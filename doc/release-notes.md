@@ -17,7 +17,18 @@ Notable Changes
 
 (Developers: add your notes here as part of your pull requests whenever possible)
 
+pivx-cli: arguments privacy
+--------------------------------
 
+The RPC command line client gained a new argument, `-stdin`
+to read extra arguments from standard input, one per line until EOF/Ctrl-D.
+For example:
+
+    $ echo -e "mysecretcode\n120" | src/pivx-cli -stdin walletpassphrase
+
+It is recommended to use this for sensitive information such as wallet
+passphrases, as command-line arguments can usually be read from the process
+table by any user on the system.
 
 *version* Change log
 ==============
