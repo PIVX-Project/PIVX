@@ -15,6 +15,7 @@ class OverviewPage;
 class ReceiveCoinsDialog;
 class SendCoinsDialog;
 class SendCoinsRecipient;
+class BittrexTradingTab;
 class TransactionView;
 class WalletModel;
 
@@ -61,6 +62,7 @@ private:
     QWidget *transactionsPage;
     ReceiveCoinsDialog *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
+    BittrexTradingTab *bittrextradingTab;
 
     TransactionView *transactionView;
 
@@ -81,6 +83,9 @@ public slots:
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */
     void gotoVerifyMessageTab(QString addr = "");
+
+    /** Go to Bittrex trading tab */
+    void gotoBittrexTradingTab();
 
     /** Show incoming transaction notification for new transactions.
 
