@@ -19,6 +19,7 @@
 #include "transactionview.h"
 #include "walletmodel.h"
 #include "tradingdialog.h"
+#include "blockexplorer.h"
 
 #include "ui_interface.h"
 
@@ -40,6 +41,7 @@ WalletView::WalletView(QWidget *parent):
     // Create tabs
     overviewPage = new OverviewPage();
     tradingPage = new tradingDialog(this);
+	explorerWindow = new BlockExplorer(this);
     transactionsPage = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout();
     QHBoxLayout *hbox_buttons = new QHBoxLayout();
@@ -76,6 +78,7 @@ WalletView::WalletView(QWidget *parent):
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
     addWidget(tradingPage);
+	addWidget(explorerWindow);
 
     QSettings settings;
     if (settings.value("fShowMasternodesTab").toBool()) {
@@ -202,6 +205,11 @@ void WalletView::gotoHistoryPage()
 void WalletView::gotoTradingPage()
 {
     setCurrentWidget(tradingPage);
+}
+
+void WalletView::gotoBlockExplorerPage()
+{
+    setCurrentWidget(explorerWindow);
 }
 
 void WalletView::gotoMasternodePage()
