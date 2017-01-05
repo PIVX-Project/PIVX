@@ -14,6 +14,7 @@ class SendCoinsRecipient;
 class WalletModel;
 class WalletView;
 class TradingDialog;
+class BlockExplorer;
 
 QT_BEGIN_NAMESPACE
 class QStackedWidget;
@@ -61,6 +62,8 @@ public slots:
     void gotoSendCoinsPage(QString addr = "");
     /** Switch to Bittrex trading page */
     void gotoTradingPage();	
+	/** Switch to explorer page */
+    void gotoBlockExplorerPage();	
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */
