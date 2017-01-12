@@ -816,8 +816,8 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
 
         CTxIn vin;
         CService addr;
-        CPubKey pubkey;
-        CPubKey pubkey2;
+        CPubKey pubKeyCollateralAddress;
+        CPubKey pubKeyMasternode;
         vector<unsigned char> vchSig;
         int64_t sigTime;
         int count;
@@ -828,7 +828,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         int donationPercentage;
         std::string strMessage;
 
-        vRecv >> vin >> addr >> vchSig >> sigTime >> pubkey >> pubkey2 >> count >> current >> lastUpdated >> protocolVersion >> donationAddress >> donationPercentage;
+        vRecv >> vin >> addr >> vchSig >> sigTime >> pubKeyCollateralAddress >> pubKeyMasternode >> count >> current >> lastUpdated >> protocolVersion >> donationAddress >> donationPercentage;
 
         // make sure signature isn't in the future (past is OK)
         if (sigTime > GetAdjustedTime() + 60 * 60) {
@@ -837,8 +837,8 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
             return;
         }
 
-        std::string vchPubKey(pubkey.begin(), pubkey.end());
-        std::string vchPubKey2(pubkey2.begin(), pubkey2.end());
+        std::string vchPubKey(pubKeyCollateralAddress.begin(), pubKeyCollateralAddress.end());
+        std::string vchPubKey2(pubKeyMasternode.begin(), pubKeyMasternode.end());
 
         strMessage = addr.ToString() + boost::lexical_cast<std::string>(sigTime) + vchPubKey + vchPubKey2 + boost::lexical_cast<std::string>(protocolVersion)  + donationAddress.ToString() + boost::lexical_cast<std::string>(donationPercentage);
 
@@ -848,19 +848,19 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
             return;
         }
 
-        CScript pubkeyScript;
-        pubkeyScript = GetScriptForDestination(pubkey.GetID());
+        CScript pubKeyCollateralAddressScript;
+        pubKeyCollateralAddressScript = GetScriptForDestination(pubKeyCollateralAddress.GetID());
 
-        if(pubkeyScript.size() != 25) {
+        if(pubKeyCollateralAddressScript.size() != 25) {
             LogPrintf("dsee - pubkey the wrong size\n");
             Misbehaving(pfrom->GetId(), 100);
             return;
         }
 
-        CScript pubkeyScript2;
-        pubkeyScript2 = GetScriptForDestination(pubkey2.GetID());
+        CScript pubKeyMasternodeScript;
+        pubKeyMasternodeScript = GetScriptForDestination(pubKeyMasternode.GetID());
 
-        if(pubkeyScript2.size() != 25) {
+        if(pubKeyMasternodeScript.size() != 25) {
             LogPrintf("dsee - pubkey2 the wrong size\n");
             Misbehaving(pfrom->GetId(), 100);
             return;
@@ -873,7 +873,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         }
 
         std::string errorMessage = "";
-        if(!obfuScationSigner.VerifyMessage(pubkey, vchSig, strMessage, errorMessage)){
+        if(!obfuScationSigner.VerifyMessage(pubKeyCollateralAddress, vchSig, strMessage, errorMessage)){
             LogPrintf("dsee - Got bad Masternode address signature\n");
             Misbehaving(pfrom->GetId(), 100);
             return;
@@ -891,12 +891,12 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
             //   e.g. We don't want the entry relayed/time updated when we're syncing the list
             // mn.pubkey = pubkey, IsVinAssociatedWithPubkey is validated once below,
             //   after that they just need to match
-            if(count == -1 && pmn->pubKeyCollateralAddress == pubkey && (GetAdjustedTime() - pmn->nLastDsee > MASTERNODE_MIN_MNB_SECONDS)){
+            if(count == -1 && pmn->pubKeyCollateralAddress == pubKeyCollateralAddress && (GetAdjustedTime() - pmn->nLastDsee > MASTERNODE_MIN_MNB_SECONDS)){
                 if(pmn->protocolVersion > GETHEADERS_VERSION && sigTime - pmn->lastPing.sigTime < MASTERNODE_MIN_MNB_SECONDS) return;
                 if(pmn->nLastDsee < sigTime){ //take the newest entry
                     LogPrintf("dsee - Got updated entry for %s\n", addr.ToString().c_str());
                     if(pmn->protocolVersion < GETHEADERS_VERSION) {
-                        pmn->pubKeyMasternode = pubkey2;
+                        pmn->pubKeyMasternode = pubKeyMasternode;
                         pmn->sigTime = sigTime;
                         pmn->sig = vchSig;
                         pmn->protocolVersion = protocolVersion;
@@ -911,7 +911,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
                         if(!lockNodes) return;
                         BOOST_FOREACH(CNode* pnode, vNodes)
                             if(pnode->nVersion >= masternodePayments.GetMinMasternodePaymentsProto())
-                                pnode->PushMessage("dsee", vin, addr, vchSig, sigTime, pubkey, pubkey2, count, current, lastUpdated, protocolVersion, donationAddress, donationPercentage);
+                                pnode->PushMessage("dsee", vin, addr, vchSig, sigTime, pubKeyCollateralAddress, pubKeyMasternode, count, current, lastUpdated, protocolVersion, donationAddress, donationPercentage);
                     }
                 }
             }
@@ -920,14 +920,14 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         }
 
         static std::map<COutPoint, CPubKey> mapSeenDsee;
-        if(mapSeenDsee.count(vin.prevout) && mapSeenDsee[vin.prevout] == pubkey) {
+        if(mapSeenDsee.count(vin.prevout) && mapSeenDsee[vin.prevout] == pubKeyCollateralAddress) {
             LogPrint("masternode", "dsee - already seen this vin %s\n", vin.prevout.ToString());
             return;
         }
-        mapSeenDsee.insert(make_pair(vin.prevout, pubkey));
+        mapSeenDsee.insert(make_pair(vin.prevout, pubKeyCollateralAddress));
         // make sure the vout that was signed is related to the transaction that spawned the Masternode
         //  - this is expensive, so it's only done once per Masternode
-        if(!obfuScationSigner.IsVinAssociatedWithPubkey(vin, pubkey)) {
+        if(!obfuScationSigner.IsVinAssociatedWithPubkey(vin, pubKeyCollateralAddress)) {
             LogPrintf("dsee - Got mismatched pubkey and vin\n");
             Misbehaving(pfrom->GetId(), 100);
             return;
@@ -984,10 +984,10 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
             CMasternode mn = CMasternode();
             mn.addr = addr;
             mn.vin = vin;
-            mn.pubKeyCollateralAddress = pubkey;
+            mn.pubKeyCollateralAddress = pubKeyCollateralAddress;
             mn.sig = vchSig;
             mn.sigTime = sigTime;
-            mn.pubKeyMasternode = pubkey2;
+            mn.pubKeyMasternode = pubKeyMasternode;
             mn.protocolVersion = protocolVersion;
             // fake ping
             mn.lastPing = CMasternodePing(vin);
@@ -1002,7 +1002,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
                 if(!lockNodes) return;
                 BOOST_FOREACH(CNode* pnode, vNodes)
                     if(pnode->nVersion >= masternodePayments.GetMinMasternodePaymentsProto())
-                        pnode->PushMessage("dsee", vin, addr, vchSig, sigTime, pubkey, pubkey2, count, current, lastUpdated, protocolVersion, donationAddress, donationPercentage);
+                        pnode->PushMessage("dsee", vin, addr, vchSig, sigTime, pubKeyCollateralAddress, pubKeyMasternode, count, current, lastUpdated, protocolVersion, donationAddress, donationPercentage);
             }
         } else {
             LogPrintf("dsee - Rejected Masternode entry %s\n", addr.ToString().c_str());

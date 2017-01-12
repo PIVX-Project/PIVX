@@ -137,7 +137,7 @@ bool CMasternode::UpdateFromNewBroadcast(CMasternodeBroadcast& mnb)
 {
     if(mnb.sigTime > sigTime) {    
         pubKeyMasternode = mnb.pubKeyMasternode;
-        pubKeyCollateralAddress = mnb.pubKeyCollateralAddress;
+// XYX       pubKeyCollateralAddress = mnb.pubKeyCollateralAddress;
         sigTime = mnb.sigTime;
         sig = mnb.sig;
         protocolVersion = mnb.protocolVersion;
@@ -316,7 +316,7 @@ CMasternodeBroadcast::CMasternodeBroadcast()
     vin = CTxIn();
     addr = CService();
     pubKeyCollateralAddress = CPubKey();
-    pubKeyMasternode1 = CPubKey();
+    pubKeyMasternode = CPubKey();
     sig = std::vector<unsigned char>();
     activeState = MASTERNODE_ENABLED;
     sigTime = GetAdjustedTime();
