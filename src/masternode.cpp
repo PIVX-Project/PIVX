@@ -137,7 +137,7 @@ bool CMasternode::UpdateFromNewBroadcast(CMasternodeBroadcast& mnb)
 {
     if(mnb.sigTime > sigTime) {    
         pubKeyMasternode = mnb.pubKeyMasternode;
-        pubKeyCollateralAddress = mnb.pubKeyCollateralAddress;
+// XYX       pubKeyCollateralAddress = mnb.pubKeyCollateralAddress;
         sigTime = mnb.sigTime;
         sig = mnb.sig;
         protocolVersion = mnb.protocolVersion;
