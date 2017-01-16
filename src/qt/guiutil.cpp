@@ -77,6 +77,8 @@ extern double NSAppKitVersionNumber;
 #endif
 #endif
 
+#define URI_SCHEME "pivx"
+
 namespace GUIUtil {
 
 QString dateTimeStr(const QDateTime &date)
@@ -126,7 +128,7 @@ void setupAmountWidget(QLineEdit *widget, QWidget *parent)
 bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 {
     // return if URI is not valid or is no PIVX: URI
-    if(!uri.isValid() || uri.scheme() != QString("pivx"))
+    if(!uri.isValid() || uri.scheme() != QString(URI_SCHEME))
         return false;
 
     SendCoinsRecipient rv;
@@ -190,9 +192,9 @@ bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
     //
     //    Cannot handle this later, because pivx:// will cause Qt to see the part after // as host,
     //    which will lower-case it (and thus invalidate the address).
-    if(uri.startsWith("pivx://", Qt::CaseInsensitive))
+    if(uri.startsWith(URI_SCHEME "://", Qt::CaseInsensitive))
     {
-        uri.replace(0, 12, "pivx:");
+        uri.replace(0, std::strlen(URI_SCHEME) + 3, URI_SCHEME ":");
     }
     QUrl uriInstance(uri);
     return parseBitcoinURI(uriInstance, out);
@@ -200,7 +202,7 @@ bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
 
 QString formatBitcoinURI(const SendCoinsRecipient &info)
 {
-    QString ret = QString("pivx:%1").arg(info.address);
+    QString ret = QString(URI_SCHEME ":%1").arg(info.address);
     int paramCount = 0;
 
     if (info.amount)
@@ -218,7 +220,7 @@ QString formatBitcoinURI(const SendCoinsRecipient &info)
 
     if (!info.message.isEmpty())
     {
-        QString msg(QUrl::toPercentEncoding(info.message));;
+        QString msg(QUrl::toPercentEncoding(info.message));
         ret += QString("%1message=%2").arg(paramCount == 0 ? "?" : "&").arg(msg);
         paramCount++;
     }
