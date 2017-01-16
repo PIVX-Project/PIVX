@@ -77,6 +77,8 @@ extern double NSAppKitVersionNumber;
 #endif
 #endif
 
+#define URI_SCHEME "pivx"
+
 namespace GUIUtil {
 
 QString dateTimeStr(const QDateTime &date)
@@ -108,7 +110,7 @@ void setupAddressWidget(QValidatedLineEdit *widget, QWidget *parent)
 #if QT_VERSION >= 0x040700
     // We don't want translators to use own addresses in translations
     // and this is the only place, where this address is supplied.
-    widget->setPlaceholderText(QObject::tr("Enter a DarkNet address (e.g. %1)").arg("D7VFR83SQbiezrW72hjcWJtcfip5krte2Z"));
+    widget->setPlaceholderText(QObject::tr("Enter a PIVX address (e.g. %1)").arg("D7VFR83SQbiezrW72hjcWJtcfip5krte2Z"));
 #endif
     widget->setValidator(new BitcoinAddressEntryValidator(parent));
     widget->setCheckValidator(new BitcoinAddressCheckValidator(parent));
@@ -125,8 +127,8 @@ void setupAmountWidget(QLineEdit *widget, QWidget *parent)
 
 bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
 {
-    // return if URI is not valid or is no DarkNet: URI
-    if(!uri.isValid() || uri.scheme() != QString("darknet"))
+    // return if URI is not valid or is no bitcoin: URI
+    if(!uri.isValid() || uri.scheme() != QString(URI_SCHEME))
         return false;
 
     SendCoinsRecipient rv;
@@ -190,9 +192,9 @@ bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
     //
     //    Cannot handle this later, because darknet:// will cause Qt to see the part after // as host,
     //    which will lower-case it (and thus invalidate the address).
-    if(uri.startsWith("darknet://", Qt::CaseInsensitive))
+    if(uri.startsWith(URI_SCHEME "://", Qt::CaseInsensitive))
     {
-        uri.replace(0, 12, "darknet:");
+        uri.replace(0, std::strlen(URI_SCHEME) + 3, URI_SCHEME ":");
     }
     QUrl uriInstance(uri);
     return parseBitcoinURI(uriInstance, out);
@@ -200,7 +202,7 @@ bool parseBitcoinURI(QString uri, SendCoinsRecipient *out)
 
 QString formatBitcoinURI(const SendCoinsRecipient &info)
 {
-    QString ret = QString("darknet:%1").arg(info.address);
+    QString ret = QString(URI_SCHEME ":%1").arg(info.address);
     int paramCount = 0;
 
     if (info.amount)
@@ -218,7 +220,7 @@ QString formatBitcoinURI(const SendCoinsRecipient &info)
 
     if (!info.message.isEmpty())
     {
-        QString msg(QUrl::toPercentEncoding(info.message));;
+        QString msg(QUrl::toPercentEncoding(info.message));
         ret += QString("%1message=%2").arg(paramCount == 0 ? "?" : "&").arg(msg);
         paramCount++;
     }
