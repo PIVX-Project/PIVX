@@ -153,6 +153,68 @@ bool CWalletDB::WriteStakeSplitThreshold(uint64_t nStakeSplitThreshold)
     return Write(std::string("stakeSplitThreshold"), nStakeSplitThreshold);
 }
 
+//presstab HyperStake
+bool CWalletDB::WriteMultiSend(std::vector<std::pair<std::string, int> > vMultiSend)
+{
+    nWalletDBUpdated++;
+    bool ret = true;
+    for(unsigned int i = 0; i < vMultiSend.size(); i++)
+    {
+        std::pair<std::string, int> pMultiSend;
+        pMultiSend = vMultiSend[i];
+        if(!Write(std::make_pair(std::string("multisend"), i), pMultiSend, true))
+            ret = false;
+    }
+    return ret;
+}
+//presstab HyperStake
+bool CWalletDB::EraseMultiSend(std::vector<std::pair<std::string, int> > vMultiSend)
+{
+    nWalletDBUpdated++;
+    bool ret = true;
+    for(unsigned int i = 0; i < vMultiSend.size(); i++)
+    {
+        std::pair<std::string, int> pMultiSend;
+        pMultiSend = vMultiSend[i];
+        if(!Erase(std::make_pair(std::string("multisend"), i)))
+            ret = false;
+    }
+    return ret;
+}
+//presstab HyperStake
+bool CWalletDB::WriteMSettings(bool fEnable, int nLastMultiSendHeight)
+{
+    nWalletDBUpdated++;
+    std::pair<bool, int> pSettings;
+    pSettings.first = fEnable;
+    pSettings.second = nLastMultiSendHeight;
+    return Write(std::string("msettings"), pSettings, true);
+}
+//presstab HyperStake
+bool CWalletDB::WriteMSDisabledAddresses(std::vector<std::string> vDisabledAddresses)
+{
+    nWalletDBUpdated++;
+    bool ret = true;
+    for(unsigned int i = 0; i < vDisabledAddresses.size(); i++)
+    {
+        if(!Write(std::make_pair(std::string("mdisabled"), i), vDisabledAddresses[i]))
+            ret = false;
+    }
+    return ret;
+}
+//presstab HyperStake
+bool CWalletDB::EraseMSDisabledAddresses(std::vector<std::string> vDisabledAddresses)
+{
+    nWalletDBUpdated++;
+    bool ret = true;
+    for(unsigned int i = 0; i < vDisabledAddresses.size(); i++)
+    {
+        if(!Erase(std::make_pair(std::string("mdisabled"), i)))
+            ret = false;
+    }
+    return ret;
+}
+
 bool CWalletDB::WriteDefaultKey(const CPubKey& vchPubKey)
 {
     nWalletDBUpdated++;
@@ -590,7 +652,31 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
 	else if (strType == "stakeSplitThreshold") //presstab HyperStake
 	{
             ssValue >> pwallet->nStakeSplitThreshold;
-	}
+        }
+        else if (strType == "multisend") //presstab HyperStake
+        {
+            unsigned int i;
+            ssKey >> i;
+            std::pair<std::string, int> pMultiSend;
+            ssValue >> pMultiSend;
+            if(CBitcoinAddress(pMultiSend.first).IsValid())
+            {
+                pwallet->vMultiSend.push_back(pMultiSend);
+            }
+        }
+        else if(strType == "msettings")//presstab HyperStake
+        {
+            std::pair<bool, int> pSettings;
+            ssValue >> pSettings;
+            pwallet->fMultiSend = pSettings.first;
+            pwallet->nLastMultiSendHeight = pSettings.second;
+        }
+        else if(strType == "mdisabled")//presstab HyperStake
+        {
+            std::string strDisabledAddress;
+            ssValue >> strDisabledAddress;
+            pwallet->vDisabledAddresses.push_back(strDisabledAddress);
+        }
         else if (strType == "destdata")
         {
             std::string strAddress, strKey, strValue;

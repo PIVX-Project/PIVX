@@ -374,8 +374,6 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             pblock->vtx[0] = txNew;
             pblocktemplate->vTxFees[0] = -nFees;
         }
-        
-        
 
         // Fill in header
         pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
@@ -388,7 +386,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
         CValidationState state;
         if (!TestBlockValidity(state, *pblock, pindexPrev, false, false))
         {
-            LogPrintf("CreateNewBlock() : TestBlockValidity failed");
+            LogPrintf("CreateNewBlock() : TestBlockValidity failed\n");
             return NULL;
         }
     }
@@ -465,6 +463,7 @@ bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
 bool fGenerateBitcoins = false;
 
 // ***TODO*** that part changed in bitcoin, we are using a mix with old one here for now
+
 void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
 {
     LogPrintf("DarkNetMiner started\n");
@@ -487,26 +486,29 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
 
     while (fGenerateBitcoins || fProofOfStake) 
     {
-        if(chainActive.Tip()->nHeight < Params().LAST_POW_BLOCK())
+        if(fProofOfStake)
         {
-            MilliSleep(5000);
-            continue;
-        }
-
-        while (chainActive.Tip()->nTime < 1471482000 || vNodes.empty() || pwallet->IsLocked() ||  !fMintableCoins || nReserveBalance >= pwallet->GetBalance() || !masternodeSync.IsSynced())
-        {
-            nLastCoinStakeSearchInterval = 0;
-            MilliSleep(5000);
-            if (!fGenerateBitcoins && !fProofOfStake)
-                continue;
-        }
-
-        if(mapHashedBlocks.count(chainActive.Tip()->nHeight)) //search our map of hashed blocks, see if bestblock has been hashed yet
-        {
-            if(GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < max(pwallet->nHashInterval, (unsigned int)1)) // wait half of the nHashDrift with max wait of 3 minutes
+            if(chainActive.Tip()->nHeight < Params().LAST_POW_BLOCK())
             {
                 MilliSleep(5000);
                 continue;
+            }
+
+            while (chainActive.Tip()->nTime < 1471482000 || vNodes.empty() || pwallet->IsLocked() ||  !fMintableCoins || nReserveBalance >= pwallet->GetBalance() || !masternodeSync.IsSynced())
+            {
+                nLastCoinStakeSearchInterval = 0;
+                MilliSleep(5000);
+                if (!fGenerateBitcoins && !fProofOfStake)
+                    continue;
+            }
+
+            if(mapHashedBlocks.count(chainActive.Tip()->nHeight)) //search our map of hashed blocks, see if bestblock has been hashed yet
+            {
+                if(GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < max(pwallet->nHashInterval, (unsigned int)1)) // wait half of the nHashDrift with max wait of 3 minutes
+                {
+                    MilliSleep(5000);
+                    continue;
+                }
             }
         }
 

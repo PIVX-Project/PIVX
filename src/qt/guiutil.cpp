@@ -823,7 +823,7 @@ QString loadStyleSheet()
         // External CSS
         settings.setValue("fCSSexternal", true);
         boost::filesystem::path pathAddr = GetDataDir() / "themes/";
-        cssName = pathAddr.c_str() + theme + "/css/theme.css";
+        cssName = pathAddr.string().c_str() + theme + "/css/theme.css";
     }
     else{
         // Build-in CSS

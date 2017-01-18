@@ -4,7 +4,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "base58.h"
+#include "bip38.h"
 #include "rpcserver.h"
 #include "init.h"
 #include "main.h"
@@ -14,12 +14,16 @@
 #include "util.h"
 #include "utiltime.h"
 #include "wallet.h"
+#include "utilstrencodings.h"
 
 #include <fstream>
 #include <stdint.h>
+#include <secp256k1.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <openssl/sha.h>
+#include <openssl/aes.h>
 
 #include "json/json_spirit_value.h"
 
@@ -399,3 +403,105 @@ Value dumpwallet(const Array& params, bool fHelp)
     file.close();
     return Value::null;
 }
+
+Value bip38encrypt(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 2)
+        throw runtime_error(
+            "bip38encrypt \"darknetaddress\"\n"
+            "\nEncrypts a private key corresponding to 'darknetaddress'.\n"
+            "\nArguments:\n"
+            "1. \"darknetaddress\"   (string, required) The darknet address for the private key (you must hold the key already)\n"
+            "2. \"passphrase\"   (string, required) The passphrase you want the private key to be encrypted with - Valid special chars: !#$%&'()*+,-./:;<=>?`{|}~ \n"
+            "\nResult:\n"
+            "\"key\"                (string) The encrypted private key\n"
+            "\nExamples:\n"
+        );
+
+    EnsureWalletIsUnlocked();
+
+    string strAddress = params[0].get_str();
+    string strPassphrase = params[1].get_str();
+
+    CBitcoinAddress address;
+    if (!address.SetString(strAddress))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid DarkNet address");
+    CKeyID keyID;
+    if (!address.GetKeyID(keyID))
+        throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to a key");
+    CKey vchSecret;
+    if (!pwalletMain->GetKey(keyID, vchSecret))
+        throw JSONRPCError(RPC_WALLET_ERROR, "Private key for address " + strAddress + " is not known");
+
+    uint256 privKey = vchSecret.GetPrivKey_256();
+    string encryptedOut = BIP38_Encrypt(strAddress, strPassphrase, privKey);
+
+    Object result;
+    result.push_back(Pair("Addess", strAddress));
+    result.push_back(Pair("Encrypted Key", encryptedOut));
+
+    return result;
+}
+
+Value bip38decrypt(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 2)
+        throw runtime_error(
+            "bip38decrypt \"darknetaddress\"\n"
+            "\nDecrypts and then imports password protected private key.\n"
+            "\nArguments:\n"
+            "1. \"passphrase\"   (string, required) The passphrase you want the private key to be encrypted with\n"
+            "2. \"encryptedkey\"   (string, required) The encrypted private key\n"
+
+            "\nResult:\n"
+            "\"key\"                (string) The decrypted private key\n"
+            "\nExamples:\n"
+        );
+
+    EnsureWalletIsUnlocked();
+
+    /** Collect private key and passphrase **/
+    string strPassphrase = params[0].get_str();
+    string strKey = params[1].get_str();
+
+    uint256 privKey;
+    bool fCompressed;
+    if(!BIP38_Decrypt(strPassphrase, strKey, privKey, fCompressed))
+        throw JSONRPCError(RPC_WALLET_ERROR, "Failed To Decrypt");
+
+    Object result;
+    result.push_back(Pair("privatekey", HexStr(privKey)));
+
+    CKey key;
+    key.Set(privKey.begin(), privKey.end(), fCompressed);
+
+    if(!key.IsValid())
+        throw JSONRPCError(RPC_WALLET_ERROR, "Private Key Not Valid");
+
+    CPubKey pubkey = key.GetPubKey();
+    pubkey.IsCompressed();
+    assert(key.VerifyPubKey(pubkey));
+    result.push_back(Pair("Address", CBitcoinAddress(pubkey.GetID()).ToString()));
+    CKeyID vchAddress = pubkey.GetID();
+    {
+        pwalletMain->MarkDirty();
+        pwalletMain->SetAddressBook(vchAddress, "", "receive");
+
+        // Don't throw error in case a key is already there
+        if (pwalletMain->HaveKey(vchAddress))
+            throw JSONRPCError(RPC_WALLET_ERROR, "Key already held by wallet");
+
+        pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = 1;
+
+        if (!pwalletMain->AddKeyPubKey(key, pubkey))
+            throw JSONRPCError(RPC_WALLET_ERROR, "Error adding key to wallet");
+
+        // whenever a key is imported, we need to scan the whole chain
+        pwalletMain->nTimeFirstKey = 1; // 0 would be considered 'no value'
+        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+    }
+
+    return result;
+}
+
+

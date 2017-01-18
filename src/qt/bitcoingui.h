@@ -23,6 +23,7 @@ class ClientModel;
 class NetworkStyle;
 class Notificator;
 class OptionsModel;
+class tradingDialog;
 class RPCConsole;
 class SendCoinsRecipient;
 class UnitDisplayStatusBarControl;
@@ -67,6 +68,8 @@ public:
     void removeAllWallets();
 #endif // ENABLE_WALLET
     bool enableWallet;
+    bool fMultiSend;
+    bool fMultiSendNotify;
 
 protected:
     void changeEvent(QEvent *e);
@@ -98,6 +101,7 @@ private:
     QAction *usedReceivingAddressesAction;
     QAction *signMessageAction;
     QAction *verifyMessageAction;
+    QAction *bip38ToolAction;
     QAction *aboutAction;
     QAction *receiveCoinsAction;
     QAction *optionsAction;
@@ -116,12 +120,15 @@ private:
     QAction *openConfEditorAction;
     QAction *showBackupsAction;
     QAction *openAction;
+    QAction *openTradingwindowAction;
     QAction *showHelpMessageAction;
+    QAction *multiSendAction;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
     Notificator *notificator;
     RPCConsole *rpcConsole;
+    tradingDialog  *tradingWindow;
 
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;
@@ -190,6 +197,8 @@ private slots:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
+    /** Switch to Trading Page */
+    void gotoTradingPage(); 
     /** Switch to masternode page */
     void gotoMasternodePage(); 
     /** Switch to receive coins page */
@@ -201,9 +210,15 @@ private slots:
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */
     void gotoVerifyMessageTab(QString addr = "");
+    /** Show MultiSend Dialog */
+    void gotoMultiSendDialog();
+
+    /** Show BIP 38 tool - default to Encryption tab */
+    void gotoBip38Tool();
 
     /** Show open dialog */
     void openClicked();
+
 #endif // ENABLE_WALLET
     /** Show configuration dialog */
     void optionsClicked();

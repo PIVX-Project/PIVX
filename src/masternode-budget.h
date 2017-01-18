@@ -23,10 +23,8 @@ extern CCriticalSection cs_budget;
 class CBudgetManager;
 class CFinalizedBudgetBroadcast;
 class CFinalizedBudget;
-class CFinalizedBudgetVote;
 class CBudgetProposal;
 class CBudgetProposalBroadcast;
-class CBudgetVote;
 class CTxBudgetPayment;
 
 #define VOTE_ABSTAIN  0
@@ -48,6 +46,100 @@ int GetBudgetPaymentCycleBlocks();
 
 //Check the collateral transaction for the budget proposal/finalized budget
 bool IsBudgetCollateralValid(uint256 nTxCollateralHash, uint256 nExpectedHash, std::string& strError, int64_t& nTime, int& nConf);
+
+//
+// CBudgetVote - Allow a masternode node to vote and broadcast throughout the network
+//
+
+class CBudgetVote
+{
+public:
+    bool fValid; //if the vote is currently valid / counted
+    bool fSynced; //if we've sent this to our peers
+    CTxIn vin;
+    uint256 nProposalHash;
+    int nVote;
+    int64_t nTime;
+    std::vector<unsigned char> vchSig;
+
+    CBudgetVote();
+    CBudgetVote(CTxIn vin, uint256 nProposalHash, int nVoteIn);
+
+    bool Sign(CKey& keyMasternode, CPubKey& pubKeyMasternode);
+    bool SignatureValid(bool fSignatureCheck);
+    void Relay();
+
+    std::string GetVoteString() {
+        std::string ret = "ABSTAIN";
+        if(nVote == VOTE_YES) ret = "YES";
+        if(nVote == VOTE_NO) ret = "NO";
+        return ret;
+    }
+
+    uint256 GetHash(){
+        CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
+        ss << vin;
+        ss << nProposalHash;
+        ss << nVote;
+        ss << nTime;
+        return ss.GetHash();
+    }
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+        READWRITE(vin);
+        READWRITE(nProposalHash);
+        READWRITE(nVote);
+        READWRITE(nTime);
+        READWRITE(vchSig);
+    }
+
+
+
+};
+
+//
+// CFinalizedBudgetVote - Allow a masternode node to vote and broadcast throughout the network
+//
+
+class CFinalizedBudgetVote
+{
+public:
+    bool fValid; //if the vote is currently valid / counted
+    bool fSynced; //if we've sent this to our peers
+    CTxIn vin;
+    uint256 nBudgetHash;
+    int64_t nTime;
+    std::vector<unsigned char> vchSig;
+
+    CFinalizedBudgetVote();
+    CFinalizedBudgetVote(CTxIn vinIn, uint256 nBudgetHashIn);
+
+    bool Sign(CKey& keyMasternode, CPubKey& pubKeyMasternode);
+    bool SignatureValid(bool fSignatureCheck);
+    void Relay();
+
+    uint256 GetHash(){
+        CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
+        ss << vin;
+        ss << nBudgetHash;
+        ss << nTime;
+        return ss.GetHash();
+    }
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+        READWRITE(vin);
+        READWRITE(nBudgetHash);
+        READWRITE(nTime);
+        READWRITE(vchSig);
+    }
+
+};
 
 /** Save Budget Manager (budget.dat)
  */
@@ -343,46 +435,6 @@ public:
     }
 };
 
-//
-// CFinalizedBudgetVote - Allow a masternode node to vote and broadcast throughout the network
-//
-
-class CFinalizedBudgetVote
-{
-public:
-    bool fValid; //if the vote is currently valid / counted
-    bool fSynced; //if we've sent this to our peers
-    CTxIn vin;
-    uint256 nBudgetHash;
-    int64_t nTime;
-    std::vector<unsigned char> vchSig;
-
-    CFinalizedBudgetVote();
-    CFinalizedBudgetVote(CTxIn vinIn, uint256 nBudgetHashIn);
-
-    bool Sign(CKey& keyMasternode, CPubKey& pubKeyMasternode);
-    bool SignatureValid(bool fSignatureCheck);
-    void Relay();
-
-    uint256 GetHash(){
-        CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
-        ss << vin;
-        ss << nBudgetHash;
-        ss << nTime;
-        return ss.GetHash();
-    }
-
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        READWRITE(vin);
-        READWRITE(nBudgetHash);
-        READWRITE(nTime);
-        READWRITE(vchSig);
-    }
-
-};
 
 //
 // Budget Proposal : Contains the masternode votes for each budget
@@ -538,57 +590,5 @@ public:
     }
 };
 
-//
-// CBudgetVote - Allow a masternode node to vote and broadcast throughout the network
-//
-
-class CBudgetVote
-{
-public:
-    bool fValid; //if the vote is currently valid / counted
-    bool fSynced; //if we've sent this to our peers
-    CTxIn vin;
-    uint256 nProposalHash;
-    int nVote;
-    int64_t nTime;
-    std::vector<unsigned char> vchSig;
-
-    CBudgetVote();
-    CBudgetVote(CTxIn vin, uint256 nProposalHash, int nVoteIn);
-
-    bool Sign(CKey& keyMasternode, CPubKey& pubKeyMasternode);
-    bool SignatureValid(bool fSignatureCheck);
-    void Relay();
-
-    std::string GetVoteString() {
-        std::string ret = "ABSTAIN";
-        if(nVote == VOTE_YES) ret = "YES";
-        if(nVote == VOTE_NO) ret = "NO";
-        return ret;
-    }
-
-    uint256 GetHash(){
-        CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
-        ss << vin;
-        ss << nProposalHash;
-        ss << nVote;
-        ss << nTime;
-        return ss.GetHash();
-    }
-
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
-        READWRITE(vin);
-        READWRITE(nProposalHash);
-        READWRITE(nVote);
-        READWRITE(nTime);
-        READWRITE(vchSig);
-    }
-
-
-
-};
 
 #endif

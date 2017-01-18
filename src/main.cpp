@@ -1636,6 +1636,17 @@ double ConvertBitsToDouble(unsigned int nBits)
 int64_t GetBlockValue(int nHeight)
 {
     int64_t nSubsidy = 0;
+
+    if(Params().NetworkID() == CBaseChainParams::TESTNET)
+    {
+        if(nHeight < 200 && nHeight > 0)
+            return 250000 * COIN;
+
+        // Add TESTNET_OFFSET to nheight because that is the current height at time of writing this code
+        // This will allow the testnet simulation to catch up to current main net conditions
+        nHeight += TESTNET_OFFSET;
+    }
+
     if(nHeight == 0) {
         nSubsidy = 60001 * COIN;
     }
@@ -1681,20 +1692,22 @@ int64_t GetBlockValue(int nHeight)
     else {
         nSubsidy = 0 * COIN; 
     }
-    if(Params().NetworkID() == CBaseChainParams::TESTNET){
-        if(nHeight < 200 && nHeight > 0) {
-            nSubsidy = 25000 * COIN;
-        }
-        else {
-            nSubsidy = 50 * COIN; 
-        }
-    }
     return nSubsidy;
 }
 
 int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
 {
     int64_t ret = 0;
+
+    if(Params().NetworkID() == CBaseChainParams::TESTNET)
+    {
+        if(nHeight < 200)
+            return 0;
+
+        // Add TESTNET_OFFSET to nheight because that is the current height at the time of writing this code
+        // This will allow the testnet simulation to catch up to current main net conditions
+        nHeight += TESTNET_OFFSET;
+    }
 
     if(nHeight <= 43200) {
         ret = blockValue/5;
@@ -2029,66 +2042,6 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
             else{
                 ret = blockValue * .01;
             }
-        }
-    }
-    if(Params().NetworkID() == CBaseChainParams::TESTNET){
-        int64_t nMoneySupply = chainActive.Tip()->nMoneySupply;
-        int64_t mNodeCoins = mnodeman.size() * 10000 * COIN;
-
-        if(fDebug)
-            LogPrintf("GetMasternodePayment(): moneysupply=%s, nodecoins=%s \n", FormatMoney(nMoneySupply).c_str(), 
-                FormatMoney(mNodeCoins).c_str());
-
-        if (mNodeCoins == 0) {
-            ret = 0;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .05) && mNodeCoins > 0) {
-            ret = blockValue * .85;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .1) && mNodeCoins > (nMoneySupply * .05)) {
-            ret = blockValue * .8;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .15) && mNodeCoins > (nMoneySupply * .1)) {
-            ret = blockValue * .75;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .2) && mNodeCoins > (nMoneySupply * .15)) {
-            ret = blockValue * .7;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .25) && mNodeCoins > (nMoneySupply * .2)) {
-            ret = blockValue * .65;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .3) && mNodeCoins > (nMoneySupply * .25)) {
-            ret = blockValue * .6;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .35) && mNodeCoins > (nMoneySupply * .3)) {
-            ret = blockValue * .55;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .4) && mNodeCoins > (nMoneySupply * .35)) {
-            ret = blockValue * .5;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .45) && mNodeCoins > (nMoneySupply * .4)) {
-            ret = blockValue * .45;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .5) && mNodeCoins > (nMoneySupply * .45)) {
-            ret = blockValue * .4;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .55) && mNodeCoins > (nMoneySupply * .5)) {
-            ret = blockValue * .35;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .6) && mNodeCoins > (nMoneySupply * .55)) {
-            ret = blockValue * .3;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .65) && mNodeCoins > (nMoneySupply * .6)) {
-            ret = blockValue * .25;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .7) && mNodeCoins > (nMoneySupply * .65)) {
-            ret = blockValue * .2;
-        }
-        else if (mNodeCoins <= (nMoneySupply * .75) && mNodeCoins > (nMoneySupply * .7)) {
-            ret = blockValue * .15;
-        }
-        else{
-            ret = blockValue * .1;
         }
     }
 
@@ -3933,6 +3886,12 @@ bool ProcessNewBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDis
             budget.NewBlock();
         }
     }
+
+    // If turned on MultiSend will send a transaction (or more) on the 30th confirmation of a stake
+     if (pwalletMain->fMultiSend)
+        if (!pwalletMain->MultiSend() )
+            LogPrintf("ERROR While trying to use MultiSend \n");
+
 
     LogPrintf("%s : ACCEPTED\n", __func__);
 

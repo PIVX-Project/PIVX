@@ -146,12 +146,13 @@ public:
         vSeeds.push_back(CDNSSeedData("162.213.154.31", ""));
         vSeeds.push_back(CDNSSeedData("151.80.206.104", ""));
 
-        base58Prefixes[PUBKEY_ADDRESS] = list_of( 30);                    
-        base58Prefixes[SCRIPT_ADDRESS] = list_of( 13);                    
-        base58Prefixes[SECRET_KEY] =     list_of(212);                    
-        base58Prefixes[EXT_PUBLIC_KEY] = list_of(0x02)(0x2D)(0x25)(0x33); 
-        base58Prefixes[EXT_SECRET_KEY] = list_of(0x02)(0x21)(0x31)(0x2B); 
-        base58Prefixes[EXT_COIN_TYPE]  = list_of(0x80000013);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,30);                    
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,13);                    
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,212);                    
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x02)(0x2D)(0x25)(0x33).convert_to_container<std::vector<unsigned char> >();
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x02)(0x21)(0x31)(0x2B).convert_to_container<std::vector<unsigned char> >();
+        // 	BIP44 coin type is 'TBD' 
+        base58Prefixes[EXT_COIN_TYPE]  = boost::assign::list_of(0x13)(0x00)(0x00)(0x80).convert_to_container<std::vector<unsigned char> >();
 
         convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
 
@@ -211,12 +212,15 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
 
-        base58Prefixes[PUBKEY_ADDRESS] = list_of(139);                    // Testnet darknet addresses start with 'x' or 'y'
-        base58Prefixes[SCRIPT_ADDRESS] = list_of( 19);                    // Testnet darknet script addresses start with '8' or '9'
-        base58Prefixes[SECRET_KEY]     = list_of(239);                    // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
-        base58Prefixes[EXT_PUBLIC_KEY] = list_of(0x3a)(0x80)(0x61)(0xa0); // Testnet darknet BIP32 pubkeys start with 'DRKV'
-        base58Prefixes[EXT_SECRET_KEY] = list_of(0x3a)(0x80)(0x58)(0x37); // Testnet darknet BIP32 prvkeys start with 'DRKP'
-        base58Prefixes[EXT_COIN_TYPE]  = list_of(0x80000001);             // Testnet darknet BIP44 coin type is '5' (All coin's testnet default)
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,139);  // Testnet darknet addresses start with 'x' or 'y'                   
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);   // Testnet darknet script addresses start with '8' or '9'                 
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);    // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
+        // Testnet darknet BIP32 pubkeys start with 'DRKV'
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x3a)(0x80)(0x61)(0xa0).convert_to_container<std::vector<unsigned char> >();
+        // Testnet darknet BIP32 prvkeys start with 'DRKP'
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x3a)(0x80)(0x58)(0x37).convert_to_container<std::vector<unsigned char> >();
+        // Testnet darknet BIP44 coin type is '1' (All coin's testnet default)
+        base58Prefixes[EXT_COIN_TYPE]  = boost::assign::list_of(0x01)(0x00)(0x00)(0x80).convert_to_container<std::vector<unsigned char> >();
 
         convertSeed6(vFixedSeeds, pnSeed6_test, ARRAYLEN(pnSeed6_test));
 
