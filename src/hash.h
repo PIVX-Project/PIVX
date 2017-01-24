@@ -12,6 +12,7 @@
 #include "crypto/sha256.h"
 #include "serialize.h"
 #include "uint256.h"
+#include "uint512.h"
 #include "version.h"
 
 #include "crypto/sph_blake.h"
