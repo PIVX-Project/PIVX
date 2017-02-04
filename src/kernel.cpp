@@ -425,7 +425,7 @@ unsigned int GetStakeModifierChecksum(const CBlockIndex* pindex)
     ss << pindex->nFlags << pindex->hashProofOfStake << pindex->nStakeModifier;
     arith_uint256 hashChecksum = UintToArith256(Hash(ss.begin(), ss.end()));
     hashChecksum >>= (256 - 32);
-    return hashChecksum.GetCheapHash();
+    return ArithToUint256(hashChecksum).GetCheapHash();
 }
 
 // Check stake modifier hard checkpoints

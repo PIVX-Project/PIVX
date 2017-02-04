@@ -6,11 +6,37 @@
 #include "arith_uint256.h"
 
 #include "uint256.h"
+#include "uint512.h"
 #include "utilstrencodings.h"
 #include "crypto/common.h"
 
 #include <stdio.h>
 #include <string.h>
+
+
+
+
+template <> std::string base_uint<256>::GetHex() const
+{
+    return ArithToUint256(*this).GetHex();
+}
+
+template <> void base_uint<256>::SetHex(const char* psz)
+{
+    *this = UintToArith256(uint256S(psz));
+}
+
+template <> std::string base_uint<512>::GetHex() const
+{
+    return ArithToUint512(*this).GetHex();
+}
+
+
+template <> void base_uint<512>::SetHex(const char* psz)
+{
+    *this = UintToArith512(uint512S(psz));
+}
+
 
 template <unsigned int BITS>
 base_uint<BITS>::base_uint(const std::string& str)
@@ -153,44 +179,6 @@ double base_uint<BITS>::getdouble() const
 }
 
 template <unsigned int BITS>
-std::string base_uint<BITS>::GetHex() const
-{
-    char psz[sizeof(pn) * 2 + 1];
-    for (unsigned int i = 0; i < sizeof(pn); i++)
-        sprintf(psz + i * 2, "%02x", ((unsigned char*)pn)[sizeof(pn) - i - 1]);
-    return std::string(psz, psz + sizeof(pn) * 2);
-}
-
-template <unsigned int BITS>
-void base_uint<BITS>::SetHex(const char* psz)
-{
-    memset(pn, 0, sizeof(pn));
-
-    // skip leading spaces
-    while (isspace(*psz))
-        psz++;
-
-    // skip 0x
-    if (psz[0] == '0' && tolower(psz[1]) == 'x')
-        psz += 2;
-
-    // hex string to uint
-    const char* pbegin = psz;
-    while (::HexDigit(*psz) != -1)
-        psz++;
-    psz--;
-    unsigned char* p1 = (unsigned char*)pn;
-    unsigned char* pend = p1 + WIDTH * 4;
-    while (psz >= pbegin && p1 < pend) {
-        *p1 = ::HexDigit(*psz--);
-        if (psz >= pbegin) {
-            *p1 |= ((unsigned char)::HexDigit(*psz--) << 4);
-            p1++;
-        }
-    }
-}
-
-template <unsigned int BITS>
 void base_uint<BITS>::SetHex(const std::string& str)
 {
     SetHex(str.c_str());
@@ -217,23 +205,6 @@ unsigned int base_uint<BITS>::bits() const
     return 0;
 }
 
-// Explicit instantiations for base_uint<160>
-template base_uint<160>::base_uint(const std::string&);
-template base_uint<160>::base_uint(const std::vector<unsigned char>&);
-template base_uint<160>& base_uint<160>::operator<<=(unsigned int);
-template base_uint<160>& base_uint<160>::operator>>=(unsigned int);
-template base_uint<160>& base_uint<160>::operator*=(uint32_t b32);
-template base_uint<160>& base_uint<160>::operator*=(const base_uint<160>& b);
-template base_uint<160>& base_uint<160>::operator/=(const base_uint<160>& b);
-template int base_uint<160>::CompareTo(const base_uint<160>&) const;
-template bool base_uint<160>::EqualTo(uint64_t) const;
-template double base_uint<160>::getdouble() const;
-template std::string base_uint<160>::GetHex() const;
-template std::string base_uint<160>::ToString() const;
-template void base_uint<160>::SetHex(const char*);
-template void base_uint<160>::SetHex(const std::string&);
-template unsigned int base_uint<160>::bits() const;
-
 // Explicit instantiations for base_uint<256>
 template base_uint<256>::base_uint(const std::string&);
 template base_uint<256>::base_uint(const std::vector<unsigned char>&);
@@ -245,7 +216,6 @@ template base_uint<256>& base_uint<256>::operator/=(const base_uint<256>& b);
 template int base_uint<256>::CompareTo(const base_uint<256>&) const;
 template bool base_uint<256>::EqualTo(uint64_t) const;
 template double base_uint<256>::getdouble() const;
-template std::string base_uint<256>::GetHex() const;
 template std::string base_uint<256>::ToString() const;
 template void base_uint<256>::SetHex(const char*);
 template void base_uint<256>::SetHex(const std::string&);
@@ -262,9 +232,8 @@ template base_uint<512>& base_uint<512>::operator/=(const base_uint<512>& b);
 template int base_uint<512>::CompareTo(const base_uint<512>&) const;
 template bool base_uint<512>::EqualTo(uint64_t) const;
 template double base_uint<512>::getdouble() const;
-template std::string base_uint<512>::GetHex() const;
 template std::string base_uint<512>::ToString() const;
-template void base_uint<512>::SetHex(const char*);
+//template void base_uint<512>::SetHex(const char*);
 template void base_uint<512>::SetHex(const std::string&);
 template unsigned int base_uint<512>::bits() const;
 
@@ -313,79 +282,34 @@ uint32_t arith_uint256::GetCompact(bool fNegative) const
     return nCompact;
 }
 
-static void inline HashMix(uint32_t& a, uint32_t& b, uint32_t& c)
-{
-    // Taken from lookup3, by Bob Jenkins.
-    a -= c;
-    a ^= ((c << 4) | (c >> 28));
-    c += b;
-    b -= a;
-    b ^= ((a << 6) | (a >> 26));
-    a += c;
-    c -= b;
-    c ^= ((b << 8) | (b >> 24));
-    b += a;
-    a -= c;
-    a ^= ((c << 16) | (c >> 16));
-    c += b;
-    b -= a;
-    b ^= ((a << 19) | (a >> 13));
-    a += c;
-    c -= b;
-    c ^= ((b << 4) | (b >> 28));
-    b += a;
-}
-
-static void inline HashFinal(uint32_t& a, uint32_t& b, uint32_t& c)
-{
-    // Taken from lookup3, by Bob Jenkins.
-    c ^= b;
-    c -= ((b << 14) | (b >> 18));
-    a ^= c;
-    a -= ((c << 11) | (c >> 21));
-    b ^= a;
-    b -= ((a << 25) | (a >> 7));
-    c ^= b;
-    c -= ((b << 16) | (b >> 16));
-    a ^= c;
-    a -= ((c << 4) | (c >> 28));
-    b ^= a;
-    b -= ((a << 14) | (a >> 18));
-    c ^= b;
-    c -= ((b << 24) | (b >> 8));
-}
-
-uint64_t arith_uint256::GetHash(const arith_uint256& salt) const
-{
-    uint32_t a, b, c;
-    a = b = c = 0xdeadbeef + (WIDTH << 2);
-
-    a += pn[0] ^ salt.pn[0];
-    b += pn[1] ^ salt.pn[1];
-    c += pn[2] ^ salt.pn[2];
-    HashMix(a, b, c);
-    a += pn[3] ^ salt.pn[3];
-    b += pn[4] ^ salt.pn[4];
-    c += pn[5] ^ salt.pn[5];
-    HashMix(a, b, c);
-    a += pn[6] ^ salt.pn[6];
-    b += pn[7] ^ salt.pn[7];
-    HashFinal(a, b, c);
-
-    return ((((uint64_t)b) << 32) | c);
-}
-
 uint256 ArithToUint256(const arith_uint256 &a)
 {
     uint256 b;
-    // TODO: needs bswap32 on big-endian
-    memcpy(b.begin(), a.pn, a.size());
+    for(int x=0; x<a.WIDTH; ++x)
+        WriteLE32(b.begin() + x*4, a.pn[x]);
     return b;
 }
 arith_uint256 UintToArith256(const uint256 &a)
 {
     arith_uint256 b;
-    // TODO: needs bswap32 on big-endian
-    memcpy(b.pn, a.begin(), a.size());
+    for(int x=0; x<b.WIDTH; ++x)
+        b.pn[x] = ReadLE32(a.begin() + x*4);
     return b;
 }
+
+uint512 ArithToUint512(const arith_uint512 &a)
+{
+    uint512 b;
+    for(int x=0; x<a.WIDTH; ++x)
+        WriteLE32(b.begin() + x*4, a.pn[x]);
+    return b;
+}
+
+arith_uint512 UintToArith512(const uint512 &a)
+{
+    arith_uint512 b;
+    for(int x=0; x<b.WIDTH; ++x)
+        b.pn[x] = ReadLE32(a.begin() + x*4);
+    return b;
+}
+

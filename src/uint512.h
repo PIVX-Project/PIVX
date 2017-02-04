@@ -3,13 +3,13 @@
 #include "arith_uint256.h"
 
 /** 512-bit unsigned big integer. */
-class uint512 : public base_uint<512> {
+class uint512 : public base_blob<512> {
 public:
     uint512() {}
-    uint512(const base_uint<512>& b) : base_uint<512>(b) {}
-    uint512(uint64_t b) : base_uint<512>(b) {}
+    uint512(const base_blob<512>& b) : base_blob<512>(b) {}
     //explicit uint512(const std::vector<unsigned char>& vch) : base_uint<512>(vch) {}
-    explicit uint512(const std::string& str) : base_uint<512>(str) {}
+    explicit uint512(const std::vector<unsigned char>& vch) : base_blob<512>(vch) {}
+    //explicit uint512(const std::string& str) : base_blob<512>(str) {}
 
 	  uint256 trim256() const
 	  {
@@ -22,3 +22,15 @@ public:
           return retval;
 		}
 };
+
+
+/* uint256 from const char *.
+ * This is a separate function because the constructor uint256(const char*) can result
+ * in dangerously catching uint256(0).
+ */
+inline uint512 uint512S(const char *str)
+{
+    uint512 rv;
+    rv.SetHex(str);
+    return rv;
+}

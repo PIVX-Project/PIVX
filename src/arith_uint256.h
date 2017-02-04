@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+class uint512;
 class uint256;
 
 class uint_error : public std::runtime_error {
@@ -268,50 +269,6 @@ public:
         assert(WIDTH >= 2);
         return pn[0] | (uint64_t)pn[1] << 32;
     }
-
-    unsigned int GetSerializeSize(int nType, int nVersion) const
-    {
-        return sizeof(pn);
-    }
-
-    template<typename Stream>
-    void Serialize(Stream& s, int nType, int nVersion) const
-    {
-        s.write((char*)pn, sizeof(pn));
-    }
-
-    template<typename Stream>
-    void Unserialize(Stream& s, int nType, int nVersion)
-    {
-        s.read((char*)pn, sizeof(pn));
-    }
-
-    // Temporary for migration to blob160/256
-    uint64_t GetCheapHash() const
-    {
-        return GetLow64();
-    }
-    void SetNull()
-    {
-        memset(pn, 0, sizeof(pn));
-    }
-    bool IsNull() const
-    {
-        for (int i = 0; i < WIDTH; i++)
-            if (pn[i] != 0)
-                return false;
-        return true;
-    }
-};
-
-/** 160-bit unsigned big integer. */
-class arith_uint160 : public base_uint<160> {
-public:
-    arith_uint160() {}
-    arith_uint160(const base_uint<160>& b) : base_uint<160>(b) {}
-    arith_uint160(uint64_t b) : base_uint<160>(b) {}
-    explicit arith_uint160(const std::string& str) : base_uint<160>(str) {}
-    explicit arith_uint160(const std::vector<unsigned char>& vch) : base_uint<160>(vch) {}
 };
 
 /** 256-bit unsigned big integer. */
@@ -346,10 +303,9 @@ public:
     arith_uint256& SetCompact(uint32_t nCompact, bool *pfNegative = NULL, bool *pfOverflow = NULL);
     uint32_t GetCompact(bool fNegative = false) const;
 
-    uint64_t GetHash(const arith_uint256& salt) const;
-
     friend uint256 ArithToUint256(const arith_uint256 &);
     friend arith_uint256 UintToArith256(const uint256 &);
+    uint64_t GetHash(const arith_uint256& salt) const;
 };
 
 
@@ -364,11 +320,14 @@ public:
 
     uint64_t GetHash(const arith_uint256& salt) const;
 
-    friend uint256 ArithToUint256(const arith_uint256 &);
-    friend arith_uint256 UintToArith256(const uint256 &);
+    friend arith_uint512 UintToArith512(const uint512 &a);
+    friend uint512 ArithToUint512(const arith_uint512 &a);
+
 };
 
 uint256 ArithToUint256(const arith_uint256 &);
 arith_uint256 UintToArith256(const uint256 &);
+uint512 ArithToUint512(const arith_uint512 &);
+arith_uint512 UintToArith512(const uint512 &);
 
 #endif // BITCOIN_UINT256_H

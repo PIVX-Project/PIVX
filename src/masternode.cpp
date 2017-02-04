@@ -175,7 +175,7 @@ uint256 CMasternode::CalculateScore(int mod, int64_t nBlockHeight)
 
     CHashWriter ss2(SER_GETHASH, PROTOCOL_VERSION);
     ss2 << hash;
-    ss2 << aux;
+    ss2 << ArithToUint256(aux);
     arith_uint256 hash3 = UintToArith256(ss2.GetHash());
 
     arith_uint256 r = (hash3 > hash2 ? hash3 - hash2 : hash2 - hash3);
