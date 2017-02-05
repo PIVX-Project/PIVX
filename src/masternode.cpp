@@ -2,7 +2,7 @@
 // Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
+#include "arith_uint256.h"
 #include "masternode.h"
 #include "masternodeman.h"
 #include "obfuscation.h"
@@ -159,28 +159,28 @@ bool CMasternode::UpdateFromNewBroadcast(CMasternodeBroadcast& mnb)
 //
 uint256 CMasternode::CalculateScore(int mod, int64_t nBlockHeight)
 {
-    if(chainActive.Tip() == NULL) return 0;
+	if(chainActive.Tip() == NULL) return uint256();
 
-    uint256 hash = 0;
-    uint256 aux = vin.prevout.hash + vin.prevout.n;
+	  uint256 hash = uint256();
+    arith_uint256 aux = UintToArith256(vin.prevout.hash) + vin.prevout.n;
 
     if(!GetBlockHash(hash, nBlockHeight)) {
         LogPrintf("CalculateScore ERROR - nHeight %d - Returned 0\n", nBlockHeight);
-        return 0;
+        return uint256();
     }
 
     CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
     ss << hash;
-    uint256 hash2 = ss.GetHash();
+    arith_uint256 hash2 = UintToArith256(ss.GetHash());
 
     CHashWriter ss2(SER_GETHASH, PROTOCOL_VERSION);
     ss2 << hash;
-    ss2 << aux;
-    uint256 hash3 = ss2.GetHash();
+    ss2 << ArithToUint256(aux);
+    arith_uint256 hash3 = UintToArith256(ss2.GetHash());
 
-    uint256 r = (hash3 > hash2 ? hash3 - hash2 : hash2 - hash3);
+    arith_uint256 r = (hash3 > hash2 ? hash3 - hash2 : hash2 - hash3);
 
-    return r;
+    return ArithToUint256(r);
 }
 
 void CMasternode::Check(bool forceCheck)
@@ -238,7 +238,7 @@ int64_t CMasternode::SecondsSincePayment() {
     CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
     ss << vin;
     ss << sigTime;
-    uint256 hash =  ss.GetHash();
+    arith_uint256 hash =  UintToArith256(ss.GetHash());
 
     // return some deterministic value for unknown/unpaid but force it to be more than 30 days old
     return month + hash.GetCompact(false);
@@ -254,7 +254,7 @@ int64_t CMasternode::GetLastPaid() {
     CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
     ss << vin;
     ss << sigTime;
-    uint256 hash =  ss.GetHash();
+    arith_uint256 hash =  UintToArith256(ss.GetHash());
 
     // use a deterministic offset to break a tie -- 2.5 minutes
     int64_t nOffset = hash.GetCompact(false) % 150; 
@@ -585,14 +585,14 @@ bool CMasternodeBroadcast::CheckInputsAndAdd(int& nDoS)
     }
 
     // verify that sig time is legit in past
-    // should be at least not earlier than block when 1000 PIV tx got MASTERNODE_MIN_CONFIRMATIONS
-    uint256 hashBlock = 0;
+    // should be at least not earlier than block when 1000 PIVX tx got MASTERNODE_MIN_CONFIRMATIONS
+    uint256 hashBlock = uint256();
     CTransaction tx2;
     GetTransaction(vin.prevout.hash, tx2, hashBlock, true);
     BlockMap::iterator mi = mapBlockIndex.find(hashBlock);
     if (mi != mapBlockIndex.end() && (*mi).second)
     {
-        CBlockIndex* pMNIndex = (*mi).second; // block for 10000 PIV tx -> 1 confirmation
+        CBlockIndex* pMNIndex = (*mi).second; // block for 1000 PIVX tx -> 1 confirmation
         CBlockIndex* pConfIndex = chainActive[pMNIndex->nHeight + MASTERNODE_MIN_CONFIRMATIONS - 1]; // block where tx got MASTERNODE_MIN_CONFIRMATIONS
         if(pConfIndex->GetBlockTime() > sigTime)
         {
@@ -652,7 +652,7 @@ bool CMasternodeBroadcast::Sign(CKey& keyCollateralAddress)
 CMasternodePing::CMasternodePing()
 {
     vin = CTxIn();
-    blockHash = uint256(0);
+    blockHash = uint256();
     sigTime = 0;
     vchSig = std::vector<unsigned char>();
 }

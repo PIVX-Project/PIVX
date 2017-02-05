@@ -1,6 +1,6 @@
 
 
-
+#include "arith_uint256.h"
 #include "sync.h"
 #include "net.h"
 #include "key.h"
@@ -462,7 +462,10 @@ void CleanTransactionLocksList()
 
 uint256 CConsensusVote::GetHash() const
 {
-    return vinMasternode.prevout.hash + vinMasternode.prevout.n + txHash;
+	arith_uint256 n((uint64_t)vinMasternode.prevout.n);
+	arith_uint256 v = UintToArith256(vinMasternode.prevout.hash) + n + UintToArith256(txHash);
+	uint256 retval = ArithToUint256(v);
+	return retval;
 }
 
 
