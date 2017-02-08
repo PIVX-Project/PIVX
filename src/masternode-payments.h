@@ -6,6 +6,7 @@
 #ifndef MASTERNODE_PAYMENTS_H
 #define MASTERNODE_PAYMENTS_H
 
+#include "arith_uint256.h"
 #include "key.h"
 #include "main.h"
 #include "masternode.h"
@@ -254,14 +255,14 @@ public:
     bool CanVote(COutPoint outMasternode, int nBlockHeight) {
         LOCK(cs_mapMasternodePayeeVotes);
 
-        if(mapMasternodesLastVote.count(outMasternode.hash + outMasternode.n)) {
-            if(mapMasternodesLastVote[outMasternode.hash + outMasternode.n] == nBlockHeight) {
+        if(mapMasternodesLastVote.count(ArithToUint256(UintToArith256(outMasternode.hash) + arith_uint256(outMasternode.n)))) {
+  					if(mapMasternodesLastVote[ArithToUint256(UintToArith256(outMasternode.hash) + arith_uint256(outMasternode.n))] == nBlockHeight) {
                 return false;
             }
         }
 
         //record this masternode voted
-        mapMasternodesLastVote[outMasternode.hash + outMasternode.n] = nBlockHeight;
+				mapMasternodesLastVote[ArithToUint256(UintToArith256(outMasternode.hash) + arith_uint256(outMasternode.n))] = nBlockHeight;
         return true;
     }
 
