@@ -3847,6 +3847,10 @@ bool ProcessNewBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDis
     if (!pblock->CheckBlockSignature())
         return error("ProcessNewBlock() : bad proof-of-stake block signature");
 
+    if (pblock->hashPrevBlock.IsNull()) {
+        return error("ProcessNewBlock() : Null previous block");
+    }
+
     //if we get this far, check if the prev block is our prev block, if not then request sync and return false
     BlockMap::iterator mi = mapBlockIndex.find(pblock->hashPrevBlock);
     if (mi == mapBlockIndex.end())
