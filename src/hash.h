@@ -300,7 +300,7 @@ inline uint256 HashQuark(const T1 pbegin, const T1 pend)
     sph_jh512_context        ctx_jh;
     sph_keccak512_context    ctx_keccak;
     sph_skein512_context     ctx_skein;
-    static unsigned char pblank[1];
+    static const unsigned char pblank[1] = {};
 
     arith_uint512 mask(8);
     arith_uint512 zero(0);
