@@ -17,6 +17,8 @@ MultiSendDialog::MultiSendDialog(QWidget *parent) :
     model(0)
 {
     ui->setupUi(this);
+
+    updateCheckBoxes();
 }
 
 MultiSendDialog::~MultiSendDialog()
@@ -40,6 +42,12 @@ void MultiSendDialog::setAddress(const QString &address, QLineEdit *addrEdit)
     addrEdit->setFocus();
 }
 
+void MultiSendDialog::updateCheckBoxes()
+{
+    ui->multiSendStakeCheckBox->setChecked(pwalletMain->fMultiSendStake);
+    ui->multiSendMasternodeCheckBox->setChecked(pwalletMain->fMultiSendMasternodeReward);
+}
+
 void MultiSendDialog::on_addressBookButton_clicked()
 {
     if (model && model->getAddressTableModel())
@@ -55,10 +63,17 @@ void MultiSendDialog::on_viewButton_clicked()
 {
     std::pair<std::string, int> pMultiSend;
     std::string strMultiSendPrint = "";
-    if(pwalletMain->fMultiSend)
-        strMultiSendPrint += "MultiSend Active\n";
+    if(pwalletMain->isMultiSendEnabled())
+    {
+
+        if(pwalletMain->fMultiSendStake)
+            strMultiSendPrint += "MultiSend Active for Stakes\n";
+        else if(pwalletMain->fMultiSendStake)
+            strMultiSendPrint += "MultiSend Active for Masternode Rewards\n";
+    }
     else
         strMultiSendPrint += "MultiSend Not Active\n";
+
     for(int i = 0; i < (int)pwalletMain->vMultiSend.size(); i++)
     {
         pMultiSend = pwalletMain->vMultiSend[i];
@@ -144,10 +159,14 @@ void MultiSendDialog::on_deleteButton_clicked()
         fRemoved = false;
     if(!walletdb.WriteMultiSend(pwalletMain->vMultiSend))
         fRemoved = false;
+
     if(fRemoved)
         ui->message->setText(tr("Removed ") + QString(strAddress.c_str()));
     else
         ui->message->setText(tr("Could not locate address\n"));
+
+    updateCheckBoxes();
+
     return;
 }
 
@@ -156,11 +175,17 @@ void MultiSendDialog::on_activateButton_clicked()
     std::string strRet = "";
     if(pwalletMain->vMultiSend.size() < 1)
         strRet = "Unable to activate MultiSend, check MultiSend vector\n";
+    else if(!(ui->multiSendStakeCheckBox->isChecked() || ui->multiSendMasternodeCheckBox->isChecked()))
+    {
+        strRet = "Need to select to send on stake and/or masternode rewards\n";
+    }
     else if(CBitcoinAddress(pwalletMain->vMultiSend[0].first).IsValid())
     {
-        pwalletMain->fMultiSend = true;
+        pwalletMain->fMultiSendStake = ui->multiSendStakeCheckBox->isChecked();
+        pwalletMain->fMultiSendMasternodeReward = ui->multiSendMasternodeCheckBox->isChecked();
+
         CWalletDB walletdb(pwalletMain->strWalletFile);
-        if(!walletdb.WriteMSettings(true, pwalletMain->nLastMultiSendHeight))
+        if(!walletdb.WriteMSettings(pwalletMain->fMultiSendStake, pwalletMain->fMultiSendMasternodeReward, pwalletMain->nLastMultiSendHeight))
             strRet = "MultiSend activated but writing settings to DB failed";
         else
             strRet = "MultiSend activated";
@@ -176,9 +201,9 @@ void MultiSendDialog::on_activateButton_clicked()
 void MultiSendDialog::on_disableButton_clicked()
 {
     std::string strRet = "";
-    pwalletMain->fMultiSend = false;
+    pwalletMain->setMultiSendDisabled();
     CWalletDB walletdb(pwalletMain->strWalletFile);
-    if(!walletdb.WriteMSettings(false, pwalletMain->nLastMultiSendHeight))
+    if(!walletdb.WriteMSettings(false, false, pwalletMain->nLastMultiSendHeight))
         strRet = "MultiSend deactivated but writing settings to DB failed";
     else
         strRet = "MultiSend deactivated";

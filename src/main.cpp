@@ -3887,9 +3887,9 @@ bool ProcessNewBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDis
         }
     }
 
-    // If turned on MultiSend will send a transaction (or more) on the 30th confirmation of a stake
-     if (pwalletMain->fMultiSend)
-         pwalletMain->MultiSend();
+    // If turned on MultiSend will send a transaction (or more) on the after maturity of a stake
+     if (pwalletMain->isMultiSendEnabled())
+        pwalletMain->MultiSend();
 
 
     LogPrintf("%s : ACCEPTED\n", __func__);

@@ -201,7 +201,8 @@ public:
 
     //MultiSend
     std::vector<std::pair<std::string, int> > vMultiSend;
-    bool fMultiSend;
+    bool fMultiSendStake;
+    bool fMultiSendMasternodeReward;
     bool fMultiSendNotify;
     std::string strMultiSendChangeAddress;
     int nLastMultiSendHeight;
@@ -247,11 +248,23 @@ public:
 
         //MultiSend
         vMultiSend.clear();
-        fMultiSend = false;
+        fMultiSendStake = false;
+        fMultiSendMasternodeReward = false;
         fMultiSendNotify = false;
         strMultiSendChangeAddress = "";
         nLastMultiSendHeight = 0;
         vDisabledAddresses.clear();
+    }
+
+    bool isMultiSendEnabled()
+    {
+        return fMultiSendMasternodeReward || fMultiSendStake;
+    }
+
+    void setMultiSendDisabled()
+    {
+        fMultiSendMasternodeReward = false;
+        fMultiSendStake = false;
     }
 
     std::map<uint256, CWalletTx> mapWallet;

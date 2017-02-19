@@ -12,6 +12,7 @@ class QLineEdit;
 class MultiSendDialog : public QDialog
 {
     Q_OBJECT
+    void updateCheckBoxes();
 public:
     explicit MultiSendDialog(QWidget *parent = 0);
     ~MultiSendDialog();

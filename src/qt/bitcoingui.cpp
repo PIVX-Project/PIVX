@@ -1094,7 +1094,7 @@ bool BitcoinGUI::eventFilter(QObject *object, QEvent *event)
 void BitcoinGUI::setStakingStatus()
 {
     if(pwalletMain)
-        fMultiSend = pwalletMain->fMultiSend;
+        fMultiSend = pwalletMain->isMultiSendEnabled();
 
     if(nLastCoinStakeSearchInterval)
     {

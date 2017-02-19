@@ -2224,7 +2224,8 @@ Array printMultiSend()
 {
     Array ret;
     Object act;
-    act.push_back(Pair("MultiSend Activated?", pwalletMain->fMultiSend));
+    act.push_back(Pair("MultiSendStake Activated?", pwalletMain->fMultiSendStake));
+    act.push_back(Pair("MultiSendMasternode Activated?", pwalletMain->fMultiSendMasternodeReward));
     ret.push_back(act);
 
     if(pwalletMain->vDisabledAddresses.size() >= 1)
@@ -2321,19 +2322,37 @@ Value multisend(const Array &params, bool fHelp)
                         strRet += "erased MultiSend vector from database & ";
                 }
                 pwalletMain->vMultiSend.clear();
-                pwalletMain->fMultiSend = false;
+                pwalletMain->setMultiSendDisabled();
                 strRet += "cleared MultiSend vector from RAM";
                 return strRet;
             }
         }
-        else if (strCommand == "enable" || strCommand == "activate" )
+        else if (strCommand == "enablestake" || strCommand == "activatestake" )
         {
             if(pwalletMain->vMultiSend.size() < 1)
                 return "Unable to activate MultiSend, check MultiSend vector";
             if(CBitcoinAddress(pwalletMain->vMultiSend[0].first).IsValid())
             {
-                pwalletMain->fMultiSend = true;
-                if(!walletdb.WriteMSettings(true, pwalletMain->nLastMultiSendHeight))
+                pwalletMain->fMultiSendStake = true;
+
+                if(!walletdb.WriteMSettings(true, pwalletMain->fMultiSendMasternodeReward, pwalletMain->nLastMultiSendHeight))
+                    return "MultiSend activated but writing settings to DB failed";
+                else
+                    return "MultiSend activated";
+            }
+            else
+                return "Unable to activate MultiSend, check MultiSend vector";
+        }
+        else if(strCommand == "enablemasternode" || strCommand == "activatemasternode")
+        {
+            if(pwalletMain->vMultiSend.size() < 1)
+                return "Unable to activate MultiSend, check MultiSend vector";
+
+            if(CBitcoinAddress(pwalletMain->vMultiSend[0].first).IsValid())
+            {
+                pwalletMain->fMultiSendMasternodeReward = true;
+
+                if(!walletdb.WriteMSettings(pwalletMain->fMultiSendStake, true, pwalletMain->nLastMultiSendHeight))
                     return "MultiSend activated but writing settings to DB failed";
                 else
                     return "MultiSend activated";
@@ -2343,8 +2362,8 @@ Value multisend(const Array &params, bool fHelp)
         }
         else if (strCommand == "disable" || strCommand == "deactivate" )
         {
-            pwalletMain->fMultiSend = false;
-            if(!walletdb.WriteMSettings(false, pwalletMain->nLastMultiSendHeight))
+            pwalletMain->setMultiSendDisabled();
+            if(!walletdb.WriteMSettings(false, false, pwalletMain->nLastMultiSendHeight))
                 return "MultiSend deactivated but writing settings to DB failed";
 
             return "MultiSend deactivated";
