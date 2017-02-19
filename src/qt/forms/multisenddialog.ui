@@ -20,7 +20,7 @@
    <property name="geometry">
     <rect>
      <x>170</x>
-     <y>120</y>
+     <y>130</y>
      <width>201</width>
      <height>20</height>
     </rect>
@@ -36,7 +36,7 @@
    <property name="geometry">
     <rect>
      <x>170</x>
-     <y>150</y>
+     <y>160</y>
      <width>401</width>
      <height>21</height>
     </rect>
@@ -61,7 +61,7 @@
     <number>1</number>
    </property>
    <property name="text">
-    <string>MultiSend allows you to automatically send up to 100% of your stake to a list of other PIVX addresses after it matures.
+    <string>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other PIVX addresses after it matures.
 To Add: enter percentage to give and PIVX address to add to the MultiSend vector.
 To Delete: Enter address to delete and press delete.
 MultiSend will not be activated unless you have clicked Activate</string>
@@ -125,7 +125,7 @@ MultiSend will not be activated unless you have clicked Activate</string>
    <property name="geometry">
     <rect>
      <x>570</x>
-     <y>150</y>
+     <y>160</y>
      <width>28</width>
      <height>21</height>
     </rect>
@@ -151,7 +151,7 @@ MultiSend will not be activated unless you have clicked Activate</string>
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>120</y>
+     <y>130</y>
      <width>121</width>
      <height>20</height>
     </rect>
@@ -167,7 +167,7 @@ MultiSend will not be activated unless you have clicked Activate</string>
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>150</y>
+     <y>160</y>
      <width>111</width>
      <height>16</height>
     </rect>
@@ -232,6 +232,32 @@ MultiSend will not be activated unless you have clicked Activate</string>
    <property name="text">
     <string>View MultiSend</string>
    </property>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>100</y>
+     <width>351</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QCheckBox" name="multiSendStakeCheckBox">
+      <property name="text">
+       <string>Send For Stakes</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="multiSendMasternodeCheckBox">
+      <property name="text">
+       <string>Send For Masternode Rewards</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources>
