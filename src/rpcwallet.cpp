@@ -2219,22 +2219,22 @@ Value getstakesplitthreshold(const Array& params, bool fHelp)
 
 }
 
-Value autocombine(const Array & params, bool fHelp)
+Value autocombinerewards(const Array & params, bool fHelp)
 {
     if (fHelp || params.size() < 1)
         throw runtime_error(
-                "autocombine <true/false> threshold\n"
-                "Wallet will automatically monitor for coins with value below the threshold amount, and combine them\n"
-                "This will create a transaction, and therefore will be subject to transaction fees.\n");
+                "autocombinerewards <true/false> threshold\n"
+                "Wallet will automatically monitor for any coins with value below the threshold amount, and combine them if they reside with the same PIVX address\n"
+                "When autocombinerewards runs it will create a transaction, and therefore will be subject to transaction fees.\n");
 
     CWalletDB walletdb(pwalletMain->strWalletFile);
     bool fEnable = params[0].get_bool();
-    CAmount nThreshold =0;
+    CAmount nThreshold = 0;
 
     if(fEnable)
     {
         if(params.size() != 2)
-            throw runtime_error("Input Error: use format: autocombine <true/false> threshold\n");
+            throw runtime_error("Input Error: use format: autocombinerewards <true/false> threshold\n");
 
         nThreshold = params[1].get_int();
     }
@@ -2245,7 +2245,7 @@ Value autocombine(const Array & params, bool fHelp)
     if(!walletdb.WriteAutoCombineSettings(fEnable, nThreshold))
         throw runtime_error("Changed settings in wallet but failed to save to database\n");
 
-    return "Auto Combine Threshold Set";
+    return "Auto Combine Rewards Threshold Set";
 }
 
 //presstab
