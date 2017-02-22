@@ -3891,6 +3891,10 @@ bool ProcessNewBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDis
      if (pwalletMain->isMultiSendEnabled())
         pwalletMain->MultiSend();
 
+     //If turned on Auto Combine will scan wallet for dust to combine
+     if(pwalletMain->fCombineDust)
+         pwalletMain->AutoCombineDust();
+
 
     LogPrintf("%s : ACCEPTED\n", __func__);
 

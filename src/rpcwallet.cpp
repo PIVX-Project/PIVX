@@ -2219,7 +2219,36 @@ Value getstakesplitthreshold(const Array& params, bool fHelp)
 
 }
 
-//presstab HyperStake
+Value autocombine(const Array & params, bool fHelp)
+{
+    if (fHelp || params.size() < 1)
+        throw runtime_error(
+                "autocombine <true/false> threshold\n"
+                "Wallet will automatically monitor for coins with value below the threshold amount, and combine them\n"
+                "This will create a transaction, and therefore will be subject to transaction fees.\n");
+
+    CWalletDB walletdb(pwalletMain->strWalletFile);
+    bool fEnable = params[0].get_bool();
+    CAmount nThreshold =0;
+
+    if(fEnable)
+    {
+        if(params.size() != 2)
+            throw runtime_error("Input Error: use format: autocombine <true/false> threshold\n");
+
+        nThreshold = params[1].get_int();
+    }
+
+    pwalletMain->fCombineDust = fEnable;
+    pwalletMain->nAutoCombineThreshold = nThreshold;
+
+    if(!walletdb.WriteAutoCombineSettings(fEnable, nThreshold))
+        throw runtime_error("Changed settings in wallet but failed to save to database\n");
+
+    return "Auto Combine Threshold Set";
+}
+
+//presstab
 Array printMultiSend()
 {
     Array ret;
@@ -2292,7 +2321,6 @@ unsigned int sumMultiSend()
     return sum;
 }
 
-// presstab HyperStake
 Value multisend(const Array &params, bool fHelp)
 {
     CWalletDB walletdb(pwalletMain->strWalletFile);

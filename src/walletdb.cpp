@@ -214,6 +214,14 @@ bool CWalletDB::EraseMSDisabledAddresses(std::vector<std::string> vDisabledAddre
     }
     return ret;
 }
+bool CWalletDB::WriteAutoCombineSettings(bool fEnable, CAmount nCombineThreshold)
+{
+    nWalletDBUpdated++;
+    std::pair<bool, CAmount> pSettings;
+    pSettings.first = fEnable;
+    pSettings.second = nCombineThreshold;
+    return Write(std::string("autocombinesettings"), pSettings, true);
+}
 
 bool CWalletDB::WriteDefaultKey(const CPubKey& vchPubKey)
 {
@@ -677,6 +685,13 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
             std::string strDisabledAddress;
             ssValue >> strDisabledAddress;
             pwallet->vDisabledAddresses.push_back(strDisabledAddress);
+        }
+        else if(strType == "autocombinesettings")
+        {
+            std::pair<bool, CAmount> pSettings;
+            ssValue >> pSettings;
+            pwallet->fCombineDust = pSettings.first;
+            pwallet->nAutoCombineThreshold = pSettings.second;
         }
         else if (strType == "destdata")
         {
