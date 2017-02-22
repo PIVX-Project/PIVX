@@ -323,6 +323,7 @@ static const CRPCCommand vRPCCommands[] =
 
     /* Wallet */
     { "wallet",             "addmultisigaddress",     &addmultisigaddress,     true,      false,      true },
+    { "wallet",             "autocombine",            &autocombine,            false,     false,      true },
     { "wallet",             "backupwallet",           &backupwallet,           true,      false,      true },
     { "wallet",             "dumpprivkey",            &dumpprivkey,            true,      false,      true },
     { "wallet",             "dumpwallet",             &dumpwallet,             true,      false,      true },
@@ -337,6 +338,7 @@ static const CRPCCommand vRPCCommands[] =
     { "wallet",             "getrawchangeaddress",    &getrawchangeaddress,    true,      false,      true },
     { "wallet",             "getreceivedbyaccount",   &getreceivedbyaccount,   false,     false,      true },
     { "wallet",             "getreceivedbyaddress",   &getreceivedbyaddress,   false,     false,      true },
+    { "wallet",             "getstakesplitthreshold", &getstakesplitthreshold, false,     false,      true },
     { "wallet",             "gettransaction",         &gettransaction,         false,     false,      true },
     { "wallet",             "getunconfirmedbalance",  &getunconfirmedbalance,  false,     false,      true },
     { "wallet",             "getwalletinfo",          &getwalletinfo,          false,     false,      true },
@@ -355,19 +357,18 @@ static const CRPCCommand vRPCCommands[] =
     { "wallet",             "listunspent",            &listunspent,            false,     false,      true },
     { "wallet",             "lockunspent",            &lockunspent,            true,      false,      true },
     { "wallet",             "move",                   &movecmd,                false,     false,      true },
+    { "wallet",             "multisend",              &multisend,              false,     false,      true },
     { "wallet",             "sendfrom",               &sendfrom,               false,     false,      true },
     { "wallet",             "sendmany",               &sendmany,               false,     false,      true },
     { "wallet",             "sendtoaddress",          &sendtoaddress,          false,     false,      true },
     { "wallet",             "sendtoaddressix",        &sendtoaddressix,        false,     false,      true },
     { "wallet",             "setaccount",             &setaccount,             true,      false,      true },
+    { "wallet",             "setstakesplitthreshold", &setstakesplitthreshold, false,     false,      true },
     { "wallet",             "settxfee",               &settxfee,               true,      false,      true },
     { "wallet",             "signmessage",            &signmessage,            true,      false,      true },
     { "wallet",             "walletlock",             &walletlock,             true,      false,      true },
     { "wallet",             "walletpassphrasechange", &walletpassphrasechange, true,      false,      true },
-    { "wallet",             "walletpassphrase",       &walletpassphrase,       true,      false,      true },
-    { "wallet",             "setstakesplitthreshold", &setstakesplitthreshold, false,     false,      true },
-    { "wallet",             "getstakesplitthreshold", &getstakesplitthreshold, false,     false,      true },
-    { "wallet",             "multisend",              &multisend,              false,     false,      true },
+    { "wallet",             "walletpassphrase",       &walletpassphrase,       true,      false,      true }, 
 #endif // ENABLE_WALLET
 };
 

@@ -3501,6 +3501,78 @@ bool CWallet::GetDestData(const CTxDestination &dest, const std::string &key, st
     return false;
 }
 
+void CWallet::AutoCombineDust()
+{
+    if (IsInitialBlockDownload() || IsLocked())
+    {
+        return;
+    }
+
+    std::vector<COutput> vCoins, vDustCoins;
+    AvailableCoins(vCoins);
+
+    CCoinControl* coinControl = new CCoinControl();
+
+    CAmount nAmount = 0;
+    const isminefilter filter = ISMINE_SPENDABLE;
+    BOOST_FOREACH(const COutput& out, vCoins)
+    {
+        CAmount nValue = out.tx->vout[out.i].nValue;
+
+        if(out.tx->IsCoinStake() && out.tx->GetDepthInMainChain() < COINBASE_MATURITY + 1)
+            continue;
+
+        if(nValue > nAutoCombineThreshold * COIN)
+            continue;
+
+        COutPoint outpt(out.tx->GetHash(), out.i);
+        coinControl->Select(outpt);
+        vDustCoins.push_back(out);
+        nAmount += nValue;
+    }
+
+    //if no dust inputs found then return
+    if(!coinControl->HasSelected())
+        return;
+
+    //use the first address in the selection as the address to send to
+    CTxDestination address;
+    if(!ExtractDestination(vDustCoins[0].tx->vout[vDustCoins[0].i].scriptPubKey, address))
+    {
+        LogPrintf("AutoCombineDust: failed to extract destination\n");
+        return;
+    }
+
+    vector<pair<CScript, int64_t> > vecSend;
+    CScript scriptPubKey = GetScriptForDestination(address);
+    vecSend.push_back(make_pair(scriptPubKey, nAmount));
+
+    // Create the transaction and commit it to the network
+    CWalletTx wtx;
+    CReserveKey keyChange(this); // this change address does not end up being used, because change is returned with coin control switch
+    string strErr;
+    int64_t nFeeRet = 0;
+
+    //get the fee amount
+    CWalletTx wtxdummy;
+    CreateTransaction(vecSend, wtxdummy, keyChange, nFeeRet, strErr, coinControl, ALL_COINS, false, CAmount(0));
+    vecSend[0].second = nAmount - nFeeRet - 1;
+
+    if (!CreateTransaction(vecSend, wtx, keyChange, nFeeRet, strErr, coinControl, ALL_COINS, false, CAmount(0)))
+    {
+        LogPrintf("AutoCombineDust createtransaction failed, reason: %s\n", strErr);
+        return;
+    }
+
+    if(!CommitTransaction(wtx, keyChange))
+    {
+        LogPrintf("AutoCombineDust transaction commit failed\n");
+        return;
+    }
+
+    delete coinControl;
+}
+
 bool CWallet::MultiSend()
 {
     if (IsInitialBlockDownload() || IsLocked())
@@ -3523,20 +3595,11 @@ bool CWallet::MultiSend()
         //need output with precise confirm count - this is how we identify which is the output to send
         if(out.tx->GetDepthInMainChain() != COINBASE_MATURITY + 1)
             continue;
-        LogPrintf("Multisend found potential to send \n");
 
         bool sendMSonMNReward = fMultiSendMasternodeReward && out.tx->vout[out.i].IsMasternodeReward(out.tx);
-        if(sendMSonMNReward)
-            LogPrintf("Masternode reward multisend is true \n");
         bool sendMSOnStake = fMultiSendStake && out.tx->IsCoinStake() && !sendMSonMNReward; //output is either mnreward or stake reward, not both
-        if(sendMSOnStake)
-            LogPrintf("Stake multisend is true \n");
 
         if(!(sendMSOnStake || sendMSonMNReward))
-            continue;
-
-        //check if we already sent for this case
-        if((stakeSent > 0 && sendMSOnStake) || (mnSent > 0 && sendMSonMNReward))
             continue;
 
         CTxDestination address;
