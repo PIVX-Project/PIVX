@@ -1614,6 +1614,27 @@ void CWallet::AvailableCoins(vector<COutput>& vCoins, bool fOnlyConfirmed, const
     }
 }
 
+map<CBitcoinAddress, vector<COutput> > CWallet::AvailableCoinsByAddress(bool fConfirmed, CAmount maxCoinValue)
+{
+    vector<COutput> vCoins;
+    AvailableCoins(vCoins, fConfirmed);
+
+    map<CBitcoinAddress, vector<COutput> > mapCoins;
+    BOOST_FOREACH(COutput out, vCoins)
+    {
+        if(maxCoinValue > 0 && out.tx->vout[out.i].nValue > maxCoinValue)
+            continue;
+
+        CTxDestination address;
+        if(!ExtractDestination(out.tx->vout[out.i].scriptPubKey, address))
+            continue;
+
+        mapCoins[CBitcoinAddress(address)].push_back(out);
+    }
+
+    return mapCoins;
+}
+
 static void ApproximateBestSubset(vector<pair<CAmount, pair<const CWalletTx*,unsigned int> > >vValue, const CAmount& nTotalLower, const CAmount& nTargetValue,
                                   vector<char>& vfBest, CAmount& nBest, int iterations = 1000)
 {
@@ -3508,69 +3529,72 @@ void CWallet::AutoCombineDust()
         return;
     }
 
-    std::vector<COutput> vCoins, vDustCoins;
-    AvailableCoins(vCoins);
+    map<CBitcoinAddress, vector<COutput>> mapCoinsByAddress = AvailableCoinsByAddress(true, 0);
 
-    CCoinControl* coinControl = new CCoinControl();
-
-    CAmount nAmount = 0;
-    const isminefilter filter = ISMINE_SPENDABLE;
-    BOOST_FOREACH(const COutput& out, vCoins)
+    //coins are sectioned by address. This combination code only wants to combine inputs that belong to the same address
+    for(map<CBitcoinAddress, vector<COutput> >::iterator it = mapCoinsByAddress.begin(); it != mapCoinsByAddress.end(); it++)
     {
-        CAmount nValue = out.tx->vout[out.i].nValue;
+        vector<COutput> vCoins, vRewardCoins;
+        vCoins= it->second;
 
-        if(out.tx->IsCoinStake() && out.tx->GetDepthInMainChain() < COINBASE_MATURITY + 1)
+        //find masternode rewards that need to be combined
+        CCoinControl* coinControl = new CCoinControl();
+        CAmount nTotalRewardsValue = 0;
+        BOOST_FOREACH(const COutput& out, vCoins)
+        {
+            //no coins should get this far if they dont have proper maturity, this is double checking
+            if(out.tx->IsCoinStake() && out.tx->GetDepthInMainChain() < COINBASE_MATURITY + 1)
+                continue;
+
+            if(out.Value() > nAutoCombineThreshold * COIN)
+                continue;
+
+            COutPoint outpt(out.tx->GetHash(), out.i);
+            coinControl->Select(outpt);
+            vRewardCoins.push_back(out);
+            nTotalRewardsValue += out.Value();
+        }
+
+        //if no inputs found then return
+        if(!coinControl->HasSelected())
             continue;
 
-        if(nValue > nAutoCombineThreshold * COIN)
+        //we cannot combine one coin with itself
+        if(vRewardCoins.size() <= 1)
             continue;
 
-        COutPoint outpt(out.tx->GetHash(), out.i);
-        coinControl->Select(outpt);
-        vDustCoins.push_back(out);
-        nAmount += nValue;
+        vector<pair<CScript, int64_t> > vecSend;
+        CScript scriptPubKey = GetScriptForDestination(it->first.Get());
+        vecSend.push_back(make_pair(scriptPubKey, nTotalRewardsValue));
+
+        // Create the transaction and commit it to the network
+        CWalletTx wtx;
+        CReserveKey keyChange(this); // this change address does not end up being used, because change is returned with coin control switch
+        string strErr;
+        int64_t nFeeRet = 0;
+
+        //get the fee amount
+        CWalletTx wtxdummy;
+        CreateTransaction(vecSend, wtxdummy, keyChange, nFeeRet, strErr, coinControl, ALL_COINS, false, CAmount(0));
+        vecSend[0].second = nTotalRewardsValue - nFeeRet - 500;
+
+        if (!CreateTransaction(vecSend, wtx, keyChange, nFeeRet, strErr, coinControl, ALL_COINS, false, CAmount(0)))
+        {
+            LogPrintf("AutoCombineDust createtransaction failed, reason: %s\n", strErr);
+            continue;
+        }
+
+        if(!CommitTransaction(wtx, keyChange))
+        {
+            LogPrintf("AutoCombineDust transaction commit failed\n");
+            continue;
+        }
+
+        LogPrintf("AutoCombineDust sent transaction\n");
+
+        delete coinControl;
     }
 
-    //if no dust inputs found then return
-    if(!coinControl->HasSelected())
-        return;
-
-    //use the first address in the selection as the address to send to
-    CTxDestination address;
-    if(!ExtractDestination(vDustCoins[0].tx->vout[vDustCoins[0].i].scriptPubKey, address))
-    {
-        LogPrintf("AutoCombineDust: failed to extract destination\n");
-        return;
-    }
-
-    vector<pair<CScript, int64_t> > vecSend;
-    CScript scriptPubKey = GetScriptForDestination(address);
-    vecSend.push_back(make_pair(scriptPubKey, nAmount));
-
-    // Create the transaction and commit it to the network
-    CWalletTx wtx;
-    CReserveKey keyChange(this); // this change address does not end up being used, because change is returned with coin control switch
-    string strErr;
-    int64_t nFeeRet = 0;
-
-    //get the fee amount
-    CWalletTx wtxdummy;
-    CreateTransaction(vecSend, wtxdummy, keyChange, nFeeRet, strErr, coinControl, ALL_COINS, false, CAmount(0));
-    vecSend[0].second = nAmount - nFeeRet - 1;
-
-    if (!CreateTransaction(vecSend, wtx, keyChange, nFeeRet, strErr, coinControl, ALL_COINS, false, CAmount(0)))
-    {
-        LogPrintf("AutoCombineDust createtransaction failed, reason: %s\n", strErr);
-        return;
-    }
-
-    if(!CommitTransaction(wtx, keyChange))
-    {
-        LogPrintf("AutoCombineDust transaction commit failed\n");
-        return;
-    }
-
-    delete coinControl;
 }
 
 bool CWallet::MultiSend()
