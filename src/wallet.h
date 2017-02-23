@@ -615,7 +615,7 @@ public:
 
     void Init()
     {
-        hashBlock = uint256();
+        hashBlock = 0;
         nIndex = -1;
         fMerkleVerified = false;
     }

@@ -484,13 +484,13 @@ CMasternode* CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight
     //  -- (chance per block * chances before IsScheduled will fire)
     int nTenthNetwork = CountEnabled()/10;
     int nCountTenth = 0; 
-    uint256 nHigh = uint256();
+    uint256 nHigh = 0;
     BOOST_FOREACH (PAIRTYPE(int64_t, CTxIn)& s, vecMasternodeLastPaid){
         CMasternode* pmn = Find(s.second);
         if(!pmn) break;
 
         uint256 n = pmn->CalculateScore(1, nBlockHeight-100);
-        if(UintToArith256(n) > UintToArith256(nHigh)) {
+        if(n > nHigh){
             nHigh = n;
             pBestMasternode = pmn;
         }
@@ -543,7 +543,7 @@ CMasternode* CMasternodeMan::GetCurrentMasterNode(int mod, int64_t nBlockHeight,
         if(mn.protocolVersion < minProtocol || !mn.IsEnabled()) continue;
 
         // calculate the score for each Masternode
-        arith_uint256 n = UintToArith256(mn.CalculateScore(mod, nBlockHeight));
+        uint256 n = mn.CalculateScore(mod, nBlockHeight);
         int64_t n2 = n.GetCompact(false);
 
         // determine the winner
@@ -561,7 +561,7 @@ int CMasternodeMan::GetMasternodeRank(const CTxIn& vin, int64_t nBlockHeight, in
     std::vector<pair<int64_t, CTxIn> > vecMasternodeScores;
 
     //make sure we know about this block
-    uint256 hash = uint256();
+    uint256 hash = 0;
     if(!GetBlockHash(hash, nBlockHeight)) return -1;
 
     // scan for winner
@@ -571,7 +571,7 @@ int CMasternodeMan::GetMasternodeRank(const CTxIn& vin, int64_t nBlockHeight, in
             mn.Check();
             if(!mn.IsEnabled()) continue;
         }
-        arith_uint256 n = UintToArith256(mn.CalculateScore(1, nBlockHeight));
+        uint256 n = mn.CalculateScore(1, nBlockHeight);
         int64_t n2 = n.GetCompact(false);
 
         vecMasternodeScores.push_back(make_pair(n2, mn.vin));
@@ -596,7 +596,7 @@ std::vector<pair<int, CMasternode> > CMasternodeMan::GetMasternodeRanks(int64_t 
     std::vector<pair<int, CMasternode> > vecMasternodeRanks;
 
     //make sure we know about this block
-    uint256 hash = uint256();
+    uint256 hash = 0;
     if(!GetBlockHash(hash, nBlockHeight)) return vecMasternodeRanks;
 
     // scan for winner
@@ -609,7 +609,7 @@ std::vector<pair<int, CMasternode> > CMasternodeMan::GetMasternodeRanks(int64_t 
             continue;
         }
 
-        arith_uint256 n = UintToArith256(mn.CalculateScore(1, nBlockHeight));
+        uint256 n = mn.CalculateScore(1, nBlockHeight);
         int64_t n2 = n.GetCompact(false);
 
         vecMasternodeScores.push_back(make_pair(n2, mn));
@@ -639,7 +639,7 @@ CMasternode* CMasternodeMan::GetMasternodeByRank(int nRank, int64_t nBlockHeight
             if(!mn.IsEnabled()) continue;
         }
 
-        arith_uint256 n = UintToArith256(mn.CalculateScore(1, nBlockHeight));
+        uint256 n = mn.CalculateScore(1, nBlockHeight);
         int64_t n2 = n.GetCompact(false);
 
         vecMasternodeScores.push_back(make_pair(n2, mn.vin));
@@ -960,7 +960,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
 
             // verify that sig time is legit in past
             // should be at least not earlier than block when 1000 PIVX tx got MASTERNODE_MIN_CONFIRMATIONS
-            uint256 hashBlock = uint256();
+            uint256 hashBlock = 0;
             CTransaction tx2;
             GetTransaction(vin.prevout.hash, tx2, hashBlock, true);
             BlockMap::iterator mi = mapBlockIndex.find(hashBlock);

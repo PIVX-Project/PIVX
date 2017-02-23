@@ -12,7 +12,6 @@
 #include "crypto/sha256.h"
 #include "serialize.h"
 #include "uint256.h"
-#include "uint512.h"
 #include "version.h"
 
 #include "crypto/sph_blake.h"
@@ -300,10 +299,10 @@ inline uint256 HashQuark(const T1 pbegin, const T1 pend)
     sph_jh512_context        ctx_jh;
     sph_keccak512_context    ctx_keccak;
     sph_skein512_context     ctx_skein;
-    static const unsigned char pblank[1] = {};
+    static unsigned char pblank[1];
 
-    arith_uint512 mask(8);
-    arith_uint512 zero(0);
+    uint512 mask = 8;
+    uint512 zero = 0;
     
     uint512 hash[9];
 
@@ -317,7 +316,7 @@ inline uint256 HashQuark(const T1 pbegin, const T1 pend)
     sph_bmw512 (&ctx_bmw, static_cast<const void*>(&hash[0]), 64);
     sph_bmw512_close(&ctx_bmw, static_cast<void*>(&hash[1]));
 
-    if ((UintToArith512(hash[1]) & mask) != zero)
+    if ((hash[1] & mask) != zero)
     {
         sph_groestl512_init(&ctx_groestl);
         // ZGROESTL;
@@ -342,7 +341,7 @@ inline uint256 HashQuark(const T1 pbegin, const T1 pend)
     sph_jh512 (&ctx_jh, static_cast<const void*>(&hash[3]), 64);
     sph_jh512_close(&ctx_jh, static_cast<void*>(&hash[4]));
 
-    if ((UintToArith512(hash[4]) & mask) != zero)
+    if ((hash[4] & mask) != zero)
     {
         sph_blake512_init(&ctx_blake);
         // ZBLAKE;
@@ -367,7 +366,7 @@ inline uint256 HashQuark(const T1 pbegin, const T1 pend)
     sph_skein512 (&ctx_skein, static_cast<const void*>(&hash[6]), 64);
     sph_skein512_close(&ctx_skein, static_cast<void*>(&hash[7]));
 
-    if ((UintToArith512(hash[7]) & mask) != zero)
+    if ((hash[7] & mask) != zero)
     {
         sph_keccak512_init(&ctx_keccak);
         // ZKECCAK;

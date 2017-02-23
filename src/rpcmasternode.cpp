@@ -362,7 +362,7 @@ Value masternode(const Array& params, bool fHelp)
         BOOST_FOREACH(CMasternodeConfig::CMasternodeEntry mne, masternodeConfig.getEntries()) {
             std::string errorMessage;
 
-            CTxIn vin = CTxIn(uint256S(mne.getTxHash()), uint32_t(atoi(mne.getOutputIndex().c_str())));
+            CTxIn vin = CTxIn(uint256(mne.getTxHash()), uint32_t(atoi(mne.getOutputIndex().c_str())));
             CMasternode *pmn = mnodeman.Find(vin);
 
             if(strCommand == "start-missing" && pmn) continue;
@@ -414,7 +414,7 @@ Value masternode(const Array& params, bool fHelp)
         Object resultObj;
 
         BOOST_FOREACH(CMasternodeConfig::CMasternodeEntry mne, masternodeConfig.getEntries()) {
-            CTxIn vin = CTxIn(uint256S(mne.getTxHash()), uint32_t(atoi(mne.getOutputIndex().c_str())));
+            CTxIn vin = CTxIn(uint256(mne.getTxHash()), uint32_t(atoi(mne.getOutputIndex().c_str())));
             CMasternode *pmn = mnodeman.Find(vin);
 
             std::string strStatus = pmn ? pmn->Status() : "MISSING";
@@ -492,11 +492,11 @@ Value masternode(const Array& params, bool fHelp)
 
         std::vector<CMasternode> vMasternodes = mnodeman.GetFullMasternodeVector();
         for(int nHeight = chainActive.Tip()->nHeight-nLast; nHeight < chainActive.Tip()->nHeight+20; nHeight++){
-  					uint256 nHigh = uint256();
+            uint256 nHigh = 0;
             CMasternode *pBestMasternode = NULL;
             BOOST_FOREACH(CMasternode& mn, vMasternodes) {
                 uint256 n = mn.CalculateScore(1, nHeight-100);
-                if(UintToArith256(n) > UintToArith256(nHigh)){
+                if(n > nHigh){
                     nHigh = n;
                     pBestMasternode = &mn;
                 }

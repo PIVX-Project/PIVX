@@ -553,15 +553,15 @@ void BitcoinMiner(CWallet *pwallet, bool fProofOfStake)
         // Search
         //
         int64_t nStart = GetTime();
-        arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
+        uint256 hashTarget = uint256().SetCompact(pblock->nBits);
         while (true)
         {
             unsigned int nHashesDone = 0;
 
-            arith_uint256 hash;
+            uint256 hash;
             while (true)
             {
-                hash = UintToArith256(pblock->GetHash());
+                hash = pblock->GetHash();
                 if (hash <= hashTarget)
                 {
                     // Found a solution

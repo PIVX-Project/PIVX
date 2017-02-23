@@ -54,8 +54,8 @@ public:
     void SetNull()
     {
         nVersion = CBlockHeader::CURRENT_VERSION;
-        hashPrevBlock.SetNull();
-        hashMerkleRoot.SetNull();
+        hashPrevBlock = 0;
+        hashMerkleRoot = 0;
         nTime = 0;
         nBits = 0;
         nNonce = 0;
