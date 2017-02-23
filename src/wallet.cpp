@@ -3620,7 +3620,8 @@ bool CWallet::MultiSend()
         if(out.tx->GetDepthInMainChain() != COINBASE_MATURITY + 1)
             continue;
 
-        bool sendMSonMNReward = fMultiSendMasternodeReward && out.tx->vout[out.i].IsMasternodeReward(out.tx);
+        COutPoint outpoint(out.tx->GetHash(), out.i);
+        bool sendMSonMNReward = fMultiSendMasternodeReward && outpoint.IsMasternodeReward(out.tx);
         bool sendMSOnStake = fMultiSendStake && out.tx->IsCoinStake() && !sendMSonMNReward; //output is either mnreward or stake reward, not both
 
         if(!(sendMSOnStake || sendMSonMNReward))

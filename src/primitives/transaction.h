@@ -32,6 +32,7 @@ public:
 
     void SetNull() { hash = 0; n = (uint32_t) -1; }
     bool IsNull() const { return (hash == 0 && n == (uint32_t) -1); }
+    bool IsMasternodeReward(const CTransaction* tx) const;
 
     friend bool operator<(const COutPoint& a, const COutPoint& b)
     {
@@ -151,8 +152,6 @@ public:
     {
         return (nValue == 0 && scriptPubKey.empty());
     }
-
-    bool IsMasternodeReward(const CTransaction* tx) const;
 
     uint256 GetHash() const;
 
