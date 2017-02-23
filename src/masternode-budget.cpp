@@ -66,7 +66,7 @@ bool IsBudgetCollateralValid(uint256 nTxCollateralHash, uint256 nExpectedHash, s
     }
 
     int conf = GetIXConfirmations(nTxCollateralHash);
-    if (nBlockHash != uint256()) {
+    if (nBlockHash != uint256(0)) {
         BlockMap::iterator mi = mapBlockIndex.find(nBlockHash);
         if (mi != mapBlockIndex.end() && (*mi).second) {
             CBlockIndex* pindex = (*mi).second;
@@ -143,7 +143,7 @@ void CBudgetManager::SubmitFinalBudget()
         return;
     }
 
-    CFinalizedBudgetBroadcast tempBudget(strBudgetName, nBlockStart, vecTxBudgetPayments, uint256());
+    CFinalizedBudgetBroadcast tempBudget(strBudgetName, nBlockStart, vecTxBudgetPayments, 0);
     if(mapSeenFinalizedBudgets.count(tempBudget.GetHash())) {
         LogPrintf("CBudgetManager::SubmitFinalBudget - Budget already exists - %s\n", tempBudget.GetHash().ToString());    
         nSubmittedFinalBudget = pindexPrev->nHeight;
@@ -657,7 +657,7 @@ struct sortProposalsByVotes {
     bool operator()(const std::pair<CBudgetProposal*, int> &left, const std::pair<CBudgetProposal*, int> &right) {
       if( left.second != right.second)
         return (left.second > right.second);
-      return (UintToArith256(left.first->nFeeTXHash) > UintToArith256(right.first->nFeeTXHash));
+      return (left.first->nFeeTXHash > right.first->nFeeTXHash);
     }
 };
 
@@ -865,7 +865,7 @@ void CBudgetManager::NewBlock()
         LOCK(cs_vNodes);
         BOOST_FOREACH(CNode* pnode, vNodes)
             if(pnode->nVersion >= MIN_BUDGET_PEER_PROTO_VERSION) 
-  							Sync(pnode, uint256(), true);
+                Sync(pnode, 0, true);
         
         MarkSynced();
     }
@@ -958,7 +958,7 @@ void CBudgetManager::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         vRecv >> nProp;
 
         if(Params().NetworkID() == CBaseChainParams::MAIN){
-  					if(nProp.IsNull()) {
+            if(nProp == 0) {
                 if(pfrom->HasFulfilledRequest("mnvs")) {
                     LogPrintf("mnvs - peer already asked me for the list\n");
                     Misbehaving(pfrom->GetId(), 20);
@@ -1220,7 +1220,7 @@ void CBudgetManager::Sync(CNode* pfrom, uint256 nProp, bool fPartial)
     std::map<uint256, CBudgetProposalBroadcast>::iterator it1 = mapSeenMasternodeBudgetProposals.begin();
     while(it1 != mapSeenMasternodeBudgetProposals.end()){
         CBudgetProposal* pbudgetProposal = FindProposal((*it1).first);
-        if(pbudgetProposal && pbudgetProposal->fValid && (nProp.IsNull() || (*it1).first == nProp)){
+        if(pbudgetProposal && pbudgetProposal->fValid && (nProp == 0 || (*it1).first == nProp)){
             pfrom->PushInventory(CInv(MSG_BUDGET_PROPOSAL, (*it1).second.GetHash()));
             nInvCount++;
         
@@ -1248,7 +1248,7 @@ void CBudgetManager::Sync(CNode* pfrom, uint256 nProp, bool fPartial)
     std::map<uint256, CFinalizedBudgetBroadcast>::iterator it3 = mapSeenFinalizedBudgets.begin();
     while(it3 != mapSeenFinalizedBudgets.end()){
         CFinalizedBudget* pfinalizedBudget = FindFinalizedBudget((*it3).first);
-        if(pfinalizedBudget && pfinalizedBudget->fValid && (nProp.IsNull() || (*it3).first == nProp)){
+        if(pfinalizedBudget && pfinalizedBudget->fValid && (nProp == 0 || (*it3).first == nProp)){
             pfrom->PushInventory(CInv(MSG_BUDGET_FINALIZED, (*it3).second.GetHash()));
             nInvCount++;
 
@@ -1589,7 +1589,7 @@ void CBudgetProposalBroadcast::Relay()
 CBudgetVote::CBudgetVote()
 {
     vin = CTxIn();
-    nProposalHash = uint256();
+    nProposalHash = 0;
     nVote = VOTE_ABSTAIN;
     nTime = 0;
     fValid = true;
@@ -1663,7 +1663,7 @@ CFinalizedBudget::CFinalizedBudget()
     nBlockStart = 0;
     vecBudgetPayments.clear();
     mapVotes.clear();
-    nFeeTXHash = uint256();
+    nFeeTXHash = 0;
     nTime = 0;
     fValid = true;
     fAutoChecked = false;
@@ -1872,7 +1872,7 @@ bool CFinalizedBudget::IsValid(std::string& strError, bool fCheckCollateral)
     if((int)vecBudgetPayments.size() > 100) {strError = "Invalid budget payments count (too many)"; return false;}
     if(strBudgetName == "") {strError = "Invalid Budget Name"; return false;}
     if(nBlockStart == 0) {strError = "Invalid BlockStart == 0"; return false;}
-    if(nFeeTXHash.IsNull()) {strError = "Invalid FeeTx == 0"; return false;}
+    if(nFeeTXHash == 0) {strError = "Invalid FeeTx == 0"; return false;}
 
     //can only pay out 10% of the possible coins (min value of coins)
     if(GetTotalPayout() > budget.GetTotalBudget(nBlockStart)) {strError = "Invalid Payout (more than max)"; return false;}
@@ -1960,7 +1960,7 @@ CFinalizedBudgetBroadcast::CFinalizedBudgetBroadcast()
     vecBudgetPayments.clear();
     mapVotes.clear();
     vchSig.clear();
-    nFeeTXHash = uint256();
+    nFeeTXHash = 0;
 }
 
 CFinalizedBudgetBroadcast::CFinalizedBudgetBroadcast(const CFinalizedBudget& other)
@@ -1990,7 +1990,7 @@ void CFinalizedBudgetBroadcast::Relay()
 CFinalizedBudgetVote::CFinalizedBudgetVote()
 {
     vin = CTxIn();
-    nBudgetHash = uint256();
+    nBudgetHash = 0;
     nTime = 0;
     vchSig.clear();
     fValid = true;

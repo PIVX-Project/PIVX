@@ -1542,7 +1542,7 @@ Value listsinceblock(const Array& params, bool fHelp)
 
     if (params.size() > 0)
     {
-        uint256 blockId;
+        uint256 blockId = 0;
 
         blockId.SetHex(params[0].get_str());
         BlockMap::iterator it = mapBlockIndex.find(blockId);
@@ -1575,7 +1575,7 @@ Value listsinceblock(const Array& params, bool fHelp)
     }
 
     CBlockIndex *pblockLast = chainActive[chainActive.Height() + 1 - target_confirms];
-    uint256 lastblock = pblockLast ? pblockLast->GetBlockHash() : uint256();
+    uint256 lastblock = pblockLast ? pblockLast->GetBlockHash() : 0;
 
     Object ret;
     ret.push_back(Pair("transactions", transactions));
@@ -1971,7 +1971,7 @@ Value lockunspent(const Array& params, bool fHelp)
         if (nOutput < 0)
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, vout must be positive");
 
-        COutPoint outpt(uint256S(txid), nOutput);
+        COutPoint outpt(uint256(txid), nOutput);
 
         if (fUnlock)
             pwalletMain->UnlockCoin(outpt);

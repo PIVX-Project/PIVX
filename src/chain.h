@@ -6,7 +6,6 @@
 #ifndef BITCOIN_CHAIN_H
 #define BITCOIN_CHAIN_H
 
-#include "arith_uint256.h"
 #include "primitives/block.h"
 #include "pow.h"
 #include "tinyformat.h"
@@ -98,7 +97,7 @@ enum BlockStatus {
 class CBlockIndex
 {
 public:
-    //! pointer to the hash of the block, if any. Memory is owned by this CBlockIndex
+    //! pointer to the hash of the block, if any. memory is owned by this CBlockIndex
     const uint256* phashBlock;
 
     //! pointer to the index of the predecessor of this block
@@ -126,7 +125,7 @@ public:
     unsigned int nUndoPos;
 
     //! (memory only) Total amount of work (expected number of hashes) in the chain up to and including this block
-    arith_uint256 nChainWork;
+    uint256 nChainWork;
 
     //! Number of transactions in this block.
     //! Note: in a potential headers-first mode, this number cannot be relied upon
@@ -177,7 +176,7 @@ public:
         nFile = 0;
         nDataPos = 0;
         nUndoPos = 0;
-        nChainWork = arith_uint256(0);
+        nChainWork = 0;
         nTx = 0;
         nChainTx = 0;
         nStatus = 0;
@@ -192,7 +191,7 @@ public:
         nStakeTime = 0;
 
         nVersion       = 0;
-        hashMerkleRoot = uint256();
+        hashMerkleRoot = 0;
         nTime          = 0;
         nBits          = 0;
         nNonce         = 0;
@@ -214,13 +213,13 @@ public:
         nNonce         = block.nNonce;
 
         //Proof of Stake
-        bnChainTrust = uint256();
+        bnChainTrust = 0;
         nMint = 0;
         nMoneySupply = 0;
         nFlags = 0;
         nStakeModifier = 0;
         nStakeModifierChecksum = 0;
-        hashProofOfStake = uint256();
+        hashProofOfStake = 0;
         CBlock block2(block);
         if (block2.IsProofOfStake())
         {
@@ -309,7 +308,7 @@ public:
 
     unsigned int GetStakeEntropyBit() const
     {
-        unsigned int nEntropyBit = ((GetBlockHash().GetCheapHash()) & 1);
+        unsigned int nEntropyBit = ((GetBlockHash().Get64()) & 1);
         if (fDebug || GetBoolArg("-printstakemodifier", false))
             LogPrintf("GetStakeEntropyBit: nHeight=%u hashBlock=%s nEntropyBit=%u\n", nHeight, GetBlockHash().ToString().c_str(), nEntropyBit);
 
@@ -391,12 +390,12 @@ public:
     uint256 hashNext;
 
     CDiskBlockIndex() {
-			hashPrev = uint256();
-			hashNext = uint256();
+        hashPrev = 0;
+        hashNext = 0;
     }
 
     explicit CDiskBlockIndex(CBlockIndex* pindex) : CBlockIndex(*pindex) {
-			hashPrev = (pprev ? pprev->GetBlockHash() : uint256());
+        hashPrev = (pprev ? pprev->GetBlockHash() : 0);
     }
 
     ADD_SERIALIZE_METHODS;
@@ -430,7 +429,7 @@ public:
         {
             const_cast<CDiskBlockIndex*>(this)->prevoutStake.SetNull();
             const_cast<CDiskBlockIndex*>(this)->nStakeTime = 0;
-            const_cast<CDiskBlockIndex*>(this)->hashProofOfStake = uint256();
+            const_cast<CDiskBlockIndex*>(this)->hashProofOfStake = 0;
         }
 
         // block header

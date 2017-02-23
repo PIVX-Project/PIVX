@@ -224,8 +224,8 @@ void CoinControlDialog::buttonToggleLockClicked()
         ui->treeWidget->setEnabled(false);
         for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++){
             item = ui->treeWidget->topLevelItem(i);
-            COutPoint outpt(uint256S(item->text(COLUMN_TXHASH).toStdString()), item->text(COLUMN_VOUT_INDEX).toUInt());
-            if (model->isLockedCoin(uint256S(item->text(COLUMN_TXHASH).toStdString()), item->text(COLUMN_VOUT_INDEX).toUInt())){
+            COutPoint outpt(uint256(item->text(COLUMN_TXHASH).toStdString()), item->text(COLUMN_VOUT_INDEX).toUInt());
+            if (model->isLockedCoin(uint256(item->text(COLUMN_TXHASH).toStdString()), item->text(COLUMN_VOUT_INDEX).toUInt())){
                 model->unlockCoin(outpt);
                 item->setDisabled(false);
                 item->setIcon(COLUMN_CHECKBOX, QIcon());
@@ -261,7 +261,7 @@ void CoinControlDialog::showMenu(const QPoint &point)
         if (item->text(COLUMN_TXHASH).length() == 64) // transaction hash is 64 characters (this means its a child node, so its not a parent node in tree mode)
         {
             copyTransactionHashAction->setEnabled(true);
-            if (model->isLockedCoin(uint256S(item->text(COLUMN_TXHASH).toStdString()), item->text(COLUMN_VOUT_INDEX).toUInt()))
+            if (model->isLockedCoin(uint256(item->text(COLUMN_TXHASH).toStdString()), item->text(COLUMN_VOUT_INDEX).toUInt()))
             {
                 lockAction->setEnabled(false);
                 unlockAction->setEnabled(true);
@@ -320,7 +320,7 @@ void CoinControlDialog::lockCoin()
     if (contextMenuItem->checkState(COLUMN_CHECKBOX) == Qt::Checked)
         contextMenuItem->setCheckState(COLUMN_CHECKBOX, Qt::Unchecked);
 
-    COutPoint outpt(uint256S(contextMenuItem->text(COLUMN_TXHASH).toStdString()), contextMenuItem->text(COLUMN_VOUT_INDEX).toUInt());
+    COutPoint outpt(uint256(contextMenuItem->text(COLUMN_TXHASH).toStdString()), contextMenuItem->text(COLUMN_VOUT_INDEX).toUInt());
     model->lockCoin(outpt);
     contextMenuItem->setDisabled(true);
     contextMenuItem->setIcon(COLUMN_CHECKBOX, QIcon(":/icons/lock_closed"));
@@ -330,7 +330,7 @@ void CoinControlDialog::lockCoin()
 // context menu action: unlock coin
 void CoinControlDialog::unlockCoin()
 {
-    COutPoint outpt(uint256S(contextMenuItem->text(COLUMN_TXHASH).toStdString()), contextMenuItem->text(COLUMN_VOUT_INDEX).toUInt());
+    COutPoint outpt(uint256(contextMenuItem->text(COLUMN_TXHASH).toStdString()), contextMenuItem->text(COLUMN_VOUT_INDEX).toUInt());
     model->unlockCoin(outpt);
     contextMenuItem->setDisabled(false);
     contextMenuItem->setIcon(COLUMN_CHECKBOX, QIcon());
@@ -436,7 +436,7 @@ void CoinControlDialog::viewItemChanged(QTreeWidgetItem* item, int column)
 {
     if (column == COLUMN_CHECKBOX && item->text(COLUMN_TXHASH).length() == 64) // transaction hash is 64 characters (this means its a child node, so its not a parent node in tree mode)
     {
-        COutPoint outpt(uint256S(item->text(COLUMN_TXHASH).toStdString()), item->text(COLUMN_VOUT_INDEX).toUInt());
+        COutPoint outpt(uint256(item->text(COLUMN_TXHASH).toStdString()), item->text(COLUMN_VOUT_INDEX).toUInt());
 
         if (item->checkState(COLUMN_CHECKBOX) == Qt::Unchecked)
             coinControl->UnSelect(outpt);

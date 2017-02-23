@@ -370,7 +370,7 @@ bool CActiveMasternode::GetMasterNodeVin(CTxIn& vin, CPubKey& pubkey, CKey& secr
     // Find the vin
     if(!strTxHash.empty()) {
         // Let's find it
-  			uint256 txHash(uint256S(strTxHash));
+        uint256 txHash(strTxHash);
         int outputIndex = atoi(strOutputIndex.c_str());
         bool found = false;
         BOOST_FOREACH(COutput& out, possibleCoins) {

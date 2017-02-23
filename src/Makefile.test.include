@@ -69,7 +69,7 @@ BITCOIN_TESTS =\
   test/test_pivx.cpp \
   test/timedata_tests.cpp \
   test/transaction_tests.cpp \
-  test/arith_uint256_tests.cpp \
+  test/uint256_tests.cpp \
   test/univalue_tests.cpp \
   test/util_tests.cpp
 

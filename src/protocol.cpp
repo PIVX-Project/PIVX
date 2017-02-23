@@ -109,7 +109,7 @@ void CAddress::Init()
 CInv::CInv()
 {
     type = 0;
-    hash.SetNull();
+    hash = 0;
 }
 
 CInv::CInv(int typeIn, const uint256& hashIn)

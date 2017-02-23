@@ -113,7 +113,7 @@ static const unsigned char REJECT_CHECKPOINT = 0x43;
 
 struct BlockHasher
 {
-    size_t operator()(const uint256& hash) const { return hash.GetCheapHash(); }
+    size_t operator()(const uint256& hash) const { return hash.GetLow64(); }
 };
 
 extern CScript COINBASE_FLAGS;

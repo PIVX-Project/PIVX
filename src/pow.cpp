@@ -5,7 +5,6 @@
 
 #include "pow.h"
 
-#include "arith_uint256.h"
 #include "chain.h"
 #include "chainparams.h"
 #include "main.h"
@@ -26,8 +25,8 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     int64_t PastBlocksMin = 24;
     int64_t PastBlocksMax = 24;
     int64_t CountBlocks = 0;
-    arith_uint256 PastDifficultyAverage;
-    arith_uint256 PastDifficultyAveragePrev;
+    uint256 PastDifficultyAverage;
+    uint256 PastDifficultyAveragePrev;
 
     if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin) {
         return Params().ProofOfWorkLimit().GetCompact();
@@ -36,7 +35,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     if(chainActive.Tip()->nHeight > Params().LAST_POW_BLOCK())
     {
         const CBlockIndex* pindexPrev = chainActive.Tip();
-        arith_uint256 bnTargetLimit = (~arith_uint256() >> 24);
+        uint256 bnTargetLimit = (~uint256(0) >> 24);
         int64_t nTargetSpacing = 60;
         int64_t nTargetTimespan = 60*40;
 
@@ -50,7 +49,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 
         // ppcoin: target change every block
         // ppcoin: retarget with exponential moving toward target spacing
-        arith_uint256 bnNew;
+        uint256 bnNew;
         bnNew.SetCompact(pindexPrev->nBits);
 
         int64_t nInterval = nTargetTimespan / nTargetSpacing;
@@ -69,7 +68,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 
         if(CountBlocks <= PastBlocksMin) {
             if (CountBlocks == 1) { PastDifficultyAverage.SetCompact(BlockReading->nBits); }
-            else { PastDifficultyAverage = ((PastDifficultyAveragePrev * CountBlocks) + (arith_uint256().SetCompact(BlockReading->nBits))) / (CountBlocks + 1); }
+            else { PastDifficultyAverage = ((PastDifficultyAveragePrev * CountBlocks) + (uint256().SetCompact(BlockReading->nBits))) / (CountBlocks + 1); }
             PastDifficultyAveragePrev = PastDifficultyAverage;
         }
 
@@ -83,7 +82,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         BlockReading = BlockReading->pprev;
     }
 
-    arith_uint256 bnNew(PastDifficultyAverage);
+    uint256 bnNew(PastDifficultyAverage);
 
     int64_t _nTargetTimespan = CountBlocks * Params().TargetSpacing();
 
@@ -107,7 +106,7 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits)
 {
     bool fNegative;
     bool fOverflow;
-    arith_uint256 bnTarget;
+    uint256 bnTarget;
 
     if (Params().SkipProofOfWorkCheck() || Params().NetworkID() == CBaseChainParams::TESTNET)
        return true;
@@ -119,22 +118,22 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits)
         return error("CheckProofOfWork() : nBits below minimum work");
 
     // Check proof of work matches claimed amount
-    if (UintToArith256(hash) > bnTarget && Params().NetworkID() != CBaseChainParams::TESTNET)
+    if (hash > bnTarget && Params().NetworkID() != CBaseChainParams::TESTNET)
         return error("CheckProofOfWork() : hash doesn't match nBits");
 
     return true;
 }
 
-arith_uint256 GetBlockProof(const CBlockIndex& block)
+uint256 GetBlockProof(const CBlockIndex& block)
 {
-    arith_uint256 bnTarget;
+    uint256 bnTarget;
     bool fNegative;
     bool fOverflow;
     bnTarget.SetCompact(block.nBits, &fNegative, &fOverflow);
     if (fNegative || fOverflow || bnTarget == 0)
         return 0;
     // We need to compute 2**256 / (bnTarget+1), but we can't represent 2**256
-    // as it's too large for a arith_uint256. However, as 2**256 is at least as large
+    // as it's too large for a uint256. However, as 2**256 is at least as large
     // as bnTarget+1, it is equal to ((2**256 - bnTarget - 1) / (bnTarget+1)) + 1,
     // or ~bnTarget / (nTarget+1) + 1.
     return (~bnTarget / (bnTarget + 1)) + 1;
