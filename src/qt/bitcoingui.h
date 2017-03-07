@@ -6,7 +6,7 @@
 #define BITCOIN_QT_BITCOINGUI_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/darknet-config.h"
+#include "config/pivx-config.h"
 #endif
 
 #include "amount.h"
@@ -69,6 +69,8 @@ public:
     void removeAllWallets();
 #endif // ENABLE_WALLET
     bool enableWallet;
+    bool fMultiSend;
+    bool fMultiSendNotify;
 
 protected:
     void changeEvent(QEvent *e);
@@ -100,6 +102,7 @@ private:
     QAction *usedReceivingAddressesAction;
     QAction *signMessageAction;
     QAction *verifyMessageAction;
+    QAction *bip38ToolAction;
     QAction *aboutAction;
     QAction *receiveCoinsAction;
     QAction *optionsAction;
@@ -121,6 +124,7 @@ private:
     QAction *openTradingwindowAction;
 	QAction *openBlockExplorerAction;
     QAction *showHelpMessageAction;
+    QAction *multiSendAction;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -211,9 +215,15 @@ private slots:
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */
     void gotoVerifyMessageTab(QString addr = "");
+    /** Show MultiSend Dialog */
+    void gotoMultiSendDialog();
+
+    /** Show BIP 38 tool - default to Encryption tab */
+    void gotoBip38Tool();
 
     /** Show open dialog */
     void openClicked();
+
 #endif // ENABLE_WALLET
     /** Show configuration dialog */
     void optionsClicked();

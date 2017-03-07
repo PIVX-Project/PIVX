@@ -1,7 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2016 The DarkNet developers
+// Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -230,10 +230,10 @@ Value stop(const Array& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "stop\n"
-            "\nStop DarkNet server.");
+            "\nStop PIVX server.");
     // Shutdown will take long enough that the response should get back
     StartShutdown();
-    return "DarkNet server stopping";
+    return "PIVX server stopping";
 }
 
 
@@ -310,22 +310,25 @@ static const CRPCCommand vRPCCommands[] =
     { "hidden",             "reconsiderblock",        &reconsiderblock,        true,      true,       false },
     { "hidden",             "setmocktime",            &setmocktime,            true,      false,      false },
 
-    /* Darknet features */
-    { "darknet",               "masternode",             &masternode,             true,      true,       false },
-    { "darknet",               "masternodelist",         &masternodelist,         true,      true,       false },
-    { "darknet",               "mnbudget",               &mnbudget,               true,      true,       false },
-    { "darknet",               "mnbudgetvoteraw",        &mnbudgetvoteraw,        true,      true,       false },
-    { "darknet",               "mnfinalbudget",          &mnfinalbudget,          true,      true,       false },
-    { "darknet",               "mnsync",                 &mnsync,                 true,      true,       false },
-    { "darknet",               "spork",                  &spork,                  true,      true,       false },
+    /* Pivx features */
+    { "pivx",               "masternode",             &masternode,             true,      true,       false },
+    { "pivx",               "masternodelist",         &masternodelist,         true,      true,       false },
+    { "pivx",               "mnbudget",               &mnbudget,               true,      true,       false },
+    { "pivx",               "mnbudgetvoteraw",        &mnbudgetvoteraw,        true,      true,       false },
+    { "pivx",               "mnfinalbudget",          &mnfinalbudget,          true,      true,       false },
+    { "pivx",               "mnsync",                 &mnsync,                 true,      true,       false },
+    { "pivx",               "spork",                  &spork,                  true,      true,       false },
 #ifdef ENABLE_WALLET
-    { "darknet",               "obfuscation",               &obfuscation,               false,     false,      true  }, /* not threadSafe because of SendMoney */
+    { "pivx",               "obfuscation",               &obfuscation,               false,     false,      true  }, /* not threadSafe because of SendMoney */
 
     /* Wallet */
     { "wallet",             "addmultisigaddress",     &addmultisigaddress,     true,      false,      true },
+    { "wallet",             "autocombinerewards",            &autocombinerewards,            false,     false,      true },
     { "wallet",             "backupwallet",           &backupwallet,           true,      false,      true },
     { "wallet",             "dumpprivkey",            &dumpprivkey,            true,      false,      true },
     { "wallet",             "dumpwallet",             &dumpwallet,             true,      false,      true },
+    { "wallet",             "bip38encrypt",           &bip38encrypt,           true,      false,      true },
+    { "wallet",             "bip38decrypt",           &bip38decrypt,           true,      false,      true },
     { "wallet",             "encryptwallet",          &encryptwallet,          true,      false,      true },
     { "wallet",             "getaccountaddress",      &getaccountaddress,      true,      false,      true },
     { "wallet",             "getaccount",             &getaccount,             true,      false,      true },
@@ -335,6 +338,7 @@ static const CRPCCommand vRPCCommands[] =
     { "wallet",             "getrawchangeaddress",    &getrawchangeaddress,    true,      false,      true },
     { "wallet",             "getreceivedbyaccount",   &getreceivedbyaccount,   false,     false,      true },
     { "wallet",             "getreceivedbyaddress",   &getreceivedbyaddress,   false,     false,      true },
+    { "wallet",             "getstakesplitthreshold", &getstakesplitthreshold, false,     false,      true },
     { "wallet",             "gettransaction",         &gettransaction,         false,     false,      true },
     { "wallet",             "getunconfirmedbalance",  &getunconfirmedbalance,  false,     false,      true },
     { "wallet",             "getwalletinfo",          &getwalletinfo,          false,     false,      true },
@@ -353,18 +357,18 @@ static const CRPCCommand vRPCCommands[] =
     { "wallet",             "listunspent",            &listunspent,            false,     false,      true },
     { "wallet",             "lockunspent",            &lockunspent,            true,      false,      true },
     { "wallet",             "move",                   &movecmd,                false,     false,      true },
+    { "wallet",             "multisend",              &multisend,              false,     false,      true },
     { "wallet",             "sendfrom",               &sendfrom,               false,     false,      true },
     { "wallet",             "sendmany",               &sendmany,               false,     false,      true },
     { "wallet",             "sendtoaddress",          &sendtoaddress,          false,     false,      true },
     { "wallet",             "sendtoaddressix",        &sendtoaddressix,        false,     false,      true },
     { "wallet",             "setaccount",             &setaccount,             true,      false,      true },
+    { "wallet",             "setstakesplitthreshold", &setstakesplitthreshold, false,     false,      true },
     { "wallet",             "settxfee",               &settxfee,               true,      false,      true },
     { "wallet",             "signmessage",            &signmessage,            true,      false,      true },
     { "wallet",             "walletlock",             &walletlock,             true,      false,      true },
     { "wallet",             "walletpassphrasechange", &walletpassphrasechange, true,      false,      true },
-    { "wallet",             "walletpassphrase",       &walletpassphrase,       true,      false,      true },
-    { "wallet",             "setstakesplitthreshold", &setstakesplitthreshold, false,     false,      true },
-    { "wallet",             "getstakesplitthreshold", &getstakesplitthreshold, false,     false,      true },
+    { "wallet",             "walletpassphrase",       &walletpassphrase,       true,      false,      true }, 
 #endif // ENABLE_WALLET
 };
 
@@ -590,16 +594,16 @@ void StartRPCThreads()
         unsigned char rand_pwd[32];
         GetRandBytes(rand_pwd, 32);
         uiInterface.ThreadSafeMessageBox(strprintf(
-            _("To use darknetd, or the -server option to darknet-qt, you must set an rpcpassword in the configuration file:\n"
+            _("To use pivxd, or the -server option to pivx-qt, you must set an rpcpassword in the configuration file:\n"
               "%s\n"
               "It is recommended you use the following random password:\n"
-              "rpcuser=darknetrpc\n"
+              "rpcuser=pivxrpc\n"
               "rpcpassword=%s\n"
               "(you do not need to remember this password)\n"
               "The username and password MUST NOT be the same.\n"
               "If the file does not exist, create it with owner-readable-only file permissions.\n"
               "It is also recommended to set alertnotify so you are notified of problems;\n"
-              "for example: alertnotify=echo %%s | mail -s \"DarkNet Alert\" admin@foo.com\n"),
+              "for example: alertnotify=echo %%s | mail -s \"PIVX Alert\" admin@foo.com\n"),
                 GetConfigFile().string(),
                 EncodeBase58(&rand_pwd[0],&rand_pwd[0]+32)),
                 "", CClientUIInterface::MSG_ERROR | CClientUIInterface::SECURE);
@@ -1050,7 +1054,7 @@ json_spirit::Value CRPCTable::execute(const std::string &strMethod, const json_s
 }
 
 std::string HelpExampleCli(string methodname, string args){
-    return "> darknet-cli " + methodname + " " + args + "\n";
+    return "> pivx-cli " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleRpc(string methodname, string args){

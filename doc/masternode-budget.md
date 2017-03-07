@@ -1,7 +1,7 @@
 Masternode Budget API
 =======================
 
-Darknet now supports full decentralized budgets that are paid directly from the blockchain via superblocks once per month. 
+Pivx now supports full decentralized budgets that are paid directly from the blockchain via superblocks once per month. 
 
 Budgets go through a series of stages before being paid:
 * prepare - create a special transaction that destroys coins in order to make a proposal
@@ -16,13 +16,13 @@ Budgets go through a series of stages before being paid:
 1. Prepare collateral transaction
 --
 
-mnbudget prepare proposal-name url payment_count block_start darknet_address monthly_payment_darknet [use_ix(true|false)]
+mnbudget prepare proposal-name url payment_count block_start pivx_address monthly_payment_pivx [use_ix(true|false)]
 
 Example: ```mnbudget prepare cool-project http://www.cool-project/one.json 12 100000 y6R9oN12KnB9zydzTLc3LikD9cCjjQzYG7 1200 true```
 
 Output: ```464a0eb70ea91c94295214df48c47baa72b3876cfb658744aaf863c7b5bf1ff0``` - This is the collateral hash, copy this output for the next step
 
-In this transaction we prepare collateral for "_cool-project_". This proposal will pay _1200_ DNET, _12_ times over the course of a year totaling _24000_ DNET. 
+In this transaction we prepare collateral for "_cool-project_". This proposal will pay _1200_ PIVX, _12_ times over the course of a year totaling _24000_ PIVX. 
 
 **Warning -- if you change any fields within this command, the collateral transaction will become invalid.** 
 
@@ -111,15 +111,15 @@ After you get enough votes, execute ```mnbudget projection``` to see if you made
 6. Get paid
 --
 
-When block ```1000000``` is reached you'll receive a payment for ```1200``` DNET. 
+When block ```1000000``` is reached you'll receive a payment for ```1200``` PIVX. 
 
 The following new RPC commands are supported:
 - mnbudget "command"... ( "passphrase" )
  - prepare            - Prepare proposal for network by signing and creating tx
  - submit             - Submit proposal for network
- - vote-many          - Vote on a Darknet initiative
- - vote-alias         - Vote on a Darknet initiative
- - vote               - Vote on a Darknet initiative/budget
+ - vote-many          - Vote on a Pivx initiative
+ - vote-alias         - Vote on a Pivx initiative
+ - vote               - Vote on a Pivx initiative/budget
  - getvotes           - Show current masternode budgets
  - getinfo            - Show current masternode budgets
  - show               - Show all budgets

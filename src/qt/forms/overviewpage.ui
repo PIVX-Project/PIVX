@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>960</width>
-    <height>585</height>
+    <height>615</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -70,7 +70,7 @@
                <cursorShape>WhatsThisCursor</cursorShape>
               </property>
               <property name="toolTip">
-               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the DarkNet network after a connection is established, but this process has not completed yet.</string>
+               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</string>
               </property>
               <property name="styleSheet">
                <string notr="true">QLabel { color: red; }</string>
@@ -474,7 +474,7 @@
               </font>
              </property>
              <property name="text">
-              <string notr="true">0 DNET</string>
+              <string notr="true">0 PIV</string>
              </property>
             </widget>
            </item>
@@ -488,7 +488,7 @@
            <item row="3" column="1">
             <widget class="QLabel" name="labelAmountRounds">
              <property name="text">
-              <string>0 DNET / 0 Rounds</string>
+              <string>0 PIV / 0 Rounds</string>
              </property>
             </widget>
            </item>
@@ -958,8 +958,8 @@
          <widget class="QPushButton" name="toggleObfuscation">
           <property name="geometry">
            <rect>
-            <x>10</x>
-            <y>292</y>
+            <x>120</x>
+            <y>250</y>
             <width>221</width>
             <height>56</height>
            </rect>
@@ -1015,8 +1015,8 @@
          <widget class="QPushButton" name="obfuscationAuto">
           <property name="geometry">
            <rect>
-            <x>230</x>
-            <y>292</y>
+            <x>10</x>
+            <y>310</y>
             <width>221</width>
             <height>28</height>
            </rect>
@@ -1038,7 +1038,7 @@
           <property name="geometry">
            <rect>
             <x>230</x>
-            <y>319</y>
+            <y>310</y>
             <width>221</width>
             <height>28</height>
            </rect>
@@ -1085,7 +1085,7 @@
            <item>
             <widget class="QLabel" name="labelObfuscationSyncStatus">
              <property name="toolTip">
-              <string>The displayed information may be out of date. Your wallet automatically synchronizes with the DarkNet network after a connection is established, but this process has not completed yet.</string>
+              <string>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</string>
              </property>
              <property name="styleSheet">
               <string notr="true">QLabel { color: red; }</string>
@@ -1142,6 +1142,22 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
+           <spacer name="verticalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>75</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
              <widget class="QLabel" name="label_4">
@@ -1162,7 +1178,7 @@
                <cursorShape>WhatsThisCursor</cursorShape>
               </property>
               <property name="toolTip">
-               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the DarkNet network after a connection is established, but this process has not completed yet.</string>
+               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</string>
               </property>
               <property name="styleSheet">
                <string notr="true">QLabel { color: red; }</string>
@@ -1216,6 +1232,9 @@
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>

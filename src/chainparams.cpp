@@ -1,7 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2016 The Darknet developers
+// Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -100,15 +100,15 @@ public:
         pchMessageStart[3] = 0xe9;
         vAlertPubKey = ParseHex("0484698d3ba6ba6e7423fa5cbd6a89e0a9a5348f88d332b44a5cb1a8b7ed2c1eaa335fc8dc4f012cb8241cc0bdafd6ca70c5f5448916e4e6f511bcd746ed57dc50");
         nDefaultPort = 51472;
-        bnProofOfWorkLimit = ~uint256(0) >> 20;  // DarkNet starting difficulty is 1 / 2^12
+        bnProofOfWorkLimit = ~uint256(0) >> 20;  // PIVX starting difficulty is 1 / 2^12
         nSubsidyHalvingInterval = 210000;
         nMaxReorganizationDepth = 100;
         nEnforceBlockUpgradeMajority = 750;
         nRejectBlockOutdatedMajority = 950;
         nToCheckBlockUpgradeMajority = 1000;
         nMinerThreads = 0;
-        nTargetTimespan = 1 * 60; // DarkNet: 1 day
-        nTargetSpacing = 1 * 60; // DarkNet: 1 minute
+        nTargetTimespan = 1 * 60; // PIVX: 1 day
+        nTargetSpacing = 1 * 60; // PIVX: 1 minute
         nLastPOWBlock = 259200;
         nMaturity = 100;
 
@@ -142,16 +142,16 @@ public:
         assert(genesis.hashMerkleRoot == uint256("0x1b2ef6e2f28be914103a277377ae7729dcd125dfeb8bf97bd5964ba72b6dc39b"));
 
         vSeeds.push_back(CDNSSeedData("coin-server.com", ""));
-        vSeeds.push_back(CDNSSeedData("173.245.158.8", ""));
-        vSeeds.push_back(CDNSSeedData("162.213.154.31", ""));
-        vSeeds.push_back(CDNSSeedData("151.80.206.104", ""));
+        vSeeds.push_back(CDNSSeedData("s3v3nh4cks.ddns.net", ""));
+        vSeeds.push_back(CDNSSeedData("178.254.23.111", ""));
 
-        base58Prefixes[PUBKEY_ADDRESS] = list_of( 30);                    
-        base58Prefixes[SCRIPT_ADDRESS] = list_of( 13);                    
-        base58Prefixes[SECRET_KEY] =     list_of(212);                    
-        base58Prefixes[EXT_PUBLIC_KEY] = list_of(0x02)(0x2D)(0x25)(0x33); 
-        base58Prefixes[EXT_SECRET_KEY] = list_of(0x02)(0x21)(0x31)(0x2B); 
-        base58Prefixes[EXT_COIN_TYPE]  = list_of(0x80000013);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,30);                    
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,13);                    
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,212);                    
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x02)(0x2D)(0x25)(0x33).convert_to_container<std::vector<unsigned char> >();
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x02)(0x21)(0x31)(0x2B).convert_to_container<std::vector<unsigned char> >();
+        // 	BIP44 coin type is 'TBD' 
+        base58Prefixes[EXT_COIN_TYPE]  = boost::assign::list_of(0x13)(0x00)(0x00)(0x80).convert_to_container<std::vector<unsigned char> >();
 
         convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
 
@@ -196,8 +196,8 @@ public:
         nRejectBlockOutdatedMajority = 75;
         nToCheckBlockUpgradeMajority = 100;
         nMinerThreads = 0;
-        nTargetTimespan = 1 * 60; // DarkNet: 1 day
-        nTargetSpacing = 1 * 60; // DarkNet: 1 minute
+        nTargetTimespan = 1 * 60; // PIVX: 1 day
+        nTargetSpacing = 1 * 60; // PIVX: 1 minute
         nLastPOWBlock = 200;
         nMaturity = 15;
 
@@ -211,12 +211,15 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
 
-        base58Prefixes[PUBKEY_ADDRESS] = list_of(139);                    // Testnet darknet addresses start with 'x' or 'y'
-        base58Prefixes[SCRIPT_ADDRESS] = list_of( 19);                    // Testnet darknet script addresses start with '8' or '9'
-        base58Prefixes[SECRET_KEY]     = list_of(239);                    // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
-        base58Prefixes[EXT_PUBLIC_KEY] = list_of(0x3a)(0x80)(0x61)(0xa0); // Testnet darknet BIP32 pubkeys start with 'DRKV'
-        base58Prefixes[EXT_SECRET_KEY] = list_of(0x3a)(0x80)(0x58)(0x37); // Testnet darknet BIP32 prvkeys start with 'DRKP'
-        base58Prefixes[EXT_COIN_TYPE]  = list_of(0x80000001);             // Testnet darknet BIP44 coin type is '5' (All coin's testnet default)
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,139);  // Testnet pivx addresses start with 'x' or 'y'                   
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);   // Testnet pivx script addresses start with '8' or '9'                 
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);    // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
+        // Testnet pivx BIP32 pubkeys start with 'DRKV'
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x3a)(0x80)(0x61)(0xa0).convert_to_container<std::vector<unsigned char> >();
+        // Testnet pivx BIP32 prvkeys start with 'DRKP'
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x3a)(0x80)(0x58)(0x37).convert_to_container<std::vector<unsigned char> >();
+        // Testnet pivx BIP44 coin type is '1' (All coin's testnet default)
+        base58Prefixes[EXT_COIN_TYPE]  = boost::assign::list_of(0x01)(0x00)(0x00)(0x80).convert_to_container<std::vector<unsigned char> >();
 
         convertSeed6(vFixedSeeds, pnSeed6_test, ARRAYLEN(pnSeed6_test));
 
@@ -259,8 +262,8 @@ public:
         nRejectBlockOutdatedMajority = 950;
         nToCheckBlockUpgradeMajority = 1000;
         nMinerThreads = 1;
-        nTargetTimespan = 24 * 60 * 60; // DarkNet: 1 day
-        nTargetSpacing = 1 * 60; // Darknet: 1 minutes
+        nTargetTimespan = 24 * 60 * 60; // Pivx: 1 day
+        nTargetSpacing = 1 * 60; // Pivx: 1 minutes
         bnProofOfWorkLimit = ~uint256(0) >> 1;
         genesis.nTime = 1454124731;
         genesis.nBits = 0x207fffff;
@@ -296,7 +299,7 @@ public:
     CUnitTestParams() {
         networkID = CBaseChainParams::UNITTEST;
         strNetworkID = "unittest";
-        nDefaultPort = 18445;
+        nDefaultPort = 51478;
         vFixedSeeds.clear(); //! Unit test mode doesn't have any fixed seeds.
         vSeeds.clear();  //! Unit test mode doesn't have any DNS seeds.
 

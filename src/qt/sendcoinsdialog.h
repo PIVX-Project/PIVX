@@ -44,6 +44,7 @@ public:
     void setAddress(const QString &address);
     void pasteEntry(const SendCoinsRecipient &rv);
     bool handlePaymentRequest(const SendCoinsRecipient &recipient);
+    bool fSplitBlock;
 
 public slots:
     void clear();
@@ -89,6 +90,8 @@ private slots:
     void coinControlClipboardPriority();
     void coinControlClipboardLowOutput();
     void coinControlClipboardChange();
+    void splitBlockChecked(int);
+    void splitBlockLineEditChanged(const QString & text);
     void setMinimumFee();
     void updateFeeSectionControls();
     void updateMinFeeLabel();

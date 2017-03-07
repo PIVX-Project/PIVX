@@ -6,10 +6,12 @@
 
 #include "addressbookpage.h"
 #include "askpassphrasedialog.h"
+#include "bip38tooldialog.h"
 #include "bitcoingui.h"
 #include "clientmodel.h"
 #include "guiutil.h"
 #include "masternodeconfig.h"
+#include "multisenddialog.h"
 #include "optionsmodel.h"
 #include "overviewpage.h"
 #include "receivecoinsdialog.h"
@@ -255,6 +257,21 @@ void WalletView::gotoVerifyMessageTab(QString addr)
 
     if (!addr.isEmpty())
         signVerifyMessageDialog->setAddress_VM(addr);
+}
+
+void WalletView::gotoBip38Tool()
+{
+    Bip38ToolDialog *bip38ToolDialog = new Bip38ToolDialog(this);
+    //bip38ToolDialog->setAttribute(Qt::WA_DeleteOnClose);
+    bip38ToolDialog->setModel(walletModel);
+    bip38ToolDialog->showTab_ENC(true);
+}
+
+void WalletView::gotoMultiSendDialog()
+{
+    MultiSendDialog *multiSendDialog = new MultiSendDialog(this);
+    multiSendDialog->setModel(walletModel);
+    multiSendDialog->show();
 }
 
 bool WalletView::handlePaymentRequest(const SendCoinsRecipient& recipient)

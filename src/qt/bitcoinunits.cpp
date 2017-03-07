@@ -1,6 +1,6 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2016 The Darknet developers
+// Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,9 +20,9 @@ BitcoinUnits::BitcoinUnits(QObject *parent):
 QList<BitcoinUnits::Unit> BitcoinUnits::availableUnits()
 {
     QList<BitcoinUnits::Unit> unitlist;
-    unitlist.append(DNET);
-    unitlist.append(mDNET);
-    unitlist.append(uDNET);
+    unitlist.append(PIV);
+    unitlist.append(mPIV);
+    unitlist.append(uPIV);
     return unitlist;
 }
 
@@ -30,9 +30,9 @@ bool BitcoinUnits::valid(int unit)
 {
     switch(unit)
     {
-    case DNET:
-    case mDNET:
-    case uDNET:
+    case PIV:
+    case mPIV:
+    case uPIV:
         return true;
     default:
         return false;
@@ -43,9 +43,9 @@ QString BitcoinUnits::id(int unit)
 {
     switch(unit)
     {
-        case DNET: return QString("darknet");
-        case mDNET: return QString("mdarknet");
-        case uDNET: return QString::fromUtf8("udarknet");
+        case PIV: return QString("pivx");
+        case mPIV: return QString("mpivx");
+        case uPIV: return QString::fromUtf8("upivx");
         default: return QString("???");
     }
 }
@@ -56,9 +56,9 @@ QString BitcoinUnits::name(int unit)
     {
         switch(unit)
         {
-            case DNET: return QString("DNET");
-            case mDNET: return QString("mDNET");
-            case uDNET: return QString::fromUtf8("μDNET");
+            case PIV: return QString("PIV");
+            case mPIV: return QString("mPIV");
+            case uPIV: return QString::fromUtf8("μPIV");
             default: return QString("???");
         }
     }
@@ -66,9 +66,9 @@ QString BitcoinUnits::name(int unit)
     {
         switch(unit)
         {
-            case DNET: return QString("tDNET");
-            case mDNET: return QString("mtDNET");
-            case uDNET: return QString::fromUtf8("μtDNET");
+            case PIV: return QString("tPIV");
+            case mPIV: return QString("mtPIV");
+            case uPIV: return QString::fromUtf8("μtPIV");
             default: return QString("???");
         }
     }
@@ -80,9 +80,9 @@ QString BitcoinUnits::description(int unit)
     {
         switch(unit)
         {
-            case DNET: return QString("DNET");
-            case mDNET: return QString("Milli-DNET (1 / 1" THIN_SP_UTF8 "000)");
-            case uDNET: return QString("Micro-DNET (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case PIV: return QString("PIV");
+            case mPIV: return QString("Milli-PIV (1 / 1" THIN_SP_UTF8 "000)");
+            case uPIV: return QString("Micro-PIV (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
             default: return QString("???");
         }
     }
@@ -90,9 +90,9 @@ QString BitcoinUnits::description(int unit)
     {
         switch(unit)
         {
-            case DNET: return QString("TestDNETs");
-            case mDNET: return QString("Milli-TestDNET (1 / 1" THIN_SP_UTF8 "000)");
-            case uDNET: return QString("Micro-TestDNET (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case PIV: return QString("TestPIVs");
+            case mPIV: return QString("Milli-TestPIV (1 / 1" THIN_SP_UTF8 "000)");
+            case uPIV: return QString("Micro-TestPIV (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
             default: return QString("???");
         }
     }
@@ -102,9 +102,9 @@ qint64 BitcoinUnits::factor(int unit)
 {
     switch(unit)
     {
-    case DNET:  return 100000000;
-    case mDNET: return 100000;
-    case uDNET: return 100;
+    case PIV:  return 100000000;
+    case mPIV: return 100000;
+    case uPIV: return 100;
     default:   return 100000000;
     }
 }
@@ -113,9 +113,9 @@ int BitcoinUnits::decimals(int unit)
 {
     switch(unit)
     {
-    case DNET: return 8;
-    case mDNET: return 5;
-    case uDNET: return 2;
+    case PIV: return 8;
+    case mPIV: return 5;
+    case uPIV: return 2;
     default: return 0;
     }
 }

@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2016 The DarkNet developers
+// Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1614,6 +1614,27 @@ void CWallet::AvailableCoins(vector<COutput>& vCoins, bool fOnlyConfirmed, const
     }
 }
 
+map<CBitcoinAddress, vector<COutput> > CWallet::AvailableCoinsByAddress(bool fConfirmed, CAmount maxCoinValue)
+{
+    vector<COutput> vCoins;
+    AvailableCoins(vCoins, fConfirmed);
+
+    map<CBitcoinAddress, vector<COutput> > mapCoins;
+    BOOST_FOREACH(COutput out, vCoins)
+    {
+        if(maxCoinValue > 0 && out.tx->vout[out.i].nValue > maxCoinValue)
+            continue;
+
+        CTxDestination address;
+        if(!ExtractDestination(out.tx->vout[out.i].scriptPubKey, address))
+            continue;
+
+        mapCoins[CBitcoinAddress(address)].push_back(out);
+    }
+
+    return mapCoins;
+}
+
 static void ApproximateBestSubset(vector<pair<CAmount, pair<const CWalletTx*,unsigned int> > >vValue, const CAmount& nTotalLower, const CAmount& nTargetValue,
                                   vector<char>& vfBest, CAmount& nBest, int iterations = 1000)
 {
@@ -1876,7 +1897,7 @@ bool CWallet::SelectCoins(const CAmount& nTargetValue, set<pair<const CWalletTx*
         return (nValueRet >= nTargetValue);
     }
 
-    //if we're doing only denominated, we need to round up to the nearest .1DNET
+    //if we're doing only denominated, we need to round up to the nearest .1 PIV
     if(coin_type == ONLY_DENOMINATED) {
         // Make outputs by looping through denominations, from large to small
         BOOST_FOREACH(int64_t v, obfuScationDenominations)
@@ -1884,7 +1905,7 @@ bool CWallet::SelectCoins(const CAmount& nTargetValue, set<pair<const CWalletTx*
             BOOST_FOREACH(const COutput& out, vCoins)
             {
                 if(out.tx->vout[out.i].nValue == v                                            //make sure it's the denom we're looking for
-                    && nValueRet + out.tx->vout[out.i].nValue < nTargetValue + (0.1*COIN)+100 //round the amount up to .1DNET over
+                    && nValueRet + out.tx->vout[out.i].nValue < nTargetValue + (0.1*COIN)+100 //round the amount up to .1 PIV over
                 ){
                     CTxIn vin = CTxIn(out.tx->GetHash(),out.i);
                     int rounds = GetInputObfuscationRounds(vin);
@@ -1948,12 +1969,12 @@ bool CWallet::SelectCoinsByDenominations(int nDenom, int64_t nValueMin, int64_t 
 
             // Function returns as follows:
             //
-            // bit 0 - 10000 DNET+1 ( bit on if present )
-            // bit 1 - 1000 DNET+1
-            // bit 2 - 100 DNET+1
-            // bit 3 - 10 DNET+1
-            // bit 4 - 1 DNET+1
-            // bit 5 - .1 DNET+1
+            // bit 0 - 10000 PIV+1 ( bit on if present )
+            // bit 1 - 1000 PIV+1
+            // bit 2 - 100 PIV+1
+            // bit 3 - 10 PIV+1
+            // bit 4 - 1 PIV+1
+            // bit 5 - .1 PIV+1
 
             CTxIn vin = CTxIn(out.tx->GetHash(),out.i);
 
@@ -2256,16 +2277,43 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, CAmount> >& vecSend,
 
                 CAmount nTotalValue = nValue + nFeeRet;
                 double dPriority = 0;
+
                 // vouts to the payees
-                BOOST_FOREACH (const PAIRTYPE(CScript, CAmount)& s, vecSend)
+                if(coinControl && !coinControl->fSplitBlock)
                 {
-                    CTxOut txout(s.second, s.first);
-                    if (txout.IsDust(::minRelayTxFee))
+                    BOOST_FOREACH (const PAIRTYPE(CScript, CAmount)& s, vecSend)
                     {
-                        strFailReason = _("Transaction amount too small");
-                        return false;
+                        CTxOut txout(s.second, s.first);
+                        if (txout.IsDust(::minRelayTxFee))
+                        {
+                            strFailReason = _("Transaction amount too small");
+                            return false;
+                        }
+                        txNew.vout.push_back(txout);
                     }
-                    txNew.vout.push_back(txout);
+                }
+                else //UTXO Splitter Transaction
+                {
+                    int nSplitBlock;
+
+                    if(coinControl)
+                        nSplitBlock = coinControl->nSplitBlock;
+                    else
+                        nSplitBlock = 1;
+
+                    BOOST_FOREACH (const PAIRTYPE(CScript, CAmount)& s, vecSend)
+                    {
+                        for(int i = 0; i < nSplitBlock; i++)
+                        {
+                            if(i == nSplitBlock - 1)
+                            {
+                                uint64_t nRemainder = s.second % nSplitBlock;
+                                txNew.vout.push_back(CTxOut((s.second / nSplitBlock) + nRemainder, s.first));
+                            }
+                            else
+                                txNew.vout.push_back(CTxOut(s.second / nSplitBlock, s.first));
+                        }
+                    }
                 }
 
                 // Choose coins to use
@@ -2277,9 +2325,9 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, CAmount> >& vecSend,
                     if(coin_type == ALL_COINS) {
                         strFailReason = _("Insufficient funds.");
                     } else if (coin_type == ONLY_NOT10000IFMN) {
-                        strFailReason = _("Unable to locate enough funds for this transaction that are not equal 10000DNET.");
+                        strFailReason = _("Unable to locate enough funds for this transaction that are not equal 10000 PIV.");
                     } else if (coin_type == ONLY_NONDENOMINATED_NOT10000IFMN) {
-                        strFailReason = _("Unable to locate enough Obfuscation non-denominated funds for this transaction that are not equal 10000DNET.");
+                        strFailReason = _("Unable to locate enough Obfuscation non-denominated funds for this transaction that are not equal 10000 PIV.");
                     } else {
                         strFailReason = _("Unable to locate enough Obfuscation denominated funds for this transaction.");
                         strFailReason += " " + _("Obfuscation uses exact denominated amounts to send funds, you might simply need to anonymize some more coins.");
@@ -2319,7 +2367,7 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, CAmount> >& vecSend,
                 {
                     // Fill a vout to ourself
                     // TODO: pass in scriptChange instead of reservekey so
-                    // change transaction isn't always pay-to-darknet-address
+                    // change transaction isn't always pay-to-pivx-address
                     CScript scriptChange;
 
                     // coin control: send change to custom address
@@ -3472,6 +3520,196 @@ bool CWallet::GetDestData(const CTxDestination &dest, const std::string &key, st
         }
     }
     return false;
+}
+
+void CWallet::AutoCombineDust()
+{
+    if (IsInitialBlockDownload() || IsLocked())
+    {
+        return;
+    }
+
+    map<CBitcoinAddress, vector<COutput>> mapCoinsByAddress = AvailableCoinsByAddress(true, 0);
+
+    //coins are sectioned by address. This combination code only wants to combine inputs that belong to the same address
+    for(map<CBitcoinAddress, vector<COutput> >::iterator it = mapCoinsByAddress.begin(); it != mapCoinsByAddress.end(); it++)
+    {
+        vector<COutput> vCoins, vRewardCoins;
+        vCoins= it->second;
+
+        //find masternode rewards that need to be combined
+        CCoinControl* coinControl = new CCoinControl();
+        CAmount nTotalRewardsValue = 0;
+        BOOST_FOREACH(const COutput& out, vCoins)
+        {
+            //no coins should get this far if they dont have proper maturity, this is double checking
+            if(out.tx->IsCoinStake() && out.tx->GetDepthInMainChain() < COINBASE_MATURITY + 1)
+                continue;
+
+            if(out.Value() > nAutoCombineThreshold * COIN)
+                continue;
+
+            COutPoint outpt(out.tx->GetHash(), out.i);
+            coinControl->Select(outpt);
+            vRewardCoins.push_back(out);
+            nTotalRewardsValue += out.Value();
+        }
+
+        //if no inputs found then return
+        if(!coinControl->HasSelected())
+            continue;
+
+        //we cannot combine one coin with itself
+        if(vRewardCoins.size() <= 1)
+            continue;
+
+        vector<pair<CScript, int64_t> > vecSend;
+        CScript scriptPubKey = GetScriptForDestination(it->first.Get());
+        vecSend.push_back(make_pair(scriptPubKey, nTotalRewardsValue));
+
+        // Create the transaction and commit it to the network
+        CWalletTx wtx;
+        CReserveKey keyChange(this); // this change address does not end up being used, because change is returned with coin control switch
+        string strErr;
+        int64_t nFeeRet = 0;
+
+        //get the fee amount
+        CWalletTx wtxdummy;
+        CreateTransaction(vecSend, wtxdummy, keyChange, nFeeRet, strErr, coinControl, ALL_COINS, false, CAmount(0));
+        vecSend[0].second = nTotalRewardsValue - nFeeRet - 500;
+
+        if (!CreateTransaction(vecSend, wtx, keyChange, nFeeRet, strErr, coinControl, ALL_COINS, false, CAmount(0)))
+        {
+            LogPrintf("AutoCombineDust createtransaction failed, reason: %s\n", strErr);
+            continue;
+        }
+
+        if(!CommitTransaction(wtx, keyChange))
+        {
+            LogPrintf("AutoCombineDust transaction commit failed\n");
+            continue;
+        }
+
+        LogPrintf("AutoCombineDust sent transaction\n");
+
+        delete coinControl;
+    }
+
+}
+
+bool CWallet::MultiSend()
+{
+    if (IsInitialBlockDownload() || IsLocked())
+    {
+        return false;
+    }
+
+    if (chainActive.Tip()->nHeight <= nLastMultiSendHeight)
+    {
+        LogPrintf("Multisend: lastmultisendheight is higher than current best height\n");
+        return false;
+    }
+
+    std::vector<COutput> vCoins;
+    AvailableCoins(vCoins);
+    int stakeSent = 0;
+    int mnSent = 0;
+    BOOST_FOREACH(const COutput& out, vCoins)
+    {
+        //need output with precise confirm count - this is how we identify which is the output to send
+        if(out.tx->GetDepthInMainChain() != COINBASE_MATURITY + 1)
+            continue;
+
+        COutPoint outpoint(out.tx->GetHash(), out.i);
+        bool sendMSonMNReward = fMultiSendMasternodeReward && outpoint.IsMasternodeReward(out.tx);
+        bool sendMSOnStake = fMultiSendStake && out.tx->IsCoinStake() && !sendMSonMNReward; //output is either mnreward or stake reward, not both
+
+        if(!(sendMSOnStake || sendMSonMNReward))
+            continue;
+
+        CTxDestination address;
+        if(!ExtractDestination(out.tx->vout[out.i].scriptPubKey, address))
+        {
+            LogPrintf("Multisend: failed to extract destination\n");
+            continue;
+        }
+
+        //Disabled Addresses won't send MultiSend transactions
+        if(vDisabledAddresses.size() > 0)
+        {
+            for(unsigned int i = 0; i < vDisabledAddresses.size(); i++)
+            {
+                if(vDisabledAddresses[i] == CBitcoinAddress(address).ToString())
+                {
+                    LogPrintf("Multisend: disabled address preventing multisend\n");
+                    return false;
+                }
+            }
+        }
+
+        // create new coin control, populate it with the selected utxo, create sending vector
+        CCoinControl* cControl = new CCoinControl();
+        uint256 txhash = out.tx->GetHash();
+        COutPoint outpt(txhash, out.i);
+        cControl->Select(outpt);
+        CWalletTx wtx;
+        CReserveKey keyChange(this); // this change address does not end up being used, because change is returned with coin control switch
+        int64_t nFeeRet = 0;
+        vector<pair<CScript, int64_t> > vecSend;
+
+        // loop through multisend vector and add amounts and addresses to the sending vector
+        const isminefilter filter = ISMINE_SPENDABLE;
+        int64_t nAmount = 0;
+        for(unsigned int i = 0; i < vMultiSend.size(); i++)
+        {
+            // MultiSend vector is a pair of 1)Address as a std::string 2) Percent of stake to send as an int
+            nAmount = ( ( out.tx->GetCredit(filter) - out.tx->GetDebit(filter) ) * vMultiSend[i].second )/100;
+            CBitcoinAddress strAddSend(vMultiSend[i].first);
+            CScript scriptPubKey;
+            scriptPubKey = GetScriptForDestination(strAddSend.Get());
+            vecSend.push_back(make_pair(scriptPubKey, nAmount));
+        }
+
+        // Create the transaction and commit it to the network
+        string strErr;
+        if (!CreateTransaction(vecSend, wtx, keyChange, nFeeRet, strErr, cControl, ALL_COINS, false, CAmount(0)))
+        {
+            LogPrintf("MultiSend createtransaction failed\n");
+            return false;
+        }
+
+        if(!CommitTransaction(wtx, keyChange))
+        {
+            LogPrintf("MultiSend transaction commit failed\n");
+            return false;
+        }
+        else
+            fMultiSendNotify = true;
+
+        delete cControl;
+
+        //write nLastMultiSendHeight to DB
+        CWalletDB walletdb(strWalletFile);
+        nLastMultiSendHeight = chainActive.Tip()->nHeight;
+        if(!walletdb.WriteMSettings(fMultiSendStake, fMultiSendMasternodeReward, nLastMultiSendHeight))
+            LogPrintf("Failed to write MultiSend setting to DB\n");
+
+        LogPrintf("MultiSend successfully sent\n");
+        if(sendMSOnStake)
+            stakeSent++;
+        else
+            mnSent++;
+
+        //stop iterating if we are done
+        if(mnSent > 0 && stakeSent > 0)
+            return true;
+        if(stakeSent > 0 && !fMultiSendMasternodeReward)
+            return true;
+        if(mnSent > 0 && !fMultiSendStake)
+            return true;
+    }
+
+    return true;
 }
 
 CKeyPool::CKeyPool()

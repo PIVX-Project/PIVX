@@ -1,74 +1,65 @@
-DarkNet Repository (Version 2.1.3.1)
-More information at darknet-crypto.com
-Visit our ANN thread at bitcointalk.org/index.php?topic=1262920
-
-Coin specs:
-
-Algo:  Quark
-PoW Block Reward:  (block# 2 - 151200) 250 DNET (block# 151201 - 259200) 50 DNET
-Block Time:  60 Second with Retargeting at every Block
-
-Coin Supply During PoW Phase:  43,199,500
-
-
-
-PoW Phase:  (block# 1) 60k Premine for the Creation of 6 Masternodes for the Functioning of the Network
-            (60k DNET will be Burned at approx. Block 259201)
-PoW Phase:  (block#’s 2-259200) Approx. 180 DAYS
-
-
-
-PoW Rewards Breakdown:  (block#’s 2-43200) 20% MNODE (50 DNET) / 80% MINER (200 DNET)
-                        (block#’s 43201-172800) 20% MNODE (50 DNET) / 70% MINER (175 DNET) / 10% available to the PROPOSALS (25 DNET)
-                        (block#’s 172800-259200) 45% MNODE (22.5 DNET) / 45% MINER (22.5 DNET) / 10% available to the PROPOSALS (10 DNET)
-
-
-
-PoS Phase 1:  PoS [259201-302399] 30 DAYS
-PoS Rewards Breakdown:  50 DNET (90% distributed between the MN/Staker based upon the amount of coins held in the                                  masternodes to how many coins are being staked / up to 10% of the block is available to the                                proposal system)
-
-
-PoS Phase 2: PoS [302400-345599] 30 DAYS
-PoS Rewards Breakdown:  45 DNET (90% distributed between the MN/Staker based upon the amount of coins held in the                                  masternodes to how many coins are being staked / up to 10% of the block is available to the                                proposal system)
-
-
-PoS Phase 3: PoS [345600-388799] 30 DAYS
-PoS Rewards Breakdown:  40 DNET (90% distributed between the MN/Staker based upon the amount of coins held in the                                  masternodes to how many coins are being staked / up to 10% of the block is available to the                                proposal system)
-
-
-PoS Phase 4: PoS [388800-431999] 30 DAYS
-PoS Rewards Breakdown:  35 DNET (90% distributed between the MN/Staker based upon the amount of coins held in the                                  masternodes to how many coins are being staked / up to 10% of the block is available to the                                proposal system)
-
-
-PoS Phase 5: PoS [432000-475199] 30 DAYS
-PoS Rewards Breakdown:  30 DNET (90% distributed between the MN/Staker based upon the amount of coins held in the                                  masternodes to how many coins are being staked / up to 10% of the block is available to the                                proposal system)
-
-
-PoS Phase 6: PoS [475200-518399] 30 DAYS
-PoS Rewards Breakdown:  25 DNET (90% distributed between the MN/Staker based upon the amount of coins held in the                                  masternodes to how many coins are being staked / up to 10% of the block is available to the                                proposal system)
-
-
-PoS Phase 7: PoS [518400-561599] 30 DAYS
-PoS Rewards Breakdown:  20 DNET (90% distributed between the MN/Staker based upon the amount of coins held in the                                  masternodes to how many coins are being staked / up to 10% of the block is available to the                                proposal system)
-
-
-PoS Phase 8: PoS [561600-604799] 30 DAYS
-PoS Rewards Breakdown:  15 DNET (90% distributed between the MN/Staker based upon the amount of coins held in the                                  masternodes to how many coins are being staked / up to 10% of the block is available to the                                proposal system)
-
-
-PoS Phase 9: PoS [604800-647999] 30 DAYS
-PoS Rewards Breakdown:  10 DNET (90% distributed between the MN/Staker based upon the amount of coins held in the                                  masternodes to how many coins are being staked / up to 10% of the block is available to the                                proposal system)
-
-
-PoS Phase X: PoS [648000-forever] 
-PoS Rewards Breakdown:  5 DNET (90% distributed between the MN/Staker based upon the amount of coins held in the                                   masternodes to how many coins are being staked / up to 10% of the block is available to the                                proposal system)
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-DarkNet is a cutting edge crytpocurrency, with many features not available in most other cryptocurrencies. 
-Anonymized transactions using coin mixing technology, we call it Obfuscation.
-
-Fast transactions featuring guaranteed zero confirmation transactions, we call it SwiftTX.
-
-Decentralized blockchain voting providing for consensus based advancement of the currency
-Masternode technology used to secure the network and provide the above features, each masternode is secured with collateral of 10kDNET
+<h2><strong>PIVX Repository (Version 2.1.4.0)</strong></h2>
+<p>More information at pivx.org Visit our ANN thread at bitcointalk.org/index.php?topic=1262920</p>
+<h3><strong>Coin specs:</strong></h3>
+<p><strong><span style="color: #800080;"><em>Algo:</em></span></strong></p>
+<ul>
+<li>Quark</li>
+</ul>
+<p><strong><span style="color: #800080;"><em>PoW Block Reward:</em></span></strong></p>
+<ul>
+<li>[block# 2-151200] 250 PIV [block# 151201-259200] 50 PIV</li>
+</ul>
+<p><strong><span style="color: #800080;"><em>PoS Block Reward:</em></span></strong></p>
+<ul>
+<li>[block# 259201-Infinite] Variable based on SeeSaw Reward Mechanism</li>
+</ul>
+<p><strong><span style="color: #800080;"><em>Block Time:</em></span></strong></p>
+<ul>
+<li>60 Seconds with Retargeting every Block</li>
+</ul>
+<p><strong><span style="color: #800080;"><em>Max Coin Supply:</em></span></strong></p>
+<ul>
+<li>PoW Phase: 43,199,500</li>
+</ul>
+<p><strong><span style="color: #800080;"><em>Max Coin Supply:</em></span></strong></p>
+<ul>
+<li>PoS Phase: Infinte</li>
+</ul>
+<p><strong><span style="color: #800080;"><em>PoW Phase 1:</em></span></strong></p>
+<ul>
+<li>[block# 1] 60k Premine for creation of 6 Masternodes for the functioning of the network.</li>
+</ul>
+<p><strong><span style="color: #800080;"><em>Pre-mine:</em></span></strong></p>
+<ul>
+<li>[block# 1] 60k Premine was burned at block 279917</li>
+</ul>
+<p><strong><span style="color: #800080;"><em>PoW Phase 2:</em></span></strong></p>
+<ul>
+<li>[block#&rsquo;s 2-259200] Approx 180 Days</li>
+</ul>
+<p><strong><span style="color: #800080;"><em>PoW Rewards Breakdown:</em></span></strong></p>
+<ul>
+<li>[block&rsquo;s &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2-432000] 20% MN (50 PIV) &nbsp; &nbsp;/ 80% MINER (200 PIV)</li>
+<li>[block&rsquo;s &nbsp; 43201-151200] 20% MN (50 PIV) &nbsp; &nbsp;/ 70% MINER (200 PIV) &nbsp;/ 10% Available to the budget system (25 PIV)</li>
+<li>[block&rsquo;s 151201-259200] 45% MN (22.5 PIV) / 45% MINER (22.5 PIV) / 10% Available to the budget system ( &nbsp;5 PIV)</li>
+</ul>
+<p><strong><span style="color: #800080;"><em>PoS Rewards Breakdown:</em></span></strong></p>
+<ul>
+<li>PoS Phase 1: [blocks 259201-302399] 50 PIV (90% distributed to staker and masternode - 10% available to budget system)</li>
+<li>PoS Phase 2: [blocks 302400-345599] 45 PIV (90% distributed to staker and masternode - 10% available to budget system)</li>
+<li>PoS Phase 3: [blocks 345600-388799] 40 PIV (90% distributed to staker and masternode - 10% available to budget system)</li>
+<li>PoS Phase 4: [blocks 388800-431999] 35 PIV (90% distributed to staker and masternode - 10% available to budget system)</li>
+<li>PoS Phase 5: [blocks 432000-475199] 30 PIV (90% distributed to staker and masternode - 10% available to budget system)</li>
+<li>PoS Phase 6: [blocks 475200-518399] 25 PIV (90% distributed to staker and masternode - 10% available to budget system)</li>
+<li>PoS Phase 7: [blocks 518400-561599] 20 PIV (90% distributed to staker and masternode - 10% available to budget system)</li>
+<li>PoS Phase 8: [blocks 561600-604799] 15 PIV (90% distributed to staker and masternode - 10% available to budget system)</li>
+<li>PoS Phase 9: [blocks 604800-647999] 10 PIV (90% distributed to staker and masternode - 10% available to budget system)</li>
+<li>PoS Phase X: [blocks 648000-Infinite] &nbsp; 5 PIV (90% distributed to staker and masternode - 10% available to budget system)</li>
+</ul>
+<p>&nbsp;</p>
+<p>+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</p>
+<p>&nbsp;</p>
+<p>PIVX is a cutting edge cryptocurrency, with many features not available in most other cryptocurrencies.</p>
+<p>Anonymized transactions using coin mixing technology, we call it <em>Obfuscation</em>.</p>
+<p>Fast transactions featuring guaranteed zero confirmation transactions, we call it <em>SwiftTX</em>.</p>
+<p>Decentralized blockchain voting providing for consensus based advancement of the current Masternode technology used to secure the network and provide the above features, each Masternode is secured with collateral of 10K PIV</p>

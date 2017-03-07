@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Pivx
+Comment=Pivx P2P Cryptocurrency
+Comment[fr]=Pivx, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Pivx, eşten eşe kriptografik sanal para birimi
+Exec=pivx-qt %u
+Terminal=false
+Type=Application
+Icon=pivx128
+MimeType=x-scheme-handler/pivx;
+Categories=Office;Finance;

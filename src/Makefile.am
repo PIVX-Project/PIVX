@@ -60,15 +60,15 @@ bin_PROGRAMS =
 TESTS =
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += darknetd
+  bin_PROGRAMS += pivxd
 endif
 
 if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += darknet-cli darknet-tx
+  bin_PROGRAMS += pivx-cli pivx-tx
 endif
 
 .PHONY: FORCE
-# darknet core #
+# pivx core #
 BITCOIN_CORE_H = \
   activemasternode.h \
   addrman.h \
@@ -76,6 +76,7 @@ BITCOIN_CORE_H = \
   allocators.h \
   amount.h \
   base58.h \
+  bip38.h \
   bloom.h \
   chain.h \
   chainparams.h \
@@ -171,7 +172,7 @@ obj/build.h: FORCE
 	  $(abs_top_srcdir)
 libbitcoin_util_a-clientversion.$(OBJEXT): obj/build.h
 
-# server: shared between darknetd and darknet-qt
+# server: shared between pivxd and pivx-qt
 libbitcoin_server_a_CPPFLAGS = $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS)
 libbitcoin_server_a_SOURCES = \
   addrman.cpp \
@@ -203,13 +204,14 @@ libbitcoin_server_a_SOURCES = \
   $(JSON_H) \
   $(BITCOIN_CORE_H)
 
-# wallet: shared between darknetd and darknet-qt, but only linked
+# wallet: shared between pivxd and pivx-qt, but only linked
 # when wallet enabled
 
 libbitcoin_wallet_a_CFLAGS = -fPIC
 libbitcoin_wallet_a_CPPFLAGS = $(BITCOIN_INCLUDES)
 libbitcoin_wallet_a_SOURCES = \
   activemasternode.cpp \
+  bip38.cpp \
   obfuscation.cpp \
   obfuscation-relay.cpp \
   db.cpp \
@@ -240,6 +242,7 @@ crypto_libbitcoin_crypto_a_SOURCES = \
   crypto/hmac_sha256.cpp \
   crypto/rfc6979_hmac_sha256.cpp \
   crypto/hmac_sha512.cpp \
+  crypto/scrypt.cpp \
   crypto/ripemd160.cpp \
   crypto/aes_helper.c \
   crypto/blake.c \
@@ -254,6 +257,7 @@ crypto_libbitcoin_crypto_a_SOURCES = \
   crypto/hmac_sha256.h \
   crypto/rfc6979_hmac_sha256.h \
   crypto/hmac_sha512.h \
+  crypto/scrypt.h \
   crypto/sha1.h \
   crypto/ripemd160.h \
   crypto/sph_blake.h \
@@ -272,12 +276,13 @@ univalue_libbitcoin_univalue_a_SOURCES = \
   univalue/univalue_escapes.h \
   univalue/univalue.h
 
-# common: shared between darknetd, and darknet-qt and non-server tools
+# common: shared between pivxd, and pivx-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(BITCOIN_INCLUDES)
 libbitcoin_common_a_SOURCES = \
   allocators.cpp \
   amount.cpp \
   base58.cpp \
+  bip38.cpp \
   chainparams.cpp \
   coins.cpp \
   compressor.cpp \
@@ -327,7 +332,7 @@ libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
 libbitcoin_util_a_SOURCES += compat/glibcxx_compat.cpp
 endif
 
-# cli: shared between darknet-cli and darknet-qt
+# cli: shared between pivx-cli and pivx-qt
 libbitcoin_cli_a_CPPFLAGS = $(BITCOIN_INCLUDES)
 libbitcoin_cli_a_SOURCES = \
   rpcclient.cpp \
@@ -337,7 +342,7 @@ nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # bitcoind binary #
-darknetd_LDADD = \
+pivxd_LDADD = \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UNIVALUE) \
@@ -348,36 +353,36 @@ darknetd_LDADD = \
   $(LIBSECP256K1)
 
 if ENABLE_WALLET
-darknetd_LDADD += libbitcoin_wallet.a
+pivxd_LDADD += libbitcoin_wallet.a
 endif
-darknetd_SOURCES = darknetd.cpp
+pivxd_SOURCES = pivxd.cpp
 #
 
 if TARGET_WINDOWS
-darknetd_SOURCES += darknetd-res.rc
+pivxd_SOURCES += pivxd-res.rc
 endif
 
-darknetd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
-darknetd_CPPFLAGS = $(BITCOIN_INCLUDES)
-darknetd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+pivxd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
+pivxd_CPPFLAGS = $(BITCOIN_INCLUDES)
+pivxd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 
-# darknet-cli binary #
-darknet_cli_LDADD = \
+# pivx-cli binary #
+pivx_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBBITCOIN_UTIL) \
   $(BOOST_LIBS) \
   $(SSL_LIBS) \
   $(CRYPTO_LIBS)
 
-darknet_cli_SOURCES = \
-  darknet-cli.cpp
+pivx_cli_SOURCES = \
+  pivx-cli.cpp
 
-darknet_cli_CPPFLAGS = $(BITCOIN_INCLUDES)
+pivx_cli_CPPFLAGS = $(BITCOIN_INCLUDES)
 #
 
-# darknet-tx binary #
-darknet_tx_LDADD = \
+# pivx-tx binary #
+pivx_tx_LDADD = \
   $(LIBBITCOIN_UNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
@@ -386,15 +391,15 @@ darknet_tx_LDADD = \
   $(BOOST_LIBS) \
   $(CRYPTO_LIBS)
 
-darknet_tx_SOURCES = darknet-tx.cpp
-darknet_tx_CPPFLAGS = $(BITCOIN_INCLUDES)
+pivx_tx_SOURCES = pivx-tx.cpp
+pivx_tx_CPPFLAGS = $(BITCOIN_INCLUDES)
 #
-darknet_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+pivx_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-darknet_cli_SOURCES += darknet-cli-res.rc
+pivx_cli_SOURCES += pivx-cli-res.rc
 endif
-darknet_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+pivx_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if BUILD_BITCOIN_LIBS
 include_HEADERS = script/bitcoinconsensus.h
@@ -402,6 +407,7 @@ libbitcoinconsensus_la_SOURCES = \
   allocators.cpp \
   primitives/transaction.cpp \
   crypto/hmac_sha512.cpp \
+  crypto/scrypt.cpp \
   crypto/sha1.cpp \
   crypto/sha256.cpp \
   crypto/sha512.cpp \

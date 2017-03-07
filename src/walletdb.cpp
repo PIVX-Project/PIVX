@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2014-2015 The DarkNet developers
+// Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -151,6 +151,76 @@ bool CWalletDB::WriteStakeSplitThreshold(uint64_t nStakeSplitThreshold)
 {
     nWalletDBUpdated++;
     return Write(std::string("stakeSplitThreshold"), nStakeSplitThreshold);
+}
+
+//presstab HyperStake
+bool CWalletDB::WriteMultiSend(std::vector<std::pair<std::string, int> > vMultiSend)
+{
+    nWalletDBUpdated++;
+    bool ret = true;
+    for(unsigned int i = 0; i < vMultiSend.size(); i++)
+    {
+        std::pair<std::string, int> pMultiSend;
+        pMultiSend = vMultiSend[i];
+        if(!Write(std::make_pair(std::string("multisend"), i), pMultiSend, true))
+            ret = false;
+    }
+    return ret;
+}
+//presstab HyperStake
+bool CWalletDB::EraseMultiSend(std::vector<std::pair<std::string, int> > vMultiSend)
+{
+    nWalletDBUpdated++;
+    bool ret = true;
+    for(unsigned int i = 0; i < vMultiSend.size(); i++)
+    {
+        std::pair<std::string, int> pMultiSend;
+        pMultiSend = vMultiSend[i];
+        if(!Erase(std::make_pair(std::string("multisend"), i)))
+            ret = false;
+    }
+    return ret;
+}
+//presstab HyperStake
+bool CWalletDB::WriteMSettings(bool fMultiSendStake, bool fMultiSendMasternode, int nLastMultiSendHeight)
+{
+    nWalletDBUpdated++;
+    std::pair<bool, bool> enabledMS(fMultiSendStake, fMultiSendMasternode);
+    std::pair<std::pair<bool, bool>, int> pSettings(enabledMS, nLastMultiSendHeight);
+
+    return Write(std::string("msettingsv2"), pSettings, true);
+}
+//presstab HyperStake
+bool CWalletDB::WriteMSDisabledAddresses(std::vector<std::string> vDisabledAddresses)
+{
+    nWalletDBUpdated++;
+    bool ret = true;
+    for(unsigned int i = 0; i < vDisabledAddresses.size(); i++)
+    {
+        if(!Write(std::make_pair(std::string("mdisabled"), i), vDisabledAddresses[i]))
+            ret = false;
+    }
+    return ret;
+}
+//presstab HyperStake
+bool CWalletDB::EraseMSDisabledAddresses(std::vector<std::string> vDisabledAddresses)
+{
+    nWalletDBUpdated++;
+    bool ret = true;
+    for(unsigned int i = 0; i < vDisabledAddresses.size(); i++)
+    {
+        if(!Erase(std::make_pair(std::string("mdisabled"), i)))
+            ret = false;
+    }
+    return ret;
+}
+bool CWalletDB::WriteAutoCombineSettings(bool fEnable, CAmount nCombineThreshold)
+{
+    nWalletDBUpdated++;
+    std::pair<bool, CAmount> pSettings;
+    pSettings.first = fEnable;
+    pSettings.second = nCombineThreshold;
+    return Write(std::string("autocombinesettings"), pSettings, true);
 }
 
 bool CWalletDB::WriteDefaultKey(const CPubKey& vchPubKey)
@@ -590,7 +660,39 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
 	else if (strType == "stakeSplitThreshold") //presstab HyperStake
 	{
             ssValue >> pwallet->nStakeSplitThreshold;
-	}
+        }
+        else if (strType == "multisend") //presstab HyperStake
+        {
+            unsigned int i;
+            ssKey >> i;
+            std::pair<std::string, int> pMultiSend;
+            ssValue >> pMultiSend;
+            if(CBitcoinAddress(pMultiSend.first).IsValid())
+            {
+                pwallet->vMultiSend.push_back(pMultiSend);
+            }
+        }
+        else if(strType == "msettingsv2")//presstab HyperStake
+        {
+            std::pair<std::pair<bool, bool>, int> pSettings;
+            ssValue >> pSettings;
+            pwallet->fMultiSendStake = pSettings.first.first;
+            pwallet->fMultiSendMasternodeReward = pSettings.first.second;
+            pwallet->nLastMultiSendHeight = pSettings.second;
+        }
+        else if(strType == "mdisabled")//presstab HyperStake
+        {
+            std::string strDisabledAddress;
+            ssValue >> strDisabledAddress;
+            pwallet->vDisabledAddresses.push_back(strDisabledAddress);
+        }
+        else if(strType == "autocombinesettings")
+        {
+            std::pair<bool, CAmount> pSettings;
+            ssValue >> pSettings;
+            pwallet->fCombineDust = pSettings.first;
+            pwallet->nAutoCombineThreshold = pSettings.second;
+        }
         else if (strType == "destdata")
         {
             std::string strAddress, strKey, strValue;
@@ -803,7 +905,7 @@ DBErrors CWalletDB::ZapWalletTx(CWallet* pwallet, vector<CWalletTx>& vWtx)
 void ThreadFlushWalletDB(const string& strFile)
 {
     // Make this thread recognisable as the wallet flushing thread
-    RenameThread("darknet-wallet");
+    RenameThread("pivx-wallet");
 
     static bool fOneThread;
     if (fOneThread)

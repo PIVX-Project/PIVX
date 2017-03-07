@@ -1,0 +1,20 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="bg">locale/pivx_bg.qm</file>
+        <file alias="de">locale/pivx_de.qm</file>
+        <file alias="en">locale/pivx_en.qm</file>
+        <file alias="es">locale/pivx_es.qm</file>
+        <file alias="fi">locale/pivx_fi.qm</file>
+        <file alias="fr">locale/pivx_fr.qm</file>
+        <file alias="it">locale/pivx_it.qm</file>
+        <file alias="ja">locale/pivx_ja.qm</file>
+        <file alias="pl">locale/pivx_pl.qm</file>
+        <file alias="pt">locale/pivx_pt.qm</file>
+        <file alias="ru">locale/pivx_ru.qm</file>
+        <file alias="sk">locale/pivx_sk.qm</file>
+        <file alias="sv">locale/pivx_sv.qm</file>
+        <file alias="vi">locale/pivx_vi.qm</file>
+        <file alias="zh_CN">locale/pivx_zh_CN.qm</file>
+        <file alias="zh_TW">locale/pivx_zh_TW.qm</file>
+    </qresource>
+</RCC>

@@ -1,9 +1,9 @@
 Sample configuration files for:
 
-SystemD: darknetd.service
-Upstart: darknetd.conf
-OpenRC:  darknetd.openrc
-         darknetd.openrcconf
+SystemD: pivxd.service
+Upstart: pivxd.conf
+OpenRC:  pivxd.openrc
+         pivxd.openrcconf
 
 have been made available to assist packagers in creating node packages here.
 

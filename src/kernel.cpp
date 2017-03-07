@@ -276,7 +276,7 @@ static bool GetKernelStakeModifier(uint256 hashBlockFrom, uint64_t& nStakeModifi
 
 uint256 stakeHash(unsigned int nTimeTx, CDataStream ss, unsigned int prevoutIndex, uint256 prevoutHash, unsigned int nTimeBlockFrom)
 {
-	//Darknet will hash in the transaction hash and the index number in order to make sure each hash is unique
+	//Pivx will hash in the transaction hash and the index number in order to make sure each hash is unique
 	ss << nTimeBlockFrom << prevoutIndex << prevoutHash << nTimeTx;
 	return Hash(ss.begin(), ss.end());
 }

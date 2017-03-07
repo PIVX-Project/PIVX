@@ -1,6 +1,6 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2016 The DarkNet developers
+// Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -13,7 +13,7 @@ static const int MODEL_UPDATE_DELAY = 250;
 /* AskPassphraseDialog -- Maximum passphrase length */
 static const int MAX_PASSPHRASE_SIZE = 1024;
 
-/* DarknetGUI -- Size of icons in status bar */
+/* Pivx GUI -- Size of icons in status bar */
 static const int STATUSBAR_ICONSIZE = 16;
 
 /* Invalid field background style */
@@ -46,9 +46,9 @@ static const int MAX_URI_LENGTH = 255;
 /* Number of frames in spinner animation */
 #define SPINNER_FRAMES 35
 
-#define QAPP_ORG_NAME "DarkNet"
-#define QAPP_ORG_DOMAIN "darknet-crypto.com"
-#define QAPP_APP_NAME_DEFAULT "DarkNet-Qt"
-#define QAPP_APP_NAME_TESTNET "DarkNet-Qt-testnet"
+#define QAPP_ORG_NAME "PIVX"
+#define QAPP_ORG_DOMAIN "pivx.org"
+#define QAPP_APP_NAME_DEFAULT "PIVX-Qt"
+#define QAPP_APP_NAME_TESTNET "PIVX-Qt-testnet"
 
 #endif // BITCOIN_QT_GUICONSTANTS_H

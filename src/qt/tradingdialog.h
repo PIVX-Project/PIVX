@@ -15,7 +15,7 @@ namespace Ui {
 class tradingDialog;
 }
 
-extern double _dDnetPriceLast;
+extern double _dPivPriceLast;
 extern double _dBtcPriceCurrent;
 extern double _dBtcPriceLast;
 
@@ -52,11 +52,11 @@ private Q_SLOTS:
     void on_BuyBidcomboBox_currentIndexChanged(const QString &arg1);
     void on_UnitsInput_textChanged(const QString &arg1);
     void on_BuyBidPriceEdit_textChanged(const QString &arg1);
-    void on_BuyDNET_clicked();
-    void on_SellDNETBTN_clicked();
+    void on_BuyPIV_clicked();
+    void on_SellPIVBTN_clicked();
     void on_SellBidcomboBox_currentIndexChanged(const QString &arg1);
     void on_Sell_Max_Amount_clicked();
-    void on_UnitsInputDNET_textChanged(const QString &arg1);
+    void on_UnitsInputPIV_textChanged(const QString &arg1);
     void on_SellBidPriceEdit_textChanged(const QString &arg1);
     void on_AdvancedView_stateChanged(int arg1);
 
@@ -64,8 +64,8 @@ private Q_SLOTS:
     QString BittrexTimeStampToReadable(QString DateTime);
     qint64 BittrexTimeStampToSeconds(QString DateTime);
     QString CancelOrder(QString Orderid);
-    QString BuyDNET(QString OrderType, double Quantity, double Rate);
-    QString SellDNET(QString OrderType, double Quantity, double Rate);
+    QString BuyPIV(QString OrderType, double Quantity, double Rate);
+    QString SellPIV(QString OrderType, double Quantity, double Rate);
     QString GetMarketHistory();
     QString GetMarketSummary();
     QString GetOrderBook();

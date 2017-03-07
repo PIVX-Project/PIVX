@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2016 The Darknet developers
+// Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -22,6 +22,11 @@
 #include "crypto/sph_skein.h"
 
 #include <vector>
+#include <sstream>
+#include <iomanip>
+#include <openssl/sha.h>
+
+using namespace std;
 
 /** A hasher class for Bitcoin's 256-bit hash (double SHA-256). */
 class CHash256 {
@@ -100,6 +105,31 @@ public:
         return *this;
     }
 };
+
+/** Compute the 256-bit hash of a std::string */
+inline std::string Hash(std::string input)
+{
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+    SHA256_Update(&sha256, input.c_str(), input.size());
+    SHA256_Final(hash, &sha256);
+    stringstream ss;
+    for(int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    {
+        ss << hex << setw(2) << setfill('0') << (int)hash[i];
+    }
+    return ss.str();
+}
+
+/** Compute the 256-bit hash of a void pointer */
+inline void Hash(void* in, unsigned int len, unsigned char* out)
+{
+    SHA256_CTX sha256;
+    SHA256_Init(&sha256);
+    SHA256_Update(&sha256, in, len);
+    SHA256_Final(out, &sha256);
+}
 
 /** Compute the 256-bit hash of an object. */
 template<typename T1>
@@ -353,5 +383,7 @@ inline uint256 HashQuark(const T1 pbegin, const T1 pend)
     return hash[8].trim256();
 
 }
+
+void scrypt_hash(const char* pass, unsigned int pLen, const char* salt, unsigned int sLen, char *output, unsigned int N, unsigned int r, unsigned int p, unsigned int dkLen);
 
 #endif // BITCOIN_HASH_H

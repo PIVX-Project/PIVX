@@ -1,7 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2016 The DarkNet developers
+// Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -86,13 +86,13 @@ Value getnewaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "getnewaddress ( \"account\" )\n"
-            "\nReturns a new DarkNet address for receiving payments.\n"
+            "\nReturns a new PIVX address for receiving payments.\n"
             "If 'account' is specified (recommended), it is added to the address book \n"
             "so payments received with the address will be credited to 'account'.\n"
             "\nArguments:\n"
             "1. \"account\"        (string, optional) The account name for the address to be linked to. if not provided, the default account \"\" is used. It can also be set to the empty string \"\" to represent the default account. The account does not need to exist, it will be created if there is no account by the given name.\n"
             "\nResult:\n"
-            "\"darknetaddress\"    (string) The new darknet address\n"
+            "\"pivxaddress\"    (string) The new pivx address\n"
             "\nExamples:\n"
             + HelpExampleCli("getnewaddress", "")
             + HelpExampleCli("getnewaddress", "\"\"")
@@ -162,11 +162,11 @@ Value getaccountaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() != 1)
         throw runtime_error(
             "getaccountaddress \"account\"\n"
-            "\nReturns the current DarkNet address for receiving payments to this account.\n"
+            "\nReturns the current PIVX address for receiving payments to this account.\n"
             "\nArguments:\n"
             "1. \"account\"       (string, required) The account name for the address. It can also be set to the empty string \"\" to represent the default account. The account does not need to exist, it will be created and a new address created  if there is no account by the given name.\n"
             "\nResult:\n"
-            "\"darknetaddress\"   (string) The account darknet address\n"
+            "\"pivxaddress\"   (string) The account pivx address\n"
             "\nExamples:\n"
             + HelpExampleCli("getaccountaddress", "")
             + HelpExampleCli("getaccountaddress", "\"\"")
@@ -190,7 +190,7 @@ Value getrawchangeaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "getrawchangeaddress\n"
-            "\nReturns a new DarkNet address, for receiving change.\n"
+            "\nReturns a new PIVX address, for receiving change.\n"
             "This is for use with raw transactions, NOT normal use.\n"
             "\nResult:\n"
             "\"address\"    (string) The address\n"
@@ -219,10 +219,10 @@ Value setaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "setaccount \"darknetaddress\" \"account\"\n"
+            "setaccount \"pivxaddress\" \"account\"\n"
             "\nSets the account associated with the given address.\n"
             "\nArguments:\n"
-            "1. \"darknetaddress\"  (string, required) The darknet address to be associated with an account.\n"
+            "1. \"pivxaddress\"  (string, required) The pivx address to be associated with an account.\n"
             "2. \"account\"         (string, required) The account to assign the address to.\n"
             "\nExamples:\n"
             + HelpExampleCli("setaccount", "\"XwnLY9Tf7Zsef8gMGL2fhWA9ZmMjt4KPwg\" \"tabby\"")
@@ -231,7 +231,7 @@ Value setaccount(const Array& params, bool fHelp)
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid DarkNet address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
 
 
     string strAccount;
@@ -261,10 +261,10 @@ Value getaccount(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "getaccount \"darknetaddress\"\n"
+            "getaccount \"pivxaddress\"\n"
             "\nReturns the account associated with the given address.\n"
             "\nArguments:\n"
-            "1. \"darknetaddress\"  (string, required) The darknet address for account lookup.\n"
+            "1. \"pivxaddress\"  (string, required) The pivx address for account lookup.\n"
             "\nResult:\n"
             "\"accountname\"        (string) the account address\n"
             "\nExamples:\n"
@@ -274,7 +274,7 @@ Value getaccount(const Array& params, bool fHelp)
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid DarkNet address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
 
     string strAccount;
     map<CTxDestination, CAddressBookData>::iterator mi = pwalletMain->mapAddressBook.find(address.Get());
@@ -294,7 +294,7 @@ Value getaddressesbyaccount(const Array& params, bool fHelp)
             "1. \"account\"  (string, required) The account name.\n"
             "\nResult:\n"
             "[                     (json array of string)\n"
-            "  \"darknetaddress\"  (string) a darknet address associated with the given account\n"
+            "  \"pivxaddress\"  (string) a pivx address associated with the given account\n"
             "  ,...\n"
             "]\n"
             "\nExamples:\n"
@@ -333,7 +333,7 @@ void SendMoney(const CTxDestination &address, CAmount nValue, CWalletTx& wtxNew,
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
 
-    // Parse DarkNet address
+    // Parse PIVX address
     CScript scriptPubKey = GetScriptForDestination(address);
 
     // Create and send the transaction
@@ -354,11 +354,11 @@ Value sendtoaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
-            "sendtoaddress \"darknetaddress\" amount ( \"comment\" \"comment-to\" )\n"
+            "sendtoaddress \"pivxaddress\" amount ( \"comment\" \"comment-to\" )\n"
             "\nSend an amount to a given address. The amount is a real and is rounded to the nearest 0.00000001\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
-            "1. \"darknetaddress\"  (string, required) The darknet address to send to.\n"
+            "1. \"pivxaddress\"  (string, required) The pivx address to send to.\n"
             "2. \"amount\"      (numeric, required) The amount in btc to send. eg 0.1\n"
             "3. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
             "                             This is not part of the transaction, just kept in your wallet.\n"
@@ -375,7 +375,7 @@ Value sendtoaddress(const Array& params, bool fHelp)
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid DarkNet address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
 
     // Amount
     CAmount nAmount = AmountFromValue(params[1]);
@@ -398,11 +398,11 @@ Value sendtoaddressix(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
-            "sendtoaddressix \"darknetaddress\" amount ( \"comment\" \"comment-to\" )\n"
+            "sendtoaddressix \"pivxaddress\" amount ( \"comment\" \"comment-to\" )\n"
             "\nSend an amount to a given address. The amount is a real and is rounded to the nearest 0.00000001\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
-            "1. \"darknetaddress\"  (string, required) The darknet address to send to.\n"
+            "1. \"pivxaddress\"  (string, required) The pivx address to send to.\n"
             "2. \"amount\"      (numeric, required) The amount in btc to send. eg 0.1\n"
             "3. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
             "                             This is not part of the transaction, just kept in your wallet.\n"
@@ -419,7 +419,7 @@ Value sendtoaddressix(const Array& params, bool fHelp)
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid DarkNet address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
 
     // Amount
     CAmount nAmount = AmountFromValue(params[1]);
@@ -449,7 +449,7 @@ Value listaddressgroupings(const Array& params, bool fHelp)
             "[\n"
             "  [\n"
             "    [\n"
-            "      \"darknetaddress\",     (string) The darknet address\n"
+            "      \"pivxaddress\",     (string) The pivx address\n"
             "      amount,                 (numeric) The amount in btc\n"
             "      \"account\"             (string, optional) The account\n"
             "    ]\n"
@@ -488,11 +488,11 @@ Value signmessage(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 2)
         throw runtime_error(
-            "signmessage \"darknetaddress\" \"message\"\n"
+            "signmessage \"pivxaddress\" \"message\"\n"
             "\nSign a message with the private key of an address"
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
-            "1. \"darknetaddress\"  (string, required) The darknet address to use for the private key.\n"
+            "1. \"pivxaddress\"  (string, required) The pivx address to use for the private key.\n"
             "2. \"message\"         (string, required) The message to create a signature of.\n"
             "\nResult:\n"
             "\"signature\"          (string) The signature of the message encoded in base 64\n"
@@ -539,10 +539,10 @@ Value getreceivedbyaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-            "getreceivedbyaddress \"darknetaddress\" ( minconf )\n"
-            "\nReturns the total amount received by the given darknetaddress in transactions with at least minconf confirmations.\n"
+            "getreceivedbyaddress \"pivxaddress\" ( minconf )\n"
+            "\nReturns the total amount received by the given pivxaddress in transactions with at least minconf confirmations.\n"
             "\nArguments:\n"
-            "1. \"darknetaddress\"  (string, required) The darknet address for transactions.\n"
+            "1. \"pivxaddress\"  (string, required) The pivx address for transactions.\n"
             "2. minconf             (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
             "\nResult:\n"
             "amount   (numeric) The total amount in btc received at this address.\n"
@@ -557,10 +557,10 @@ Value getreceivedbyaddress(const Array& params, bool fHelp)
             + HelpExampleRpc("getreceivedbyaddress", "\"XwnLY9Tf7Zsef8gMGL2fhWA9ZmMjt4KPwg\", 6")
        );
 
-    // darknet address
+    // pivx address
     CBitcoinAddress address = CBitcoinAddress(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid DarkNet address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
     CScript scriptPubKey = GetScriptForDestination(address.Get());
     if (!IsMine(*pwalletMain,scriptPubKey))
         return (double)0.0;
@@ -825,13 +825,13 @@ Value sendfrom(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 3 || params.size() > 6)
         throw runtime_error(
-            "sendfrom \"fromaccount\" \"todarknetaddress\" amount ( minconf \"comment\" \"comment-to\" )\n"
-            "\nSent an amount from an account to a darknet address.\n"
+            "sendfrom \"fromaccount\" \"topivxaddress\" amount ( minconf \"comment\" \"comment-to\" )\n"
+            "\nSent an amount from an account to a pivx address.\n"
             "The amount is a real and is rounded to the nearest 0.00000001."
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
             "1. \"fromaccount\"       (string, required) The name of the account to send funds from. May be the default account using \"\".\n"
-            "2. \"todarknetaddress\"  (string, required) The darknet address to send funds to.\n"
+            "2. \"topivxaddress\"  (string, required) The pivx address to send funds to.\n"
             "3. amount                (numeric, required) The amount in btc. (transaction fee is added on top).\n"
             "4. minconf               (numeric, optional, default=1) Only use funds with at least this many confirmations.\n"
             "5. \"comment\"           (string, optional) A comment used to store what the transaction is for. \n"
@@ -853,7 +853,7 @@ Value sendfrom(const Array& params, bool fHelp)
     string strAccount = AccountFromValue(params[0]);
     CBitcoinAddress address(params[1].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid DarkNet address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
     CAmount nAmount = AmountFromValue(params[2]);
     int nMinDepth = 1;
     if (params.size() > 3)
@@ -890,7 +890,7 @@ Value sendmany(const Array& params, bool fHelp)
             "1. \"fromaccount\"         (string, required) The account to send the funds from, can be \"\" for the default account\n"
             "2. \"amounts\"             (string, required) A json object with addresses and amounts\n"
             "    {\n"
-            "      \"address\":amount   (numeric) The darknet address is the key, the numeric amount in btc is the value\n"
+            "      \"address\":amount   (numeric) The pivx address is the key, the numeric amount in btc is the value\n"
             "      ,...\n"
             "    }\n"
             "3. minconf                 (numeric, optional, default=1) Only use the balance confirmed at least this many times.\n"
@@ -926,7 +926,7 @@ Value sendmany(const Array& params, bool fHelp)
     {
         CBitcoinAddress address(s.name_);
         if (!address.IsValid())
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid DarkNet address: ")+s.name_);
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid PIVX address: ")+s.name_);
 
         if (setAddress.count(address))
             throw JSONRPCError(RPC_INVALID_PARAMETER, string("Invalid parameter, duplicated address: ")+s.name_);
@@ -968,20 +968,20 @@ Value addmultisigaddress(const Array& params, bool fHelp)
     {
         string msg = "addmultisigaddress nrequired [\"key\",...] ( \"account\" )\n"
             "\nAdd a nrequired-to-sign multisignature address to the wallet.\n"
-            "Each key is a DarkNet address or hex-encoded public key.\n"
+            "Each key is a PIVX address or hex-encoded public key.\n"
             "If 'account' is specified, assign address to that account.\n"
 
             "\nArguments:\n"
             "1. nrequired        (numeric, required) The number of required signatures out of the n keys or addresses.\n"
-            "2. \"keysobject\"   (string, required) A json array of darknet addresses or hex-encoded public keys\n"
+            "2. \"keysobject\"   (string, required) A json array of pivx addresses or hex-encoded public keys\n"
             "     [\n"
-            "       \"address\"  (string) darknet address or hex-encoded public key\n"
+            "       \"address\"  (string) pivx address or hex-encoded public key\n"
             "       ...,\n"
             "     ]\n"
             "3. \"account\"      (string, optional) An account to assign the addresses to.\n"
 
             "\nResult:\n"
-            "\"darknetaddress\"  (string) A darknet address associated with the keys.\n"
+            "\"pivxaddress\"  (string) A pivx address associated with the keys.\n"
 
             "\nExamples:\n"
             "\nAdd a multisig address from 2 addresses\n"
@@ -1325,7 +1325,7 @@ Value listtransactions(const Array& params, bool fHelp)
             "  {\n"
             "    \"account\":\"accountname\",       (string) The account name associated with the transaction. \n"
             "                                                It will be \"\" for the default account.\n"
-            "    \"address\":\"darknetaddress\",    (string) The darknet address of the transaction. Not present for \n"
+            "    \"address\":\"pivxaddress\",    (string) The pivx address of the transaction. Not present for \n"
             "                                                move transactions (category = move).\n"
             "    \"category\":\"send|receive|move\", (string) The transaction category. 'move' is a local (off blockchain)\n"
             "                                                transaction between accounts, and not associated with an address,\n"
@@ -1511,7 +1511,7 @@ Value listsinceblock(const Array& params, bool fHelp)
             "{\n"
             "  \"transactions\": [\n"
             "    \"account\":\"accountname\",       (string) The account name associated with the transaction. Will be \"\" for the default account.\n"
-            "    \"address\":\"darknetaddress\",    (string) The darknet address of the transaction. Not present for move transactions (category = move).\n"
+            "    \"address\":\"pivxaddress\",    (string) The pivx address of the transaction. Not present for move transactions (category = move).\n"
             "    \"category\":\"send|receive\",     (string) The transaction category. 'send' has negative amounts, 'receive' has positive amounts.\n"
             "    \"amount\": x.xxx,          (numeric) The amount in btc. This is negative for the 'send' category, and for the 'move' category for moves \n"
             "                                          outbound. It is positive for the 'receive' category, and for the 'move' category for inbound funds.\n"
@@ -1607,7 +1607,7 @@ Value gettransaction(const Array& params, bool fHelp)
             "  \"details\" : [\n"
             "    {\n"
             "      \"account\" : \"accountname\",  (string) The account name involved in the transaction, can be \"\" for the default account.\n"
-            "      \"address\" : \"darknetaddress\",   (string) The darknet address involved in the transaction\n"
+            "      \"address\" : \"pivxaddress\",   (string) The pivx address involved in the transaction\n"
             "      \"category\" : \"send|receive\",    (string) The category, either 'send' or 'receive'\n"
             "      \"amount\" : x.xxx                  (numeric) The amount in btc\n"
             "      \"vout\" : n,                       (numeric) the vout value\n"
@@ -1724,7 +1724,7 @@ Value walletpassphrase(const Array& params, bool fHelp)
         throw runtime_error(
             "walletpassphrase \"passphrase\" timeout ( anonymizeonly )\n"
             "\nStores the wallet decryption key in memory for 'timeout' seconds.\n"
-            "This is needed prior to performing transactions related to private keys such as sending darknets\n"
+            "This is needed prior to performing transactions related to private keys such as sending PIVs\n"
             "\nArguments:\n"
             "1. \"passphrase\"     (string, required) The wallet passphrase\n"
             "2. timeout            (numeric, required) The time to keep the decryption key in seconds.\n"
@@ -1867,10 +1867,10 @@ Value encryptwallet(const Array& params, bool fHelp)
             "\nExamples:\n"
             "\nEncrypt you wallet\n"
             + HelpExampleCli("encryptwallet", "\"my pass phrase\"") +
-            "\nNow set the passphrase to use the wallet, such as for signing or sending darknet\n"
+            "\nNow set the passphrase to use the wallet, such as for signing or sending PIVs\n"
             + HelpExampleCli("walletpassphrase", "\"my pass phrase\"") +
             "\nNow we can so something like sign\n"
-            + HelpExampleCli("signmessage", "\"darknetaddress\" \"test message\"") +
+            + HelpExampleCli("signmessage", "\"pivxaddress\" \"test message\"") +
             "\nNow lock the wallet again by removing the passphrase\n"
             + HelpExampleCli("walletlock", "") +
             "\nAs a json rpc call\n"
@@ -1900,7 +1900,7 @@ Value encryptwallet(const Array& params, bool fHelp)
     // slack space in .dat files; that is bad if the old data is
     // unencrypted private keys. So:
     StartShutdown();
-    return "wallet encrypted; darknet server stopping, restart to run with encrypted wallet. The keypool has been flushed, you need to make a new backup.";
+    return "wallet encrypted; pivx server stopping, restart to run with encrypted wallet. The keypool has been flushed, you need to make a new backup.";
 }
 
 Value lockunspent(const Array& params, bool fHelp)
@@ -1910,7 +1910,7 @@ Value lockunspent(const Array& params, bool fHelp)
             "lockunspent unlock [{\"txid\":\"txid\",\"vout\":n},...]\n"
             "\nUpdates list of temporarily unspendable outputs.\n"
             "Temporarily lock (unlock=false) or unlock (unlock=true) specified transaction outputs.\n"
-            "A locked transaction output will not be chosen by automatic coin selection, when spending darknets.\n"
+            "A locked transaction output will not be chosen by automatic coin selection, when spending PIVs.\n"
             "Locks are stored in memory only. Nodes start with zero locked outputs, and the locked output list\n"
             "is always cleared (by virtue of process exit) when a node stops or fails.\n"
             "Also see the listunspent call\n"
@@ -2033,7 +2033,7 @@ Value settxfee(const Array& params, bool fHelp)
             "settxfee amount\n"
             "\nSet the transaction fee per kB.\n"
             "\nArguments:\n"
-            "1. amount         (numeric, required) The transaction fee in DNET/kB rounded to the nearest 0.00000001\n"
+            "1. amount         (numeric, required) The transaction fee in PIV/kB rounded to the nearest 0.00000001\n"
             "\nResult\n"
             "true|false        (boolean) Returns true if successful\n"
             "\nExamples:\n"
@@ -2059,7 +2059,7 @@ Value getwalletinfo(const Array& params, bool fHelp)
             "\nResult:\n"
             "{\n"
             "  \"walletversion\": xxxxx,     (numeric) the wallet version\n"
-            "  \"balance\": xxxxxxx,         (numeric) the total DNET balance of the wallet\n"
+            "  \"balance\": xxxxxxx,         (numeric) the total PIV balance of the wallet\n"
             "  \"txcount\": xxxxxxx,         (numeric) the total number of transactions in the wallet\n"
             "  \"keypoololdest\": xxxxxx,    (numeric) the timestamp (seconds since GMT epoch) of the oldest pre-generated key in the key pool\n"
             "  \"keypoolsize\": xxxx,        (numeric) how many new keys are pre-generated\n"
@@ -2219,3 +2219,292 @@ Value getstakesplitthreshold(const Array& params, bool fHelp)
 
 }
 
+Value autocombinerewards(const Array & params, bool fHelp)
+{
+    if (fHelp || params.size() < 1)
+        throw runtime_error(
+                "autocombinerewards <true/false> threshold\n"
+                "Wallet will automatically monitor for any coins with value below the threshold amount, and combine them if they reside with the same PIVX address\n"
+                "When autocombinerewards runs it will create a transaction, and therefore will be subject to transaction fees.\n");
+
+    CWalletDB walletdb(pwalletMain->strWalletFile);
+    bool fEnable = params[0].get_bool();
+    CAmount nThreshold = 0;
+
+    if(fEnable)
+    {
+        if(params.size() != 2)
+            throw runtime_error("Input Error: use format: autocombinerewards <true/false> threshold\n");
+
+        nThreshold = params[1].get_int();
+    }
+
+    pwalletMain->fCombineDust = fEnable;
+    pwalletMain->nAutoCombineThreshold = nThreshold;
+
+    if(!walletdb.WriteAutoCombineSettings(fEnable, nThreshold))
+        throw runtime_error("Changed settings in wallet but failed to save to database\n");
+
+    return "Auto Combine Rewards Threshold Set";
+}
+
+//presstab
+Array printMultiSend()
+{
+    Array ret;
+    Object act;
+    act.push_back(Pair("MultiSendStake Activated?", pwalletMain->fMultiSendStake));
+    act.push_back(Pair("MultiSendMasternode Activated?", pwalletMain->fMultiSendMasternodeReward));
+    ret.push_back(act);
+
+    if(pwalletMain->vDisabledAddresses.size() >= 1)
+    {
+        Object disAdd;
+        for(unsigned int i = 0; i < pwalletMain->vDisabledAddresses.size(); i++)
+        {
+            disAdd.push_back(Pair("Disabled From Sending", pwalletMain->vDisabledAddresses[i]));
+        }
+        ret.push_back(disAdd);
+    }
+
+    ret.push_back("MultiSend Addresses to Send To:");
+
+    Object vMS;
+    for(unsigned int i = 0; i < pwalletMain->vMultiSend.size(); i++)
+    {
+        vMS.push_back(Pair("Address " + boost::lexical_cast<std::string>(i), pwalletMain->vMultiSend[i].first));
+        vMS.push_back(Pair("Percent", pwalletMain->vMultiSend[i].second));
+    }
+
+    ret.push_back(vMS);
+    return ret;
+}
+
+//presstab HyperStake
+Array printAddresses()
+{
+    std::vector<COutput> vCoins;
+    pwalletMain->AvailableCoins(vCoins);
+    std::map<std::string, double> mapAddresses;
+    BOOST_FOREACH(const COutput& out, vCoins)
+    {
+        CTxDestination utxoAddress;
+        ExtractDestination(out.tx->vout[out.i].scriptPubKey, utxoAddress);
+        std::string strAdd = CBitcoinAddress(utxoAddress).ToString();
+
+        if(mapAddresses.find(strAdd) == mapAddresses.end()) //if strAdd is not already part of the map
+            mapAddresses[strAdd] = (double)out.tx->vout[out.i].nValue / (double)COIN;
+        else
+            mapAddresses[strAdd] += (double)out.tx->vout[out.i].nValue / (double)COIN;
+    }
+
+    Array ret;
+    for (map<std::string, double>::const_iterator it = mapAddresses.begin(); it != mapAddresses.end(); ++it)
+    {
+        Object obj;
+        const std::string* strAdd = &(*it).first;
+        const double* nBalance = &(*it).second;
+        obj.push_back(Pair("Address ", *strAdd));
+        obj.push_back(Pair("Balance ", *nBalance));
+        ret.push_back(obj);
+    }
+
+    return ret;
+}
+
+//presstab HyperStake
+unsigned int sumMultiSend()
+{
+    unsigned int sum = 0;
+    for(unsigned int i = 0; i < pwalletMain->vMultiSend.size(); i++)
+    sum += pwalletMain->vMultiSend[i].second;
+    return sum;
+}
+
+Value multisend(const Array &params, bool fHelp)
+{
+    CWalletDB walletdb(pwalletMain->strWalletFile);
+    bool fFileBacked;
+    //MultiSend Commands
+    if(params.size() == 1)
+    {
+        string strCommand = params[0].get_str();
+        Object ret;
+        if(strCommand == "print")
+        {
+            return printMultiSend();
+        }
+        else if(strCommand == "printaddress" || strCommand == "printaddresses")
+        {
+            return printAddresses();
+        }
+        else if(strCommand == "clear")
+        {
+            LOCK(pwalletMain->cs_wallet);
+            {
+                fFileBacked = pwalletMain->fFileBacked;
+                string strRet;
+                if(fFileBacked)
+                {
+                    if(walletdb.EraseMultiSend(pwalletMain->vMultiSend))
+                        strRet += "erased MultiSend vector from database & ";
+                }
+                pwalletMain->vMultiSend.clear();
+                pwalletMain->setMultiSendDisabled();
+                strRet += "cleared MultiSend vector from RAM";
+                return strRet;
+            }
+        }
+        else if (strCommand == "enablestake" || strCommand == "activatestake" )
+        {
+            if(pwalletMain->vMultiSend.size() < 1)
+                return "Unable to activate MultiSend, check MultiSend vector";
+            if(CBitcoinAddress(pwalletMain->vMultiSend[0].first).IsValid())
+            {
+                pwalletMain->fMultiSendStake = true;
+
+                if(!walletdb.WriteMSettings(true, pwalletMain->fMultiSendMasternodeReward, pwalletMain->nLastMultiSendHeight))
+                    return "MultiSend activated but writing settings to DB failed";
+                else
+                    return "MultiSend activated";
+            }
+            else
+                return "Unable to activate MultiSend, check MultiSend vector";
+        }
+        else if(strCommand == "enablemasternode" || strCommand == "activatemasternode")
+        {
+            if(pwalletMain->vMultiSend.size() < 1)
+                return "Unable to activate MultiSend, check MultiSend vector";
+
+            if(CBitcoinAddress(pwalletMain->vMultiSend[0].first).IsValid())
+            {
+                pwalletMain->fMultiSendMasternodeReward = true;
+
+                if(!walletdb.WriteMSettings(pwalletMain->fMultiSendStake, true, pwalletMain->nLastMultiSendHeight))
+                    return "MultiSend activated but writing settings to DB failed";
+                else
+                    return "MultiSend activated";
+            }
+            else
+                return "Unable to activate MultiSend, check MultiSend vector";
+        }
+        else if (strCommand == "disable" || strCommand == "deactivate" )
+        {
+            pwalletMain->setMultiSendDisabled();
+            if(!walletdb.WriteMSettings(false, false, pwalletMain->nLastMultiSendHeight))
+                return "MultiSend deactivated but writing settings to DB failed";
+
+            return "MultiSend deactivated";
+        }
+        else if(strCommand == "enableall")
+        {
+            if(!walletdb.EraseMSDisabledAddresses(pwalletMain->vDisabledAddresses))
+                return "failed to clear old vector from walletDB";
+            else
+            {
+                pwalletMain->vDisabledAddresses.clear();
+                return "all addresses will now send MultiSend transactions";
+            }
+        }
+    }
+    if(params.size() == 2 && params[0].get_str() == "delete")
+    {
+        int del = boost::lexical_cast<int>(params[1].get_str());
+        if(!walletdb.EraseMultiSend(pwalletMain->vMultiSend))
+            return "failed to delete old MultiSend vector from database";
+        pwalletMain->vMultiSend.erase(pwalletMain->vMultiSend.begin() + del);
+        if(!walletdb.WriteMultiSend(pwalletMain->vMultiSend))
+            return "walletdb WriteMultiSend failed!";
+
+        return printMultiSend();
+    }
+    if(params.size() == 2 && params[0].get_str() == "disable")
+    {
+        std::string disAddress = params[1].get_str();
+        if(!CBitcoinAddress(disAddress).IsValid())
+            return "address you want to disable is not valid";
+        else
+        {
+            pwalletMain->vDisabledAddresses.push_back(disAddress);
+            if(!walletdb.EraseMSDisabledAddresses(pwalletMain->vDisabledAddresses))
+                return "disabled address from sending, but failed to clear old vector from walletDB";
+
+            if(!walletdb.WriteMSDisabledAddresses(pwalletMain->vDisabledAddresses))
+                return "disabled address from sending, but failed to store it to walletDB";
+            else
+                return "disabled address from sending MultiSend transactions";
+        }
+    }
+
+    //if no commands are used
+    if (fHelp || params.size() != 2)
+    throw runtime_error(
+    "multisend <command>\n"
+    "****************************************************************\n"
+    "WHAT IS MULTISEND?\n"
+    "MultiSend is a rebuild of what used to be called Stake For Charity (s4c)\n"
+    "MultiSend allows a user to automatically send a percent of their stake reward to as many addresses as you would like\n"
+    "The MultiSend transaction is sent when the staked coins mature (30 confirmations)\n"
+    "The only current restriction is that you cannot choose to send more than 100% of your stake using MultiSend\n"
+    "****************************************************************\n"
+    "MULTISEND COMMANDS (usage: multisend <command>)\n"
+    " print - displays the current MultiSend vector \n"
+    " clear - deletes the current MultiSend vector \n"
+    " enable/activate - activates the current MultiSend vector \n"
+    " disable/deactivate - disables the current MultiSend vector \n"
+    " delete <Address #> - deletes an address from the MultiSend vector \n"
+    " disable <address> - prevents a specific address from sending MultiSend transactions\n"
+    " enableall - enables all addresses to be eligible to send MultiSend transactions\n"
+    "****************************************************************\n"
+    "TO CREATE OR ADD TO THE MULTISEND VECTOR:\n"
+    "multisend <PIV Address> <percent>\n"
+    "This will add a new address to the MultiSend vector\n"
+    "Percent is a whole number 1 to 100.\n"
+    "****************************************************************\n"
+    );
+
+    //if the user is entering a new MultiSend item
+    string strAddress = params[0].get_str();
+    CBitcoinAddress address(strAddress);
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIV address");
+    if (boost::lexical_cast<int>(params[1].get_str()) < 0)
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, expected valid percentage");
+    if (pwalletMain->IsLocked())
+        throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with walletpassphrase first.");
+    unsigned int nPercent = boost::lexical_cast<unsigned int>(params[1].get_str());
+
+    LOCK(pwalletMain->cs_wallet);
+    {
+        fFileBacked = pwalletMain->fFileBacked;
+        //Error if 0 is entered
+        if(nPercent == 0)
+        {
+            return "Sending 0% of stake is not valid";
+        }
+
+        //MultiSend can only send 100% of your stake
+        if (nPercent + sumMultiSend() > 100)
+            return "Failed to add to MultiSend vector, the sum of your MultiSend is greater than 100%";
+
+        for(unsigned int i = 0; i < pwalletMain->vMultiSend.size(); i++)
+        {
+            if(pwalletMain->vMultiSend[i].first == strAddress)
+                return "Failed to add to MultiSend vector, cannot use the same address twice";
+        }
+
+        if(fFileBacked)
+            walletdb.EraseMultiSend(pwalletMain->vMultiSend);
+
+        std::pair<std::string, int> newMultiSend;
+        newMultiSend.first = strAddress;
+        newMultiSend.second = nPercent;
+        pwalletMain->vMultiSend.push_back(newMultiSend);
+        if(fFileBacked)
+        {
+            if(!walletdb.WriteMultiSend(pwalletMain->vMultiSend))
+                return "walletdb WriteMultiSend failed!";
+        }
+    }
+    return printMultiSend();
+}

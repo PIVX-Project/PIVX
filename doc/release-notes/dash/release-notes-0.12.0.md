@@ -8,7 +8,7 @@ Dash Core version 0.12.0 is now available from:
 
 Please report bugs using the issue tracker at github:
 
-  https://github.com/darknetpay/darknet/issues
+  https://github.com/dashpay/dash/issues
 
 
 How to Upgrade
@@ -17,7 +17,7 @@ How to Upgrade
 If you are running an older version, shut it down. Wait until it has completely
 shut down (which might take a few minutes for older versions), then run the
 installer (on Windows) or just copy over /Applications/Dash-Qt (on Mac) or
-darknetd/darknet-qt (on Linux).
+dashd/dash-qt (on Linux).
 
 **This new version uses transaction indexing by default, you will need to reindex 
 the blockchain. To do so, start the client with --reindex.**
@@ -100,4 +100,4 @@ AlexMomo
 snogcel
 bertlebbert
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/darknet/).
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/pivx-project/pivx-project-translations).

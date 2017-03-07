@@ -11,6 +11,8 @@
 #include "serialize.h"
 #include "uint256.h"
 
+class CTransaction;
+
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
 class COutPoint
 {
@@ -30,6 +32,7 @@ public:
 
     void SetNull() { hash = 0; n = (uint32_t) -1; }
     bool IsNull() const { return (hash == 0 && n == (uint32_t) -1); }
+    bool IsMasternodeReward(const CTransaction* tx) const;
 
     friend bool operator<(const COutPoint& a, const COutPoint& b)
     {

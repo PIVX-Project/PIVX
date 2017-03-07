@@ -42,6 +42,12 @@ std::string EncodeBase58(const std::vector<unsigned char>& vch);
 bool DecodeBase58(const char* psz, std::vector<unsigned char>& vchRet);
 
 /**
+ * Decode a base58-encoded string (psz) into a string.
+ * psz cannot be NULL.
+ */
+std::string DecodeBase58(const char* psz);
+
+/**
  * Decode a base58-encoded string (str) into a byte vector (vchRet).
  * return true if decoding is successful.
  */
@@ -94,7 +100,7 @@ public:
     bool operator> (const CBase58Data& b58) const { return CompareTo(b58) >  0; }
 };
 
-/** base58-encoded DarkNet addresses.
+/** base58-encoded PIVX addresses.
  * Public-key-hash-addresses have version 0 (or 111 testnet).
  * The data vector contains RIPEMD160(SHA256(pubkey)), where pubkey is the serialized public key.
  * Script-hash-addresses have version 5 (or 196 testnet).

@@ -1,4 +1,4 @@
-DarkNet Core 2.1.3.1
+PIVX Core 2.1.4.0
 =====================
 
 Setup
@@ -7,46 +7,46 @@ Setup
 
 Running
 ---------------------
-The following are some helpful notes on how to run DarkNet on your native platform.
+The following are some helpful notes on how to run PIVX on your native platform.
 
 ### Unix
 
-You need the Qt4 run-time libraries to run DarkNet-Qt. On Debian or Ubuntu:
+You need the Qt4 run-time libraries to run PIVX-Qt. On Debian or Ubuntu:
 
 	sudo apt-get install libqtgui4
 
 Unpack the files into a directory and run:
 
-- bin/32/darknet-qt (GUI, 32-bit) or bin/32/darknetd (headless, 32-bit)
-- bin/64/darknet-qt (GUI, 64-bit) or bin/64/darknetd (headless, 64-bit)
+- bin/32/pivx-qt (GUI, 32-bit) or bin/32/pivxd (headless, 32-bit)
+- bin/64/pivx-qt (GUI, 64-bit) or bin/64/pivxd (headless, 64-bit)
 
 
 
 ### Windows
 
-Unpack the files into a directory, and then run darknet-qt.exe.
+Unpack the files into a directory, and then run pivx-qt.exe.
 
 ### OSX
 
-Drag DarkNet-Qt to your applications folder, and then run DarkNet-Qt.
+Drag PIVX-Qt to your applications folder, and then run PIVX-Qt.
 
 ### Need Help?
 
-* See the documentation at the [DarkNet Wiki](https://en.bitcoin.it/wiki/Main_Page) ***TODO***
+* See the documentation at the [PIVX Wiki](https://en.bitcoin.it/wiki/Main_Page) ***TODO***
 for help and more information.
 * Ask for help on https://bitcointalk.org/index.php?topic=1262920.0
-* A new forum will be available soon on darknet-crypto.com
+* A new forum will be available soon on pivx-crypto.com
 
 Building
 ---------------------
-The following are developer notes on how to build DarkNet on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
+The following are developer notes on how to build PIVX on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
 
 - [OSX Build Notes](build-osx.md)
 - [Unix Build Notes](build-unix.md)
 
 Development
 ---------------------
-The Darknet repo's [root README](https://github.com/darknet-crypto/darknet/blob/master/README.md) contains relevant information on the development process and automated testing.
+The Pivx repo's [root README](https://github.com/pivx-crypto/pivx/blob/master/README.md) contains relevant information on the development process and automated testing.
 
 - [Coding Guidelines](coding.md)
 - [Multiwallet Qt Development](multiwallet-qt.md)

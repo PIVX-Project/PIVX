@@ -15,6 +15,8 @@ public:
     CTxDestination destChange;
     bool useObfuScation;
     bool useSwiftTX;
+    bool fSplitBlock;
+    int nSplitBlock;
     //! If false, allows unselected inputs, but requires all selected inputs be used
     bool fAllowOtherInputs;
     //! Includes watch only addresses which match the ISMINE_WATCH_SOLVABLE criteria
@@ -36,6 +38,8 @@ public:
         fAllowOtherInputs = false;
         fAllowWatchOnly = false;
         nMinimumTotalFee = 0;
+        fSplitBlock = false;
+        nSplitBlock = 1;
     }
 
     bool HasSelected() const

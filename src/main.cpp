@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2016 The DarkNet developers
+// Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -41,7 +41,7 @@ using namespace boost;
 using namespace std;
 
 #if defined(NDEBUG)
-# error "DarkNet cannot be compiled without assertions."
+# error "PIVX cannot be compiled without assertions."
 #endif
 
 /**
@@ -2442,7 +2442,7 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck() {
-    RenameThread("darknet-scriptch");
+    RenameThread("pivx-scriptch");
     scriptcheckqueue.Thread();
 }
 
@@ -3886,6 +3886,15 @@ bool ProcessNewBlock(CValidationState &state, CNode* pfrom, CBlock* pblock, CDis
             budget.NewBlock();
         }
     }
+
+    // If turned on MultiSend will send a transaction (or more) on the after maturity of a stake
+     if (pwalletMain->isMultiSendEnabled())
+        pwalletMain->MultiSend();
+
+     //If turned on Auto Combine will scan wallet for dust to combine
+     if(pwalletMain->fCombineDust)
+         pwalletMain->AutoCombineDust();
+
 
     LogPrintf("%s : ACCEPTED\n", __func__);
 

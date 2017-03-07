@@ -1,10 +1,10 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2016 The DarkNet developers
+// Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "base58.h"
+#include "bip38.h"
 #include "rpcserver.h"
 #include "init.h"
 #include "main.h"
@@ -14,12 +14,16 @@
 #include "util.h"
 #include "utiltime.h"
 #include "wallet.h"
+#include "utilstrencodings.h"
 
 #include <fstream>
 #include <stdint.h>
+#include <secp256k1.h>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <openssl/sha.h>
+#include <openssl/aes.h>
 
 #include "json/json_spirit_value.h"
 
@@ -75,10 +79,10 @@ Value importprivkey(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 3)
         throw runtime_error(
-            "importprivkey \"darknetprivkey\" ( \"label\" rescan )\n"
+            "importprivkey \"pivxprivkey\" ( \"label\" rescan )\n"
             "\nAdds a private key (as returned by dumpprivkey) to your wallet.\n"
             "\nArguments:\n"
-            "1. \"darknetprivkey\"   (string, required) The private key (see dumpprivkey)\n"
+            "1. \"pivxprivkey\"   (string, required) The private key (see dumpprivkey)\n"
             "2. \"label\"            (string, optional, default=\"\") An optional label\n"
             "3. rescan               (boolean, optional, default=true) Rescan the wallet for transactions\n"
             "\nNote: This call can take minutes to complete if rescan is true.\n"
@@ -169,7 +173,7 @@ Value importaddress(const Array& params, bool fHelp)
         std::vector<unsigned char> data(ParseHex(params[0].get_str()));
         script = CScript(data.begin(), data.end());
     } else {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid DarkNet address or script");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address or script");
     }
 
     string strLabel = "";
@@ -311,11 +315,11 @@ Value dumpprivkey(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
         throw runtime_error(
-            "dumpprivkey \"darknetaddress\"\n"
-            "\nReveals the private key corresponding to 'darknetaddress'.\n"
+            "dumpprivkey \"pivxaddress\"\n"
+            "\nReveals the private key corresponding to 'pivxaddress'.\n"
             "Then the importprivkey can be used with this output\n"
             "\nArguments:\n"
-            "1. \"darknetaddress\"   (string, required) The darknet address for the private key\n"
+            "1. \"pivxaddress\"   (string, required) The pivx address for the private key\n"
             "\nResult:\n"
             "\"key\"                (string) The private key\n"
             "\nExamples:\n"
@@ -329,7 +333,7 @@ Value dumpprivkey(const Array& params, bool fHelp)
     string strAddress = params[0].get_str();
     CBitcoinAddress address;
     if (!address.SetString(strAddress))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid DarkNet address");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
     CKeyID keyID;
     if (!address.GetKeyID(keyID))
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to a key");
@@ -374,7 +378,7 @@ Value dumpwallet(const Array& params, bool fHelp)
     std::sort(vKeyBirth.begin(), vKeyBirth.end());
 
     // produce output
-    file << strprintf("# Wallet dump created by DarkNet %s (%s)\n", CLIENT_BUILD, CLIENT_DATE);
+    file << strprintf("# Wallet dump created by PIVX %s (%s)\n", CLIENT_BUILD, CLIENT_DATE);
     file << strprintf("# * Created on %s\n", EncodeDumpTime(GetTime()));
     file << strprintf("# * Best block at time of backup was %i (%s),\n", chainActive.Height(), chainActive.Tip()->GetBlockHash().ToString());
     file << strprintf("#   mined on %s\n", EncodeDumpTime(chainActive.Tip()->GetBlockTime()));
@@ -399,3 +403,105 @@ Value dumpwallet(const Array& params, bool fHelp)
     file.close();
     return Value::null;
 }
+
+Value bip38encrypt(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 2)
+        throw runtime_error(
+            "bip38encrypt \"pivxaddress\"\n"
+            "\nEncrypts a private key corresponding to 'pivxaddress'.\n"
+            "\nArguments:\n"
+            "1. \"pivxaddress\"   (string, required) The pivx address for the private key (you must hold the key already)\n"
+            "2. \"passphrase\"   (string, required) The passphrase you want the private key to be encrypted with - Valid special chars: !#$%&'()*+,-./:;<=>?`{|}~ \n"
+            "\nResult:\n"
+            "\"key\"                (string) The encrypted private key\n"
+            "\nExamples:\n"
+        );
+
+    EnsureWalletIsUnlocked();
+
+    string strAddress = params[0].get_str();
+    string strPassphrase = params[1].get_str();
+
+    CBitcoinAddress address;
+    if (!address.SetString(strAddress))
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
+    CKeyID keyID;
+    if (!address.GetKeyID(keyID))
+        throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to a key");
+    CKey vchSecret;
+    if (!pwalletMain->GetKey(keyID, vchSecret))
+        throw JSONRPCError(RPC_WALLET_ERROR, "Private key for address " + strAddress + " is not known");
+
+    uint256 privKey = vchSecret.GetPrivKey_256();
+    string encryptedOut = BIP38_Encrypt(strAddress, strPassphrase, privKey);
+
+    Object result;
+    result.push_back(Pair("Addess", strAddress));
+    result.push_back(Pair("Encrypted Key", encryptedOut));
+
+    return result;
+}
+
+Value bip38decrypt(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 2)
+        throw runtime_error(
+            "bip38decrypt \"pivxaddress\"\n"
+            "\nDecrypts and then imports password protected private key.\n"
+            "\nArguments:\n"
+            "1. \"passphrase\"   (string, required) The passphrase you want the private key to be encrypted with\n"
+            "2. \"encryptedkey\"   (string, required) The encrypted private key\n"
+
+            "\nResult:\n"
+            "\"key\"                (string) The decrypted private key\n"
+            "\nExamples:\n"
+        );
+
+    EnsureWalletIsUnlocked();
+
+    /** Collect private key and passphrase **/
+    string strPassphrase = params[0].get_str();
+    string strKey = params[1].get_str();
+
+    uint256 privKey;
+    bool fCompressed;
+    if(!BIP38_Decrypt(strPassphrase, strKey, privKey, fCompressed))
+        throw JSONRPCError(RPC_WALLET_ERROR, "Failed To Decrypt");
+
+    Object result;
+    result.push_back(Pair("privatekey", HexStr(privKey)));
+
+    CKey key;
+    key.Set(privKey.begin(), privKey.end(), fCompressed);
+
+    if(!key.IsValid())
+        throw JSONRPCError(RPC_WALLET_ERROR, "Private Key Not Valid");
+
+    CPubKey pubkey = key.GetPubKey();
+    pubkey.IsCompressed();
+    assert(key.VerifyPubKey(pubkey));
+    result.push_back(Pair("Address", CBitcoinAddress(pubkey.GetID()).ToString()));
+    CKeyID vchAddress = pubkey.GetID();
+    {
+        pwalletMain->MarkDirty();
+        pwalletMain->SetAddressBook(vchAddress, "", "receive");
+
+        // Don't throw error in case a key is already there
+        if (pwalletMain->HaveKey(vchAddress))
+            throw JSONRPCError(RPC_WALLET_ERROR, "Key already held by wallet");
+
+        pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = 1;
+
+        if (!pwalletMain->AddKeyPubKey(key, pubkey))
+            throw JSONRPCError(RPC_WALLET_ERROR, "Error adding key to wallet");
+
+        // whenever a key is imported, we need to scan the whole chain
+        pwalletMain->nTimeFirstKey = 1; // 0 would be considered 'no value'
+        pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+    }
+
+    return result;
+}
+
+

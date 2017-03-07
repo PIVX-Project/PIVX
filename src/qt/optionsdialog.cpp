@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/darknet-config.h"
+#include "config/pivx-config.h"
 #endif
 
 #include "optionsdialog.h"
@@ -82,10 +82,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     }
     
     /* Theme selector static themes */
-    ui->theme->addItem(QString("DNET-dark"), QVariant("drk"));
-    ui->theme->addItem(QString("DNET-dark-1"), QVariant("drk-1"));
-    ui->theme->addItem(QString("DNET-blue"), QVariant("drkblue"));
-    ui->theme->addItem(QString("DNET-traditional"), QVariant("trad"));
+    ui->theme->addItem(QString("Default"), QVariant("default"));
 
     /* Theme selector external themes */
     boost::filesystem::path pathAddr = GetDataDir() / "themes";
@@ -222,7 +219,7 @@ void OptionsDialog::setMapper()
 
     /* Obfuscation Rounds */
     mapper->addMapping(ui->obfuscationRounds, OptionsModel::ObfuscationRounds);
-    mapper->addMapping(ui->anonymizeDarknet, OptionsModel::AnonymizeDarknetAmount);
+    mapper->addMapping(ui->anonymizePivx, OptionsModel::AnonymizePivxAmount);
     mapper->addMapping(ui->showMasternodesTab, OptionsModel::ShowMasternodesTab);
 
 }

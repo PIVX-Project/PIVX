@@ -41,6 +41,7 @@ public:
 
     static QList<CAmount> payAmounts;
     static CCoinControl *coinControl;
+    static int nSplitBlockDummy;
 
 private:
     Ui::CoinControlDialog *ui;
