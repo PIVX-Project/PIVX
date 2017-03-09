@@ -298,13 +298,14 @@ RES_IMAGES = \
   qt/res/images/leftArrow_small.png \
   qt/res/images/rightArrow_small.png \
   qt/res/images/qtreeview_selected.png \
+  qt/res/images/walletFrame.png \
   qt/res/images/walletFrame_bg.png \
   qt/res/images/walletFrame_bg.png
 
 RES_CSS = \
   qt/res/css/default.css
 
-RES_MOVIES = $(wildcard qt/res/movies/spinner-*.png)
+RES_MOVIES = $(wildcard $(srcdir)/qt/res/movies/spinner-*.png)
 
 BITCOIN_RC = qt/res/pivx-qt-res.rc
 
