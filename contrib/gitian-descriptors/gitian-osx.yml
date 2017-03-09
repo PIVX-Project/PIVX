@@ -144,7 +144,7 @@ script: |
     popd
 
     make deploy
-    ${WRAP_DIR}/dmg dmg PIVX-Core.dmg ${OUTDIR}/${DISTNAME}-osx-unsigned.dmg
+    ${WRAP_DIR}/dmg dmg "${OSX_VOLNAME}.dmg" ${OUTDIR}/${DISTNAME}-osx-unsigned.dmg
 
     cd installed
     find . -name "lib*.la" -delete
