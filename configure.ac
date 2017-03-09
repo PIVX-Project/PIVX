@@ -78,6 +78,8 @@ AC_PATH_TOOL(READELF, readelf)
 AC_PATH_TOOL(CPPFILT, c++filt)
 AC_PATH_TOOL(OBJCOPY, objcopy)
 
+AC_ARG_VAR(PYTHONPATH, Augments the default search path for python module files)
+
 # This m4 will only be used if a system copy cannot be found. This is helpful
 # on systems where autotools are installed but the pkg-config macros are not in
 # a default location. It is currently used for building on OSX where autotools
