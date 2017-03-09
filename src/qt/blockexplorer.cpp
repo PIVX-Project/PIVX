@@ -43,7 +43,7 @@ static std::string ValueToString(int64_t nValue, bool AllowNegative = false)
     if (nValue < 0 && !AllowNegative)
         return "<span>" + _("unknown") + "</span>";
 
-    QString Str = BitcoinUnits::formatWithUnit(BitcoinUnits::DNET, nValue);
+    QString Str = BitcoinUnits::formatWithUnit(BitcoinUnits::PIV, nValue);
     if (AllowNegative && nValue > 0)
         Str = '+' + Str;
     return std::string("<span>") + Str.toUtf8().data() + "</span>";
@@ -495,8 +495,8 @@ void BlockExplorer::showEvent(QShowEvent*)
 
         if (!GetBoolArg("-txindex", false))
         {
-            QString Warning = tr("Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (darknet.conf).");
-            QMessageBox::warning(this, "Darknet Core Blockchain Explorer", Warning, QMessageBox::Ok);
+            QString Warning = tr("Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (pivx.conf).");
+            QMessageBox::warning(this, "PIVX Core Blockchain Explorer", Warning, QMessageBox::Ok);
         }
     }
 }
