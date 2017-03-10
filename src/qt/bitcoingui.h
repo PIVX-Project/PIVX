@@ -24,6 +24,7 @@ class NetworkStyle;
 class Notificator;
 class OptionsModel;
 class tradingDialog;
+class BlockExplorer;
 class RPCConsole;
 class SendCoinsRecipient;
 class UnitDisplayStatusBarControl;
@@ -121,6 +122,7 @@ private:
     QAction *showBackupsAction;
     QAction *openAction;
     QAction *openTradingwindowAction;
+	QAction *openBlockExplorerAction;
     QAction *showHelpMessageAction;
     QAction *multiSendAction;
 
@@ -129,6 +131,7 @@ private:
     Notificator *notificator;
     RPCConsole *rpcConsole;
     tradingDialog  *tradingWindow;
+    BlockExplorer  *explorerWindow;
 
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;
@@ -199,6 +202,8 @@ private slots:
     void gotoHistoryPage();
     /** Switch to Trading Page */
     void gotoTradingPage(); 
+    /** Switch to Explorer Page */
+    void gotoBlockExplorerPage(); 
     /** Switch to masternode page */
     void gotoMasternodePage(); 
     /** Switch to receive coins page */
