@@ -1,5 +1,5 @@
 ---
-name: "pivx-linux-2.1.4.0"
+name: "pivx-linux-2.1.4.1"
 enable_cache: true
 suites:
 - "trusty"
