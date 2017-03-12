@@ -54,7 +54,7 @@ static void convertSeed6(std::vector<CAddress> &vSeedsOut, const SeedSpec6 *data
 // + Contains no strange transactions
 static Checkpoints::MapCheckpoints mapCheckpoints =
         boost::assign::map_list_of
-	( 259201, uint256("1c9121bf9329a6234bfd1ea2d91515f19cd96990725265253f4b164283ade5dd"));
+        ( 259201, uint256("1c9121bf9329a6234bfd1ea2d91515f19cd96990725265253f4b164283ade5dd"));
 static const Checkpoints::CCheckpointData data = {
         &mapCheckpoints,
         1471401614, // * UNIX timestamp of last checkpoint block
@@ -65,7 +65,7 @@ static const Checkpoints::CCheckpointData data = {
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
         boost::assign::map_list_of
-	( 0, uint256("0x001"));
+        ( 0, uint256("0x001"));
 static const Checkpoints::CCheckpointData dataTestnet = {
         &mapCheckpointsTestnet,
         1454124731,
@@ -89,7 +89,7 @@ public:
     CMainParams() {
         networkID = CBaseChainParams::MAIN;
         strNetworkID = "main";
-        /** 
+        /**
          * The message start string is designed to be unlikely to occur in normal data.
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 4-byte int at any alignment.
@@ -115,7 +115,7 @@ public:
         /**
          * Build the genesis block. Note that the output of the genesis coinbase cannot
          * be spent as it did not originally exist in the database.
-         * 
+         *
          * CBlock(hash=00000ffd590b14, ver=1, hashPrevBlock=00000000000000, hashMerkleRoot=e0028e, nTime=1390095618, nBits=1e0ffff0, nNonce=28917698, vtx=1)
          *   CTransaction(hash=e0028e, ver=1, vin.size=1, vout.size=1, nLockTime=0)
          *     CTxIn(COutPoint(000000, -1), coinbase 04ffff001d01044c5957697265642030392f4a616e2f3230313420546865204772616e64204578706572696d656e7420476f6573204c6976653a204f76657273746f636b2e636f6d204973204e6f7720416363657074696e6720426974636f696e73)
@@ -136,8 +136,8 @@ public:
         genesis.nTime    = 1454124731;
         genesis.nBits    = 0x1e0ffff0;
         genesis.nNonce   = 2402015;
-	
-	hashGenesisBlock = genesis.GetHash();
+
+        hashGenesisBlock = genesis.GetHash();
         assert(hashGenesisBlock == uint256("0x0000041e482b9b9691d98eefb48473405c0b8ec31b76df3797c74a78680ef818"));
         assert(genesis.hashMerkleRoot == uint256("0x1b2ef6e2f28be914103a277377ae7729dcd125dfeb8bf97bd5964ba72b6dc39b"));
 
@@ -145,12 +145,12 @@ public:
         vSeeds.push_back(CDNSSeedData("s3v3nh4cks.ddns.net", "s3v3nh4cks.ddns.net"));
         vSeeds.push_back(CDNSSeedData("178.254.23.111", "178.254.23.111"));
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,30);                    
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,13);                    
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,212);                    
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,30);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,13);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,212);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x02)(0x2D)(0x25)(0x33).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x02)(0x21)(0x31)(0x2B).convert_to_container<std::vector<unsigned char> >();
-        // 	BIP44 coin type is 'TBD' 
+        // 	BIP44 coin type is 'TBD'
         base58Prefixes[EXT_COIN_TYPE]  = boost::assign::list_of(0x13)(0x00)(0x00)(0x80).convert_to_container<std::vector<unsigned char> >();
 
         convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
@@ -171,7 +171,7 @@ public:
         nStartMasternodePayments = 1403728576; //Wed, 25 Jun 2014 20:36:16 GMT
     }
 
-    const Checkpoints::CCheckpointData& Checkpoints() const 
+    const Checkpoints::CCheckpointData& Checkpoints() const
     {
         return data;
     }
@@ -204,15 +204,15 @@ public:
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nTime = 1454124731;
         genesis.nNonce = 2402015;
-	
+
         hashGenesisBlock = genesis.GetHash();
         assert(hashGenesisBlock == uint256("0x0000041e482b9b9691d98eefb48473405c0b8ec31b76df3797c74a78680ef818"));
 
         vSeeds.push_back(CDNSSeedData("s3v3nh4cks.ddns.net", "s3v3nh4cks.ddns.net"));
         vSeeds.push_back(CDNSSeedData("88.198.192.110", "88.198.192.110"));
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,139);  // Testnet pivx addresses start with 'x' or 'y'                   
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);   // Testnet pivx script addresses start with '8' or '9'                 
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,139);  // Testnet pivx addresses start with 'x' or 'y'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,19);   // Testnet pivx script addresses start with '8' or '9'
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);    // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
         // Testnet pivx BIP32 pubkeys start with 'DRKV'
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x3a)(0x80)(0x61)(0xa0).convert_to_container<std::vector<unsigned char> >();
@@ -237,7 +237,7 @@ public:
         strObfuscationPoolDummyAddress = "y57cqfGRkekRyDRNeJiLtYVEbvhXrNbmox";
         nStartMasternodePayments = 1420837558; //Fri, 09 Jan 2015 21:05:58 GMT
     }
-    const Checkpoints::CCheckpointData& Checkpoints() const 
+    const Checkpoints::CCheckpointData& Checkpoints() const
     {
         return dataTestnet;
     }
@@ -284,7 +284,7 @@ public:
         fMineBlocksOnDemand = true;
         fTestnetToBeDeprecatedFieldRPC = false;
     }
-    const Checkpoints::CCheckpointData& Checkpoints() const 
+    const Checkpoints::CCheckpointData& Checkpoints() const
     {
         return dataRegtest;
     }
@@ -310,7 +310,7 @@ public:
         fMineBlocksOnDemand = true;
     }
 
-    const Checkpoints::CCheckpointData& Checkpoints() const 
+    const Checkpoints::CCheckpointData& Checkpoints() const
     {
         // UnitTest share the same checkpoints as MAIN
         return data;
