@@ -1,4 +1,4 @@
-PIVX Core 2.1.5.0
+PIVX Core 2.1.6
 =====================
 
 Intro
