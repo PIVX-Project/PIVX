@@ -38,6 +38,7 @@
 #include "keepass.h"
 #endif
 
+#include <fstream>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -929,12 +930,18 @@ bool AppInit2(boost::thread_group& threadGroup)
                 sourceFile.make_preferred();
                 backupFile.make_preferred();
                 if(boost::filesystem::exists(sourceFile)) {
+#if BOOST_VERSION >= 155000
                     try {
                         boost::filesystem::copy_file(sourceFile, backupFile);
                         LogPrintf("Creating backup of %s -> %s\n", sourceFile, backupFile);
                     } catch(boost::filesystem::filesystem_error &error) {
                         LogPrintf("Failed to create backup %s\n", error.what());
                     }
+#else
+                    std::ifstream  src(sourceFile.string(), std::ios::binary);
+                    std::ofstream  dst(backupFile.string(), std::ios::binary);
+                    dst << src.rdbuf();
+#endif
                 }
                 // Keep only the last 10 backups, including the new one of course
                 typedef std::multimap<std::time_t, boost::filesystem::path> folder_set_t;
