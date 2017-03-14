@@ -15,6 +15,7 @@
 #include "utiltime.h"
 #include "wallet.h"
 
+#include <fstream>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -986,10 +987,12 @@ bool BackupWallet(const CWallet& wallet, const string& strDest)
                     pathDest /= wallet.strWalletFile;
 
                 try {
-#if BOOST_VERSION >= 104000
+#if BOOST_VERSION >= 155000
                     filesystem::copy_file(pathSrc, pathDest, filesystem::copy_option::overwrite_if_exists);
 #else
-                    filesystem::copy_file(pathSrc, pathDest);
+                    std::ifstream  src(pathSrc.string(), std::ios::binary);
+                    std::ofstream  dst(pathDest.string(),   std::ios::binary);
+                    dst << src.rdbuf();
 #endif
                     LogPrintf("copied wallet.dat to %s\n", pathDest.string());
                     return true;
