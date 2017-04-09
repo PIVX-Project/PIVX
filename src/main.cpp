@@ -1644,10 +1644,6 @@ int64_t GetBlockValue(int nHeight)
     {
         if(nHeight < 200 && nHeight > 0)
             return 250000 * COIN;
-
-        // Add TESTNET_OFFSET to nheight because that is the current height at time of writing this code
-        // This will allow the testnet simulation to catch up to current main net conditions
-        nHeight += TESTNET_OFFSET;
     }
 
     if(nHeight == 0) {
@@ -1706,10 +1702,6 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue)
     {
         if(nHeight < 200)
             return 0;
-
-        // Add TESTNET_OFFSET to nheight because that is the current height at the time of writing this code
-        // This will allow the testnet simulation to catch up to current main net conditions
-        nHeight += TESTNET_OFFSET;
     }
 
     if(nHeight <= 43200) {
@@ -3549,12 +3541,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
 
 bool CheckWork(const CBlock block, CBlockIndex * const pindexPrev)
 {
-    if(Params().NetworkID() == CBaseChainParams::TESTNET) 
-    {
-        if (block.nBits != GetNextWorkRequired(pindexPrev, &block, block.IsProofOfStake()))
-            return error("%s : incorrect proof of work at %d", __func__, pindexPrev->nHeight + 1);
-    } 
-    else if (block.IsProofOfWork())
+    if (block.IsProofOfWork())
     {
         // Check proof of work (Here for the architecture issues with DGW v1 and v2)
         if(pindexPrev == NULL || pindexPrev->nHeight + 1 <= 68589)
@@ -4099,7 +4086,7 @@ bool static LoadBlockIndexDB()
     bool fLastShutdownWasPrepared = true;
     pblocktree->ReadFlag("shutdown", fLastShutdownWasPrepared);
     LogPrintf("%s: Last shutdown was prepared: %s\n", __func__, fLastShutdownWasPrepared);
-    
+		
     //Check for inconsistency with block file info and internal state
     if(!fLastShutdownWasPrepared
        && !GetBoolArg("-forcestart", false)
