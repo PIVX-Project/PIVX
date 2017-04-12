@@ -79,7 +79,7 @@ bool CObfuScationRelay::VerifyMessage(std::string strSharedKey)
 
 void CObfuScationRelay::Relay()
 {
-    int nCount = std::min(mnodeman.CountEnabled(MIN_POOL_PEER_PROTO_VERSION), 20);
+    int nCount = std::min(mnodeman.CountEnabled(ActiveProtocol()), 20);
     int nRank1 = (rand() % nCount) + 1;
     int nRank2 = (rand() % nCount) + 1;
 
@@ -96,7 +96,7 @@ void CObfuScationRelay::Relay()
 
 void CObfuScationRelay::RelayThroughNode(int nRank)
 {
-    CMasternode* pmn = mnodeman.GetMasternodeByRank(nRank, nBlockHeight, MIN_POOL_PEER_PROTO_VERSION);
+    CMasternode* pmn = mnodeman.GetMasternodeByRank(nRank, nBlockHeight, ActiveProtocol());
 
     if (pmn != NULL) {
         //printf("RelayThroughNode %s\n", pmn->addr.ToString().c_str());

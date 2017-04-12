@@ -4774,12 +4774,11 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         CAddress addrFrom;
         uint64_t nNonce = 1;
         vRecv >> pfrom->nVersion >> pfrom->nServices >> nTime >> addrMe;
-        if (pfrom->nVersion < MIN_PEER_PROTO_VERSION ||
-            (chainActive.Tip()->nHeight >= Params().LAST_POW_BLOCK() && pfrom->nVersion < MIN_PEER_PROTO_VERSION_POS)) {
+        if (pfrom->nVersion < ActiveProtocol()) {
             // disconnect from peers older than this proto version
             LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
             pfrom->PushMessage("reject", strCommand, REJECT_OBSOLETE,
-                strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION));
+                strprintf("Version must be %d or greater", ActiveProtocol()));
             pfrom->fDisconnect = true;
             return false;
         }
@@ -5559,6 +5558,14 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
 
 
     return true;
+}
+
+int ActiveProtocol()
+{
+    if ((unsigned int)chainActive.Tip()->nHeight >= PROTOCOL_ENFORCEMENT_BLOCK)
+        return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
+
+    return MIN_PEER_PROTO_VERSION_BEFORE_ENFORCEMENT;
 }
 
 // requires LOCK(cs_vRecvMsg)

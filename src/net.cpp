@@ -1713,11 +1713,11 @@ void RelayTransactionLockReq(const CTransaction& tx, bool relayToAll)
     }
 }
 
-void RelayInv(CInv& inv, const int minProtoVersion)
+void RelayInv(CInv& inv)
 {
     LOCK(cs_vNodes);
     BOOST_FOREACH (CNode* pnode, vNodes)
-        if (pnode->nVersion >= minProtoVersion)
+        if (pnode->nVersion >= ActiveProtocol())
             pnode->PushInventory(inv);
 }
 

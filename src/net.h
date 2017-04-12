@@ -655,7 +655,7 @@ class CTransaction;
 void RelayTransaction(const CTransaction& tx);
 void RelayTransaction(const CTransaction& tx, const CDataStream& ss);
 void RelayTransactionLockReq(const CTransaction& tx, bool relayToAll = false);
-void RelayInv(CInv& inv, const int minProtoVersion = MIN_PEER_PROTO_VERSION);
+void RelayInv(CInv& inv);
 
 /** Access to the (IP) address database (peers.dat) */
 class CAddrDB
