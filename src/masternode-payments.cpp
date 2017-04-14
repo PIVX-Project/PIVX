@@ -228,34 +228,28 @@ bool IsBlockPayeeValid(const CBlock& block, int nBlockHeight)
     //check if it's a budget block
     if (IsSporkActive(SPORK_13_ENABLE_SUPERBLOCKS)) {
         if (budget.IsBudgetPaymentBlock(nBlockHeight)) {
-            if (budget.IsTransactionValid(txNew, nBlockHeight)) {
+            if (budget.IsTransactionValid(txNew, nBlockHeight))
                 return true;
-            } else {
-                LogPrintf("Invalid budget payment detected %s\n", txNew.ToString().c_str());
-                if (IsSporkActive(SPORK_9_MASTERNODE_BUDGET_ENFORCEMENT)) {
-                    return false;
-                } else {
-                    LogPrintf("Budget enforcement is disabled, accepting block\n");
-                    return true;
-                }
-            }
-        }
-    }
 
-    //check for masternode payee
-    if (masternodePayments.IsTransactionValid(txNew, nBlockHeight)) {
-        return true;
-    } else {
-        LogPrintf("Invalid mn payment detected %s\n", txNew.ToString().c_str());
-        if (IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
-            return false;
-        } else {
-            LogPrintf("Masternode payment enforcement is disabled, accepting block\n");
+            LogPrintf("Invalid budget payment detected %s\n", txNew.ToString().c_str());
+            if (IsSporkActive(SPORK_9_MASTERNODE_BUDGET_ENFORCEMENT))
+                return false;
+
+            LogPrintf("Budget enforcement is disabled, accepting block\n");
             return true;
         }
     }
 
-    return false;
+    //check for masternode payee
+    if (masternodePayments.IsTransactionValid(txNew, nBlockHeight))
+        return true;
+    LogPrintf("Invalid mn payment detected %s\n", txNew.ToString().c_str());
+
+    if (IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT))
+        return false;
+    LogPrintf("Masternode payment enforcement is disabled, accepting block\n");
+
+    return true;
 }
 
 
@@ -517,7 +511,11 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
     std::string strPayeesPossible = "";
 
     CAmount nReward = GetBlockValue(nBlockHeight);
-    CAmount requiredMasternodePayment = GetMasternodePayment(nBlockHeight, nReward);
+
+    //account for the fact that all peers do not see the same masternode count. A allowance of being off our masternode count is given
+    //we only need to look at an increased masternode count because as count increases, the reward decreases. This code only checks
+    //for mnPayment >= required, so it only makes sense to check the max node count allowed.
+    CAmount requiredMasternodePayment = GetMasternodePayment(nBlockHeight, nReward, mnodeman.size() + Params().MasternodeCountDrift());
 
     //require at least 6 signatures
     BOOST_FOREACH (CMasternodePayee& payee, vecPayments)
@@ -530,8 +528,11 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
     BOOST_FOREACH (CMasternodePayee& payee, vecPayments) {
         bool found = false;
         BOOST_FOREACH (CTxOut out, txNew.vout) {
-            if (payee.scriptPubKey == out.scriptPubKey && out.nValue >= requiredMasternodePayment) {
-                found = true;
+            if (payee.scriptPubKey == out.scriptPubKey) {
+                if(out.nValue >= requiredMasternodePayment)
+                    found = true;
+                else
+                    LogPrintf("Masternode payment is out of drift range. Paid=%s Min=%s\n", FormatMoney(out.nValue).c_str(), FormatMoney(requiredMasternodePayment).c_str());
             }
         }
 
@@ -549,7 +550,6 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
             }
         }
     }
-
 
     LogPrintf("CMasternodePayments::IsTransactionValid - Missing required payment of %s to %s\n", FormatMoney(requiredMasternodePayment).c_str(), strPayeesPossible.c_str());
     return false;

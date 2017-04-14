@@ -108,6 +108,7 @@ public:
         nTargetSpacing = 1 * 60;  // PIVX: 1 minute
         nLastPOWBlock = 259200;
         nMaturity = 100;
+        nMasternodeCountDrift = 20;
 
         /**
          * Build the genesis block. Note that the output of the genesis coinbase cannot
