@@ -410,8 +410,10 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord* wtx, b
 
 QVariant TransactionTableModel::addressColor(const TransactionRecord* wtx) const
 {
-    // Show addresses without label in a less visible color
     switch (wtx->type) {
+    case TransactionRecord::SendToSelf:
+        return COLOR_BAREADDRESS;
+    // Show addresses without label in a less visible color
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::SendToAddress:
     case TransactionRecord::Generated:
@@ -419,13 +421,12 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord* wtx) const
         QString label = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(wtx->address));
         if (label.isEmpty())
             return COLOR_BAREADDRESS;
-    } break;
-    case TransactionRecord::SendToSelf:
-        return COLOR_BAREADDRESS;
-    default:
-        break;
     }
-    return QVariant();
+    default:
+        // To avoid overriding above conditional formats a default text color for this QTableView is not defined in stylesheet,
+        // so we must always return a color here
+        return COLOR_BLACK;
+    }
 }
 
 QString TransactionTableModel::formatTxAmount(const TransactionRecord* wtx, bool showUnconfirmed, BitcoinUnits::SeparatorStyle separators) const
@@ -558,7 +559,10 @@ QVariant TransactionTableModel::data(const QModelIndex& index, int role) const
         if (index.column() == ToAddress) {
             return addressColor(rec);
         }
-        break;
+
+        // To avoid overriding above conditional formats a default text color for this QTableView is not defined in stylesheet,
+        // so we must always return a color here
+        return COLOR_BLACK;
     case TypeRole:
         return rec->type;
     case DateRole:

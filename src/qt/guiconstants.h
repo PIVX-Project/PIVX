@@ -30,7 +30,7 @@ static const int STATUSBAR_ICONSIZE = 16;
 /* Transaction list -- TX status decoration - offline */
 #define COLOR_TX_STATUS_OFFLINE QColor(192, 192, 192)
 /* Transaction list -- TX status decoration - default color */
-#define COLOR_BLACK QColor(0, 0, 0)
+#define COLOR_BLACK QColor(51, 51, 51)
 
 /* Tooltips longer than this (in characters) are converted into rich text,
    so that they can be word-wrapped.
