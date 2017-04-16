@@ -22,7 +22,6 @@ static const int GETHEADERS_VERSION = 70077;
 //! disconnect from peers older than this proto version
 static const int MIN_PEER_PROTO_VERSION_BEFORE_ENFORCEMENT = 70701;
 static const int MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT = 70710;
-static const unsigned int PROTOCOL_ENFORCEMENT_BLOCK = 9999999; // place holder
 
 //! nTime field added to CAddress, starting with this version;
 //! if possible, avoid requesting addresses nodes older than this
