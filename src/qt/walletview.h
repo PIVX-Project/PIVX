@@ -80,8 +80,10 @@ public slots:
     void gotoHistoryPage();
     /** Switch to masternode page */
     void gotoMasternodePage();
+#ifdef HAVE_QT5
     /** Switch to Bittrex trading page */
     void gotoTradingPage();
+#endif // HAVE_QT5
     /** Switch to explorer page */
     void gotoBlockExplorerPage();
     /** Switch to receive coins page */

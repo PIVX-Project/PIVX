@@ -60,8 +60,10 @@ public slots:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
+#ifdef HAVE_QT5
     /** Switch to Bittrex trading page */
     void gotoTradingPage();
+#endif
     /** Switch to explorer page */
     void gotoBlockExplorerPage();
     /** Show Sign/Verify Message dialog and switch to sign message tab */

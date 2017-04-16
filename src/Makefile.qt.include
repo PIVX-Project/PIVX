@@ -41,8 +41,11 @@ QT_FORMS_UI = \
   qt/forms/sendcoinsdialog.ui \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
-  qt/forms/tradingdialog.ui \
   qt/forms/transactiondescdialog.ui
+
+if HAVE_QT5
+QT_FORMS_UI += qt/forms/tradingdialog.ui
+endif
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
@@ -83,7 +86,6 @@ QT_MOC_CPP = \
   qt/moc_sendcoinsentry.cpp \
   qt/moc_signverifymessagedialog.cpp \
   qt/moc_splashscreen.cpp \
-  qt/moc_tradingdialog.cpp \
   qt/moc_trafficgraphwidget.cpp \
   qt/moc_transactiondesc.cpp \
   qt/moc_transactiondescdialog.cpp \
@@ -94,6 +96,10 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp
+
+if HAVE_QT5
+QT_MOC_CPP += qt/moc_tradingdialog.cpp
+endif
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -158,7 +164,6 @@ BITCOIN_QT_H = \
   qt/sendcoinsentry.h \
   qt/signverifymessagedialog.h \
   qt/splashscreen.h \
-  qt/tradingdialog.h \
   qt/trafficgraphwidget.h \
   qt/transactiondesc.h \
   qt/transactiondescdialog.h \
@@ -172,6 +177,10 @@ BITCOIN_QT_H = \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
   qt/winshutdownmonitor.h
+
+if HAVE_QT5
+BITCOIN_QT_H += qt/tradingdialog.h
+endif
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -252,7 +261,6 @@ BITCOIN_QT_CPP = \
   qt/qvaluecombobox.cpp \
   qt/rpcconsole.cpp \
   qt/splashscreen.cpp \
-  qt/tradingdialog.cpp \
   qt/trafficgraphwidget.cpp \
   qt/utilitydialog.cpp \
   qt/winshutdownmonitor.cpp
@@ -280,7 +288,6 @@ BITCOIN_QT_CPP += \
   qt/sendcoinsdialog.cpp \
   qt/sendcoinsentry.cpp \
   qt/signverifymessagedialog.cpp \
-  qt/tradingdialog.cpp \
   qt/transactiondesc.cpp \
   qt/transactiondescdialog.cpp \
   qt/transactionfilterproxy.cpp \
@@ -291,6 +298,10 @@ BITCOIN_QT_CPP += \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
   qt/walletview.cpp
+
+if HAVE_QT5
+BITCOIN_QT_CPP += qt/tradingdialog.cpp
+endif
 endif
 
 RES_IMAGES = \

@@ -200,8 +200,10 @@ private slots:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
+#ifdef HAVE_QT5
     /** Switch to Trading Page */
     void gotoTradingPage();
+#endif // HAVE_QT5
     /** Switch to Explorer Page */
     void gotoBlockExplorerPage();
     /** Switch to masternode page */

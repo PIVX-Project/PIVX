@@ -125,6 +125,7 @@ void WalletFrame::gotoMasternodePage() // Masternode list
         i.value()->gotoMasternodePage();
 }
 
+#ifdef HAVE_QT5
 void WalletFrame::gotoTradingPage() // Bittrex trading
 
 {
@@ -132,6 +133,7 @@ void WalletFrame::gotoTradingPage() // Bittrex trading
     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
         i.value()->gotoTradingPage();
 }
+#endif // HAVE_QT5
 
 void WalletFrame::gotoBlockExplorerPage()
 {

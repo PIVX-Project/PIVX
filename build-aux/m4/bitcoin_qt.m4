@@ -110,6 +110,7 @@ AC_DEFUN([BITCOIN_QT_CONFIGURE],[
   CPPFLAGS="$QT_INCLUDES $CPPFLAGS"
   CXXFLAGS="$PIC_FLAGS $CXXFLAGS"
   if test x$bitcoin_qt_got_major_vers = x5; then
+    TEMP_CPPFLAGS="$TEMP_CPPFLAGS -DHAVE_QT5"
     _BITCOIN_QT_IS_STATIC
     if test x$bitcoin_cv_static_qt = xyes; then
       _BITCOIN_QT_FIND_STATIC_PLUGINS

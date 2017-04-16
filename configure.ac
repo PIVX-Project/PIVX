@@ -550,6 +550,18 @@ else
     use_boost=yes
 fi
 
+if test x$bitcoin_enable_qt = xyes; then
+dnl enable tradingdialog
+  AC_MSG_CHECKING([if the trading dialog should be enabled])
+    if test x$bitcoin_qt_got_major_vers = x5; then
+      AC_MSG_RESULT(yes)
+      AC_DEFINE_UNQUOTED([HAVE_QT5],[1],[Define to 1 to enable trading dialog])
+
+    else
+      AC_MSG_RESULT(no)
+    fi
+fi
+
 if test x$use_boost = xyes; then
 
 dnl Check for boost libs
@@ -878,6 +890,7 @@ AM_CONDITIONAL([TARGET_WINDOWS], [test x$TARGET_OS = xwindows])
 AM_CONDITIONAL([ENABLE_WALLET],[test x$enable_wallet = xyes])
 AM_CONDITIONAL([ENABLE_TESTS],[test x$use_tests = xyes])
 AM_CONDITIONAL([ENABLE_QT],[test x$bitcoin_enable_qt = xyes])
+AM_CONDITIONAL([HAVE_QT5], [test x$bitcoin_qt_got_major_vers = x5])
 AM_CONDITIONAL([ENABLE_QT_TESTS],[test x$use_tests$bitcoin_enable_qt_test = xyesyes])
 AM_CONDITIONAL([USE_QRCODE], [test x$use_qr = xyes])
 AM_CONDITIONAL([USE_LCOV],[test x$use_lcov = xyes])
