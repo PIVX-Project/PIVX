@@ -2672,7 +2672,7 @@ bool static ConnectTip(CValidationState& state, CBlockIndex* pindexNew, CBlock* 
     nTimeFlush += nTime4 - nTime3;
     LogPrint("bench", "  - Flush: %.2fms [%.2fs]\n", (nTime4 - nTime3) * 0.001, nTimeFlush * 0.000001);
     // Write the chain state to disk, if necessary.
-    if (!FlushStateToDisk(state, FLUSH_STATE_ALWAYS))
+    if (!FlushStateToDisk(state, FLUSH_STATE_IF_NEEDED))
         return false;
     int64_t nTime5 = GetTimeMicros();
     nTimeChainState += nTime5 - nTime4;
@@ -3930,38 +3930,46 @@ bool static LoadBlockIndexDB()
             vinfoBlockFile[nLastBlockFile].nSize);
 
         //try reading the block from the last index we have
-        LogPrintf("%s: Attempting to re-add last block that was recorded to disk\n", __func__);
         bool isFixed = true;
         string strError = "";
-        CBlockIndex* pindexBestKnown = vSortedByHeight[vSortedByHeight.size() - 1].second;
-        CBlock checkBlock;
-        if (!ReadBlockFromDisk(checkBlock, pindexBestKnown)) {
+        LogPrintf("%s: Attempting to re-add last block that was recorded to disk\n", __func__);
+
+        //get the last block that was properly recorded to the block info file
+        CBlockIndex* pindexLastMeta = vSortedByHeight[vinfoBlockFile[nLastBlockFile].nHeightLast + 1].second;
+        LogPrintf("%s: Last block properly recorded: #%d %s\n", __func__, pindexLastMeta->nHeight, pindexLastMeta->GetBlockHash().ToString().c_str());
+
+        CBlock lastMetaBlock;
+        if (!ReadBlockFromDisk(lastMetaBlock, pindexLastMeta)) {
             isFixed = false;
-            strError = strprintf("failed to read block %d from disk", pindexBestKnown->nHeight);
+            strError = strprintf("failed to read block %d from disk", pindexLastMeta->nHeight);
         }
 
-        LogPrintf("%s: bestBlock=%s prev=%s\n", __func__, pindexBestKnown->GetBlockHash().ToString().c_str(),
-            pindexBestKnown->pprev->GetBlockHash().ToString().c_str());
+        //set the chain to the block before lastMeta so that the meta block will be seen as new
+        chainActive.SetTip(pindexLastMeta->pprev);
 
-        //set the chain to the previous block that has been completely accepted
-        chainActive.SetTip(pindexBestKnown->pprev);
-
-        //Process the bestBlock again, using the known location on disk
-        CDiskBlockPos blockPos = pindexBestKnown->GetBlockPos();
+        //Process the lastMetaBlock again, using the known location on disk
+        CDiskBlockPos blockPos = pindexLastMeta->GetBlockPos();
         CValidationState state;
-        ProcessNewBlock(state, NULL, &checkBlock, &blockPos);
+        ProcessNewBlock(state, NULL, &lastMetaBlock, &blockPos);
 
         //ensure that everything is as it should be
-        if (pcoinsTip->GetBestBlock() != checkBlock.GetHash()) {
+        if (pcoinsTip->GetBestBlock() != vSortedByHeight[vSortedByHeight.size() - 1].second->GetBlockHash()) {
             isFixed = false;
             strError = "pcoinsTip best block is not correct";
         }
 
-        //force the block file to update or else the bestBlock will be overwritten by the next block
-        vinfoBlockFile[nLastBlockFile].AddBlock(pindexBestKnown->nHeight, pindexBestKnown->nTime);
-        vinfoBlockFile[nLastBlockFile].nSize += checkBlock.GetSerializeSize(SER_DISK, CLIENT_VERSION);
+        //properly account for all of the blocks that were not in the meta data. If this is not done the file
+        //positioning will be wrong and blocks will be overwritten and later cause serialization errors
+        CBlockIndex *pindexLast = vSortedByHeight[vSortedByHeight.size() - 1].second;
+        CBlock lastBlock;
+        if (!ReadBlockFromDisk(lastBlock, pindexLast)) {
+            isFixed = false;
+            strError = strprintf("failed to read block %d from disk", pindexLast->nHeight);
+        }
+        vinfoBlockFile[nLastBlockFile].nHeightLast = pindexLast->nHeight;
+        vinfoBlockFile[nLastBlockFile].nSize = pindexLast->GetBlockPos().nPos + ::GetSerializeSize(lastBlock, SER_DISK, CLIENT_VERSION);;
         setDirtyFileInfo.insert(nLastBlockFile);
-        FlushStateToDisk();
+        FlushStateToDisk(state, FLUSH_STATE_ALWAYS);
 
         //Print out file info again
         pblocktree->ReadLastBlockFile(nLastBlockFile);
@@ -3972,17 +3980,13 @@ bool static LoadBlockIndexDB()
         }
         LogPrintf("%s: last block file info: %s\n", __func__, vinfoBlockFile[nLastBlockFile].ToString());
 
-        if (mapBlockIndex.size() != vinfoBlockFile[nLastBlockFile].nHeightLast + 1) {
-            isFixed = false;
-            strError = "mapBlockIndex does not equal the meta data's last height";
-        }
-
         if (!isFixed) {
             strError = "Failed reading from database. " + strError + ". The block database is in an inconsistent state and may cause issues in the future."
                                                                      "To force start use -forcestart";
             uiInterface.ThreadSafeMessageBox(strError, "", CClientUIInterface::MSG_ERROR);
             abort();
         }
+        LogPrintf("Passed corruption fix\n");
     }
 
     // Check whether we need to continue reindexing
