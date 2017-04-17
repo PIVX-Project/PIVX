@@ -52,7 +52,7 @@ void CObfuscationPool::ProcessMessageObfuscation(CNode* pfrom, std::string& strC
 
         int errorID;
 
-        if (pfrom->nVersion < MIN_POOL_PEER_PROTO_VERSION) {
+        if (pfrom->nVersion < ActiveProtocol()) {
             errorID = ERR_VERSION;
             LogPrintf("dsa -- incompatible version! \n");
             pfrom->PushMessage("dssu", sessionID, GetState(), GetEntriesCount(), MASTERNODE_REJECTED, errorID);
@@ -81,7 +81,7 @@ void CObfuscationPool::ProcessMessageObfuscation(CNode* pfrom, std::string& strC
 
         if (sessionUsers == 0) {
             if (pmn->nLastDsq != 0 &&
-                pmn->nLastDsq + mnodeman.CountEnabled(MIN_POOL_PEER_PROTO_VERSION) / 5 > mnodeman.nDsqCount) {
+                pmn->nLastDsq + mnodeman.CountEnabled(ActiveProtocol()) / 5 > mnodeman.nDsqCount) {
                 LogPrintf("dsa -- last dsq too recent, must wait. %s \n", pfrom->addr.ToString());
                 errorID = ERR_RECENT;
                 pfrom->PushMessage("dssu", sessionID, GetState(), GetEntriesCount(), MASTERNODE_REJECTED, errorID);
@@ -103,7 +103,7 @@ void CObfuscationPool::ProcessMessageObfuscation(CNode* pfrom, std::string& strC
         TRY_LOCK(cs_obfuscation, lockRecv);
         if (!lockRecv) return;
 
-        if (pfrom->nVersion < MIN_POOL_PEER_PROTO_VERSION) {
+        if (pfrom->nVersion < ActiveProtocol()) {
             return;
         }
 
@@ -139,7 +139,7 @@ void CObfuscationPool::ProcessMessageObfuscation(CNode* pfrom, std::string& strC
             LogPrint("obfuscation", "dsq last %d last2 %d count %d\n", pmn->nLastDsq, pmn->nLastDsq + mnodeman.size() / 5, mnodeman.nDsqCount);
             //don't allow a few nodes to dominate the queuing process
             if (pmn->nLastDsq != 0 &&
-                pmn->nLastDsq + mnodeman.CountEnabled(MIN_POOL_PEER_PROTO_VERSION) / 5 > mnodeman.nDsqCount) {
+                pmn->nLastDsq + mnodeman.CountEnabled(ActiveProtocol()) / 5 > mnodeman.nDsqCount) {
                 LogPrint("obfuscation", "dsq -- Masternode sending too many dsq messages. %s \n", pmn->addr.ToString());
                 return;
             }
@@ -156,7 +156,7 @@ void CObfuscationPool::ProcessMessageObfuscation(CNode* pfrom, std::string& strC
     } else if (strCommand == "dsi") { //ObfuScation vIn
         int errorID;
 
-        if (pfrom->nVersion < MIN_POOL_PEER_PROTO_VERSION) {
+        if (pfrom->nVersion < ActiveProtocol()) {
             LogPrintf("dsi -- incompatible version! \n");
             errorID = ERR_VERSION;
             pfrom->PushMessage("dssu", sessionID, GetState(), GetEntriesCount(), MASTERNODE_REJECTED, errorID);
@@ -279,7 +279,7 @@ void CObfuscationPool::ProcessMessageObfuscation(CNode* pfrom, std::string& strC
         }
 
     } else if (strCommand == "dssu") { //Obfuscation status update
-        if (pfrom->nVersion < MIN_POOL_PEER_PROTO_VERSION) {
+        if (pfrom->nVersion < ActiveProtocol()) {
             return;
         }
 
@@ -307,7 +307,7 @@ void CObfuscationPool::ProcessMessageObfuscation(CNode* pfrom, std::string& strC
 
     } else if (strCommand == "dss") { //Obfuscation Sign Final Tx
 
-        if (pfrom->nVersion < MIN_POOL_PEER_PROTO_VERSION) {
+        if (pfrom->nVersion < ActiveProtocol()) {
             return;
         }
 
@@ -328,7 +328,7 @@ void CObfuscationPool::ProcessMessageObfuscation(CNode* pfrom, std::string& strC
             RelayStatus(obfuScationPool.sessionID, obfuScationPool.GetState(), obfuScationPool.GetEntriesCount(), MASTERNODE_RESET);
         }
     } else if (strCommand == "dsf") { //Obfuscation Final tx
-        if (pfrom->nVersion < MIN_POOL_PEER_PROTO_VERSION) {
+        if (pfrom->nVersion < ActiveProtocol()) {
             return;
         }
 
@@ -352,7 +352,7 @@ void CObfuscationPool::ProcessMessageObfuscation(CNode* pfrom, std::string& strC
 
     } else if (strCommand == "dsc") { //Obfuscation Complete
 
-        if (pfrom->nVersion < MIN_POOL_PEER_PROTO_VERSION) {
+        if (pfrom->nVersion < ActiveProtocol()) {
             return;
         }
 
@@ -1518,7 +1518,7 @@ bool CObfuscationPool::DoAutomaticDenominating(bool fDryRun)
         }
 
         //if we've used 90% of the Masternode list then drop all the oldest first
-        int nThreshold = (int)(mnodeman.CountEnabled(MIN_POOL_PEER_PROTO_VERSION) * 0.9);
+        int nThreshold = (int)(mnodeman.CountEnabled(ActiveProtocol()) * 0.9);
         LogPrint("obfuscation", "Checking vecMasternodesUsed size %d threshold %d\n", (int)vecMasternodesUsed.size(), nThreshold);
         while ((int)vecMasternodesUsed.size() > nThreshold) {
             vecMasternodesUsed.erase(vecMasternodesUsed.begin());
@@ -1537,7 +1537,7 @@ bool CObfuscationPool::DoAutomaticDenominating(bool fDryRun)
 
                 int protocolVersion;
                 if (!dsq.GetProtocolVersion(protocolVersion)) continue;
-                if (protocolVersion < MIN_POOL_PEER_PROTO_VERSION) continue;
+                if (protocolVersion < ActiveProtocol()) continue;
 
                 //non-denom's are incompatible
                 if ((dsq.nDenom & (1 << 4))) continue;
@@ -1597,7 +1597,7 @@ bool CObfuscationPool::DoAutomaticDenominating(bool fDryRun)
 
         // otherwise, try one randomly
         while (i < 10) {
-            CMasternode* pmn = mnodeman.FindRandomNotInVec(vecMasternodesUsed, MIN_POOL_PEER_PROTO_VERSION);
+            CMasternode* pmn = mnodeman.FindRandomNotInVec(vecMasternodesUsed, ActiveProtocol());
             if (pmn == NULL) {
                 LogPrintf("DoAutomaticDenominating --- Can't find random masternode!\n");
                 strAutoDenomResult = _("Can't find random Masternode.");
@@ -1605,7 +1605,7 @@ bool CObfuscationPool::DoAutomaticDenominating(bool fDryRun)
             }
 
             if (pmn->nLastDsq != 0 &&
-                pmn->nLastDsq + mnodeman.CountEnabled(MIN_POOL_PEER_PROTO_VERSION) / 5 > mnodeman.nDsqCount) {
+                pmn->nLastDsq + mnodeman.CountEnabled(ActiveProtocol()) / 5 > mnodeman.nDsqCount) {
                 i++;
                 continue;
             }
