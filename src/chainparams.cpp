@@ -109,7 +109,7 @@ public:
         nLastPOWBlock = 259200;
         nMaturity = 100;
         nMasternodeCountDrift = 20;
-        nModifierUpdateBlock = 99999999; //place holder
+        nModifierUpdateBlock = 615800;
 
         /**
          * Build the genesis block. Note that the output of the genesis coinbase cannot
