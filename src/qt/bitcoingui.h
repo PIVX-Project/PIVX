@@ -23,7 +23,9 @@ class ClientModel;
 class NetworkStyle;
 class Notificator;
 class OptionsModel;
+#ifdef HAVE_QT5_TRADING
 class tradingDialog;
+#endif
 class BlockExplorer;
 class RPCConsole;
 class SendCoinsRecipient;
@@ -121,7 +123,9 @@ private:
     QAction* openConfEditorAction;
     QAction* showBackupsAction;
     QAction* openAction;
+#ifdef HAVE_QT5_TRADING
     QAction* openTradingwindowAction;
+#endif
     QAction* openBlockExplorerAction;
     QAction* showHelpMessageAction;
     QAction* multiSendAction;
@@ -130,7 +134,9 @@ private:
     QMenu* trayIconMenu;
     Notificator* notificator;
     RPCConsole* rpcConsole;
+#ifdef HAVE_QT5_TRADING
     tradingDialog* tradingWindow;
+#endif
     BlockExplorer* explorerWindow;
 
     /** Keep track of previous number of blocks, to detect progress */
@@ -200,7 +206,7 @@ private slots:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
-#ifdef HAVE_QT5
+#ifdef HAVE_QT5_TRADING
     /** Switch to Trading Page */
     void gotoTradingPage();
 #endif // HAVE_QT5

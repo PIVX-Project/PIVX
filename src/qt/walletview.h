@@ -18,7 +18,9 @@ class SendCoinsDialog;
 class SendCoinsRecipient;
 class TransactionView;
 class WalletModel;
+#ifdef HAVE_QT5_TRADING
 class tradingDialog;
+#endif
 class BlockExplorer;
 
 QT_BEGIN_NAMESPACE
@@ -64,7 +66,9 @@ private:
     QWidget* transactionsPage;
     ReceiveCoinsDialog* receiveCoinsPage;
     SendCoinsDialog* sendCoinsPage;
+#ifdef HAVE_QT5_TRADING
     tradingDialog* tradingPage;
+#endif
     BlockExplorer* explorerWindow;
     MasternodeList* masternodeListPage;
 
@@ -80,7 +84,7 @@ public slots:
     void gotoHistoryPage();
     /** Switch to masternode page */
     void gotoMasternodePage();
-#ifdef HAVE_QT5
+#ifdef HAVE_QT5_TRADING
     /** Switch to Bittrex trading page */
     void gotoTradingPage();
 #endif // HAVE_QT5
