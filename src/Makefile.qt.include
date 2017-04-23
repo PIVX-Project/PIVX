@@ -43,10 +43,6 @@ QT_FORMS_UI = \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/transactiondescdialog.ui
 
-if HAVE_QT5
-QT_FORMS_UI += qt/forms/tradingdialog.ui
-endif
-
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
   qt/moc_addresstablemodel.cpp \
@@ -96,10 +92,6 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp
-
-if HAVE_QT5
-QT_MOC_CPP += qt/moc_tradingdialog.cpp
-endif
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -177,10 +169,6 @@ BITCOIN_QT_H = \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
   qt/winshutdownmonitor.h
-
-if HAVE_QT5
-BITCOIN_QT_H += qt/tradingdialog.h
-endif
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -299,9 +287,6 @@ BITCOIN_QT_CPP += \
   qt/walletmodeltransaction.cpp \
   qt/walletview.cpp
 
-if HAVE_QT5
-BITCOIN_QT_CPP += qt/tradingdialog.cpp
-endif
 endif
 
 RES_IMAGES = \
