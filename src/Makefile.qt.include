@@ -43,7 +43,7 @@ QT_FORMS_UI = \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/transactiondescdialog.ui
 
-if HAVE_QT5
+if HAVE_QT5_TRADING
 QT_FORMS_UI += qt/forms/tradingdialog.ui
 endif
 
@@ -97,7 +97,7 @@ QT_MOC_CPP = \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp
 
-if HAVE_QT5
+if HAVE_QT5_TRADING
 QT_MOC_CPP += qt/moc_tradingdialog.cpp
 endif
 
@@ -178,7 +178,7 @@ BITCOIN_QT_H = \
   qt/walletview.h \
   qt/winshutdownmonitor.h
 
-if HAVE_QT5
+if HAVE_QT5_TRADING
 BITCOIN_QT_H += qt/tradingdialog.h
 endif
 
@@ -299,7 +299,7 @@ BITCOIN_QT_CPP += \
   qt/walletmodeltransaction.cpp \
   qt/walletview.cpp
 
-if HAVE_QT5
+if HAVE_QT5_TRADING
 BITCOIN_QT_CPP += qt/tradingdialog.cpp
 endif
 endif

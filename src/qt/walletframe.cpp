@@ -125,7 +125,7 @@ void WalletFrame::gotoMasternodePage() // Masternode list
         i.value()->gotoMasternodePage();
 }
 
-#ifdef HAVE_QT5
+#ifdef HAVE_QT5_TRADING
 void WalletFrame::gotoTradingPage() // Bittrex trading
 
 {
