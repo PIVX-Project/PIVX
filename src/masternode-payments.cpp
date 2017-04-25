@@ -104,6 +104,7 @@ CMasternodePaymentDB::ReadResult CMasternodePaymentDB::Read(CMasternodePayments&
         return IncorrectHash;
     }
 
+
     unsigned char pchMsgTmp[4];
     std::string strMagicMessageTmp;
     try {
@@ -361,12 +362,8 @@ void CMasternodePayments::ProcessMessageMasternodePayments(CNode* pfrom, std::st
 
         if (pfrom->nVersion < ActiveProtocol()) return;
 
-        int nHeight;
-        {
-            TRY_LOCK(cs_main, locked);
-            if (!locked || chainActive.Tip() == NULL) return;
-            nHeight = chainActive.Tip()->nHeight;
-        }
+        if (!pCurrentBlockIndex) return;
+        int nHeight = chainActive.Tip()->nHeight;
 
         if (masternodePayments.mapMasternodePayeeVotes.count(winner.GetHash())) {
             LogPrint("mnpayments", "mnw - Already seen - %s bestHeight %d\n", winner.GetHash().ToString().c_str(), nHeight);
@@ -449,12 +446,8 @@ bool CMasternodePayments::IsScheduled(CMasternode& mn, int nNotBlockHeight)
 {
     LOCK(cs_mapMasternodeBlocks);
 
-    int nHeight;
-    {
-        TRY_LOCK(cs_main, locked);
-        if (!locked || chainActive.Tip() == NULL) return false;
-        nHeight = chainActive.Tip()->nHeight;
-    }
+    if (!pCurrentBlockIndex) return false;
+    int nHeight = chainActive.Tip()->nHeight;
 
     CScript mnpayee;
     mnpayee = GetScriptForDestination(mn.pubKeyCollateralAddress.GetID());
@@ -842,4 +835,13 @@ int CMasternodePayments::GetNewestBlock()
     }
 
     return nNewestBlock;
+}
+
+void CMasternodePayments::UpdatedBlockTip(const CBlockIndex* pindex)
+{
+    pCurrentBlockIndex = pindex;
+    LogPrint("mnpayments", "pCurrentBlockIndex->nHeight: %d\n", pCurrentBlockIndex->nHeight);
+
+    if (!fLiteMode && masternodeSync.RequestedMasternodeAssets > MASTERNODE_SYNC_LIST)
+        ProcessBlock(pindex->nHeight + 10);
 }

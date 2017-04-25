@@ -4,6 +4,7 @@
 #include "util.h"
 #include "ui_interface.h"
 #include <base58.h>
+#include <boost/lexical_cast.hpp>
 // clang-format on
 
 CMasternodeConfig masternodeConfig;
@@ -76,5 +77,17 @@ bool CMasternodeConfig::read(std::string& strErr)
     }
 
     streamConfig.close();
+    return true;
+}
+
+bool CMasternodeConfig::CMasternodeEntry::castOutputIndex(int &n)
+{
+    try {
+        n = boost::lexical_cast<int>(outputIndex);
+    } catch (const boost::bad_lexical_cast &) {
+        LogPrintf("%s: Bad lexical cast on getOutputIndex\n", __func__);
+        return false;
+    }
+
     return true;
 }

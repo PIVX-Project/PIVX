@@ -53,6 +53,8 @@ public:
             return outputIndex;
         }
 
+        bool castOutputIndex(int& n);
+
         void setOutputIndex(const std::string& outputIndex)
         {
             this->outputIndex = outputIndex;
