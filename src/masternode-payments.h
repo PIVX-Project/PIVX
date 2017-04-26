@@ -236,6 +236,8 @@ class CMasternodePayments
 private:
     int nSyncedFromPeer;
     int nLastBlockHeight;
+    // Keep track of current block index
+    const CBlockIndex* pCurrentBlockIndex;
 
 public:
     std::map<uint256, CMasternodePaymentWinner> mapMasternodePayeeVotes;
@@ -286,8 +288,18 @@ public:
     std::string GetRequiredPaymentsString(int nBlockHeight);
     void FillBlockPayee(CMutableTransaction& txNew, int64_t nFees, bool fProofOfStake);
     std::string ToString() const;
+
     int GetOldestBlock();
     int GetNewestBlock();
+
+    int GetBlockCount()
+    {
+        return mapMasternodeBlocks.size();
+    }
+    int GetVoteCount()
+    {
+        return mapMasternodePayeeVotes.size();
+    }
 
     ADD_SERIALIZE_METHODS;
 
@@ -297,6 +309,8 @@ public:
         READWRITE(mapMasternodePayeeVotes);
         READWRITE(mapMasternodeBlocks);
     }
+
+    void UpdatedBlockTip(const CBlockIndex* pindex);
 };
 
 

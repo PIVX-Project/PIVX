@@ -61,6 +61,7 @@ public:
 
     bool CheckAndUpdate(int& nDos, bool fRequireEnabled = true);
     bool Sign(CKey& keyMasternode, CPubKey& pubKeyMasternode);
+    bool VerifySignature(CPubKey& pubKeyMasternode, int& nDos);
     void Relay();
 
     uint256 GetHash()
@@ -251,6 +252,11 @@ public:
     bool IsEnabled()
     {
         return activeState == MASTERNODE_ENABLED;
+    }
+
+    bool IsPreEnabled()
+    {
+        return activeState == MASTERNODE_PRE_ENABLED;
     }
 
     int GetMasternodeInputAge()

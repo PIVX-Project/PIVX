@@ -57,6 +57,9 @@ public:
     // Time when current masternode asset sync started
     int64_t nAssetSyncStarted;
 
+    // Keep track of current block index
+    const CBlockIndex* pCurrentBlockIndex;
+
     CMasternodeSync();
 
     void AddedMasternodeList(uint256 hash);
@@ -74,6 +77,8 @@ public:
     bool IsBlockchainSynced();
     bool IsMasternodeListSynced() { return RequestedMasternodeAssets > MASTERNODE_SYNC_LIST; }
     void ClearFulfilledRequest();
+
+    void UpdatedBlockTip(const CBlockIndex* pindex);
 };
 
 #endif
