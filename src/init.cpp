@@ -1512,6 +1512,16 @@ bool AppInit2(boost::thread_group& threadGroup)
     }
 
     if (fMasterNode) {
+#ifdef ENABLE_WALLET
+        if (fDisableWallet) {
+            return InitError("Enabling Masternode support requires wallet functionality. "
+                             "Please remove disablewallet from your configuration.");
+        }
+#else
+        return InitError("Enabling Masternode support requires wallet functionality. "
+                         "Please recompile or use a different binary with wallet support enabled.");
+#endif
+
         LogPrintf("IS OBFUSCATION MASTER NODE\n");
         strMasterNodeAddr = GetArg("-masternodeaddr", "");
 
