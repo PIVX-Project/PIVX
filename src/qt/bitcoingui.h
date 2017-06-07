@@ -123,6 +123,7 @@ private:
     QAction* openBlockExplorerAction;
     QAction* showHelpMessageAction;
     QAction* multiSendAction;
+    QAction* multiSigAddressAction;
 
     QSystemTrayIcon* trayIcon;
     QMenu* trayIconMenu;
@@ -212,7 +213,8 @@ private slots:
     void gotoVerifyMessageTab(QString addr = "");
     /** Show MultiSend Dialog */
     void gotoMultiSendDialog();
-
+    /** Show MultiSigAddress Dialog */
+    void gotoMultiSigAddressDialog();
     /** Show BIP 38 tool - default to Encryption tab */
     void gotoBip38Tool();
 
