@@ -98,6 +98,7 @@ private:
     QAction* sendCoinsAction;
     QAction* usedSendingAddressesAction;
     QAction* usedReceivingAddressesAction;
+    QAction* multiSigAddressAction;
     QAction* signMessageAction;
     QAction* verifyMessageAction;
     QAction* bip38ToolAction;
@@ -123,7 +124,6 @@ private:
     QAction* openBlockExplorerAction;
     QAction* showHelpMessageAction;
     QAction* multiSendAction;
-    QAction* multiSigAddressAction;
 
     QSystemTrayIcon* trayIcon;
     QMenu* trayIconMenu;

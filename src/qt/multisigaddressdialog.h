@@ -25,8 +25,7 @@ public:
     void setModel(WalletModel* model);
     void setAddress(const QString& address);
 
-    void showPage_1(bool fShow);
-    void showPage_2(bool fShow);
+    void showPage(int pageNumber);
 
 protected:
     bool eventFilter(QObject* object, QEvent* event);

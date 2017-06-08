@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>addMultisigLayout</class>
- <widget class="QDialog" name="addMultisigLayout">
+ <class>MultiSigAddressDialog</class>
+ <widget class="QDialog" name="MultiSigAddressDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Add Multisignature Address</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
@@ -22,7 +22,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="page_1">
+     <widget class="QWidget" name="mnAccept">
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <layout class="QVBoxLayout" name="verticalLayout">

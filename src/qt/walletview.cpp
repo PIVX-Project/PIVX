@@ -269,7 +269,7 @@ void WalletView::gotoMultiSigAddressDialog()
 {
     MultiSigAddressDialog* multiSigAddressDialog = new MultiSigAddressDialog(this);
     multiSigAddressDialog->setModel(walletModel);
-    multiSigAddressDialog->showPage_1(true);
+    multiSigAddressDialog->showPage(0);
 }
 
 bool WalletView::handlePaymentRequest(const SendCoinsRecipient& recipient)

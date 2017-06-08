@@ -415,8 +415,8 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
     usedSendingAddressesAction->setStatusTip(tr("Show the list of used sending addresses and labels"));
     usedReceivingAddressesAction = new QAction(QIcon(":/icons/address-book"), tr("&Receiving addresses..."), this);
     usedReceivingAddressesAction->setStatusTip(tr("Show the list of used receiving addresses and labels"));
-    multiSigAddressAction = new QAction(QIcon(":/icons/address-book"), tr("&Create multi-signature address..."), this);
-    multiSigAddressAction->setStatusTip(tr("Create a multi-signature address"));
+    multiSigAddressAction = new QAction(QIcon(":/icons/address-book"), tr("&Create multisignature address..."), this);
+    multiSigAddressAction->setStatusTip(tr("Create a multisignature address"));
 
 
     openAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_FileIcon), tr("Open &URI..."), this);
@@ -448,7 +448,7 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
         connect(usedReceivingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedReceivingAddresses()));
         connect(openAction, SIGNAL(triggered()), this, SLOT(openClicked()));
         connect(multiSendAction, SIGNAL(triggered()), this, SLOT(gotoMultiSendDialog()));
-        connect(multiSigAddressAction, SIGNAL(triggered()), this, SLOT(gotoMultiSendDialog()));
+        connect(multiSigAddressAction, SIGNAL(triggered()), this, SLOT(gotoMultiSigAddressDialog()));
     }
 #endif // ENABLE_WALLET
 }
@@ -789,8 +789,7 @@ void BitcoinGUI::gotoMultiSendDialog()
 
 void BitcoinGUI::gotoMultiSigAddressDialog()
 {
-    if(walletFrame)
-        walletFrame->gotoMultiSigAddressDialog();
+    if(walletFrame) walletFrame->gotoMultiSigAddressDialog();
 }
 
 void BitcoinGUI::gotoBlockExplorerPage()

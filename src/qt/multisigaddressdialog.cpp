@@ -19,11 +19,12 @@
 
 #include <QClipboard>
 
-MultiSigAddressDialog::MultiSigAddressDialog(QWidget* parent) : QDialog(parent),
-                                                    ui(new Ui::MultiSigAddressDialog),
-                                                    model(0)
+MultiSigAddressDialog::MultiSigAddressDialog(QWidget* parent) :  QDialog(parent),
+                                                                 ui(new Ui::MultiSigAddressDialog),
+                                                                 model(0)
 {
     ui->setupUi(this);
+    ui->continueButton->installEventFilter(this);
 }
 
 MultiSigAddressDialog::~MultiSigAddressDialog()
@@ -41,6 +42,12 @@ void MultiSigAddressDialog::setModel(WalletModel* model)
     this->model = model;
 }
 
+void MultiSigAddressDialog::showPage(int pageNumber)
+{
+    ui->stackedWidget->setCurrentIndex(pageNumber);
+    this->show();
+}
+
 void MultiSigAddressDialog::on_continueButton_clicked()
 {
     if(!model)
@@ -50,8 +57,10 @@ void MultiSigAddressDialog::on_continueButton_clicked()
     int n = ui->enterNSpinbox->value();
 
     if(m > n) {
-        ui->continueStatusLabel->setStyleSheet("QLabel { color: red; }");
-        ui->continueStatusLabel->setText("The amount of required signatures must be less than or equal to the total number of addresses.");
+        ui->continueStatus->setStyleSheet("QLabel { color: red; }");
+        ui->continueStatus->setText("The amount of required signatures must be less than or equal to the total number of addresses.");
+    } else {
+        ui->stackedWidget->setCurrentIndex(1);
     }
 
 }
@@ -70,4 +79,24 @@ void MultiSigAddressDialog::on_addressBookButton_clicked()
 void MultiSigAddressDialog::on_pasteButton_clicked()
 {
     setAddress(QApplication::clipboard()->text());
+}
+
+bool MultiSigAddressDialog::eventFilter(QObject* object, QEvent* event)
+{
+    if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::FocusIn) {
+        if (ui->stackedWidget->currentIndex() == 0) {
+            /* Clear status message on focus change */
+            ui->continueStatus->clear();
+
+            /* Select generated signature
+            if (object == ui->encryptedKeyOut_ENC) {
+                ui->encryptedKeyOut_ENC->selectAll();
+                return true;
+            } */
+        } else if (ui->stackedWidget->currentIndex() == 1) {
+            /* Clear status message on focus change */
+            ui->exitStatus->clear();
+        }
+    }
+    return QDialog::eventFilter(object, event);
 }
