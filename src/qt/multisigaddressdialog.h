@@ -38,6 +38,7 @@ private slots:
    void on_continueButton_clicked();
    void on_addressBookButton_clicked();
    void on_pasteButton_clicked();
+   void on_createAddressButton_clicked();
 };
 
 #endif // BITCOIN_QT_MULTISIGADDRESSDIALOG_H
