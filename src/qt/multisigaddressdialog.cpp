@@ -10,27 +10,25 @@
 #include "addressbookpage.h"
 #include "guiutil.h"
 #include "walletmodel.h"
-#include "rpcconsole.h"
-#include "json/json_spirit_utils.h"
-#include "json/json_spirit_value.h"
-
+#include "script/script.h"
+#include "../base58.h"
 #include "init.h"
 #include "wallet.h"
 
 #include <string>
 #include <vector>
-#include <boost/format.hpp>
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
+#include <QMap>
 #include <QtWidgets/QPushButton>
 #include <QClipboard>
 #include "qvalidatedlineedit.h"
 
-using namespace std;
+
 using namespace boost;
-using namespace json_spirit;
+
 
 MultiSigAddressDialog::MultiSigAddressDialog(QWidget* parent) :  QDialog(parent),
                                                                  ui(new Ui::MultiSigAddressDialog),
@@ -61,6 +59,8 @@ void MultiSigAddressDialog::showPage(int pageNumber)
     this->show();
 }
 int m,n;
+//QMap<QString, QValidatedLineEdit*> lineEdits;
+QValidatedLineEdit* lineEdits[16];
 void MultiSigAddressDialog::on_continueButton_clicked()
 {
     if(!model)
@@ -73,8 +73,7 @@ void MultiSigAddressDialog::on_continueButton_clicked()
         ui->continueStatus->setStyleSheet("QLabel { color: red; }");
         ui->continueStatus->setText("The amount of required signatures must be less than or equal to the total number of addresses.");
     } else {
-
-        for(int i = 1; i < n; i++){
+        for(int i = 0; i < n; i++){
             std::stringstream ss;
             /*Create address line layout*/
             QHBoxLayout *address = new QHBoxLayout();
@@ -95,9 +94,9 @@ void MultiSigAddressDialog::on_continueButton_clicked()
             QValidatedLineEdit *addressIn = new QValidatedLineEdit(ui->addressList);
             ss << "addressIn_"<< i;
             addressIn->setObjectName(QString::fromStdString(ss.str()));
+            lineEdits[i] = addressIn;
             address->addWidget(addressIn);
             ss.str(std::string());
-
 
             /*create address book button*/
             QPushButton *addressBookButton= new QPushButton(ui->addressList);
@@ -107,6 +106,7 @@ void MultiSigAddressDialog::on_continueButton_clicked()
             icon1.addFile(QStringLiteral(":/icons/address-book"), QSize(), QIcon::Normal, QIcon::Off);
             addressBookButton->setIcon(icon1);
             addressBookButton->setAutoDefault(false);
+            addressBookButton->installEventFilter(this);
             address->addWidget(addressBookButton);
             ss.str(std::string());
 
@@ -144,60 +144,102 @@ void MultiSigAddressDialog::on_pasteButton_clicked()
     setAddress(QApplication::clipboard()->text());
 }
 
-extern CScript _createmultisig_redeemScript(const Array& params);
-
 void MultiSigAddressDialog::on_createAddressButton_clicked(){
     if(!model)
         return;
 
-    // model->validateAddress(ui->addressIn_1->text());
-    CBasicKeyStore keystore;
-    CKey key[4];
-    std::vector<CPubKey> keys;
-    for (int i = 0; i < 4; i++)
-    {
-        key[i].MakeNewKey(true);
-        keystore.AddKey(key[i]);
-        keys.push_back(key[i].GetPubKey());
+    string keys[n];// = {"yDVyjR2U5UcxMsf5S4qN8EAYvn27MHxUPW", "y5vdZGbCp4SJcCiTgjYt9wYLegmHhN6iJu"};
+
+    for(int i = 0; i < n; i++){
+        keys[i] = lineEdits[i]->text().toStdString();
     }
 
-    Object params;
-    params.push_back(Value(2));
-    params.push_back(Value("[\"yDVyjR2U5UcxMsf5S4qN8EAYvn27MHxUPW\", \"y5vdZGbCp4SJcCiTgjYt9wYLegmHhN6iJu\"]"));
-
-    std::stringstream ss;
-    write(params, ss, pretty_print);
-
-    // const Array& params = {1,"[\"xw6hdzY1zGvD17PiVVgFbHTCzw8kuqveHq\",\"xw7mAPxpGd6pG6uBpcXT4KVrNzcfprTTDF\"]"};
-    CScript redeem = _createmultisig_redeemScript(ss.str());
-    CScriptID innerID(redeem);
-    pwalletMain->AddCScript(redeem);
-
-
-    pwalletMain->SetAddressBook(innerID, "testinglollolyouasrelol", "testingFROMCODE");
-
-
-    ui->exitStatus->setText(QString::fromStdString(CBitcoinAddress(innerID).ToString()));
-
+    CScript redeem;
+    try{
+        createRedeemScript(m, keys);
+        CScriptID innerID(redeem);
+        pwalletMain->AddCScript(redeem);
+        pwalletMain->SetAddressBook(innerID, "Multisig-", "receive");
+        ui->exitStatus->setText(QString::fromStdString(CBitcoinAddress(innerID).ToString()));
+    }catch(const runtime_error& e) {
+        ui->exitStatus->setText(QString::fromStdString(e.what()));
+    }
 }
 
 bool MultiSigAddressDialog::eventFilter(QObject* object, QEvent* event)
 {
+    /*std::size_t addrButton = (object->objectName()).toStdString().find("addressBook");
+    if(addrButton != std::string::npos){
+        if (model && model->getAddressTableModel()) {
+            AddressBookPage dlg(AddressBookPage::ForSelection, AddressBookPage::ReceivingTab, this);
+            dlg.setModel(model->getAddressTableModel());
+            if (dlg.exec()) {
+                setAddress(dlg.getReturnValue());
+            }
+        }
+    }*/
     if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::FocusIn) {
         if (ui->stackedWidget->currentIndex() == 0) {
             /* Clear status message on focus change */
             ui->continueStatus->clear();
-
-            /* Select generated signature
-            if (object == ui->encryptedKeyOut_ENC) {
-                ui->encryptedKeyOut_ENC->selectAll();
-                return true;
-            } */
         } else if (ui->stackedWidget->currentIndex() == 1) {
             /* Clear status message on focus change */
             ui->exitStatus->clear();
         }
     }
     return QDialog::eventFilter(object, event);
+}
+
+
+CScript MultiSigAddressDialog::createRedeemScript(int m, string keys[])
+{
+    //gather pub keys
+    if (n < 1)
+        throw runtime_error("a multisignature address must require at least one key to redeem");
+    if (n < m)
+        throw runtime_error(
+            strprintf("not enough keys supplied "
+                      "(got %u keys, but need at least %d to redeem)",
+                m, n));
+    if (n > 16)
+        throw runtime_error("Number of addresses involved in the multisignature address creation > 16\nReduce the number");
+
+    std::vector<CPubKey> pubkeys;
+    pubkeys.resize(n);
+
+    for(int i = 0; i < n ; i++) {
+        string keyString = keys[i];
+#ifdef ENABLE_WALLET
+        // Case 1: PIVX address and we have full public key:
+        CBitcoinAddress address(keyString);
+        if (pwalletMain && address.IsValid()) {
+            CKeyID keyID;
+            if (!address.GetKeyID(keyID)) {
+                throw runtime_error(
+                    strprintf("%s does not refer to a key", keyString));
+            }
+            CPubKey vchPubKey;
+            if (!pwalletMain->GetPubKey(keyID, vchPubKey))
+                throw runtime_error(
+                    strprintf("no full public key for address %s", keyString));
+            if (!vchPubKey.IsFullyValid())
+                throw runtime_error(" Invalid public key: " + keyString);
+            pubkeys[i] = vchPubKey;
+        }
+
+        //case 2: hex pub key
+        else
+#endif
+            if (IsHex(keyString)) {
+            CPubKey vchPubKey(ParseHex(keyString));
+            if (!vchPubKey.IsFullyValid())
+                throw runtime_error(" Invalid public key: " + keyString);
+            pubkeys[i] = vchPubKey;
+        } else {
+            throw runtime_error(" Invalid public key: " + keyString);
+        }
+    }
+
+    return GetScriptForMultisig(m, pubkeys);
 }
 

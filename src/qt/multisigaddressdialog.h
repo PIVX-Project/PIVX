@@ -6,8 +6,10 @@
 #define BITCOIN_QT_MULTISIGADDRESSDIALOG_H
 
 #include <QDialog>
+#include "script/script.h"
 
 class WalletModel;
+
 
 namespace Ui
 {
@@ -33,6 +35,7 @@ protected:
 private:
     Ui::MultiSigAddressDialog* ui;
     WalletModel* model;
+    CScript createRedeemScript(int m, std::string keys[]);
 
 private slots:
    void on_continueButton_clicked();

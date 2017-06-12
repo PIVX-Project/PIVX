@@ -30,11 +30,17 @@
           <layout class="QHBoxLayout" name="enterMLayout">
            <item>
             <widget class="QSpinBox" name="enterMSpinbox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="minimum">
               <number>1</number>
              </property>
              <property name="maximum">
-              <number>9999</number>
+              <number>16</number>
              </property>
              <property name="value">
               <number>1</number>
@@ -64,7 +70,7 @@
               <number>2</number>
              </property>
              <property name="maximum">
-              <number>9999</number>
+              <number>16</number>
              </property>
              <property name="value">
               <number>2</number>
@@ -161,73 +167,11 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>494</width>
-              <height>68</height>
+              <width>98</width>
+              <height>28</height>
              </rect>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_4">
-             <item>
-              <layout class="QHBoxLayout" name="address_1">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QLabel" name="addressLabel_1">
-                 <property name="text">
-                  <string>Address:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QValidatedLineEdit" name="addressIn_1">
-                 <property name="toolTip">
-                  <string>The PIVX address to sign the message with</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="addressBookButton_1">
-                 <property name="toolTip">
-                  <string>Choose previously used address</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="../pivx.qrc">
-                   <normaloff>:/icons/address-book</normaloff>:/icons/address-book</iconset>
-                 </property>
-                 <property name="shortcut">
-                  <string>Alt+A</string>
-                 </property>
-                 <property name="autoDefault">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="addressPasteButton_1">
-                 <property name="toolTip">
-                  <string>Paste address from clipboard</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="../pivx.qrc">
-                   <normaloff>:/icons/editpaste</normaloff>:/icons/editpaste</iconset>
-                 </property>
-                 <property name="shortcut">
-                  <string>Alt+P</string>
-                 </property>
-                 <property name="autoDefault">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
+            <layout class="QVBoxLayout" name="verticalLayout_4"/>
            </widget>
           </widget>
          </item>
@@ -319,13 +263,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QValidatedLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>qvalidatedlineedit.h</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../pivx.qrc"/>
  </resources>
