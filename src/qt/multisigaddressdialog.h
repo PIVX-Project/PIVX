@@ -6,6 +6,7 @@
 #define BITCOIN_QT_MULTISIGADDRESSDIALOG_H
 
 #include <QDialog>
+#include <QFrame>
 #include "script/script.h"
 
 class WalletModel;
@@ -13,16 +14,16 @@ class WalletModel;
 
 namespace Ui
 {
-class MultiSigAddressDialog;
+class MultisigAddressDialog;
 }
 
-class MultiSigAddressDialog : public QDialog
+class MultisigAddressDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MultiSigAddressDialog(QWidget* parent);
-    ~MultiSigAddressDialog();
+    explicit MultisigAddressDialog(QWidget* parent);
+    ~MultisigAddressDialog();
 
     void setModel(WalletModel* model);
     void setAddress(const QString& address);
@@ -33,15 +34,25 @@ protected:
     bool eventFilter(QObject* object, QEvent* event);
 
 private:
-    Ui::MultiSigAddressDialog* ui;
+    Ui::MultisigAddressDialog* ui;
     WalletModel* model;
-    CScript createRedeemScript(int m, std::string keys[]);
+    CScript createRedeemScript(int m, std::vector<std::string> keys);
+    QFrame* createAddress(int labelNumber);
+    QFrame* createInput(int labelNumber);
 
 private slots:
-   void on_continueButton_clicked();
+   void on_addAddressButton_ADD_clicked();
+   void on_addAddressButton_SIG_clicked();
    void on_addressBookButton_clicked();
    void on_pasteButton_clicked();
-   void on_createAddressButton_clicked();
+   void on_addMultisigButton_clicked();
+   void on_addDestinationButton_clicked();
+   void on_createButton_clicked();
+   void on_addInputButton_SIG_clicked();
+   void on_addInputButton_CRE_clicked();
+   void on_addAddressButton_clicked();
+   void on_addPKButton_clicked();
+   void on_signButton_clicked();
 };
 
 #endif // BITCOIN_QT_MULTISIGADDRESSDIALOG_H

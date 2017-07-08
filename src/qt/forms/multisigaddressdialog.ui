@@ -1,148 +1,554 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MultiSigAddressDialog</class>
- <widget class="QDialog" name="MultiSigAddressDialog">
+ <class>MultisigAddressDialog</class>
+ <widget class="QDialog" name="MultisigAddressDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>534</width>
-    <height>164</height>
+    <width>864</width>
+    <height>464</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Add Multisignature Address</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
+  <layout class="QVBoxLayout" name="verticalLayout_8">
    <item>
-    <widget class="QStackedWidget" name="stackedWidget">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+    <widget class="QTabWidget" name="multisigTabWidget">
+     <property name="styleSheet">
+      <string notr="true">QScrollArea{border: 1px solid #5b4c7c;}
+QFrame{background-color:#f2f0f0;}
+QLabel{background-color:#ffffff;}
+QFrame &gt; QLabel{background-color:#f2f0f0;}</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
-     <widget class="QWidget" name="mnAccept">
+     <widget class="QWidget" name="addMultisigTab">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <attribute name="title">
+       <string>Add &amp;Multisignature Address</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QHBoxLayout" name="enterMLayout">
+         <item>
+          <widget class="QSpinBox" name="enterMSpinbox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>16</number>
+           </property>
+           <property name="value">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="enterMLabel">
+           <property name="text">
+            <string>Enter the minimum number of signatures required to sign transactions</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="addressLabelLayout">
+         <item>
+          <widget class="QLabel" name="addressLableLabel">
+           <property name="text">
+            <string>Address Label:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="multisigAddressLabel"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="addAddressLayout">
+         <item>
+          <widget class="QLabel" name="addAddressLabel">
+           <property name="text">
+            <string>Addresses that can sign:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addAddressButton_ADD">
+           <property name="toolTip">
+            <string>Sign the message to prove you own this PIVX address</string>
+           </property>
+           <property name="text">
+            <string>&amp;Add Address</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../pivx.qrc">
+             <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="addAddressSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>48</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QScrollArea" name="addAddressScrollArea_ADD">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="addAddressWidget_ADD">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>822</width>
+            <height>226</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <layout class="QVBoxLayout" name="addressList_ADD"/>
+           </item>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="addMultisigLayout">
+         <item>
+          <widget class="QPushButton" name="addMultisigButton">
+           <property name="toolTip">
+            <string>Sign the message to prove you own this PIVX address</string>
+           </property>
+           <property name="toolTipDuration">
+            <number>-3</number>
+           </property>
+           <property name="text">
+            <string>&amp;Add Multisig</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../pivx.qrc">
+             <normaloff>:/icons/filesave</normaloff>:/icons/filesave</iconset>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="addMultisigSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Status:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="addMultisigSpacer_1">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Preferred</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>48</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QTextEdit" name="addMultisigStatus">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="addMultisigSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Preferred</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>48</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="createTransactionTab">
+      <attribute name="title">
+       <string>Create &amp;Raw Transaction</string>
+      </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <layout class="QVBoxLayout" name="verticalLayout">
+        <layout class="QVBoxLayout" name="createTxLayout">
          <item>
-          <layout class="QHBoxLayout" name="enterMLayout">
+          <layout class="QHBoxLayout" name="descriptionLayout">
            <item>
-            <widget class="QSpinBox" name="enterMSpinbox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimum">
-              <number>1</number>
-             </property>
-             <property name="maximum">
-              <number>16</number>
-             </property>
-             <property name="value">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="enterMLabel">
+            <widget class="QLabel" name="descriptionLabel">
              <property name="text">
-              <string>Enter the minimum number of signatures required to sign transactions</string>
+              <string>TextLabel</string>
              </property>
             </widget>
            </item>
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="enterNLayout">
+          <layout class="QHBoxLayout" name="addTxInputLayout">
            <item>
-            <widget class="QSpinBox" name="enterNSpinbox">
+            <widget class="QLabel" name="addTxInputLabel">
+             <property name="text">
+              <string>Inputs:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="addInputButton_CRE">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="minimum">
-              <number>2</number>
-             </property>
-             <property name="maximum">
-              <number>16</number>
-             </property>
-             <property name="value">
-              <number>2</number>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="enterNLabel">
              <property name="text">
-              <string>Enter the total number of addresses to validate the signatures</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="continueButtonLayout">
-           <item>
-            <widget class="QPushButton" name="continueButton">
-             <property name="toolTip">
-              <string>Sign the message to prove you own this PIVX address</string>
-             </property>
-             <property name="text">
-              <string>&amp;Continue</string>
+              <string>Add &amp;Input</string>
              </property>
              <property name="icon">
               <iconset resource="../pivx.qrc">
-               <normaloff>:/icons/continue</normaloff>:/icons/continue</iconset>
-             </property>
-             <property name="autoDefault">
-              <bool>false</bool>
+               <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
              </property>
             </widget>
            </item>
            <item>
-            <spacer name="continueSpacer_1">
+            <spacer name="addTxInputSpacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
                <width>40</width>
-               <height>48</height>
+               <height>20</height>
               </size>
              </property>
             </spacer>
            </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="txInputsScrollArea">
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="txInputsWidget">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>820</width>
+              <height>127</height>
+             </rect>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <layout class="QVBoxLayout" name="inputsList_CRE"/>
+             </item>
+             <item>
+              <spacer name="txInputsSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="addDestinationLayout">
            <item>
-            <widget class="QLabel" name="continueStatus">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
+            <widget class="QLabel" name="addDestinationLabel">
+             <property name="text">
+              <string>Address / Amount:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="addDestinationButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
              <property name="text">
-              <string/>
+              <string>Add &amp;Destination</string>
              </property>
-             <property name="wordWrap">
+             <property name="icon">
+              <iconset resource="../pivx.qrc">
+               <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="addDestinationHorizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="destionationsScrollArea">
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="destinationsScrollAreaContents">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>820</width>
+              <height>127</height>
+             </rect>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_11">
+             <item>
+              <layout class="QVBoxLayout" name="destinationsList"/>
+             </item>
+             <item>
+              <spacer name="destinationsSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="createButtonLayout">
+           <item>
+            <widget class="QPushButton" name="createButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Confirm the send action</string>
+             </property>
+             <property name="text">
+              <string>&amp;Create</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../pivx.qrc">
+               <normaloff>:/icons/edit</normaloff>:/icons/edit</iconset>
+             </property>
+             <property name="autoDefault">
+              <bool>false</bool>
+             </property>
+             <property name="default">
               <bool>true</bool>
              </property>
             </widget>
            </item>
            <item>
-            <spacer name="continueSpacer_2">
+            <widget class="QLabel" name="fee">
+             <property name="text">
+              <string>Fee:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="createButtonVerticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="createButtonLabel">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Status:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="createButtonSpacer_1">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
                <width>40</width>
-               <height>48</height>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QTextEdit" name="createButtonStatus">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="createButtonSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Preferred</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
               </size>
              </property>
             </spacer>
@@ -153,37 +559,311 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="addressAccept">
-      <layout class="QGridLayout" name="gridLayout_3">
+     <widget class="QWidget" name="signMultisigTransaction">
+      <property name="styleSheet">
+       <string notr="true">txScrollArea:{
+	border: 1px solid #5b4c7c;
+}
+keyScrollArea:{
+	border: 1px solid #5b4c7c;
+}
+txScrollArea:{
+	border: 1px solid #5b4c7c;
+}</string>
+      </property>
+      <attribute name="title">
+       <string>Sign &amp;Raw Transaction</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0">
-        <layout class="QVBoxLayout" name="addressLayout">
+        <layout class="QVBoxLayout" name="signTransactionLayout">
          <item>
-          <widget class="QScrollArea" name="addressInputScrollArea">
+          <layout class="QHBoxLayout" name="transactionHexLayout">
+           <item>
+            <widget class="QLabel" name="transactionHexLabel">
+             <property name="text">
+              <string>Transaction Hex:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="transactionHex"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="addInputButtonLayout">
+           <item>
+            <widget class="QLabel" name="addInputLabel">
+             <property name="text">
+              <string>Inputs:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="addInputButton_SIG">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Add &amp;Input</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../pivx.qrc">
+               <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="addInputSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="inputScrollArea">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
            <property name="widgetResizable">
             <bool>true</bool>
            </property>
-           <widget class="QWidget" name="addressList">
+           <widget class="QWidget" name="inputScrollAreaContents">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>98</width>
-              <height>28</height>
+              <width>820</width>
+              <height>62</height>
              </rect>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_4"/>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_10">
+             <item>
+              <layout class="QVBoxLayout" name="inputsList_SIG"/>
+             </item>
+             <item>
+              <spacer name="inputsSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
            </widget>
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="exitDialog">
+          <layout class="QHBoxLayout" name="addAddressButtonLayout">
            <item>
-            <widget class="QPushButton" name="createAddressButton">
-             <property name="toolTip">
-              <string>Sign the message to prove you own this PIVX address</string>
+            <widget class="QLabel" name="addAddressButtonLabel">
+             <property name="text">
+              <string>Owned PIVX Addresses to Sign With:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="addAddressButton_SIG">
+             <property name="text">
+              <string>Add &amp;Address</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../pivx.qrc">
+               <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="addAddressButtonSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="addressScrollArea">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="addressScrollAreaContents">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>820</width>
+              <height>62</height>
+             </rect>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <layout class="QVBoxLayout" name="addressList_SIG"/>
+             </item>
+             <item>
+              <spacer name="addressListSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="addPKLayout">
+           <item>
+            <widget class="QLabel" name="addPKLabel">
+             <property name="text">
+              <string>Full Private Keys to Sign With (Not Recommened):</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="addPKButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
              <property name="text">
-              <string>&amp;Create Address</string>
+              <string>Add &amp;Private Key</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../pivx.qrc">
+               <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="addPKSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="keyScrollArea">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="keyScrollAreaContents">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>820</width>
+              <height>62</height>
+             </rect>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_9">
+             <item>
+              <layout class="QVBoxLayout" name="keyList"/>
+             </item>
+             <item>
+              <spacer name="keySpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="signButtonLayout">
+           <item>
+            <widget class="QPushButton" name="signButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Confirm the send action</string>
+             </property>
+             <property name="text">
+              <string>&amp;Sign</string>
              </property>
              <property name="icon">
               <iconset resource="../pivx.qrc">
@@ -192,63 +872,75 @@
              <property name="autoDefault">
               <bool>false</bool>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="clearButton">
-             <property name="toolTip">
-              <string>Reset all sign message fields</string>
-             </property>
-             <property name="text">
-              <string>Clear &amp;All</string>
-             </property>
-             <property name="icon">
-              <iconset resource="../pivx.qrc">
-               <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
-             </property>
-             <property name="autoDefault">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="exitSpacer_1">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>48</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QLabel" name="exitStatus">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="wordWrap">
+             <property name="default">
               <bool>true</bool>
              </property>
             </widget>
            </item>
            <item>
-            <spacer name="exitSpacer_2">
+            <widget class="QLabel" name="signButtonStatusLabel">
+             <property name="text">
+              <string>Status:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="signButtonVerticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Preferred</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <spacer name="signButtonHorizontalSpacer_1">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Preferred</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
                <width>40</width>
-               <height>48</height>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QTextEdit" name="signButtonStatus">
+             <property name="verticalScrollBarPolicy">
+              <enum>Qt::ScrollBarAsNeeded</enum>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="signButtonHorizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Preferred</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
               </size>
              </property>
             </spacer>

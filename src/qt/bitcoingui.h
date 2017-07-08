@@ -98,7 +98,7 @@ private:
     QAction* sendCoinsAction;
     QAction* usedSendingAddressesAction;
     QAction* usedReceivingAddressesAction;
-    QAction* multiSigAddressAction;
+    QAction* multisigAddressAction;
     QAction* signMessageAction;
     QAction* verifyMessageAction;
     QAction* bip38ToolAction;
@@ -214,7 +214,7 @@ private slots:
     /** Show MultiSend Dialog */
     void gotoMultiSendDialog();
     /** Show MultiSigAddress Dialog */
-    void gotoMultiSigAddressDialog();
+    void gotoMultisigAddressDialog();
     /** Show BIP 38 tool - default to Encryption tab */
     void gotoBip38Tool();
 

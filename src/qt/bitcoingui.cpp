@@ -84,7 +84,7 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
                                                                             sendCoinsAction(0),
                                                                             usedSendingAddressesAction(0),
                                                                             usedReceivingAddressesAction(0),
-                                                                            multiSigAddressAction(0),
+                                                                            multisigAddressAction(0),
                                                                             signMessageAction(0),
                                                                             verifyMessageAction(0),
                                                                             bip38ToolAction(0),
@@ -415,8 +415,8 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
     usedSendingAddressesAction->setStatusTip(tr("Show the list of used sending addresses and labels"));
     usedReceivingAddressesAction = new QAction(QIcon(":/icons/address-book"), tr("&Receiving addresses..."), this);
     usedReceivingAddressesAction->setStatusTip(tr("Show the list of used receiving addresses and labels"));
-    multiSigAddressAction = new QAction(QIcon(":/icons/address-book"), tr("&Create multisignature address..."), this);
-    multiSigAddressAction->setStatusTip(tr("Create a multisignature address"));
+    multisigAddressAction = new QAction(QIcon(":/icons/address-book"), tr("&Multisignature add/spend/sign..."), this);
+    multisigAddressAction->setStatusTip(tr("Interact with multisignature addresses"));
 
 
     openAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_FileIcon), tr("Open &URI..."), this);
@@ -448,7 +448,7 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
         connect(usedReceivingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedReceivingAddresses()));
         connect(openAction, SIGNAL(triggered()), this, SLOT(openClicked()));
         connect(multiSendAction, SIGNAL(triggered()), this, SLOT(gotoMultiSendDialog()));
-        connect(multiSigAddressAction, SIGNAL(triggered()), this, SLOT(gotoMultiSigAddressDialog()));
+        connect(multisigAddressAction, SIGNAL(triggered()), this, SLOT(gotoMultisigAddressDialog()));
     }
 #endif // ENABLE_WALLET
 }
@@ -473,7 +473,7 @@ void BitcoinGUI::createMenuBar()
         file->addSeparator();
         file->addAction(usedSendingAddressesAction);
         file->addAction(usedReceivingAddressesAction);
-        file->addAction(multiSigAddressAction);
+        file->addAction(multisigAddressAction);
         file->addSeparator();
     }
     file->addAction(quitAction);
@@ -620,7 +620,7 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     signMessageAction->setEnabled(enabled);
     verifyMessageAction->setEnabled(enabled);
     bip38ToolAction->setEnabled(enabled);
-    multiSigAddressAction->setEnabled(enabled);
+    multisigAddressAction->setEnabled(enabled);
     usedSendingAddressesAction->setEnabled(enabled);
     usedReceivingAddressesAction->setEnabled(enabled);
     openAction->setEnabled(enabled);
@@ -663,7 +663,7 @@ void BitcoinGUI::createTrayIconMenu()
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(sendCoinsAction);
     trayIconMenu->addAction(receiveCoinsAction);
-    trayIconMenu->addAction(multiSigAddressAction);
+    trayIconMenu->addAction(multisigAddressAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(signMessageAction);
     trayIconMenu->addAction(verifyMessageAction);
@@ -787,9 +787,9 @@ void BitcoinGUI::gotoMultiSendDialog()
         walletFrame->gotoMultiSendDialog();
 }
 
-void BitcoinGUI::gotoMultiSigAddressDialog()
+void BitcoinGUI::gotoMultisigAddressDialog()
 {
-    if(walletFrame) walletFrame->gotoMultiSigAddressDialog();
+    if(walletFrame) walletFrame->gotoMultisigAddressDialog();
 }
 
 void BitcoinGUI::gotoBlockExplorerPage()

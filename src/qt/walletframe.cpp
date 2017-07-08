@@ -175,12 +175,12 @@ void WalletFrame::gotoMultiSendDialog()
         walletView->gotoMultiSendDialog();
 }
 
-void WalletFrame::gotoMultiSigAddressDialog()
+void WalletFrame::gotoMultisigAddressDialog()
 {
     WalletView* walletView = currentWalletView();
 
     if(walletView)
-       walletView->gotoMultiSigAddressDialog();
+       walletView->gotoMultisigAddressDialog();
 }
 
 void WalletFrame::encryptWallet(bool status)

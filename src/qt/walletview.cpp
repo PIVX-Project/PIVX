@@ -265,11 +265,11 @@ void WalletView::gotoMultiSendDialog()
     multiSendDialog->show();
 }
 
-void WalletView::gotoMultiSigAddressDialog()
+void WalletView::gotoMultisigAddressDialog()
 {
-    MultiSigAddressDialog* multiSigAddressDialog = new MultiSigAddressDialog(this);
-    multiSigAddressDialog->setModel(walletModel);
-    multiSigAddressDialog->showPage(0);
+    MultisigAddressDialog* multisigAddressDialog = new MultisigAddressDialog(this);
+    multisigAddressDialog->setModel(walletModel);
+    multisigAddressDialog->showPage(0);
 }
 
 bool WalletView::handlePaymentRequest(const SendCoinsRecipient& recipient)
