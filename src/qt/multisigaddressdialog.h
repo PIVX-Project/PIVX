@@ -7,10 +7,13 @@
 
 #include <QDialog>
 #include <QFrame>
+#include <QVBoxLayout>
 #include "script/script.h"
+#include "../primitives/transaction.h"
+#include "../coins.h"
+
 
 class WalletModel;
-
 
 namespace Ui
 {
@@ -24,11 +27,8 @@ class MultisigAddressDialog : public QDialog
 public:
     explicit MultisigAddressDialog(QWidget* parent);
     ~MultisigAddressDialog();
-
     void setModel(WalletModel* model);
-    void setAddress(const QString& address);
-
-    void showPage(int pageNumber);
+    void showDialog();
 
 protected:
     bool eventFilter(QObject* object, QEvent* event);
@@ -36,21 +36,23 @@ protected:
 private:
     Ui::MultisigAddressDialog* ui;
     WalletModel* model;
+    bool isFirstPK;
+    CCoinsViewCache accessInputCoins(std::vector<CTxIn>& vin);
     CScript createRedeemScript(int m, std::vector<std::string> keys);
     QFrame* createAddress(int labelNumber);
     QFrame* createInput(int labelNumber);
+    bool signTxFromLocalWallet(CMutableTransaction& tx, std::string& errorMessageOut, QVBoxLayout* keyList = nullptr);
 
 private slots:
-   void on_addAddressButton_ADD_clicked();
-   void on_addAddressButton_SIG_clicked();
-   void on_addressBookButton_clicked();
+   void deleteFrame();
+   void addressBookButtonReceiving();
+   void on_addAddressButton_clicked();
+   void on_pushButton_clicked();
    void on_pasteButton_clicked();
    void on_addMultisigButton_clicked();
    void on_addDestinationButton_clicked();
    void on_createButton_clicked();
-   void on_addInputButton_SIG_clicked();
-   void on_addInputButton_CRE_clicked();
-   void on_addAddressButton_clicked();
+   void on_addInputButton_clicked();
    void on_addPKButton_clicked();
    void on_signButton_clicked();
 };
