@@ -38,9 +38,10 @@ private:
     WalletModel* model;
     bool isFirstPK;
     CCoinsViewCache accessInputCoins(std::vector<CTxIn>& vin);
-    CScript createRedeemScript(int m, std::vector<std::string> keys);
+    CScript createRedeemScript(int m, std::vector<std::string> keys, std::string& errorOut);
     QFrame* createAddress(int labelNumber);
     QFrame* createInput(int labelNumber);
+    unsigned int scriptSigSerializeSize(CScript scriptSig);
     bool signTxFromLocalWallet(CMutableTransaction& tx, std::string& errorMessageOut, QVBoxLayout* keyList = nullptr);
 
 private slots:

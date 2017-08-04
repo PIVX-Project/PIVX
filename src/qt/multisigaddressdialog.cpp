@@ -1,5 +1,3 @@
-// Copyright (c) 2011-2014 The Bitcoin developers
-// Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -130,7 +128,11 @@ void MultisigAddressDialog::on_addMultisigButton_clicked()
     }
 
     try{
-        CScript redeem = createRedeemScript(m, keys);
+        string error;
+        CScript redeem = createRedeemScript(m, keys, error);
+        if(!error.empty()){
+            throw runtime_error(error.data());
+        }
         CScriptID innerID(redeem);
         pwalletMain->AddCScript(redeem);
         pwalletMain->SetAddressBook(innerID, label, "receive");
@@ -149,8 +151,8 @@ void MultisigAddressDialog::on_createButton_clicked()
         return;
 
     //first collect user data into vectors
-    vector<CTxIn> userVin;
-    vector<CTxOut> userVout;
+    vector<CTxIn> vUserIn;
+    vector<CTxOut> vUserOut;
     try{
         for(int i = 0; i < ui->inputsList->count(); i++){
             QWidget* input = qobject_cast<QWidget*>(ui->inputsList->itemAt(i)->widget());
@@ -172,7 +174,7 @@ void MultisigAddressDialog::on_createButton_clicked()
 
             uint256 txid = uint256S(txIdLine->text().toStdString());
             CTxIn in(COutPoint(txid, nOutput));
-            userVin.push_back(in);
+            vUserIn.push_back(in);
         }
 
         bool validInput = true;
@@ -196,12 +198,6 @@ void MultisigAddressDialog::on_createButton_clicked()
                 validDest = false;
             }
 
-    //        if(setAddress.count(address)){
-    //            ui->createButtonStatus->setStyleSheet("QLabel { color: red; }");
-    //            ui->createButtonStatus->setText("Invalid amount.");
-    //            validDest = false;
-    //        }
-
             if(!validDest){
                 validInput = false;
                 continue;
@@ -210,7 +206,7 @@ void MultisigAddressDialog::on_createButton_clicked()
            // setAddress.insert(address);
             CScript scriptPubKey = GetScriptForDestination(address.Get());
             CTxOut out(amt->value(), scriptPubKey);
-            userVout.push_back(out);
+            vUserOut.push_back(out);
         }
 
 
@@ -219,15 +215,16 @@ void MultisigAddressDialog::on_createButton_clicked()
             //calculate total output val
             //
 
-            CCoinsViewCache view = accessInputCoins(userVin);
+            CCoinsViewCache view = accessInputCoins(vUserIn);
 
             //retrieve total input val and change dest
             CAmount totalIn = 0;
             vector<CAmount> vInputVals;
             CScript changePubKey;
+            CScript redeemScript;
             bool fFirst = true;
 
-            for(CTxIn in : userVin){
+            for(CTxIn in : vUserIn){
                 const CCoins* coins = view.AccessCoins(in.prevout.hash);
                 if (coins == NULL) {
                     qWarning() << "input not found";
@@ -258,12 +255,13 @@ void MultisigAddressDialog::on_createButton_clicked()
             CAmount totalOut = 0;
 
             //retrieve total output val
-            for(CTxOut out : userVout){
+            for(CTxOut out : vUserOut){
                 totalOut += out.nValue;
             }
+            qWarning() << strprintf("out: %i in: %i",totalOut, totalIn).c_str();
 
-            if(totalIn <= totalOut){
-                runtime_error("Not enough PIV provided as input to complete transaction (including fee).");
+            if(totalIn < totalOut){
+                throw runtime_error("Not enough PIV provided as input to complete transaction (including fee).");
             }
 
 
@@ -272,64 +270,88 @@ void MultisigAddressDialog::on_createButton_clicked()
             CTxOut change(changeAmount, changePubKey);
 
             //generate random position for change
-            unsigned int changeIndex = rand() % (userVout.size() + 1);
+            unsigned int changeIndex = rand() % (vUserOut.size() + 1);
             unsigned int count = 0;
 
             //insert change into vout[rand]
-            if(changeIndex < userVout.size()){
-                for(vector<CTxOut>::iterator it = userVout.begin(); it != userVout.end(); it++){
-                    qWarning() << "inside";
+            if(changeIndex < vUserOut.size()){
+                for(vector<CTxOut>::iterator it = vUserOut.begin(); it != vUserOut.end(); it++){
                     qWarning() << count << " " << changeIndex;
                         if(count++ == changeIndex){
-                            userVout.insert(it, change);
+                            vUserOut.insert(it, change);
                             break;
                         }
                 }
             }else{
-                userVout.insert(userVout.end(),change);
+                vUserOut.insert(vUserOut.end(),change);
             }
-
 
             //populate tx
             CMutableTransaction tx;
-            tx.vin = userVin;
-            tx.vout = userVout;
+            tx.vin = vUserIn;
+            tx.vout = vUserOut;
+
+            const CCoins* coins = view.AccessCoins(tx.vin[0].prevout.hash);
+
+            if(coins == NULL || !coins->IsAvailable(tx.vin[0].prevout.n)){
+                throw runtime_error("Coins unavailable (unconfirmed/spent)");
+            }
+
+            CScript prevPubKey = coins->vout[tx.vin[0].prevout.n].scriptPubKey;
+
+            //get payment destination
+            CTxDestination address;
+            if(!ExtractDestination(prevPubKey, address)){
+                throw runtime_error("Could not find address for destination.");
+            }
+
+            CScriptID hash = boost::get<CScriptID>(address);
+            CScript redeemScript2;
+            qWarning() << "add: " <<CBitcoinAddress(address).ToString().c_str();
+
+            if (!pwalletMain->GetCScript(hash, redeemScript2)){
+                throw runtime_error("could not redeem");
+            }
+            txnouttype type;
+            vector<CTxDestination> addresses;
+            int nReq;
+            if(!ExtractDestinations(redeemScript2, type, addresses, nReq)){
+                throw runtime_error("Could not extract redeem script.");
+            }
+
 
             //put junk data in scriptsigs for better fee estimate
             int64_t junk = INT64_MAX;
             for(CTxIn& in : tx.vin){
                 in.scriptSig.clear();
-                for(int i = 0; i < 50; i++){
+                //scale estimate to account for multisig scriptSig
+                for(int i = 0; i < 20*(nReq+addresses.size()); i++){
                     in.scriptSig  << junk;
                 }
             }
 
-            //calculate fee
+            //calculate fee                   
             unsigned int nBytes = tx.GetSerializeSize(SER_NETWORK, PROTOCOL_VERSION);
             CAmount fee = ::minRelayTxFee.GetFee(nBytes);
-            qWarning() << nBytes << ::minRelayTxFee.GetFee(nBytes) << "   " << fee;
+            qWarning() << nBytes << ::minRelayTxFee.GetFee(nBytes);
             //display fee warning
             tx.vout.at(changeIndex).nValue -= fee;
-            qWarning() << "" << tx.ToString().c_str();
-
-            //return;
 
             for(CTxIn& in : tx.vin){
                 in.scriptSig.clear();
             }
-
 
             string errorOut;
 
             bool c = signTxFromLocalWallet(tx, errorOut);
 
             qWarning() << "size after sign: " << tx.GetSerializeSize(SER_NETWORK, PROTOCOL_VERSION);
-
-
+            //qWarning() << "scipt sig: " << QString::fromStdString(tx.vin[0].scriptSig.ToString());
             if(!errorOut.empty()){
                 throw runtime_error(errorOut.data());
             }
 
+            ui->createButtonStatus->setStyleSheet("QTextEdit{ color: black }");
             if(c){
                 ui->createButtonStatus->setText(QString::fromStdString(strprintf("Complete: true \n%s\n%s", tx.GetHash().GetHex(), EncodeHexTx(tx))));
             }else{
@@ -341,6 +363,12 @@ void MultisigAddressDialog::on_createButton_clicked()
         ui->createButtonStatus->setStyleSheet("QTextEdit{ color: red }");
         ui->createButtonStatus->setText(e.what());
     }
+}
+
+unsigned int MultisigAddressDialog::scriptSigSerializeSize(CScript redeem){
+
+
+    //qWarning() << "M: " << nReq << "  N: " << addresses.size();
 }
 
 void MultisigAddressDialog::on_pushButton_clicked()
@@ -372,8 +400,12 @@ void MultisigAddressDialog::on_pushButton_clicked()
 
     // mergedTx will end up with all the signatures; it
     // starts as a clone of the rawtx
-    CMutableTransaction mergedTx(txVariants[0]);
-    ui->lolStatus->setText(QString::fromStdString((string("txs: ") + strprintf("%i :::",txVariants.size()) + mergedTx.ToString())));
+    CMutableTransaction tx(txVariants[0]);
+    unsigned int nBytes = tx.GetSerializeSize(SER_NETWORK, PROTOCOL_VERSION);
+    CAmount fee = ::minRelayTxFee.GetFee(nBytes);
+
+    qWarning() << nBytes << ::minRelayTxFee.GetFee(nBytes);
+    ui->lolStatus->setText(QString::fromStdString((string("txsize: ") + strprintf("%i ::: %i\n",nBytes, fee) + tx.ToString())));
 }
 
 //sign
@@ -571,60 +603,69 @@ bool MultisigAddressDialog::signTxFromLocalWallet(CMutableTransaction& tx, strin
     return fComplete;
 }
 
-CScript MultisigAddressDialog::createRedeemScript(int m, vector<string> keys)
+CScript MultisigAddressDialog::createRedeemScript(int m, vector<string> vKeys, string& errorOut)
 {
-    int n = keys.size();
-    //gather pub keys
-    if (n < 1)
-        throw runtime_error("a Multisignature address must require at least one key to redeem");
-    if (n < m)
-        throw runtime_error(
-            strprintf("not enough keys supplied "
-                      "(got %d keys, but need at least %d to redeem)",
-                m, n));
-    if (n > 16)
-        throw runtime_error("Number of addresses involved in the Multisignature address creation > 16\nReduce the number");
+    try{
+        int n = vKeys.size();
+        //gather pub keys
+        if (n < 1)
+            throw runtime_error("a Multisignature address must require at least one key to redeem");
+        if (n < m)
+            throw runtime_error(
+                strprintf("not enough keys supplied "
+                          "(got %d keys, but need at least %d to redeem)",
+                    m, n));
+        if (n > 16)
+            throw runtime_error("Number of addresses involved in the Multisignature address creation > 16\nReduce the number");
 
-    vector<CPubKey> pubkeys;
-    pubkeys.resize(n);
+        vector<CPubKey> pubkeys;
+        pubkeys.resize(n);
 
-    int i = 0;
-    for(vector<string>::iterator it = keys.begin(); it != keys.end(); ++it) {
-        string keyString = *it;
-#ifdef ENABLE_WALLET
-        // Case 1: PIVX address and we have full public key:
-        CBitcoinAddress address(keyString);
-        if (pwalletMain && address.IsValid()) {
-            CKeyID keyID;
-            if (!address.GetKeyID(keyID)) {
-                throw runtime_error(
-                    strprintf("%s does not refer to a key", keyString));
+        int i = 0;
+        for(vector<string>::iterator it = vKeys.begin(); it != vKeys.end(); ++it) {
+            string keyString = *it;
+    #ifdef ENABLE_WALLET
+            // Case 1: PIVX address and we have full public key:
+            CBitcoinAddress address(keyString);
+            if (pwalletMain && address.IsValid()) {
+                CKeyID keyID;
+                if (!address.GetKeyID(keyID)) {
+                    throw runtime_error(
+                        strprintf("%s does not refer to a key", keyString));
+                }
+                CPubKey vchPubKey;
+                if (!pwalletMain->GetPubKey(keyID, vchPubKey))
+                    throw runtime_error(
+                        strprintf("no full public key for address %s", keyString));
+                if (!vchPubKey.IsFullyValid()){
+                    string sKey = keyString.empty()?"(empty)":keyString;
+                    throw runtime_error(" Invalid public key: " + sKey );
+                }
+                pubkeys[i++] = vchPubKey;
             }
-            CPubKey vchPubKey;
-            if (!pwalletMain->GetPubKey(keyID, vchPubKey))
-                throw runtime_error(
-                    strprintf("no full public key for address %s", keyString));
-            if (!vchPubKey.IsFullyValid()){
-                string sKey = keyString.empty()?"(empty)":keyString;
-                throw runtime_error(" Invalid public key: " + sKey );
-            }
-            pubkeys[i++] = vchPubKey;
-        }
 
-        //case 2: hex pub key
-        else
-#endif
+            //case 2: hex pub key
+            else
+    #endif
             if (IsHex(keyString)) {
-            CPubKey vchPubKey(ParseHex(keyString));
-            if (!vchPubKey.IsFullyValid())
+                CPubKey vchPubKey(ParseHex(keyString));
+                if (!vchPubKey.IsFullyValid()){
+                    throw runtime_error(" Invalid public key: " + keyString);
+                }
+                pubkeys[i++] = vchPubKey;
+            } else {
                 throw runtime_error(" Invalid public key: " + keyString);
-            pubkeys[i++] = vchPubKey;
-        } else {
-            throw runtime_error(" Invalid public key: " + keyString);
+            }
         }
-    }
 
-    return GetScriptForMultisig(m, pubkeys);
+        CScript test = GetScriptForMultisig(m, pubkeys);
+
+        qWarning() << "pussy " << sizeof(test);
+
+    }catch(const runtime_error& e){
+        errorOut = string(e.what());
+        return NULL;
+    }
 }
 
 /***
