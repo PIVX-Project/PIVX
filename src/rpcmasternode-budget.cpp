@@ -156,11 +156,11 @@ Value preparebudget(const Array& params, bool fHelp)
     if (pwalletMain->IsLocked())
         throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED, "Error: Please enter the wallet passphrase with walletpassphrase first.");
 
-    std::string strProposalName = params[0].get_str();
+    std::string strProposalName = SanitizeString(params[0].get_str());
     if (strProposalName.size() > 20)
         throw runtime_error("Invalid proposal name, limit of 20 characters.");
 
-    std::string strURL = params[1].get_str();
+    std::string strURL = SanitizeString(params[1].get_str());
     if (strURL.size() > 64)
         throw runtime_error("Invalid url, limit of 64 characters.");
 
@@ -177,13 +177,13 @@ Value preparebudget(const Array& params, bool fHelp)
         throw runtime_error(strprintf("Invalid block start - must be a budget cycle block. Next valid block: %d", nNext));
     }
 
-    int nBlockEnd = nBlockStart + GetBudgetPaymentCycleBlocks() * nPaymentCount;
+    int nBlockEnd = nBlockStart + (GetBudgetPaymentCycleBlocks() * (nPaymentCount + 1)) + 2; // End must be AFTER current cycle
 
     if (nBlockStart < nBlockMin)
         throw runtime_error("Invalid block start, must be more than current height.");
 
     if (nBlockEnd < pindexPrev->nHeight)
-        throw runtime_error("Invalid ending block, starting block + (payment_cycle*payments) must be more than current height.");
+        throw runtime_error("Invalid ending block, starting block + (payment_cycle*(payments+1)) + 2 must be more than current height.");
 
     CBitcoinAddress address(params[4].get_str());
     if (!address.IsValid())
@@ -250,11 +250,11 @@ Value submitbudget(const Array& params, bool fHelp)
     // Check these inputs the same way we check the vote commands:
     // **********************************************************
 
-    std::string strProposalName = params[0].get_str();
+    std::string strProposalName = SanitizeString(params[0].get_str());
     if (strProposalName.size() > 20)
         throw runtime_error("Invalid proposal name, limit of 20 characters.");
 
-    std::string strURL = params[1].get_str();
+    std::string strURL = SanitizeString(params[1].get_str());
     if (strURL.size() > 64)
         throw runtime_error("Invalid url, limit of 64 characters.");
 
@@ -271,13 +271,13 @@ Value submitbudget(const Array& params, bool fHelp)
         throw runtime_error(strprintf("Invalid block start - must be a budget cycle block. Next valid block: %d", nNext));
     }
 
-    int nBlockEnd = nBlockStart + (GetBudgetPaymentCycleBlocks() * nPaymentCount);
+    int nBlockEnd = nBlockStart + (GetBudgetPaymentCycleBlocks() * (nPaymentCount + 1)) + 2; // End must be AFTER current cycle
 
     if (nBlockStart < nBlockMin)
         throw runtime_error("Invalid block start, must be more than current height.");
 
     if (nBlockEnd < pindexPrev->nHeight)
-        throw runtime_error("Invalid ending block, starting block + (payment_cycle*payments) must be more than current height.");
+        throw runtime_error("Invalid ending block, starting block + (payment_cycle*(payments+1)) + 2 must be more than current height.");
 
     CBitcoinAddress address(params[4].get_str());
     if (!address.IsValid())
@@ -598,7 +598,7 @@ Value getbudgetvotes(const Array& params, bool fHelp)
             "\nExamples:\n" +
             HelpExampleCli("getbudgetvotes", "\"test-proposal\"") + HelpExampleRpc("getbudgetvotes", "\"test-proposal\""));
 
-    std::string strProposalName = params[0].get_str();
+    std::string strProposalName = SanitizeString(params[0].get_str());
 
     Array ret;
 
@@ -744,7 +744,7 @@ Value getbudgetinfo(const Array& params, bool fHelp)
 
     std::string strShow = "valid";
     if (params.size() == 1) {
-        std::string strProposalName = params[0].get_str();
+        std::string strProposalName = SanitizeString(params[0].get_str());
         CBudgetProposal* pbudgetProposal = budget.FindProposal(strProposalName);
         if (pbudgetProposal == NULL) throw runtime_error("Unknown proposal name");
         Object bObj;
