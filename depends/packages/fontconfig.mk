@@ -1,8 +1,8 @@
 package=fontconfig
-$(package)_version=2.12.5
+$(package)_version=2.12.2
 $(package)_download_path=http://www.freedesktop.org/software/fontconfig/release/
 $(package)_file_name=$(package)-$($(package)_version).tar.bz2
-$(package)_sha256_hash=e10ccf1e26b0968f61d81037af1147fea28e86bfd159ffd8cfd5a486da126ce4
+$(package)_sha256_hash=8e0e91b7141ecf3ffc0cd346fc3020fe0d2ec3a1ca7f1b58eacf66a611aa4871
 $(package)_dependencies=freetype expat
 
 define $(package)_set_vars
