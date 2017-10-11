@@ -216,6 +216,7 @@ public:
 private:
     CWallet* wallet;
     bool fHaveWatchOnly;
+    bool fHaveMultiSig;
     bool fForceCheckBalanceChanged;
 
     // Wallet has an options model for wallet-specific options
@@ -269,6 +270,8 @@ signals:
     // Watch-only address added
     void notifyWatchonlyChanged(bool fHaveWatchonly);
 
+    // MultiSig address added
+    void notifyMultiSigChanged(bool fHaveMultiSig);
 public slots:
     /* Wallet status might have changed */
     void updateStatus();
@@ -280,6 +283,8 @@ public slots:
     void updateAddressBook(const QString &pubCoin, const QString &isUsed, int status);
     /* Watch-only added */
     void updateWatchOnlyFlag(bool fHaveWatchonly);
+    /* MultiSig added */
+    void updateMultiSigFlag(bool fHaveMultiSig);
     /* Current, immature or unconfirmed balance might have changed - emit 'balanceChanged' if so */
     void pollBalanceChanged();
 };

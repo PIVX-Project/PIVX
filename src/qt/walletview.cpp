@@ -13,7 +13,7 @@
 #include "guiutil.h"
 #include "masternodeconfig.h"
 #include "multisenddialog.h"
-#include "multisigaddressdialog.h"
+#include "multisigdialog.h"
 #include "optionsmodel.h"
 #include "overviewpage.h"
 #include "receivecoinsdialog.h"
@@ -274,11 +274,11 @@ void WalletView::gotoMultiSendDialog()
     multiSendDialog->show();
 }
 
-void WalletView::gotoMultisigAddressDialog()
+void WalletView::gotoMultisigDialog(int index)
 {
-    MultisigAddressDialog* multisigAddressDialog = new MultisigAddressDialog(this);
-    multisigAddressDialog->setModel(walletModel);
-    multisigAddressDialog->showDialog();
+    MultisigDialog* multisig = new MultisigDialog(this);
+    multisig->setModel(walletModel);
+    multisig->showTab(index);
 }
 
 bool WalletView::handlePaymentRequest(const SendCoinsRecipient& recipient)
