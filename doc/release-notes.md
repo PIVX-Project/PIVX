@@ -11,6 +11,18 @@ Please report bugs using the issue tracker at github:
 
   <https://github.com/pivx-project/pivx/issues>
 
+Mandatory Update
+==============
+
+PIVX Core v3.0.0 is a mandatory update for all users. This release contains new consensus rules and improvements that are not backwards compatible with older versions. Users will have a grace period of one week to update their clients before enforcement of this update is enabled.
+
+Users updating from a previous version after the 16th of October will require a full resync of their local blockchain from either the P2P network or by way of the bootstrap.
+
+How to Upgrade
+==============
+
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+
 Compatibility
 ==============
 
@@ -28,7 +40,21 @@ frequently tested on them.
 Notable Changes
 ===============
 
+Zerocoin (zPIV) Protocol
+---------------------
 
+At long last, the zPIV release is here and the zerocoin protocol has been fully implemented! This allows users to send transactions with 100% fungible coins and absolutely zero history or link-ability to their previous owners.
+
+Full and comprehensive details about the process and the use will be posted here during the days between Oct 6 and Oct 13.
+
+Tor Service Integration Improvements
+---------------------
+
+Integrating with Tor is now easier than ever! Starting with Tor version 0.2.7.1 it is possible, through Tor's control socket API, to create and destroy 'ephemeral' hidden services programmatically. PIVX Core has been updated to make use of this.
+
+This means that if Tor is running (and proper authorization is available), PIVX Core automatically creates a hidden service to listen on, without manual configuration. PIVX Core will also use Tor automatically to connect to other .onion nodes if the control socket can be successfully opened. This will positively affect the number of available .onion nodes and their usage.
+
+This new feature is enabled by default if PIVX Core is listening, and a connection to Tor can be made. It can be configured with the `-listenonion`, `-torcontrol` and `-torpassword` settings. To show verbose debugging information, pass `-debug=tor`.
 
 *version* Change log
 =================
@@ -38,25 +64,27 @@ behavior, not code moves, refactors and string updates. For convenience in locat
 the code changes and accompanying discussion, both the pull request and
 git merge commit are mentioned.
 
-### RPC and other APIs
-
-
-### Block and Transaction Handling
-
+### Broad Features
+- #264 `15e84e5` zPIV is here! (Fuzzbawls Mrs-X Presstab Spock PIVX)
 
 ### P2P Protocol and Network Code
-
+- #242 `0ecd77f` [P2P] Improve TOR service connectivity (Fuzzbawls)
 
 ### GUI
-
+- #251 `79af8d2` [Qt] Adjust masternode count in information UI (Mrs-X)
 
 ### Miscellaneous
-
+- #258 `c950765` [Depends] Update Depends with newer versions (Fuzzbawls)
 
 Credits
 =======
 
 Thanks to everyone who directly contributed to this release:
-
+- Fuzzbawls
+- Jon Spock
+- Mrs-X
+- PIVX
+- amirabrams
+- presstab
 
 As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/).

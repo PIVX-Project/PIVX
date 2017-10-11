@@ -17,6 +17,7 @@
 #include "optionsmodel.h"
 #include "overviewpage.h"
 #include "receivecoinsdialog.h"
+#include "privacydialog.h"
 #include "sendcoinsdialog.h"
 #include "signverifymessagedialog.h"
 #include "transactiontablemodel.h"
@@ -70,11 +71,13 @@ WalletView::WalletView(QWidget* parent) : QStackedWidget(parent),
     vbox->addLayout(hbox_buttons);
     transactionsPage->setLayout(vbox);
 
+    privacyPage = new PrivacyDialog();
     receiveCoinsPage = new ReceiveCoinsDialog();
     sendCoinsPage = new SendCoinsDialog();
 
     addWidget(overviewPage);
     addWidget(transactionsPage);
+    addWidget(privacyPage);
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
     addWidget(explorerWindow);
@@ -148,6 +151,7 @@ void WalletView::setWalletModel(WalletModel* walletModel)
     if (settings.value("fShowMasternodesTab").toBool()) {
         masternodeListPage->setWalletModel(walletModel);
     }
+    privacyPage->setModel(walletModel);
     receiveCoinsPage->setModel(walletModel);
     sendCoinsPage->setModel(walletModel);
 
@@ -218,6 +222,11 @@ void WalletView::gotoReceiveCoinsPage()
     setCurrentWidget(receiveCoinsPage);
 }
 
+void WalletView::gotoPrivacyPage()
+{
+    setCurrentWidget(privacyPage);
+}
+
 void WalletView::gotoSendCoinsPage(QString addr)
 {
     setCurrentWidget(sendCoinsPage);
@@ -280,6 +289,7 @@ bool WalletView::handlePaymentRequest(const SendCoinsRecipient& recipient)
 void WalletView::showOutOfSyncWarning(bool fShow)
 {
     overviewPage->showOutOfSyncWarning(fShow);
+    privacyPage->showOutOfSyncWarning(fShow);
 }
 
 void WalletView::updateEncryptionStatus()
@@ -339,6 +349,24 @@ void WalletView::lockWallet()
         return;
 
     walletModel->setWalletLocked(true);
+}
+
+void WalletView::toggleLockWallet()
+{
+    if (!walletModel)
+        return;
+
+    WalletModel::EncryptionStatus encStatus = walletModel->getEncryptionStatus();
+
+    // Unlock the wallet when requested
+    if (encStatus == walletModel->Locked) {
+        AskPassphraseDialog dlg(AskPassphraseDialog::UnlockAnonymize, this, walletModel);
+        dlg.exec();
+    }
+
+    else if (encStatus == walletModel->Unlocked || encStatus == walletModel->UnlockedForAnonymizationOnly) {
+            walletModel->setWalletLocked(true);
+    }
 }
 
 void WalletView::usedSendingAddresses()

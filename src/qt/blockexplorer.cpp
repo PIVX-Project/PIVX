@@ -3,6 +3,7 @@
 #include "chainparams.h"
 #include "clientmodel.h"
 #include "core_io.h"
+#include "guiutil.h"
 #include "main.h"
 #include "net.h"
 #include "txdb.h"
@@ -27,18 +28,18 @@ static std::string makeHRef(const std::string& Str)
     return "<a href=\"" + Str + "\">" + Str + "</a>";
 }
 
-static int64_t getTxIn(const CTransaction& tx)
+static CAmount getTxIn(const CTransaction& tx)
 {
     if (tx.IsCoinBase())
         return 0;
 
-    int64_t Sum = 0;
+    CAmount Sum = 0;
     for (unsigned int i = 0; i < tx.vin.size(); i++)
         Sum += getPrevOut(tx.vin[i].prevout).nValue;
     return Sum;
 }
 
-static std::string ValueToString(int64_t nValue, bool AllowNegative = false)
+static std::string ValueToString(CAmount nValue, bool AllowNegative = false)
 {
     if (nValue < 0 && !AllowNegative)
         return "<span>" + _("unknown") + "</span>";
@@ -196,9 +197,9 @@ std::string BlockToString(CBlockIndex* pBlock)
     CBlock block;
     ReadBlockFromDisk(block, pBlock);
 
-    int64_t Fees = 0;
-    int64_t OutVolume = 0;
-    int64_t Reward = 0;
+    CAmount Fees = 0;
+    CAmount OutVolume = 0;
+    CAmount Reward = 0;
 
     std::string TxLabels[] = {_("Hash"), _("From"), _("Amount"), _("To"), _("Amount")};
 
@@ -207,12 +208,12 @@ std::string BlockToString(CBlockIndex* pBlock)
         const CTransaction& tx = block.vtx[i];
         TxContent += TxToRow(tx);
 
-        int64_t In = getTxIn(tx);
-        int64_t Out = tx.GetValueOut();
+        CAmount In = getTxIn(tx);
+        CAmount Out = tx.GetValueOut();
         if (tx.IsCoinBase())
             Reward += Out;
         else if (In < 0)
-            Fees = -MAX_MONEY;
+            Fees = -Params().MaxMoneyOut();
         else {
             Fees += In - Out;
             OutVolume += Out;
@@ -220,7 +221,7 @@ std::string BlockToString(CBlockIndex* pBlock)
     }
     TxContent += "</table>";
 
-    int64_t Generated;
+    CAmount Generated;
     if (pBlock->nHeight == 0)
         Generated = OutVolume;
     else
@@ -286,8 +287,8 @@ std::string BlockToString(CBlockIndex* pBlock)
 
 std::string TxToString(uint256 BlockHash, const CTransaction& tx)
 {
-    int64_t Input = 0;
-    int64_t Output = tx.GetValueOut();
+    CAmount Input = 0;
+    CAmount Output = tx.GetValueOut();
 
     std::string InputsContentCells[] = {_("#"), _("Taken from"), _("Address"), _("Amount")};
     std::string InputsContent = makeHTMLTableRow(InputsContentCells, sizeof(InputsContentCells) / sizeof(std::string));
@@ -307,7 +308,7 @@ std::string TxToString(uint256 BlockHash, const CTransaction& tx)
             COutPoint Out = tx.vin[i].prevout;
             CTxOut PrevOut = getPrevOut(tx.vin[i].prevout);
             if (PrevOut.nValue < 0)
-                Input = -MAX_MONEY;
+                Input = -Params().MaxMoneyOut();
             else
                 Input += PrevOut.nValue;
             std::string InputsContentCells[] =
@@ -391,7 +392,7 @@ std::string AddressToString(const CBitcoinAddress& Address)
     CScript AddressScript;
     AddressScript.SetDestination(Address.Get());
 
-    int64_t Sum = 0;
+    CAmount Sum = 0;
     bool fAddrIndex = false;
 
     if (!fAddrIndex)
@@ -432,6 +433,8 @@ BlockExplorer::BlockExplorer(QWidget* parent) : QMainWindow(parent),
 {
     ui->setupUi(this);
 
+    this->setStyleSheet(GUIUtil::loadStyleSheet());
+    
     connect(ui->pushSearch, SIGNAL(released()), this, SLOT(onSearch()));
     connect(ui->content, SIGNAL(linkActivated(const QString&)), this, SLOT(goTo(const QString&)));
     connect(ui->back, SIGNAL(released()), this, SLOT(back()));
@@ -547,9 +550,10 @@ void BlockExplorer::setBlock(CBlockIndex* pBlock)
 
 void BlockExplorer::setContent(const std::string& Content)
 {
-    QString CSS = "body {font-size:12px; background-color: #C8E5E2; color:#444;}\n a, span { font-family: monospace; }\n span.addr {color:#13BE5D; font-weight: bold;}\n table tr td {padding: 3px; border: none; background-color: #A1CDC8;}\n td.d0 {font-weight: bold; color:#f8f8f8;}\n h2, h3 { white-space:nowrap; color:#1B7884;}\n a { text-decoration:none; }\n a.nav {color:green;}\n";
+    QString CSS = "body {font-size:12px; color:#f8f6f6; bgcolor:#5B4C7C;}\n a, span { font-family: monospace; }\n span.addr {color:#5B4C7C; font-weight: bold;}\n table tr td {padding: 3px; border: 1px solid black; background-color: #5B4C7C;}\n td.d0 {font-weight: bold; color:#f8f6f6;}\n h2, h3 { white-space:nowrap; color:#5B4C7C;}\n a { color:#88f6f6; text-decoration:none; }\n a.nav {color:#5B4C7C;}\n";
     QString FullContent = "<html><head><style type=\"text/css\">" + CSS + "</style></head>" + "<body>" + Content.c_str() + "</body></html>";
     // printf(FullContent.toUtf8());
+
     ui->content->setText(FullContent);
 }
 

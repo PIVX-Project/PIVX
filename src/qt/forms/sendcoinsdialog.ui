@@ -107,7 +107,7 @@
              <string notr="true"/>
             </property>
             <property name="text">
-             <string>Inputs...</string>
+             <string>Open Coin Control...</string>
             </property>
             <property name="autoDefault">
              <bool>false</bool>
@@ -117,7 +117,7 @@
           <item>
            <widget class="QLabel" name="labelCoinControlAutomaticallySelected">
             <property name="text">
-             <string>automatically selected</string>
+             <string>Coins automatically selected</string>
             </property>
             <property name="margin">
              <number>5</number>
@@ -1385,18 +1385,12 @@
         <number>3</number>
        </property>
        <item>
-        <widget class="QCheckBox" name="checkUseObfuscation">
-         <property name="minimumSize">
-          <size>
-           <width>95</width>
-           <height>0</height>
-          </size>
+        <widget class="QCheckBox" name="checkzPIV">
+         <property name="enabled">
+          <bool>false</bool>
          </property>
          <property name="text">
-          <string>Obfuscation</string>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
+          <string>Anonymized PIV</string>
          </property>
         </widget>
        </item>
@@ -1466,7 +1460,7 @@
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="groupFee"/>
   <buttongroup name="groupCustomFee"/>
+  <buttongroup name="groupFee"/>
  </buttongroups>
 </ui>

@@ -105,20 +105,26 @@ std::string to_internal(const std::string&);
 
 using namespace std;
 
-//PIVX only features
+// PIVX only features
+// Masternode
 bool fMasterNode = false;
 string strMasterNodePrivKey = "";
 string strMasterNodeAddr = "";
 bool fLiteMode = false;
+// SwiftTX
 bool fEnableSwiftTX = true;
 int nSwiftTXDepth = 5;
-int nObfuscationRounds = 2;
+// Automatic Zerocoin minting
+bool fEnableZeromint = true;
+int nZeromintPercentage = 10;
+int nPreferredDenom = 0;
+const int64_t AUTOMINT_DELAY = (60 * 5); // Wait at least 5 minutes until Automint starts
+
 int nAnonymizePivxAmount = 1000;
 int nLiquidityProvider = 0;
 /** Spork enforcement enabled time */
 int64_t enforceMasternodePaymentsTime = 4085657524;
 bool fSucessfullyLoaded = false;
-bool fEnableObfuscation = false;
 /** All denominations used by obfuscation */
 std::vector<int64_t> obfuScationDenominations;
 string strBudgetMode = "";
@@ -237,6 +243,7 @@ bool LogAcceptCategory(const char* category)
                 ptrCategory->insert(string("swifttx"));
                 ptrCategory->insert(string("masternode"));
                 ptrCategory->insert(string("mnpayments"));
+                ptrCategory->insert(string("zero"));
                 ptrCategory->insert(string("mnbudget"));
             }
         }

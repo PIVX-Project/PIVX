@@ -63,6 +63,7 @@ Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool txDe
     result.push_back(Pair("height", blockindex->nHeight));
     result.push_back(Pair("version", block.nVersion));
     result.push_back(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
+    result.push_back(Pair("acc_checkpoint", block.nAccumulatorCheckpoint.GetHex()));
     Array txs;
     BOOST_FOREACH (const CTransaction& tx, block.vtx) {
         if (txDetails) {
@@ -461,21 +462,18 @@ Value verifychain(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() > 2)
         throw runtime_error(
-            "verifychain ( checklevel numblocks )\n"
+            "verifychain ( numblocks )\n"
             "\nVerifies blockchain database.\n"
             "\nArguments:\n"
-            "1. checklevel   (numeric, optional, 0-4, default=3) How thorough the block verification is.\n"
-            "2. numblocks    (numeric, optional, default=288, 0=all) The number of blocks to check.\n"
+            "1. numblocks    (numeric, optional, default=288, 0=all) The number of blocks to check.\n"
             "\nResult:\n"
             "true|false       (boolean) Verified or not\n"
             "\nExamples:\n" +
             HelpExampleCli("verifychain", "") + HelpExampleRpc("verifychain", ""));
 
-    int nCheckLevel = GetArg("-checklevel", 3);
+    int nCheckLevel = 4;
     int nCheckDepth = GetArg("-checkblocks", 288);
     if (params.size() > 0)
-        nCheckLevel = params[0].get_int();
-    if (params.size() > 1)
         nCheckDepth = params[1].get_int();
 
     return CVerifyDB().VerifyDB(pcoinsTip, nCheckLevel, nCheckDepth);

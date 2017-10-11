@@ -355,6 +355,16 @@ QString TransactionTableModel::formatTxType(const TransactionRecord* wtx) const
         return tr("Obfuscation Create Denominations");
     case TransactionRecord::Obfuscated:
         return tr("Obfuscated");
+    case TransactionRecord::ZerocoinMint:
+        return tr("Converted Piv to zPiv");
+    case TransactionRecord::ZerocoinSpend:
+        return tr("Spent zPiv");
+    case TransactionRecord::RecvFromZerocoinSpend:
+        return tr("Received Piv from zPiv");
+    case TransactionRecord::ZerocoinSpend_Change_zPiv:
+        return tr("Minted Change as zPiv from zPiv Spend");
+    case TransactionRecord::ZerocoinSpend_FromMe:
+        return tr("Converted zPiv to Piv");
 
     default:
         return QString();
@@ -371,9 +381,11 @@ QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord* wtx
     case TransactionRecord::RecvWithObfuscation:
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::RecvFromOther:
+    case TransactionRecord::RecvFromZerocoinSpend:
         return QIcon(":/icons/tx_input");
     case TransactionRecord::SendToAddress:
     case TransactionRecord::SendToOther:
+    case TransactionRecord::ZerocoinSpend:
         return QIcon(":/icons/tx_output");
     default:
         return QIcon(":/icons/tx_inout");
@@ -397,11 +409,17 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord* wtx, b
     case TransactionRecord::SendToAddress:
     case TransactionRecord::Generated:
     case TransactionRecord::StakeMint:
+    case TransactionRecord::ZerocoinSpend:
+    case TransactionRecord::ZerocoinSpend_FromMe:
+    case TransactionRecord::RecvFromZerocoinSpend:
         return lookupAddress(wtx->address, tooltip);
     case TransactionRecord::Obfuscated:
         return lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::SendToOther:
         return QString::fromStdString(wtx->address) + watchAddress;
+    case TransactionRecord::ZerocoinMint:
+    case TransactionRecord::ZerocoinSpend_Change_zPiv:
+        return tr("zPiv Accumulator");
     case TransactionRecord::SendToSelf:
     default:
         return tr("(n/a)") + watchAddress;

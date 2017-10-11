@@ -14,6 +14,7 @@ class BitcoinGUI;
 class ClientModel;
 class OverviewPage;
 class ReceiveCoinsDialog;
+class PrivacyDialog;
 class SendCoinsDialog;
 class SendCoinsRecipient;
 class TransactionView;
@@ -62,6 +63,7 @@ private:
     OverviewPage* overviewPage;
     QWidget* transactionsPage;
     ReceiveCoinsDialog* receiveCoinsPage;
+    PrivacyDialog* privacyPage;
     SendCoinsDialog* sendCoinsPage;
     BlockExplorer* explorerWindow;
     MasternodeList* masternodeListPage;
@@ -80,6 +82,8 @@ public slots:
     void gotoMasternodePage();
     /** Switch to explorer page */
     void gotoBlockExplorerPage();
+    /** Switch to privacy page */
+    void gotoPrivacyPage();
     /** Switch to receive coins page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
@@ -111,6 +115,8 @@ public slots:
     void unlockWallet();
     /** Lock wallet */
     void lockWallet();
+    /** Toggle wallet lock state */
+    void toggleLockWallet();
 
     /** Show used sending addresses */
     void usedSendingAddresses();

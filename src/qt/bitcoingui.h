@@ -83,7 +83,7 @@ private:
 
     UnitDisplayStatusBarControl* unitDisplayControl;
     QLabel* labelStakingIcon;
-    QLabel* labelEncryptionIcon;
+    QPushButton* labelEncryptionIcon;
     QPushButton* labelConnectionsIcon;
     QLabel* labelBlocksIcon;
     QLabel* progressBarLabel;
@@ -104,6 +104,7 @@ private:
     QAction* bip38ToolAction;
     QAction* aboutAction;
     QAction* receiveCoinsAction;
+    QAction* privacyAction;
     QAction* optionsAction;
     QAction* toggleHideAction;
     QAction* encryptWalletAction;
@@ -202,8 +203,10 @@ private slots:
     void gotoBlockExplorerPage();
     /** Switch to masternode page */
     void gotoMasternodePage();
-    /** Switch to receive coins page */
+    /** Switch to privacy page */
     void gotoReceiveCoinsPage();
+    /** Switch to receive coins page */
+    void gotoPrivacyPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
 

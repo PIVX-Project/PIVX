@@ -5,8 +5,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include "libzerocoin/Params.h"
 #include "chainparams.h"
-
 #include "random.h"
 #include "util.h"
 #include "utilstrencodings.h"
@@ -52,14 +52,18 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 //    timestamp before)
 // + Contains no strange transactions
 static Checkpoints::MapCheckpoints mapCheckpoints =
-    boost::assign::map_list_of(259201, uint256("1c9121bf9329a6234bfd1ea2d91515f19cd96990725265253f4b164283ade5dd"))
+    boost::assign::map_list_of
+    (259201, uint256("1c9121bf9329a6234bfd1ea2d91515f19cd96990725265253f4b164283ade5dd"))
     (424998, uint256("f31e381eedb0ed3ed65fcc98cc71f36012bee32e8efd017c4f9fb0620fd35f6b"))
     (616764, uint256("29dd0bd1c59484f290896687b4ffb6a49afa5c498caf61967c69a541f8191557")) //first block to use modifierV2
-    (623933, uint256("c7aafa648a0f1450157dc93bd4d7448913a85b7448f803b4ab970d91fc2a7da7"));
+    (623933, uint256("c7aafa648a0f1450157dc93bd4d7448913a85b7448f803b4ab970d91fc2a7da7"))
+    (791150, uint256("8e76f462e4e82d1bd21cb72e1ce1567d4ddda2390f26074ffd1f5d9c270e5e50"))
+    (795000, uint256("4423cceeb9fd574137a18733416275a70fdf95283cc79ad976ca399aa424a443"))
+    (799000, uint256("91dfe065e700b4faad7df95998a9352b93ce645ffbb65e9841c7c744583c3b40"));
 static const Checkpoints::CCheckpointData data = {
     &mapCheckpoints,
-    1493667067, // * UNIX timestamp of last checkpoint block
-    1157185,    // * total number of transactions between genesis and last checkpoint
+    1504290445, // * UNIX timestamp of last checkpoint block
+    1568221,    // * total number of transactions between genesis and last checkpoint
                 //   (the tx=... number in the SetBestChain debug.log lines)
     2000        // * estimated number of transactions per day after checkpoint
 };
@@ -79,6 +83,15 @@ static const Checkpoints::CCheckpointData dataRegtest = {
     1454124731,
     0,
     100};
+
+libzerocoin::ZerocoinParams* CChainParams::Zerocoin_Params() const
+{
+    assert(this);
+    static CBigNum bnTrustedModulus(zerocoinModulus);
+    static libzerocoin::ZerocoinParams ZCParams = libzerocoin::ZerocoinParams(bnTrustedModulus);
+
+    return &ZCParams;
+}
 
 class CMainParams : public CChainParams
 {
@@ -111,6 +124,7 @@ public:
         nMaturity = 100;
         nMasternodeCountDrift = 20;
         nModifierUpdateBlock = 615800;
+        nMaxMoneyOut = 21000000 * COIN;
 
         /**
          * Build the genesis block. Note that the output of the genesis coinbase cannot
@@ -168,10 +182,25 @@ public:
         fHeadersFirstSyncingActive = false;
 
         nPoolMaxTransactions = 3;
-        strSporkKey = "0484698d3ba6ba6e7423fa5cbd6a89e0a9a5348f88d332b44a5cb1a8b7ed2c1eaa335fc8dc4f012cb8241cc0bdafd6ca70c5f5448916e4e6f511bcd746ed57dc50";
-        //strSporkKey = "04B433E6598390C992F4F022F20D3B4CBBE691652EE7C48243B81701CBDB7CC7D7BF0EE09E154E6FCBF2043D65AF4E9E97B89B5DBAF830D83B9B7F469A6C45A717";
+        strSporkKeyOld = "0484698d3ba6ba6e7423fa5cbd6a89e0a9a5348f88d332b44a5cb1a8b7ed2c1eaa335fc8dc4f012cb8241cc0bdafd6ca70c5f5448916e4e6f511bcd746ed57dc50";
+        strSporkKey = "04B433E6598390C992F4F022F20D3B4CBBE691652EE7C48243B81701CBDB7CC7D7BF0EE09E154E6FCBF2043D65AF4E9E97B89B5DBAF830D83B9B7F469A6C45A717";
         strObfuscationPoolDummyAddress = "D87q2gC9j6nNrnzCsg4aY6bHMLsT9nUhEw";
+        nStopDualSporkKeys = 1508803199; // Oct 23 2017 11:59:59 GMT
         nStartMasternodePayments = 1403728576; //Wed, 25 Jun 2014 20:36:16 GMT
+
+        /** Zerocoin */
+        zerocoinModulus = "25195908475657893494027183240048398571429282126204032027777137836043662020707595556264018525880784"
+            "4069182906412495150821892985591491761845028084891200728449926873928072877767359714183472702618963750149718246911"
+            "6507761337985909570009733045974880842840179742910064245869181719511874612151517265463228221686998754918242243363"
+            "7259085141865462043576798423387184774447920739934236584823824281198163815010674810451660377306056201619676256133"
+            "8441436038339044149526344321901146575444541784240209246165157233507787077498171257724679629263863563732899121548"
+            "31438167899885040445364023527381951378636564391212010397122822120720357";
+        nMaxZerocoinSpendsPerTransaction = 7; // Assume about 20kb each
+        nMinZerocoinMintFee = 1 * CENT; //high fee required for zerocoin mints
+        nMintRequiredConfirmations = 20; //the maximum amount of confirmations until accumulated in 19
+        nDefaultSecurityLevel = 100; //full security level for accumulators
+        nZerocoinHeaderVersion = 4; //Block headers must be this version once zerocoin is active
+        nBudget_Fee_Confirmations = 6; // Number of confirmations for the finalization fee
     }
 
     const Checkpoints::CCheckpointData& Checkpoints() const
@@ -205,7 +234,9 @@ public:
         nTargetSpacing = 1 * 60;  // PIVX: 1 minute
         nLastPOWBlock = 200;
         nMaturity = 15;
+        nMasternodeCountDrift = 4;
         nModifierUpdateBlock = 51197; //approx Mon, 17 Apr 2017 04:00:00 GMT
+        nMaxMoneyOut = 43199500 * COIN;
 
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nTime = 1454124731;
@@ -244,7 +275,10 @@ public:
         nPoolMaxTransactions = 2;
         strSporkKey = "04348C2F50F90267E64FACC65BFDC9D0EB147D090872FB97ABAE92E9A36E6CA60983E28E741F8E7277B11A7479B626AC115BA31463AC48178A5075C5A9319D4A38";
         strObfuscationPoolDummyAddress = "y57cqfGRkekRyDRNeJiLtYVEbvhXrNbmox";
+        nStopDualSporkKeys = 1491004800; // April 1 2017 00:00:00 GMT
         nStartMasternodePayments = 1420837558; //Fri, 09 Jan 2015 21:05:58 GMT
+        nBudget_Fee_Confirmations = 3; // Number of confirmations for the finalization fee. We have to make this very short 
+                                       // here because we only have a 8 block finalization window on testnet
     }
     const Checkpoints::CCheckpointData& Checkpoints() const
     {

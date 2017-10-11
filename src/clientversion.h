@@ -14,8 +14,8 @@
  */
 
 //! These need to be macros, as clientversion.cpp's and pivx*-res.rc's voodoo requires it
-#define CLIENT_VERSION_MAJOR 2
-#define CLIENT_VERSION_MINOR 2
+#define CLIENT_VERSION_MAJOR 3
+#define CLIENT_VERSION_MINOR 0
 #define CLIENT_VERSION_REVISION 99
 #define CLIENT_VERSION_BUILD 0
 

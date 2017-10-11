@@ -1,11 +1,11 @@
 ---
-name: "pivx-osx-2.3"
+name: "pivx-osx-3.1"
 enable_cache: true
 suites:
 - "trusty"
 architectures:
 - "amd64"
-packages: 
+packages:
 - "ca-certificates"
 - "curl"
 - "g++"

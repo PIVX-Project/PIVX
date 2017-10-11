@@ -543,6 +543,9 @@ int main(int argc, char* argv[])
     // Generate high-dpi pixmaps
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 #endif
+#if QT_VERSION >= 0x050600
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
 #ifdef Q_OS_MAC
     QApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif
@@ -592,7 +595,7 @@ int main(int argc, char* argv[])
     } catch (std::exception& e) {
         QMessageBox::critical(0, QObject::tr("PIVX Core"),
             QObject::tr("Error: Cannot parse configuration file: %1. Only use key=value syntax.").arg(e.what()));
-        return false;
+        return 0;
     }
 
     /// 7. Determine network (and switch to network specific options)
@@ -624,7 +627,7 @@ int main(int argc, char* argv[])
     if (!masternodeConfig.read(strErr)) {
         QMessageBox::critical(0, QObject::tr("PIVX Core"),
             QObject::tr("Error reading masternode configuration file: %1").arg(strErr.c_str()));
-        return false;
+        return 0;
     }
 
     /// 8. URI IPC sending

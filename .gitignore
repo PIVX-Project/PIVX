@@ -34,6 +34,9 @@ build-aux/test-driver
 config.log
 config.status
 configure
+confdefs.h
+conftest.cpp
+conftest.err
 libtool
 src/config/pivx-config.h
 src/config/pivx-config.h.in

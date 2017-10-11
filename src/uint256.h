@@ -277,6 +277,11 @@ public:
     {
         return pn[2 * n] | (uint64_t)pn[2 * n + 1] << 32;
     }
+
+    uint32_t Get32(int n = 0) const
+    {
+        return pn[2 * n];
+    }
     /**
      * Returns the position of the highest bit set plus one, or zero if the
      * value is zero.

@@ -35,10 +35,12 @@ extern bool fMasterNode;
 extern bool fLiteMode;
 extern bool fEnableSwiftTX;
 extern int nSwiftTXDepth;
-extern int nObfuscationRounds;
+extern int nZeromintPercentage;
+extern const int64_t AUTOMINT_DELAY;
+extern int nPreferredDenom;
 extern int nAnonymizePivxAmount;
 extern int nLiquidityProvider;
-extern bool fEnableObfuscation;
+extern bool fEnableZeromint;
 extern int64_t enforceMasternodePaymentsTime;
 extern std::string strMasterNodeAddr;
 extern int keysLoaded;
@@ -82,7 +84,7 @@ int LogPrintStr(const std::string& str);
     template <TINYFORMAT_ARGTYPES(n)>                                                           \
     static inline bool error(const char* format, TINYFORMAT_VARARGS(n))                         \
     {                                                                                           \
-        LogPrintStr("ERROR: " + tfm::format(format, TINYFORMAT_PASSARGS(n)) + "\n");            \
+        LogPrintStr(std::string("ERROR: ") + tfm::format(format, TINYFORMAT_PASSARGS(n)) + "\n");            \
         return false;                                                                           \
     }
 

@@ -4,19 +4,28 @@ EXTRA_LIBRARIES += qt/libbitcoinqt.a
 # pivx qt core #
 QT_TS = \
   qt/locale/pivx_bg.ts \
+  qt/locale/pivx_ca.ts \
+  qt/locale/pivx_cs.ts \
+  qt/locale/pivx_da.ts \
   qt/locale/pivx_de.ts \
   qt/locale/pivx_en.ts \
+  qt/locale/pivx_en_US.ts \
   qt/locale/pivx_es.ts \
   qt/locale/pivx_fi.ts \
-  qt/locale/pivx_fr.ts \
+  qt/locale/pivx_fr_FR.ts \
   qt/locale/pivx_it.ts \
   qt/locale/pivx_ja.ts \
+  qt/locale/pivx_ko_KR.ts \
+  qt/locale/pivx_nl.ts \
   qt/locale/pivx_pl.ts \
   qt/locale/pivx_pt.ts \
+  qt/locale/pivx_pt_BR.ts \
+  qt/locale/pivx_ro_RO.ts \
   qt/locale/pivx_ru.ts \
   qt/locale/pivx_sk.ts \
   qt/locale/pivx_sv.ts \
-  qt/locale/pivx_vi.ts \
+  qt/locale/pivx_tr.ts \
+  qt/locale/pivx_uk.ts \
   qt/locale/pivx_zh_CN.ts \
   qt/locale/pivx_zh_TW.ts
 
@@ -37,12 +46,14 @@ QT_FORMS_UI = \
   qt/forms/optionsdialog.ui \
   qt/forms/overviewpage.ui \
   qt/forms/receivecoinsdialog.ui \
+  qt/forms/privacydialog.ui \
   qt/forms/receiverequestdialog.ui \
   qt/forms/rpcconsole.ui \
   qt/forms/sendcoinsdialog.ui \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
-  qt/forms/transactiondescdialog.ui
+  qt/forms/transactiondescdialog.ui \
+  qt/forms/zpivcontroldialog.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
@@ -77,6 +88,7 @@ QT_MOC_CPP = \
   qt/moc_qvalidatedlineedit.cpp \
   qt/moc_qvaluecombobox.cpp \
   qt/moc_receivecoinsdialog.cpp \
+  qt/moc_privacydialog.cpp \
   qt/moc_receiverequestdialog.cpp \
   qt/moc_recentrequeststablemodel.cpp \
   qt/moc_rpcconsole.cpp \
@@ -93,7 +105,8 @@ QT_MOC_CPP = \
   qt/moc_utilitydialog.cpp \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
-  qt/moc_walletview.cpp
+  qt/moc_walletview.cpp \
+  qt/moc_zpivcontroldialog.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -152,6 +165,7 @@ BITCOIN_QT_H = \
   qt/qvalidatedlineedit.h \
   qt/qvaluecombobox.h \
   qt/receivecoinsdialog.h \
+  qt/privacydialog.h \
   qt/receiverequestdialog.h \
   qt/recentrequeststablemodel.h \
   qt/rpcconsole.h \
@@ -171,7 +185,8 @@ BITCOIN_QT_H = \
   qt/walletmodel.h \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
-  qt/winshutdownmonitor.h
+  qt/winshutdownmonitor.h \
+  qt/zpivcontroldialog.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -211,6 +226,7 @@ RES_ICONS = \
   qt/res/icons/qrcode.png \
   qt/res/icons/quit.png \
   qt/res/icons/receive.png \
+  qt/res/icons/privacy.png \
   qt/res/icons/remove.png \
   qt/res/icons/send.png \
   qt/res/icons/staking_active.png \
@@ -275,6 +291,7 @@ BITCOIN_QT_CPP += \
   qt/paymentrequestplus.cpp \
   qt/paymentserver.cpp \
   qt/receivecoinsdialog.cpp \
+  qt/privacydialog.cpp \
   qt/receiverequestdialog.cpp \
   qt/recentrequeststablemodel.cpp \
   qt/sendcoinsdialog.cpp \
@@ -289,7 +306,8 @@ BITCOIN_QT_CPP += \
   qt/walletframe.cpp \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
-  qt/walletview.cpp
+  qt/walletview.cpp \
+  qt/zpivcontroldialog.cpp
 
 endif
 
@@ -358,8 +376,9 @@ endif
 if ENABLE_ZMQ
 qt_pivx_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
 endif
-qt_pivx_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBBITCOIN_UNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
-  $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1)
+qt_pivx_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBBITCOIN_UNIVALUE) $(LIBBITCOIN_ZEROCOIN) $(LIBLEVELDB) $(LIBMEMENV) \
+  $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
+  $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
 qt_pivx_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 qt_pivx_qt_LIBTOOLFLAGS = --tag CXX
 
@@ -413,4 +432,3 @@ moc_%.cpp: %.h
 	@test -f $(LRELEASE)
 	@$(MKDIR_P) $(@D)
 	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LRELEASE) -silent $< -qm $@
-

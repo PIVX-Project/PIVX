@@ -8,7 +8,7 @@ PIVX is a cutting edge cryptocurrency, with many features not available in most 
 - Fast transactions featuring guaranteed zero confirmation transactions, we call it _SwiftTX_.
 - Decentralized blockchain voting providing for consensus based advancement of the current Masternode
   technology used to secure the network and provide the above features, each Masternode is secured
-  with collateral of 10K PIV
+  with a collateral of 10K PIV.
 
 More information at [pivx.org](http://www.pivx.org) Visit our ANN thread at [BitcoinTalk](http://www.bitcointalk.org/index.php?topic=1262920)
 
@@ -41,7 +41,7 @@ More information at [pivx.org](http://www.pivx.org) Visit our ANN thread at [Bit
 
 <table>
 <th>Block Height</th><th>Masternodes</th><th>Miner</th><th>Budget</th>
-<tr><td>2-432000</td><td>20% (50 PIV)</td><td>80% (200 PIV)</td><td>N/A</td></tr>
+<tr><td>2-43200</td><td>20% (50 PIV)</td><td>80% (200 PIV)</td><td>N/A</td></tr>
 <tr><td>43201-151200</td><td>20% (50 PIV)</td><td>70% (200 PIV)</td><td>10% (25 PIV)</td></tr>
 <tr><td>151201-259200</td><td>45% (22.5 PIV)</td><td>45% (22.5 PIV)</td><td>10% (5 PIV)</td></tr>
 </table>

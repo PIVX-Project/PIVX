@@ -35,11 +35,9 @@ public:
     void setClientModel(ClientModel* clientModel);
     void setWalletModel(WalletModel* walletModel);
     void showOutOfSyncWarning(bool fShow);
-    void updateObfuscationProgress();
 
 public slots:
-    void obfuScationStatus();
-    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& anonymizedBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& zerocoinBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
 signals:
     void transactionClicked(const QModelIndex& index);
@@ -52,19 +50,17 @@ private:
     CAmount currentBalance;
     CAmount currentUnconfirmedBalance;
     CAmount currentImmatureBalance;
-    CAmount currentAnonymizedBalance;
+    CAmount currentZerocoinBalance;
     CAmount currentWatchOnlyBalance;
     CAmount currentWatchUnconfBalance;
     CAmount currentWatchImmatureBalance;
     int nDisplayUnit;
+    void getPercentage(CAmount nTotalBalance, CAmount nZerocoinBalance, QString& sPIVPercentage, QString& szPIVPercentage);
 
     TxViewDelegate* txdelegate;
     TransactionFilterProxy* filter;
 
 private slots:
-    void toggleObfuscation();
-    void obfuscationAuto();
-    void obfuscationReset();
     void updateDisplayUnit();
     void handleTransactionClicked(const QModelIndex& index);
     void updateAlerts(const QString& warnings);

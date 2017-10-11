@@ -1,11 +1,11 @@
 ---
-name: "pivx-win-2.3"
+name: "pivx-win-3.1"
 enable_cache: true
 suites:
 - "trusty"
 architectures:
 - "amd64"
-packages: 
+packages:
 - "curl"
 - "g++"
 - "git-core"
@@ -27,7 +27,7 @@ remotes:
 files: []
 script: |
   WRAP_DIR=$HOME/wrapped
-  HOSTS="x86_64-w64-mingw32 i686-w64-mingw32"
+  HOSTS="i686-w64-mingw32 x86_64-w64-mingw32"
   CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests"
   FAKETIME_HOST_PROGS="g++ ar ranlib nm windres strip objcopy"
   FAKETIME_PROGS="date makensis zip"
@@ -147,15 +147,16 @@ script: |
     make install DESTDIR=${INSTALLPATH}
     cp -f pivx-*setup*.exe $OUTDIR/
     cd installed
-    mv ${DISTNAME}/bin/*.dll ${DISTNAME}/lib/
-    find . -name "lib*.la" -delete
-    find . -name "lib*.a" -delete
+    # mv ${DISTNAME}/bin/*.dll ${DISTNAME}/lib/ # temporarily disabled for Zerocoin
+    # find . -name "lib*.la" -delete            # temporarily disabled for Zerocoin
+    # find . -name "lib*.a" -delete             # temporarily disabled for Zerocoin
     rm -rf ${DISTNAME}/lib/pkgconfig
     find ${DISTNAME}/bin -type f -executable -exec ${i}-objcopy --only-keep-debug {} {}.dbg \; -exec ${i}-strip -s {} \; -exec ${i}-objcopy --add-gnu-debuglink={}.dbg {} \;
-    find ${DISTNAME}/lib -type f -exec ${i}-objcopy --only-keep-debug {} {}.dbg \; -exec ${i}-strip -s {} \; -exec ${i}-objcopy --add-gnu-debuglink={}.dbg {} \;
+    # find ${DISTNAME}/lib -type f -exec ${i}-objcopy --only-keep-debug {} {}.dbg \; -exec ${i}-strip -s {} \; -exec ${i}-objcopy --add-gnu-debuglink={}.dbg {} \;
     find ${DISTNAME} -not -name "*.dbg"  -type f | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${i}.zip
     find ${DISTNAME} -name "*.dbg"  -type f | sort | zip -X@ ${OUTDIR}/${DISTNAME}-${i}-debug.zip
     cd ../../
+    rm -rf distsrc-${i}
   done
   cd $OUTDIR
   rename 's/-setup\.exe$/-setup-unsigned.exe/' *-setup.exe

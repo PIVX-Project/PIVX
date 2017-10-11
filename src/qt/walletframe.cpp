@@ -139,6 +139,13 @@ void WalletFrame::gotoReceiveCoinsPage()
         i.value()->gotoReceiveCoinsPage();
 }
 
+void WalletFrame::gotoPrivacyPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoPrivacyPage();
+}
+
 void WalletFrame::gotoSendCoinsPage(QString addr)
 {
     QMap<QString, WalletView*>::const_iterator i;
@@ -216,6 +223,13 @@ void WalletFrame::lockWallet()
     WalletView* walletView = currentWalletView();
     if (walletView)
         walletView->lockWallet();
+}
+
+void WalletFrame::toggleLockWallet()
+{
+    WalletView* walletView = currentWalletView();
+    if (walletView)
+        walletView->toggleLockWallet();
 }
 
 void WalletFrame::usedSendingAddresses()

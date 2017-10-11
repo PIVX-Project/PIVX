@@ -210,7 +210,6 @@ void MasternodeList::updateMyNodeList(bool fForce)
 
         CTxIn txin = CTxIn(uint256S(mne.getTxHash()), uint32_t(nIndex));
         CMasternode* pmn = mnodeman.Find(txin);
-
         updateMyMasternodeInfo(QString::fromStdString(mne.getAlias()), QString::fromStdString(mne.getIp()), pmn);
     }
     ui->tableWidgetMyMasternodes->setSortingEnabled(true);

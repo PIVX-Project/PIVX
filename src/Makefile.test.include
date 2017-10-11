@@ -34,7 +34,12 @@ RAW_TEST_FILES = test/data/alertTests.raw
 GENERATED_TEST_FILES = $(JSON_TEST_FILES:.json=.json.h) $(RAW_TEST_FILES:.raw=.raw.h)
 
 BITCOIN_TESTS =\
-  test/bignum.h \
+  test/zerocoin_implementation_tests.cpp\
+  test/zerocoin_denomination_tests.cpp\
+  test/zerocoin_transactions_tests.cpp \
+  test/benchmark_zerocoin.cpp \
+  test/tutorial_zerocoin.cpp \
+  test/libzerocoin_tests.cpp \
   test/allocator_tests.cpp \
   test/base32_tests.cpp \
   test/base58_tests.cpp \
@@ -65,6 +70,7 @@ BITCOIN_TESTS =\
   test/skiplist_tests.cpp \
   test/test_pivx.cpp \
   test/timedata_tests.cpp \
+  test/torcontrol_tests.cpp \
   test/transaction_tests.cpp \
   test/uint256_tests.cpp \
   test/univalue_tests.cpp \
@@ -79,8 +85,8 @@ endif
 
 test_test_pivx_SOURCES = $(BITCOIN_TESTS) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
 test_test_pivx_CPPFLAGS = $(BITCOIN_INCLUDES) -I$(builddir)/test/ $(TESTDEFS)
-test_test_pivx_LDADD = $(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBBITCOIN_UNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
-  $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1)
+test_test_pivx_LDADD = $(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBBITCOIN_UNIVALUE) $(LIBBITCOIN_ZEROCOIN) $(LIBLEVELDB) $(LIBMEMENV) \
+  $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS)
 if ENABLE_WALLET
 test_test_pivx_LDADD += $(LIBBITCOIN_WALLET)
 endif
