@@ -48,9 +48,10 @@ MultisigDialog::MultisigDialog(QWidget* parent) : QDialog(parent),
     //flag to show keyScrollArea on first priv key added
     isFirstPrivKey = true;
     isFirstRawTx = true;
-
     ui->keyScrollArea->hide();
     ui->txInputsScrollArea->hide();
+
+    connect(ui->commitButton, SIGNAL(clicked()), this, SLOT(commitMultisigTx));
 
     //populate lists with initial objects
     on_addAddressButton_clicked();
@@ -115,20 +116,22 @@ void MultisigDialog::deleteFrame()
 //user accepts fee
 void MultisigDialog::acceptFee(){
     try{
-        string errorOut = string();
-        bool fComplete = signMultisigTx(multisigTx, errorOut);
-        if(!errorOut.empty()){
-            throw runtime_error(errorOut.data());
-        }
+//        string errorOut = string();
+        //bool fComplete = signMultisigTx(multisigTx, errorOut);
+//        if(!errorOut.empty()){
+//            throw runtime_error(errorOut.data());
+//        }
 
         ui->createButtonStatus->setStyleSheet("QTextEdit{ color: black }");
-        ui->createButtonStatus->setText(buildMultisigTxStatusString(fComplete, multisigTx));
+        ui->createButtonStatus->setText(buildMultisigTxStatusString(false, multisigTx));
 
         QIcon icon;
         icon.addFile(QStringLiteral(":/icons/continue"), QSize(), QIcon::Normal, QIcon::Off);
         ui->createButton->setText("Calculate Fee");
         ui->createButton->setIcon(icon);
-        ui->fee->setText("");
+        ui->feeLabel->setStyleSheet("QLabel{ color: black }");
+        ui->feeLabel->setText("Fee:");
+        ui->transactionHex->setText(QString::fromStdString(EncodeHexTx(multisigTx)));
         disconnect(this, SLOT(acceptFee()), 0, 0);
         connect(ui->createButton, SIGNAL(clicked()), this, SLOT(on_createButton_clicked()));
         multisigTx = CMutableTransaction();
@@ -322,7 +325,7 @@ void MultisigDialog::on_createButton_clicked()
 
             QIcon icon;
             icon.addFile(QStringLiteral(":/icons/export"), QSize(), QIcon::Normal, QIcon::Off);
-            ui->createButton->setText("Create");
+            ui->createButton->setText("Accept Fee");
             ui->createButton->setIcon(icon);
             disconnect(this, SLOT(on_createButton_clicked()), 0, 0);
             connect(ui->createButton, SIGNAL(clicked()), this, SLOT(acceptFee()));
@@ -444,8 +447,8 @@ bool MultisigDialog::createMultisigTransaction(vector<CTxIn> vUserIn, vector<CTx
 
         if(tx.vout.at(changeIndex).nValue > fee){
            tx.vout.at(changeIndex).nValue -= fee;
-           ui->fee->setStyleSheet("QLabel{ color: red }");
-           ui->fee->setText(strprintf("%d",((double)fee)/COIN).c_str());
+           ui->feeLabel->setStyleSheet("QLabel{ color: red }");
+           ui->feeLabel->setText(strprintf("Fee: %d",((double)fee)/COIN).c_str());
         }else{
             throw runtime_error("Not enough PIV provided to cover fee");
         }
@@ -506,6 +509,7 @@ QString MultisigDialog::buildMultisigTxStatusString(bool fComplete, const CMutab
     string sTxHex = EncodeHexTx(tx);
 
     if(fComplete){
+        ui->commitButton->setEnabled(true);
         string sTxId = tx.GetHash().GetHex();
         string sTxComplete   =  "Complete: true!\n"
                                 "This transaction has been fully verified and published to the network.\n"
@@ -638,41 +642,51 @@ bool MultisigDialog::signMultisigTx(CMutableTransaction& tx, string& errorOut, Q
             nIn++;
         }
 
-        //if all inputs have been signed commit tx
-        if(fComplete){
-#ifdef ENABLE_WALLET
-            CWalletTx wtx(pwalletMain, tx);
-            CReserveKey keyChange(pwalletMain);
-            if (!pwalletMain->CommitTransaction(wtx, keyChange))
-                throw runtime_error(string("Transaction rejected - Failed to commit"));
-#else
-            uint256 hashTx = tx.GetHash();
-            CCoinsViewCache& view = *pcoinsTip;
-            const CCoins* existingCoins = view.AccessCoins(hashTx);
-            bool fOverrideFees = false;
-            bool fHaveMempool = mempool.exists(hashTx);
-            bool fHaveChain = existingCoins && existingCoins->nHeight < 1000000000;
+        ui->signButtonStatus->setText(buildMultisigTxStatusString(fComplete, tx));
 
-            if (!fHaveMempool && !fHaveChain) {
-                // push to local node and sync with wallets
-                CValidationState state;
-                if (!AcceptToMemoryPool(mempool, state, tx, false, NULL, !fOverrideFees)) {
-                    if (state.IsInvalid())
-                        throw runtime_error(strprintf("Transaction rejected - %i: %s", state.GetRejectCode(), state.GetRejectReason()));
-                    else
-                        throw runtime_error(string("Transaction rejected - ") + state.GetRejectReason());
-                }
-            } else if (fHaveChain) {
-                throw runtime_error("transaction already in block chain");
-            }
-            RelayTransaction(tx);
-#endif
-        }
     }catch(const runtime_error& e){
         errorOut = string(e.what());
         fComplete = false;
     }
     return fComplete;
+}
+
+void MultisigDialog::commitMultisigTx()
+{
+    CMutableTransaction tx(multisigTx);
+    try{
+#ifdef ENABLE_WALLET
+        CWalletTx wtx(pwalletMain, tx);
+        CReserveKey keyChange(pwalletMain);
+        if (!pwalletMain->CommitTransaction(wtx, keyChange))
+            throw runtime_error(string("Transaction rejected - Failed to commit"));
+#else
+        uint256 hashTx = tx.GetHash();
+        CCoinsViewCache& view = *pcoinsTip;
+        const CCoins* existingCoins = view.AccessCoins(hashTx);
+        bool fOverrideFees = false;
+        bool fHaveMempool = mempool.exists(hashTx);
+        bool fHaveChain = existingCoins && existingCoins->nHeight < 1000000000;
+
+        if (!fHaveMempool && !fHaveChain) {
+            // push to local node and sync with wallets
+            CValidationState state;
+            if (!AcceptToMemoryPool(mempool, state, tx, false, NULL, !fOverrideFees)) {
+                if (state.IsInvalid())
+                    throw runtime_error(strprintf("Transaction rejected - %i: %s", state.GetRejectCode(), state.GetRejectReason()));
+                else
+                    throw runtime_error(string("Transaction rejected - ") + state.GetRejectReason());
+            }
+        } else if (fHaveChain) {
+            throw runtime_error("transaction already in block chain");
+        }
+        RelayTransaction(tx);
+#endif
+        //disable commit if successfully committed
+        ui->commitButton->setEnabled(false);
+    }catch(const runtime_error& e){
+        ui->signButtonStatus->setText(e.what());
+    }
 }
 
 bool MultisigDialog::createRedeemScript(int m, vector<string> vKeys, CScript& redeemRet, string& errorRet)

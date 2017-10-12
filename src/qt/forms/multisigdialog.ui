@@ -29,7 +29,7 @@ QLabel{background-color:#ffffff;}
 QFrame &gt; QLabel{background-color:#f2f0f0;}</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="addMultisigTab">
       <property name="sizePolicy">
@@ -381,7 +381,7 @@ QFrame &gt; QLabel{background-color:#f2f0f0;}</string>
                 <x>0</x>
                 <y>0</y>
                 <width>388</width>
-                <height>87</height>
+                <height>93</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -466,7 +466,7 @@ QFrame &gt; QLabel{background-color:#f2f0f0;}</string>
                 <x>0</x>
                 <y>0</y>
                 <width>388</width>
-                <height>68</height>
+                <height>93</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -517,7 +517,7 @@ QFrame &gt; QLabel{background-color:#f2f0f0;}</string>
                     <string>Calculate &amp;Fee</string>
                    </property>
                    <property name="icon">
-                    <iconset>
+                    <iconset resource="../pivx.qrc">
                      <normaloff>:/icons/continue</normaloff>:/icons/continue</iconset>
                    </property>
                    <property name="autoDefault">
@@ -538,19 +538,6 @@ QFrame &gt; QLabel{background-color:#f2f0f0;}</string>
                    </property>
                    <property name="text">
                     <string>Fee</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="fee">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="readOnly">
-                    <bool>true</bool>
                    </property>
                   </widget>
                  </item>
@@ -656,7 +643,7 @@ txScrollArea:{
              <item>
               <widget class="QPushButton" name="signButton">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -681,6 +668,32 @@ txScrollArea:{
                 <bool>false</bool>
                </property>
                <property name="default">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="commitButton">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="autoFillBackground">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Co&amp;mmit</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../pivx.qrc">
+                 <normaloff>:/icons/send</normaloff>:/icons/send</iconset>
+               </property>
+               <property name="autoDefault">
                 <bool>true</bool>
                </property>
               </widget>

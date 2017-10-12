@@ -55,6 +55,7 @@ private slots:
    void deleteFrame();
    void pasteText();
    void acceptFee();
+   void commitMultisigTx();
    void addressBookButtonReceiving();
    void on_addAddressButton_clicked();
    void on_addMultisigButton_clicked();
