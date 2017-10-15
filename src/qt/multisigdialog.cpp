@@ -51,7 +51,7 @@ MultisigDialog::MultisigDialog(QWidget* parent) : QDialog(parent),
     ui->keyScrollArea->hide();
     ui->txInputsScrollArea->hide();
 
-    connect(ui->commitButton, SIGNAL(clicked()), this, SLOT(commitMultisigTx));
+    connect(ui->commitButton, SIGNAL(clicked()), this, SLOT(commitMultisigTx()));
 
     //populate lists with initial objects
     on_addAddressButton_clicked();
@@ -107,38 +107,19 @@ void MultisigDialog::deleteFrame()
    QWidget *buttonWidget = qobject_cast<QWidget*>(sender());
    if(!buttonWidget)return;
 
+   //if deleting last raw input/priv key, hide scroll area
+   if(buttonWidget->objectName() == "inputDeleteButton" && ui->inputsList->count() == 1){
+       isFirstRawTx = true;
+       ui->txInputsScrollArea->hide();
+   }else if(buttonWidget->objectName() == "keyDeleteButton" && ui->keyList->count() == 1){
+       isFirstPrivKey = true;
+       ui->keyScrollArea->hide();
+   }
+
    QFrame* frame = qobject_cast<QFrame*>(buttonWidget->parentWidget());
    if(!frame)return;
 
    delete frame;
-}
-
-//user accepts fee
-void MultisigDialog::acceptFee(){
-    try{
-//        string errorOut = string();
-        //bool fComplete = signMultisigTx(multisigTx, errorOut);
-//        if(!errorOut.empty()){
-//            throw runtime_error(errorOut.data());
-//        }
-
-        ui->createButtonStatus->setStyleSheet("QTextEdit{ color: black }");
-        ui->createButtonStatus->setText(buildMultisigTxStatusString(false, multisigTx));
-
-        QIcon icon;
-        icon.addFile(QStringLiteral(":/icons/continue"), QSize(), QIcon::Normal, QIcon::Off);
-        ui->createButton->setText("Calculate Fee");
-        ui->createButton->setIcon(icon);
-        ui->feeLabel->setStyleSheet("QLabel{ color: black }");
-        ui->feeLabel->setText("Fee:");
-        ui->transactionHex->setText(QString::fromStdString(EncodeHexTx(multisigTx)));
-        disconnect(this, SLOT(acceptFee()), 0, 0);
-        connect(ui->createButton, SIGNAL(clicked()), this, SLOT(on_createButton_clicked()));
-        multisigTx = CMutableTransaction();
-    }catch(const runtime_error& e){
-        ui->createButtonStatus->setStyleSheet("QTextEdit{ color: red }");
-        ui->createButtonStatus->setText(tr(e.what()));
-    }
 }
 
 //slot to open address book dialog
@@ -189,6 +170,12 @@ void MultisigDialog::on_importAddressButton_clicked(){
         return;
 
     string sRedeem = ui->importRedeem->text().toStdString();
+
+    if(sRedeem.empty()){
+        ui->addMultisigStatus->setStyleSheet("QLabel { color: red; }");
+        ui->addMultisigStatus->setText("Import box empty!");
+        return;
+    }
 
     vector<string> vRedeem;
     size_t pos = 0;
@@ -257,34 +244,31 @@ void MultisigDialog::on_createButton_clicked()
             CoinControlDialog::coinControl->ListSelected(vSelected);
             for (auto outpoint : vSelected)
                 vUserIn.emplace_back(CTxIn(outpoint));
+        }else{//check for raw inputs
+            for(int i = 0; i < ui->inputsList->count(); i++){
+                QWidget* input = qobject_cast<QWidget*>(ui->inputsList->itemAt(i)->widget());
+                QLineEdit* txIdLine = input->findChild<QLineEdit*>("txInputId");
+                if(txIdLine->text().isEmpty()){
+                    ui->createButtonStatus->setStyleSheet("QLabel { color: red; }");
+                    ui->createButtonStatus->setText(tr("Invalid Tx Hash."));
+                    return;
+                }
+
+                QSpinBox* txVoutLine = input->findChild<QSpinBox*>("txInputVout");
+                int nOutput = txVoutLine->value();
+                if(nOutput < 0){
+                    ui->createButtonStatus->setStyleSheet("QLabel { color: red; }");
+                    ui->createButtonStatus->setText(tr("Vout position must be positive."));
+                    return;
+                }
+
+                uint256 txid = uint256S(txIdLine->text().toStdString());
+                CTxIn in(COutPoint(txid, nOutput));
+                vUserIn.emplace_back(in);
+            }
         }
 
-        //Add inputs from "Raw" entry fields if any have been entered
-        for(int i = 0; i < ui->inputsList->count(); i++){
-            QWidget* input = qobject_cast<QWidget*>(ui->inputsList->itemAt(i)->widget());
-            QLineEdit* txIdLine = input->findChild<QLineEdit*>("txInputId");
-            if(txIdLine->text().isEmpty()){
-                // inputs already added from coincontrol
-                if (!vUserIn.empty())
-                    break;
-                ui->createButtonStatus->setStyleSheet("QLabel { color: red; }");
-                ui->createButtonStatus->setText(tr("Invalid Tx Hash."));
-                return;
-            }
-
-            QSpinBox* txVoutLine = input->findChild<QSpinBox*>("txInputVout");
-            int nOutput = txVoutLine->value();
-            if(nOutput < 0){
-                ui->createButtonStatus->setStyleSheet("QLabel { color: red; }");
-                ui->createButtonStatus->setText(tr("Vout position must be positive."));
-                return;
-            }
-
-            uint256 txid = uint256S(txIdLine->text().toStdString());
-            CTxIn in(COutPoint(txid, nOutput));
-            vUserIn.push_back(in);
-        }
-
+        //validate destinations
         bool validInput = true;
         for(int i = 0; i < ui->destinationsList->count(); i++){
             QWidget* dest = qobject_cast<QWidget*>(ui->destinationsList->itemAt(i)->widget());
@@ -317,18 +301,27 @@ void MultisigDialog::on_createButton_clicked()
         }
 
 
+        //if all user data valid create a multisig tx
         if(validInput){
-            string error;
-            if(!createMultisigTransaction(vUserIn, vUserOut, error)){
-                throw runtime_error(error);
-            }
+            //clear member variable
+            multisigTx = CMutableTransaction();
 
-            QIcon icon;
-            icon.addFile(QStringLiteral(":/icons/export"), QSize(), QIcon::Normal, QIcon::Off);
-            ui->createButton->setText("Accept Fee");
-            ui->createButton->setIcon(icon);
-            disconnect(this, SLOT(on_createButton_clicked()), 0, 0);
-            connect(ui->createButton, SIGNAL(clicked()), this, SLOT(acceptFee()));
+            string error;
+            string fee;
+            if(!createMultisigTransaction(vUserIn, vUserOut, fee, error)){
+                throw runtime_error(error);
+            }   
+
+            //display status string
+            ui->createButtonStatus->setStyleSheet("QTextEdit{ color: black }");
+
+            QString status(strprintf("Transaction has successfully created with a fee of %s.\n"
+                                     "The transaction has been automatically imported to the sign tab.\n"
+                                     "Please continue on to sign the tx from this wallet, to access the hex to send to other owners.", fee).c_str());
+
+            ui->createButtonStatus->setText(status);
+            ui->transactionHex->setText(QString::fromStdString(EncodeHexTx(multisigTx)));
+
         }
     }catch(const runtime_error& e){
         ui->createButtonStatus->setStyleSheet("QTextEdit{ color: red }");
@@ -336,7 +329,7 @@ void MultisigDialog::on_createButton_clicked()
     }
 }
 
-bool MultisigDialog::createMultisigTransaction(vector<CTxIn> vUserIn, vector<CTxOut> vUserOut, string& errorRet)
+bool MultisigDialog::createMultisigTransaction(vector<CTxIn> vUserIn, vector<CTxOut> vUserOut, string& feeStringRet, string& errorRet)
 {
     try{
         //attempt to access the given inputs
@@ -447,8 +440,7 @@ bool MultisigDialog::createMultisigTransaction(vector<CTxIn> vUserIn, vector<CTx
 
         if(tx.vout.at(changeIndex).nValue > fee){
            tx.vout.at(changeIndex).nValue -= fee;
-           ui->feeLabel->setStyleSheet("QLabel{ color: red }");
-           ui->feeLabel->setText(strprintf("Fee: %d",((double)fee)/COIN).c_str());
+           feeStringRet = strprintf("%d",((double)fee)/COIN).c_str();
         }else{
             throw runtime_error("Not enough PIV provided to cover fee");
         }
@@ -479,12 +471,21 @@ void MultisigDialog::on_signButton_clicked()
 
         CMutableTransaction tx(txRead);
 
-        string errorOut = string();
+        //check if transaction is already fully verified
+        if(isFullyVerified(tx)){
+            this->multisigTx = tx;
+            ui->commitButton->setEnabled(true);
+            ui->signButtonStatus->setText("This transaction is ready to commit. \nThe commit button in now enabled.");
+            return;
+        }
 
+        string errorOut = string();
         bool fComplete = signMultisigTx(tx, errorOut, ui->keyList);
 
         if(!errorOut.empty()){
             throw runtime_error(errorOut.data());
+        }else{
+            this->multisigTx = tx;
         }
 
         ui->signButtonStatus->setStyleSheet("QTextEdit{ color: black }");
@@ -501,26 +502,24 @@ void MultisigDialog::on_signButton_clicked()
  */
 QString MultisigDialog::buildMultisigTxStatusString(bool fComplete, const CMutableTransaction& tx)
 {
-    CCoinsViewCache view = getInputsCoinsViewCache(tx.vin);
-    COutPoint prevout = tx.vin[0].prevout;
-    const CCoins* coins = view.AccessCoins(prevout.hash);
-    CScript scriptPubKey = coins->vout[prevout.n].scriptPubKey;
-    string sAddress = CBitcoinAddress(scriptPubKey).ToString();
     string sTxHex = EncodeHexTx(tx);
 
     if(fComplete){
         ui->commitButton->setEnabled(true);
         string sTxId = tx.GetHash().GetHex();
         string sTxComplete   =  "Complete: true!\n"
-                                "This transaction has been fully verified and published to the network.\n"
-                                "Copy the information below to notify other owners of";
+                                "The commit button has now been enabled for you to finalize the transaction.\n"
+                                "Once the commit button is clicked, the transaction will be published and coins transfered"
+                                "to their destinations.\nWARNING: THE ACTIONS OF THE COMMIT BUTTON ARE FINAL AND CANNOT BE REVERESED.";
 
-        return QString(strprintf("%s %s.\nTx Id:\n%s\nTx Hex:\n%s",sTxComplete,sAddress,sTxId,sTxHex).c_str());
+        return QString(strprintf("%s\nTx Id:\n%s\nTx Hex:\n%s",sTxComplete, sTxId, sTxHex).c_str());
     } else {
-        string sTxIncomplete1 = "Complete: false.\nYou may now send the hex below to other owners of ";
-        string sTxIncomplete2 = "for them to sign.\n";
+        string sTxIncomplete = "Complete: false.\n"
+                                "You may now send the hex below to another owner to sign.\n"
+                                "Keep in mind the transaction must be passed from one owner to the next for signing.\n"
+                                "Ensure all owners have imported the redeem before trying to sign. (besides creator)";
 
-        return QString(strprintf("%s %s %s.\nTx Hex: %s", sTxIncomplete1, sTxIncomplete2, sAddress, sTxHex).c_str());
+        return QString(strprintf("%s\nTx Hex: %s", sTxIncomplete, sTxHex).c_str());
     }
 }
 
@@ -651,6 +650,36 @@ bool MultisigDialog::signMultisigTx(CMutableTransaction& tx, string& errorOut, Q
     return fComplete;
 }
 
+// quick check for an already fully signed tx
+bool MultisigDialog::isFullyVerified(CMutableTransaction& tx){
+    try{
+        int nIn = 0;
+        for(CTxIn& txin : tx.vin){
+            CTransaction txVin;
+            uint256 hashBlock;
+            if (!GetTransaction(txin.prevout.hash, txVin, hashBlock, true)){
+                throw runtime_error("txin could not be found");
+            }
+            if (hashBlock == 0){
+                throw runtime_error("txin is unconfirmed");
+            }
+
+            //get pubkey from this input as output in last tx
+            CScript prevPubKey = txVin.vout[txin.prevout.n].scriptPubKey;
+
+            if (!VerifyScript(txin.scriptSig, prevPubKey, STANDARD_SCRIPT_VERIFY_FLAGS, MutableTransactionSignatureChecker(&tx, nIn))){
+                return false;
+            }
+
+            nIn++;
+        }
+    }catch(const runtime_error& e){
+        return false;
+    }
+
+    return true;
+}
+
 void MultisigDialog::commitMultisigTx()
 {
     CMutableTransaction tx(multisigTx);
@@ -684,6 +713,7 @@ void MultisigDialog::commitMultisigTx()
 #endif
         //disable commit if successfully committed
         ui->commitButton->setEnabled(false);
+        ui->signButtonStatus->setText(strprintf("Transaction has been successfully published with transaction ID:\n %s", tx.GetHash().GetHex()).c_str());
     }catch(const runtime_error& e){
         ui->signButtonStatus->setText(e.what());
     }
