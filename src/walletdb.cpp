@@ -129,6 +129,18 @@ bool CWalletDB::EraseWatchOnly(const CScript& dest)
     return Erase(std::make_pair(std::string("watchs"), dest));
 }
 
+bool CWalletDB::WriteMultiSig(const CScript& dest)
+{
+    nWalletDBUpdated++;
+    return Write(std::make_pair(std::string("multisig"), dest), '1');
+}
+
+bool CWalletDB::EraseMultiSig(const CScript& dest)
+{
+    nWalletDBUpdated++;
+    return Erase(std::make_pair(std::string("multisig"), dest));
+}
+
 bool CWalletDB::WriteBestBlock(const CBlockLocator& locator)
 {
     nWalletDBUpdated++;
@@ -472,6 +484,17 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
                 pwallet->LoadWatchOnly(script);
 
             // Watch-only addresses have no birthday information for now,
+            // so set the wallet birthday to the beginning of time.
+            pwallet->nTimeFirstKey = 1;
+        } else if (strType == "multisig") {
+            CScript script;
+            ssKey >> script;
+            char fYes;
+            ssValue >> fYes;
+            if (fYes == '1')
+                pwallet->LoadMultiSig(script);
+
+            // MultiSig addresses have no birthday information for now,
             // so set the wallet birthday to the beginning of time.
             pwallet->nTimeFirstKey = 1;
         } else if (strType == "key" || strType == "wkey") {

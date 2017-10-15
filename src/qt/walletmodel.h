@@ -139,10 +139,12 @@ public:
     CAmount getWatchUnconfirmedBalance() const;
     CAmount getWatchImmatureBalance() const;
     EncryptionStatus getEncryptionStatus() const;
+    std::vector<CScript> getMultisigAddresses() const;
     CKey generateNewKey() const; //for temporary paper wallet key generation
     bool setAddressBook(const CTxDestination& address, const string& strName, const string& strPurpose);
     void encryptKey(const CKey key, const std::string& pwd, const std::string& slt, std::vector<unsigned char>& crypted);
     void decryptKey(const std::vector<unsigned char>& crypted, const std::string& slt, const std::string& pwd, CKey& key);
+
 
     // Check address for validity
     bool validateAddress(const QString& address);
@@ -214,6 +216,7 @@ public:
 private:
     CWallet* wallet;
     bool fHaveWatchOnly;
+    bool fHaveMultiSig;
     bool fForceCheckBalanceChanged;
 
     // Wallet has an options model for wallet-specific options
@@ -267,6 +270,8 @@ signals:
     // Watch-only address added
     void notifyWatchonlyChanged(bool fHaveWatchonly);
 
+    // MultiSig address added
+    void notifyMultiSigChanged(bool fHaveMultiSig);
 public slots:
     /* Wallet status might have changed */
     void updateStatus();
@@ -278,6 +283,8 @@ public slots:
     void updateAddressBook(const QString &pubCoin, const QString &isUsed, int status);
     /* Watch-only added */
     void updateWatchOnlyFlag(bool fHaveWatchonly);
+    /* MultiSig added */
+    void updateMultiSigFlag(bool fHaveMultiSig);
     /* Current, immature or unconfirmed balance might have changed - emit 'balanceChanged' if so */
     void pollBalanceChanged();
 };

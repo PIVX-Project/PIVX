@@ -37,6 +37,7 @@ WalletModel::WalletModel(CWallet* wallet, OptionsModel* optionsModel, QObject* p
                                                                                          cachedNumBlocks(0)
 {
     fHaveWatchOnly = wallet->HaveWatchOnly();
+    fHaveMultiSig = wallet->HaveMultiSig();
     fForceCheckBalanceChanged = false;
 
     addressTableModel = new AddressTableModel(wallet, this);
@@ -197,6 +198,12 @@ void WalletModel::updateWatchOnlyFlag(bool fHaveWatchonly)
 {
     fHaveWatchOnly = fHaveWatchonly;
     emit notifyWatchonlyChanged(fHaveWatchonly);
+}
+
+void WalletModel::updateMultiSigFlag(bool fHaveMultiSig)
+{
+    this->fHaveMultiSig = fHaveMultiSig;
+    emit notifyMultiSigChanged(fHaveMultiSig);
 }
 
 bool WalletModel::validateAddress(const QString& address)
@@ -507,6 +514,12 @@ static void NotifyWatchonlyChanged(WalletModel* walletmodel, bool fHaveWatchonly
         Q_ARG(bool, fHaveWatchonly));
 }
 
+static void NotifyMultiSigChanged(WalletModel* walletmodel, bool fHaveMultiSig)
+{
+    QMetaObject::invokeMethod(walletmodel, "updateMultiSigFlag", Qt::QueuedConnection,
+                              Q_ARG(bool, fHaveMultiSig));
+}
+
 static void NotifyZerocoinChanged(WalletModel* walletmodel, CWallet* wallet, const std::string& hexString,
                                   const std::string& isUsed, ChangeType status)
 {
@@ -527,6 +540,7 @@ void WalletModel::subscribeToCoreSignals()
     wallet->NotifyTransactionChanged.connect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
     wallet->ShowProgress.connect(boost::bind(ShowProgress, this, _1, _2));
     wallet->NotifyWatchonlyChanged.connect(boost::bind(NotifyWatchonlyChanged, this, _1));
+    wallet->NotifyMultiSigChanged.connect(boost::bind(NotifyMultiSigChanged, this, _1));
     wallet->NotifyZerocoinChanged.connect(boost::bind(NotifyZerocoinChanged, this, _1, _2, _3, _4));
 }
 
@@ -538,6 +552,7 @@ void WalletModel::unsubscribeFromCoreSignals()
     wallet->NotifyTransactionChanged.disconnect(boost::bind(NotifyTransactionChanged, this, _1, _2, _3));
     wallet->ShowProgress.disconnect(boost::bind(ShowProgress, this, _1, _2));
     wallet->NotifyWatchonlyChanged.disconnect(boost::bind(NotifyWatchonlyChanged, this, _1));
+    wallet->NotifyMultiSigChanged.disconnect(boost::bind(NotifyMultiSigChanged, this, _1));
     wallet->NotifyZerocoinChanged.disconnect(boost::bind(NotifyZerocoinChanged, this, _1, _2, _3, _4));
 }
 
