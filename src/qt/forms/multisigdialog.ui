@@ -582,7 +582,6 @@ p, li { white-space: pre-wrap; }
         </layout>
        </item>
       </layout>
-      <zorder></zorder>
      </widget>
      <widget class="QWidget" name="signMultisigTransaction">
       <property name="styleSheet">
@@ -813,8 +812,6 @@ txScrollArea:{
         </spacer>
        </item>
       </layout>
-      <zorder></zorder>
-      <zorder>verticalSpacer_2</zorder>
      </widget>
     </widget>
    </item>
