@@ -8,7 +8,7 @@
 CSporkDB::CSporkDB(size_t nCacheSize, bool fMemory, bool fWipe) : CLevelDBWrapper(GetDataDir() / "sporks", nCacheSize, fMemory, fWipe) {}
 
 CSporkDB::~CSporkDB() {
-    ~CLevelDBWrapper();
+    CLevelDBWrapper::~CLevelDBWrapper();
 }
 
 bool CSporkDB::WriteSpork(const int nSporkId, const CSporkMessage& spork)
