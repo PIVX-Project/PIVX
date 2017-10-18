@@ -13,6 +13,7 @@ class CSporkDB : public CLevelDBWrapper
 {
 public:
     CSporkDB(size_t nCacheSize, bool fMemory = false, bool fWipe = false);
+    ~CSporkDB();
 
 private:
     CSporkDB(const CSporkDB&);

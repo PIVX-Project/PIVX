@@ -7,6 +7,10 @@
 
 CSporkDB::CSporkDB(size_t nCacheSize, bool fMemory, bool fWipe) : CLevelDBWrapper(GetDataDir() / "sporks", nCacheSize, fMemory, fWipe) {}
 
+CSporkDB::~CSporkDB() {
+    ~CLevelDBWrapper();
+}
+
 bool CSporkDB::WriteSpork(const int nSporkId, const CSporkMessage& spork)
 {
     LogPrintf("Wrote spork %s to database\n", sporkManager.GetSporkNameByID(nSporkId));
