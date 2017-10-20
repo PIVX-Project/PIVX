@@ -1500,6 +1500,15 @@ bool CheckTransaction(const CTransaction& tx, bool fZerocoinActive, CValidationS
     } else if (fZerocoinActive && tx.IsZerocoinSpend()) {
         if(tx.vin.size() < 1 || static_cast<int>(tx.vin.size()) > Params().Zerocoin_MaxSpendsPerTransaction())
             return state.DoS(10, error("CheckTransaction() : Zerocoin Spend has more than allowed txin's"), REJECT_INVALID, "bad-zerocoinspend");
+
+        if (!fVerifyingBlocks) {
+            //Check that this transaction is not already in the blockchain
+            uint256 hashFromChain;
+            CTransaction txTest;
+            GetTransaction(tx.GetHash(), txTest, hashFromChain, true);
+            if(hashFromChain != 0 && mapBlockIndex.count(hashFromChain))
+                return state.DoS(100, error("CheckTransaction(): transaction already exists in blockchain!"));
+        }
     } else {
         BOOST_FOREACH (const CTxIn& txin, tx.vin)
             if (txin.prevout.IsNull() && (fZerocoinActive && !txin.scriptSig.IsZerocoinSpend()))
