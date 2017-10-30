@@ -104,6 +104,9 @@ public:
     bool WriteWatchOnly(const CScript& script);
     bool EraseWatchOnly(const CScript& script);
 
+    bool WriteMultiSig(const CScript& script);
+    bool EraseMultiSig(const CScript& script);
+
     bool WriteBestBlock(const CBlockLocator& locator);
     bool ReadBestBlock(CBlockLocator& locator);
 
