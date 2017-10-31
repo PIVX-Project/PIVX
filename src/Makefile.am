@@ -77,6 +77,8 @@ endif
 # pivx core #
 BITCOIN_CORE_H = \
   activemasternode.h \
+  accumulators.h \
+  accumulatormap.h \
   addrman.h \
   alert.h \
   allocators.h \
@@ -169,7 +171,6 @@ BITCOIN_CORE_H = \
   zmq/zmqconfig.h \
   zmq/zmqnotificationinterface.h \
   zmq/zmqpublishnotifier.h \
-  accumulators.h \
   compat/sanity.h
 
 JSON_H = \
@@ -334,6 +335,8 @@ libzerocoin_libbitcoin_zerocoin_a_SOURCES = \
 # common: shared between pivxd, and pivx-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(BITCOIN_INCLUDES)
 libbitcoin_common_a_SOURCES = \
+  accumulators.cpp \
+  accumulatormap.cpp \
   allocators.cpp \
   amount.cpp \
   base58.cpp \
@@ -361,7 +364,6 @@ libbitcoin_common_a_SOURCES = \
   script/script_error.cpp \
   spork.cpp \
   sporkdb.cpp \
-  accumulators.cpp \
   $(BITCOIN_CORE_H)
 
 # util: shared between all executables.

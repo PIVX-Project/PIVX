@@ -1173,10 +1173,8 @@ bool TxOutToPublicCoin(const CTxOut txout, PublicCoin& pubCoin, CValidationState
         return state.DoS(100, error("TxOutToPublicCoin : txout.nValue is not correct"));
 
     PublicCoin checkPubCoin(Params().Zerocoin_Params(), publicZerocoin, denomination);
-    if (!checkPubCoin.validate())
-        return state.DoS(100, error("TxOutToPublicCoin : PubCoin does not validate"));
-
     pubCoin = checkPubCoin;
+
     return true;
 }
 
@@ -1280,6 +1278,9 @@ bool CheckZerocoinMint(const uint256& txHash, const CTxOut& txout, CValidationSt
     if(!TxOutToPublicCoin(txout, pubCoin, state))
         return state.DoS(100, error("CheckZerocoinMint(): TxOutToPublicCoin() failed"));
 
+    if (!pubCoin.validate())
+        return state.DoS(100, error("CheckZerocoinMint() : PubCoin does not validate"));
+
     if(!fCheckOnly && !RecordMintToDB(pubCoin, txHash))
         return state.DoS(100, error("CheckZerocoinMint(): RecordMintToDB() failed"));
 
@@ -1360,9 +1361,8 @@ bool CheckZerocoinSpend(const CTransaction tx, bool fVerifySignature, CValidatio
         // Skip signature verification during initial block download
         if (fVerifySignature) {
             //see if we have record of the accumulator used in the spend tx
-            CBigNum bnAccumulatorValue = CAccumulators::getInstance().GetAccumulatorValueFromChecksum(
-                newSpend.getAccumulatorChecksum());
-            if(bnAccumulatorValue == 0)
+            CBigNum bnAccumulatorValue = 0;
+            if(!zerocoinDB->ReadAccumulatorValue(newSpend.getAccumulatorChecksum(), bnAccumulatorValue))
                 return state.DoS(100, error("Zerocoinspend could not find accumulator associated with checksum"));
 
             Accumulator accumulator(Params().Zerocoin_Params(), newSpend.getDenomination(), bnAccumulatorValue);
@@ -2707,7 +2707,7 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
                 for (const CTxIn txin : tx.vin) {
                     if (txin.scriptSig.IsZerocoinSpend()) {
                         CoinSpend spend = TxInToZerocoinSpend(txin);
-                        if (!CAccumulators::getInstance().EraseCoinSpend(spend.getCoinSerialNumber()))
+                        if (!zerocoinDB->EraseCoinSpend(spend.getCoinSerialNumber()))
                             return error("failed to erase spent zerocoin in block");
                     }
                 }
@@ -2722,7 +2722,7 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
                     if (!TxOutToPublicCoin(txout, pubCoin, state))
                         return error("DisconnectBlock(): TxOutToPublicCoin() failed");
 
-                    if(!CAccumulators::getInstance().EraseCoinMint(pubCoin.getValue()))
+                    if(!zerocoinDB->EraseCoinMint(pubCoin.getValue()))
                         return error("DisconnectBlock(): Failed to erase coin mint");
                 }
             }
@@ -2789,7 +2789,7 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
         //if block is an accumulator checkpoint block, remove checkpoint and checksums from db
         uint256 nCheckpoint = pindex->nAccumulatorCheckpoint;
         if(nCheckpoint != pindex->pprev->nAccumulatorCheckpoint) {
-            if(!CAccumulators::getInstance().EraseAccumulatorValues(nCheckpoint, pindex->pprev->nAccumulatorCheckpoint))
+            if(!EraseAccumulatorValues(nCheckpoint, pindex->pprev->nAccumulatorCheckpoint))
                 return error("DisconnectBlock(): failed to erase checkpoint");
         }
     }
@@ -3068,7 +3068,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     // zerocoin accumulator: if a new accumulator checkpoint was generated, check that it is the correct value
     if (!fVerifyingBlocks && block.nVersion >= Params().Zerocoin_HeaderVersion() && pindex->nHeight % 10 == 0) {
         uint256 nCheckpointCalculated = 0;
-        if (!CAccumulators::getInstance().GetCheckpoint(pindex->nHeight, nCheckpointCalculated))
+        if (!CalculateAccumulatorCheckpoint(pindex->nHeight, nCheckpointCalculated))
             return state.DoS(100, error("ConnectBlock() : failed to calculate accumulator checkpoint"));
 
         if (nCheckpointCalculated != block.nAccumulatorCheckpoint) {

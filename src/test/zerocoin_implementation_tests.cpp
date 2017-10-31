@@ -134,8 +134,8 @@ bool CheckZerocoinSpendNoDB(const CTransaction tx, string& strError)
 //        }
 
         //see if we have record of the accumulator used in the spend tx
-        CBigNum bnAccumulatorValue = CAccumulators::getInstance().GetAccumulatorValueFromChecksum(newSpend.getAccumulatorChecksum());
-        if(bnAccumulatorValue == 0) {
+        CBigNum bnAccumulatorValue = 0;
+        if (!GetAccumulatorValueFromChecksum(newSpend.getAccumulatorChecksum(), bnAccumulatorValue)) {
             strError = "Zerocoinspend could not find accumulator associated with checksum";
             return false;
         }
@@ -213,8 +213,8 @@ BOOST_AUTO_TEST_CASE(checkzerocoinspend_test)
     privateCoin.setSerialNumber(zerocoinMint.GetSerialNumber());
 
     //Get the checksum of the accumulator we use for the spend and also add it to our checksum map
-    uint32_t nChecksum = CAccumulators::getInstance().GetChecksum(accumulator);
-    CAccumulators::getInstance().AddAccumulatorChecksum(nChecksum, accumulator.getValue(), true);
+    uint32_t nChecksum = GetChecksum(accumulator.getValue());
+    AddAccumulatorChecksum(nChecksum, accumulator.getValue(), true);
     CoinSpend coinSpend(Params().Zerocoin_Params(), privateCoin, accumulator, nChecksum, witness, 0);
 
     CBigNum serial = coinSpend.getCoinSerialNumber();

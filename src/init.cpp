@@ -11,6 +11,7 @@
 
 #include "init.h"
 
+#include "accumulators.h"
 #include "activemasternode.h"
 #include "addrman.h"
 #include "amount.h"
@@ -70,6 +71,7 @@ int nWalletBackups = 10;
 #endif
 volatile bool fFeeEstimatesInitialized = false;
 volatile bool fRestartRequested = false; // true: restart false: shutdown
+extern std::list<uint256> listAccCheckpointsNoDB;
 
 #if ENABLE_ZMQ
 static CZMQNotificationInterface* pzmqNotificationInterface = NULL;
@@ -1451,7 +1453,6 @@ bool AppInit2(boost::thread_group& threadGroup)
                     pblocktree->WriteFlag("msindexfix", true);
                 }
 
-                list<uint256> listAccCheckpointsNoDB = CAccumulators::getInstance().GetAccCheckpointsNoDB();
                 // PIVX: recalculate Accumulator Checkpoints that failed to database properly
                 if (!listAccCheckpointsNoDB.empty() && chainActive.Tip()->GetBlockHeader().nVersion >= Params().Zerocoin_HeaderVersion()) {
                     uiInterface.InitMessage(_("Calculating missing accumulators..."));
@@ -1482,11 +1483,13 @@ bool AppInit2(boost::thread_group& threadGroup)
                             uiInterface.ShowProgress(_("Calculating missing accumulators..."), (int)(dPercent * 100));
                             if(find(listAccCheckpointsNoDB.begin(), listAccCheckpointsNoDB.end(), pindex->nAccumulatorCheckpoint) != listAccCheckpointsNoDB.end()) {
                                 uint256 nCheckpointCalculated = 0;
-                                CAccumulators::getInstance().GetCheckpoint(pindex->nHeight, nCheckpointCalculated);
+                                if (!CalculateAccumulatorCheckpoint(pindex->nHeight, nCheckpointCalculated)) {
+                                    // GetCheckpoint could have terminated due to a shutdown request. Check this here.
+                                    if (ShutdownRequested())
+                                        break;
+                                    return InitError(_("Failed to calculate accumulator checkpoint"));
+                                }
 
-                                // GetCheckpoint could have terminated due to a shutdown request. Check this here.
-                                if (ShutdownRequested())
-                                    break;
                                 //check that the calculated checkpoint is what is in the index.
                                 if(nCheckpointCalculated != pindex->nAccumulatorCheckpoint) {
                                     LogPrintf("%s : height=%d calculated_checkpoint=%s actual=%s\n", __func__, pindex->nHeight, nCheckpointCalculated.GetHex(), pindex->nAccumulatorCheckpoint.GetHex());
@@ -1505,7 +1508,6 @@ bool AppInit2(boost::thread_group& threadGroup)
                             break;
                     }
                 }
-                CAccumulators::getInstance().ClearAccCheckpointsNoDB();
 
                 uiInterface.InitMessage(_("Verifying blocks..."));
 
