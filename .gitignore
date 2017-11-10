@@ -124,3 +124,7 @@ qa/pull-tester/test.*/*
 .project
 /doc/doxygen/
 /nbproject/
+
+.idea
+CMakeLists.txt
+cmake-build-debug
