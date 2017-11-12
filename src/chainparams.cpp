@@ -132,6 +132,7 @@ public:
         nLastPOWBlock = 259200;
         nModifierUpdateBlock = 615800;
         nZerocoinStartHeight = 863787;
+        nZerocoinStartTime = 1508214600; // October 17, 2017 4:30:00 AM
 
         /**
          * Build the genesis block. Note that the output of the genesis coinbase cannot
