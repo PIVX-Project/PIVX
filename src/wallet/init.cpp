@@ -30,7 +30,7 @@ std::string GetWalletHelpString(bool showDebug)
     strUsage += HelpMessageOpt("-spendzeroconfchange", strprintf(_("Spend unconfirmed change when sending transactions (default: %u)"), DEFAULT_SPEND_ZEROCONF_CHANGE));
     strUsage += HelpMessageOpt("-txconfirmtarget=<n>", strprintf(_("If paytxfee is not set, include enough fee so transactions begin confirmation on average within n blocks (default: %u)"), 1));
     strUsage += HelpMessageOpt("-upgradewallet", _("Upgrade wallet to latest format") + " " + _("on startup"));
-    strUsage += HelpMessageOpt("-wallet=<file>", _("Specify wallet file (within data directory)") + " " + strprintf(_("(default: %s)"), DEFAULT_WALLET_DAT));
+    strUsage += HelpMessageOpt("-wallet=<path>", _("Specify wallet database path. Can be specified multiple times to load multiple wallets. Path is interpreted relative to <walletdir> if it is not absolute, and will be created if it does not exist.") + " " + strprintf(_("(default: %s)"), DEFAULT_WALLET_DAT));
     strUsage += HelpMessageOpt("-walletdir=<dir>", _("Specify directory to hold wallets (default: <datadir>/wallets if it exists, otherwise <datadir>)"));
     strUsage += HelpMessageOpt("-walletnotify=<cmd>", _("Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)"));
     strUsage += HelpMessageOpt("-zapwallettxes=<mode>", _("Delete all wallet transactions and only recover those parts of the blockchain through -rescan on startup") +
@@ -166,13 +166,6 @@ bool WalletVerify()
     std::set<fs::path> wallet_paths;
 
     for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        if (fs::path(walletFile).filename() != walletFile) {
-            return UIError(strprintf(_("Error loading wallet %s. %s parameter must only specify a filename (not a path)."), walletFile, "-wallet"));
-        }
-        if (SanitizeString(walletFile, SAFE_CHARS_FILENAME) != walletFile) {
-            return UIError(strprintf(_("Error loading wallet %s. Invalid characters in %s filename."), walletFile, "-wallet"));
-        }
-
         fs::path wallet_path = fs::absolute(walletFile, GetWalletDir());
 
         if (fs::exists(wallet_path) && (!fs::is_regular_file(wallet_path) || fs::is_symlink(wallet_path))) {

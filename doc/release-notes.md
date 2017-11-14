@@ -100,6 +100,15 @@ PIVX data directory. The behavior is now:
 Care should be taken when choosing the wallets directory location, as if it
 becomes unavailable during operation, funds may be lost.
 
+External wallet files
+---------------------
+
+The `-wallet=<path>` option now accepts full paths instead of requiring wallets
+to be located in the -walletdir directory. When wallets are located in
+different directories, wallet data will be stored independently, so data from
+every wallet is not mixed into the same <walletdir>/database/log.??????????
+files.
+
 Database cache memory increased
 --------------------------------
 
