@@ -848,8 +848,6 @@ namespace { // Variables internal to initialization process only
     int nUserMaxConnections;
     int nFD;
     ServiceFlags nLocalServices = NODE_NETWORK;
-
-    std::string strWalletFile;
 }
 
 bool AppInitBasicSetup()
@@ -1174,7 +1172,6 @@ bool AppInitParameterInteraction()
     }
 
 #ifdef ENABLE_WALLET
-    strWalletFile = gArgs.GetArg("-wallet", DEFAULT_WALLET_DAT);
     if (!WalletParameterInteraction())
         return false;
 #endif // ENABLE_WALLET
@@ -1261,9 +1258,9 @@ bool AppInitMain()
     // Warn about relative -datadir path.
     if (gArgs.IsArgSet("-datadir") && !fs::path(gArgs.GetArg("-datadir", "")).is_absolute()) {
         LogPrintf("Warning: relative datadir option '%s' specified, which will be interpreted relative to the "
-                  "current working directory '%s'. This is fragile, because if bitcoin is started in the future "
-                  "from a different location, it will be unable to locate the current data files. There could "
-                  "also be data loss if bitcoin is started while in a temporary directory.\n",
+                  "current working directory '%s'. This is fragile because if PIVX is started in the future "
+                  "from a different location. It will be unable to locate the current data files. There could "
+                  "also be data loss if PIVX is started while in a temporary directory.\n",
             gArgs.GetArg("-datadir", ""), fs::current_path().string());
     }
 

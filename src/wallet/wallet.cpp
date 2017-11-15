@@ -39,8 +39,6 @@ bool bdisableSystemnotifications = false; // Those bubbles can be annoying and s
 bool fPayAtLeastCustomFee = true;
 bool bSpendZeroConfChange = DEFAULT_SPEND_ZEROCONF_CHANGE;
 
-const char * DEFAULT_WALLET_DAT = "wallet.dat";
-
 /**
  * Fees smaller than this (in upiv) are considered zero fee (for transaction creation)
  * We are ~100 times smaller then bitcoin now (2015-06-23), set minTxFee 10 times higher

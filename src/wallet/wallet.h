@@ -81,7 +81,6 @@ static const unsigned int DEFAULT_CREATEWALLETBACKUPS = 10;
 //! Default for -disablewallet
 static const bool DEFAULT_DISABLE_WALLET = false;
 
-extern const char * DEFAULT_WALLET_DAT;
 static const int64_t TIMESTAMP_MIN = 0;
 
 class CAddressBookIterator;
