@@ -36,10 +36,11 @@ if __name__ == "__main__":
         tempLine = ""
 
         for row in rows:
+            # Collapse multiple lines into one
+            tempLine += row
+
             # Line contains LogPrint or LogPrintf
-            if row.find("LogPrint") != -1:
-                # Collapse multiple lines into one
-                tempLine += row
+            if tempLine.find("LogPrint") != -1:
                 if tempLine.count("(") == tempLine.count(")"):
                     havePercents = tempLine.count('%') > 0
 
@@ -75,9 +76,9 @@ if __name__ == "__main__":
                             incorrectInstanceCounter += 1
 
                     # Done with this multiline, clear tempLine
-                    #print ""
                     tempLine = ""
 
+            tempLine = ""
             lineCounter +=1
 
     print("# of incorrect instances: " + str(incorrectInstanceCounter))
