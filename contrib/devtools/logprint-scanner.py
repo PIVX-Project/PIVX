@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os, sys
+from subprocess import check_output
 
 def countRelevantCommas(line):
     openParensPosStack = []
@@ -22,7 +23,10 @@ def countRelevantCommas(line):
     return numRelevantCommas
 
 if __name__ == "__main__":
-    filelist = [os.path.join(dp, f) for dp, dn, filenames in os.walk('../../') for f in filenames if os.path.splitext(f)[1] == '.cpp' or os.path.splitext(f)[1] == '.h' ]
+    out = check_output(["git", "rev-parse", "--show-toplevel"])
+    srcDir = out.rstrip() + "/src/"
+
+    filelist = [os.path.join(dp, f) for dp, dn, filenames in os.walk(srcDir) for f in filenames if os.path.splitext(f)[1] == '.cpp' or os.path.splitext(f)[1] == '.h' ]
     incorrectInstanceCounter = 0
 
     for file in filelist:    
