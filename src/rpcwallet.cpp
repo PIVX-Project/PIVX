@@ -2555,6 +2555,11 @@ Value resetmintzerocoin(const Array& params, bool fHelp)
     // update the meta data of mints that were marked for updating
     Array arrUpdated;
     for (CZerocoinMint mint : vMintsToUpdate) {
+
+        if(pwalletMain->IsCrypted() && !mint.Encrypt()){
+            LogPrintf("Error: encryption of mint failed");
+        }
+
         walletdb.WriteZerocoinMint(mint);
         arrUpdated.push_back(mint.GetValue().GetHex());
     }
@@ -2684,6 +2689,12 @@ Value exportzerocoins(const Array& params, bool fHelp)
         denomination = libzerocoin::IntToZerocoinDenomination(params[1].get_int());
     list<CZerocoinMint> listMints = walletdb.ListMintedCoins(!fIncludeSpent, false, false);
 
+    for(CZerocoinMint mint : listMints) {
+        if(pwalletMain->IsCrypted() && !mint.Decrypt()){
+            LogPrintf("Error: encryption of mint failed");
+        }
+    }
+
     Array jsonList;
     for (const CZerocoinMint mint : listMints) {
         if (denomination != libzerocoin::ZQ_ERROR && denomination != mint.GetDenomination())
@@ -2754,6 +2765,11 @@ Value importzerocoins(const Array& params, bool fHelp)
         CZerocoinMint mint(denom, bnValue, bnRandom, bnSerial, fUsed);
         mint.SetTxHash(txid);
         mint.SetHeight(nHeight);
+
+        if(pwalletMain->IsCrypted() && !mint.Encrypt()){
+            LogPrintf("Error: encryption of mint failed");
+        }
+
         walletdb.WriteZerocoinMint(mint);
         count++;
         nValue += libzerocoin::ZerocoinDenominationToAmount(denom);

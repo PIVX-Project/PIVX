@@ -4520,18 +4520,23 @@ string CWallet::MintZerocoin(CAmount nValue, CWalletTx& wtxNew, vector<CZerocoin
     } else {
         //update mints with full transaction hash and then database them
         CWalletDB walletdb(pwalletMain->strWalletFile);
+
         for (CZerocoinMint mint : vMints) {
             mint.SetTxHash(wtxNew.GetHash());
+            //db the mint
+            if(IsCrypted() && !mint.Encrypt()){
+                return _("Error: encryption of mint failed");
+            }
             walletdb.WriteZerocoinMint(mint);
             pwalletMain->NotifyZerocoinChanged(pwalletMain, mint.GetValue().GetHex(), "Used", CT_UPDATED);
         }
+
+        //Create a backup of the wallet
+        if (fBackupMints)
+            ZPivBackupWallet();
+
+        return "";
     }
-
-    //Create a backup of the wallet
-    if (fBackupMints)
-        ZPivBackupWallet();
-
-    return "";
 }
 
 bool CWallet::SpendZerocoin(CAmount nAmount, int nSecurityLevel, CWalletTx& wtxNew, CZerocoinSpendReceipt& receipt, vector<CZerocoinMint>& vMintsSelected, bool fMintChange, bool fMinimizeChange, CBitcoinAddress* addressTo)
@@ -4561,6 +4566,9 @@ bool CWallet::SpendZerocoin(CAmount nAmount, int nSecurityLevel, CWalletTx& wtxN
         //reset all mints
         for (CZerocoinMint mint : vMintsSelected) {
             mint.SetUsed(false); // having error, so set to false, to be able to use again
+            if(IsCrypted() && !mint.Encrypt()){
+                LogPrintf("Error: encryption of mint failed");
+            }
             walletdb.WriteZerocoinMint(mint);
             pwalletMain->NotifyZerocoinChanged(pwalletMain, mint.GetValue().GetHex(), "New", CT_UPDATED);
         }
@@ -4588,6 +4596,11 @@ bool CWallet::SpendZerocoin(CAmount nAmount, int nSecurityLevel, CWalletTx& wtxN
 
     for (CZerocoinMint mint : vMintsSelected) {
         mint.SetUsed(true);
+
+        if(IsCrypted() && !mint.Encrypt()){
+            LogPrintf("Error: encryption of mint failed");
+        }
+
         if (!walletdb.WriteZerocoinMint(mint)) {
             receipt.SetStatus("Failed to write mint to db", nStatus);
             return false;
@@ -4597,7 +4610,12 @@ bool CWallet::SpendZerocoin(CAmount nAmount, int nSecurityLevel, CWalletTx& wtxN
         if (!walletdb.ReadZerocoinMint(mint.GetValue(), mintCheck)) {
             receipt.SetStatus("failed to read mintcheck", nStatus);
             return false;
+        } else {
+            if(IsCrypted() && !mintCheck.Decrypt()){
+                LogPrintf("Error: decryption of mint failed");
+            }
         }
+
 
         if (!mintCheck.IsUsed()) {
             receipt.SetStatus("Error, the mint did not get marked as used", nStatus);
@@ -4608,6 +4626,11 @@ bool CWallet::SpendZerocoin(CAmount nAmount, int nSecurityLevel, CWalletTx& wtxN
     // write new Mints to db
     for (CZerocoinMint mint : vNewMints) {
         mint.SetTxHash(wtxNew.GetHash());
+
+        if(IsCrypted() && !mint.Encrypt()){
+            LogPrintf("Error: encryption of mint failed");
+        }
+
         walletdb.WriteZerocoinMint(mint);
     }
 

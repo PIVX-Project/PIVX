@@ -14,6 +14,7 @@
 #include "util.h"
 #include "utiltime.h"
 #include "wallet.h"
+#include "init.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
@@ -1047,8 +1048,13 @@ bool CWalletDB::WriteZerocoinMint(const CZerocoinMint& zerocoinMint)
     ss << zerocoinMint.GetValue();
     uint256 hash = Hash(ss.begin(), ss.end());
 
-    Erase(make_pair(string("zerocoin"), hash));
-    return Write(make_pair(string("zerocoin"), hash), zerocoinMint, true);
+    auto namePair = make_pair(string("zerocoin"), hash);
+    Erase(namePair);
+    if(!Write(namePair, zerocoinMint, true)){
+        LogPrintf("%s : failed to write zerocoin mint\n", __func__);
+        return false;
+    }
+    return true;
 }
 
 bool CWalletDB::ReadZerocoinMint(const CBigNum &bnPubCoinValue, CZerocoinMint& zerocoinMint)
@@ -1057,7 +1063,12 @@ bool CWalletDB::ReadZerocoinMint(const CBigNum &bnPubCoinValue, CZerocoinMint& z
     ss << bnPubCoinValue;
     uint256 hash = Hash(ss.begin(), ss.end());
 
-    return Read(make_pair(string("zerocoin"), hash), zerocoinMint);
+    if (!Read(make_pair(string("zerocoin"), hash), zerocoinMint)) {
+        LogPrintf("%s : failed to read zerocoin mint\n", __func__);
+        return false;
+    }
+
+    return true;
 }
 
 bool CWalletDB::EraseZerocoinMint(const CZerocoinMint& zerocoinMint)
@@ -1140,6 +1151,9 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
         CZerocoinMint mint;
         ssValue >> mint;
 
+        if(pwalletMain->IsCrypted() && !mint.Decrypt())
+            LogPrintf("Error: encryption of mint failed");
+
         if (fUnusedOnly) {
             if (mint.IsUsed())
                 continue;
@@ -1205,12 +1219,16 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
 
     //overwrite any updates
     for (CZerocoinMint mint : vOverWrite) {
+        if(pwalletMain->IsCrypted() && !mint.Encrypt())
+            LogPrintf("Error: encryption of mint failed");
         if(!this->WriteZerocoinMint(mint))
             LogPrintf("%s failed to update mint from tx %s\n", __func__, mint.GetTxHash().GetHex());
     }
 
     // archive mints
     for (CZerocoinMint mint : vArchive) {
+        if(pwalletMain->IsCrypted() && !mint.Encrypt())
+            LogPrintf("Error: encryption of mint failed");
         if (!this->ArchiveMintOrphan(mint))
             LogPrintf("%s failed to archive mint from %s\n", __func__, mint.GetTxHash().GetHex());
     }
