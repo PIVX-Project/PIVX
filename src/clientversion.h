@@ -19,9 +19,6 @@
 #define CLIENT_VERSION_REVISION 99
 #define CLIENT_VERSION_BUILD 0
 
-//! Set to true for release, false for prerelease or test build
-#define CLIENT_VERSION_IS_RELEASE false
-
 /**
  * Copyright year (2009-this)
  * Todo: update this when changing our copyright comments in the source

@@ -6,6 +6,12 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "main.h"
+#ifdef HAVE_BUILD_INFO
+#include "./obj/build.h"
+#else
+// For systems that can't create build.h
+#define IS_RELEASE 0
+#endif
 
 #include "accumulators.h"
 #include "addrman.h"
@@ -5639,7 +5645,7 @@ string GetWarnings(string strFor)
     string strStatusBar;
     string strRPC;
 
-    if (!CLIENT_VERSION_IS_RELEASE)
+    if (!IS_RELEASE)
         strStatusBar = _("This is a pre-release test build - use at your own risk - do not use for staking or merchant applications!");
 
     if (GetBoolArg("-testsafemode", false))
