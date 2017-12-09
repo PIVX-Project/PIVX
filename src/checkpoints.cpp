@@ -27,7 +27,7 @@ static const double SIGCHECK_VERIFICATION_FACTOR = 5.0;
 
 bool fEnabled = true;
 
-bool CheckBlock(int nHeight, const uint256& hash)
+bool CheckBlock(int nHeight, const uint256& hash, bool fMatchesCheckpoint)
 {
     if (!fEnabled)
         return true;
@@ -35,7 +35,8 @@ bool CheckBlock(int nHeight, const uint256& hash)
     const MapCheckpoints& checkpoints = *Params().Checkpoints().mapCheckpoints;
 
     MapCheckpoints::const_iterator i = checkpoints.find(nHeight);
-    if (i == checkpoints.end()) return true;
+    // If looking for an exact match, then return false
+    if (i == checkpoints.end()) return !fMatchesCheckpoint;
     return hash == i->second;
 }
 

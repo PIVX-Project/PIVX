@@ -1311,8 +1311,10 @@ bool AppInit2(boost::thread_group& threadGroup)
                 delete zerocoinDB;
                 delete pSporkDB;
 
-                zerocoinDB = new CZerocoinDB(0, false, false);
+                //PIVX specific: zerocoin and spork DB's
+                zerocoinDB = new CZerocoinDB(0, false, fReindex);
                 pSporkDB = new CSporkDB(0, false, false);
+
                 pblocktree = new CBlockTreeDB(nBlockTreeDBCache, false, fReindex);
                 pcoinsdbview = new CCoinsViewDB(nCoinDBCache, false, fReindex);
                 pcoinscatcher = new CCoinsViewErrorCatcher(pcoinsdbview);
@@ -1326,8 +1328,10 @@ bool AppInit2(boost::thread_group& threadGroup)
                 LoadSporksFromDB();
 
                 uiInterface.InitMessage(_("Loading block index..."));
-                if (!LoadBlockIndex()) {
+                string strBlockIndexError = "";
+                if (!LoadBlockIndex(strBlockIndexError)) {
                     strLoadError = _("Error loading block database");
+                    strLoadError = strprintf("%s : %s", strLoadError, strBlockIndexError);
                     break;
                 }
 
@@ -1371,59 +1375,13 @@ bool AppInit2(boost::thread_group& threadGroup)
                 }
 
                 // PIVX: recalculate Accumulator Checkpoints that failed to database properly
-                if (!listAccCheckpointsNoDB.empty() && chainActive.Tip()->GetBlockHeader().nVersion >= Params().Zerocoin_HeaderVersion()) {
+                if (!listAccCheckpointsNoDB.empty()) {
                     uiInterface.InitMessage(_("Calculating missing accumulators..."));
                     LogPrintf("%s : finding missing checkpoints\n", __func__);
 
-                    //search the chain to see when zerocoin started
-                    int nZerocoinStart = 0;
-                    CBlockIndex* pindex = chainActive.Tip();
-                    while (pindex->pprev) {
-                        if (pindex->GetBlockHeader().nVersion >= Params().Zerocoin_HeaderVersion())
-                            nZerocoinStart = pindex->nHeight;
-                        else if (nZerocoinStart)
-                            break;
-
-                        pindex = pindex->pprev;
-                    }
-
-                    // find each checkpoint that is missing
-                    pindex = chainActive[nZerocoinStart];
-                    while (!listAccCheckpointsNoDB.empty()) {
-                        if (ShutdownRequested())
-                            break;
-
-                        // find checkpoints by iterating through the blockchain beginning with the first zerocoin block
-                        if (pindex->nAccumulatorCheckpoint != pindex->pprev->nAccumulatorCheckpoint) {
-
-                            double dPercent = (pindex->nHeight - nZerocoinStart) / (double)(chainActive.Height() - nZerocoinStart);
-                            uiInterface.ShowProgress(_("Calculating missing accumulators..."), (int)(dPercent * 100));
-                            if(find(listAccCheckpointsNoDB.begin(), listAccCheckpointsNoDB.end(), pindex->nAccumulatorCheckpoint) != listAccCheckpointsNoDB.end()) {
-                                uint256 nCheckpointCalculated = 0;
-                                if (!CalculateAccumulatorCheckpoint(pindex->nHeight, nCheckpointCalculated)) {
-                                    // GetCheckpoint could have terminated due to a shutdown request. Check this here.
-                                    if (ShutdownRequested())
-                                        break;
-                                    return InitError(_("Failed to calculate accumulator checkpoint"));
-                                }
-
-                                //check that the calculated checkpoint is what is in the index.
-                                if(nCheckpointCalculated != pindex->nAccumulatorCheckpoint) {
-                                    LogPrintf("%s : height=%d calculated_checkpoint=%s actual=%s\n", __func__, pindex->nHeight, nCheckpointCalculated.GetHex(), pindex->nAccumulatorCheckpoint.GetHex());
-                                    return InitError(_("Calculated accumulator checkpoint is not what is recorded by block index"));
-                                }
-
-                                auto it = find(listAccCheckpointsNoDB.begin(), listAccCheckpointsNoDB.end(), pindex->nAccumulatorCheckpoint);
-                                listAccCheckpointsNoDB.erase(it);
-                            }
-                        }
-
-                        // if we have iterated to the end of the blockchain, then checkpoints should be in sync
-                        if (pindex->nHeight + 1 <= chainActive.Height())
-                            pindex = chainActive[pindex->nHeight + 1];
-                        else
-                            break;
-                    }
+                    string strError;
+                    if (!ReindexAccumulators(listAccCheckpointsNoDB, strError))
+                        return InitError(strError);
                 }
 
                 uiInterface.InitMessage(_("Verifying blocks..."));

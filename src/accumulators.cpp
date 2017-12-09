@@ -290,8 +290,10 @@ bool GenerateAccumulatorWitness(const PublicCoin &coin, Accumulator& accumulator
         if (pindex->nHeight % 10 == 0) {
             nChanges++;
 
-            if (nChanges == 1)
+            if (nChanges == 1) {
                 nCheckpointBeforeMint = pindex->nAccumulatorCheckpoint;
+                break;
+            }
         }
         pindex = chainActive.Next(pindex);
     }
@@ -342,7 +344,7 @@ bool GenerateAccumulatorWitness(const PublicCoin &coin, Accumulator& accumulator
 
         //if a new checkpoint was generated on this block, and we have added the specified amount of checkpointed accumulators,
         //then initialize the accumulator at this point and break
-        if (!InvalidCheckpointRange(pindex->nHeight) && (pindex->nHeight == nHeightStop || (nSecurityLevel != 100 && nCheckpointsAdded >= nSecurityLevel))) {
+        if (!InvalidCheckpointRange(pindex->nHeight) && (pindex->nHeight >= nHeightStop || (nSecurityLevel != 100 && nCheckpointsAdded >= nSecurityLevel))) {
             uint32_t nChecksum = ParseChecksum(chainActive[pindex->nHeight + 10]->nAccumulatorCheckpoint, coin.getDenomination());
             CBigNum bnAccValue = 0;
             if (!zerocoinDB->ReadAccumulatorValue(nChecksum, bnAccValue)) {

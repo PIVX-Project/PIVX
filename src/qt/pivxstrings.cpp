@@ -50,16 +50,18 @@ QT_TRANSLATE_NOOP("pivx-core", ""
 "Delete all wallet transactions and only recover those parts of the "
 "blockchain through -rescan on startup"),
 QT_TRANSLATE_NOOP("pivx-core", ""
-"Disable all PIVX specific functionality (Masternodes, Obfuscation, SwiftX, "
+"Disable all PIVX specific functionality (Masternodes, Zerocoin, SwiftX, "
 "Budgeting) (0-1, default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", ""
 "Distributed under the MIT software license, see the accompanying file "
 "COPYING or <http://www.opensource.org/licenses/mit-license.php>."),
 QT_TRANSLATE_NOOP("pivx-core", ""
-"Enable spork administration functionality with the appropriate private key."),
+"Enable SwiftX, show confirmations for locked transactions (bool, default: %s)"),
 QT_TRANSLATE_NOOP("pivx-core", ""
-"Enable SwiftX, show confirmations for locked transactions (bool, default: "
-"%s)"),
+"Enable automatic wallet backups triggered after each zPiv minting (0-1, "
+"default: %u)"),
+QT_TRANSLATE_NOOP("pivx-core", ""
+"Enable spork administration functionality with the appropriate private key."),
 QT_TRANSLATE_NOOP("pivx-core", ""
 "Enter regression test mode, which uses a special chain in which blocks can "
 "be solved instantly."),
@@ -104,6 +106,9 @@ QT_TRANSLATE_NOOP("pivx-core", ""
 QT_TRANSLATE_NOOP("pivx-core", ""
 "In this mode -genproclimit controls how many blocks are generated "
 "immediately."),
+QT_TRANSLATE_NOOP("pivx-core", ""
+"Insufficient or insufficient confirmed funds, you might need to wait a few "
+"minutes and try again."),
 QT_TRANSLATE_NOOP("pivx-core", ""
 "Invalid amount for -maxtxfee=<amount>: '%s' (must be at least the minrelay "
 "fee of %s to prevent stuck transactions)"),
@@ -154,8 +159,8 @@ QT_TRANSLATE_NOOP("pivx-core", ""
 QT_TRANSLATE_NOOP("pivx-core", ""
 "Support filtering of blocks and transaction with bloom filters (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", ""
-"SwiftX requires inputs with at least 6 confirmations, you might need to "
-"wait a few minutes and try again."),
+"SwiftX requires inputs with at least 6 confirmations, you might need to wait "
+"a few minutes and try again."),
 QT_TRANSLATE_NOOP("pivx-core", ""
 "This is a pre-release test build - use at your own risk - do not use for "
 "staking or merchant applications!"),
@@ -258,6 +263,7 @@ QT_TRANSLATE_NOOP("pivx-core", "Corrupted block database detected"),
 QT_TRANSLATE_NOOP("pivx-core", "Could not parse -rpcbind value %s as network address"),
 QT_TRANSLATE_NOOP("pivx-core", "Could not parse masternode.conf"),
 QT_TRANSLATE_NOOP("pivx-core", "Debugging/Testing options:"),
+QT_TRANSLATE_NOOP("pivx-core", "Delete blockchain folders and resync from scratch"),
 QT_TRANSLATE_NOOP("pivx-core", "Disable OS notifications for incoming transactions (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", "Disable safemode, override a real safe mode event (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", "Discover own IP address (default: 1 when listening and no -externalip)"),
@@ -293,8 +299,11 @@ QT_TRANSLATE_NOOP("pivx-core", "Error: Disk space is low!"),
 QT_TRANSLATE_NOOP("pivx-core", "Error: Unsupported argument -tor found, use -onion."),
 QT_TRANSLATE_NOOP("pivx-core", "Error: Wallet locked, unable to create transaction!"),
 QT_TRANSLATE_NOOP("pivx-core", "Error: You already have pending entries in the Obfuscation pool"),
+QT_TRANSLATE_NOOP("pivx-core", "Failed to calculate accumulator checkpoint"),
 QT_TRANSLATE_NOOP("pivx-core", "Failed to listen on any port. Use -listen=0 if you want this."),
+QT_TRANSLATE_NOOP("pivx-core", "Failed to read block index"),
 QT_TRANSLATE_NOOP("pivx-core", "Failed to read block"),
+QT_TRANSLATE_NOOP("pivx-core", "Failed to write block index"),
 QT_TRANSLATE_NOOP("pivx-core", "Fee (in PIV/kB) to add to transactions you send (default: %s)"),
 QT_TRANSLATE_NOOP("pivx-core", "Finalizing transaction."),
 QT_TRANSLATE_NOOP("pivx-core", "Force safe mode (default: %u)"),
@@ -331,7 +340,6 @@ QT_TRANSLATE_NOOP("pivx-core", "Invalid script detected."),
 QT_TRANSLATE_NOOP("pivx-core", "Keep at most <n> unconnectable transactions in memory (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", "Last Obfuscation was too recent."),
 QT_TRANSLATE_NOOP("pivx-core", "Last successful Obfuscation action was too recent."),
-QT_TRANSLATE_NOOP("pivx-core", "Less than 3 mints added, unable to create spend"),
 QT_TRANSLATE_NOOP("pivx-core", "Limit size of signature cache to <n> entries (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", "Line: %d"),
 QT_TRANSLATE_NOOP("pivx-core", "Listen for JSON-RPC connections on <port> (default: %u or testnet: %u)"),
@@ -373,6 +381,7 @@ QT_TRANSLATE_NOOP("pivx-core", "Only connect to nodes in network <net> (ipv4, ip
 QT_TRANSLATE_NOOP("pivx-core", "Options:"),
 QT_TRANSLATE_NOOP("pivx-core", "Password for JSON-RPC connections"),
 QT_TRANSLATE_NOOP("pivx-core", "Percentage of automatically minted Zerocoin  (10-100, default: %u)"),
+QT_TRANSLATE_NOOP("pivx-core", "Preparing for resync..."),
 QT_TRANSLATE_NOOP("pivx-core", "Prepend debug output with timestamp (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", "Print version and exit"),
 QT_TRANSLATE_NOOP("pivx-core", "RPC SSL options: (see the Bitcoin Wiki for SSL setup instructions)"),
@@ -381,7 +390,10 @@ QT_TRANSLATE_NOOP("pivx-core", "RPC support for HTTP persistent connections (def
 QT_TRANSLATE_NOOP("pivx-core", "Randomly drop 1 of every <n> network messages"),
 QT_TRANSLATE_NOOP("pivx-core", "Randomly fuzz 1 of every <n> network messages"),
 QT_TRANSLATE_NOOP("pivx-core", "Rebuild block chain index from current blk000??.dat files"),
+QT_TRANSLATE_NOOP("pivx-core", "Recalculating coin supply may take 30-60 minutes..."),
+QT_TRANSLATE_NOOP("pivx-core", "Recalculating supply statistics may take 30-60 minutes..."),
 QT_TRANSLATE_NOOP("pivx-core", "Receive and display P2P network alerts (default: %u)"),
+QT_TRANSLATE_NOOP("pivx-core", "Reindex the accumulator database"),
 QT_TRANSLATE_NOOP("pivx-core", "Relay and mine data carrier transactions (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", "Relay non-P2SH multisig (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", "Rescan the block chain for missing wallet transactions"),
@@ -400,6 +412,7 @@ QT_TRANSLATE_NOOP("pivx-core", "Set external address:port to get to this mastern
 QT_TRANSLATE_NOOP("pivx-core", "Set key pool size to <n> (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", "Set maximum block size in bytes (default: %d)"),
 QT_TRANSLATE_NOOP("pivx-core", "Set minimum block size in bytes (default: %u)"),
+QT_TRANSLATE_NOOP("pivx-core", "Set the Maximum reorg depth (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", "Set the masternode private key"),
 QT_TRANSLATE_NOOP("pivx-core", "Set the number of threads to service RPC calls (default: %d)"),
 QT_TRANSLATE_NOOP("pivx-core", "Sets the DB_PRIVATE flag in the wallet db environment (default: %u)"),
@@ -452,6 +465,7 @@ QT_TRANSLATE_NOOP("pivx-core", "Upgrade wallet to latest format"),
 QT_TRANSLATE_NOOP("pivx-core", "Use OpenSSL (https) for JSON-RPC connections"),
 QT_TRANSLATE_NOOP("pivx-core", "Use UPnP to map the listening port (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", "Use UPnP to map the listening port (default: 1 when listening)"),
+QT_TRANSLATE_NOOP("pivx-core", "Use a custom max chain reorganization depth (default: %u)"),
 QT_TRANSLATE_NOOP("pivx-core", "Use the test network"),
 QT_TRANSLATE_NOOP("pivx-core", "Username for JSON-RPC connections"),
 QT_TRANSLATE_NOOP("pivx-core", "Value more than Obfuscation pool maximum allows."),

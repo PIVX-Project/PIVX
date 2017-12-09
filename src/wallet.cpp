@@ -1073,9 +1073,12 @@ void CWalletTx::GetAmounts(list<COutputEntry>& listReceived,
 
         // In either case, we need to get the destination address
         CTxDestination address;
-        if (!ExtractDestination(txout.scriptPubKey, address)) {
-            LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n",
-                this->GetHash().ToString());
+        if (txout.scriptPubKey.IsZerocoinMint()) {
+            address = CNoDestination();
+        } else if (!ExtractDestination(txout.scriptPubKey, address)) {
+            if (!IsCoinStake() && !IsCoinBase()) {
+                LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n", this->GetHash().ToString());
+            }
             address = CNoDestination();
         }
 
@@ -3769,7 +3772,7 @@ bool CWallet::MultiSend()
         CreateTransaction(vecSend, wtxdummy, keyChange, nFeeRet, strErr, cControl, ALL_COINS, false, CAmount(0));
         CAmount nLastSendAmount = vecSend[vecSend.size() - 1].second;
         if (nLastSendAmount < nFeeRet + 500) {
-            LogPrintf("%s: fee of %s is too large to insert into last output\n");
+            LogPrintf("%s: fee of %d is too large to insert into last output\n", __func__, nFeeRet + 500);
             return false;
         }
         vecSend[vecSend.size() - 1].second = nLastSendAmount - nFeeRet - 500;
@@ -4062,14 +4065,14 @@ bool CWallet::CreateZerocoinMintTransaction(const CAmount nValue, CMutableTransa
 bool CWallet::MintToTxIn(CZerocoinMint zerocoinSelected, int nSecurityLevel, const uint256& hashTxOut, CTxIn& newTxIn, CZerocoinSpendReceipt& receipt)
 {
     // Default error status if not changed below
-    receipt.SetStatus("Transaction Mint Started", ZPIV_TXMINT_GENERAL);
+    receipt.SetStatus(_("Transaction Mint Started"), ZPIV_TXMINT_GENERAL);
 
     libzerocoin::CoinDenomination denomination = zerocoinSelected.GetDenomination();
     // 2. Get pubcoin from the private coin
     libzerocoin::PublicCoin pubCoinSelected(Params().Zerocoin_Params(), zerocoinSelected.GetValue(), denomination);
     LogPrintf("%s : pubCoinSelected:\n denom=%d\n value%s\n", __func__, denomination, pubCoinSelected.getValue().GetHex());
     if (!pubCoinSelected.validate()) {
-        receipt.SetStatus("the selected mint coin is an invalid coin", ZPIV_INVALID_COIN);
+        receipt.SetStatus(_("The selected mint coin is an invalid coin"), ZPIV_INVALID_COIN);
         return false;
     }
 
@@ -4079,7 +4082,7 @@ bool CWallet::MintToTxIn(CZerocoinMint zerocoinSelected, int nSecurityLevel, con
     string strFailReason = "";
     int nMintsAdded = 0;
     if (!GenerateAccumulatorWitness(pubCoinSelected, accumulator, witness, nSecurityLevel, nMintsAdded, strFailReason)) {
-        receipt.SetStatus("Try to spend with a higher security level to include more coins", ZPIV_FAILED_ACCUMULATOR_INITIALIZATION);
+        receipt.SetStatus(_("Try to spend with a higher security level to include more coins"), ZPIV_FAILED_ACCUMULATOR_INITIALIZATION);
         LogPrintf("%s : %s \n", __func__, receipt.GetStatusMessage());
         return false;
     }
@@ -4095,7 +4098,7 @@ bool CWallet::MintToTxIn(CZerocoinMint zerocoinSelected, int nSecurityLevel, con
         libzerocoin::CoinSpend spend(Params().Zerocoin_Params(), privateCoin, accumulator, nChecksum, witness, hashTxOut);
 
         if (!spend.Verify(accumulator)) {
-            receipt.SetStatus("the new spend coin transaction did not verify", ZPIV_INVALID_WITNESS);
+            receipt.SetStatus(_("The new spend coin transaction did not verify"), ZPIV_INVALID_WITNESS);
             return false;
         }
 
@@ -4119,13 +4122,13 @@ bool CWallet::MintToTxIn(CZerocoinMint zerocoinSelected, int nSecurityLevel, con
             serializedCoinSpendChecking << spend;
         }
         catch (...) {
-            receipt.SetStatus("failed to deserialize", ZPIV_BAD_SERIALIZATION);
+            receipt.SetStatus(_("Failed to deserialize"), ZPIV_BAD_SERIALIZATION);
             return false;
         }
 
         libzerocoin::CoinSpend newSpendChecking(Params().Zerocoin_Params(), serializedCoinSpendChecking);
         if (!newSpendChecking.Verify(accumulator)) {
-            receipt.SetStatus("the transaction did not verify", ZPIV_BAD_SERIALIZATION);
+            receipt.SetStatus(_("The transaction did not verify"), ZPIV_BAD_SERIALIZATION);
             return false;
         }
 
@@ -4138,7 +4141,7 @@ bool CWallet::MintToTxIn(CZerocoinMint zerocoinSelected, int nSecurityLevel, con
                     LogPrintf("%s failed to write zerocoinmint\n", __func__);
 
                 pwalletMain->NotifyZerocoinChanged(pwalletMain, zerocoinSelected.GetValue().GetHex(), "Used", CT_UPDATED);
-                receipt.SetStatus("the coin spend has been used", ZPIV_SPENT_USED_ZPIV);
+                receipt.SetStatus(_("The coin spend has been used"), ZPIV_SPENT_USED_ZPIV);
                 return false;
             }
         }
@@ -4149,11 +4152,11 @@ bool CWallet::MintToTxIn(CZerocoinMint zerocoinSelected, int nSecurityLevel, con
         receipt.AddSpend(zcSpend);
     }
     catch (const std::exception&) {
-        receipt.SetStatus("CoinSpend: Accumulator witness does not verify", ZPIV_INVALID_WITNESS);
+        receipt.SetStatus(_("CoinSpend: Accumulator witness does not verify"), ZPIV_INVALID_WITNESS);
         return false;
     }
 
-    receipt.SetStatus("Spend Valid", ZPIV_SPEND_OKAY); // Everything okay
+    receipt.SetStatus(_("Spend Valid"), ZPIV_SPEND_OKAY); // Everything okay
 
     return true;
 }
@@ -4163,12 +4166,12 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
     // Check available funds
     int nStatus = ZPIV_TRX_FUNDS_PROBLEMS;
     if (nValue > GetZerocoinBalance(true)) {
-        receipt.SetStatus("You don't have enough Zerocoins in your wallet", nStatus);
+        receipt.SetStatus(_("You don't have enough Zerocoins in your wallet"), nStatus);
         return false;
     }
 
     if (nValue < 1) {
-        receipt.SetStatus("Value is below the the smallest available denomination (= 1) of zPiv", nStatus);
+        receipt.SetStatus(_("Value is below the the smallest available denomination (= 1) of zPiv"), nStatus);
         return false;
     }
 
@@ -4185,7 +4188,7 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
     if (vSelectedMints.empty()) {
         listMints = walletdb.ListMintedCoins(true, true, true); // need to find mints to spend
         if(listMints.empty()) {
-            receipt.SetStatus("failed to find Zerocoins in in wallet.dat", nStatus);
+            receipt.SetStatus(_("Failed to find Zerocoins in in wallet.dat"), nStatus);
             return false;
         }
 
@@ -4211,7 +4214,7 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
     for (CZerocoinMint mint : vSelectedMints) {
         // see if this serial has already been spent
         if (IsSerialKnown(mint.GetSerialNumber())) {
-            receipt.SetStatus("trying to spend an already spent serial #, try again.", nStatus);
+            receipt.SetStatus(_("Trying to spend an already spent serial #, try again."), nStatus);
 
             mint.SetUsed(true);
             walletdb.WriteZerocoinMint(mint);
@@ -4224,10 +4227,10 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
         uint256 hashBlock;
         bool fArchive = false;
         if (!GetTransaction(mint.GetTxHash(), txMint, hashBlock)) {
-            receipt.SetStatus("unable to find transaction containing mint", nStatus);
+            receipt.SetStatus(_("Unable to find transaction containing mint"), nStatus);
             fArchive = true;
         } else if (mapBlockIndex.count(hashBlock) < 1) {
-            receipt.SetStatus("mint did not make it into blockchain", nStatus);
+            receipt.SetStatus(_("Mint did not make it into blockchain"), nStatus);
             fArchive = true;
         }
 
@@ -4243,16 +4246,16 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
     if (vSelectedMints.empty()) {
         if(nNeededSpends > 0){
             // Too much spends needed, so abuse nStatus to report back the number of needed spends
-            receipt.SetStatus("Too much spends needed", nStatus, nNeededSpends);
+            receipt.SetStatus(_("Too many spends needed"), nStatus, nNeededSpends);
         }
         else {
-            receipt.SetStatus("failed to select a zerocoin", nStatus);
+            receipt.SetStatus(_("Failed to select a zerocoin"), nStatus);
         }
         return false;
     }
 
     if ((static_cast<int>(vSelectedMints.size()) > Params().Zerocoin_MaxSpendsPerTransaction())) {
-        receipt.SetStatus("Failed to find coin set amongst held coins with less than maxNumber of Spends", nStatus);
+        receipt.SetStatus(_("Failed to find coin set amongst held coins with less than maxNumber of Spends"), nStatus);
         return false;
     }
 
@@ -4272,9 +4275,11 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
             CScript scriptChange;
             CAmount nChange = nValueSelected - nValue;
             if (nChange && !address) {
-                receipt.SetStatus("Need address because change is not exact", nStatus);
+                receipt.SetStatus(_("Need address because change is not exact"), nStatus);
                 return false;
-            } else if (address) {
+            }
+
+            if (address) {
                 scriptZerocoinSpend = GetScriptForDestination(address->Get());
                 if (nChange) {
                     // Reserve a new key pair from key pool
@@ -4296,7 +4301,7 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
                     CAmount nFeeRet = 0;
                     string strFailReason = "";
                     if (!CreateZerocoinMintTransaction(nChange, txNew, vNewMints, &reserveKey, nFeeRet, strFailReason, NULL, true)) {
-                        receipt.SetStatus("Failed to create mint", nStatus);
+                        receipt.SetStatus(_("Failed to create mint"), nStatus);
                         return false;
                     }
                 } else {
@@ -4321,13 +4326,20 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
                 txNew.vin.push_back(newTxIn);
             }
 
+            // Limit size
+            unsigned int nBytes = ::GetSerializeSize(txNew, SER_NETWORK, PROTOCOL_VERSION);
+            if (nBytes >= MAX_ZEROCOIN_TX_SIZE) {
+                receipt.SetStatus(_("In rare cases, a spend with 7 coins exceeds our maximum allowable transaction size, please retry spend using 6 or less coins"), ZPIV_TX_TOO_LARGE);
+                return false;
+            }
+
             //now that all inputs have been added, add full tx hash to zerocoinspend records and write to db
             uint256 txHash = txNew.GetHash();
             for (CZerocoinSpend spend : receipt.GetSpends()) {
                 spend.SetTxHash(txHash);
 
                 if (!CWalletDB(strWalletFile).WriteZerocoinSpendSerialEntry(spend)) {
-                    receipt.SetStatus("failed to write coin serial number into wallet", nStatus);
+                    receipt.SetStatus(_("Failed to write coin serial number into wallet"), nStatus);
                 }
             }
 
@@ -4339,7 +4351,7 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
         }
     }
 
-    receipt.SetStatus("Transaction Created", ZPIV_SPEND_OKAY); // Everything okay
+    receipt.SetStatus(_("Transaction Created"), ZPIV_SPEND_OKAY); // Everything okay
 
     return true;
 }
@@ -4498,7 +4510,7 @@ string CWallet::MintZerocoin(CAmount nValue, CWalletTx& wtxNew, vector<CZerocoin
 
     if (IsLocked()) {
         string strError = _("Error: Wallet locked, unable to create transaction!");
-        printf("MintZerocoin() : %s", strError.c_str());
+        LogPrintf("MintZerocoin() : %s", strError.c_str());
         return strError;
     }
 
@@ -4513,6 +4525,12 @@ string CWallet::MintZerocoin(CAmount nValue, CWalletTx& wtxNew, vector<CZerocoin
     wtxNew = CWalletTx(this, txNew);
     wtxNew.fFromMe = true;
     wtxNew.fTimeReceivedIsTxTime = true;
+
+    // Limit size
+    unsigned int nBytes = ::GetSerializeSize(txNew, SER_NETWORK, PROTOCOL_VERSION);
+    if (nBytes >= MAX_ZEROCOIN_TX_SIZE) {
+        return _("Error: The transaction is larger than the maximum allowed transaction size!");
+    }
 
     //commit the transaction to the network
     if (!CommitTransaction(wtxNew, reservekey)) {
