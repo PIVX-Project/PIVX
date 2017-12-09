@@ -21,16 +21,9 @@ private:
     CBigNum serialNumber;
     uint256 txid;
     bool isUsed;
-    CPubKey cipherPubKey;
-    CZerocoinCrypter crypter;
-    void ZerocoinCrypterSetup();
+    bool isCrypted;
 
 public:
-    CZerocoinMint()
-    {
-        SetNull();
-    }
-
     CZerocoinMint(libzerocoin::CoinDenomination denom, CBigNum value, CBigNum randomness, CBigNum serialNumber, bool isUsed)
     {
         SetNull();
@@ -41,15 +34,19 @@ public:
         this->isUsed = isUsed;
     }
 
+    CZerocoinMint()
+    {
+        SetNull();
+    }
+
     void SetNull()
     {
+        isCrypted = false;
         isUsed = false;
-        randomness = 0;
         value = 0;
         denomination = libzerocoin::ZQ_ERROR;
         nHeight = 0;
         txid = 0;
-        ZerocoinCrypterSetup();
     }
 
     uint256 GetHash() const;
@@ -69,12 +66,9 @@ public:
     void SetSerialNumber(CBigNum serial){ this->serialNumber = serial; }
     uint256 GetTxHash() const { return this->txid; }
     void SetTxHash(uint256 txid) { this->txid = txid; }
-    bool HasCipher() const { return crypter.HasKey(); }
-    CZerocoinCrypter GetCrypter() const { return this->crypter; }
-    CPubKey GetCipherPubKey() const { return this->cipherPubKey; }
-    CKeyID GetCipherKeyID() const { return this->cipherPubKey.GetID(); }
-    bool Encrypt();
-    bool Decrypt();
+    bool IsCrypted() const { return this->isCrypted; }
+    void SetIsCrypted(bool isCrypted) { this->isCrypted = isCrypted; }
+
 
     inline bool operator <(const CZerocoinMint& a) const { return GetHeight() < a.GetHeight(); }
 
@@ -86,6 +80,7 @@ public:
         serialNumber = other.GetSerialNumber();
         txid = other.GetTxHash();
         isUsed = other.IsUsed();
+        isCrypted = other.IsCrypted();
     }
 
     bool operator == (const CZerocoinMint& other) const
@@ -102,11 +97,7 @@ public:
         serialNumber = other.GetSerialNumber();
         txid = other.GetTxHash();
         isUsed = other.IsUsed();
-        cipherPubKey = other.GetCipherPubKey();
-
-        if(!this->GetCipherPubKey().IsValid()){
-            ZerocoinCrypterSetup();
-        }
+        isCrypted = other.IsCrypted();
         return *this;
     }
 
@@ -130,7 +121,7 @@ public:
         READWRITE(denomination);
         READWRITE(nHeight);
         READWRITE(txid);
-        READWRITE(cipherPubKey);
+        READWRITE(isCrypted);
     };
 };
 

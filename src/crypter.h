@@ -8,6 +8,7 @@
 #include "allocators.h"
 #include "keystore.h"
 #include "serialize.h"
+#include "primitives/zerocoin.h"
 
 class uint256;
 
@@ -75,10 +76,23 @@ private:
     unsigned char chIV[WALLET_CRYPTO_KEY_SIZE];
     bool fKeySet;
 
+    enum ZerocoinSecrets {
+        SERIAL,
+        RANDOM
+    };
+
 public:
+    enum CryptionMethod {
+        ENC,
+        DEC
+    };
+
     bool SetKeyFromPassphrase(const SecureString& strKeyData, const std::vector<unsigned char>& chSalt, const unsigned int nRounds, const unsigned int nDerivationMethod);
     bool Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned char>& vchCiphertext);
     bool Decrypt(const std::vector<unsigned char>& vchCiphertext, CKeyingMaterial& vchPlaintext);
+    bool EncryptZerocoinMint(const CZerocoinMint& mintPlain, CZerocoinMint& mintCrypted);
+    bool CryptZerocoinMint(const CZerocoinMint& mintIn, CZerocoinMint& mintOut, CryptionMethod method);
+    bool DecryptZerocoinMint(const CZerocoinMint& mintCrypted, CZerocoinMint& mintPlain);
     bool SetKey(const CKeyingMaterial& chNewKey, const std::vector<unsigned char>& chNewIV);
 
     void CleanKey()

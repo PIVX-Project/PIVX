@@ -7,6 +7,9 @@
 #include "script/script.h"
 #include "script/standard.h"
 #include "util.h"
+#include "primitives/zerocoin.h"
+#include "libzerocoin/bignum.h"
+#include "init.h"
 
 #include <boost/foreach.hpp>
 #include <openssl/aes.h>
@@ -110,6 +113,145 @@ bool EncryptSecret(const CKeyingMaterial& vMasterKey, const CKeyingMaterial& vch
         return false;
     return cKeyCrypter.Encrypt(*((const CKeyingMaterial*)&vchPlaintext), vchCiphertext);
 }
+
+
+bool CCrypter::CryptZerocoinMint(const CZerocoinMint &mintIn, CZerocoinMint& mintOut, CryptionMethod method)
+{
+    LogPrintf("inside zercoin crypt xyz123");
+    if (!fKeySet)
+        return false;
+
+    //already encrypted
+    if(mintIn.IsCrypted() && method == ENC) {
+        mintOut = mintIn;
+        return true;
+    }
+
+    //already decryted
+    if(!mintIn.IsCrypted() && method == DEC) {
+        mintOut = mintIn;
+        return true;
+    }
+
+    vector< vector<unsigned char> > vchSecrets;
+
+    vchSecrets[SERIAL] = mintIn.GetSerialNumber().getvch();
+    vchSecrets[RANDOM] = mintIn.GetRandomness().getvch();
+
+    for(auto& secret : vchSecrets) {
+        int nSecretLength = (int) secret.size();
+        int nCipherLength = nSecretLength + AES_BLOCK_SIZE, nFLen = 0;
+
+        vector<unsigned char> secretCiphered;
+
+        EVP_CIPHER_CTX ctx;
+
+        bool fOk = true;
+        switch(method) {
+            case CryptionMethod::ENC:
+                EVP_CIPHER_CTX_init(&ctx);
+                if (fOk) fOk = EVP_EncryptInit_ex(&ctx, EVP_aes_256_cbc(), NULL, chKey, chIV) != 0;
+                if (fOk) fOk = EVP_EncryptUpdate(&ctx, &secretCiphered[0], &nCipherLength, &secret[0], nSecretLength) != 0;
+                if (fOk) fOk = EVP_EncryptFinal_ex(&ctx, (&secretCiphered[0]) + nSecretLength, &nFLen) != 0;
+                EVP_CIPHER_CTX_cleanup(&ctx);
+                break;
+            case CryptionMethod::DEC:
+                EVP_CIPHER_CTX_init(&ctx);
+                if (fOk) fOk = EVP_DecryptInit_ex(&ctx, EVP_aes_256_cbc(), NULL, chKey, chIV) != 0;
+                if (fOk) fOk = EVP_DecryptUpdate(&ctx, &secretCiphered[0], &nCipherLength, &secret[0], nSecretLength) != 0;
+                if (fOk) fOk = EVP_DecryptFinal_ex(&ctx, (&secretCiphered[0]) + nCipherLength, &nFLen) != 0;
+                EVP_CIPHER_CTX_cleanup(&ctx);
+                break;
+        }
+        if (!fOk) return false;
+    }
+
+    mintOut = CZerocoinMint(mintIn);
+    mintOut.SetSerialNumber(CBigNum(vchSecrets[SERIAL]));
+    mintOut.SetRandomness(CBigNum(vchSecrets[RANDOM]));
+    method == ENC ? mintOut.SetIsCrypted(true) : mintOut.SetIsCrypted(false);
+
+    return true;
+}
+
+
+bool CCrypter::EncryptZerocoinMint(const CZerocoinMint& mintPlain, CZerocoinMint& mintCrypted)
+{
+    if (!fKeySet)
+        return false;
+
+    vector< vector<unsigned char> > vchSecrets;
+
+    vchSecrets[ZerocoinSecrets::SERIAL] = mintPlain.GetSerialNumber().getvch();
+    vchSecrets[ZerocoinSecrets::RANDOM] = mintPlain.GetRandomness().getvch();
+
+    for(auto& plaintext : vchSecrets) {
+        // max ciphertext len for a n bytes of plaintext is
+        // n + AES_BLOCK_SIZE - 1 bytes
+        int nLen = plaintext.size();
+        int nCLen = nLen + AES_BLOCK_SIZE, nFLen = 0;
+        std::vector<unsigned char> vchCiphertext(nCLen);
+
+        EVP_CIPHER_CTX ctx;
+
+        bool fOk = true;
+
+        EVP_CIPHER_CTX_init(&ctx);
+        if (fOk) fOk = EVP_EncryptInit_ex(&ctx, EVP_aes_256_cbc(), NULL, chKey, chIV) != 0;
+        if (fOk) fOk = EVP_EncryptUpdate(&ctx, &vchCiphertext[0], &nCLen, &plaintext[0], nLen) != 0;
+        if (fOk) fOk = EVP_EncryptFinal_ex(&ctx, (&vchCiphertext[0]) + nCLen, &nFLen) != 0;
+        EVP_CIPHER_CTX_cleanup(&ctx);
+
+        if (!fOk) return false;
+
+        vchCiphertext.resize(nCLen + nFLen);
+    }
+
+    mintCrypted = CZerocoinMint(mintPlain);
+    mintCrypted.SetSerialNumber(CBigNum(vchSecrets[ZerocoinSecrets::SERIAL]));
+    mintCrypted.SetRandomness(CBigNum(vchSecrets[ZerocoinSecrets::RANDOM]));
+    return true;
+}
+
+bool CCrypter::DecryptZerocoinMint(const CZerocoinMint &mintCrypted, CZerocoinMint &mintPlain)
+{
+    if (!fKeySet)
+        return false;
+
+    vector< vector<unsigned char> > vchSecrets;
+
+    vchSecrets[ZerocoinSecrets::SERIAL] = mintCrypted.GetSerialNumber().getvch();
+    vchSecrets[ZerocoinSecrets::RANDOM] = mintCrypted.GetRandomness().getvch();
+
+    for(auto& crypted : vchSecrets) {
+        // plaintext will always be equal to or lesser than length of ciphertext
+        int nLen = crypted.size();
+        int nPLen = nLen, nFLen = 0;
+
+        std::vector<unsigned char> vchPlaintext(nPLen);
+
+        EVP_CIPHER_CTX ctx;
+
+        bool fOk = true;
+
+        EVP_CIPHER_CTX_init(&ctx);
+        if (fOk) fOk = EVP_DecryptInit_ex(&ctx, EVP_aes_256_cbc(), NULL, chKey, chIV) != 0;
+        if (fOk) fOk = EVP_DecryptUpdate(&ctx, &vchPlaintext[0], &nPLen, &crypted[0], nLen) != 0;
+        if (fOk) fOk = EVP_DecryptFinal_ex(&ctx, (&vchPlaintext[0]) + nPLen, &nFLen) != 0;
+        EVP_CIPHER_CTX_cleanup(&ctx);
+
+        if (!fOk) return false;
+
+        vchPlaintext.resize(nPLen + nFLen);
+    }
+
+    mintPlain = CZerocoinMint(mintCrypted);
+    mintPlain.SetSerialNumber(CBigNum(vchSecrets[ZerocoinSecrets::SERIAL]));
+    mintPlain.SetRandomness(CBigNum(vchSecrets[ZerocoinSecrets::RANDOM]));
+
+    return true;
+}
+
 
 
 // General secure AES 256 CBC encryption routine

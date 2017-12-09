@@ -1151,8 +1151,8 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
         CZerocoinMint mint;
         ssValue >> mint;
 
-        if(pwalletMain->IsCrypted() && !mint.Decrypt())
-            LogPrintf("Error: encryption of mint failed");
+//        if(pwalletMain->IsCrypted() && !mint.Decrypt())
+//            LogPrintf("Error: encryption of mint failed");
 
         if (fUnusedOnly) {
             if (mint.IsUsed())
@@ -1219,16 +1219,16 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
 
     //overwrite any updates
     for (CZerocoinMint mint : vOverWrite) {
-        if(pwalletMain->IsCrypted() && !mint.Encrypt())
-            LogPrintf("Error: encryption of mint failed");
+//        if(pwalletMain->IsCrypted() && !mint.Encrypt())
+//            LogPrintf("Error: encryption of mint failed");
         if(!this->WriteZerocoinMint(mint))
             LogPrintf("%s failed to update mint from tx %s\n", __func__, mint.GetTxHash().GetHex());
     }
 
     // archive mints
     for (CZerocoinMint mint : vArchive) {
-        if(pwalletMain->IsCrypted() && !mint.Encrypt())
-            LogPrintf("Error: encryption of mint failed");
+//        if(pwalletMain->IsCrypted() && !mint.Encrypt())
+//            LogPrintf("Error: encryption of mint failed");
         if (!this->ArchiveMintOrphan(mint))
             LogPrintf("%s failed to archive mint from %s\n", __func__, mint.GetTxHash().GetHex());
     }

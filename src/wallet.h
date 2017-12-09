@@ -23,6 +23,7 @@
 #include "validationinterface.h"
 #include "wallet_ismine.h"
 #include "walletdb.h"
+#include "zerocoincrypter.h"
 
 #include <algorithm>
 #include <map>
@@ -164,6 +165,7 @@ private:
     //it was public bool SelectCoins(int64_t nTargetValue, std::set<std::pair<const CWalletTx*,unsigned int> >& setCoinsRet, int64_t& nValueRet, const CCoinControl *coinControl = NULL, AvailableCoinsType coin_type=ALL_COINS, bool useIX = true) const;
 
     CWalletDB* pwalletdbEncryption;
+    CZerocoinCrypter zerocoinCrypter;
 
     //! the current wallet version: clients below this version are not able to load the wallet
     int nWalletVersion;
@@ -207,9 +209,12 @@ public:
     std::string ResetMintZerocoin(bool fExtendedSearch);
     std::string ResetSpentZerocoin();
     void ReconsiderZerocoins(std::list<CZerocoinMint>& listMintsRestored);
+    bool EncryptZerocoinMint(CZerocoinMint mintToEncrypt, CZerocoinMint& mintCryptedRet);
+    bool DecryptZerocoinMint(CZerocoinMint mintToDecrypt, CZerocoinMint& mintPlainRet);
+    bool SetupZerocoinCrypter();
     void ZPivBackupWallet();
 
-    /** Zerocin entry changed.
+    /** Zerocoin entry changed.
     * @note called with lock cs_wallet held.
     */
     boost::signals2::signal<void(CWallet* wallet, const std::string& pubCoin, const std::string& isUsed, ChangeType status)> NotifyZerocoinChanged;
