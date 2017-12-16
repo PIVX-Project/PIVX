@@ -29,7 +29,8 @@ Drag PIVX-Qt to your applications folder, and then run PIVX-Qt.
 * See the documentation at the [PIVX Wiki](https://en.bitcoin.it/wiki/Main_Page) ***TODO***
 for help and more information.
 * Ask for help on [BitcoinTalk](https://bitcointalk.org/index.php?topic=1262920.0) or on the [PIVX Forum](http://forum.pivx.org/).
-* Join one of our Slack groups [PIVX Slack Groups](https://pivx.org/slack-logins/).
+* Join our Discord server [Discord Server](https://discord.pivx.org)
+* Join one of our Slack groups [PIVX Slack Groups](https://pivx.org/slack-logins/) (Main community is replaced by Discord).
 
 Building
 ---------------------

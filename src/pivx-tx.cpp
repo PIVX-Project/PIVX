@@ -13,7 +13,7 @@
 #include "script/script.h"
 #include "script/sign.h"
 #include "ui_interface.h" // for _(...)
-#include "univalue/univalue.h"
+#include <univalue.h>
 #include "util.h"
 #include "utilmoneystr.h"
 #include "utilstrencodings.h"
@@ -351,7 +351,7 @@ static void MutateTxSign(CMutableTransaction& tx, const string& flagStr)
     UniValue keysObj = registers["privatekeys"];
     fGivenKeys = true;
 
-    for (unsigned int kidx = 0; kidx < keysObj.count(); kidx++) {
+    for (unsigned int kidx = 0; kidx < keysObj.size(); kidx++) {
         if (!keysObj[kidx].isStr())
             throw runtime_error("privatekey not a string");
         CBitcoinSecret vchSecret;
@@ -368,7 +368,7 @@ static void MutateTxSign(CMutableTransaction& tx, const string& flagStr)
         throw runtime_error("prevtxs register variable must be set.");
     UniValue prevtxsObj = registers["prevtxs"];
     {
-        for (unsigned int previdx = 0; previdx < prevtxsObj.count(); previdx++) {
+        for (unsigned int previdx = 0; previdx < prevtxsObj.size(); previdx++) {
             UniValue prevOut = prevtxsObj[previdx];
             if (!prevOut.isObject())
                 throw runtime_error("expected prevtxs internal object");

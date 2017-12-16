@@ -11,36 +11,36 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/test/unit_test.hpp>
 
-using namespace std;
-using namespace json_spirit;
+#include <univalue.h>
 
-Array
+using namespace std;
+
+UniValue
 createArgs(int nRequired, const char* address1=NULL, const char* address2=NULL)
 {
-    Array result;
+    UniValue result(UniValue::VARR);
     result.push_back(nRequired);
-    Array addresses;
+    UniValue addresses(UniValue::VARR);
     if (address1) addresses.push_back(address1);
     if (address2) addresses.push_back(address2);
     result.push_back(addresses);
     return result;
 }
 
-Value CallRPC(string args)
+UniValue CallRPC(string args)
 {
     vector<string> vArgs;
     boost::split(vArgs, args, boost::is_any_of(" \t"));
     string strMethod = vArgs[0];
     vArgs.erase(vArgs.begin());
-    Array params = RPCConvertValues(strMethod, vArgs);
+    UniValue params = RPCConvertValues(strMethod, vArgs);
 
     rpcfn_type method = tableRPC[strMethod]->actor;
     try {
-        Value result = (*method)(params, false);
+        UniValue result = (*method)(params, false);
         return result;
     }
-    catch (Object& objError)
-    {
+    catch (const UniValue& objError) {
         throw runtime_error(find_value(objError, "message").get_str());
     }
 }
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_SUITE(rpc_tests)
 BOOST_AUTO_TEST_CASE(rpc_rawparams)
 {
     // Test raw transaction API argument handling
-    Value r;
+    UniValue r;
 
     BOOST_CHECK_THROW(CallRPC("getrawtransaction"), runtime_error);
     BOOST_CHECK_THROW(CallRPC("getrawtransaction not_hex"), runtime_error);
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(rpc_rawparams)
 
 BOOST_AUTO_TEST_CASE(rpc_rawsign)
 {
-    Value r;
+    UniValue r;
     // input is a 1-of-2 multisig (so is output):
     string prevout =
       "[{\"txid\":\"dd2888870cdc3f6e92661f6b0829667ee4bb07ed086c44205e726bbf3338f726\","
@@ -110,20 +110,43 @@ BOOST_AUTO_TEST_CASE(rpc_rawsign)
 
 BOOST_AUTO_TEST_CASE(rpc_format_monetary_values)
 {
-    BOOST_CHECK_EQUAL(write_string(ValueFromAmount(0LL), false), "0.00000000");
-    BOOST_CHECK_EQUAL(write_string(ValueFromAmount(1LL), false), "0.00000001");
-    BOOST_CHECK_EQUAL(write_string(ValueFromAmount(17622195LL), false), "0.17622195");
-    BOOST_CHECK_EQUAL(write_string(ValueFromAmount(50000000LL), false), "0.50000000");
-    BOOST_CHECK_EQUAL(write_string(ValueFromAmount(89898989LL), false), "0.89898989");
-    BOOST_CHECK_EQUAL(write_string(ValueFromAmount(100000000LL), false), "1.00000000");
-    BOOST_CHECK_EQUAL(write_string(ValueFromAmount(2099999999999990LL), false), "20999999.99999990");
-    BOOST_CHECK_EQUAL(write_string(ValueFromAmount(2099999999999999LL), false), "20999999.99999999");
+    BOOST_CHECK(ValueFromAmount(0LL).write() == "0.00000000");
+    BOOST_CHECK(ValueFromAmount(1LL).write() == "0.00000001");
+    BOOST_CHECK(ValueFromAmount(17622195LL).write() == "0.17622195");
+    BOOST_CHECK(ValueFromAmount(50000000LL).write() == "0.50000000");
+    BOOST_CHECK(ValueFromAmount(89898989LL).write() == "0.89898989");
+    BOOST_CHECK(ValueFromAmount(100000000LL).write() == "1.00000000");
+    BOOST_CHECK(ValueFromAmount(2099999999999990LL).write() == "20999999.99999990");
+    BOOST_CHECK(ValueFromAmount(2099999999999999LL).write() == "20999999.99999999");
+
+    BOOST_CHECK_EQUAL(ValueFromAmount(0).write(), "0.00000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount((COIN/10000)*123456789).write(), "12345.67890000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(-COIN).write(), "-1.00000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(-COIN/10).write(), "-0.10000000");
+
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN*100000000).write(), "100000000.00000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN*10000000).write(), "10000000.00000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN*1000000).write(), "1000000.00000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN*100000).write(), "100000.00000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN*10000).write(), "10000.00000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN*1000).write(), "1000.00000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN*100).write(), "100.00000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN*10).write(), "10.00000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN).write(), "1.00000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN/10).write(), "0.10000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN/100).write(), "0.01000000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN/1000).write(), "0.00100000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN/10000).write(), "0.00010000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN/100000).write(), "0.00001000");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN/1000000).write(), "0.00000100");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN/10000000).write(), "0.00000010");
+    BOOST_CHECK_EQUAL(ValueFromAmount(COIN/100000000).write(), "0.00000001");
 }
 
-static Value ValueFromString(const std::string &str)
+static UniValue ValueFromString(const std::string &str)
 {
-    Value value;
-    BOOST_CHECK(read_string(str, value));
+    UniValue value;
+    BOOST_CHECK(value.setNumStr(str));
     return value;
 }
 
@@ -141,20 +164,20 @@ BOOST_AUTO_TEST_CASE(rpc_parse_monetary_values)
 
 BOOST_AUTO_TEST_CASE(json_parse_errors)
 {
-    Value value;
     // Valid
-    BOOST_CHECK_EQUAL(read_string(std::string("1.0"), value), true);
-    // Valid, with trailing whitespace
-    BOOST_CHECK_EQUAL(read_string(std::string("1.0 "), value), true);
+    BOOST_CHECK_EQUAL(ParseNonRFCJSONValue("1.0").get_real(), 1.0);
+    // Valid, with leading or trailing whitespace
+    BOOST_CHECK_EQUAL(ParseNonRFCJSONValue(" 1.0").get_real(), 1.0);
+    BOOST_CHECK_EQUAL(ParseNonRFCJSONValue("1.0 ").get_real(), 1.0);
     // Invalid, initial garbage
-    BOOST_CHECK_EQUAL(read_string(std::string("[1.0"), value), false);
-    BOOST_CHECK_EQUAL(read_string(std::string("a1.0"), value), false);
+    BOOST_CHECK_THROW(ParseNonRFCJSONValue("[1.0"), std::runtime_error);
+    BOOST_CHECK_THROW(ParseNonRFCJSONValue("a1.0"), std::runtime_error);
     // Invalid, trailing garbage
-    BOOST_CHECK_EQUAL(read_string(std::string("1.0sds"), value), false);
-    BOOST_CHECK_EQUAL(read_string(std::string("1.0]"), value), false);
+    BOOST_CHECK_THROW(ParseNonRFCJSONValue("1.0sds"), std::runtime_error);
+    BOOST_CHECK_THROW(ParseNonRFCJSONValue("1.0]"), std::runtime_error);
     // BTC addresses should fail parsing
-    BOOST_CHECK_EQUAL(read_string(std::string("175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W"), value), false);
-    BOOST_CHECK_EQUAL(read_string(std::string("3J98t1WpEZ73CNmQviecrnyiWrnqRhWNL"), value), false);
+    BOOST_CHECK_THROW(ParseNonRFCJSONValue("175tWpb8K1S7NmH4Zx6rewF9WQrcZv245W"), std::runtime_error);
+    BOOST_CHECK_THROW(ParseNonRFCJSONValue("3J98t1WpEZ73CNmQviecrnyiWrnqRhWNL"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(rpc_boostasiotocnetaddr)

@@ -1,7 +1,7 @@
 <!--- Remove this description and sections that do not apply -->
 
 This issue tracker is only for technical issues related to PIVX Core.
-General PIVX questions and/or support requests and are best directed to the [PIVX Slack](http://pivx.slack.com).
+General PIVX questions and/or support requests and are best directed to the [PIVX Discord](https://discord.pivx.org).
 
 ### Describe the issue
 
