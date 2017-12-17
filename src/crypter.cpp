@@ -210,6 +210,7 @@ bool CCrypter::EncryptZerocoinMint(const CZerocoinMint& mintPlain, CZerocoinMint
     mintCrypted = CZerocoinMint(mintPlain);
     mintCrypted.SetSerialNumber(CBigNum(vchSecrets[ZerocoinSecrets::SERIAL]));
     mintCrypted.SetRandomness(CBigNum(vchSecrets[ZerocoinSecrets::RANDOM]));
+    mintCrypted.SetIsCrypted(true);
     return true;
 }
 
@@ -248,7 +249,7 @@ bool CCrypter::DecryptZerocoinMint(const CZerocoinMint &mintCrypted, CZerocoinMi
     mintPlain = CZerocoinMint(mintCrypted);
     mintPlain.SetSerialNumber(CBigNum(vchSecrets[ZerocoinSecrets::SERIAL]));
     mintPlain.SetRandomness(CBigNum(vchSecrets[ZerocoinSecrets::RANDOM]));
-
+    mintPlain.SetIsCrypted(false);
     return true;
 }
 

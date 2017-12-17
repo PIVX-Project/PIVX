@@ -9,7 +9,6 @@
 #include "libzerocoin/bignum.h"
 #include "libzerocoin/Denominations.h"
 #include "serialize.h"
-#include "zerocoincrypter.h"
 
 class CZerocoinMint
 {
