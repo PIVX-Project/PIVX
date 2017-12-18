@@ -261,35 +261,45 @@ bool CWallet::Unlock(const SecureString& strWalletPassphrase, bool anonymizeOnly
 
     {
         LOCK(cs_wallet);
-        for(const auto& pMasterKey : mapMasterKeys) {
-                        if (!crypter.SetKeyFromPassphrase(strWalletPassphraseFinal, pMasterKey.second.vchSalt, pMasterKey.second.nDeriveIterations, pMasterKey.second.nDerivationMethod)){
-                            return false;
-                        }
+        BOOST_FOREACH (const MasterKeyMap::value_type& pMasterKey, mapMasterKeys) {
+            if (!crypter.SetKeyFromPassphrase(strWalletPassphraseFinal, pMasterKey.second.vchSalt, pMasterKey.second.nDeriveIterations, pMasterKey.second.nDerivationMethod)){
+                return false;
+            }
+            LogPrintf("crypter key set\n");
+            if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, vMasterKey)) {
+                continue; // try another master key
+            }
+            LogPrintf("master key found\n");
 
-                        if (!crypter.Decrypt(pMasterKey.second.vchCryptedKey, vMasterKey)) {
-                            continue; // try another master key
-                        }
-
-                        if (CCryptoKeyStore::Unlock(vMasterKey)) {
-                            fWalletUnlockAnonymizeOnly = anonymizeOnly;
+            if (CCryptoKeyStore::Unlock(vMasterKey)) {
+                fWalletUnlockAnonymizeOnly = anonymizeOnly;
+                LogPrintf("zerocoin decrypt begin\n");
 
 //                            bool fZerocoinDecryptSuccess = true;
-                            for(auto& mint : pwalletdbEncryption->ListMintedCoins(true, false, false)) {
-                                if(mint.IsCrypted()) {
-                                    CZerocoinMint mintPlain;
-                                    if(!crypter.DecryptZerocoinMint(mint, mintPlain)) {
+                auto list = pwalletdbEncryption->ListMintedCoins(true, false, false);
+                LogPrintf("list size: %n", list.size());
+                for(auto& mint : list) {
+                    LogPrintf("in list");
+
+                    CZerocoinMint mintPlain;
+                    if(!crypter.DecryptZerocoinMint(mint, mintPlain)) {
 //                                        fZerocoinDecryptSuccess = false;
-                                        LogPrintf("zerocoin decrypt failed %s", mint.GetValue().ToString());
-                                        break;
-                                    }
-
-                                    pwalletdbEncryption->WriteZerocoinMint(mintPlain);
-                                }
-                            }
-
-                            return true;
-                        }
+                        LogPrintf("zerocoin decrypt failed %s\n", mint.GetValue().ToString());
                     }
+
+                    if(!pwalletdbEncryption->WriteZerocoinMint(mintPlain)) {
+                        LogPrintf("zerocoin write failed %s\n", mint.GetValue().ToString());
+                    }
+
+                    LogPrintf("Success %s\n", mint.GetValue().ToString());
+//
+                }
+
+                LogPrintf("exit unlock");
+
+                return true;
+            }
+        }
     }
     return false;
 }
