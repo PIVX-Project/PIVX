@@ -2565,12 +2565,7 @@ UniValue resetmintzerocoin(const UniValue& params, bool fHelp)
     // update the meta data of mints that were marked for updating
     UniValue arrUpdated(UniValue::VARR);
     for (CZerocoinMint mint : vMintsToUpdate) {
-
-//        if(pwalletMain->IsCrypted() && !mint.Encrypt()){
-//            LogPrintf("Error: encryption of mint failed");
-//        }
-
-        walletdb.WriteZerocoinMint(mint);
+        pwalletMain->AddZerocoinMint(mint);
         arrUpdated.push_back(mint.GetValue().GetHex());
     }
 

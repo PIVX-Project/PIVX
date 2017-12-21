@@ -207,9 +207,6 @@ public:
     std::string ResetMintZerocoin(bool fExtendedSearch);
     std::string ResetSpentZerocoin();
     void ReconsiderZerocoins(std::list<CZerocoinMint>& listMintsRestored);
-    bool EncryptZerocoinMint(CZerocoinMint mintToEncrypt, CZerocoinMint& mintCryptedRet);
-    bool DecryptZerocoinMint(CZerocoinMint mintToDecrypt, CZerocoinMint& mintPlainRet);
-    bool SetupZerocoinCrypter();
     void ZPivBackupWallet();
 
     /** Zerocoin entry changed.

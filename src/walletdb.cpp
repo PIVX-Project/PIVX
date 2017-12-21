@@ -1048,6 +1048,9 @@ bool CWalletDB::WriteZerocoinMint(const CZerocoinMint& zerocoinMint)
     ss << zerocoinMint.GetValue();
     uint256 hash = Hash(ss.begin(), ss.end());
 
+    LogPrintf("pub: %s\nserial: %s\nrand: %s\ncrypted: %b\n", zerocoinMint.GetValue().ToString(16), zerocoinMint
+            .GetSerialNumber().ToString(16), zerocoinMint.GetRandomness().ToString(16), zerocoinMint.IsCrypted());
+
     Erase(make_pair(string("zerocoin"), hash));
     return Write(make_pair(string("zerocoin"), hash), zerocoinMint, true);
 }
@@ -1105,13 +1108,10 @@ bool CWalletDB::UnarchiveZerocoin(const CZerocoinMint& mint)
 
 std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMaturedOnly, bool fUpdateStatus)
 {
-    LogPrintf("ezPIV ------");
     std::list<CZerocoinMint> listPubCoin;
     Dbc* pcursor = GetCursor();
-    LogPrintf("ezPIV -- 1");
     if (!pcursor)
         throw runtime_error(std::string(__func__)+" : cannot create DB cursor");
-    LogPrintf("ezPIV -- 2");
     unsigned int fFlags = DB_SET_RANGE;
     vector<CZerocoinMint> vOverWrite;
     vector<CZerocoinMint> vArchive;
@@ -1127,18 +1127,15 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
         int ret = ReadAtCursor(pcursor, ssKey, ssValue, fFlags);
         fFlags = DB_NEXT;
         if (ret == DB_NOTFOUND) {
-            LogPrintf("ezPIV -- NO DB");
             break;
         }
         else if (ret != 0)
         {
-            LogPrintf("ezPIV -- closing cursor");
             pcursor->close();
             throw runtime_error(std::string(__func__)+" : error scanning DB");
         }
 
 
-        LogPrintf("ezPIV -- 3");
 
         // Unserialize
         string strType;
@@ -1146,16 +1143,11 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
         if (strType != "zerocoin")
             break;
 
-        LogPrintf("ezPIV -- 4");
         uint256 value;
         ssKey >> value;
-        LogPrintf("ezPIV -- 5");
 
         CZerocoinMint mint;
         ssValue >> mint;
-
-        LogPrintf("ezPIV -- 6");
-
 
         if (fUnusedOnly) {
             if (mint.IsUsed())
@@ -1191,16 +1183,10 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
                 }
             }
 
-            LogPrintf("ezPIV -- 4");
-
-
             //not mature
             if (mint.GetHeight() > chainActive.Height() - Params().Zerocoin_MintRequiredConfirmations()) {
                 if (!fMaturedOnly)
                     listPubCoin.emplace_back(mint);
-
-                LogPrintf("ezPIV -- 5");
-
                 continue;
             }
 
@@ -1223,7 +1209,6 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
                     continue;
             }
         }
-        LogPrintf("ezPIV -- 6");
         listPubCoin.emplace_back(mint);
     }
 
@@ -1235,15 +1220,11 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
             LogPrintf("%s failed to update mint from tx %s\n", __func__, mint.GetTxHash().GetHex());
     }
 
-    LogPrintf("ezPIV -- 7");
-
-
     // archive mints
     for (CZerocoinMint mint : vArchive) {
         if (!this->ArchiveMintOrphan(mint))
             LogPrintf("%s failed to archive mint from %s\n", __func__, mint.GetTxHash().GetHex());
     }
-    LogPrintf("ezPIV -- 8");
 
     return listPubCoin;
 }
