@@ -2819,3 +2819,64 @@ UniValue reconsiderzerocoins(const UniValue& params, bool fHelp)
 
     return arrRet;
 }
+
+UniValue setzpivseed(const UniValue& params, bool fHelp)
+{
+    if(fHelp || params.size() != 1)
+        throw runtime_error(
+                "setzpivseed seed\n"
+                        "\nSet the wallet's deterministic zpiv seed to a specific value.\n"
+
+                        "\nArguments:\n"
+                        "1. \"seed\"        (string, required) The deterministic zpiv seed.\n"
+
+                        "\nResult\n"
+                        "\"success\" : b,  (boolean) Whether the seed was successfully set.\n"
+
+                        "\nExamples\n" +
+                HelpExampleCli("setzpivseed", "63f793e7895dd30d99187b35fbfb314a5f91af0add9e0a4e5877036d1e392dd5") +
+                HelpExampleRpc("setzpivseed", "63f793e7895dd30d99187b35fbfb314a5f91af0add9e0a4e5877036d1e392dd5"));
+
+    if(pwalletMain->IsLocked())
+        throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED,
+                           "Error: Please enter the wallet passphrase with walletpassphrase first.");
+
+    uint256 seed;
+    seed.SetHex(params[0].get_str());
+
+    CzPIVWallet* zwallet = pwalletMain->getZWallet();
+    bool fSuccess = zwallet->SetMasterSeed(seed, true);
+    if (fSuccess)
+        zwallet->SyncWithChain();
+
+    UniValue ret(UniValue::VOBJ);
+    ret.push_back(Pair("success", fSuccess));
+
+    return ret;
+}
+
+UniValue getzpivseed(const UniValue& params, bool fHelp)
+{
+    if(fHelp || !params.empty())
+        throw runtime_error(
+                "getzpivseed\n"
+                        "\nCheck archived zPiv list to see if any mints were added to the blockchain.\n"
+
+                        "\nResult\n"
+                        "\"seed\" : s,  (string) The deterministic zpiv seed.\n"
+
+                        "\nExamples\n" +
+                HelpExampleCli("getzpivseed", "") + HelpExampleRpc("getzpivseed", ""));
+
+    if(pwalletMain->IsLocked())
+        throw JSONRPCError(RPC_WALLET_UNLOCK_NEEDED,
+                           "Error: Please enter the wallet passphrase with walletpassphrase first.");
+
+    CzPIVWallet* zwallet = pwalletMain->getZWallet();
+    uint256 seed = zwallet->GetMasterSeed();
+
+    UniValue ret(UniValue::VOBJ);
+    ret.push_back(Pair("seed", seed.GetHex()));
+
+    return ret;
+}

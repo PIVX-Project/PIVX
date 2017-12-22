@@ -1147,7 +1147,7 @@ bool RecordMintToDB(PublicCoin publicZerocoin, const uint256& txHash)
         if(hashFromDB == txHash)
             return true;
 
-        LogPrintf("RecordMintToDB: failed, we already have this public coin recorded\n");
+        LogPrintf("RecordMintToDB: failed: public coin %s already exists in db\n", publicZerocoin.getValue().GetHex().substr(0,6));
         return false;
     }
 
@@ -1322,7 +1322,7 @@ bool CheckZerocoinMint(const uint256& txHash, const CTxOut& txout, CValidationSt
     if (!pubCoin.validate())
         return state.DoS(100, error("CheckZerocoinMint() : PubCoin does not validate"));
 
-    if(!fCheckOnly && !RecordMintToDB(pubCoin, txHash))
+    if (!fCheckOnly && !RecordMintToDB(pubCoin, txHash))
         return state.DoS(100, error("CheckZerocoinMint(): RecordMintToDB() failed"));
 
     return true;
@@ -3464,6 +3464,15 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
             libzerocoin::CoinDenomination denom = m.GetDenomination();
             pindex->vMintDenominationsInBlock.push_back(m.GetDenomination());
             pindex->mapZerocoinSupply.at(denom)++;
+
+            //Remove any of our own mints from the mintpool
+            if (pwalletMain) {
+                CzPIVWallet* zwallet = pwalletMain->getZWallet();
+                if (zwallet->IsInMintPool(m.GetValue())) {
+                    if (!zwallet->SetMintSeen(m))
+                        LogPrintf("%s: Failed to set mint %s as seen!\n", __func__, m.GetValue().GetHex());
+                }
+            }
         }
 
         for (auto& denom : listSpends) {

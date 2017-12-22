@@ -46,23 +46,46 @@ PublicCoin::PublicCoin(const ZerocoinParams* p, const CBigNum& coin, const CoinD
 	}
 };
 
+bool PublicCoin::validate() const {
+    return (this->params->accumulatorParams.minCoinValue < value) && (value < this->params->accumulatorParams.maxCoinValue) && value.isPrime(params->zkp_iterations);
+}
+
 //PrivateCoin class
-PrivateCoin::PrivateCoin(const ZerocoinParams* p, const CoinDenomination denomination): params(p), publicCoin(p) {
+PrivateCoin::PrivateCoin(const ZerocoinParams* p, const CoinDenomination denomination, bool fMintNew): params(p), publicCoin(p) {
 	// Verify that the parameters are valid
 	if(this->params->initialized == false) {
 		throw std::runtime_error("Params are not initialized");
 	}
 
+    if (fMintNew) {
 #ifdef ZEROCOIN_FAST_MINT
-	// Mint a new coin with a random serial number using the fast process.
-	// This is more vulnerable to timing attacks so don't mint coins when
-	// somebody could be timing you.
-	this->mintCoinFast(denomination);
+        // Mint a new coin with a random serial number using the fast process.
+        // This is more vulnerable to timing attacks so don't mint coins when
+        // somebody could be timing you.
+        this->mintCoinFast(denomination);
 #else
-	// Mint a new coin with a random serial number using the standard process.
-	this->mintCoin(denomination);
+        // Mint a new coin with a random serial number using the standard process.
+        this->mintCoin(denomination);
 #endif
-	
+    }
+}
+
+PrivateCoin::PrivateCoin(const ZerocoinParams* p, const CoinDenomination denomination, const CBigNum& bnSerial, const CBigNum& bnRandomness): params(p), publicCoin(p) {
+    // Verify that the parameters are valid
+    if(!this->params->initialized) {
+        throw std::runtime_error("Params are not initialized");
+    }
+
+    this->serialNumber = bnSerial;
+    this->randomness = bnRandomness;
+
+    Commitment commitment(&p->coinCommitmentGroup, bnSerial, bnRandomness);
+    this->publicCoin = PublicCoin(p, commitment.getCommitmentValue(), denomination);
+}
+
+bool PrivateCoin::IsValid()
+{
+    return serialNumber > 0 && serialNumber < params->coinCommitmentGroup.groupOrder && getPublicCoin().validate();
 }
 
 void PrivateCoin::mintCoin(const CoinDenomination denomination) {

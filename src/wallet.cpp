@@ -25,6 +25,7 @@
 
 #include "denomination_functions.h"
 #include "libzerocoin/Denominations.h"
+#include "zpivwallet.h"
 #include <assert.h>
 
 #include <boost/algorithm/string/replace.hpp>
@@ -735,7 +736,8 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFromLoadWallet)
         }
 
         //// debug print
-        LogPrintf("AddToWallet %s  %s%s\n", wtxIn.GetHash().ToString(), (fInsertedNew ? "new" : ""), (fUpdated ? "update" : ""));
+
+        LogPrintf("AddToWallet %s  size=%d %s%s\n", wtxIn.GetHash().ToString(), wtxIn.GetSerializeSize(SER_NETWORK, PROTOCOL_VERSION), (fInsertedNew ? "new" : ""), (fUpdated ? "update" : ""));
 
         // Write to disk
         if (fInsertedNew || fUpdated)
@@ -1279,8 +1281,11 @@ CAmount CWallet::GetBalance() const
         LOCK2(cs_main, cs_wallet);
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx* pcoin = &(*it).second;
+
             if (pcoin->IsTrusted())
                 nTotal += pcoin->GetAvailableCredit();
+            else if (Params().NetworkID() == CBaseChainParams::UNITTEST)
+                nTotal += pcoin->GetValueOut();
         }
     }
 
@@ -1603,6 +1608,10 @@ void CWallet::AvailableCoins(vector<COutput>& vCoins, bool fOnlyConfirmed, const
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const uint256& wtxid = it->first;
             const CWalletTx* pcoin = &(*it).second;
+
+            //For unit tests, consider anything as valid
+            if (Params().NetworkID() == CBaseChainParams::UNITTEST)
+                vCoins.emplace_back(COutput(pcoin, 0, 10, true));
 
             if (!CheckFinalTx(*pcoin))
                 continue;
@@ -2704,6 +2713,8 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
  */
 bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, std::string strCommand)
 {
+    if (Params().NetworkID() == CBaseChainParams::UNITTEST)
+        return true;
     {
         LOCK2(cs_main, cs_wallet);
         LogPrintf("CommitTransaction:\n%s", wtxNew.ToString());
@@ -4003,7 +4014,9 @@ bool CWallet::CreateZerocoinMintTransaction(const CAmount nValue, CMutableTransa
         nMintingValue += nValueNewMint;
 
         // mint a new coin (create Pedersen Commitment) and extract PublicCoin that is shareable from it
-        libzerocoin::PrivateCoin newCoin(Params().Zerocoin_Params(), denomination);
+        libzerocoin::PrivateCoin newCoin(Params().Zerocoin_Params(), denomination, false);
+        zwalletMain->GenerateDeterministicZPIV(denomination, newCoin);
+
         libzerocoin::PublicCoin pubCoin = newCoin.getPublicCoin();
 
         // Validate
@@ -4525,9 +4538,13 @@ string CWallet::MintZerocoin(CAmount nValue, CWalletTx& wtxNew, vector<CZerocoin
         return strError;
     }
 
+    CWalletDB walletdb(strWalletFile);
     string strError;
     CMutableTransaction txNew;
+    uint32_t nZPIVCount = 0;
+    walletdb.ReadZPIVCount(nZPIVCount);
     if (!CreateZerocoinMintTransaction(nValue, txNew, vMints, &reservekey, nFeeRequired, strError, coinControl)) {
+        walletdb.WriteZPIVCount(nZPIVCount);
         if (nValue + nFeeRequired > GetBalance())
             return strprintf(_("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!"), FormatMoney(nFeeRequired).c_str());
         return strError;
@@ -4548,7 +4565,7 @@ string CWallet::MintZerocoin(CAmount nValue, CWalletTx& wtxNew, vector<CZerocoin
         return _("Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
     } else {
         //update mints with full transaction hash and then database them
-        CWalletDB walletdb(pwalletMain->strWalletFile);
+        walletdb.WriteZPIVCount(nZPIVCount);
         for (CZerocoinMint mint : vMints) {
             mint.SetTxHash(wtxNew.GetHash());
             walletdb.WriteZerocoinMint(mint);
@@ -4557,8 +4574,8 @@ string CWallet::MintZerocoin(CAmount nValue, CWalletTx& wtxNew, vector<CZerocoin
     }
 
     //Create a backup of the wallet
-    if (fBackupMints)
-        ZPivBackupWallet();
+   // if (fBackupMints)
+     //   ZPivBackupWallet();
 
     return "";
 }

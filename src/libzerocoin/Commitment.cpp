@@ -18,11 +18,17 @@
 namespace libzerocoin {
 
 //Commitment class
-Commitment::Commitment::Commitment(const IntegerGroupParams* p,
+Commitment::Commitment(const IntegerGroupParams* p,
                                    const CBigNum& value): params(p), contents(value) {
 	this->randomness = CBigNum::randBignum(params->groupOrder);
 	this->commitmentValue = (params->g.pow_mod(this->contents, params->modulus).mul_mod(
 	                         params->h.pow_mod(this->randomness, params->modulus), params->modulus));
+}
+
+Commitment::Commitment(const IntegerGroupParams* p, const CBigNum& bnSerial, const CBigNum& bnRandomness): params(p), contents(bnSerial) {
+    this->randomness = bnRandomness;
+    this->commitmentValue = (params->g.pow_mod(this->contents, params->modulus).mul_mod(
+        params->h.pow_mod(this->randomness, params->modulus), params->modulus));
 }
 
 const CBigNum& Commitment::getCommitmentValue() const {

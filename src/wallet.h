@@ -23,6 +23,7 @@
 #include "validationinterface.h"
 #include "wallet_ismine.h"
 #include "walletdb.h"
+#include "zpivwallet.h"
 
 #include <algorithm>
 #include <map>
@@ -222,6 +223,8 @@ public:
      */
     mutable CCriticalSection cs_wallet;
 
+    CzPIVWallet* zwalletMain;
+
     bool fFileBacked;
     bool fWalletUnlockAnonymizeOnly;
     std::string strWalletFile;
@@ -304,6 +307,13 @@ public:
         fCombineDust = false;
         nAutoCombineThreshold = 0;
     }
+
+    void setZWallet(CzPIVWallet* zwallet)
+    {
+        zwalletMain = zwallet;
+    }
+
+    CzPIVWallet* getZWallet() { return zwalletMain; }
 
     bool isZeromintEnabled()
     {

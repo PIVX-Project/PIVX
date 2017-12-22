@@ -38,6 +38,7 @@ public:
 	 * @param value the value to commit to
 	 */
 	Commitment(const IntegerGroupParams* p, const CBigNum& value);
+    explicit Commitment(const IntegerGroupParams* p, const CBigNum& bnSerial, const CBigNum& bnRandomness);
 	const CBigNum& getCommitmentValue() const;
 	const CBigNum& getRandomness() const;
 	const CBigNum& getContents() const;

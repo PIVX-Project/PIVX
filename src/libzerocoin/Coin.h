@@ -18,6 +18,7 @@
 #include "amount.h"
 #include "bignum.h"
 #include "util.h"
+
 namespace libzerocoin
 {
 /** A Public coin is the part of a coin that
@@ -55,9 +56,7 @@ public:
     /** Checks that coin is prime and in the appropriate range given the parameters
      * @return true if valid
      */
-    bool validate() const {
-        return (this->params->accumulatorParams.minCoinValue < value) && (value < this->params->accumulatorParams.maxCoinValue) && value.isPrime(params->zkp_iterations);
-    }
+    bool validate() const;
 
     ADD_SERIALIZE_METHODS;
     template <typename Stream, typename Operation>
@@ -92,7 +91,8 @@ public:
     {
         strm >> *this;
     }
-    PrivateCoin(const ZerocoinParams* p, const CoinDenomination denomination);
+    PrivateCoin(const ZerocoinParams* p, const CoinDenomination denomination, bool fMintNew = true);
+    PrivateCoin(const ZerocoinParams* p, const CoinDenomination denomination, const CBigNum& bnSerial, const CBigNum& bnRandomness);
     const PublicCoin& getPublicCoin() const { return this->publicCoin; }
     // @return the coins serial number
     const CBigNum& getSerialNumber() const { return this->serialNumber; }
@@ -101,6 +101,7 @@ public:
     void setPublicCoin(PublicCoin p) { publicCoin = p; }
     void setRandomness(Bignum n) { randomness = n; }
     void setSerialNumber(Bignum n) { serialNumber = n; }
+    bool IsValid();
 
     ADD_SERIALIZE_METHODS;
     template <typename Stream, typename Operation>

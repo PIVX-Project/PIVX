@@ -67,6 +67,7 @@ using namespace std;
 
 #ifdef ENABLE_WALLET
 CWallet* pwalletMain = NULL;
+CzPIVWallet* zwalletMain = NULL;
 int nWalletBackups = 10;
 #endif
 volatile bool fFeeEstimatesInitialized = false;
@@ -263,6 +264,8 @@ void Shutdown()
 #ifdef ENABLE_WALLET
     delete pwalletMain;
     pwalletMain = NULL;
+    delete zwalletMain;
+    zwalletMain = NULL;
 #endif
     LogPrintf("%s: done\n", __func__);
 }
@@ -1446,6 +1449,7 @@ bool AppInit2(boost::thread_group& threadGroup)
 #ifdef ENABLE_WALLET
     if (fDisableWallet) {
         pwalletMain = NULL;
+        zwalletMain = NULL;
         LogPrintf("Wallet disabled!\n");
     } else {
         // needed to restore wallet transaction meta data after -zapwallettxes
@@ -1563,6 +1567,14 @@ bool AppInit2(boost::thread_group& threadGroup)
             }
         }
         fVerifyingBlocks = false;
+
+        //Inititalize zPIVWallet
+        uint256 seed = 0;
+        bool fFirstRunZWallet = !CWalletDB(pwalletMain->strWalletFile).ReadZPIVSeed(seed);
+        zwalletMain = new CzPIVWallet(pwalletMain->strWalletFile, fFirstRunZWallet);
+        zwalletMain->SyncWithChain();
+
+        pwalletMain->setZWallet(zwalletMain);
 
         bool fEnableZPivBackups = GetBoolArg("-backupzpiv", true);
         pwalletMain->setZPivAutoBackups(fEnableZPivBackups);
