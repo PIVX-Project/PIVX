@@ -124,11 +124,12 @@ bool CDBEnv::Open(const fs::path& pathIn, bool retry)
 
     boost::this_thread::interruption_point();
 
+    strPath = pathIn.string();
     if (!LockEnvDirectory(pathIn)) {
+        LogPrintf("Cannot obtain a lock on wallet directory %s. Another instance of PIVX may be using it.", strPath);
         return false;
     }
 
-    strPath = pathIn.string();
     fs::path pathLogDir = pathIn / "database";
     TryCreateDirectories(pathLogDir);
     fs::path pathErrorFile = pathIn / "db.log";
@@ -307,7 +308,7 @@ bool CDB::VerifyEnvironment(const std::string& walletFile, const fs::path& walle
         return UIError(strprintf(_("Wallet %s resides outside data directory %s"), walletFile, walletDir.string()));
 
     if (!bitdb.Open(walletDir, true)) {
-        errorStr = strprintf(_("Cannot obtain a lock on wallet directory %s. Another instance of bitcoin may be using it."), walletDir);
+        errorStr = strprintf(_("Error initializing wallet database environment %s!"), walletDir);
         return false;
     }
 
