@@ -33,6 +33,8 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
+extern CWallet* pwalletMain;
+
 using namespace std;
 QList<CAmount> CoinControlDialog::payAmounts;
 int CoinControlDialog::nSplitBlockDummy;
@@ -153,14 +155,31 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool fMultisigEnabled) : Q
         ui->radioTreeMode->click();
     if (settings.contains("nCoinControlSortColumn") && settings.contains("nCoinControlSortOrder"))
         sortView(settings.value("nCoinControlSortColumn").toInt(), ((Qt::SortOrder)settings.value("nCoinControlSortOrder").toInt()));
+
+    if (pwalletMain)
+        ui->spinBoxStakeSplitThreshold->setValue(pwalletMain->nStakeSplitThreshold);
 }
 
 CoinControlDialog::~CoinControlDialog()
 {
     QSettings settings;
+    uint64_t nStakeSplitThreshold;
+
     settings.setValue("nCoinControlMode", ui->radioListMode->isChecked());
     settings.setValue("nCoinControlSortColumn", sortColumn);
     settings.setValue("nCoinControlSortOrder", (int)sortOrder);
+
+    nStakeSplitThreshold = ui->spinBoxStakeSplitThreshold->value();
+    if (pwalletMain && pwalletMain->nStakeSplitThreshold != nStakeSplitThreshold)
+    {
+        CWalletDB walletdb(pwalletMain->strWalletFile);
+        LOCK(pwalletMain->cs_wallet);
+        {
+            pwalletMain->nStakeSplitThreshold = nStakeSplitThreshold;
+            if (pwalletMain->fFileBacked)
+                walletdb.WriteStakeSplitThreshold(nStakeSplitThreshold);
+        }
+    }
 
     delete ui;
 }
