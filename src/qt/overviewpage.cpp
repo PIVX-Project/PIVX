@@ -14,6 +14,7 @@
 #include "init.h"
 #include "obfuscation.h"
 #include "obfuscationconfig.h"
+#include "optionsdialog.h"
 #include "optionsmodel.h"
 #include "transactionfilterproxy.h"
 #include "transactiontablemodel.h"
@@ -129,7 +130,7 @@ OverviewPage::OverviewPage(QWidget* parent) : QWidget(parent),
     ui->listTransactions->setAttribute(Qt::WA_MacShowFocusRect, false);
 
     connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
-
+    connect(ui->pushButtonUpdateZeromint, SIGNAL(released()), this, SLOT(handleUpdateClicked()));
 
     // init "out of sync" warning labels
     ui->labelWalletStatus->setText("(" + tr("out of sync") + ")");
@@ -230,10 +231,12 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     bool fEnableZeromint = GetBoolArg("-enablezeromint", true);
     int nZeromintPercentage = GetArg("-zeromintpercentage", 10);
     if (fEnableZeromint) {
+	ui->labelPIV2zPIVAutoMint->setText(QString::number(nZeromintPercentage) + "%");
         automintHelp += tr("AutoMint is currently enabled and set to ") + QString::number(nZeromintPercentage) + "%.\n";
         automintHelp += tr("To disable AutoMint add 'enablezeromint=0' in pivx.conf.");
     }
     else {
+	ui->labelPIV2zPIVAutoMint->setText(tr("Disabled"));
         automintHelp += tr("AutoMint is currently disabled.\nTo enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in pivx.conf");
     }
     ui->labelzPIVPercent->setToolTip(automintHelp);
@@ -344,4 +347,16 @@ void OverviewPage::showOutOfSyncWarning(bool fShow)
 {
     ui->labelWalletStatus->setVisible(fShow);
     ui->labelTransactionsStatus->setVisible(fShow);
+}
+
+void OverviewPage::handleUpdateClicked()
+{
+//  BitcoinGUI::optionsClicked();
+  if (!this->clientModel || !clientModel->getOptionsModel())
+      return;
+
+  // can we assume enableWallet true here ?
+  OptionsDialog dlg(this, true);
+  dlg.setModel(clientModel->getOptionsModel());
+  dlg.exec();
 }
