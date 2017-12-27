@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>960</width>
-    <height>615</height>
+    <height>648</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -429,6 +429,9 @@
              <layout class="QGridLayout" name="gridLayout_2" columnstretch="0">
               <item row="0" column="0">
                <widget class="QLabel" name="labelPIV2zPIVAutoMintText">
+                <property name="toolTip">
+                 <string>Current percentage of zPIV autominting.</string>
+                </property>
                 <property name="text">
                  <string>zPIV Auto-Minting:</string>
                 </property>
