@@ -43,6 +43,7 @@ public:
         ThreadsScriptVerif,  // int
         DatabaseCache,       // int
         SpendZeroConfChange, // bool
+        EnableZeromint,      // bool
         ZeromintPercentage,  // int
         ZeromintPrefDenom,   // int
         AnonymizePivxAmount, //int
@@ -90,6 +91,7 @@ private:
 
 signals:
     void displayUnitChanged(int unit);
+    void zeromintEnabledChanged(bool);
     void zeromintPercentageChanged(int);
     void preferredDenomChanged(int);
     void anonymizePivxAmountChanged(int);
