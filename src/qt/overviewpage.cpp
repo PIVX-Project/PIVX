@@ -18,8 +18,8 @@
 #include "optionsmodel.h"
 #include "transactionfilterproxy.h"
 #include "transactiontablemodel.h"
-#include "walletmodel.h"
 #include "util.h"
+#include "walletmodel.h"
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -157,28 +157,23 @@ void OverviewPage::getPercentage(CAmount nUnlockedBalance, CAmount nZerocoinBala
     int nPrecision = 2;
     double dzPercentage = 0.0;
 
-    if (nZerocoinBalance <= 0){
+    if (nZerocoinBalance <= 0) {
         dzPercentage = 0.0;
-    }
-    else{
-        if (nUnlockedBalance <= 0){
+    } else {
+        if (nUnlockedBalance <= 0) {
             dzPercentage = 100.0;
-        }
-        else{
+        } else {
             dzPercentage = 100.0 * (double)(nZerocoinBalance / (double)(nZerocoinBalance + nUnlockedBalance));
         }
     }
 
     double dPercentage = 100.0 - dzPercentage;
-    
+
     szPIVPercentage = "(" + QLocale(QLocale::system()).toString(dzPercentage, 'f', nPrecision) + " %)";
     sPIVPercentage = "(" + QLocale(QLocale::system()).toString(dPercentage, 'f', nPrecision) + " %)";
-    
 }
 
-void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, 
-                              const CAmount& zerocoinBalance, const CAmount& unconfirmedZerocoinBalance, const CAmount& immatureZerocoinBalance,
-                              const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
+void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& zerocoinBalance, const CAmount& unconfirmedZerocoinBalance, const CAmount& immatureZerocoinBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
     currentBalance = balance;
     currentUnconfirmedBalance = unconfirmedBalance;
@@ -233,8 +228,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
         ui->labelPIV2zPIVAutoMint->setText(QString::number(nZeromintPercentage) + "%");
         automintHelp += tr("AutoMint is currently enabled and set to ") + QString::number(nZeromintPercentage) + "%.\n";
         automintHelp += tr("To disable AutoMint add 'enablezeromint=0' in pivx.conf.");
-    }
-    else {
+    } else {
         ui->labelPIV2zPIVAutoMint->setText(tr("Disabled"));
         automintHelp += tr("AutoMint is currently disabled.\nTo enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in pivx.conf");
     }
@@ -306,10 +300,10 @@ void OverviewPage::setWalletModel(WalletModel* model)
 
         // Keep up to date with wallet
         setBalance(model->getBalance(), model->getUnconfirmedBalance(), model->getImmatureBalance(),
-                   model->getZerocoinBalance(), model->getUnconfirmedZerocoinBalance(), model->getImmatureZerocoinBalance(), 
-                   model->getWatchBalance(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance());
-        connect(model, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)), this, 
-                         SLOT(setBalance(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)));
+            model->getZerocoinBalance(), model->getUnconfirmedZerocoinBalance(), model->getImmatureZerocoinBalance(),
+            model->getWatchBalance(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance());
+        connect(model, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)), this,
+            SLOT(setBalance(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)));
 
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
 
@@ -353,32 +347,31 @@ void OverviewPage::showOutOfSyncWarning(bool fShow)
 
 void OverviewPage::updateZeromintOptionStatus()
 {
-
-  if (fEnableZeromint) {
-    ui->labelPIV2zPIVAutoMint->setText(QString::number(nZeromintPercentage) + "%");
-  } else {
-    ui->labelPIV2zPIVAutoMint->setText(tr("Disabled"));
-  }
+    if (fEnableZeromint) {
+        ui->labelPIV2zPIVAutoMint->setText(QString::number(nZeromintPercentage) + "%");
+    } else {
+        ui->labelPIV2zPIVAutoMint->setText(tr("Disabled"));
+    }
 }
 
 void OverviewPage::updateZeromintOptionEnabled(bool fEnabled)
 {
-  updateZeromintOptionStatus();
+    updateZeromintOptionStatus();
 }
 
 void OverviewPage::updateZeromintOptionPercentage(int p)
 {
-  updateZeromintOptionStatus();
+    updateZeromintOptionStatus();
 }
 
 void OverviewPage::handleUpdateClicked()
 {
-//  BitcoinGUI::optionsClicked();
-  if (!this->clientModel || !clientModel->getOptionsModel())
-      return;
+    //  BitcoinGUI::optionsClicked();
+    if (!this->clientModel || !clientModel->getOptionsModel())
+        return;
 
-  // can we assume enableWallet true here ?
-  OptionsDialog dlg(this, true);
-  dlg.setModel(clientModel->getOptionsModel());
-  dlg.exec();
+    // can we assume enableWallet true here ?
+    OptionsDialog dlg(this, true);
+    dlg.setModel(clientModel->getOptionsModel());
+    dlg.exec();
 }
