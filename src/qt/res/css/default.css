@@ -1026,6 +1026,24 @@ font-size:14px;
 /* min-height:35px; */
 }
 
+QWidget .QFrame#frame_5 .QLabel#labelPIV2zPIVAutoMintText { /* PIV to zPIV Auto-Minting Label */
+qproperty-alignment: 'AlignVCenter | AlignRight';
+min-width:160px;
+background-color:#5B4C7C;
+color:#fff;
+margin-right:5px;
+padding-right:5px;
+font-weight:bold;
+font-size:14px;
+/* min-height:35px; */
+}
+
+QWidget .QFrame#frame_5 .QLabel#labelPIV2zPIVAutoMint { /* PIV to zPIV Auto-Minting */
+min-width: 75px;
+font-size: 12px;
+margin-right: 5px;
+}
+
 QWidget .QFrame#frame_4 .QLabel#labelzBalance { /* Available zPIV Balance */
 qproperty-alignment: 'AlignVCenter | AlignLeft';
 font-size:12px;

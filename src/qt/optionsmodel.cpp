@@ -72,6 +72,9 @@ void OptionsModel::Init()
         settings.setValue("fCoinControlFeatures", false);
     fCoinControlFeatures = settings.value("fCoinControlFeatures", false).toBool();
 
+    if (!settings.contains("fEnableZeromint"))
+        settings.setValue("fEnableZeromint", true);
+    fEnableZeromint = settings.value("fEnableZeromint").toBool();
     if (!settings.contains("nPreferredDenom"))
         settings.setValue("nPreferredDenom", 0);
     nPreferredDenom = settings.value("nPreferredDenom", "0").toLongLong();
@@ -147,6 +150,8 @@ void OptionsModel::Init()
     if (!SoftSetArg("-lang", settings.value("language").toString().toStdString()))
         addOverriddenOption("-lang");
 
+    if (settings.contains("fEnableZeromint"))
+        SoftSetBoolArg("-enablezeromint", settings.value("fEnableZeromint").toBool());
     if (settings.contains("nZeromintPercentage"))
         SoftSetArg("-zeromintpercentage", settings.value("nZeromintPercentage").toString().toStdString());
     if (settings.contains("nPreferredDenom"))
@@ -230,6 +235,8 @@ QVariant OptionsModel::data(const QModelIndex& index, int role) const
             return settings.value("nDatabaseCache");
         case ThreadsScriptVerif:
             return settings.value("nThreadsScriptVerif");
+        case EnableZeromint:
+            return QVariant(fEnableZeromint);
         case ZeromintPercentage:
             return QVariant(nZeromintPercentage);
         case ZeromintPrefDenom:
@@ -339,6 +346,11 @@ bool OptionsModel::setData(const QModelIndex& index, const QVariant& value, int 
                 setRestartRequired(true);
             }
             break;
+        case EnableZeromint:
+            fEnableZeromint = value.toBool();
+            settings.setValue("fEnableZeromint", fEnableZeromint);
+            emit zeromintEnabledChanged(fEnableZeromint);
+            break;
         case ZeromintPercentage:
             nZeromintPercentage = value.toInt();
             settings.setValue("nZeromintPercentage", nZeromintPercentage);
@@ -419,6 +431,7 @@ bool OptionsModel::getProxySettings(QNetworkProxy& proxy) const
 void OptionsModel::setRestartRequired(bool fRequired)
 {
     QSettings settings;
+    // XXX: why 'return' here?  either remove or change function return type
     return settings.setValue("fRestartRequired", fRequired);
 }
 

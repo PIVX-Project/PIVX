@@ -79,7 +79,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(paren
         digits.setNum(index);
         ui->digits->addItem(digits, digits);
     }
-    
+
     /* Theme selector static themes */
     ui->theme->addItem(QString("Default"), QVariant("default"));
 
@@ -194,6 +194,8 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->bitcoinAtStartup, OptionsModel::StartAtStartup);
     mapper->addMapping(ui->threadsScriptVerif, OptionsModel::ThreadsScriptVerif);
     mapper->addMapping(ui->databaseCache, OptionsModel::DatabaseCache);
+    // Zerocoin mint enabled
+    mapper->addMapping(ui->cbEnableAutoMint, OptionsModel::EnableZeromint);
     // Zerocoin mint percentage
     mapper->addMapping(ui->zeromintPercentage, OptionsModel::ZeromintPercentage);
     // Zerocoin preferred denomination
@@ -211,7 +213,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->proxyIp, OptionsModel::ProxyIP);
     mapper->addMapping(ui->proxyPort, OptionsModel::ProxyPort);
 
-    /* Window */
+/* Window */
 #ifndef Q_OS_MAC
     mapper->addMapping(ui->minimizeToTray, OptionsModel::MinimizeToTray);
     mapper->addMapping(ui->minimizeOnClose, OptionsModel::MinimizeOnClose);
