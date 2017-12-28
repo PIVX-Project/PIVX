@@ -73,7 +73,7 @@ void OptionsModel::Init()
     fCoinControlFeatures = settings.value("fCoinControlFeatures", false).toBool();
 
     if (!settings.contains("fEnableZeromint"))
-        settings.setValue("fEnableZeromint", false);  // by default zeromintEnabled is 'off'
+        settings.setValue("fEnableZeromint", true);
     fEnableZeromint = settings.value("fEnableZeromint").toBool();
     if (!settings.contains("nPreferredDenom"))
         settings.setValue("nPreferredDenom", 0);
