@@ -153,11 +153,13 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool fMultisigEnabled) : Q
         ui->radioTreeMode->click();
     if (settings.contains("nCoinControlSortColumn") && settings.contains("nCoinControlSortOrder"))
         sortView(settings.value("nCoinControlSortColumn").toInt(), ((Qt::SortOrder)settings.value("nCoinControlSortOrder").toInt()));
+
 }
 
 CoinControlDialog::~CoinControlDialog()
 {
     QSettings settings;
+
     settings.setValue("nCoinControlMode", ui->radioListMode->isChecked());
     settings.setValue("nCoinControlSortColumn", sortColumn);
     settings.setValue("nCoinControlSortOrder", (int)sortOrder);

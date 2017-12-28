@@ -113,6 +113,11 @@ void OptionsModel::Init()
     if (!SoftSetBoolArg("-spendzeroconfchange", settings.value("bSpendZeroConfChange").toBool()))
         addOverriddenOption("-spendzeroconfchange");
 #endif
+    if (!settings.contains("nStakeSplitThreshold"))
+        settings.setValue("nStakeSplitThreshold", 1);
+
+    if (!settings.contains("nAnonymizePivxAmount"))
+        settings.setValue("nAnonymizePivxAmount", 1000);
 
     // Network
     if (!settings.contains("fUseUPnP"))
@@ -214,6 +219,10 @@ QVariant OptionsModel::data(const QModelIndex& index, int role) const
         case ShowMasternodesTab:
             return settings.value("fShowMasternodesTab");
 #endif
+        case StakeSplitThreshold:
+            if (pwalletMain)
+                return QVariant((int)pwalletMain->nStakeSplitThreshold);
+            return settings.value("nStakeSplitThreshold");
         case DisplayUnit:
             return nDisplayUnit;
         case ThirdPartyTxUrls:
@@ -311,6 +320,10 @@ bool OptionsModel::setData(const QModelIndex& index, const QVariant& value, int 
             }
             break;
 #endif
+        case StakeSplitThreshold:
+            settings.setValue("nStakeSplitThreshold", value.toInt());
+            setStakeSplitThreshold(value.toInt());
+            break;
         case DisplayUnit:
             setDisplayUnit(value);
             break;
@@ -396,6 +409,24 @@ void OptionsModel::setDisplayUnit(const QVariant& value)
         nDisplayUnit = value.toInt();
         settings.setValue("nDisplayUnit", nDisplayUnit);
         emit displayUnitChanged(nDisplayUnit);
+    }
+}
+
+/* Update StakeSplitThreshold's value in wallet */
+void OptionsModel::setStakeSplitThreshold(int value)
+{
+    // XXX: maybe it's worth to wrap related stuff with WALLET_ENABLE ?
+    uint64_t nStakeSplitThreshold;
+
+    nStakeSplitThreshold = value;
+    if (pwalletMain && pwalletMain->nStakeSplitThreshold != nStakeSplitThreshold) {
+        CWalletDB walletdb(pwalletMain->strWalletFile);
+        {
+            LOCK(pwalletMain->cs_wallet);
+            pwalletMain->nStakeSplitThreshold = nStakeSplitThreshold;
+            if (pwalletMain->fFileBacked)
+                walletdb.WriteStakeSplitThreshold(nStakeSplitThreshold);
+        }
     }
 }
 
