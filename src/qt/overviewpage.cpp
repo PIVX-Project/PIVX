@@ -19,6 +19,7 @@
 #include "transactionfilterproxy.h"
 #include "transactiontablemodel.h"
 #include "walletmodel.h"
+#include "util.h"
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -228,8 +229,6 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 
     // Adjust bubble-help according to AutoMint settings
     QString automintHelp = tr("Current percentage of zPIV.\nIf AutoMint is enabled this percentage will settle around the configured AutoMint percentage (default = 10%).\n");
-    bool fEnableZeromint = GetBoolArg("-enablezeromint", true);
-    int nZeromintPercentage = GetArg("-zeromintpercentage", 10);
     if (fEnableZeromint) {
         ui->labelPIV2zPIVAutoMint->setText(QString::number(nZeromintPercentage) + "%");
         automintHelp += tr("AutoMint is currently enabled and set to ") + QString::number(nZeromintPercentage) + "%.\n";
@@ -354,8 +353,6 @@ void OverviewPage::showOutOfSyncWarning(bool fShow)
 
 void OverviewPage::updateZeromintOptionStatus()
 {
-  bool fEnableZeromint = GetBoolArg("-enablezeromint", true);
-  int nZeromintPercentage = GetArg("-zeromintpercentage", 10);
 
   if (fEnableZeromint) {
     ui->labelPIV2zPIVAutoMint->setText(QString::number(nZeromintPercentage) + "%");
