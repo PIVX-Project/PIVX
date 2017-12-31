@@ -40,8 +40,9 @@ bool CCrypter::SetKeyFromPassphrase(const SecureString& strKeyData, const std::v
 
 bool CCrypter::SetKey(const CKeyingMaterial& chNewKey, const std::vector<unsigned char>& chNewIV)
 {
-    if (chNewKey.size() != WALLET_CRYPTO_KEY_SIZE || chNewIV.size() != WALLET_CRYPTO_KEY_SIZE)
+    if (chNewKey.size() != WALLET_CRYPTO_KEY_SIZE || chNewIV.size() != WALLET_CRYPTO_KEY_SIZE) {
         return false;
+    }
 
     memcpy(&chKey[0], &chNewKey[0], sizeof chKey);
     memcpy(&chIV[0], &chNewIV[0], sizeof chIV);
@@ -54,7 +55,8 @@ bool CCrypter::Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned
 {
     if (!fKeySet)
         return false;
-
+//    vector<unsigned char> x(vchPlaintext.begin(), vchPlaintext.end());
+//    CBigNum t(x);
     // max ciphertext len for a n bytes of plaintext is
     // n + AES_BLOCK_SIZE - 1 bytes
     int nLen = vchPlaintext.size();
@@ -74,6 +76,8 @@ bool CCrypter::Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned
     if (!fOk) return false;
 
     vchCiphertext.resize(nCLen + nFLen);
+
+    //CBigNum y(vchCiphertext);
     return true;
 }
 
@@ -108,71 +112,80 @@ bool CCrypter::Decrypt(const std::vector<unsigned char>& vchCiphertext, CKeyingM
 bool EncryptSecret(const CKeyingMaterial& vMasterKey, const CKeyingMaterial& vchPlaintext, const uint256& nIV, std::vector<unsigned char>& vchCiphertext)
 {
     CCrypter cKeyCrypter;
+    vector<unsigned char> key(vMasterKey.begin(), vMasterKey.end());
+    vector<unsigned char> plain(vchPlaintext.begin(), vchPlaintext.end());
+
+
+
     std::vector<unsigned char> chIV(WALLET_CRYPTO_KEY_SIZE);
     memcpy(&chIV[0], &nIV, WALLET_CRYPTO_KEY_SIZE);
-    if (!cKeyCrypter.SetKey(vMasterKey, chIV))
+
+
+    if (!cKeyCrypter.SetKey(vMasterKey, chIV)) {
         return false;
-    return cKeyCrypter.Encrypt(*((const CKeyingMaterial*)&vchPlaintext), vchCiphertext);
+    }
+    bool ret = cKeyCrypter.Encrypt(*((const CKeyingMaterial*)&vchPlaintext), vchCiphertext);
+    return ret;
 }
 
-bool CCrypter::CryptZerocoinMint(const CZerocoinMint &mintIn, CZerocoinMint& mintOut, CryptionMethod method)
-{
-    LogPrintf("inside zercoin crypt xyz123");
-    if (!fKeySet)
-        return false;
-
-    //already encrypted
-    if(mintIn.IsCrypted() && method == ENC) {
-        mintOut = mintIn;
-        return true;
-    }
-
-    //already decryted
-    if(!mintIn.IsCrypted() && method == DEC) {
-        mintOut = mintIn;
-        return true;
-    }
-
-    vector< vector<unsigned char> > vchSecrets;
-
-    vchSecrets[SERIAL] = mintIn.GetSerialNumber().getvch();
-    vchSecrets[RANDOM] = mintIn.GetRandomness().getvch();
-
-    for(auto& secret : vchSecrets) {
-        int nSecretLength = (int) secret.size();
-        int nCipherLength = nSecretLength + AES_BLOCK_SIZE, nFLen = 0;
-
-        vector<unsigned char> secretCiphered;
-
-        EVP_CIPHER_CTX ctx;
-
-        bool fOk = true;
-        switch(method) {
-            case CryptionMethod::ENC:
-                EVP_CIPHER_CTX_init(&ctx);
-                if (fOk) fOk = EVP_EncryptInit_ex(&ctx, EVP_aes_256_cbc(), NULL, chKey, chIV) != 0;
-                if (fOk) fOk = EVP_EncryptUpdate(&ctx, &secretCiphered[0], &nCipherLength, &secret[0], nSecretLength) != 0;
-                if (fOk) fOk = EVP_EncryptFinal_ex(&ctx, (&secretCiphered[0]) + nSecretLength, &nFLen) != 0;
-                EVP_CIPHER_CTX_cleanup(&ctx);
-                break;
-            case CryptionMethod::DEC:
-                EVP_CIPHER_CTX_init(&ctx);
-                if (fOk) fOk = EVP_DecryptInit_ex(&ctx, EVP_aes_256_cbc(), NULL, chKey, chIV) != 0;
-                if (fOk) fOk = EVP_DecryptUpdate(&ctx, &secretCiphered[0], &nCipherLength, &secret[0], nSecretLength) != 0;
-                if (fOk) fOk = EVP_DecryptFinal_ex(&ctx, (&secretCiphered[0]) + nCipherLength, &nFLen) != 0;
-                EVP_CIPHER_CTX_cleanup(&ctx);
-                break;
-        }
-        if (!fOk) return false;
-    }
-
-    mintOut = CZerocoinMint(mintIn);
-    mintOut.SetSerialNumber(CBigNum(vchSecrets[SERIAL]));
-    mintOut.SetRandomness(CBigNum(vchSecrets[RANDOM]));
-    method == ENC ? mintOut.SetIsCrypted(true) : mintOut.SetIsCrypted(false);
-
-    return true;
-}
+//bool CCrypter::CryptZerocoinMint(const CZerocoinMint &mintIn, CZerocoinMint& mintOut, CryptionMethod method)
+//{
+//    LogPrintf("inside zercoin crypt xyz123");
+//    if (!fKeySet)
+//        return false;
+//
+//    //already encrypted
+//    if(mintIn.IsCrypted() && method == ENC) {
+//        mintOut = mintIn;
+//        return true;
+//    }
+//
+//    //already decryted
+//    if(!mintIn.IsCrypted() && method == DEC) {
+//        mintOut = mintIn;
+//        return true;
+//    }
+//
+//    vector< vector<unsigned char> > vchSecrets;
+//
+//    vchSecrets[SERIAL] = mintIn.GetSerialNumber().getvch();
+//    vchSecrets[RANDOM] = mintIn.GetRandomness().getvch();
+//
+//    for(auto& secret : vchSecrets) {
+//        int nSecretLength = (int) secret.size();
+//        int nCipherLength = nSecretLength + AES_BLOCK_SIZE, nFLen = 0;
+//
+//        vector<unsigned char> secretCiphered;
+//
+//        EVP_CIPHER_CTX ctx;
+//
+//        bool fOk = true;
+//        switch(method) {
+//            case CryptionMethod::ENC:
+//                EVP_CIPHER_CTX_init(&ctx);
+//                if (fOk) fOk = EVP_EncryptInit_ex(&ctx, EVP_aes_256_cbc(), NULL, chKey, chIV) != 0;
+//                if (fOk) fOk = EVP_EncryptUpdate(&ctx, &secretCiphered[0], &nCipherLength, &secret[0], nSecretLength) != 0;
+//                if (fOk) fOk = EVP_EncryptFinal_ex(&ctx, (&secretCiphered[0]) + nSecretLength, &nFLen) != 0;
+//                EVP_CIPHER_CTX_cleanup(&ctx);
+//                break;
+//            case CryptionMethod::DEC:
+//                EVP_CIPHER_CTX_init(&ctx);
+//                if (fOk) fOk = EVP_DecryptInit_ex(&ctx, EVP_aes_256_cbc(), NULL, chKey, chIV) != 0;
+//                if (fOk) fOk = EVP_DecryptUpdate(&ctx, &secretCiphered[0], &nCipherLength, &secret[0], nSecretLength) != 0;
+//                if (fOk) fOk = EVP_DecryptFinal_ex(&ctx, (&secretCiphered[0]) + nCipherLength, &nFLen) != 0;
+//                EVP_CIPHER_CTX_cleanup(&ctx);
+//                break;
+//        }
+//        if (!fOk) return false;
+//    }
+//
+//    mintOut = CZerocoinMint(mintIn);
+//    mintOut.SetSerialNumber(CBigNum(vchSecrets[SERIAL]));
+//    mintOut.SetRandomness(CBigNum(vchSecrets[RANDOM]));
+//    method == ENC ? mintOut.SetIsCrypted(true) : mintOut.SetIsCrypted(false);
+//
+//    return true;
+//}
 
 // General secure AES 256 CBC encryption routine
 bool EncryptAES256(const SecureString& sKey, const SecureString& sPlaintext, const std::string& sIV, std::string& sCiphertext)
@@ -398,19 +411,29 @@ bool CCryptoKeyStore::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
 {
     {
         LOCK(cs_KeyStore);
-        if (!mapCryptedKeys.empty() || IsCrypted())
+        if (!mapCryptedKeys.empty() || IsCrypted()) {
             return false;
+        }
 
         fUseCrypto = true;
         BOOST_FOREACH (KeyMap::value_type& mKey, mapKeys) {
+
             const CKey& key = mKey.second;
+
             CPubKey vchPubKey = key.GetPubKey();
+
             CKeyingMaterial vchSecret(key.begin(), key.end());
+
             std::vector<unsigned char> vchCryptedSecret;
-            if (!EncryptSecret(vMasterKeyIn, vchSecret, vchPubKey.GetHash(), vchCryptedSecret))
+
+            if (!EncryptSecret(vMasterKeyIn, vchSecret, vchPubKey.GetHash(), vchCryptedSecret)) {
                 return false;
-            if (!AddCryptedKey(vchPubKey, vchCryptedSecret))
+            }
+
+            if (!AddCryptedKey(vchPubKey, vchCryptedSecret)) {
                 return false;
+            }
+
         }
         mapKeys.clear();
 
@@ -422,25 +445,21 @@ bool CCryptoKeyStore::EncryptKeys(CKeyingMaterial& vMasterKeyIn)
     return true;
 }
 
-bool CCryptoKeyStore::AddCryptedZerocoinMint(const CZerocoinMint &mintCrypted)
+bool CCryptoKeyStore::AddCryptedZerocoinMint(const CZerocoinMint& mintCrypted)
 {
     {
         LOCK(cs_KeyStore);
-        if (!SetCrypted())
+        if (!SetCrypted()) {
             return false;
-        LogPrintf("%s - %i\n", __func__, 1);
+        }
 
-
-        if(!mintCrypted.IsCrypted())
+        if(!mintCrypted.IsCrypted()) {
             return false;
-        LogPrintf("%s - %i\n", __func__, 2);
-
+        }
 
         mapCryptedMints[mintCrypted.GetValue().getuint256()] = mintCrypted;
-        LogPrintf("%s - %i\n", __func__, 3);
 
         CWalletDB(pwalletMain->strWalletFile).WriteZerocoinMint(mintCrypted);
-        LogPrintf("%s - %i\n", __func__, 4);
     }
     return true;
 }
@@ -450,32 +469,29 @@ bool CCryptoKeyStore::AddZerocoinMint(const CZerocoinMint& mint)
     if (!IsCrypted()) {
         return CWalletDB(pwalletMain->strWalletFile).WriteZerocoinMint(mint);
     } else {
+
         map<ZerocoinSecrets, vector<unsigned char> > mapPlain;
         map<ZerocoinSecrets, vector<unsigned char> > mapSecrets;
 
-        int i = 0;
-        LogPrintf("%s - %i\n", __func__, i++);
         const uint256 key = mint.GetValue().getuint256();
         const uint256 nIV = Hash(key.begin(), key.end());
-        LogPrintf("%s - %i\n", __func__, i++);
 
         mapPlain[SERIAL] = mint.GetSerialNumber().getvch();
         mapPlain[RANDOM] = mint.GetRandomness().getvch();
-        LogPrintf("%s - %i\n", __func__, i++);
 
         CKeyingMaterial kmSerialPlain(mapPlain[SERIAL].begin(), mapPlain[SERIAL].end());
         CKeyingMaterial kmRandomnessPlain(mapPlain[RANDOM].begin(), mapPlain[RANDOM].end());
-        LogPrintf("%s - %i\n", __func__, i++);
 
-        EncryptSecret(vMasterKey, kmSerialPlain, nIV, mapSecrets[SERIAL]);
-        EncryptSecret(vMasterKey, kmRandomnessPlain, nIV, mapSecrets[RANDOM]);
-        LogPrintf("%s - %i\n", __func__, i++);
+        vector<unsigned char> serialOut;
+        vector<unsigned char> randomOut;
+
+        EncryptSecret(vMasterKey, kmSerialPlain, nIV, serialOut);
+        EncryptSecret(vMasterKey, kmRandomnessPlain, nIV, randomOut);
 
         CZerocoinMint mintCrypted(mint);
-        mintCrypted.SetSerialNumber(CBigNum(mapSecrets[SERIAL]));
-        mintCrypted.SetRandomness(CBigNum(mapSecrets[RANDOM]));
+        mintCrypted.SetSerialNumber(CBigNum(serialOut));
+        mintCrypted.SetRandomness(CBigNum(randomOut));
         mintCrypted.SetIsCrypted(true);
-        LogPrintf("%s - %i\n", __func__, i++);
 
         AddCryptedZerocoinMint(mintCrypted);
         return true;
@@ -536,44 +552,35 @@ bool CCryptoKeyStore::GetZerocoinMint(const CBigNum &bnPubcoinValue, CZerocoinMi
 
 bool CCryptoKeyStore::EncryptZerocoinMints(CKeyingMaterial& vMasterKeyIn)
 {
-    int i = 0;
-    if (!mapCryptedKeys.empty() || IsCrypted())
-        return false;
-    LogPrintf("%s - %i\n", __func__, i++);
+    if (!mapCryptedMints.empty() || IsCrypted()) {
+        return true;
+    }
 
     cs_KeyStore.try_lock(); //this call will obtain a lock if not already locked
     //for the time being, the only call to this method is from CCryptoKeyStore::EncryptKeys
     //and calls this method before releasing the lock. This is more of a sanity check over anything
 
-    LogPrintf("%s - %i\n", __func__, i++);
-
     list<CZerocoinMint> listMints = CWalletDB(pwalletMain->strWalletFile).ListMintedCoins(true, false, false);
-
-    LogPrintf("%s - %i\n", __func__, i++);
 
     // if no mints tracked consider success
     if(listMints.empty()) {
         return true;
     }
-    LogPrintf("%s - %i\n", __func__, i++);
 
-    for (auto mint : listMints) {
+    for (auto& mint : listMints) {
         AddZerocoinMint(mint);
     }
-    LogPrintf("%s - %i\n", __func__, i++);
+
+    mapCryptedMints.clear();
 
     return true;
 }
 
 bool CCryptoKeyStore::RemoveZerocoinMint(const CZerocoinMint &mint)
 {
-    LogPrintf("%s - %i\n", __func__, 0);
-
-    if(IsCrypted()) { //delete reference in heap
-        LogPrintf("%s - %i\n", __func__, 1);
+    if(IsCrypted()) {
         mapCryptedMints.erase(mint.GetValue().getuint256());
     }
-    LogPrintf("%s - %i\n", __func__, 2);
     //delete reference from wallet.dat
     return CWalletDB(pwalletMain->strWalletFile).EraseZerocoinMint(mint);
 }
