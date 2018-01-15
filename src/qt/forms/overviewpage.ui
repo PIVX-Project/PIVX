@@ -582,6 +582,59 @@
                    </widget>
                   </item>
                   <item>
+                   <widget class="QFrame" name="frame_AutoMinting">
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_2">
+                     <item>
+                      <layout class="QGridLayout" name="gridLayout_2">
+                       <item row="0" column="1">
+                        <widget class="QLabel" name="labelPIV2zPIVAutoMint">
+                         <property name="text">
+                          <string>Unknown</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="0">
+                        <widget class="QLabel" name="labelPIV2zPIVAutoMintText">
+                         <property name="toolTip">
+                          <string>Current percentage of zPIV autominting.</string>
+                         </property>
+                         <property name="text">
+                          <string>zPIV Auto-Minting:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="2">
+                        <widget class="QPushButton" name="pushButtonUpdateZeromint">
+                         <property name="text">
+                          <string>Update</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="3">
+                        <spacer name="horizontalSpacer_9">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>40</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
                    <widget class="QFrame" name="frame_ZerocoinBalances">
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>

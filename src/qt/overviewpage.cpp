@@ -19,6 +19,8 @@
 #include "transactionrecord.h"
 #include "transactiontablemodel.h"
 #include "walletmodel.h"
+#include "optionsdialog.h"
+#include "util.h"
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -144,6 +146,7 @@ OverviewPage::OverviewPage(QWidget* parent) : QWidget(parent),
     ui->listTransactions->setAttribute(Qt::WA_MacShowFocusRect, false);
 
     connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
+    connect(ui->pushButtonUpdateZeromint, SIGNAL(released()), this, SLOT(handleUpdateClicked()));
 
     // init "out of sync" warning labels
     ui->labelWalletStatus->setText("(" + tr("out of sync") + ")");
@@ -241,13 +244,14 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 
     // Adjust bubble-help according to AutoMint settings
     QString automintHelp = tr("Current percentage of zPIV.\nIf AutoMint is enabled this percentage will settle around the configured AutoMint percentage (default = 10%).\n");
-    bool fEnableZeromint = GetBoolArg("-enablezeromint", true);
-    int nZeromintPercentage = GetArg("-zeromintpercentage", 10);
+
     if (fEnableZeromint) {
+        ui->labelPIV2zPIVAutoMint->setText(QString::number(nZeromintPercentage) + "%");
         automintHelp += tr("AutoMint is currently enabled and set to ") + QString::number(nZeromintPercentage) + "%.\n";
         automintHelp += tr("To disable AutoMint add 'enablezeromint=0' in pivx.conf.");
     }
     else {
+        ui->labelPIV2zPIVAutoMint->setText(tr("Disabled"));
         automintHelp += tr("AutoMint is currently disabled.\nTo enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in pivx.conf");
     }
     ui->labelzPIVPercent->setToolTip(automintHelp);
@@ -327,6 +331,9 @@ void OverviewPage::setWalletModel(WalletModel* model)
 
         updateWatchOnlyLabels(model->haveWatchOnly());
         connect(model, SIGNAL(notifyWatchonlyChanged(bool)), this, SLOT(updateWatchOnlyLabels(bool)));
+
+        connect(model->getOptionsModel(), SIGNAL(zeromintEnableChanged(bool)), this, SLOT(updateZeromintOptionEnabled(bool)));
+        connect(model->getOptionsModel(), SIGNAL(zeromintPercentageChanged(int)), this, SLOT(updateZeromintOptionPercentage(int)));
     }
 
     // update the display unit, to not use the default ("PIV")
@@ -358,4 +365,35 @@ void OverviewPage::showOutOfSyncWarning(bool fShow)
 {
     ui->labelWalletStatus->setVisible(fShow);
     ui->labelTransactionsStatus->setVisible(fShow);
+}
+
+void OverviewPage::updateZeromintOptionStatus()
+{
+    if (fEnableZeromint) {
+        ui->labelPIV2zPIVAutoMint->setText(QString::number(nZeromintPercentage) + "%");
+    } else {
+        ui->labelPIV2zPIVAutoMint->setText(tr("Disabled"));
+    }
+}
+
+void OverviewPage::updateZeromintOptionEnabled(bool fEnabled)
+{
+    updateZeromintOptionStatus();
+}
+
+void OverviewPage::updateZeromintOptionPercentage(int p)
+{
+    updateZeromintOptionStatus();
+}
+
+void OverviewPage::handleUpdateClicked()
+{
+    // XXX: copy of BitcoinGUI::optionsClicked().  reuse original method somehow ?
+    if (!this->clientModel || !clientModel->getOptionsModel())
+        return;
+
+    // XXX: can we assume enableWallet true here ?
+    OptionsDialog dlg(this, true);
+    dlg.setModel(clientModel->getOptionsModel());
+    dlg.exec();
 }

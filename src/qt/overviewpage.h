@@ -69,6 +69,10 @@ private slots:
     void handleTransactionClicked(const QModelIndex& index);
     void updateAlerts(const QString& warnings);
     void updateWatchOnlyLabels(bool showWatchOnly);
+    void handleUpdateClicked();
+    void updateZeromintOptionStatus();
+    void updateZeromintOptionEnabled(bool);
+    void updateZeromintOptionPercentage(int);
 };
 
 #endif // BITCOIN_QT_OVERVIEWPAGE_H
