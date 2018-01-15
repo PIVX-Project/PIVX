@@ -22,9 +22,10 @@
 
 #include "libzerocoin/Coin.h"
 #include "spork.h"
+#include "univalue/include/univalue.h"
 #include <boost/assign/list_of.hpp>
 
-#include <univalue.h>
+//#include <univalue.h>
 
 using namespace std;
 using namespace boost;
@@ -2573,7 +2574,7 @@ UniValue resetmintzerocoin(const UniValue& params, bool fHelp)
     UniValue arrDeleted(UniValue::VARR);
     for (CZerocoinMint mint : vMintsMissing) {
         arrDeleted.push_back(mint.GetValue().GetHex());
-        walletdb.ArchiveMintOrphan(mint);
+        pwalletMain->AddMintToArchive(mint);
     }
 
     UniValue obj(UniValue::VOBJ);
@@ -2614,7 +2615,7 @@ UniValue resetspentzerocoin(const UniValue& params, bool fHelp)
         for (CZerocoinMint mint : listMints) {
             if (mint.GetSerialNumber() == spend.GetSerial()) {
                 mint.SetUsed(false);
-                walletdb.WriteZerocoinMint(mint);
+                pwalletMain->AddZerocoinMint(mint);
                 walletdb.EraseZerocoinSpendSerialEntry(spend.GetSerial());
                 RemoveSerialFromDB(spend.GetSerial());
                 UniValue obj(UniValue::VOBJ);
@@ -2766,12 +2767,8 @@ UniValue importzerocoins(const UniValue& params, bool fHelp)
         mint.SetTxHash(txid);
         mint.SetHeight(nHeight);
 
-//        if(pwalletMain->IsCrypted() && !mint.Encrypt()){
-//            LogPrintf("Error: encryption of mint failed");
-//            //TODO: throw RPC ERROR
-//        }
+        pwalletMain->AddZerocoinMint(mint);
 
-        walletdb.WriteZerocoinMint(mint);
         count++;
         nValue += libzerocoin::ZerocoinDenominationToAmount(denom);
     }

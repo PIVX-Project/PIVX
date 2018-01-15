@@ -91,6 +91,9 @@ public:
     bool SetKeyFromPassphrase(const SecureString& strKeyData, const std::vector<unsigned char>& chSalt, const unsigned int nRounds, const unsigned int nDerivationMethod);
     bool Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned char>& vchCiphertext);
     bool Decrypt(const std::vector<unsigned char>& vchCiphertext, CKeyingMaterial& vchPlaintext);
+    bool EncryptZerocoinMint(const CZerocoinMint& mintPlain, CZerocoinMint& mintCrypted);
+    bool CryptZerocoinMint(const CZerocoinMint& mintIn, CZerocoinMint& mintOut, CryptionMethod method);
+    bool DecryptZerocoinMint(const CZerocoinMint& mintCrypted, CZerocoinMint& mintPlain);
     bool SetKey(const CKeyingMaterial& chNewKey, const std::vector<unsigned char>& chNewIV);
 
     void CleanKey()
@@ -145,10 +148,11 @@ private:
     bool fDecryptionThoroughlyChecked;
     //! will encrypt previously unencrypted mints
     bool EncryptZerocoinMints(CKeyingMaterial& vMasterKeyIn);
-
     bool AddCryptedZerocoinMint(const CZerocoinMint& mintCrypted);
-protected:
+    bool EncryptZerocoinMint(const CZerocoinMint& mintPlain, CZerocoinMint& mintEncrypted);
+    bool DecryptZerocoinMint(const CZerocoinMint& mintEncrypted, CZerocoinMint& mintPlain);
 
+protected:
     bool SetCrypted();
 
     //! will encrypt previously unencrypted keys
@@ -201,15 +205,17 @@ public:
             return;
         }
         setAddress.clear();
-        CryptedKeyMap::const_iterator mi = mapCryptedKeys.begin();
+        auto mi = mapCryptedKeys.begin();
         while (mi != mapCryptedKeys.end()) {
             setAddress.insert((*mi).first);
             mi++;
         }
     }
-    bool GetZerocoinMint(const CBigNum& bnPubcoinValue, CZerocoinMint& mintDecrypted);
+    bool GetZerocoinMint(const CBigNum& bnPubcoinValue, CZerocoinMint& mintOut, bool fForUnarchive);
     bool AddZerocoinMint(const CZerocoinMint& mint);
     bool RemoveZerocoinMint(const CZerocoinMint& mint);
+    bool GetMintFromArchive(const CBigNum& bnPubcoinValue, CZerocoinMint& mintOut);
+    bool AddMintToArchive(const CZerocoinMint& mint);
     /**
      * Wallet status (encrypted, locked) changed.
      * Note: Called without locks held.

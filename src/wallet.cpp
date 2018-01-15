@@ -1303,6 +1303,9 @@ CAmount CWallet::GetZerocoinBalance(bool fMatureOnly) const
         LOCK2(cs_main, cs_wallet);
         // Get Unused coins
         list<CZerocoinMint> listPubCoin = CWalletDB(strWalletFile).ListMintedCoins(true, fMatureOnly, true);
+
+
+
         for (auto& mint : listPubCoin) {
             libzerocoin::CoinDenomination denom = mint.GetDenomination();
             nTotal += libzerocoin::ZerocoinDenominationToAmount(denom);
@@ -4207,7 +4210,7 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
         vSelectedMints = SelectMintsFromList(nValueToSelect, nValueSelected, nMaxSpends, fMinimizeChange,
                                              nCoinsReturned, listMints, DenomMap, nNeededSpends);
     } else {
-        for (const CZerocoinMint mint : vSelectedMints)
+        for (const CZerocoinMint& mint : vSelectedMints)
             nValueSelected += ZerocoinDenominationToAmount(mint.GetDenomination());
     }
 
@@ -4239,7 +4242,7 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
 
         // archive this mint as an orphan
         if (fArchive) {
-            walletdb.ArchiveMintOrphan(mint);
+            AddMintToArchive(mint);
             nArchived++;
         }
     }
@@ -4302,8 +4305,8 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
                 //mint change as zerocoins
                 if (fMintChange) {
                     CAmount nFeeRet = 0;
-                    string strFailReason = "";
-                    if (!CreateZerocoinMintTransaction(nChange, txNew, vNewMints, &reserveKey, nFeeRet, strFailReason, NULL, true)) {
+                    string strFailReason;
+                    if (!CreateZerocoinMintTransaction(nChange, txNew, vNewMints, &reserveKey, nFeeRet, strFailReason, nullptr, true)) {
                         receipt.SetStatus(_("Failed to create mint"), nStatus);
                         return false;
                     }
@@ -4321,7 +4324,7 @@ bool CWallet::CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel,
             uint256 hashTxOut = txNew.GetHash();
 
             //add all of the mints to the transaction as inputs
-            for (CZerocoinMint mint : vSelectedMints) {
+            for (CZerocoinMint& mint : vSelectedMints) {
                 CTxIn newTxIn;
                 if (!MintToTxIn(mint, nSecurityLevel, hashTxOut, newTxIn, receipt)) {
                     return false;
@@ -4374,15 +4377,15 @@ string CWallet::ResetMintZerocoin(bool fExtendedSearch)
     FindMints(vMintsToFind, vMintsToUpdate, vMintsMissing, fExtendedSearch);
 
     // Update the meta data of mints that were marked for updating
-    for (CZerocoinMint mint : vMintsToUpdate) {
+    for (CZerocoinMint& mint : vMintsToUpdate) {
         updates++;
         AddZerocoinMint(mint);
     }
 
     // Delete any mints that were unable to be located on the blockchain
-    for (CZerocoinMint mint : vMintsMissing) {
+    for (CZerocoinMint& mint : vMintsMissing) {
         deletions++;
-        walletdb.ArchiveMintOrphan(mint);
+        AddMintToArchive(mint);
     }
 
     string strResult = _("ResetMintZerocoin finished: ") + to_string(updates) + _(" mints updated, ") + to_string(deletions) + _(" mints deleted\n");
@@ -4396,9 +4399,13 @@ string CWallet::ResetSpentZerocoin()
 
     list<CZerocoinMint> listMints = walletdb.ListMintedCoins(false, false, false);
     list<CZerocoinSpend> listSpends = walletdb.ListSpentCoins();
+
+
+
+
     list<CZerocoinSpend> listUnconfirmedSpends;
 
-    for (CZerocoinSpend spend : listSpends) {
+    for (CZerocoinSpend& spend : listSpends) {
         CTransaction tx;
         uint256 hashBlock = 0;
         if (!GetTransaction(spend.GetTxHash(), tx, hashBlock)) {
@@ -4411,7 +4418,7 @@ string CWallet::ResetSpentZerocoin()
             listUnconfirmedSpends.push_back(spend);
     }
 
-    for (CZerocoinSpend spend : listUnconfirmedSpends) {
+    for (CZerocoinSpend& spend : listUnconfirmedSpends) {
         for (CZerocoinMint mint : listMints) {
             if (mint.GetSerialNumber() == spend.GetSerial()) {
                 removed++;
@@ -4451,7 +4458,7 @@ void CWallet::ReconsiderZerocoins(std::list<CZerocoinMint>& listMintsRestored)
 
         mint.SetTxHash(txHash);
         mint.SetHeight(mapBlockIndex.at(hashBlock)->nHeight);
-        if (!walletdb.UnarchiveZerocoin(mint)) {
+        if (GetZerocoinMint(mint.GetValue(), mint, true)) {
             LogPrintf("%s : failed to unarchive mint %s\n", __func__, mint.GetValue().GetHex());
         }
         listMintsRestored.emplace_back(mint);
@@ -4615,7 +4622,7 @@ bool CWallet::SpendZerocoin(CAmount nAmount, int nSecurityLevel, CWalletTx& wtxN
         }
 
         CZerocoinMint mintCheck;
-        if (GetZerocoinMint(mint.GetValue(), mintCheck)) {
+        if (GetZerocoinMint(mint.GetValue(), mintCheck, false)) {
             receipt.SetStatus("failed to read mintcheck", nStatus);
             return false;
         }
