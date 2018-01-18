@@ -79,19 +79,26 @@ The `getwalletinfo` RPC method returns the name of the wallet used for the query
 
 Note that while multi-wallet is now fully supported, the RPC multi-wallet interface should be considered unstable for version 6.0.0, and there may backwards-incompatible changes in future versions.
 
-Custom wallet directories
----------------------
-The ability to specify a directory other than the default data directory in which to store
-wallets has been added. An existing directory can be specified using the `-walletdir=<dir>`
-argument. Wallets loaded via `-wallet` arguments must be in this wallet directory. Care should be taken
-when choosing a wallet directory location, as if it becomes unavailable during operation,
-funds may be lost.
+Wallets directory configuration (`-walletdir`)
+----------------------------------------------
 
-Default wallet directory change
---------------------------
-On new installations (if the data directory doesn't exist), wallets will now be stored in a
-new `wallets/` subdirectory inside the data directory. If this `wallets/` subdirectory
-doesn't exist (i.e. on existing nodes), the current datadir root is used instead, as it was.
+PIVX Core now has more flexibility in where the wallets directory can be
+located. Previously wallet database files were stored at the top level of the
+PIVX data directory. The behavior is now:
+
+- For new installations (where the data directory doesn't already exist),
+  wallets will now be stored in a new `wallets/` subdirectory inside the data
+  directory by default.
+- For existing nodes (where the data directory already exists), wallets will be
+  stored in the data directory root by default. If a `wallets/` subdirectory
+  already exists in the data directory root, then wallets will be stored in the
+  `wallets/` subdirectory by default.
+- The location of the wallets directory can be overridden by specifying a
+  `-walletdir=<path>` option where `<path>` can be an absolute path to a
+  directory or directory symlink.
+
+Care should be taken when choosing the wallets directory location, as if it
+becomes unavailable during operation, funds may be lost.
 
 Database cache memory increased
 --------------------------------
