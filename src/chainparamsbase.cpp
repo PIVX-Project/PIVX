@@ -13,6 +13,7 @@
 
 using namespace boost::assign;
 
+//--0.0.0.1a-- Changed Port # from 51473 -> 33733
 /**
  * Main network
  */
@@ -22,7 +23,7 @@ public:
     CBaseMainParams()
     {
         networkID = CBaseChainParams::MAIN;
-        nRPCPort = 51473;
+        nRPCPort = 33733;
     }
 };
 static CBaseMainParams mainParams;
