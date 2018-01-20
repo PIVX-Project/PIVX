@@ -13,7 +13,7 @@
 
 using namespace boost::assign;
 
-//--0.0.0.1a-- Changed Port # from 51473 -> 33733
+//--0.0.0.1a-- Changed Port # from 51473 -> 33734
 /**
  * Main network
  */
@@ -28,7 +28,7 @@ public:
 };
 static CBaseMainParams mainParams;
 
-//--0.0.0.1a-- Changed Port # from 51475 -> 33735
+//--0.0.0.1a-- Changed Port # from 51475 -> 33736
 //To-Do: Test changing testnet string folder name
 /**
  * Testnet (v3)
