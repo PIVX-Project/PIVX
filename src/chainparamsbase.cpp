@@ -81,6 +81,9 @@ const CBaseChainParams& BaseParams()
     return *pCurrentBaseParams;
 }
 
+/*
+* Selects Chainparams Based on Network Connected To
+*/
 void SelectBaseParams(CBaseChainParams::Network network)
 {
     switch (network) {
@@ -102,6 +105,9 @@ void SelectBaseParams(CBaseChainParams::Network network)
     }
 }
 
+/*
+* Defines CLI Options for Network Selection
+*/
 CBaseChainParams::Network NetworkIdFromCommandLine()
 {
     bool fRegTest = GetBoolArg("-regtest", false);
