@@ -2252,6 +2252,8 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
             LogPrintf("GetMasternodePayment(): moneysupply=%s, nodecoins=%s \n", FormatMoney(nMoneySupply).c_str(),
                 FormatMoney(mNodeCoins).c_str());
 
+        //--PIVX SEESAW REWARDS--
+        //ToDo: Change
         if (mNodeCoins == 0) {
             ret = 0;
         } else if (nHeight <= 325000) {
