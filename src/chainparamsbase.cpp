@@ -28,6 +28,8 @@ public:
 };
 static CBaseMainParams mainParams;
 
+//--0.0.0.1a-- Changed Port # from 51475 -> 33735
+//To-Do: Test changing testnet string folder name
 /**
  * Testnet (v3)
  */
