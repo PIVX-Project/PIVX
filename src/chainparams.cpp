@@ -51,7 +51,7 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 Checkpoints section:
     This section defines every change of consensus marked to blocks that are mapped into the code.
 */
-static Checkpoints::MapCheckpoints mapCheckpoints = boost::assign::map_list_of(0, uint256("0x"));
+static Checkpoints::MapCheckpoints mapCheckpoints = boost::assign::map_list_of(0, uint256("0x000004a79990d315493002c9c29d28f3464d1522039615240b650875a7219d79"));
 
 static const Checkpoints::CCheckpointData data = { &mapCheckpoints };
 
@@ -137,7 +137,7 @@ public:
         genesis.nVersion = 5;
         genesis.nTime = 1516444806 ;
         genesis.nBits = 0x1e0ffff0;
-        genesis.nNonce = 0;
+        genesis.nNonce = 64387;
 
         if (true && genesis.GetHash() != hashGenesisBlock) {
             printf("Searching for genesis block...\n");
@@ -165,8 +165,8 @@ public:
             }
 
         hashGenesisBlock = genesis.GetHash();
-        assert(hashGenesisBlock == uint256("0x"));
-        assert(genesis.hashMerkleRoot == uint256("0x"));
+        assert(hashGenesisBlock == uint256("0x000004a79990d315493002c9c29d28f3464d1522039615240b650875a7219d79"));
+        assert(genesis.hashMerkleRoot == uint256("0x7f4ec67561de3cb3ad9ec57d2f130cfdbba46d269f6afcd8c96163186306cdd7"));
 
         vSeeds.push_back(CDNSSeedData("zeronode.io", "node-one.zeronode.io"));     // Primary Seed Nodes
 
