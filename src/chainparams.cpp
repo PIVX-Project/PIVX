@@ -51,7 +51,7 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 Checkpoints section:
     This section defines every change of consensus marked to blocks that are mapped into the code.
 */
-static Checkpoints::MapCheckpoints mapCheckpoints = boost::assign::map_list_of(0, uint256("0x"))
+static Checkpoints::MapCheckpoints mapCheckpoints = boost::assign::map_list_of(0, uint256("0x"));
 
 static const Checkpoints::CCheckpointData data = { &mapCheckpoints };
 
