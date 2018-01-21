@@ -105,13 +105,13 @@ public:
         /** Height or Time Based Activations **/
         nLastPOWBlock = 99999999; //zeronode: changed to -1.
         nModifierUpdateBlock = 615800;
-        nZerocoinStartHeight = 250;
+        nZerocoinStartHeight = 1;
         nZerocoinStartTime = 250; // October 17, 2017 4:30:00 AM
-        nBlockEnforceSerialRange = 250; //Enforce serial range starting this block
+        nBlockEnforceSerialRange = 1; //Enforce serial range starting this block
         nBlockRecalculateAccumulators = 908000; //Trigger a recalculation of accumulators
-        nBlockFirstFraudulent = 500; //First block that bad serials emerged
+        nBlockFirstFraudulent = 1; //First block that bad serials emerged
         nBlockLastGoodCheckpoint = 0; //Last valid accumulator checkpoint
-        nBlockEnforceInvalidUTXO = 250; //Start enforcing the invalid UTXO's
+        nBlockEnforceInvalidUTXO = 1; //Start enforcing the invalid UTXO's
 
         /**
          * Build the genesis block. Note that the output of the genesis coinbase cannot
@@ -257,7 +257,7 @@ public:
         genesis.nNonce = 2402015;
 
         hashGenesisBlock = genesis.GetHash();
-        
+
 //      assert(hashGenesisBlock == uint256("0x000000a4a72bb16cebbb1513341a2707feaa357b94c743403061f20cb575b6a8"));
 
         vFixedSeeds.clear();
