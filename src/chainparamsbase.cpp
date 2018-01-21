@@ -13,6 +13,7 @@
 
 using namespace boost::assign;
 
+//--0.0.0.1a-- Changed Port # from 51473 -> 33734
 /**
  * Main network
  */
@@ -22,11 +23,13 @@ public:
     CBaseMainParams()
     {
         networkID = CBaseChainParams::MAIN;
-        nRPCPort = 51473;
+        nRPCPort = 33734;
     }
 };
 static CBaseMainParams mainParams;
 
+//--0.0.0.1a-- Changed Port # from 51475 -> 33736
+//To-Do: Test changing testnet string folder name
 /**
  * Testnet (v3)
  */
@@ -36,7 +39,7 @@ public:
     CBaseTestNetParams()
     {
         networkID = CBaseChainParams::TESTNET;
-        nRPCPort = 51475;
+        nRPCPort = 51476;
         strDataDir = "testnet4";
     }
 };
@@ -78,6 +81,9 @@ const CBaseChainParams& BaseParams()
     return *pCurrentBaseParams;
 }
 
+/*
+* Selects Chainparams Based on Network Connected To
+*/
 void SelectBaseParams(CBaseChainParams::Network network)
 {
     switch (network) {
@@ -99,6 +105,9 @@ void SelectBaseParams(CBaseChainParams::Network network)
     }
 }
 
+/*
+* Defines CLI Options for Network Selection
+*/
 CBaseChainParams::Network NetworkIdFromCommandLine()
 {
     bool fRegTest = GetBoolArg("-regtest", false);
