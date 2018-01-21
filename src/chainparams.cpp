@@ -103,13 +103,13 @@ public:
         nMaxMoneyOut = 21000000 * COIN;
         //zeronode: Changed start heights
         /** Height or Time Based Activations **/
-        nLastPOWBlock = 999999999999; //zeronode: changed to -1.
+        nLastPOWBlock = 99999999; //zeronode: changed to -1.
         nModifierUpdateBlock = 615800;
         nZerocoinStartHeight = 250;
         nZerocoinStartTime = 250; // October 17, 2017 4:30:00 AM
         nBlockEnforceSerialRange = 250; //Enforce serial range starting this block
         nBlockRecalculateAccumulators = 908000; //Trigger a recalculation of accumulators
-        nBlockFirstFraudulent = 9999999999; //First block that bad serials emerged
+        nBlockFirstFraudulent = 500; //First block that bad serials emerged
         nBlockLastGoodCheckpoint = 0; //Last valid accumulator checkpoint
         nBlockEnforceInvalidUTXO = 250; //Start enforcing the invalid UTXO's
 
@@ -238,7 +238,7 @@ public:
         nMinerThreads = 0;
         nTargetTimespan = 1 * 60; // PIVX: 1 day
         nTargetSpacing = 1 * 60;  // PIVX: 1 minute
-        nLastPOWBlock = 999999999999;
+        nLastPOWBlock = 99999999;
         nMaturity = 3;
         nMasternodeCountDrift = 4;
         nModifierUpdateBlock = 51197; //approx Mon, 17 Apr 2017 04:00:00 GMT
