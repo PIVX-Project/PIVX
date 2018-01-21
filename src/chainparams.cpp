@@ -51,7 +51,7 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 Checkpoints section:
     This section defines every change of consensus marked to blocks that are mapped into the code.
 */
-static Checkpoints::MapCheckpoints mapCheckpoints = boost::assign::map_list_of(0, uint256("0x000000a4a72bb16cebbb1513341a2707feaa357b94c743403061f20cb575b6a8"));
+static Checkpoints::MapCheckpoints mapCheckpoints = boost::assign::map_list_of(0, uint256("0x"));
 
 static const Checkpoints::CCheckpointData data = { &mapCheckpoints };
 
@@ -137,8 +137,8 @@ public:
         genesis.nVersion = 5;
         genesis.nTime = 1516444806 ;
         genesis.nBits = 0x1e0ffff0;
-        genesis.nNonce = 1284859;
-/*
+        genesis.nNonce = 0;
+
         if (true && genesis.GetHash() != hashGenesisBlock) {
             printf("Searching for genesis block...\n");
             uint256 hashTarget = CBigNum().SetCompact(genesis.nBits).getuint256();
@@ -163,10 +163,10 @@ public:
 		        printf("genesis.GetHash = %s\n", genesis.GetHash().ToString().c_str()); //first this, then comment this line out and uncomment the one under.
 		        printf("genesis.hashMerkleRoot = %s \n", genesis.hashMerkleRoot.ToString().c_str()); //improvised. worked for me, to find merkle root
             }
-*/
+
         hashGenesisBlock = genesis.GetHash();
-        assert(hashGenesisBlock == uint256("0x000000a4a72bb16cebbb1513341a2707feaa357b94c743403061f20cb575b6a8"));
-        assert(genesis.hashMerkleRoot == uint256("0x7f4ec67561de3cb3ad9ec57d2f130cfdbba46d269f6afcd8c96163186306cdd7"));
+        assert(hashGenesisBlock == uint256("0x"));
+        assert(genesis.hashMerkleRoot == uint256("0x"));
 
         vSeeds.push_back(CDNSSeedData("zeronode.io", "node-one.zeronode.io"));     // Primary Seed Nodes
 
