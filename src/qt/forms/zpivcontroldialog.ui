@@ -7,121 +7,184 @@
     <x>0</x>
     <y>0</y>
     <width>681</width>
-    <height>384</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>681</width>
-    <height>384</height>
+    <height>450</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Select zPiv to Spend</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <layout class="QFormLayout" name="formLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+     <property name="spacing">
+      <number>-1</number>
      </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="labelQuantity">
-       <property name="text">
-        <string>Quantity</string>
+     <property name="bottomMargin">
+      <number>10</number>
+     </property>
+     <item>
+      <layout class="QFormLayout" name="formLayout">
+       <property name="horizontalSpacing">
+        <number>10</number>
        </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="labelQuantity_int">
-       <property name="text">
-        <string>0</string>
+       <property name="verticalSpacing">
+        <number>10</number>
        </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="labelZPiv">
-       <property name="text">
-        <string>zPiv</string>
+       <property name="leftMargin">
+        <number>6</number>
        </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="labelZPiv_int">
-       <property name="text">
-        <string>0</string>
+       <property name="rightMargin">
+        <number>6</number>
        </property>
-      </widget>
+       <item row="0" column="0">
+        <widget class="QLabel" name="labelQuantity">
+         <property name="text">
+          <string>Quantity</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="labelQuantity_int">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="labelZPiv">
+         <property name="text">
+          <string>zPiv</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="labelZPiv_int">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="2" column="0">
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout3" stretch="0,0">
+     <property name="spacing">
+      <number>14</number>
+     </property>
+     <property name="bottomMargin">
+      <number>10</number>
+     </property>
+     <item>
       <widget class="QPushButton" name="pushButtonAll">
        <property name="text">
         <string>Select/Deselect All</string>
        </property>
       </widget>
      </item>
-    </layout>
-   </item>
-   <item row="1" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QTreeWidget" name="treeWidget">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>250</height>
-        </size>
-       </property>
-       <property name="alternatingRowColors">
-        <bool>true</bool>
-       </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-       <property name="columnCount">
-        <number>5</number>
-       </property>
-       <attribute name="headerDefaultSectionSize">
-        <number>100</number>
-       </attribute>
-       <column>
-        <property name="text">
-         <string notr="true">Select</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string notr="true">Denomination</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string notr="true">zPiv Public ID</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string notr="true">Confirmations</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Is Spendable</string>
-        </property>
-       </column>
-      </widget>
-     </item>
-     <item>
-      <widget class="QDialogButtonBox" name="buttonBox">
+      <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Ok</set>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
        </property>
-      </widget>
+      </spacer>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QTreeWidget" name="treeWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>250</height>
+      </size>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="columnCount">
+      <number>5</number>
+     </property>
+     <attribute name="headerDefaultSectionSize">
+      <number>100</number>
+     </attribute>
+     <column>
+      <property name="text">
+       <string notr="true">Select</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string notr="true">Denomination</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string notr="true">zPiv Public ID</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string notr="true">Confirmations</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Is Spendable</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
