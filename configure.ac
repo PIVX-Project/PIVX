@@ -245,6 +245,11 @@ case $host in
      AC_CHECK_LIB([iphlpapi],      [main],, AC_MSG_ERROR(lib missing))
      AC_CHECK_LIB([crypt32],      [main],, AC_MSG_ERROR(lib missing))
 
+     #required for multimedia
+     AC_CHECK_LIB([strmiids],      [main],, AC_MSG_ERROR(lib missing))
+     AC_CHECK_LIB([dmoguids],      [main],, AC_MSG_ERROR(lib missing))
+     AC_CHECK_LIB([msdmo],      [main],, AC_MSG_ERROR(lib missing))
+
      # -static is interpreted by libtool, where it has a different meaning.
      # In libtool-speak, it's -all-static.
      AX_CHECK_LINK_FLAG([[-static]],[LIBTOOL_APP_LDFLAGS="$LIBTOOL_APP_LDFLAGS -all-static"])
@@ -570,12 +575,14 @@ else
 fi
 
 if test x$bitcoin_enable_qt = xyes; then
-dnl enable tradingdialog
-  AC_MSG_CHECKING([if the trading dialog should be enabled])
-    if test x$bitcoin_qt_got_major_vers = x5; then
+  if test x$bitcoin_qt_got_major_vers = x5; then
+    AC_DEFINE_UNQUOTED([HAVE_QT5],[1],[Define to 1 if we have QT 5])
+  fi
+dnl enable QtMultimedia
+  AC_MSG_CHECKING([if QtMultimedia should be enabled])
+    if test x$qt_enable_multimedia != xno; then
       AC_MSG_RESULT(yes)
-      AC_DEFINE_UNQUOTED([HAVE_QT5],[1],[Define to 1 to enable trading dialog])
-
+      AC_DEFINE([USE_MULTIMEDIA],[1],[Define if QtMultimedia support should be compiled in])
     else
       AC_MSG_RESULT(no)
     fi
@@ -991,6 +998,7 @@ AM_CONDITIONAL([ENABLE_QT],[test x$bitcoin_enable_qt = xyes])
 AM_CONDITIONAL([HAVE_QT5], [test x$bitcoin_qt_got_major_vers = x5])
 AM_CONDITIONAL([ENABLE_QT_TESTS],[test x$use_tests$bitcoin_enable_qt_test = xyesyes])
 AM_CONDITIONAL([USE_QRCODE], [test x$use_qr = xyes])
+AM_CONDITIONAL([USE_MULTIMEDIA],[test x$qt_enable_multimedia = xyes])
 AM_CONDITIONAL([USE_LCOV],[test x$use_lcov = xyes])
 AM_CONDITIONAL([USE_COMPARISON_TOOL],[test x$use_comparison_tool != xno])
 AM_CONDITIONAL([USE_COMPARISON_TOOL_REORG_TESTS],[test x$use_comparison_tool_reorg_test != xno])
@@ -1086,8 +1094,9 @@ echo "Options used to compile and link:"
 echo "  with wallet   = $enable_wallet"
 echo "  with gui / qt = $bitcoin_enable_qt"
 if test x$bitcoin_enable_qt != xno; then
-    echo "    qt version  = $bitcoin_qt_got_major_vers"
-    echo "    with qr     = $use_qr"
+    echo "    qt version      = $bitcoin_qt_got_major_vers"
+    echo "    with qr         = $use_qr"
+    echo "    with multimedia = $qt_enable_multimedia"
 fi
 echo "  with zmq      = $use_zmq"
 echo "  with test     = $use_tests"
