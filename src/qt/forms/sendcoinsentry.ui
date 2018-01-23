@@ -90,6 +90,18 @@
        </widget>
       </item>
       <item>
+       <widget class="QToolButton" name="qrCodeButton">
+        <property name="toolTip">
+         <string>Scan QRCode</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../pivx.qrc">
+          <normaloff>:/icons/qrcode</normaloff>
+          <disabledoff>:/icons/qrcode</disabledoff>:/icons/qrcode</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QToolButton" name="deleteButton">
         <property name="toolTip">
          <string>Remove this entry</string>

@@ -70,8 +70,14 @@ Q_IMPORT_PLUGIN(AccessibleFactory)
 Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);
 #elif defined(QT_QPA_PLATFORM_WINDOWS)
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
+#ifdef USE_MULTIMEDIA
+Q_IMPORT_PLUGIN(DSServicePlugin);
+#endif
 #elif defined(QT_QPA_PLATFORM_COCOA)
 Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
+#ifdef USE_MULTIMEDIA
+Q_IMPORT_PLUGIN(AVFServicePlugin);
+#endif
 #endif
 #endif
 #endif

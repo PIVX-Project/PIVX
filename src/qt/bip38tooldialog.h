@@ -5,6 +5,12 @@
 #ifndef BITCOIN_QT_BIP38DIALOG_H
 #define BITCOIN_QT_BIP38DIALOG_H
 
+#include "config/pivx-config.h"
+
+#ifdef USE_MULTIMEDIA
+#include "qrcodescanner.h"
+#endif
+
 #include <QDialog>
 
 class WalletModel;
@@ -35,6 +41,9 @@ protected:
 private:
     Ui::Bip38ToolDialog* ui;
     WalletModel* model;
+#ifdef USE_MULTIMEDIA
+    QRCodeScanner *qrCodeScanner;
+#endif
 
 private slots:
     /* encrypt key */
@@ -44,9 +53,13 @@ private slots:
     void on_copyKeyButton_ENC_clicked();
     void on_clearButton_ENC_clicked();
     /* decrypt key */
+    void on_pasteButton_DEC_clicked();
     void on_decryptKeyButton_DEC_clicked();
     void on_importAddressButton_DEC_clicked();
     void on_clearButton_DEC_clicked();
+    // QRCode Scanner
+    void showQrCodeScanner();
+    void qrCodeFound(const QString& payload);
 };
 
 #endif // BITCOIN_QT_BIP38TOOLDIALOG_H

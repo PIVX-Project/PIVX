@@ -5,7 +5,12 @@
 #ifndef BITCOIN_QT_SENDCOINSENTRY_H
 #define BITCOIN_QT_SENDCOINSENTRY_H
 
+#include "config/pivx-config.h"
+
 #include "walletmodel.h"
+#ifdef USE_MULTIMEDIA
+#include "qrcodescanner.h"
+#endif
 
 #include <QStackedWidget>
 
@@ -60,10 +65,17 @@ private slots:
     void on_pasteButton_clicked();
     void updateDisplayUnit();
 
+    // QRCode Scanner
+    void showQrCodeScanner();
+    void qrCodeFound(const QString& payload);
+
 private:
     SendCoinsRecipient recipient;
     Ui::SendCoinsEntry* ui;
     WalletModel* model;
+#ifdef USE_MULTIMEDIA
+    QRCodeScanner *qrCodeScanner;
+#endif
 
     bool updateLabel(const QString& address);
 };

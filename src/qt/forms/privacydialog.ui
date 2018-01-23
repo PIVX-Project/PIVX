@@ -865,6 +865,18 @@ zPIV are mature when they have more than 20 confirmations AND more than 2 mints 
                             </property>
                            </widget>
                           </item>
+                          <item>
+                           <widget class="QToolButton" name="qrCodeButton">
+                            <property name="toolTip">
+                             <string>Scan QRCode</string>
+                            </property>
+                            <property name="icon">
+                             <iconset resource="../pivx.qrc">
+                              <normaloff>:/icons/qrcode</normaloff>
+                              <disabledoff>:/icons/qrcode</disabledoff>:/icons/qrcode</iconset>
+                            </property>
+                           </widget>
+                          </item>
                          </layout>
                         </item>
                        </layout>
