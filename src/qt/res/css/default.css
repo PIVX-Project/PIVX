@@ -1407,33 +1407,11 @@ padding-right:5px;
 
 /* QStackedWidget#SendCoinsEntry .QValidatedLineEdit#payTo { /* Pay To Input Field */
 /* QStackedWidget#SendCoinsEntry .QValidatedLineEdit#payTo:!focus { /* Pay To Input Field */
-
-QStackedWidget#SendCoinsEntry .QToolButton { /* General Settings for Pay To Icons */
-background-color: #5c4c7c; 
-border-width: 1px;
-border-style: outset;
-border-color: #382f44;
-border-radius: 2px;
-color:#ffffff;
-font-size:12px;
-font-weight:bold;
-margin: 2px;
-}    
-
-QStackedWidget#SendCoinsEntry .QToolButton:hover { /* General Settings for Pay To Icons */
-background-color: qlineargradient(y1:0, y2: 1, stop: 0 #ffffff, stop: 0.1 #ffffff, stop: 0.101 #6f5ca3, stop: 0.9 #6f5ca3, stop: 0.901 #ffffff, stop: 1 #ffffff);
-}    
-
-QStackedWidget#SendCoinsEntry .QToolButton:focus { /* General Settings for Pay To Icons */
-
-}    
-
-QStackedWidget#SendCoinsEntry .QToolButton:pressed { /* General Settings for Pay To Icons */
-border:1px solid #ffffff;
-}    
-    
+/* QStackedWidget#SendCoinsEntry .QToolButton { /* Pay To Custom ToolButton */
+/* QStackedWidget#SendCoinsEntry .QToolButton:hover { /* Pay To Custom ToolButton */
+/* QStackedWidget#SendCoinsEntry .QToolButton:focus { /* Pay To Custom ToolButton */
+/* QStackedWidget#SendCoinsEntry .QToolButton:pressed { /* Pay To Custom ToolButton */
 /* QStackedWidget#SendCoinsEntry .QToolButton#addressBookButton { /* Address Book Button */
-/* QStackedWidget#SendCoinsEntry .QToolButton#addressBookButton { */
 /* QStackedWidget#SendCoinsEntry .QToolButton#pasteButton { */
 /* QStackedWidget#SendCoinsEntry .QToolButton#deleteButton { */
 /* QStackedWidget#SendCoinsEntry .QLineEdit#addAsLabel { /* Pay To Input Field */
@@ -1578,6 +1556,12 @@ QDialog#CoinControlDialog .CoinControlTreeWidget#treeWidget::indicator { /* Coin
 
 }
 
+QDialog#ZPivControlDialog .QTreeWidget#treeWidget { /* zPIV Control Widget Container */
+outline:0;
+background-color:#ffffff;
+border:1px solid #333;
+}
+
 /**************************** RECEIVE COINS *********************************************/
 
 QWidget#ReceiveCoinsDialog {
@@ -1680,6 +1664,12 @@ background-color:#ffffff;
 
 QWidget#PrivacyDialog .QFrame#verticalFrameRight {
 background-color:#ffffff;
+}
+
+QWidget#PrivacyDialog .QToolButton {
+margin:2px;
+min-height: 24px;
+min-width: 24px;
 }
 
 /**************************** MASTERNODE LIST *******************************************/
