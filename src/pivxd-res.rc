@@ -17,7 +17,7 @@ BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
             VALUE "CompanyName",        "PIVX"
-            VALUE "FileDescription",    "pivxd (OSS daemon/client for Pivx)"
+            VALUE "FileDescription",    "pivxd (OSS daemon/client for PIVX)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "pivxd"
             VALUE "LegalCopyright",     COPYRIGHT_STR

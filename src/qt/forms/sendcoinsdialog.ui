@@ -1702,7 +1702,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>SwiftTX</string>
+                <string>SwiftX</string>
                </property>
               </widget>
              </item>
@@ -1762,7 +1762,7 @@
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="groupFee"/>
   <buttongroup name="groupCustomFee"/>
+  <buttongroup name="groupFee"/>
  </buttongroups>
 </ui>
