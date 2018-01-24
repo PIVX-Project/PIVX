@@ -53,15 +53,27 @@ Checkpoints section:
 */
 static Checkpoints::MapCheckpoints mapCheckpoints = boost::assign::map_list_of(0, uint256("0x000004a79990d315493002c9c29d28f3464d1522039615240b650875a7219d79"));
 
-static const Checkpoints::CCheckpointData data = { &mapCheckpoints };
+static const Checkpoints::CCheckpointData data = { &mapCheckpoints,
+                                                        1516444806,
+                                                        0,
+                                                        500
+                                                    };
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet = boost::assign::map_list_of(0, uint256("0x001"));
 
-static const Checkpoints::CCheckpointData dataTestnet = { &mapCheckpointsTestnet };
+static const Checkpoints::CCheckpointData dataTestnet = { &mapCheckpointsTestnet,
+                                                        1516444806,
+                                                        0,
+                                                        250
+                                                    };
 
 static Checkpoints::MapCheckpoints mapCheckpointsRegtest = boost::assign::map_list_of(0, uint256("0x001"));
 
-static const Checkpoints::CCheckpointData dataRegtest = { &mapCheckpointsRegtest };
+static const Checkpoints::CCheckpointData dataRegtest = { &mapCheckpointsRegtest,
+                                                        1516444806,
+                                                        0,
+                                                        100
+                                                    };
 
 libzerocoin::ZerocoinParams* CChainParams::Zerocoin_Params() const
 {
@@ -89,15 +101,15 @@ public:
         pchMessageStart[3] = 0xe9;
         vAlertPubKey = ParseHex("0000098d3ba6ba6e7423fa5cbd6a89e0a9a5348f88d332b44a5cb1a8b7ed2c1eaa335fc8dc4f012cb8241cc0bdafd6ca70c5f5448916e4e6f511bcd746ed57dc50");
         nDefaultPort = 33733;
-        bnProofOfWorkLimit = ~uint256(0) >> 20; // PIVX starting difficulty is 1 / 2^12
+        bnProofOfWorkLimit = ~uint256(0) >> 20; // ZeroNode starting difficulty is 1 / 2^12
         nSubsidyHalvingInterval = 210000; //ToDo: Retarget
         nMaxReorganizationDepth = 100;
         nEnforceBlockUpgradeMajority = 750;
         nRejectBlockOutdatedMajority = 950;
         nToCheckBlockUpgradeMajority = 1000;
         nMinerThreads = 0;
-        nTargetTimespan = 1 * 60; // PIVX: 1 day
-        nTargetSpacing = 1 * 60;  // PIVX: 1 minute
+        nTargetTimespan = 1 * 60;
+        nTargetSpacing = 1 * 60;
         nMaturity = 10;
         nMasternodeCountDrift = 20; //ToDo: Retarget
         nMaxMoneyOut = 21000000 * COIN;
@@ -227,18 +239,18 @@ public:
     {
         networkID = CBaseChainParams::TESTNET;
         strNetworkID = "test";
-        pchMessageStart[0] = 0x31;
-        pchMessageStart[1] = 0x56;
-        pchMessageStart[2] = 0x25;
-        pchMessageStart[3] = 0xbf;
-        vAlertPubKey = ParseHex("000010e83b2703ccf322f7dbd62dd5855ac7c10bd055814ce121ba32607d573b8810c02c0582aed05b4deb9c4b77b26d92428c61256cd42774babea0a073b2ed0c9");
+        pchMessageStart[0] = 0x45;
+        pchMessageStart[1] = 0x76;
+        pchMessageStart[2] = 0x65;
+        pchMessageStart[3] = 0xba;
+        vAlertPubKey = ParseHex("04c10e83b2703ccf322f7dbd62dd5855ac7c10bd055814ce121ba32607d573b8810c02c0582aed05b4deb9c4b77b26d92428c61256cd42774babea0a073b2ed0c9");
         nDefaultPort = 33735;
         nEnforceBlockUpgradeMajority = 51;
         nRejectBlockOutdatedMajority = 75;
         nToCheckBlockUpgradeMajority = 100;
         nMinerThreads = 0;
-        nTargetTimespan = 1 * 60; // PIVX: 1 day
-        nTargetSpacing = 1 * 60;  // PIVX: 1 minute
+        nTargetTimespan = 1 * 60;
+        nTargetSpacing = 1 * 60;
         nLastPOWBlock = 99999999;
         nMaturity = 3;
         nMasternodeCountDrift = 4;
@@ -258,7 +270,7 @@ public:
 
         hashGenesisBlock = genesis.GetHash();
 
-//      assert(hashGenesisBlock == uint256("0x000000a4a72bb16cebbb1513341a2707feaa357b94c743403061f20cb575b6a8"));
+//        assert(hashGenesisBlock == uint256("0x000000a4a72bb16cebbb1513341a2707feaa357b94c743403061f20cb575b6a8"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
