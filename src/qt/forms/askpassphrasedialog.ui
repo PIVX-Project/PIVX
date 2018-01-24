@@ -117,7 +117,7 @@
         <string>Serves to disable the trivial sendmoney when OS account compromised. Provides no real security.</string>
        </property>
        <property name="text">
-        <string>For anonymization and staking only</string>
+        <string>For anonymization, automint, and staking only</string>
        </property>
        <property name="visible">
         <bool>false</bool>
