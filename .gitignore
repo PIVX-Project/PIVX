@@ -13,6 +13,12 @@ src/pivx-cli
 src/pivx-tx
 src/test/test_pivx
 src/qt/test/test_pivx-qt
+src/zeronode
+src/zeronoded
+src/zeronode-cli
+src/zeronode-tx
+src/test/test_zeronode
+src/qt/test/test_zeronode-qt
 
 # autoreconf
 Makefile.in
