@@ -134,4 +134,3 @@ qa/pull-tester/test.*/*
 .idea
 CMakeLists.txt
 cmake-build-debug
-ZeroNode-0.0.0.01-alpha.cbp
