@@ -2941,7 +2941,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Generate Pivx Deposit Address</string>
+      <string>Generate PIVX Deposit Address</string>
      </property>
      <property name="icon">
       <iconset resource="../pivx.qrc">
