@@ -51,28 +51,28 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 Checkpoints section:
     This section defines every change of consensus marked to blocks that are mapped into the code.
 */
-static Checkpoints::MapCheckpoints mapCheckpoints = boost::assign::map_list_of(0, uint256("0x000004a79990d315493002c9c29d28f3464d1522039615240b650875a7219d79"));
+static Checkpoints::MapCheckpoints mapCheckpoints = boost::assign::map_list_of(0, uint256("0x"));
 
-static const Checkpoints::CCheckpointData data = { &mapCheckpoints,
+static const Checkpoints::CCheckpointData data = { &mapCheckpoints/*,
                                                         1516444806,
                                                         0,
-                                                        500
+                                                        500 */
                                                     };
 
 static Checkpoints::MapCheckpoints mapCheckpointsTestnet = boost::assign::map_list_of(0, uint256("0x001"));
 
-static const Checkpoints::CCheckpointData dataTestnet = { &mapCheckpointsTestnet,
+static const Checkpoints::CCheckpointData dataTestnet = { &mapCheckpointsTestnet/*,
                                                         1516444806,
                                                         0,
-                                                        250
+                                                        250*/
                                                     };
 
 static Checkpoints::MapCheckpoints mapCheckpointsRegtest = boost::assign::map_list_of(0, uint256("0x001"));
 
-static const Checkpoints::CCheckpointData dataRegtest = { &mapCheckpointsRegtest,
+static const Checkpoints::CCheckpointData dataRegtest = { &mapCheckpointsRegtest/*,
                                                         1516444806,
                                                         0,
-                                                        100
+                                                        100 */
                                                     };
 
 libzerocoin::ZerocoinParams* CChainParams::Zerocoin_Params() const
@@ -136,7 +136,7 @@ public:
          *   vMerkleTree: e0028e
          */
          //zeronode: changed CSCRIPT << # to 0
-        const char* pszTimestamp = "Today January the 20th, the US govt. shut down due to budgetary quarrels.";
+        const char* pszTimestamp = "Today January the 24th, ZeroNode was born.";
         CMutableTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
@@ -147,9 +147,9 @@ public:
         genesis.hashPrevBlock = 0;
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion = 5;
-        genesis.nTime = 1516444806 ;
+        genesis.nTime = 1516861436;
         genesis.nBits = 0x1e0ffff0;
-        genesis.nNonce = 64387;
+        genesis.nNonce = 0;
 
         if (true && genesis.GetHash() != hashGenesisBlock) {
             printf("Searching for genesis block...\n");
@@ -177,8 +177,8 @@ public:
             }
 
         hashGenesisBlock = genesis.GetHash();
-        assert(hashGenesisBlock == uint256("0x000004a79990d315493002c9c29d28f3464d1522039615240b650875a7219d79"));
-        assert(genesis.hashMerkleRoot == uint256("0x7f4ec67561de3cb3ad9ec57d2f130cfdbba46d269f6afcd8c96163186306cdd7"));
+        assert(hashGenesisBlock == uint256("0x"));
+        assert(genesis.hashMerkleRoot == uint256("0x"));
 
         vSeeds.push_back(CDNSSeedData("zeronode.io", "node-one.zeronode.io"));     // Primary Seed Nodes
 
@@ -329,8 +329,8 @@ public:
         nRejectBlockOutdatedMajority = 950;
         nToCheckBlockUpgradeMajority = 1000;
         nMinerThreads = 1;
-        nTargetTimespan = 24 * 60 * 60; // PIVX: 1 day
-        nTargetSpacing = 1 * 60;        // PIVX: 1 minutes
+        nTargetTimespan = 24 * 60 * 60; // Pivx: 1 day
+        nTargetSpacing = 1 * 60;        // Pivx: 1 minutes
         bnProofOfWorkLimit = ~uint256(0) >> 1;
         genesis.nTime = 1454124731;
         genesis.nBits = 0x207fffff;
