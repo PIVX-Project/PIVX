@@ -8,7 +8,6 @@
 
 #include <string>
 
-class CScheduler;
 class CWallet;
 
 namespace boost
@@ -22,7 +21,7 @@ void StartShutdown();
 bool ShutdownRequested();
 void Shutdown();
 void PrepareShutdown();
-bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler);
+bool AppInit2(boost::thread_group& threadGroup);
 
 /** The help message mode determines what help message to show */
 enum HelpMessageMode {

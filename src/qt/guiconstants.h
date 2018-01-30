@@ -22,9 +22,9 @@ static const bool DEFAULT_SPLASHSCREEN = true;
 #define STYLE_INVALID "background:#FF8080"
 
 /* Transaction list -- unconfirmed transaction */
-#define COLOR_UNCONFIRMED QColor(91, 76, 134)
+#define COLOR_UNCONFIRMED QColor(128, 128, 128)
 /* Transaction list -- negative amount */
-#define COLOR_NEGATIVE QColor(206, 0, 188)
+#define COLOR_NEGATIVE QColor(255, 0, 0)
 /* Transaction list -- bare address (without label) */
 #define COLOR_BAREADDRESS QColor(140, 140, 140)
 /* Transaction list -- TX status decoration - open until date */
@@ -33,8 +33,6 @@ static const bool DEFAULT_SPLASHSCREEN = true;
 #define COLOR_TX_STATUS_OFFLINE QColor(192, 192, 192)
 /* Transaction list -- TX status decoration - default color */
 #define COLOR_BLACK QColor(51, 51, 51)
-/* Transaction list -- TX status decoration - conflicted */
-#define COLOR_CONFLICTED QColor(255, 0, 0)
 
 /* Tooltips longer than this (in characters) are converted into rich text,
    so that they can be word-wrapped.
@@ -50,9 +48,9 @@ static const int MAX_URI_LENGTH = 255;
 /* Number of frames in spinner animation */
 #define SPINNER_FRAMES 35
 
-#define QAPP_ORG_NAME "PIVX"
-#define QAPP_ORG_DOMAIN "pivx.org"
-#define QAPP_APP_NAME_DEFAULT "PIVX-Qt"
-#define QAPP_APP_NAME_TESTNET "PIVX-Qt-testnet"
+#define QAPP_ORG_NAME "ColossusCoinXT"
+#define QAPP_ORG_DOMAIN "colx.org"
+#define QAPP_APP_NAME_DEFAULT "ColossusCoinXT-Qt"
+#define QAPP_APP_NAME_TESTNET "ColossusCoinXT-Qt-testnet"
 
 #endif // BITCOIN_QT_GUICONSTANTS_H

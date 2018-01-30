@@ -6,13 +6,13 @@ and tests weren't explicitly disabled.
 
 After configuring, they can be run with 'make check'.
 
-To run the pivxd tests manually, launch src/test/test_pivx .
+To run the colxd tests manually, launch src/test/test_colx .
 
-To add more pivxd tests, add `BOOST_AUTO_TEST_CASE` functions to the existing
+To add more colxd tests, add `BOOST_AUTO_TEST_CASE` functions to the existing
 .cpp files in the test/ directory or add new .cpp files that
 implement new BOOST_AUTO_TEST_SUITE sections.
 
-To run the pivx-qt tests manually, launch src/qt/test/pivx-qt_test
+To run the colx-qt tests manually, launch src/qt/test/colx-qt_test
 
-To add more pivx-qt tests, add them to the `src/qt/test/` directory and
+To add more colx-qt tests, add them to the `src/qt/test/` directory and
 the `src/qt/test/test_main.cpp` file.

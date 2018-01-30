@@ -109,17 +109,13 @@ void PaymentServerTests::paymentServerTests()
     r.paymentRequest.getMerchant(caStore, merchant);
     QCOMPARE(merchant, QString(""));
 
-    unsigned long lDoSProtectionTrigger = (unsigned long) BIP70_MAX_PAYMENTREQUEST_SIZE + 1;
-    std::string randData(lDoSProtectionTrigger, '\0');
-
-    unsigned char* buff = reinterpret_cast<unsigned char *>(&randData[0]);
-
     // Just get some random data big enough to trigger BIP70 DoS protection
-    GetRandBytes(buff, sizeof(buff));
+    unsigned char randData[BIP70_MAX_PAYMENTREQUEST_SIZE + 1];
+    GetRandBytes(randData, sizeof(randData));
     // Write data to a temp file:
     QTemporaryFile tempFile;
     tempFile.open();
-    tempFile.write((const char*)buff, sizeof(buff));
+    tempFile.write((const char*)randData, sizeof(randData));
     tempFile.close();
     // Trigger BIP70 DoS protection
     QCOMPARE(PaymentServer::readPaymentRequestFromFile(tempFile.fileName(), r.paymentRequest), false);

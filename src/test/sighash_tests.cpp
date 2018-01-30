@@ -14,10 +14,12 @@
 #include <iostream>
 
 #include <boost/test/unit_test.hpp>
+#include "json/json_spirit_reader_template.h"
+#include "json/json_spirit_utils.h"
+#include "json/json_spirit_writer_template.h"
 
-#include <univalue.h>
-
-extern UniValue read_json(const std::string& jsondata);
+using namespace json_spirit;
+extern Array read_json(const std::string& jsondata);
 
 // Old script.cpp SignatureHash function
 uint256 static SignatureHashOld(CScript scriptCode, const CTransaction& txTo, unsigned int nIn, int nHashType)
@@ -163,11 +165,12 @@ BOOST_AUTO_TEST_CASE(sighash_test)
 // Goal: check that SignatureHash generates correct hash
 BOOST_AUTO_TEST_CASE(sighash_from_data)
 {
-    UniValue tests = read_json(std::string(json_tests::sighash, json_tests::sighash + sizeof(json_tests::sighash)));
+    Array tests = read_json(std::string(json_tests::sighash, json_tests::sighash + sizeof(json_tests::sighash)));
 
-    for (unsigned int idx = 0; idx < tests.size(); idx++) {
-        UniValue test = tests[idx];
-        std::string strTest = test.write();
+    BOOST_FOREACH(Value& tv, tests)
+    {
+        Array test = tv.get_array();
+        std::string strTest = write_string(tv, false);
         if (test.size() < 1) // Allow for extra stuff (useful for comments)
         {
             BOOST_ERROR("Bad test: " << strTest);
@@ -194,7 +197,7 @@ BOOST_AUTO_TEST_CASE(sighash_from_data)
           stream >> tx;
 
           CValidationState state;
-          BOOST_CHECK_MESSAGE(CheckTransaction(tx, false, false, state), strTest);
+          BOOST_CHECK_MESSAGE(CheckTransaction(tx, state), strTest);
           BOOST_CHECK(state.IsValid());
 
           std::vector<unsigned char> raw = ParseHex(raw_script);

@@ -6,12 +6,10 @@
 #ifndef BITCOIN_RPCCLIENT_H
 #define BITCOIN_RPCCLIENT_H
 
-#include <univalue.h>
+#include "json/json_spirit_reader_template.h"
+#include "json/json_spirit_utils.h"
+#include "json/json_spirit_writer_template.h"
 
-UniValue RPCConvertValues(const std::string& strMethod, const std::vector<std::string>& strParams);
-/** Non-RFC4627 JSON parser, accepts internal values (such as numbers, true, false, null)
- * as well as objects and arrays.
- */
-UniValue ParseNonRFCJSONValue(const std::string& strVal);
+json_spirit::Array RPCConvertValues(const std::string& strMethod, const std::vector<std::string>& strParams);
 
 #endif // BITCOIN_RPCCLIENT_H

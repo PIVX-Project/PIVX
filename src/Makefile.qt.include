@@ -1,33 +1,32 @@
-bin_PROGRAMS += qt/pivx-qt
+bin_PROGRAMS += qt/colx-qt
 EXTRA_LIBRARIES += qt/libbitcoinqt.a
 
-# pivx qt core #
+# colx qt core #
 QT_TS = \
-  qt/locale/pivx_bg.ts \
-  qt/locale/pivx_ca.ts \
-  qt/locale/pivx_cs.ts \
-  qt/locale/pivx_da.ts \
-  qt/locale/pivx_de.ts \
-  qt/locale/pivx_en.ts \
-  qt/locale/pivx_en_US.ts \
-  qt/locale/pivx_es.ts \
-  qt/locale/pivx_fi.ts \
-  qt/locale/pivx_fr_FR.ts \
-  qt/locale/pivx_it.ts \
-  qt/locale/pivx_ja.ts \
-  qt/locale/pivx_ko_KR.ts \
-  qt/locale/pivx_nl.ts \
-  qt/locale/pivx_pl.ts \
-  qt/locale/pivx_pt.ts \
-  qt/locale/pivx_pt_BR.ts \
-  qt/locale/pivx_ro_RO.ts \
-  qt/locale/pivx_ru.ts \
-  qt/locale/pivx_sk.ts \
-  qt/locale/pivx_sv.ts \
-  qt/locale/pivx_tr.ts \
-  qt/locale/pivx_uk.ts \
-  qt/locale/pivx_zh_CN.ts \
-  qt/locale/pivx_zh_TW.ts
+  qt/locale/colx_bg.ts \
+  qt/locale/colx_ca.ts \
+  qt/locale/colx_cs.ts \
+  qt/locale/colx_da.ts \
+  qt/locale/colx_de.ts \
+  qt/locale/colx_en.ts \
+  qt/locale/colx_en_US.ts \
+  qt/locale/colx_es.ts \
+  qt/locale/colx_fi.ts \
+  qt/locale/colx_fr_FR.ts \
+  qt/locale/colx_it.ts \
+  qt/locale/colx_ja.ts \
+  qt/locale/colx_ko_KR.ts \
+  qt/locale/colx_nl.ts \
+  qt/locale/colx_pl.ts \
+  qt/locale/colx_pt.ts \
+  qt/locale/colx_pt_BR.ts \
+  qt/locale/colx_ro_RO.ts \
+  qt/locale/colx_ru.ts \
+  qt/locale/colx_sk.ts \
+  qt/locale/colx_sv.ts \
+  qt/locale/colx_uk.ts \
+  qt/locale/colx_zh_CN.ts \
+  qt/locale/colx_zh_TW.ts
 
 QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
@@ -41,25 +40,21 @@ QT_FORMS_UI = \
   qt/forms/intro.ui \
   qt/forms/masternodelist.ui \
   qt/forms/multisenddialog.ui \
-  qt/forms/multisigdialog.ui\
   qt/forms/openuridialog.ui \
   qt/forms/optionsdialog.ui \
   qt/forms/overviewpage.ui \
   qt/forms/receivecoinsdialog.ui \
-  qt/forms/privacydialog.ui \
   qt/forms/receiverequestdialog.ui \
   qt/forms/rpcconsole.ui \
   qt/forms/sendcoinsdialog.ui \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
-  qt/forms/transactiondescdialog.ui \
-  qt/forms/zpivcontroldialog.ui
+  qt/forms/transactiondescdialog.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
-  qt/moc_bantablemodel.cpp \
   qt/moc_bip38tooldialog.cpp \
   qt/moc_bitcoinaddressvalidator.cpp \
   qt/moc_bitcoinamountfield.cpp \
@@ -78,7 +73,6 @@ QT_MOC_CPP = \
   qt/moc_macnotificationhandler.cpp \
   qt/moc_masternodelist.cpp \
   qt/moc_multisenddialog.cpp \
-  qt/moc_multisigdialog.cpp\
   qt/moc_notificator.cpp \
   qt/moc_openuridialog.cpp \
   qt/moc_optionsdialog.cpp \
@@ -89,7 +83,6 @@ QT_MOC_CPP = \
   qt/moc_qvalidatedlineedit.cpp \
   qt/moc_qvaluecombobox.cpp \
   qt/moc_receivecoinsdialog.cpp \
-  qt/moc_privacydialog.cpp \
   qt/moc_receiverequestdialog.cpp \
   qt/moc_recentrequeststablemodel.cpp \
   qt/moc_rpcconsole.cpp \
@@ -106,24 +99,23 @@ QT_MOC_CPP = \
   qt/moc_utilitydialog.cpp \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
-  qt/moc_walletview.cpp \
-  qt/moc_zpivcontroldialog.cpp
+  qt/moc_walletview.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
   qt/macnotificationhandler.mm
 
 QT_MOC = \
-  qt/pivx.moc \
+  qt/colx.moc \
   qt/bitcoinamountfield.moc \
   qt/intro.moc \
   qt/overviewpage.moc \
   qt/rpcconsole.moc
 
-QT_QRC_CPP = qt/qrc_pivx.cpp
-QT_QRC = qt/pivx.qrc
-QT_QRC_LOCALE_CPP = qt/qrc_pivx_locale.cpp
-QT_QRC_LOCALE = qt/pivx_locale.qrc
+QT_QRC_CPP = qt/qrc_colx.cpp
+QT_QRC = qt/colx.qrc
+QT_QRC_LOCALE_CPP = qt/qrc_colx_locale.cpp
+QT_QRC_LOCALE = qt/colx_locale.qrc
 
 PROTOBUF_CC = qt/paymentrequest.pb.cc
 PROTOBUF_H = qt/paymentrequest.pb.h
@@ -133,7 +125,6 @@ BITCOIN_QT_H = \
   qt/addressbookpage.h \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
-  qt/bantablemodel.h \
   qt/bip38tooldialog.h \
   qt/bitcoinaddressvalidator.h \
   qt/bitcoinamountfield.h \
@@ -153,7 +144,6 @@ BITCOIN_QT_H = \
   qt/macnotificationhandler.h \
   qt/masternodelist.h \
   qt/multisenddialog.h \
-  qt/multisigdialog.h\
   qt/networkstyle.h \
   qt/notificator.h \
   qt/openuridialog.h \
@@ -167,7 +157,6 @@ BITCOIN_QT_H = \
   qt/qvalidatedlineedit.h \
   qt/qvaluecombobox.h \
   qt/receivecoinsdialog.h \
-  qt/privacydialog.h \
   qt/receiverequestdialog.h \
   qt/recentrequeststablemodel.h \
   qt/rpcconsole.h \
@@ -187,8 +176,7 @@ BITCOIN_QT_H = \
   qt/walletmodel.h \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
-  qt/winshutdownmonitor.h \
-  qt/zpivcontroldialog.h
+  qt/winshutdownmonitor.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -228,11 +216,8 @@ RES_ICONS = \
   qt/res/icons/qrcode.png \
   qt/res/icons/quit.png \
   qt/res/icons/receive.png \
-  qt/res/icons/receive_dark.png \
-  qt/res/icons/privacy.png \
   qt/res/icons/remove.png \
   qt/res/icons/send.png \
-  qt/res/icons/send_dark.png \
   qt/res/icons/staking_active.png \
   qt/res/icons/staking_inactive.png \
   qt/res/icons/synced.png \
@@ -244,15 +229,14 @@ RES_ICONS = \
   qt/res/icons/tx_input.png \
   qt/res/icons/tx_output.png \
   qt/res/icons/tx_mined.png \
-  qt/res/icons/unit_pivx.png \
-  qt/res/icons/unit_mpivx.png \
-  qt/res/icons/unit_upivx.png \
-  qt/res/icons/unit_tpivx.png \
-  qt/res/icons/unit_tmpivx.png \
-  qt/res/icons/unit_tupivx.png
+  qt/res/icons/unit_colx.png \
+  qt/res/icons/unit_mcolx.png \
+  qt/res/icons/unit_ucolx.png \
+  qt/res/icons/unit_tcolx.png \
+  qt/res/icons/unit_tmcolx.png \
+  qt/res/icons/unit_tucolx.png
 
 BITCOIN_QT_CPP = \
-  qt/bantablemodel.cpp \
   qt/bitcoinaddressvalidator.cpp \
   qt/bitcoinamountfield.cpp \
   qt/bitcoingui.cpp \
@@ -274,11 +258,8 @@ BITCOIN_QT_CPP = \
   qt/rpcconsole.cpp \
   qt/splashscreen.cpp \
   qt/trafficgraphwidget.cpp \
-  qt/utilitydialog.cpp
-
-if TARGET_WINDOWS
-BITCOIN_QT_CPP += qt/winshutdownmonitor.cpp
-endif
+  qt/utilitydialog.cpp \
+  qt/winshutdownmonitor.cpp
 
 if ENABLE_WALLET
 BITCOIN_QT_CPP += \
@@ -293,13 +274,11 @@ BITCOIN_QT_CPP += \
   qt/editaddressdialog.cpp \
   qt/masternodelist.cpp \
   qt/multisenddialog.cpp \
-  qt/multisigdialog.cpp\
   qt/openuridialog.cpp \
   qt/overviewpage.cpp \
   qt/paymentrequestplus.cpp \
   qt/paymentserver.cpp \
   qt/receivecoinsdialog.cpp \
-  qt/privacydialog.cpp \
   qt/receiverequestdialog.cpp \
   qt/recentrequeststablemodel.cpp \
   qt/sendcoinsdialog.cpp \
@@ -314,8 +293,7 @@ BITCOIN_QT_CPP += \
   qt/walletframe.cpp \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
-  qt/walletview.cpp \
-  qt/zpivcontroldialog.cpp
+  qt/walletview.cpp
 
 endif
 
@@ -323,14 +301,12 @@ RES_IMAGES = \
   qt/res/images/about.png \
   qt/res/images/splash.png \
   qt/res/images/splash_testnet.png \
-  qt/res/images/pivx_logo_horizontal.png \
-  qt/res/images/downArrow_dark.png \
-  qt/res/images/downArrow_small_dark.png \
+  qt/res/images/colx_logo_horizontal.png \
+  qt/res/images/downArrow.png \
   qt/res/images/downArrow_small.png \
-  qt/res/images/upArrow_small_dark.png \
   qt/res/images/upArrow_small.png \
-  qt/res/images/leftArrow_small_dark.png \
-  qt/res/images/rightArrow_small_dark.png \
+  qt/res/images/leftArrow_small.png \
+  qt/res/images/rightArrow_small.png \
   qt/res/images/qtreeview_selected.png \
   qt/res/images/walletFrame.png \
   qt/res/images/walletFrame_bg.png \
@@ -341,7 +317,7 @@ RES_CSS = \
 
 RES_MOVIES = $(wildcard $(srcdir)/qt/res/movies/spinner-*.png)
 
-BITCOIN_RC = qt/res/pivx-qt-res.rc
+BITCOIN_RC = qt/res/ColossusCoinXT-qt-res.rc
 
 BITCOIN_QT_INCLUDES = -I$(builddir)/qt -I$(srcdir)/qt -I$(srcdir)/qt/forms \
   -I$(builddir)/qt/forms
@@ -361,69 +337,68 @@ QT_FORMS_H=$(join $(dir $(QT_FORMS_UI)),$(addprefix ui_, $(notdir $(QT_FORMS_UI:
 # Most files will depend on the forms and moc files as includes. Generate them
 # before anything else.
 $(QT_MOC): $(QT_FORMS_H)
-$(qt_libbitcoinqt_a_OBJECTS) $(qt_pivx_qt_OBJECTS) : | $(QT_MOC)
+$(qt_libbitcoinqt_a_OBJECTS) $(qt_colx_qt_OBJECTS) : | $(QT_MOC)
 
 #Generating these with a half-written protobuf header leads to wacky results.
 #This makes sure it's done.
 $(QT_MOC): $(PROTOBUF_H)
 $(QT_MOC_CPP): $(PROTOBUF_H)
 
-# pivx-qt binary #
-qt_pivx_qt_CPPFLAGS = $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
+# colx-qt binary #
+qt_colx_qt_CPPFLAGS = $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
   $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
 
-qt_pivx_qt_SOURCES = qt/pivx.cpp
+qt_colx_qt_SOURCES = qt/colx.cpp
 if TARGET_DARWIN
-  qt_pivx_qt_SOURCES += $(BITCOIN_MM)
+  qt_colx_qt_SOURCES += $(BITCOIN_MM)
 endif
 if TARGET_WINDOWS
-  qt_pivx_qt_SOURCES += $(BITCOIN_RC)
+  qt_colx_qt_SOURCES += $(BITCOIN_RC)
 endif
-qt_pivx_qt_LDADD = qt/libbitcoinqt.a $(LIBBITCOIN_SERVER)
+qt_colx_qt_LDADD = qt/libbitcoinqt.a $(LIBBITCOIN_SERVER)
 if ENABLE_WALLET
-qt_pivx_qt_LDADD += $(LIBBITCOIN_WALLET)
+qt_colx_qt_LDADD += $(LIBBITCOIN_WALLET)
 endif
 if ENABLE_ZMQ
-qt_pivx_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+qt_colx_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
 endif
-qt_pivx_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBBITCOIN_ZEROCOIN) $(LIBLEVELDB) $(LIBMEMENV) \
-  $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
-  $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
-qt_pivx_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
-qt_pivx_qt_LIBTOOLFLAGS = --tag CXX
+qt_colx_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBBITCOIN_UNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
+  $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1)
+qt_colx_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+qt_colx_qt_LIBTOOLFLAGS = --tag CXX
 
 #locale/foo.ts -> locale/foo.qm
 QT_QM=$(QT_TS:.ts=.qm)
 
 .SECONDARY: $(QT_QM)
 
-qt/pivxstrings.cpp: $(libbitcoin_server_a_SOURCES) $(libbitcoin_wallet_a_SOURCES) $(libbitcoin_common_a_SOURCES)
+qt/colxstrings.cpp: $(libbitcoin_server_a_SOURCES) $(libbitcoin_wallet_a_SOURCES) $(libbitcoin_common_a_SOURCES)
 	@test -n $(XGETTEXT) || echo "xgettext is required for updating translations"
 	$(AM_V_GEN) cd $(srcdir); XGETTEXT=$(XGETTEXT) $(PYTHON) ../share/qt/extract_strings_qt.py $^
 
-translate: qt/pivxstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(BITCOIN_MM)
+translate: qt/colxstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(BITCOIN_MM)
 	@test -n $(LUPDATE) || echo "lupdate is required for updating translations"
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts qt/locale/pivx_en.ts
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts qt/locale/colx_en.ts
 
 $(QT_QRC_LOCALE_CPP): $(QT_QRC_LOCALE) $(QT_QM)
 	@test -f $(RCC)
 	@test -f $(@D)/$(<F) || cp -f $< $(@D)
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name pivx_locale $(@D)/$(<F) | \
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name colx_locale $(@D)/$(<F) | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
 
 $(QT_QRC_CPP): $(QT_QRC) $(QT_FORMS_H) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(RES_MOVIES) $(PROTOBUF_H)
 	@test -f $(RCC)
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name pivx $< | \
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name colx $< | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
 
 CLEAN_QT = $(nodist_qt_libbitcoinqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda qt/*.gcno
 
 CLEANFILES += $(CLEAN_QT)
 
-pivx_qt_clean: FORCE
-	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_pivx_qt_OBJECTS) qt/pivx-qt$(EXEEXT) $(LIBBITCOINQT)
+colx_qt_clean: FORCE
+	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_colx_qt_OBJECTS) qt/colx-qt$(EXEEXT) $(LIBBITCOINQT)
 
-pivx_qt : qt/pivx-qt$(EXEEXT)
+colx_qt : qt/colx-qt$(EXEEXT)
 
 ui_%.h: %.ui
 	@test -f $(UIC)

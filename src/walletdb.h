@@ -1,6 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2013 The Bitcoin developers
-// Copyright (c) 2016-2017 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,9 +10,6 @@
 #include "db.h"
 #include "key.h"
 #include "keystore.h"
-#include "primitives/zerocoin.h"
-#include "libzerocoin/Accumulator.h"
-#include "libzerocoin/Denominations.h"
 
 #include <list>
 #include <stdint.h>
@@ -29,8 +25,6 @@ class CMasterKey;
 class CScript;
 class CWallet;
 class CWalletTx;
-class CZerocoinMint;
-class CZerocoinSpend;
 class uint160;
 class uint256;
 
@@ -104,9 +98,6 @@ public:
     bool WriteWatchOnly(const CScript& script);
     bool EraseWatchOnly(const CScript& script);
 
-    bool WriteMultiSig(const CScript& script);
-    bool EraseMultiSig(const CScript& script);
-
     bool WriteBestBlock(const CBlockLocator& locator);
     bool ReadBestBlock(CBlockLocator& locator);
 
@@ -129,10 +120,6 @@ public:
 
     bool WriteMinVersion(int nVersion);
 
-    /// This writes directly to the database, and will not update the CWallet's cached accounting entries!
-    /// Use wallet.AddAccountingEntry instead, to write *and* update its caches.
-    bool WriteAccountingEntry_Backend(const CAccountingEntry& acentry);
-
     bool ReadAccount(const std::string& strAccount, CAccount& account);
     bool WriteAccount(const std::string& strAccount, const CAccount& account);
 
@@ -141,6 +128,7 @@ public:
     /// Erase destination data tuple from wallet database
     bool EraseDestData(const std::string& address, const std::string& key);
 
+    bool WriteAccountingEntry(const CAccountingEntry& acentry);
     CAmount GetAccountCreditDebit(const std::string& strAccount);
     void ListAccountCreditDebit(const std::string& strAccount, std::list<CAccountingEntry>& acentries);
 
@@ -150,20 +138,6 @@ public:
     DBErrors ZapWalletTx(CWallet* pwallet, std::vector<CWalletTx>& vWtx);
     static bool Recover(CDBEnv& dbenv, std::string filename, bool fOnlyKeys);
     static bool Recover(CDBEnv& dbenv, std::string filename);
-
-    bool WriteZerocoinMint(const CZerocoinMint& zerocoinMint);
-    bool EraseZerocoinMint(const CZerocoinMint& zerocoinMint);
-    bool ReadZerocoinMint(const CBigNum &bnSerial, CZerocoinMint& zerocoinMint);
-    bool ArchiveMintOrphan(const CZerocoinMint& zerocoinMint);
-    bool UnarchiveZerocoin(const CZerocoinMint& mint);
-    std::list<CZerocoinMint> ListMintedCoins(bool fUnusedOnly, bool fMaturedOnly, bool fUpdateStatus);
-    std::list<CZerocoinSpend> ListSpentCoins();
-    std::list<CBigNum> ListMintedCoinsSerial();
-    std::list<CBigNum> ListSpentCoinsSerial();
-    std::list<CZerocoinMint> ListArchivedZerocoins();
-    bool WriteZerocoinSpendSerialEntry(const CZerocoinSpend& zerocoinSpend);
-    bool EraseZerocoinSpendSerialEntry(const CBigNum& serialEntry);
-    bool ReadZerocoinSpendSerialEntry(const CBigNum& bnSerial);
 
 private:
     CWalletDB(const CWalletDB&);
