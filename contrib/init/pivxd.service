@@ -1,0 +1,26 @@
+[Unit]
+Description=COLX's distributed currency daemon
+After=network.target
+
+[Service]
+User=colx
+Group=colx
+
+Type=forking
+PIDFile=/var/lib/colxd/colxd.pid
+
+ExecStart=/usr/bin/colxd -daemon -pid=/var/lib/colxd/colxd.pid \
+          -conf=/etc/colx/colx.conf -datadir=/var/lib/colxd
+
+ExecStop=-/usr/bin/colx-cli -conf=/etc/colx/colx.conf \
+         -datadir=/var/lib/colxd stop
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
