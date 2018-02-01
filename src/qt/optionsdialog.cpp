@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/pivx-config.h"
+#include "config/colx-config.h"
 #endif
 
 #include "optionsdialog.h"
@@ -79,20 +79,9 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(paren
         digits.setNum(index);
         ui->digits->addItem(digits, digits);
     }
-    
+
     /* Theme selector static themes */
     ui->theme->addItem(QString("Default"), QVariant("default"));
-
-    /* Preferred Zerocoin Denominations */
-    ui->preferredDenom->addItem(QString(tr("Any")), QVariant("0"));
-    ui->preferredDenom->addItem(QString("1"), QVariant("1"));
-    ui->preferredDenom->addItem(QString("5"), QVariant("5"));
-    ui->preferredDenom->addItem(QString("10"), QVariant("10"));
-    ui->preferredDenom->addItem(QString("50"), QVariant("50"));
-    ui->preferredDenom->addItem(QString("100"), QVariant("100"));
-    ui->preferredDenom->addItem(QString("500"), QVariant("500"));
-    ui->preferredDenom->addItem(QString("1000"), QVariant("1000"));
-    ui->preferredDenom->addItem(QString("5000"), QVariant("5000"));
 
     /* Theme selector external themes */
     boost::filesystem::path pathAddr = GetDataDir() / "themes";
@@ -194,17 +183,10 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->bitcoinAtStartup, OptionsModel::StartAtStartup);
     mapper->addMapping(ui->threadsScriptVerif, OptionsModel::ThreadsScriptVerif);
     mapper->addMapping(ui->databaseCache, OptionsModel::DatabaseCache);
-    // Zeromint Enabled
-    mapper->addMapping(ui->checkBoxZeromintEnable, OptionsModel::ZeromintEnable);
-    // Zerocoin mint percentage
-    mapper->addMapping(ui->zeromintPercentage, OptionsModel::ZeromintPercentage);
-    // Zerocoin preferred denomination
-    mapper->addMapping(ui->preferredDenom, OptionsModel::ZeromintPrefDenom);
 
     /* Wallet */
     mapper->addMapping(ui->spendZeroConfChange, OptionsModel::SpendZeroConfChange);
     mapper->addMapping(ui->coinControlFeatures, OptionsModel::CoinControlFeatures);
-    mapper->addMapping(ui->spinBoxStakeSplitThreshold, OptionsModel::StakeSplitThreshold);
 
     /* Network */
     mapper->addMapping(ui->mapPortUpnp, OptionsModel::MapPortUPnP);
@@ -214,7 +196,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->proxyIp, OptionsModel::ProxyIP);
     mapper->addMapping(ui->proxyPort, OptionsModel::ProxyPort);
 
-    /* Window */
+/* Window */
 #ifndef Q_OS_MAC
     mapper->addMapping(ui->minimizeToTray, OptionsModel::MinimizeToTray);
     mapper->addMapping(ui->minimizeOnClose, OptionsModel::MinimizeOnClose);
@@ -227,9 +209,11 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->lang, OptionsModel::Language);
     mapper->addMapping(ui->unit, OptionsModel::DisplayUnit);
     mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
-    mapper->addMapping(ui->checkBoxHideZeroBalances, OptionsModel::HideZeroBalances);
 
-    /* Masternode Tab */
+
+    /* Obfuscation Rounds */
+    mapper->addMapping(ui->obfuscationRounds, OptionsModel::ObfuscationRounds);
+    mapper->addMapping(ui->anonymizePivx, OptionsModel::AnonymizePivxAmount);
     mapper->addMapping(ui->showMasternodesTab, OptionsModel::ShowMasternodesTab);
 }
 

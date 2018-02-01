@@ -1,6 +1,6 @@
 [Protocol]
-exec=pivx-qt '%u'
-protocol=pivx
+exec=colx-qt '%u'
+protocol=colx
 input=none
 output=none
 helper=true

@@ -6,17 +6,18 @@
 #ifndef BITCOIN_RPCPROTOCOL_H
 #define BITCOIN_RPCPROTOCOL_H
 
+#include <boost/asio.hpp>
+#include <boost/asio/ssl.hpp>
+#include <boost/iostreams/concepts.hpp>
+#include <boost/iostreams/stream.hpp>
 #include <list>
 #include <map>
 #include <stdint.h>
 #include <string>
-#include <boost/iostreams/concepts.hpp>
-#include <boost/iostreams/stream.hpp>
-#include <boost/asio.hpp>
-#include <boost/asio/ssl.hpp>
-#include <boost/filesystem.hpp>
 
-#include <univalue.h>
+#include "json/json_spirit_reader_template.h"
+#include "json/json_spirit_utils.h"
+#include "json/json_spirit_writer_template.h"
 
 //! HTTP status codes
 enum HTTPStatusCode {
@@ -29,7 +30,7 @@ enum HTTPStatusCode {
     HTTP_SERVICE_UNAVAILABLE = 503,
 };
 
-//! PIVX RPC error codes
+//! COLX RPC error codes
 enum RPCErrorCode {
     //! Standard JSON-RPC 2.0 errors
     RPC_INVALID_REQUEST = -32600,
@@ -58,12 +59,10 @@ enum RPCErrorCode {
     RPC_TRANSACTION_ALREADY_IN_CHAIN = RPC_VERIFY_ALREADY_IN_CHAIN,
 
     //! P2P client errors
-    RPC_CLIENT_NOT_CONNECTED = -9,        //! PIVX is not connected
+    RPC_CLIENT_NOT_CONNECTED = -9,        //! COLX is not connected
     RPC_CLIENT_IN_INITIAL_DOWNLOAD = -10, //! Still downloading initial blocks
     RPC_CLIENT_NODE_ALREADY_ADDED = -23,  //! Node is already added
     RPC_CLIENT_NODE_NOT_ADDED = -24,      //! Node has not been added before
-    RPC_CLIENT_NODE_NOT_CONNECTED   = -29, //! Node to disconnect not found in connected nodes
-    RPC_CLIENT_INVALID_IP_OR_SUBNET = -30, //! Invalid IP/Subnet
 
     //! Wallet errors
     RPC_WALLET_ERROR = -4,                 //! Unspecified problem with wallet (key not found etc.)
@@ -153,18 +152,9 @@ bool ReadHTTPRequestLine(std::basic_istream<char>& stream, int& proto, std::stri
 int ReadHTTPStatus(std::basic_istream<char>& stream, int& proto);
 int ReadHTTPHeaders(std::basic_istream<char>& stream, std::map<std::string, std::string>& mapHeadersRet);
 int ReadHTTPMessage(std::basic_istream<char>& stream, std::map<std::string, std::string>& mapHeadersRet, std::string& strMessageRet, int nProto, size_t max_size);
-std::string JSONRPCRequest(const std::string& strMethod, const UniValue& params, const UniValue& id);
-UniValue JSONRPCReplyObj(const UniValue& result, const UniValue& error, const UniValue& id);
-std::string JSONRPCReply(const UniValue& result, const UniValue& error, const UniValue& id);
-UniValue JSONRPCError(int code, const std::string& message);
-
-/** Get name of RPC authentication cookie file */
-boost::filesystem::path GetAuthCookieFile();
-/** Generate a new RPC authentication cookie and write it to disk */
-bool GenerateAuthCookie(std::string *cookie_out);
-/** Read the RPC authentication cookie from disk */
-bool GetAuthCookie(std::string *cookie_out);
-/** Delete RPC authentication cookie from disk */
-void DeleteAuthCookie();
+std::string JSONRPCRequest(const std::string& strMethod, const json_spirit::Array& params, const json_spirit::Value& id);
+json_spirit::Object JSONRPCReplyObj(const json_spirit::Value& result, const json_spirit::Value& error, const json_spirit::Value& id);
+std::string JSONRPCReply(const json_spirit::Value& result, const json_spirit::Value& error, const json_spirit::Value& id);
+json_spirit::Object JSONRPCError(int code, const std::string& message);
 
 #endif // BITCOIN_RPCPROTOCOL_H

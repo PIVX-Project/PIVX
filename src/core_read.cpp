@@ -1,5 +1,4 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2015-2017 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,7 +9,7 @@
 #include "script/script.h"
 #include "serialize.h"
 #include "streams.h"
-#include <univalue.h>
+#include "univalue/univalue.h"
 #include "util.h"
 #include "utilstrencodings.h"
 #include "version.h"
@@ -32,7 +31,7 @@ CScript ParseScript(std::string s)
     static map<string, opcodetype> mapOpNames;
 
     if (mapOpNames.empty()) {
-        for (int op = 0; op <= OP_ZEROCOINSPEND; op++) {
+        for (int op = 0; op <= OP_NOP10; op++) {
             // Allow OP_RESERVED to get into mapOpNames
             if (op < OP_NOP && op != OP_RESERVED)
                 continue;

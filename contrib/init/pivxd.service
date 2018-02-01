@@ -1,19 +1,19 @@
 [Unit]
-Description=PIVX's distributed currency daemon
+Description=COLX's distributed currency daemon
 After=network.target
 
 [Service]
-User=pivx
-Group=pivx
+User=colx
+Group=colx
 
 Type=forking
-PIDFile=/var/lib/pivxd/pivxd.pid
+PIDFile=/var/lib/colxd/colxd.pid
 
-ExecStart=/usr/bin/pivxd -daemon -pid=/var/lib/pivxd/pivxd.pid \
-          -conf=/etc/pivx/pivx.conf -datadir=/var/lib/pivxd
+ExecStart=/usr/bin/colxd -daemon -pid=/var/lib/colxd/colxd.pid \
+          -conf=/etc/colx/colx.conf -datadir=/var/lib/colxd
 
-ExecStop=-/usr/bin/pivx-cli -conf=/etc/pivx/pivx.conf \
-         -datadir=/var/lib/pivxd stop
+ExecStop=-/usr/bin/colx-cli -conf=/etc/colx/colx.conf \
+         -datadir=/var/lib/colxd stop
 
 Restart=always
 PrivateTmp=true

@@ -289,7 +289,7 @@ bitcoin (0.3.21~dfsg-1) unstable; urgency=low
     longer needed.
   * Link against unversioned berkeleydb. Update NEWS and README.Debian
     accordingly (and improve wording while at it).
-    Closes: Bug#621425. Thanks to Ondřej Surý.
+    Closes: Bug#621425. Thanks to Ond??ej Sur??.
   * This release also implicitly updates linkage against libcrypto++,
     which closes: bug#626953, #627024.
   * Disable linkage against not yet Debian packaged MiniUPnP.
@@ -365,8 +365,8 @@ bitcoin (0.3.19~dfsg-5) unstable; urgency=low
 bitcoin (0.3.19~dfsg-4) unstable; urgency=low
 
   [ Micah Anderson ]
-  * Provide example pivx.conf.
-  * Add bitcoind(1) and pivx.conf(5) man pages.
+  * Provide example colx.conf.
+  * Add bitcoind(1) and colx.conf(5) man pages.
 
   [ Jonas Smedegaard ]
   * Ease backporting:

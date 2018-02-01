@@ -1,25 +1,25 @@
-# /etc/conf.d/pivxd: config file for /etc/init.d/pivxd
+# /etc/conf.d/colxd: config file for /etc/init.d/colxd
 
 # Config file location
-#BITCOIND_CONFIGFILE="/etc/pivx/pivx.conf"
+#BITCOIND_CONFIGFILE="/etc/colx/colx.conf"
 
 # What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
-#BITCOIND_PIDDIR="/var/run/pivxd"
+#BITCOIND_PIDDIR="/var/run/colxd"
 
 # What filename to give the pidfile
-#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/pivxd.pid"
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/colxd.pid"
 
-# Where to write pivxd data (be mindful that the blockchain is large)
-#BITCOIND_DATADIR="/var/lib/pivxd"
+# Where to write colxd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/colxd"
 
-# User and group to own pivxd process
-#BITCOIND_USER="pivx"
-#BITCOIND_GROUP="pivx"
+# User and group to own colxd process
+#BITCOIND_USER="colx"
+#BITCOIND_GROUP="colx"
 
-# Path to pivxd executable
-#BITCOIND_BIN="/usr/bin/pivxd"
+# Path to colxd executable
+#BITCOIND_BIN="/usr/bin/colxd"
 
-# Nice value to run pivxd under
+# Nice value to run colxd under
 #BITCOIND_NICE=0
 
 # Additional options (avoid -conf and -datadir, use flags above)

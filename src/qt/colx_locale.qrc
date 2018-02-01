@@ -1,0 +1,28 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="bg">locale/colx_bg.qm</file>
+        <file alias="ca">locale/colx_ca.qm</file>
+        <file alias="cs">locale/colx_cs.qm</file>
+        <file alias="da">locale/colx_da.qm</file>
+        <file alias="de">locale/colx_de.qm</file>
+        <file alias="en">locale/colx_en.qm</file>
+        <file alias="en_US">locale/colx_en_US.qm</file>
+        <file alias="es">locale/colx_es.qm</file>
+        <file alias="fi">locale/colx_fi.qm</file>
+        <file alias="fr_FR">locale/colx_fr_FR.qm</file>
+        <file alias="it">locale/colx_it.qm</file>
+        <file alias="ja">locale/colx_ja.qm</file>
+        <file alias="ko_KR">locale/colx_ko_KR.qm</file>
+        <file alias="nl">locale/colx_nl.qm</file>
+        <file alias="pl">locale/colx_pl.qm</file>
+        <file alias="pt">locale/colx_pt.qm</file>
+        <file alias="pt_BR">locale/colx_pt_BR.qm</file>
+        <file alias="ro_RO">locale/colx_ro_RO.qm</file>
+        <file alias="ru">locale/colx_ru.qm</file>
+        <file alias="sk">locale/colx_sk.qm</file>
+        <file alias="sv">locale/colx_sv.qm</file>
+        <file alias="uk">locale/colx_uk.qm</file>
+        <file alias="zh_CN">locale/colx_zh_CN.qm</file>
+        <file alias="zh_TW">locale/colx_zh_TW.qm</file>
+    </qresource>
+</RCC>

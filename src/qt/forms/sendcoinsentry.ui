@@ -64,7 +64,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../pivx.qrc">
+         <iconset resource="../colx.qrc">
           <normaloff>:/icons/address-book</normaloff>:/icons/address-book</iconset>
         </property>
         <property name="shortcut">
@@ -81,7 +81,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../pivx.qrc">
+         <iconset resource="../colx.qrc">
           <normaloff>:/icons/editpaste</normaloff>:/icons/editpaste</iconset>
         </property>
         <property name="shortcut">
@@ -98,7 +98,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../pivx.qrc">
+         <iconset resource="../colx.qrc">
           <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
         </property>
        </widget>
@@ -154,7 +154,7 @@
     <item row="3" column="1">
      <widget class="QLabel" name="messageTextLabel">
       <property name="toolTip">
-       <string>A message that was attached to the PIVX: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the PIVX network.</string>
+       <string>A message that was attached to the COLX: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the COLX network.</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -622,7 +622,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../pivx.qrc">
+         <iconset resource="../colx.qrc">
           <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
         </property>
        </widget>
@@ -1158,7 +1158,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../pivx.qrc">
+         <iconset resource="../colx.qrc">
           <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
         </property>
        </widget>
@@ -1230,7 +1230,7 @@
   <tabstop>deleteButton_s</tabstop>
  </tabstops>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../colx.qrc"/>
  </resources>
  <connections/>
 </ui>
