@@ -11,6 +11,7 @@
 #include "addresstablemodel.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
+#include "utilmoneystr.h"
 #include "walletmodel.h"
 
 #include <QApplication>
@@ -20,6 +21,10 @@ SendCoinsEntry::SendCoinsEntry(QWidget* parent) : QStackedWidget(parent),
                                                   ui(new Ui::SendCoinsEntry),
                                                   model(0)
 {
+#ifdef USE_MULTIMEDIA
+    qrCodeScanner = NULL;
+#endif
+
     ui->setupUi(this);
 
     setCurrentWidget(ui->SendCoins);
@@ -41,6 +46,17 @@ SendCoinsEntry::SendCoinsEntry(QWidget* parent) : QStackedWidget(parent),
     connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(deleteClicked()));
     connect(ui->deleteButton_is, SIGNAL(clicked()), this, SLOT(deleteClicked()));
     connect(ui->deleteButton_s, SIGNAL(clicked()), this, SLOT(deleteClicked()));
+
+#ifdef USE_MULTIMEDIA
+    // Connect and initialize QRCode Scanner
+    if (QRCodeScanner::availability())
+        ui->qrCodeButton->setEnabled(true);
+    else
+        ui->qrCodeButton->setEnabled(false);
+    connect(ui->qrCodeButton, SIGNAL(clicked()), this, SLOT(showQrCodeScanner()));
+#else
+    ui->qrCodeButton->setVisible(false);
+#endif
 }
 
 SendCoinsEntry::~SendCoinsEntry()
@@ -245,4 +261,66 @@ bool SendCoinsEntry::updateLabel(const QString& address)
     }
 
     return false;
+}
+
+void SendCoinsEntry::showQrCodeScanner()
+{
+#ifdef USE_MULTIMEDIA
+    if (!qrCodeScanner) {
+        qrCodeScanner = new QRCodeScanner(this);
+        connect(qrCodeScanner, SIGNAL(QRCodeFound(const QString&)), this, SLOT(qrCodeFound(const QString&)));
+    }
+
+    qrCodeScanner->show();
+    qrCodeScanner->setScannerActive(true);
+#endif
+}
+
+void SendCoinsEntry::qrCodeFound(const QString &payload)
+{
+#ifdef USE_MULTIMEDIA
+    static const char bitcoinurl[] = "pivx:";
+    static const char amountfield[] = "amount=";
+
+    bool validQRCode = false;
+    if (payload.startsWith(bitcoinurl, Qt::CaseInsensitive)) {
+        // get the part after the "pivx:"
+        QString addressWithDetails = payload.mid(strlen(bitcoinurl));
+
+        // form a substring with only the address
+        QString onlyAddress = addressWithDetails.mid(0,addressWithDetails.indexOf("?"));
+
+        if (model->validateAddress(onlyAddress)) {
+            // if there is an amount, rip out the string
+            if (addressWithDetails.indexOf(amountfield) != -1) {
+                QString part = addressWithDetails.mid(addressWithDetails.indexOf(amountfield));
+                QString amount = part.mid(strlen(amountfield),part.indexOf("&")-strlen(amountfield));
+                CAmount value;
+                ParseMoney(amount.toStdString(), value);
+
+                // fill amount
+                ui->payAmount->setValue(value);
+            }
+
+            // fill address
+            ui->payTo->setText(onlyAddress);
+
+            validQRCode = true;
+        }
+    } else {
+        if (model->validateAddress(payload)) {
+            ui->payTo->setText(payload);
+            ui->payAmount->setFocus();
+            validQRCode = true;
+        }
+    }
+
+    qrCodeScanner->setScannerActive(false);
+    qrCodeScanner->hide();
+
+    if (!validQRCode)
+        QMessageBox::warning(this, tr("Invalid PIVX QRCode"),
+                tr("The scanned QRCode does not contain a valid PIVX address."),
+                QMessageBox::Ok, QMessageBox::Ok);
+#endif
 }

@@ -25,6 +25,10 @@ Bip38ToolDialog::Bip38ToolDialog(QWidget* parent) : QDialog(parent),
                                                     ui(new Ui::Bip38ToolDialog),
                                                     model(0)
 {
+#ifdef USE_MULTIMEDIA
+    qrCodeScanner = NULL;
+#endif
+
     ui->setupUi(this);
 
 #if QT_VERSION >= 0x040700
@@ -38,6 +42,17 @@ Bip38ToolDialog::Bip38ToolDialog(QWidget* parent) : QDialog(parent),
     ui->encryptedKeyIn_DEC->installEventFilter(this);
     ui->passphraseIn_DEC->installEventFilter(this);
     ui->decryptedKeyOut_DEC->installEventFilter(this);
+
+#ifdef USE_MULTIMEDIA
+    // Connect and initialize QRCode Scanner
+    if (QRCodeScanner::availability())
+        ui->qrCodeButton->setEnabled(true);
+    else
+        ui->qrCodeButton->setEnabled(false);
+    connect(ui->qrCodeButton, SIGNAL(clicked()), this, SLOT(showQrCodeScanner()));
+#else
+    ui->qrCodeButton->setVisible(false);
+#endif
 }
 
 Bip38ToolDialog::~Bip38ToolDialog()
@@ -171,6 +186,12 @@ void Bip38ToolDialog::on_clearButton_ENC_clicked()
 }
 
 CKey key;
+void Bip38ToolDialog::on_pasteButton_DEC_clicked()
+{
+    // Paste text from clipboard into recipient field
+    ui->encryptedKeyIn_DEC->setText(QApplication::clipboard()->text());
+}
+
 void Bip38ToolDialog::on_decryptKeyButton_DEC_clicked()
 {
     string strPassphrase = ui->passphraseIn_DEC->text().toStdString();
@@ -188,7 +209,7 @@ void Bip38ToolDialog::on_decryptKeyButton_DEC_clicked()
     CPubKey pubKey = key.GetPubKey();
     CBitcoinAddress address(pubKey.GetID());
 
-    ui->decryptedKeyOut_DEC->setText(QString::fromStdString(HexStr(privKey)));
+    ui->decryptedKeyOut_DEC->setText(QString::fromStdString(CBitcoinSecret(key).ToString()));
     ui->addressOut_DEC->setText(QString::fromStdString(address.ToString()));
 }
 
@@ -270,4 +291,43 @@ bool Bip38ToolDialog::eventFilter(QObject* object, QEvent* event)
         }
     }
     return QDialog::eventFilter(object, event);
+}
+
+void Bip38ToolDialog::showQrCodeScanner()
+{
+#ifdef USE_MULTIMEDIA
+    if (!qrCodeScanner) {
+        qrCodeScanner = new QRCodeScanner(this);
+        connect(qrCodeScanner, SIGNAL(QRCodeFound(const QString&)), this, SLOT(qrCodeFound(const QString&)));
+    }
+
+    qrCodeScanner->setModal(true);
+    qrCodeScanner->show();
+    qrCodeScanner->raise();
+    qrCodeScanner->setScannerActive(true);
+#endif
+}
+
+void Bip38ToolDialog::qrCodeFound(const QString &payload)
+{
+#ifdef USE_MULTIMEDIA
+    bool validBIP38Key = false;
+    std::string strKey = DecodeBase58(payload.toStdString().c_str());
+    if ((strKey.size() == (78 + 8)) && (uint256(ReverseEndianString(strKey.substr(0, 2))) == uint256(0x01)))
+    {
+        // fill encrypted key in
+        ui->encryptedKeyIn_DEC->setText(payload);
+        ui->passphraseIn_DEC->setFocus();
+
+        validBIP38Key = true;
+    }
+
+    qrCodeScanner->setScannerActive(false);
+    qrCodeScanner->hide();
+
+    if (!validBIP38Key)
+        QMessageBox::warning(this, tr("Invalid PIVX QRCode"),
+                tr("The scanned QRCode does not contain a valid BIP38 key."),
+                QMessageBox::Ok, QMessageBox::Ok);
+#endif
 }

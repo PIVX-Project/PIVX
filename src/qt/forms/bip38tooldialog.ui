@@ -42,11 +42,17 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_1_ENC">
-         <property name="spacing">
-          <number>0</number>
-         </property>
          <item>
           <widget class="QLabel" name="label_5">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>85</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
             <string>Address:</string>
            </property>
@@ -55,12 +61,12 @@
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_ENC">
            <property name="toolTip">
-            <string>The PIVX address to sign the message with</string>
+            <string>The PIVX address to encrypt</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="addressBookButton_ENC">
+          <widget class="QToolButton" name="addressBookButton_ENC">
            <property name="toolTip">
             <string>Choose previously used address</string>
            </property>
@@ -74,13 +80,10 @@
            <property name="shortcut">
             <string>Alt+A</string>
            </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pasteButton_ENC">
+          <widget class="QToolButton" name="pasteButton_ENC">
            <property name="toolTip">
             <string>Paste address from clipboard</string>
            </property>
@@ -94,9 +97,6 @@
            <property name="shortcut">
             <string>Alt+P</string>
            </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
           </widget>
          </item>
         </layout>
@@ -105,6 +105,15 @@
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
           <widget class="QLabel" name="label_6">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>85</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
             <string>Passphrase: </string>
            </property>
@@ -121,11 +130,17 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2_ENC">
-         <property name="spacing">
-          <number>0</number>
-         </property>
          <item>
           <widget class="QLabel" name="encryptedKeyLabel_ENC">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>85</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
             <string>Encrypted Key:</string>
            </property>
@@ -147,7 +162,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="copyKeyButton_ENC">
+          <widget class="QToolButton" name="copyKeyButton_ENC">
            <property name="toolTip">
             <string>Copy the current signature to the system clipboard</string>
            </property>
@@ -158,9 +173,6 @@
             <iconset resource="../pivx.qrc">
              <normaloff>:/icons/editcopy</normaloff>:/icons/editcopy</iconset>
            </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
           </widget>
          </item>
         </layout>
@@ -170,7 +182,7 @@
          <item>
           <widget class="QPushButton" name="encryptKeyButton_ENC">
            <property name="toolTip">
-            <string>Sign the message to prove you own this PIVX address</string>
+            <string>Encrypt the private key for this PIVX address</string>
            </property>
            <property name="text">
             <string>Encrypt &amp;Key</string>
@@ -187,7 +199,7 @@
          <item>
           <widget class="QPushButton" name="clearButton_ENC">
            <property name="toolTip">
-            <string>Reset all sign message fields</string>
+            <string>Reset all fields</string>
            </property>
            <property name="text">
             <string>Clear &amp;All</string>
@@ -260,9 +272,6 @@
          <property name="textFormat">
           <enum>Qt::PlainText</enum>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-         </property>
          <property name="wordWrap">
           <bool>true</bool>
          </property>
@@ -272,6 +281,15 @@
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
           <widget class="QLabel" name="label_2">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>85</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
             <string>Encrypted Key:</string>
            </property>
@@ -280,7 +298,36 @@
          <item>
           <widget class="QValidatedLineEdit" name="encryptedKeyIn_DEC">
            <property name="toolTip">
-            <string>The PIVX address the message was signed with</string>
+            <string>The encrypted private key</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="pasteButton_DEC">
+           <property name="toolTip">
+            <string>Paste address from clipboard</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../pivx.qrc">
+             <normaloff>:/icons/editpaste</normaloff>:/icons/editpaste</iconset>
+           </property>
+           <property name="shortcut">
+            <string>Alt+P</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="qrCodeButton">
+           <property name="toolTip">
+            <string>Scan QRCode</string>
+           </property>
+           <property name="icon">
+            <iconset resource="../pivx.qrc">
+             <normaloff>:/icons/qrcode</normaloff>
+             <disabledoff>:/icons/qrcode</disabledoff>:/icons/qrcode</iconset>
            </property>
           </widget>
          </item>
@@ -290,6 +337,15 @@
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QLabel" name="label">
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>85</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
             <string>Passphrase: </string>
            </property>
@@ -309,7 +365,7 @@
          <item>
           <widget class="QPushButton" name="decryptKeyButton_DEC">
            <property name="toolTip">
-            <string>Verify the message to ensure it was signed with the specified PIVX address</string>
+            <string>Decrypt the entered key using the passphrase</string>
            </property>
            <property name="text">
             <string>Decrypt &amp;Key</string>
@@ -326,7 +382,7 @@
          <item>
           <widget class="QPushButton" name="clearButton_DEC">
            <property name="toolTip">
-            <string>Reset all verify message fields</string>
+            <string>Reset all fields</string>
            </property>
            <property name="text">
             <string>Clear &amp;All</string>

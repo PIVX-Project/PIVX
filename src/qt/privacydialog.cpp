@@ -27,6 +27,9 @@ PrivacyDialog::PrivacyDialog(QWidget* parent) : QDialog(parent),
                                                           walletModel(0),
                                                           currentBalance(-1)
 {
+#ifdef USE_MULTIMEDIA
+    qrCodeScanner = NULL;
+#endif
     nDisplayUnit = 0; // just make sure it's not unitialized
     ui->setupUi(this);
 
@@ -113,6 +116,18 @@ PrivacyDialog::PrivacyDialog(QWidget* parent) : QDialog(parent),
         ui->pushButtonSpendzPIV->setEnabled(false);
         ui->pushButtonSpendzPIV->setToolTip(tr("zPIV is currently disabled due to maintenance."));
     }
+
+
+#ifdef USE_MULTIMEDIA
+    // Connect and initialize QRCode Scanner
+    if (QRCodeScanner::availability())
+        ui->qrCodeButton->setEnabled(true);
+    else
+        ui->qrCodeButton->setEnabled(false);
+    connect(ui->qrCodeButton, SIGNAL(clicked()), this, SLOT(showQrCodeScanner()));
+#else
+    ui->qrCodeButton->setVisible(false);
+#endif
 }
 
 PrivacyDialog::~PrivacyDialog()
@@ -764,4 +779,64 @@ void PrivacyDialog::keyPressEvent(QKeyEvent* event)
     } else {
         event->ignore();
     }
+}
+
+void PrivacyDialog::showQrCodeScanner()
+{
+#ifdef USE_MULTIMEDIA
+    if (!qrCodeScanner) {
+        qrCodeScanner = new QRCodeScanner(this);
+        connect(qrCodeScanner, SIGNAL(QRCodeFound(const QString&)), this, SLOT(qrCodeFound(const QString&)));
+    }
+
+    qrCodeScanner->show();
+    qrCodeScanner->setScannerActive(true);
+#endif
+}
+
+void PrivacyDialog::qrCodeFound(const QString &payload)
+{
+#ifdef USE_MULTIMEDIA
+    static const char bitcoinurl[] = "pivx:";
+    static const char amountfield[] = "amount=";
+
+    bool validQRCode = false;
+    if (payload.startsWith(bitcoinurl, Qt::CaseInsensitive)) {
+        // get the part after the "pivx:"
+        QString addressWithDetails = payload.mid(strlen(bitcoinurl));
+
+        // form a substring with only the address
+        QString onlyAddress = addressWithDetails.mid(0,addressWithDetails.indexOf("?"));
+
+        if (walletModel->validateAddress(onlyAddress)) {
+            // if there is an amount, rip out the string
+            if (addressWithDetails.indexOf(amountfield) != -1) {
+                QString part = addressWithDetails.mid(addressWithDetails.indexOf(amountfield));
+                QString amount = part.mid(strlen(amountfield),part.indexOf("&")-strlen(amountfield));
+
+                // fill amount
+                ui->zPIVpayAmount->setText(amount);
+            }
+
+            // fill address
+            ui->payTo->setText(onlyAddress);
+
+            validQRCode = true;
+        }
+    } else {
+        if (walletModel->validateAddress(payload)) {
+            ui->payTo->setText(payload);
+            ui->zPIVpayAmount->setFocus();
+            validQRCode = true;
+        }
+    }
+
+    qrCodeScanner->setScannerActive(false);
+    qrCodeScanner->hide();
+
+    if (!validQRCode)
+        QMessageBox::warning(this, tr("Invalid PIVX QRCode"),
+                tr("The scanned QRCode does not contain a valid PIVX address."),
+                QMessageBox::Ok, QMessageBox::Ok);
+#endif
 }

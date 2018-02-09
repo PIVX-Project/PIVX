@@ -319,6 +319,26 @@ BITCOIN_QT_CPP += \
 
 endif
 
+if USE_MULTIMEDIA
+EXTRA_LIBRARIES += qt/quirc/libquirc.a
+
+BITCOIN_QT_H += qt/qrcodescanner.h
+BITCOIN_QT_CPP += qt/qrcodescanner.cpp
+QT_MOC_CPP += qt/moc_qrcodescanner.cpp
+QT_MOC += qt/qrcodescanner.moc
+
+LIBQUIRC_H = qt/quirc/quirc_internal.h \
+  qt/quirc/quirc.h
+
+LIBQUIRC_CPP = qt/quirc/decode.c \
+  qt/quirc/identify.c \
+  qt/quirc/quirc.c \
+  qt/quirc/version_db.c
+
+qt_quirc_libquirc_a_CPPFLAGS = $(BITCOIN_INCLUDES)
+qt_quirc_libquirc_a_SOURCES = $(LIBQUIRC_H) $(LIBQUIRC_CPP)
+endif
+
 RES_IMAGES = \
   qt/res/images/about.png \
   qt/res/images/splash.png \
@@ -345,9 +365,12 @@ BITCOIN_RC = qt/res/pivx-qt-res.rc
 
 BITCOIN_QT_INCLUDES = -I$(builddir)/qt -I$(srcdir)/qt -I$(srcdir)/qt/forms \
   -I$(builddir)/qt/forms
+if USE_MULTIMEDIA
+BITCOIN_QT_INCLUDES += -I$(builddir)/qt/quirc
+endif
 
 qt_libbitcoinqt_a_CPPFLAGS = $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
-  $(QT_INCLUDES) $(QT_DBUS_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
+  $(QT_INCLUDES) $(QT_DBUS_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS) $(QT_MULTIMEDIA_INCLUDES) $(QT_MULTIMEDIAWIDGETS_INCLUDES)
 
 qt_libbitcoinqt_a_SOURCES = $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(QT_FORMS_UI) \
   $(QT_QRC) $(QT_QRC_LOCALE) $(QT_TS) $(PROTOBUF_PROTO) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(RES_MOVIES)
@@ -370,7 +393,7 @@ $(QT_MOC_CPP): $(PROTOBUF_H)
 
 # pivx-qt binary #
 qt_pivx_qt_CPPFLAGS = $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
-  $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
+  $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS) $(QT_MULTIMEDIA_INCLUDES) $(QT_MULTIMEDIAWIDGETS_INCLUDES)
 
 qt_pivx_qt_SOURCES = qt/pivx.cpp
 if TARGET_DARWIN
@@ -386,9 +409,12 @@ endif
 if ENABLE_ZMQ
 qt_pivx_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
 endif
+if USE_MULTIMEDIA
+qt_pivx_qt_LDADD += qt/quirc/libquirc.a
+endif
 qt_pivx_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBBITCOIN_ZEROCOIN) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
-  $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+  $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(QT_MULTIMEDIA_LIBS) $(QT_MULTIMEDIAWIDGETS_LIBS)
 qt_pivx_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 qt_pivx_qt_LIBTOOLFLAGS = --tag CXX
 
@@ -418,10 +444,10 @@ $(QT_QRC_CPP): $(QT_QRC) $(QT_FORMS_H) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(R
 
 CLEAN_QT = $(nodist_qt_libbitcoinqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda qt/*.gcno
 
-CLEANFILES += $(CLEAN_QT)
+CLEANFILES += $(CLEAN_QT) qt/quirc/libquirc.a
 
 pivx_qt_clean: FORCE
-	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_pivx_qt_OBJECTS) qt/pivx-qt$(EXEEXT) $(LIBBITCOINQT)
+	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_pivx_qt_OBJECTS) qt/pivx-qt$(EXEEXT) $(LIBBITCOINQT) $(LIBQUIRC)
 
 pivx_qt : qt/pivx-qt$(EXEEXT)
 

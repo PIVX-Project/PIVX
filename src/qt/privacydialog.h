@@ -5,7 +5,12 @@
 #ifndef BITCOIN_QT_PRIVACYDIALOG_H
 #define BITCOIN_QT_PRIVACYDIALOG_H
 
+#include "config/pivx-config.h"
+
 #include "guiutil.h"
+#ifdef USE_MULTIMEDIA
+#include "qrcodescanner.h"
+#endif
 
 #include <QDialog>
 #include <QHeaderView>
@@ -70,7 +75,11 @@ private:
     CAmount currentWatchOnlyBalance;
     CAmount currentWatchUnconfBalance;
     CAmount currentWatchImmatureBalance;
-    
+
+#ifdef USE_MULTIMEDIA
+    QRCodeScanner *qrCodeScanner;
+#endif
+
     int nSecurityLevel = 0;
     bool fMinimizeChange = false;
 
@@ -103,6 +112,10 @@ private slots:
     void on_pushButtonZPivControl_clicked();
     void on_pasteButton_clicked();
     void updateDisplayUnit();
+
+    // QRCode Scanner
+    void showQrCodeScanner();
+    void qrCodeFound(const QString& payload);
 };
 
 #endif // BITCOIN_QT_PRIVACYDIALOG_H

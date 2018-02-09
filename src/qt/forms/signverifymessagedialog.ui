@@ -42,9 +42,6 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_1_SM">
-         <property name="spacing">
-          <number>0</number>
-         </property>
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_SM">
            <property name="toolTip">
@@ -53,7 +50,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="addressBookButton_SM">
+          <widget class="QToolButton" name="addressBookButton_SM">
            <property name="toolTip">
             <string>Choose previously used address</string>
            </property>
@@ -67,13 +64,10 @@
            <property name="shortcut">
             <string>Alt+A</string>
            </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pasteButton_SM">
+          <widget class="QToolButton" name="pasteButton_SM">
            <property name="toolTip">
             <string>Paste address from clipboard</string>
            </property>
@@ -86,9 +80,6 @@
            </property>
            <property name="shortcut">
             <string>Alt+P</string>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -113,9 +104,6 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2_SM">
-         <property name="spacing">
-          <number>0</number>
-         </property>
          <item>
           <widget class="QLineEdit" name="signatureOut_SM">
            <property name="font">
@@ -129,7 +117,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="copySignatureButton_SM">
+          <widget class="QToolButton" name="copySignatureButton_SM">
            <property name="toolTip">
             <string>Copy the current signature to the system clipboard</string>
            </property>
@@ -139,9 +127,6 @@
            <property name="icon">
             <iconset resource="../pivx.qrc">
              <normaloff>:/icons/editcopy</normaloff>:/icons/editcopy</iconset>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -252,9 +237,6 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_1_VM">
-         <property name="spacing">
-          <number>0</number>
-         </property>
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_VM">
            <property name="toolTip">
@@ -263,7 +245,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="addressBookButton_VM">
+          <widget class="QToolButton" name="addressBookButton_VM">
            <property name="toolTip">
             <string>Choose previously used address</string>
            </property>
@@ -276,9 +258,6 @@
            </property>
            <property name="shortcut">
             <string>Alt+A</string>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
            </property>
           </widget>
          </item>
