@@ -14,6 +14,7 @@
 #include "util.h"
 #include "utiltime.h"
 #include "wallet.h"
+#include "init.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
@@ -1053,6 +1054,9 @@ bool CWalletDB::WriteZerocoinMint(const CZerocoinMint& zerocoinMint)
     ss << zerocoinMint.GetValue();
     uint256 hash = Hash(ss.begin(), ss.end());
 
+    LogPrintf("pub: %s\nserial: %s\nrand: %s\ncrypted: %b\n", zerocoinMint.GetValue().ToString(16), zerocoinMint
+            .GetSerialNumber().ToString(16), zerocoinMint.GetRandomness().ToString(16), zerocoinMint.IsCrypted());
+
     Erase(make_pair(string("zerocoin"), hash));
     return Write(make_pair(string("zerocoin"), hash), zerocoinMint, true);
 }
@@ -1063,7 +1067,12 @@ bool CWalletDB::ReadZerocoinMint(const CBigNum &bnPubCoinValue, CZerocoinMint& z
     ss << bnPubCoinValue;
     uint256 hash = Hash(ss.begin(), ss.end());
 
-    return Read(make_pair(string("zerocoin"), hash), zerocoinMint);
+    if(!Read(make_pair(string("zerocoin"), hash), zerocoinMint)){
+        LogPrintf("%s : failed to database orphaned zerocoin mint\n", __func__);
+        return false;
+    }
+
+    return true;
 }
 
 bool CWalletDB::EraseZerocoinMint(const CZerocoinMint& zerocoinMint)
@@ -1094,18 +1103,36 @@ bool CWalletDB::ArchiveMintOrphan(const CZerocoinMint& zerocoinMint)
     return true;
 }
 
-bool CWalletDB::UnarchiveZerocoin(const CZerocoinMint& mint)
+pair<string, uint256> CWalletDB::GetMintKey(const string mintSaveType, const CBigNum &bnPubcoinValue)
 {
     CDataStream ss(SER_GETHASH, 0);
-    ss << mint.GetValue();
-    uint256 hash = Hash(ss.begin(), ss.end());;
+    ss << bnPubcoinValue;
+    uint256 hash = Hash(ss.begin(), ss.end());
+    return make_pair(mintSaveType, hash);
+}
 
-    if (!Erase(make_pair(string("zco"), hash))) {
+bool CWalletDB::ReadArchivedMint(const CBigNum& bnPubcoinKey, CZerocoinMint& mintFromArchive)
+{
+    return Read(GetMintKey(string("zco"), bnPubcoinKey), mintFromArchive);
+}
+
+bool CWalletDB::UnarchiveZerocoin(const CBigNum& bnPubcoinValue, CZerocoinMint& mintUnarchived)
+{
+    auto key = GetMintKey("zco", bnPubcoinValue);
+
+    CZerocoinMint mintFromArchive;
+
+    if(!ReadArchivedMint(bnPubcoinValue, mintFromArchive)) {
+        LogPrintf("%s : failed to find archived zerocoin mint\n", __func__);
+        return false;
+    }
+
+    if (!Erase(key)) {
         LogPrintf("%s : failed to erase archived zerocoin mint\n", __func__);
         return false;
     }
 
-    return WriteZerocoinMint(mint);
+    return pwalletMain->AddZerocoinMint(mintFromArchive);
 }
 
 std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMaturedOnly, bool fUpdateStatus)
@@ -1117,6 +1144,7 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
     unsigned int fFlags = DB_SET_RANGE;
     vector<CZerocoinMint> vOverWrite;
     vector<CZerocoinMint> vArchive;
+
     for (;;)
     {
         // Read next record
@@ -1126,8 +1154,9 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
         CDataStream ssValue(SER_DISK, CLIENT_VERSION);
         int ret = ReadAtCursor(pcursor, ssKey, ssValue, fFlags);
         fFlags = DB_NEXT;
-        if (ret == DB_NOTFOUND)
+        if (ret == DB_NOTFOUND) {
             break;
+        }
         else if (ret != 0)
         {
             pcursor->close();
@@ -1145,6 +1174,21 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
 
         CZerocoinMint mint;
         ssValue >> mint;
+
+        cout << __func__ << " : " <<__LINE__ <<"\nval:\n" << mint.GetValue() << "ser:\n" << mint.GetSerialNumber() << "rand:\n" << mint.GetRandomness() << endl;
+        if(mint.IsCrypted()) {
+            if(!pwalletMain->GetZerocoinMint(mint.GetValue(), mint, false)){
+                LogPrintf("%s failed to get decrypted mint %s\n", __func__, mint.GetValue().ToString(16));
+                cout << __func__ << " : " <<__LINE__ <<"\nval:\n" << mint.GetValue() << "ser:\n" << mint.GetSerialNumber() << "rand:\n" << mint.GetRandomness() << endl;
+                continue;
+            }
+            cout << __func__ << " : " <<__LINE__ <<"\nval:\n" << mint.GetValue() << "ser:\n" << mint.GetSerialNumber() << "rand:\n" << mint.GetRandomness() << endl;
+        }
+
+        if(mint.GetRandomness() < 0 || mint.GetSerialNumber() < 0) {
+            LogPrintf("%s failed to get decrypted mint %s\n", __func__, mint.GetValue().ToString(16));
+            continue;
+        }
 
         if (fUnusedOnly) {
             if (mint.IsUsed())
@@ -1210,15 +1254,18 @@ std::list<CZerocoinMint> CWalletDB::ListMintedCoins(bool fUnusedOnly, bool fMatu
     pcursor->close();
 
     //overwrite any updates
-    for (CZerocoinMint mint : vOverWrite) {
-        if(!this->WriteZerocoinMint(mint))
-            LogPrintf("%s failed to update mint from tx %s\n", __func__, mint.GetTxHash().GetHex());
+    for (CZerocoinMint& mint : vOverWrite) {
+        cout << __func__ << " : " <<__LINE__ <<"\nval:\n" << mint.GetValue() << "ser:\n" << mint.GetSerialNumber() << "rand:\n" << mint.GetRandomness() << endl;
+        if(!pwalletMain->AddZerocoinMint(mint)) {
+            LogPrintf("%s failed to update mint\n%s\n", __func__, mint.GetValue().ToString(16));
+        }
     }
 
     // archive mints
-    for (CZerocoinMint mint : vArchive) {
-        if (!this->ArchiveMintOrphan(mint))
-            LogPrintf("%s failed to archive mint from %s\n", __func__, mint.GetTxHash().GetHex());
+    for (CZerocoinMint& mint : vArchive) {
+        if (!pwalletMain->AddMintToArchive(mint)) {
+            LogPrintf("%s failed to archive mint\n%s\n", __func__, mint.GetValue().ToString(16));
+        }
     }
 
     return listPubCoin;
@@ -1229,7 +1276,7 @@ std::list<CBigNum> CWalletDB::ListMintedCoinsSerial()
     std::list<CBigNum> listPubCoin;
     std::list<CZerocoinMint> listCoins = ListMintedCoins(true, false, false);
     
-    for ( auto& coin : listCoins) {
+    for (auto& coin : listCoins) {
         listPubCoin.push_back(coin.GetSerialNumber());
     }
     return listPubCoin;
@@ -1285,7 +1332,7 @@ std::list<CBigNum> CWalletDB::ListSpentCoinsSerial()
     std::list<CBigNum> listPubCoin;
     std::list<CZerocoinSpend> listCoins = ListSpentCoins();
     
-    for ( auto& coin : listCoins) {
+    for (auto& coin : listCoins) {
         listPubCoin.push_back(coin.GetSerial());
     }
     return listPubCoin;
@@ -1327,7 +1374,14 @@ std::list<CZerocoinMint> CWalletDB::ListArchivedZerocoins()
         CZerocoinMint mint;
         ssValue >> mint;
 
-        listMints.push_back(mint);
+        CZerocoinMint mintFromArchive;
+
+
+        if(!pwalletMain->GetMintFromArchive(mint.GetValue(), mintFromArchive)){
+            throw runtime_error(std::string(__func__)+" : error getting mint from archive");
+        }
+
+        listMints.push_back(mintFromArchive);
     }
 
     pcursor->close();

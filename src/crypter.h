@@ -8,8 +8,10 @@
 #include "allocators.h"
 #include "keystore.h"
 #include "serialize.h"
+#include "primitives/zerocoin.h"
 
 class uint256;
+class CBigNum;
 
 const unsigned int WALLET_CRYPTO_KEY_SIZE = 32;
 const unsigned int WALLET_CRYPTO_SALT_SIZE = 8;
@@ -67,6 +69,11 @@ public:
 
 typedef std::vector<unsigned char, secure_allocator<unsigned char> > CKeyingMaterial;
 
+enum ZerocoinSecrets {
+    SERIAL,
+    RANDOM
+};
+
 /** Encryption/decryption context with key information */
 class CCrypter
 {
@@ -76,9 +83,17 @@ private:
     bool fKeySet;
 
 public:
+    enum CryptionMethod {
+        ENC,
+        DEC
+    };
+
     bool SetKeyFromPassphrase(const SecureString& strKeyData, const std::vector<unsigned char>& chSalt, const unsigned int nRounds, const unsigned int nDerivationMethod);
     bool Encrypt(const CKeyingMaterial& vchPlaintext, std::vector<unsigned char>& vchCiphertext);
     bool Decrypt(const std::vector<unsigned char>& vchCiphertext, CKeyingMaterial& vchPlaintext);
+    bool EncryptZerocoinMint(const CZerocoinMint& mintPlain, CZerocoinMint& mintCrypted);
+    bool CryptZerocoinMint(const CZerocoinMint& mintIn, CZerocoinMint& mintOut, CryptionMethod method);
+    bool DecryptZerocoinMint(const CZerocoinMint& mintCrypted, CZerocoinMint& mintPlain);
     bool SetKey(const CKeyingMaterial& chNewKey, const std::vector<unsigned char>& chNewIV);
 
     void CleanKey()
@@ -122,7 +137,7 @@ class CCryptoKeyStore : public CBasicKeyStore
 {
 private:
     CryptedKeyMap mapCryptedKeys;
-
+    std::map<uint256, CZerocoinMint> mapCryptedMints;
     CKeyingMaterial vMasterKey;
 
     //! if fUseCrypto is true, mapKeys must be empty
@@ -131,6 +146,11 @@ private:
 
     //! keeps track of whether Unlock has run a thorough check before
     bool fDecryptionThoroughlyChecked;
+    //! will encrypt previously unencrypted mints
+    bool EncryptZerocoinMints(CKeyingMaterial& vMasterKeyIn);
+    bool AddCryptedZerocoinMint(const CZerocoinMint& mintCrypted);
+    bool EncryptZerocoinMint(const CZerocoinMint& mintPlain, CZerocoinMint& mintEncrypted);
+    bool DecryptZerocoinMint(const CZerocoinMint& mintEncrypted, CZerocoinMint& mintPlain);
 
 protected:
     bool SetCrypted();
@@ -139,8 +159,8 @@ protected:
     bool EncryptKeys(CKeyingMaterial& vMasterKeyIn);
 
     bool Unlock(const CKeyingMaterial& vMasterKeyIn);
-
 public:
+
     CCryptoKeyStore() : fUseCrypto(false), fDecryptionThoroughlyChecked(false)
     {
     }
@@ -163,7 +183,6 @@ public:
     }
 
     bool Lock();
-
     virtual bool AddCryptedKey(const CPubKey& vchPubKey, const std::vector<unsigned char>& vchCryptedSecret);
     bool AddKeyPubKey(const CKey& key, const CPubKey& pubkey);
     bool HaveKey(const CKeyID& address) const
@@ -178,6 +197,7 @@ public:
     }
     bool GetKey(const CKeyID& address, CKey& keyOut) const;
     bool GetPubKey(const CKeyID& address, CPubKey& vchPubKeyOut) const;
+
     void GetKeys(std::set<CKeyID>& setAddress) const
     {
         if (!IsCrypted()) {
@@ -185,13 +205,17 @@ public:
             return;
         }
         setAddress.clear();
-        CryptedKeyMap::const_iterator mi = mapCryptedKeys.begin();
+        auto mi = mapCryptedKeys.begin();
         while (mi != mapCryptedKeys.end()) {
             setAddress.insert((*mi).first);
             mi++;
         }
     }
-
+    bool GetZerocoinMint(const CBigNum& bnPubcoinValue, CZerocoinMint& mintOut, bool fForUnarchive);
+    bool AddZerocoinMint(const CZerocoinMint& mint);
+    bool RemoveZerocoinMint(const CZerocoinMint& mint);
+    bool GetMintFromArchive(const CBigNum& bnPubcoinValue, CZerocoinMint& mintOut);
+    bool AddMintToArchive(const CZerocoinMint& mint);
     /**
      * Wallet status (encrypted, locked) changed.
      * Note: Called without locks held.

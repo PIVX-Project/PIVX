@@ -1036,7 +1036,7 @@ void FindMints(vector<CZerocoinMint> vMintsToFind, vector<CZerocoinMint>& vMints
 
 }
 
-bool GetZerocoinMint(const CBigNum& bnPubcoin, uint256& txHash)
+bool GetTransactionWithPubcoinValue(const CBigNum& bnPubcoin, uint256& txHash)
 {
     txHash = 0;
     return zerocoinDB->ReadCoinMint(bnPubcoin, txHash);

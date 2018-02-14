@@ -128,3 +128,5 @@ qa/pull-tester/test.*/*
 .idea
 CMakeLists.txt
 cmake-build-debug
+db4/
+db-4*

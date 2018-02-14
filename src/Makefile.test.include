@@ -41,6 +41,7 @@ BITCOIN_TESTS =\
   test/zerocoin_implementation_tests.cpp\
   test/zerocoin_denomination_tests.cpp\
   test/zerocoin_transactions_tests.cpp \
+  test/zerocoin_encryption_tests.cpp\
   test/benchmark_zerocoin.cpp \
   test/tutorial_zerocoin.cpp \
   test/libzerocoin_tests.cpp \

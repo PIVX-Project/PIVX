@@ -20,13 +20,9 @@ private:
     CBigNum serialNumber;
     uint256 txid;
     bool isUsed;
+    bool isCrypted;
 
 public:
-    CZerocoinMint()
-    {
-        SetNull();
-    }
-
     CZerocoinMint(libzerocoin::CoinDenomination denom, CBigNum value, CBigNum randomness, CBigNum serialNumber, bool isUsed)
     {
         SetNull();
@@ -37,10 +33,15 @@ public:
         this->isUsed = isUsed;
     }
 
+    CZerocoinMint()
+    {
+        SetNull();
+    }
+
     void SetNull()
     {
+        isCrypted = false;
         isUsed = false;
-        randomness = 0;
         value = 0;
         denomination = libzerocoin::ZQ_ERROR;
         nHeight = 0;
@@ -64,6 +65,9 @@ public:
     void SetSerialNumber(CBigNum serial){ this->serialNumber = serial; }
     uint256 GetTxHash() const { return this->txid; }
     void SetTxHash(uint256 txid) { this->txid = txid; }
+    bool IsCrypted() const { return this->isCrypted; }
+    void SetIsCrypted(bool isCrypted) { this->isCrypted = isCrypted; }
+
 
     inline bool operator <(const CZerocoinMint& a) const { return GetHeight() < a.GetHeight(); }
 
@@ -75,13 +79,14 @@ public:
         serialNumber = other.GetSerialNumber();
         txid = other.GetTxHash();
         isUsed = other.IsUsed();
+        isCrypted = other.IsCrypted();
     }
 
     bool operator == (const CZerocoinMint& other) const
     {
         return this->GetValue() == other.GetValue();
     }
-    
+
     // Copy another CZerocoinMint
     inline CZerocoinMint& operator=(const CZerocoinMint& other) {
         denomination = other.GetDenomination();
@@ -91,9 +96,10 @@ public:
         serialNumber = other.GetSerialNumber();
         txid = other.GetTxHash();
         isUsed = other.IsUsed();
+        isCrypted = other.IsCrypted();
         return *this;
     }
-    
+
     // why 6 below (SPOCK)
     inline bool checkUnused(int denom, int Height) const {
         if (IsUsed() == false && GetDenomination() == denomination && GetRandomness() != 0 && GetSerialNumber() != 0 && GetHeight() != -1 && GetHeight() != INT_MAX && GetHeight() >= 1 && (GetHeight() + 6 <= Height)) {
@@ -114,6 +120,7 @@ public:
         READWRITE(denomination);
         READWRITE(nHeight);
         READWRITE(txid);
+        READWRITE(isCrypted);
     };
 };
 
@@ -159,7 +166,7 @@ public:
     uint256 GetHash() const;
     void SetMintCount(int nMintsAdded) { this->nMintCount = nMintsAdded; }
     int GetMintCount() const { return nMintCount; }
- 
+
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
