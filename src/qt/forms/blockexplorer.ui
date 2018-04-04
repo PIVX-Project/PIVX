@@ -168,7 +168,7 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../vsync.qrc"/>
  </resources>
  <connections/>
 </ui>

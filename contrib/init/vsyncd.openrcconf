@@ -1,0 +1,26 @@
+# /etc/conf.d/vsyncd: config file for /etc/init.d/vsyncd
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/vsync/vsync.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/vsyncd"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/vsyncd.pid"
+
+# Where to write vsyncd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/vsyncd"
+
+# User and group to own vsyncd process
+#BITCOIND_USER="vsync"
+#BITCOIND_GROUP="vsync"
+
+# Path to vsyncd executable
+#BITCOIND_BIN="/usr/bin/vsyncd"
+
+# Nice value to run vsyncd under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+BITCOIND_OPTS=""

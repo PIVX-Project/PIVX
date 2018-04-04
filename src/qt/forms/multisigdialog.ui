@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>801</width>
-    <height>515</height>
+    <height>504</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,10 +23,13 @@
    <item>
     <widget class="QTabWidget" name="multisigTabWidget">
      <property name="styleSheet">
-      <string notr="true">QScrollArea{border: 1px solid #5b4c7c;}</string>
+      <string notr="true">QScrollArea{border: 1px solid #22487A;}
+QFrame{background-color:#f2f0f0;}
+QLabel{background-color:#ffffff;}
+QFrame &gt; QLabel{background-color:#f2f0f0;}</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="addMultisigTab">
       <property name="sizePolicy">
@@ -56,7 +59,7 @@
             <number>1</number>
            </property>
            <property name="maximum">
-            <number>15</number>
+            <number>16</number>
            </property>
            <property name="value">
             <number>1</number>
@@ -97,7 +100,7 @@
             <string>&amp;Add Address / Key</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../vsync.qrc">
              <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
            </property>
            <property name="autoDefault">
@@ -150,7 +153,7 @@
             <x>0</x>
             <y>0</y>
             <width>759</width>
-            <height>166</height>
+            <height>165</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -194,7 +197,7 @@
             <string>C&amp;reate</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../vsync.qrc">
              <normaloff>:/icons/filesave</normaloff>:/icons/filesave</iconset>
            </property>
            <property name="autoDefault">
@@ -268,7 +271,7 @@ Please be patient after clicking import.</string>
             <string>&amp;Import Redeem</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../vsync.qrc">
              <normaloff>:/icons/receiving_addresses</normaloff>:/icons/receiving_addresses</iconset>
            </property>
           </widget>
@@ -374,7 +377,7 @@ Please be patient after clicking import.</string>
                 <string>Add a Raw Input</string>
                </property>
                <property name="icon">
-                <iconset resource="../pivx.qrc">
+                <iconset resource="../vsync.qrc">
                  <normaloff>:/css/default</normaloff>:/css/default</iconset>
                </property>
               </widget>
@@ -397,8 +400,8 @@ Please be patient after clicking import.</string>
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>747</width>
-                <height>131</height>
+                <width>98</width>
+                <height>28</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -413,7 +416,7 @@ Please be patient after clicking import.</string>
                  <property name="sizeHint" stdset="0">
                   <size>
                    <width>20</width>
-                   <height>80</height>
+                   <height>40</height>
                   </size>
                  </property>
                 </spacer>
@@ -440,13 +443,13 @@ Please be patient after clicking import.</string>
                 </sizepolicy>
                </property>
                <property name="toolTip">
-                <string>Add destinations to send PIV to</string>
+                <string>Add destinations to send VSX to</string>
                </property>
                <property name="text">
                 <string>Add &amp;Destination</string>
                </property>
                <property name="icon">
-                <iconset resource="../pivx.qrc">
+                <iconset resource="../vsync.qrc">
                  <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
                </property>
               </widget>
@@ -482,8 +485,8 @@ Please be patient after clicking import.</string>
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>747</width>
-                <height>130</height>
+                <width>98</width>
+                <height>28</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -530,7 +533,7 @@ Please be patient after clicking import.</string>
                 <string>Cr&amp;eate</string>
                </property>
                <property name="icon">
-                <iconset resource="../pivx.qrc">
+                <iconset resource="../vsync.qrc">
                  <normaloff>:/icons/export</normaloff>:/icons/export</iconset>
                </property>
                <property name="autoDefault">
@@ -571,11 +574,15 @@ Please be patient after clicking import.</string>
                  <height>16777215</height>
                 </size>
                </property>
-               <property name="sizeAdjustPolicy">
-                <enum>QAbstractScrollArea::AdjustToContents</enum>
-               </property>
                <property name="readOnly">
                 <bool>true</bool>
+               </property>
+               <property name="html">
+                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
               </widget>
              </item>
@@ -593,13 +600,13 @@ Please be patient after clicking import.</string>
      <widget class="QWidget" name="signMultisigTransaction">
       <property name="styleSheet">
        <string notr="true">txScrollArea:{
-	border: 1px solid #5b4c7c;
+	border: 1px solid #22487A;
 }
 keyScrollArea:{
-	border: 1px solid #5b4c7c;
+	border: 1px solid #22487A;
 }
 txScrollArea:{
-	border: 1px solid #5b4c7c;
+	border: 1px solid #22487A;
 }</string>
       </property>
       <attribute name="title">
@@ -651,7 +658,7 @@ txScrollArea:{
                 <string>S&amp;ign</string>
                </property>
                <property name="icon">
-                <iconset resource="../pivx.qrc">
+                <iconset resource="../vsync.qrc">
                  <normaloff>:/icons/edit</normaloff>:/icons/edit</iconset>
                </property>
                <property name="autoDefault">
@@ -683,7 +690,7 @@ txScrollArea:{
                 <string>Co&amp;mmit</string>
                </property>
                <property name="icon">
-                <iconset resource="../pivx.qrc">
+                <iconset resource="../vsync.qrc">
                  <normaloff>:/icons/send</normaloff>:/icons/send</iconset>
                </property>
                <property name="autoDefault">
@@ -708,7 +715,7 @@ txScrollArea:{
                   <string>Add Private &amp;Key</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="../pivx.qrc">
+                  <iconset resource="../vsync.qrc">
                    <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
                  </property>
                 </widget>
@@ -768,9 +775,6 @@ txScrollArea:{
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QAbstractScrollArea::AdjustToContents</enum>
-             </property>
              <property name="widgetResizable">
               <bool>true</bool>
              </property>
@@ -779,8 +783,8 @@ txScrollArea:{
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>755</width>
-                <height>168</height>
+                <width>98</width>
+                <height>28</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -795,7 +799,7 @@ txScrollArea:{
                  <property name="sizeHint" stdset="0">
                   <size>
                    <width>20</width>
-                   <height>20</height>
+                   <height>40</height>
                   </size>
                  </property>
                 </spacer>
@@ -808,6 +812,19 @@ txScrollArea:{
          </item>
         </layout>
        </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -815,7 +832,7 @@ txScrollArea:{
   </layout>
  </widget>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../vsync.qrc"/>
  </resources>
  <connections/>
 </ui>

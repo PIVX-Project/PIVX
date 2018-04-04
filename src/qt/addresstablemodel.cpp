@@ -1,6 +1,7 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2017-2018 The Vsync developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,7 +12,6 @@
 
 #include "base58.h"
 #include "wallet.h"
-#include "askpassphrasedialog.h"
 
 #include <QDebug>
 #include <QFont>
@@ -347,7 +347,7 @@ void AddressTableModel::updateEntry(const QString& address,
     const QString& purpose,
     int status)
 {
-    // Update address book model from Pivx core
+    // Update address book model from Vsync core
     priv->updateEntry(address, label, isMine, purpose, status);
 }
 
@@ -384,7 +384,7 @@ QString AddressTableModel::addRow(const QString& type, const QString& label, con
         // Generate a new address to associate with given label
         CPubKey newKey;
         if (!wallet->GetKeyFromPool(newKey)) {
-            WalletModel::UnlockContext ctx(walletModel->requestUnlock(AskPassphraseDialog::Context::Unlock_Full, true));
+            WalletModel::UnlockContext ctx(walletModel->requestUnlock(true));
             if (!ctx.isValid()) {
                 // Unlock wallet failed or was cancelled
                 editStatus = WALLET_UNLOCK_FAILURE;

@@ -356,15 +356,15 @@ QString TransactionTableModel::formatTxType(const TransactionRecord* wtx) const
     case TransactionRecord::Obfuscated:
         return tr("Obfuscated");
     case TransactionRecord::ZerocoinMint:
-        return tr("Converted Piv to zPiv");
+        return tr("Converted VSX to zVSX");
     case TransactionRecord::ZerocoinSpend:
-        return tr("Spent zPiv");
+        return tr("Spent zVSX");
     case TransactionRecord::RecvFromZerocoinSpend:
-        return tr("Received Piv from zPiv");
-    case TransactionRecord::ZerocoinSpend_Change_zPiv:
-        return tr("Minted Change as zPiv from zPiv Spend");
+        return tr("Received VSX from zVSX");
+    case TransactionRecord::ZerocoinSpend_Change_zVSX:
+        return tr("Minted Change as zVSX from zVSX Spend");
     case TransactionRecord::ZerocoinSpend_FromMe:
-        return tr("Converted zPiv to Piv");
+        return tr("Converted zVSX to VSX");
 
     default:
         return QString();
@@ -418,8 +418,8 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord* wtx, b
     case TransactionRecord::SendToOther:
         return QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::ZerocoinMint:
-    case TransactionRecord::ZerocoinSpend_Change_zPiv:
-        return tr("zPiv Accumulator");
+    case TransactionRecord::ZerocoinSpend_Change_zVSX:
+        return tr("zVSX Accumulator");
     case TransactionRecord::SendToSelf:
     default:
         return tr("(n/a)") + watchAddress;
@@ -567,12 +567,8 @@ QVariant TransactionTableModel::data(const QModelIndex& index, int role) const
     case Qt::TextAlignmentRole:
         return column_alignments[index.column()];
     case Qt::ForegroundRole:
-        // Conflicted, most probably orphaned
-        if (rec->status.status == TransactionStatus::Conflicted || rec->status.status == TransactionStatus::NotAccepted) {
-            return COLOR_CONFLICTED;
-        }
-        // Unconfimed or immature
-        if ((rec->status.status == TransactionStatus::Unconfirmed) || (rec->status.status == TransactionStatus::Immature)) {
+        // Non-confirmed (but not immature) as transactions are grey
+        if (!rec->status.countsForBalance && rec->status.status != TransactionStatus::Immature) {
             return COLOR_UNCONFIRMED;
         }
         if (index.column() == Amount && (rec->credit + rec->debit) < 0) {

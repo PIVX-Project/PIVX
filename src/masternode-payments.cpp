@@ -1,5 +1,6 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2017-2018 The Vsync developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -329,7 +330,10 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int64_t nFe
         CBitcoinAddress address2(address1);
 
         LogPrint("masternode","Masternode payment of %s to %s\n", FormatMoney(masternodePayment).c_str(), address2.ToString().c_str());
-    }
+    } else {
+		if (!fProofOfStake)
+			txNew.vout[0].nValue = blockValue - masternodePayment;
+	}
 }
 
 int CMasternodePayments::GetMinMasternodePaymentsProto()
@@ -515,7 +519,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
 {
     LOCK(cs_vecPayments);
 
-    int nMaxSignatures = 0;
+	int nMaxSignatures = 0;
     int nMasternode_Drift_Count = 0;
 
     std::string strPayeesPossible = "";
@@ -534,14 +538,17 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
     }
 
     CAmount requiredMasternodePayment = GetMasternodePayment(nBlockHeight, nReward, nMasternode_Drift_Count);
+	
+	if (nBlockHeight < 156000)
+	{
+		//require at least 6 signatures
+		BOOST_FOREACH (CMasternodePayee& payee, vecPayments)
+			if (payee.nVotes >= nMaxSignatures && payee.nVotes >= MNPAYMENTS_SIGNATURES_REQUIRED)
+				nMaxSignatures = payee.nVotes;
 
-    //require at least 6 signatures
-    BOOST_FOREACH (CMasternodePayee& payee, vecPayments)
-        if (payee.nVotes >= nMaxSignatures && payee.nVotes >= MNPAYMENTS_SIGNATURES_REQUIRED)
-            nMaxSignatures = payee.nVotes;
-
-    // if we don't have at least 6 signatures on a payee, approve whichever is the longest chain
-    if (nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;
+		// if we don't have at least 6 signatures on a payee, approve whichever is the longest chain
+		if (nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;			
+	}	
 
     BOOST_FOREACH (CMasternodePayee& payee, vecPayments) {
         bool found = false;
@@ -554,19 +561,20 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew)
             }
         }
 
-        if (payee.nVotes >= MNPAYMENTS_SIGNATURES_REQUIRED) {
-            if (found) return true;
+        if (found) return true;
+		
+		
+		try {
+			CTxDestination address1;
+			ExtractDestination(payee.scriptPubKey, address1);
+			CBitcoinAddress address2(address1);
 
-            CTxDestination address1;
-            ExtractDestination(payee.scriptPubKey, address1);
-            CBitcoinAddress address2(address1);
-
-            if (strPayeesPossible == "") {
-                strPayeesPossible += address2.ToString();
-            } else {
-                strPayeesPossible += "," + address2.ToString();
-            }
-        }
+			if (strPayeesPossible == "") {
+				strPayeesPossible += address2.ToString();
+			} else {
+				strPayeesPossible += "," + address2.ToString();
+			}
+        } catch (...) { }
     }
 
     LogPrint("masternode","CMasternodePayments::IsTransactionValid - Missing required payment of %s to %s\n", FormatMoney(requiredMasternodePayment).c_str(), strPayeesPossible.c_str());

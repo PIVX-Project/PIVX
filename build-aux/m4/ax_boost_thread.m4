@@ -68,7 +68,7 @@ AC_DEFUN([AX_BOOST_THREAD],
         [AC_LANG_PUSH([C++])
 			 CXXFLAGS_SAVE=$CXXFLAGS
 
-			 if test "x$host_os" = "xsolaris" ; then
+			 if test "x$host_os" = "xvsync" ; then
 				 CXXFLAGS="-pthreads $CXXFLAGS"
 			 elif test "x$host_os" = "xmingw32" ; then
 				 CXXFLAGS="-mthreads $CXXFLAGS"
@@ -83,7 +83,7 @@ AC_DEFUN([AX_BOOST_THREAD],
              AC_LANG_POP([C++])
 		])
 		if test "x$ax_cv_boost_thread" = "xyes"; then
-           if test "x$host_os" = "xsolaris" ; then
+           if test "x$host_os" = "xvsync" ; then
 			  BOOST_CPPFLAGS="-pthreads $BOOST_CPPFLAGS"
 		   elif test "x$host_os" = "xmingw32" ; then
 			  BOOST_CPPFLAGS="-mthreads $BOOST_CPPFLAGS"

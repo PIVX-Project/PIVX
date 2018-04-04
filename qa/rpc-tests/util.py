@@ -1,6 +1,6 @@
 # Copyright (c) 2014 The Bitcoin Core developers
 # Copyright (c) 2014-2015 The Dash developers
-# Copyright (c) 2015-2017 The PIVX developers
+# Copyright (c) 2015-2017 The Vsync developers
 # Distributed under the MIT/X11 software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #
@@ -66,7 +66,7 @@ def initialize_datadir(dirname, n):
     datadir = os.path.join(dirname, "node"+str(n))
     if not os.path.isdir(datadir):
         os.makedirs(datadir)
-    with open(os.path.join(datadir, "pivx.conf"), 'w') as f:
+    with open(os.path.join(datadir, "vsync.conf"), 'w') as f:
         f.write("regtest=1\n");
         f.write("rpcuser=rt\n");
         f.write("rpcpassword=rt\n");
@@ -78,19 +78,19 @@ def initialize_chain(test_dir):
     """
     Create (or copy from cache) a 200-block-long chain and
     4 wallets.
-    pivxd and pivx-cli must be in search path.
+    vsyncd and vsync-cli must be in search path.
     """
 
     if not os.path.isdir(os.path.join("cache", "node0")):
         devnull = open("/dev/null", "w+")
-        # Create cache directories, run pivxd:
+        # Create cache directories, run vsyncd:
         for i in range(4):
             datadir=initialize_datadir("cache", i)
-            args = [ os.getenv("BITCOIND", "pivxd"), "-keypool=1", "-datadir="+datadir, "-discover=0" ]
+            args = [ os.getenv("BITCOIND", "vsyncd"), "-keypool=1", "-datadir="+datadir, "-discover=0" ]
             if i > 0:
                 args.append("-connect=127.0.0.1:"+str(p2p_port(0)))
             bitcoind_processes[i] = subprocess.Popen(args)
-            subprocess.check_call([ os.getenv("BITCOINCLI", "pivx-cli"), "-datadir="+datadir,
+            subprocess.check_call([ os.getenv("BITCOINCLI", "vsync-cli"), "-datadir="+datadir,
                                     "-rpcwait", "getblockcount"], stdout=devnull)
         devnull.close()
         rpcs = []
@@ -129,7 +129,7 @@ def initialize_chain(test_dir):
         from_dir = os.path.join("cache", "node"+str(i))
         to_dir = os.path.join(test_dir,  "node"+str(i))
         shutil.copytree(from_dir, to_dir)
-        initialize_datadir(test_dir, i) # Overwrite port/rpcport in pivx.conf
+        initialize_datadir(test_dir, i) # Overwrite port/rpcport in vsync.conf
 
 def initialize_chain_clean(test_dir, num_nodes):
     """
@@ -162,14 +162,14 @@ def _rpchost_to_args(rpchost):
 
 def start_node(i, dirname, extra_args=None, rpchost=None):
     """
-    Start a pivxd and return RPC connection to it
+    Start a vsyncd and return RPC connection to it
     """
     datadir = os.path.join(dirname, "node"+str(i))
-    args = [ os.getenv("BITCOIND", "pivxd"), "-datadir="+datadir, "-keypool=1", "-discover=0", "-rest" ]
+    args = [ os.getenv("BITCOIND", "vsyncd"), "-datadir="+datadir, "-keypool=1", "-discover=0", "-rest" ]
     if extra_args is not None: args.extend(extra_args)
     bitcoind_processes[i] = subprocess.Popen(args)
     devnull = open("/dev/null", "w+")
-    subprocess.check_call([ os.getenv("BITCOINCLI", "pivx-cli"), "-datadir="+datadir] +
+    subprocess.check_call([ os.getenv("BITCOINCLI", "vsync-cli"), "-datadir="+datadir] +
                           _rpchost_to_args(rpchost)  +
                           ["-rpcwait", "getblockcount"], stdout=devnull)
     devnull.close()
@@ -180,7 +180,7 @@ def start_node(i, dirname, extra_args=None, rpchost=None):
 
 def start_nodes(num_nodes, dirname, extra_args=None, rpchost=None):
     """
-    Start multiple pivxds, return RPC connections to them
+    Start multiple vsyncds, return RPC connections to them
     """
     if extra_args is None: extra_args = [ None for i in range(num_nodes) ]
     return [ start_node(i, dirname, extra_args[i], rpchost) for i in range(num_nodes) ]

@@ -7,7 +7,7 @@
 
 #include <QObject>
 
-/** Macintosh-specific notification handler (supports UserNotificationCenter).
+/** Macintosh-specific notification handler (supports UserNotificationCenter and Growl).
  */
 class MacNotificationHandler : public QObject
 {

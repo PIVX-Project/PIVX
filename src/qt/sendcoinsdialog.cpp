@@ -1,6 +1,7 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2017-2018 The Vsync developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -59,7 +60,7 @@ SendCoinsDialog::SendCoinsDialog(QWidget* parent) : QDialog(parent),
     connect(ui->splitBlockCheckBox, SIGNAL(stateChanged(int)), this, SLOT(splitBlockChecked(int)));
     connect(ui->splitBlockLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(splitBlockLineEditChanged(const QString&)));
 
-    // PIVX specific
+    // Vsync specific
     QSettings settings;
     if (!settings.contains("bUseObfuScation"))
         settings.setValue("bUseObfuScation", false);
@@ -134,7 +135,7 @@ SendCoinsDialog::SendCoinsDialog(QWidget* parent) : QDialog(parent),
     ui->customFee->setValue(settings.value("nTransactionFee").toLongLong());
     ui->checkBoxMinimumFee->setChecked(settings.value("fPayOnlyMinFee").toBool());
     ui->checkBoxFreeTx->setChecked(settings.value("fSendFreeTransactions").toBool());
-    ui->checkzPIV->hide();
+    ui->checkzVSX->hide();
     minimizeFeeSection(settings.value("fFeeSectionMinimized").toBool());
 }
 
@@ -262,14 +263,15 @@ void SendCoinsDialog::on_sendButton_clicked()
     if (CoinControlDialog::coinControl->fSplitBlock)
         CoinControlDialog::coinControl->nSplitBlock = int(ui->splitBlockLineEdit->text().toInt());
 
-    QString strFunds = "";
+    QString strFunds = tr("using") + " <b>" + tr("anonymous funds") + "</b>";
     QString strFee = "";
     recipients[0].inputType = ALL_COINS;
+    strFunds = tr("using") + " <b>" + tr("any available funds (not recommended)") + "</b>";
 
     if (ui->checkSwiftTX->isChecked()) {
         recipients[0].useSwiftTX = true;
         strFunds += " ";
-        strFunds += tr("using SwiftX");
+        strFunds += tr("and SwiftX");
     } else {
         recipients[0].useSwiftTX = false;
     }
@@ -306,7 +308,7 @@ void SendCoinsDialog::on_sendButton_clicked()
             recipientElement = tr("%1 to %2").arg(amount, address);
         }
 
-        if (CoinControlDialog::coinControl->fSplitBlock) {
+        if (fSplitBlock) {
             recipientElement.append(tr(" split into %1 outputs using the UTXO splitter.").arg(CoinControlDialog::coinControl->nSplitBlock));
         }
 
@@ -321,7 +323,7 @@ void SendCoinsDialog::on_sendButton_clicked()
     // will call relock
     WalletModel::EncryptionStatus encStatus = model->getEncryptionStatus();
     if (encStatus == model->Locked || encStatus == model->UnlockedForAnonymizationOnly) {
-        WalletModel::UnlockContext ctx(model->requestUnlock(AskPassphraseDialog::Context::Send_PIV, true));
+        WalletModel::UnlockContext ctx(model->requestUnlock(true));
         if (!ctx.isValid()) {
             // Unlock wallet was cancelled
             fNewRecipientAllowed = true;
@@ -639,7 +641,7 @@ void SendCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn&
 
     // Unlock wallet if it wasn't fully unlocked already
     if(fAskForUnlock) {
-        model->requestUnlock(AskPassphraseDialog::Context::Unlock_Full, false);
+        model->requestUnlock(false);
         if(model->getEncryptionStatus () != WalletModel::Unlocked) {
             msgParams.first = tr("Error: The wallet was unlocked only to anonymize coins. Unlock canceled.");
         }
@@ -883,7 +885,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString& text)
             ui->labelCoinControlChangeLabel->setText("");
         } else if (!addr.IsValid()) // Invalid address
         {
-            ui->labelCoinControlChangeLabel->setText(tr("Warning: Invalid PIVX address"));
+            ui->labelCoinControlChangeLabel->setText(tr("Warning: Invalid Vsync address"));
         } else // Valid address
         {
             CPubKey pubkey;

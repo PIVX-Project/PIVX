@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>585</width>
-    <height>488</height>
+    <height>225</height>
    </rect>
   </property>
   <property name="font">
@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string notr="true">PIVX Core - Command-line options</string>
+   <string notr="true">Vsync Core - Command-line options</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
@@ -28,7 +28,7 @@
       </sizepolicy>
      </property>
      <property name="pixmap">
-      <pixmap resource="../pivx.qrc">:/images/about</pixmap>
+      <pixmap resource="../vsync.qrc">:/images/about</pixmap>
      </property>
     </widget>
    </item>
@@ -54,8 +54,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>479</width>
-          <height>213</height>
+          <width>447</width>
+          <height>68</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -97,7 +97,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../vsync.qrc"/>
  </resources>
  <connections>
   <connection>

@@ -1,10 +1,10 @@
 Sample configuration files for:
 
-SystemD: pivxd.service
-Upstart: pivxd.conf
-OpenRC:  pivxd.openrc
-         pivxd.openrcconf
-CentOS:  pivxd.init
+SystemD: vsyncd.service
+Upstart: vsyncd.conf
+OpenRC:  vsyncd.openrc
+         vsyncd.openrcconf
+CentOS:  vsyncd.init
 
 have been made available to assist packagers in creating node packages here.
 

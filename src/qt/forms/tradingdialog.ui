@@ -181,7 +181,7 @@
       <string>Asks</string>
      </property>
     </widget>
-    <widget class="QLabel" name="PIVSupply">
+    <widget class="QLabel" name="VSXSupply">
      <property name="geometry">
       <rect>
        <x>540</x>
@@ -197,7 +197,7 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="PIVDemand">
+    <widget class="QLabel" name="VSXDemand">
      <property name="geometry">
       <rect>
        <x>160</x>
@@ -432,7 +432,7 @@
     <attribute name="title">
      <string>Buy</string>
     </attribute>
-    <widget class="QPushButton" name="BuyPIV">
+    <widget class="QPushButton" name="BuyVSX">
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -442,10 +442,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>Buy PIV</string>
+      <string>Buy VSX</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx.qrc">
+      <iconset resource="../vsync.qrc">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -512,7 +512,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>PIV</string>
+      <string>VSX</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_5">
@@ -1704,10 +1704,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>PIV</string>
+      <string>VSX</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="UnitsInputPIV">
+    <widget class="QLineEdit" name="UnitsInputVSX">
      <property name="geometry">
       <rect>
        <x>310</x>
@@ -1741,7 +1741,7 @@
       </font>
      </property>
     </widget>
-    <widget class="QPushButton" name="SellPIVBTN">
+    <widget class="QPushButton" name="SellVSXBTN">
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -1751,10 +1751,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>Sell PIV</string>
+      <string>Sell VSX</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx">
+      <iconset resource="../vsync">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -1777,12 +1777,12 @@
          </font>
         </property>
         <property name="text">
-         <string>PIV Available:</string>
+         <string>VSX Available:</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="PIVAvailableLabel">
+       <widget class="QLabel" name="VSXAvailableLabel">
         <property name="palette">
          <palette>
           <active>
@@ -2213,7 +2213,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="labelPIV">
+       <widget class="QLabel" name="labelVSX">
         <property name="font">
          <font>
           <weight>75</weight>
@@ -2221,7 +2221,7 @@
          </font>
         </property>
         <property name="text">
-         <string>PIV</string>
+         <string>VSX</string>
         </property>
        </widget>
       </item>
@@ -2733,7 +2733,7 @@
       <string>TextLabel</string>
      </property>
     </widget>
-    <widget class="QLabel" name="PIVBalanceLabel">
+    <widget class="QLabel" name="VSXBalanceLabel">
      <property name="geometry">
       <rect>
        <x>150</x>
@@ -2762,7 +2762,7 @@
       </font>
      </property>
      <property name="text">
-      <string>PIV Balance:</string>
+      <string>VSX Balance:</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_12">
@@ -2784,7 +2784,7 @@
       <string>BTC Balance:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="PIVAvailableLabel_2">
+    <widget class="QLabel" name="VSXAvailableLabel_2">
      <property name="geometry">
       <rect>
        <x>150</x>
@@ -2813,7 +2813,7 @@
       </font>
      </property>
      <property name="text">
-      <string>PIV Available:</string>
+      <string>VSX Available:</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_14">
@@ -2832,10 +2832,10 @@
       </font>
      </property>
      <property name="text">
-      <string>PIV Pending:</string>
+      <string>VSX Pending:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="PIVPendingLabel">
+    <widget class="QLabel" name="VSXPendingLabel">
      <property name="geometry">
       <rect>
        <x>150</x>
@@ -2928,7 +2928,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Bittrex PIV Deposit Address:</string>
+      <string>Bittrex VSX Deposit Address:</string>
      </property>
     </widget>
     <widget class="QPushButton" name="GenDepositBTN">
@@ -2941,10 +2941,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>Generate PIVX Deposit Address</string>
+      <string>Generate Vsync Deposit Address</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx.qrc">
+      <iconset resource="../vsync.qrc">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -3155,7 +3155,7 @@
        <string notr="true">border: 1px solid #61696c;margin-left:4px;</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="btnConvertPivx">
+     <widget class="QPushButton" name="btnConvertVsync">
       <property name="geometry">
        <rect>
         <x>260</x>
@@ -3206,7 +3206,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap resource="../pivx.qrc">:/icons/transaction_1</pixmap>
+       <pixmap resource="../vsync.qrc">:/icons/transaction_1</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -3253,7 +3253,7 @@
       <string>Update API Keys</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx.qrc">
+      <iconset resource="../vsync.qrc">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -3408,7 +3408,7 @@
   </widget>
  </widget>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../vsync.qrc"/>
  </resources>
  <connections/>
 </ui>

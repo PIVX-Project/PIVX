@@ -8,7 +8,7 @@ and remove old versions as necessary.
 
 The seeds compiled into the release are created from fuzzbawls' DNS seed data, like this:
 
-    curl -s http://seeder.fuzzbawls.pw/pivx-mainnet.txt > seeds_main.txt
+    curl -s http://seeder.fuzzbawls.pw/vsync-mainnet.txt > seeds_main.txt
     python3 makeseeds.py < seeds_main.txt > nodes_main.txt
     python3 generate-seeds.py . > ../../src/chainparamsseeds.h
 

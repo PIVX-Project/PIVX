@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2017 The PIVX Core developers
+// Copyright (c) 2015-2017 The Vsync Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -26,7 +26,7 @@ struct CDNSSeedData {
 
 /**
  * CChainParams defines various tweakable parameters of a given instance of the
- * PIVX system. There are three: the main network on which people trade goods
+ * Vsync system. There are three: the main network on which people trade goods
  * and services, the public test network which gets reset from time to time and
  * a regression test mode which is intended for private networks only. It has
  * minimal difficulty to ensure that blocks can be found instantly.
@@ -60,6 +60,7 @@ public:
     /** Used if GenerateBitcoins is called with a negative number of threads */
     int DefaultMinerThreads() const { return nMinerThreads; }
     const CBlock& GenesisBlock() const { return genesis; }
+    bool RequireRPCPassword() const { return fRequireRPCPassword; }
     /** Make miner wait to have peers to avoid wasting work */
     bool MiningRequiresPeers() const { return fMiningRequiresPeers; }
     /** Headers first syncing is disabled */
@@ -111,9 +112,6 @@ public:
     int LAST_POW_BLOCK() const { return nLastPOWBlock; }
     int Zerocoin_StartHeight() const { return nZerocoinStartHeight; }
     int Zerocoin_Block_EnforceSerialRange() const { return nBlockEnforceSerialRange; }
-    int Zerocoin_Block_RecalculateAccumulators() const { return nBlockRecalculateAccumulators; }
-    int Zerocoin_Block_FirstFraudulent() const { return nBlockFirstFraudulent; }
-    int Zerocoin_Block_LastGoodCheckpoint() const { return nBlockLastGoodCheckpoint; }
     int Zerocoin_StartTime() const { return nZerocoinStartTime; }
     int Block_Enforce_Invalid() const { return nBlockEnforceInvalidUTXO; }
 
@@ -145,6 +143,7 @@ protected:
     std::string strNetworkID;
     CBlock genesis;
     std::vector<CAddress> vFixedSeeds;
+    bool fRequireRPCPassword;
     bool fMiningRequiresPeers;
     bool fAllowMinDifficultyBlocks;
     bool fDefaultConsistencyChecks;
@@ -169,9 +168,6 @@ protected:
     int nZerocoinStartTime;
 
     int nBlockEnforceSerialRange;
-    int nBlockRecalculateAccumulators;
-    int nBlockFirstFraudulent;
-    int nBlockLastGoodCheckpoint;
     int nBlockEnforceInvalidUTXO;
 };
 

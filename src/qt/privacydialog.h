@@ -46,7 +46,7 @@ public:
 
     void setModel(WalletModel* model);
     void showOutOfSyncWarning(bool fShow);
-    void setZPivControlLabels(int64_t nAmount, int nQuantity);
+    void setZVSXControlLabels(int64_t nAmount, int nQuantity);
 
 public slots:
     void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, 
@@ -76,7 +76,7 @@ private:
 
     int nDisplayUnit;
     bool updateLabel(const QString& address);
-    void sendzPIV();
+    void sendzVSX();
 
 private slots:
     void on_payTo_textChanged(const QString& address);
@@ -96,14 +96,13 @@ private slots:
 //    void coinControlClipboardLowOutput();
 //    void coinControlClipboardChange();
 
-    void on_pushButtonMintzPIV_clicked();
+    void on_pushButtonMintzVSX_clicked();
     void on_pushButtonMintReset_clicked();
     void on_pushButtonSpentReset_clicked();
-    void on_pushButtonSpendzPIV_clicked();
-    void on_pushButtonZPivControl_clicked();
+    void on_pushButtonSpendzVSX_clicked();
+    void on_pushButtonZVSXControl_clicked();
     void on_pasteButton_clicked();
     void updateDisplayUnit();
-    void updateAutomintStatus();
 };
 
 #endif // BITCOIN_QT_PRIVACYDIALOG_H

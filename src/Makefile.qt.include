@@ -1,37 +1,34 @@
-# Copyright (c) 2013-2016 The Bitcoin Core developers
-# Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
-bin_PROGRAMS += qt/pivx-qt
+bin_PROGRAMS += qt/vsync-qt
 EXTRA_LIBRARIES += qt/libbitcoinqt.a
 
-# pivx qt core #
+# vsync qt core #
 QT_TS = \
-  qt/locale/pivx_bg.ts \
-  qt/locale/pivx_ca.ts \
-  qt/locale/pivx_cs.ts \
-  qt/locale/pivx_da.ts \
-  qt/locale/pivx_de.ts \
-  qt/locale/pivx_en.ts \
-  qt/locale/pivx_en_US.ts \
-  qt/locale/pivx_es.ts \
-  qt/locale/pivx_fi.ts \
-  qt/locale/pivx_fr_FR.ts \
-  qt/locale/pivx_it.ts \
-  qt/locale/pivx_ja.ts \
-  qt/locale/pivx_ko_KR.ts \
-  qt/locale/pivx_nl.ts \
-  qt/locale/pivx_pl.ts \
-  qt/locale/pivx_pt.ts \
-  qt/locale/pivx_pt_BR.ts \
-  qt/locale/pivx_ro_RO.ts \
-  qt/locale/pivx_ru.ts \
-  qt/locale/pivx_sk.ts \
-  qt/locale/pivx_sv.ts \
-  qt/locale/pivx_tr.ts \
-  qt/locale/pivx_uk.ts \
-  qt/locale/pivx_zh_CN.ts \
-  qt/locale/pivx_zh_TW.ts
+  qt/locale/vsync_bg.ts \
+  qt/locale/vsync_ca.ts \
+  qt/locale/vsync_cs.ts \
+  qt/locale/vsync_da.ts \
+  qt/locale/vsync_de.ts \
+  qt/locale/vsync_en.ts \
+  qt/locale/vsync_en_US.ts \
+  qt/locale/vsync_es.ts \
+  qt/locale/vsync_fi.ts \
+  qt/locale/vsync_fr_FR.ts \
+  qt/locale/vsync_hr.ts \
+  qt/locale/vsync_it.ts \
+  qt/locale/vsync_ja.ts \
+  qt/locale/vsync_ko_KR.ts \
+  qt/locale/vsync_nl.ts \
+  qt/locale/vsync_pl.ts \
+  qt/locale/vsync_pt.ts \
+  qt/locale/vsync_pt_BR.ts \
+  qt/locale/vsync_ro_RO.ts \
+  qt/locale/vsync_ru.ts \
+  qt/locale/vsync_sk.ts \
+  qt/locale/vsync_sv.ts \
+  qt/locale/vsync_tr.ts \
+  qt/locale/vsync_uk.ts \
+  qt/locale/vsync_zh_CN.ts \
+  qt/locale/vsync_zh_TW.ts
 
 QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
@@ -57,13 +54,12 @@ QT_FORMS_UI = \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/transactiondescdialog.ui \
-  qt/forms/zpivcontroldialog.ui
+  qt/forms/zvsxcontroldialog.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
-  qt/moc_bantablemodel.cpp \
   qt/moc_bip38tooldialog.cpp \
   qt/moc_bitcoinaddressvalidator.cpp \
   qt/moc_bitcoinamountfield.cpp \
@@ -111,23 +107,23 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp \
-  qt/moc_zpivcontroldialog.cpp
+  qt/moc_zvsxcontroldialog.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
   qt/macnotificationhandler.mm
 
 QT_MOC = \
-  qt/pivx.moc \
+  qt/vsync.moc \
   qt/bitcoinamountfield.moc \
   qt/intro.moc \
   qt/overviewpage.moc \
   qt/rpcconsole.moc
 
-QT_QRC_CPP = qt/qrc_pivx.cpp
-QT_QRC = qt/pivx.qrc
-QT_QRC_LOCALE_CPP = qt/qrc_pivx_locale.cpp
-QT_QRC_LOCALE = qt/pivx_locale.qrc
+QT_QRC_CPP = qt/qrc_vsync.cpp
+QT_QRC = qt/vsync.qrc
+QT_QRC_LOCALE_CPP = qt/qrc_vsync_locale.cpp
+QT_QRC_LOCALE = qt/vsync_locale.qrc
 
 PROTOBUF_CC = qt/paymentrequest.pb.cc
 PROTOBUF_H = qt/paymentrequest.pb.h
@@ -137,7 +133,6 @@ BITCOIN_QT_H = \
   qt/addressbookpage.h \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
-  qt/bantablemodel.h \
   qt/bip38tooldialog.h \
   qt/bitcoinaddressvalidator.h \
   qt/bitcoinamountfield.h \
@@ -192,13 +187,11 @@ BITCOIN_QT_H = \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
   qt/winshutdownmonitor.h \
-  qt/zpivcontroldialog.h
+  qt/zvsxcontroldialog.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
   qt/res/icons/address-book.png \
-  qt/res/icons/automint_active.png \
-  qt/res/icons/automint_inactive.png \
   qt/res/icons/bitcoin.ico \
   qt/res/icons/bitcoin.png \
   qt/res/icons/bitcoin_testnet.ico \
@@ -234,11 +227,9 @@ RES_ICONS = \
   qt/res/icons/qrcode.png \
   qt/res/icons/quit.png \
   qt/res/icons/receive.png \
-  qt/res/icons/receive_dark.png \
   qt/res/icons/privacy.png \
   qt/res/icons/remove.png \
   qt/res/icons/send.png \
-  qt/res/icons/send_dark.png \
   qt/res/icons/staking_active.png \
   qt/res/icons/staking_inactive.png \
   qt/res/icons/synced.png \
@@ -250,15 +241,14 @@ RES_ICONS = \
   qt/res/icons/tx_input.png \
   qt/res/icons/tx_output.png \
   qt/res/icons/tx_mined.png \
-  qt/res/icons/unit_pivx.png \
-  qt/res/icons/unit_mpivx.png \
-  qt/res/icons/unit_upivx.png \
-  qt/res/icons/unit_tpivx.png \
-  qt/res/icons/unit_tmpivx.png \
-  qt/res/icons/unit_tupivx.png
+  qt/res/icons/unit_vsync.png \
+  qt/res/icons/unit_mvsync.png \
+  qt/res/icons/unit_uvsync.png \
+  qt/res/icons/unit_tvsync.png \
+  qt/res/icons/unit_tmvsync.png \
+  qt/res/icons/unit_tuvsync.png
 
 BITCOIN_QT_CPP = \
-  qt/bantablemodel.cpp \
   qt/bitcoinaddressvalidator.cpp \
   qt/bitcoinamountfield.cpp \
   qt/bitcoingui.cpp \
@@ -280,11 +270,8 @@ BITCOIN_QT_CPP = \
   qt/rpcconsole.cpp \
   qt/splashscreen.cpp \
   qt/trafficgraphwidget.cpp \
-  qt/utilitydialog.cpp
-
-if TARGET_WINDOWS
-BITCOIN_QT_CPP += qt/winshutdownmonitor.cpp
-endif
+  qt/utilitydialog.cpp \
+  qt/winshutdownmonitor.cpp
 
 if ENABLE_WALLET
 BITCOIN_QT_CPP += \
@@ -321,7 +308,7 @@ BITCOIN_QT_CPP += \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
   qt/walletview.cpp \
-  qt/zpivcontroldialog.cpp
+  qt/zvsxcontroldialog.cpp
 
 endif
 
@@ -329,14 +316,12 @@ RES_IMAGES = \
   qt/res/images/about.png \
   qt/res/images/splash.png \
   qt/res/images/splash_testnet.png \
-  qt/res/images/pivx_logo_horizontal.png \
-  qt/res/images/downArrow_dark.png \
-  qt/res/images/downArrow_small_dark.png \
+  qt/res/images/vsync_logo_horizontal.png \
+  qt/res/images/downArrow.png \
   qt/res/images/downArrow_small.png \
-  qt/res/images/upArrow_small_dark.png \
   qt/res/images/upArrow_small.png \
-  qt/res/images/leftArrow_small_dark.png \
-  qt/res/images/rightArrow_small_dark.png \
+  qt/res/images/leftArrow_small.png \
+  qt/res/images/rightArrow_small.png \
   qt/res/images/qtreeview_selected.png \
   qt/res/images/walletFrame.png \
   qt/res/images/walletFrame_bg.png \
@@ -347,15 +332,13 @@ RES_CSS = \
 
 RES_MOVIES = $(wildcard $(srcdir)/qt/res/movies/spinner-*.png)
 
-BITCOIN_RC = qt/res/pivx-qt-res.rc
+BITCOIN_RC = qt/res/vsync-qt-res.rc
 
 BITCOIN_QT_INCLUDES = -I$(builddir)/qt -I$(srcdir)/qt -I$(srcdir)/qt/forms \
   -I$(builddir)/qt/forms
 
-qt_libbitcoinqt_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
+qt_libbitcoinqt_a_CPPFLAGS = $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
   $(QT_INCLUDES) $(QT_DBUS_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
-qt_libbitcoinqt_a_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
-qt_libbitcoinqt_a_OBJCXXFLAGS = $(AM_OBJCXXFLAGS) $(QT_PIE_FLAGS)
 
 qt_libbitcoinqt_a_SOURCES = $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(QT_FORMS_UI) \
   $(QT_QRC) $(QT_QRC_LOCALE) $(QT_TS) $(PROTOBUF_PROTO) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(RES_MOVIES)
@@ -369,72 +352,69 @@ QT_FORMS_H=$(join $(dir $(QT_FORMS_UI)),$(addprefix ui_, $(notdir $(QT_FORMS_UI:
 # Most files will depend on the forms and moc files as includes. Generate them
 # before anything else.
 $(QT_MOC): $(QT_FORMS_H)
-$(qt_libbitcoinqt_a_OBJECTS) $(qt_pivx_qt_OBJECTS) : | $(QT_MOC)
+$(qt_libbitcoinqt_a_OBJECTS) $(qt_vsync_qt_OBJECTS) : | $(QT_MOC)
 
 #Generating these with a half-written protobuf header leads to wacky results.
 #This makes sure it's done.
 $(QT_MOC): $(PROTOBUF_H)
 $(QT_MOC_CPP): $(PROTOBUF_H)
 
-# pivx-qt binary #
-qt_pivx_qt_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
+# vsync-qt binary #
+qt_vsync_qt_CPPFLAGS = $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
   $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
-qt_pivx_qt_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
-qt_bitcoin_qt_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
 
-qt_pivx_qt_SOURCES = qt/pivx.cpp
+qt_vsync_qt_SOURCES = qt/vsync.cpp
 if TARGET_DARWIN
-  qt_pivx_qt_SOURCES += $(BITCOIN_MM)
+  qt_vsync_qt_SOURCES += $(BITCOIN_MM)
 endif
 if TARGET_WINDOWS
-  qt_pivx_qt_SOURCES += $(BITCOIN_RC)
+  qt_vsync_qt_SOURCES += $(BITCOIN_RC)
 endif
-qt_pivx_qt_LDADD = qt/libbitcoinqt.a $(LIBBITCOIN_SERVER)
+qt_vsync_qt_LDADD = qt/libbitcoinqt.a $(LIBBITCOIN_SERVER)
 if ENABLE_WALLET
-qt_pivx_qt_LDADD += $(LIBBITCOIN_WALLET)
+qt_vsync_qt_LDADD += $(LIBBITCOIN_WALLET)
 endif
 if ENABLE_ZMQ
-qt_pivx_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+qt_vsync_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
 endif
-qt_pivx_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBBITCOIN_ZEROCOIN) $(LIBLEVELDB) $(LIBMEMENV) \
+qt_vsync_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBBITCOIN_UNIVALUE) $(LIBBITCOIN_ZEROCOIN) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
   $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
-qt_pivx_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
-qt_pivx_qt_LIBTOOLFLAGS = --tag CXX
+qt_vsync_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+qt_vsync_qt_LIBTOOLFLAGS = --tag CXX
 
 #locale/foo.ts -> locale/foo.qm
 QT_QM=$(QT_TS:.ts=.qm)
 
-SECONDARY: $(QT_QM)
+.SECONDARY: $(QT_QM)
 
-$(srcdir)/qt/pivxstrings.cpp: $(libbitcoin_server_a_SOURCES) $(libbitcoin_wallet_a_SOURCES) $(libbitcoin_common_a_SOURCES) $(libbitcoin_zmq_a_SOURCES) $(libbitcoin_util_a_SOURCES)
+qt/vsyncstrings.cpp: $(libbitcoin_server_a_SOURCES) $(libbitcoin_wallet_a_SOURCES) $(libbitcoin_common_a_SOURCES)
 	@test -n $(XGETTEXT) || echo "xgettext is required for updating translations"
-	$(AM_V_GEN) cd $(srcdir); XGETTEXT=$(XGETTEXT) PACKAGE_NAME="$(PACKAGE_NAME)" $(PYTHON) ../share/qt/extract_strings_qt.py $^
+	$(AM_V_GEN) cd $(srcdir); XGETTEXT=$(XGETTEXT) $(PYTHON) ../share/qt/extract_strings_qt.py $^
 
-translate: $(srcdir)/qt/pivxstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(BITCOIN_MM)
+translate: qt/vsyncstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(BITCOIN_MM)
 	@test -n $(LUPDATE) || echo "lupdate is required for updating translations"
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts $(srcdir)/qt/locale/pivx_en.ts
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts qt/locale/vsync_en.ts
 
 $(QT_QRC_LOCALE_CPP): $(QT_QRC_LOCALE) $(QT_QM)
 	@test -f $(RCC)
-	@cp -f $< $(@D)/temp_$(<F)
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name pivx_locale $(@D)/temp_$(<F) | \
+	@test -f $(@D)/$(<F) || cp -f $< $(@D)
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name vsync_locale $(@D)/$(<F) | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
-	@rm $(@D)/temp_$(<F)
 
 $(QT_QRC_CPP): $(QT_QRC) $(QT_FORMS_H) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(RES_MOVIES) $(PROTOBUF_H)
 	@test -f $(RCC)
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name pivx $< | \
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name vsync $< | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
 
-CLEAN_QT = $(nodist_qt_libbitcoinqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda qt/*.gcno qt/temp_pivx_locale.qrc
+CLEAN_QT = $(nodist_qt_libbitcoinqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda qt/*.gcno
 
 CLEANFILES += $(CLEAN_QT)
 
-pivx_qt_clean: FORCE
-	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_pivx_qt_OBJECTS) qt/pivx-qt$(EXEEXT) $(LIBBITCOINQT)
+vsync_qt_clean: FORCE
+	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_vsync_qt_OBJECTS) qt/vsync-qt$(EXEEXT) $(LIBBITCOINQT)
 
-pivx_qt : qt/pivx-qt$(EXEEXT)
+vsync_qt : qt/vsync-qt$(EXEEXT)
 
 ui_%.h: %.ui
 	@test -f $(UIC)
@@ -442,11 +422,11 @@ ui_%.h: %.ui
 	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(UIC) -o $@ $< || (echo "Error creating $@"; false)
 
 %.moc: %.cpp
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(MOC) $(DEFAULT_INCLUDES) $(QT_INCLUDES) $(MOC_DEFS) $< | \
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(MOC) $(QT_INCLUDES) $(MOC_DEFS) $< | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
 
 moc_%.cpp: %.h
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(MOC) $(DEFAULT_INCLUDES) $(QT_INCLUDES) $(MOC_DEFS) $< | \
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(MOC) $(QT_INCLUDES) $(MOC_DEFS) $< | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
 
 %.qm: %.ts

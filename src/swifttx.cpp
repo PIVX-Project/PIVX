@@ -1,10 +1,9 @@
 // Copyright (c) 2014-2016 The Dash developers
-// Copyright (c) 2016-2017 The PIVX developers
+// Copyright (c) 2016-2017 The Vsync developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "swifttx.h"
-
 #include "activemasternode.h"
 #include "base58.h"
 #include "key.h"
@@ -15,8 +14,6 @@
 #include "spork.h"
 #include "sync.h"
 #include "util.h"
-#include "validationinterface.h"
-
 #include <boost/lexical_cast.hpp>
 
 using namespace std;
@@ -51,7 +48,6 @@ void ProcessMessageSwiftTX(CNode* pfrom, std::string& strCommand, CDataStream& v
 
         CInv inv(MSG_TXLOCK_REQUEST, tx.GetHash());
         pfrom->AddInventoryKnown(inv);
-        GetMainSignals().Inventory(inv.hash);
 
         if (mapTxLockReq.count(tx.GetHash()) || mapTxLockReqRejected.count(tx.GetHash())) {
             return;
@@ -90,10 +86,6 @@ void ProcessMessageSwiftTX(CNode* pfrom, std::string& strCommand, CDataStream& v
             LogPrintf("ProcessMessageSwiftTX::ix - Transaction Lock Request: %s %s : accepted %s\n",
                 pfrom->addr.ToString().c_str(), pfrom->cleanSubVer.c_str(),
                 tx.GetHash().ToString().c_str());
-
-            if (GetTransactionLockSignatures(tx.GetHash()) == SWIFTTX_SIGNATURES_REQUIRED) {
-                GetMainSignals().NotifyTransactionLock(tx);
-            }
 
             return;
 
@@ -166,10 +158,6 @@ void ProcessMessageSwiftTX(CNode* pfrom, std::string& strCommand, CDataStream& v
                 }
             }
             RelayInv(inv);
-        }
-
-        if (mapTxLockReq.count(ctx.txHash) && GetTransactionLockSignatures(ctx.txHash) == SWIFTTX_SIGNATURES_REQUIRED) {
-            GetMainSignals().NotifyTransactionLock(mapTxLockReq[ctx.txHash]);
         }
 
         return;
@@ -459,17 +447,6 @@ void CleanTransactionLocksList()
             it++;
         }
     }
-}
-
-int GetTransactionLockSignatures(uint256 txHash)
-{
-    if(fLargeWorkForkFound || fLargeWorkInvalidChainFound) return -2;
-    if (!IsSporkActive(SPORK_2_SWIFTTX)) return -1;
-
-    std::map<uint256, CTransactionLock>::iterator it = mapTxLocks.find(txHash);
-    if(it != mapTxLocks.end()) return it->second.CountSignatures();
-
-    return -1;
 }
 
 uint256 CConsensusVote::GetHash() const

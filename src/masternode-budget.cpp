@@ -1,5 +1,6 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2017-2018 The Vsync developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -873,6 +874,7 @@ CAmount CBudgetManager::GetTotalBudget(int nHeight)
         return ((nSubsidy / 100) * 10) * 1440 * 30;
     }
 }
+
 
 void CBudgetManager::NewBlock()
 {

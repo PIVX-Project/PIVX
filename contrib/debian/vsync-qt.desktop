@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Vsync
+Comment=Vsync P2P Cryptocurrency
+Comment[fr]=Vsync, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Vsync, eşten eşe kriptografik sanal para birimi
+Exec=vsync-qt %u
+Terminal=false
+Type=Application
+Icon=vsync128
+MimeType=x-scheme-handler/vsync;
+Categories=Office;Finance;

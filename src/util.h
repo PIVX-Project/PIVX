@@ -2,6 +2,7 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2017-2018 The Vsync developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -13,7 +14,7 @@
 #define BITCOIN_UTIL_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/pivx-config.h"
+#include "config/vsync-config.h"
 #endif
 
 #include "compat.h"
@@ -29,7 +30,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/thread/exceptions.hpp>
 
-//PIVX only features
+//Vsync only features
 
 extern bool fMasterNode;
 extern bool fLiteMode;
@@ -38,7 +39,7 @@ extern int nSwiftTXDepth;
 extern int nZeromintPercentage;
 extern const int64_t AUTOMINT_DELAY;
 extern int nPreferredDenom;
-extern int nAnonymizePivxAmount;
+extern int nAnonymizeVsyncAmount;
 extern int nLiquidityProvider;
 extern bool fEnableZeromint;
 extern int64_t enforceMasternodePaymentsTime;
@@ -60,7 +61,6 @@ extern bool fLogIPs;
 extern volatile bool fReopenDebugLog;
 
 void SetupEnvironment();
-bool SetupNetworking();
 
 /** Return true if log accepts specified category */
 bool LogAcceptCategory(const char* category);
@@ -106,8 +106,6 @@ static inline bool error(const char* format)
     return false;
 }
 
-double double_safe_addition(double fValue, double fIncrement);
-double double_safe_multiplication(double fValue, double fmultiplicator);
 void PrintExceptionContinue(std::exception* pex, const char* pszThread);
 void ParseParameters(int argc, const char* const argv[]);
 void FileCommit(FILE* fileout);
@@ -207,12 +205,44 @@ void SetThreadPriority(int nPriority);
 void RenameThread(const char* name);
 
 /**
+ * Standard wrapper for do-something-forever thread functions.
+ * "Forever" really means until the thread is interrupted.
+ * Use it like:
+ *   new boost::thread(boost::bind(&LoopForever<void (*)()>, "dumpaddr", &DumpAddresses, 900000));
+ * or maybe:
+ *    boost::function<void()> f = boost::bind(&FunctionWithArg, argument);
+ *    threadGroup.create_thread(boost::bind(&LoopForever<boost::function<void()> >, "nothing", f, milliseconds));
+ */
+template <typename Callable>
+void LoopForever(const char* name, Callable func, int64_t msecs)
+{
+    std::string s = strprintf("vsync-%s", name);
+    RenameThread(s.c_str());
+    LogPrintf("%s thread start\n", name);
+    try {
+        while (1) {
+            MilliSleep(msecs);
+            func();
+        }
+    } catch (boost::thread_interrupted) {
+        LogPrintf("%s thread stop\n", name);
+        throw;
+    } catch (std::exception& e) {
+        PrintExceptionContinue(&e, name);
+        throw;
+    } catch (...) {
+        PrintExceptionContinue(NULL, name);
+        throw;
+    }
+}
+
+/**
  * .. and a wrapper that just calls func once
  */
 template <typename Callable>
 void TraceThread(const char* name, Callable func)
 {
-    std::string s = strprintf("pivx-%s", name);
+    std::string s = strprintf("vsync-%s", name);
     RenameThread(s.c_str());
     try {
         LogPrintf("%s thread start\n", name);

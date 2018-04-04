@@ -1,0 +1,30 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="bg">locale/vsync_bg.qm</file>
+        <file alias="ca">locale/vsync_ca.qm</file>
+        <file alias="cs">locale/vsync_cs.qm</file>
+        <file alias="da">locale/vsync_da.qm</file>
+        <file alias="de">locale/vsync_de.qm</file>
+        <file alias="en">locale/vsync_en.qm</file>
+        <file alias="en_US">locale/vsync_en_US.qm</file>
+        <file alias="es">locale/vsync_es.qm</file>
+        <file alias="fi">locale/vsync_fi.qm</file>
+        <file alias="fr_FR">locale/vsync_fr_FR.qm</file>
+        <file alias="hr">locale/vsync_hr.qm</file>
+        <file alias="it">locale/vsync_it.qm</file>
+        <file alias="ja">locale/vsync_ja.qm</file>
+        <file alias="ko_KR">locale/vsync_ko_KR.qm</file>
+        <file alias="nl">locale/vsync_nl.qm</file>
+        <file alias="pl">locale/vsync_pl.qm</file>
+        <file alias="pt">locale/vsync_pt.qm</file>
+        <file alias="pt_BR">locale/vsync_pt_BR.qm</file>
+        <file alias="ro_RO">locale/vsync_ro_RO.qm</file>
+        <file alias="ru">locale/vsync_ru.qm</file>
+        <file alias="sk">locale/vsync_sk.qm</file>
+        <file alias="sv">locale/vsync_sv.qm</file>
+        <file alias="tr">locale/vsync_tr.qm</file>
+        <file alias="uk">locale/vsync_uk.qm</file>
+        <file alias="zh_CN">locale/vsync_zh_CN.qm</file>
+        <file alias="zh_TW">locale/vsync_zh_TW.qm</file>
+    </qresource>
+</RCC>

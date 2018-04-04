@@ -38,7 +38,6 @@ if __name__ == "__main__":
         lineCounter = 1
 
         tempLine = ""
-        tempCount = 0
 
         for row in rows:
             # Collapse multiple lines into one
@@ -69,12 +68,11 @@ if __name__ == "__main__":
                         numExtraPercents = tempLine.count('%', commaAfterEndSpecifierStringIndex)
 
                         # Subtract extra from total count.  This is the number of expected specifiers
-                        # ignore %%
-                        numPercents = tempLine.count('%') - numExtraPercents - 2*tempLine.count('%%')
+                        numPercents = tempLine.count('%') - numExtraPercents
 
                         if numPercents != numCommas:
                             print "Incorrect number of arguments for LogPrint(f) statement found."
-                            print(str(file) + ":" + str(lineCounter - tempCount))
+                            print(str(file) + ":" + str(lineCounter))
                             print "Line = " + tempLine
                             print("numRelevantCommas = " + str(numCommas) + ", numRelevantPercents = " + str(numPercents))
                             print ""
@@ -83,15 +81,9 @@ if __name__ == "__main__":
 
                     # Done with this multiline, clear tempLine
                     tempLine = ""
-                    tempCount = 0
-                else:
-                    tempCount += 1
-            else:
-                # No LogPrint, clear tempLine
-                tempLine = ""
-                tempCount = 0
 
-            lineCounter += 1
+            tempLine = ""
+            lineCounter +=1
 
     print("# of incorrect instances: " + str(incorrectInstanceCounter))
 

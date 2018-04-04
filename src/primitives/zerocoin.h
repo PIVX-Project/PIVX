@@ -1,8 +1,8 @@
-// Copyright (c) 2017 The PIVX developers
+// Copyright (c) 2017 The Vsync developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#ifndef PIVX_ZEROCOIN_H
-#define PIVX_ZEROCOIN_H
+#ifndef Vsync_ZEROCOIN_H
+#define Vsync_ZEROCOIN_H
 
 #include <amount.h>
 #include <limits.h>
@@ -189,4 +189,4 @@ public:
     int GetNeededSpends();
 };
 
-#endif //PIVX_ZEROCOIN_H
+#endif //Vsync_ZEROCOIN_H

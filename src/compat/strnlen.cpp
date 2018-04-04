@@ -3,16 +3,15 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/pivx-config.h"
+#include "config/vsync-config.h"
 #endif
 
 #include <cstring>
-
-#if HAVE_DECL_STRNLEN == 0
-size_t strnlen( const char *start, size_t max_len)
+// OSX 10.6 is missing strnlen at runtime, but builds targetting it will still
+// succeed. Define our own version here to avoid a crash.
+size_t strnlen_int( const char *start, size_t max_len)
 {
     const char *end = (const char *)memchr(start, '\0', max_len);
 
     return end ? (size_t)(end - start) : max_len;
 }
-#endif // HAVE_DECL_STRNLEN

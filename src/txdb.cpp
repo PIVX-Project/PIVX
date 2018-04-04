@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2016-2017 The PIVX developers
+// Copyright (c) 2016-2017 The Vsync developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -271,10 +271,7 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
 
                 //populate accumulator checksum map in memory
                 if(pindexNew->nAccumulatorCheckpoint != 0 && pindexNew->nAccumulatorCheckpoint != nPreviousCheckpoint) {
-                    //Don't load any invalid checkpoints
-                    if (!InvalidCheckpointRange(pindexNew->nHeight))
-                        LoadAccumulatorValuesFromDB(pindexNew->nAccumulatorCheckpoint);
-
+                    LoadAccumulatorValuesFromDB(pindexNew->nAccumulatorCheckpoint);
                     nPreviousCheckpoint = pindexNew->nAccumulatorCheckpoint;
                 }
 

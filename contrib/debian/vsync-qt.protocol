@@ -1,0 +1,11 @@
+[Protocol]
+exec=vsync-qt '%u'
+protocol=vsync
+input=none
+output=none
+helper=true
+listing=
+reading=false
+writing=false
+makedir=false
+deleting=false

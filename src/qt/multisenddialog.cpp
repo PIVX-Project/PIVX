@@ -1,6 +1,5 @@
 #include "multisenddialog.h"
 #include "addressbookpage.h"
-#include "addresstablemodel.h"
 #include "base58.h"
 #include "init.h"
 #include "ui_multisenddialog.h"
@@ -55,13 +54,6 @@ void MultiSendDialog::on_addressBookButton_clicked()
         dlg.setModel(model->getAddressTableModel());
         if (dlg.exec())
             setAddress(dlg.getReturnValue(), ui->multiSendAddressEdit);
-
-        //Update the label text box with the label in the addressbook
-        QString associatedLabel = model->getAddressTableModel()->labelForAddress(dlg.getReturnValue());
-        if (!associatedLabel.isEmpty())
-            ui->labelAddressLabelEdit->setText(associatedLabel);
-        else
-            ui->labelAddressLabelEdit->setText(tr("(no label)"));
     }
 }
 
@@ -79,12 +71,6 @@ void MultiSendDialog::on_viewButton_clicked()
 
     for (int i = 0; i < (int)pwalletMain->vMultiSend.size(); i++) {
         pMultiSend = pwalletMain->vMultiSend[i];
-        if (model && model->getAddressTableModel()) {
-            std::string associatedLabel;
-            associatedLabel = model->getAddressTableModel()->labelForAddress(pMultiSend.first.c_str()).toStdString();
-            strMultiSendPrint += associatedLabel.c_str();
-            strMultiSendPrint += " - ";
-        }
         strMultiSendPrint += pMultiSend.first.c_str();
         strMultiSendPrint += " - ";
         strMultiSendPrint += boost::lexical_cast<string>(pMultiSend.second);
@@ -139,25 +125,8 @@ void MultiSendDialog::on_addButton_clicked()
         strMultiSendPrint += boost::lexical_cast<string>(pMultiSend.second);
         strMultiSendPrint += "% \n";
     }
-
-    if (model && model->getAddressTableModel()) {
-        // update the address book with the label given or no label if none was given.
-        CBitcoinAddress address(strAddress);
-        std::string userInputLabel = ui->labelAddressLabelEdit->text().toStdString();
-        if (!userInputLabel.empty())
-            model->updateAddressBookLabels(address.Get(), userInputLabel, "send");
-        else
-            model->updateAddressBookLabels(address.Get(), "(no label)", "send");
-    }
-
     CWalletDB walletdb(pwalletMain->strWalletFile);
-    if(!walletdb.WriteMultiSend(pwalletMain->vMultiSend)) {
-        ui->message->setProperty("status", "error");
-        ui->message->style()->polish(ui->message);
-        ui->message->setText(tr("Saved the MultiSend to memory, but failed saving properties to the database.\n"));
-        ui->multiSendAddressEdit->setFocus();
-        return;
-    }
+    walletdb.WriteMultiSend(pwalletMain->vMultiSend);
     ui->message->setText(tr("MultiSend Vector\n") + QString(strMultiSendPrint.c_str()));
     return;
 }

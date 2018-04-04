@@ -1,29 +1,33 @@
-(note: this is a temporary file, to be added-to by anybody, and moved to release-notes at release time)
+Vsync Core version 3.0.4 is now available from:
 
-PIVX Core version *version* is now available from:
+  <https://github.com/vsynccrypto/vsx/releases>
 
-  <https://github.com/pivx-project/pivx/releases>
-
-This is a new major version release, including various bug fixes and
+This is a new minor-revision version release, including various bug fixes and
 performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/pivx-project/pivx/issues>
+  <https://github.com/vsynccrypto/vsx/issues>
+
 
 Mandatory Update
 ==============
+
+Vsync Core v3.0.4 is a mandatory update for all users. This release contains various updates/fixes pertaining to the zVSX protocol, supply tracking, block transmission and relaying, as well as usability and quality-of-life updates to the GUI.
+
+Users will have a grace period to update their clients before versions prior to this release are no longer allowed to connect to this (and future) version(s).
 
 
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/Vsync-Qt (on Mac) or vsyncd/vsync-qt (on Linux).
+
 
 Compatibility
 ==============
 
-PIVX Core is extensively tested on multiple operating systems using
+Vsync Core is extensively tested on multiple operating systems using
 the Linux kernel, macOS 10.8+, and Windows Vista and later.
 
 Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support),
@@ -31,48 +35,37 @@ No attempt is made to prevent installing or running the software on Windows XP, 
 can still do so at your own risk but be aware that there are known instabilities and issues.
 Please do not report issues about Windows XP to the issue tracker.
 
-PIVX Core should also work on most other Unix-like systems but is not
+Vsync Core should also work on most other Unix-like systems but is not
 frequently tested on them.
+
+### :exclamation::exclamation::exclamation: MacOS 10.13 High Sierra :exclamation::exclamation::exclamation:
+
+**Currently there are issues with the 3.0.x gitian releases on MacOS version 10.13 (High Sierra), no reports of issues on older versions of MacOS.**
+
 
 Notable Changes
 ===============
 
-Random-cookie RPC authentication
----------------------------------
+Refactoring of zVSX Spend Validation Code
+---------------------
+zVSX spend validation was too rigid and did not give enough slack for reorganizations. Many staking wallets were unable to reorganize back to the correct blockchain when they had an orphan stake which contained a zVSX spend. zVSX double spending validation has been refactored to properly account for reorganization.
 
-When no `-rpcpassword` is specified, the daemon now uses a special 'cookie'
-file for authentication. This file is generated with random content when the
-daemon starts, and deleted when it exits. Its contents are used as
-authentication token. Read access to this file controls who can access through
-RPC. By default it is stored in the data directory but its location can be
-overridden with the option `-rpccookiefile`.
+Money Supply Calculation Fix
+---------------------
+Coin supply incorrectly was counting spent zVSX as newly minted coins that are added to the coin supply, thus resulting in innacurate coin supply data.
 
-This is similar to Tor's CookieAuthentication: see
-https://www.torproject.org/docs/tor-manual.html.en
+The coin supply is now correctly calculated and if a new wallet client is synced from scratch or if `-reindex=1` is used then the correct money supply will be calculated. If neither of these two options are used, the wallet client will automatically reindex the money supply calculations upon the first time opening the software after updating to v3.0.4. The reindex takes approximately 10-60 minutes depending on the hardware used. If the reindex is exited mid-process, it will continue where it left off upon restart.
 
-This allows running pivxd without having to do any manual configuration.
+Better Filtering of Transactions in Stake Miner
+---------------------
+The stake miner code now filters out zVSX double spends that were rarely being slipped into blocks (and being rejected by peers when sent broadcast).
 
-
-Autocombine changes
----------------------------------
-
-The autocombine feature was carrying a bug leading to a significant CPU overhead
-when being used. The function is now called only once initial blockchain
-download is finished. It's also now avoiding to combine several times while
-under the threshold in order to avoid additional transaction fees. Last but not
-least, the fee computation as been changed and the dust from fee provisioning
-is returned in the main output.
+More Responsive Shutdown Requests
+---------------------
+When computationally expensive accumulator calculations are being performed and the user requests to close the application, the wallet will exit much sooner than before.
 
 
-SOCKS5 Proxy bug
----------------------------------
-
-When inputting wrong data into the GUI for a SOCKS5 proxy, the wallet would
-crash and be unable to restart without accessing hidden configuration.
-This crash has been fixed.
-
-
-*version* Change log
+3.0.4 Change log
 =================
 
 Detailed release notes follow. This overview includes changes that affect
@@ -80,15 +73,48 @@ behavior, not code moves, refactors and string updates. For convenience in locat
 the code changes and accompanying discussion, both the pull request and
 git merge commit are mentioned.
 
-### Broad Features
 ### P2P Protocol and Network Code
+- #294 `27c0943` Add additional checks for txid for zvsx spend. (presstab)
+- #301 `b8392cd` Refactor zVSX tx counting code. Add a final check in ConnectBlock() (presstab)
+- #306 `77dd55c` [Core] Don't send not-validated blocks (Mrs-X)
+- #312 `5d79bea` [Main] Update last checkpoint data (Fuzzbawls)
+- #325 `7d98ebe` Reindex zVSX blocks and correct stats. (presstab)
+- #327 `aa1235a` [Main] Don't limit zVSX spends from getting into the mempool (Fuzzbawls)
+- #329 `19b38b2` Update checkpoints. (presstab)
+- #331 `b1fb710` [Consensus] Bump protocol. Activate via Spork 15. (rejectedpromise)
+
+### Wallet
+- #308 `bd8a982` [Minting] Clear mempool after invalid block from miner (presstab)
+- #316 `ed192cf` [Minting] Better filtering of zVSX serials in miner. (presstab)
+
 ### GUI
+- #309 `f560ffc` [UI] Better error message when too much inputs are used for spending zVSX (Mrs-X)
+- #317 `b27cb72` [UI] Wallet repair option to resync from scratch (Mrs-X)
+- #323 `2b648be` [UI] Balance fix + bubble-help + usability improvements (Mrs-X)
+- #324 `8cdbb5d` disable negative confirmation numbers. (Mrs-X)
+
+### Build System
+- #322 `a91feb3` [Build] Add compile/link summary to configure (Fuzzbawls)
+
 ### Miscellaneous
+- #298 `3580394` Reorg help to stop travis errors (Jon Spock)
+- #302 `efb648b` [Cleanup] Remove unused variables (rejectedpromise)
+- #307 `dbd801d` Remove hard-coded GIT_ARCHIVE define (Jon Spock)
+- #314 `f1c830a` Fix issue causing crash when vsyncd --help was invoked (Jon Spock)
+- #326 `8b6a13e` Combine 2 LogPrintf statement to reduce debug.log clutter (Jon Spock)
+- #328 `a6c18c8` [Main] Vsync not responding on user quitting app (Aaron Langford)
+
 
 Credits
 =======
 
 Thanks to everyone who directly contributed to this release:
+- Fuzzbawls
+- Jon Spock
+- Mrs-X
+- furszy
+- presstab
+- rejectedpromise
+- aaronlangford31
 
-
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/).
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/vsync-project-translations/).

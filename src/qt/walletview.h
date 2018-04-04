@@ -6,7 +6,6 @@
 #define BITCOIN_QT_WALLETVIEW_H
 
 #include "amount.h"
-#include "askpassphrasedialog.h"
 #include "masternodelist.h"
 
 #include <QStackedWidget>
@@ -113,7 +112,7 @@ public slots:
     /** Change encrypted wallet passphrase */
     void changePassphrase();
     /** Ask for passphrase to unlock wallet temporarily */
-    void unlockWallet(AskPassphraseDialog::Context context);
+    void unlockWallet();
     /** Lock wallet */
     void lockWallet();
     /** Toggle wallet lock state */
@@ -130,7 +129,7 @@ public slots:
     /** Show progress dialog e.g. for rescan */
     void showProgress(const QString& title, int nProgress);
 
-    /** Update selected PIV amount from transactionview */
+    /** Update selected VSX amount from transactionview */
     void trxAmount(QString amount);
 
 signals:

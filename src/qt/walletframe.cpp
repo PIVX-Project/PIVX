@@ -211,21 +211,11 @@ void WalletFrame::changePassphrase()
         walletView->changePassphrase();
 }
 
-void WalletFrame::unlockWallet(bool setContext)
-{
-    if (setContext) {
-        unlockWallet(AskPassphraseDialog::Context::Unlock_Full);
-    }
-    else {
-        unlockWallet(AskPassphraseDialog::Context::Unlock_Menu);
-    }
-}
-
-void WalletFrame::unlockWallet(AskPassphraseDialog::Context context)
+void WalletFrame::unlockWallet()
 {
     WalletView* walletView = currentWalletView();
     if (walletView)
-        walletView->unlockWallet(context);
+        walletView->unlockWallet();
 }
 
 void WalletFrame::lockWallet()

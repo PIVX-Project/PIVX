@@ -18,7 +18,7 @@ using namespace libzerocoin;
 BOOST_AUTO_TEST_SUITE(zerocoin_denom_tests)
 
 
-//translation from pivx quantity to zerocoin denomination
+//translation from vsync quantity to zerocoin denomination
 BOOST_AUTO_TEST_CASE(amount_to_denomination_test)
 {
     cout << "Running amount_to_denomination_test...\n";

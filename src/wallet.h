@@ -2,6 +2,7 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2017-2018 The Vsync developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -80,29 +81,29 @@ enum AvailableCoinsType {
     ALL_COINS = 1,
     ONLY_DENOMINATED = 2,
     ONLY_NOT10000IFMN = 3,
-    ONLY_NONDENOMINATED_NOT10000IFMN = 4, // ONLY_NONDENOMINATED and not 10000 PIV at the same time
+    ONLY_NONDENOMINATED_NOT10000IFMN = 4, // ONLY_NONDENOMINATED and not 10000 VSX at the same time
     ONLY_10000 = 5,                        // find masternode outputs including locked ones (use with caution)
     STAKABLE_COINS = 6                          // UTXO's that are valid for staking
 };
 
-// Possible states for zPIV send
+// Possible states for zVSX send
 enum ZerocoinSpendStatus {
-    ZPIV_SPEND_OKAY = 0,                            // No error
-    ZPIV_SPEND_ERROR = 1,                           // Unspecified class of errors, more details are (hopefully) in the returning text
-    ZPIV_WALLET_LOCKED = 2,                         // Wallet was locked
-    ZPIV_COMMIT_FAILED = 3,                         // Commit failed, reset status
-    ZPIV_ERASE_SPENDS_FAILED = 4,                   // Erasing spends during reset failed
-    ZPIV_ERASE_NEW_MINTS_FAILED = 5,                // Erasing new mints during reset failed
-    ZPIV_TRX_FUNDS_PROBLEMS = 6,                    // Everything related to available funds
-    ZPIV_TRX_CREATE = 7,                            // Everything related to create the transaction
-    ZPIV_TRX_CHANGE = 8,                            // Everything related to transaction change
-    ZPIV_TXMINT_GENERAL = 9,                        // General errors in MintToTxIn
-    ZPIV_INVALID_COIN = 10,                         // Selected mint coin is not valid
-    ZPIV_FAILED_ACCUMULATOR_INITIALIZATION = 11,    // Failed to initialize witness
-    ZPIV_INVALID_WITNESS = 12,                      // Spend coin transaction did not verify
-    ZPIV_BAD_SERIALIZATION = 13,                    // Transaction verification failed
-    ZPIV_SPENT_USED_ZPIV = 14,                      // Coin has already been spend
-    ZPIV_TX_TOO_LARGE = 15                          // The transaction is larger than the max tx size
+    ZVSX_SPEND_OKAY = 0,                            // No error
+    ZVSX_SPEND_ERROR = 1,                           // Unspecified class of errors, more details are (hopefully) in the returning text
+    ZVSX_WALLET_LOCKED = 2,                         // Wallet was locked
+    ZVSX_COMMIT_FAILED = 3,                         // Commit failed, reset status
+    ZVSX_ERASE_SPENDS_FAILED = 4,                   // Erasing spends during reset failed
+    ZVSX_ERASE_NEW_MINTS_FAILED = 5,                // Erasing new mints during reset failed
+    ZVSX_TRX_FUNDS_PROBLEMS = 6,                    // Everything related to available funds
+    ZVSX_TRX_CREATE = 7,                            // Everything related to create the transaction
+    ZVSX_TRX_CHANGE = 8,                            // Everything related to transaction change
+    ZVSX_TXMINT_GENERAL = 9,                        // General errors in MintToTxIn
+    ZVSX_INVALID_COIN = 10,                         // Selected mint coin is not valid
+    ZVSX_FAILED_ACCUMULATOR_INITIALIZATION = 11,    // Failed to initialize witness
+    ZVSX_INVALID_WITNESS = 12,                      // Spend coin transaction did not verify
+    ZVSX_BAD_SERIALIZATION = 13,                    // Transaction verification failed
+    ZVSX_SPENT_USED_ZVSX = 14,                      // Coin has already been spend
+    ZVSX_TX_TOO_LARGE = 15                          // The transaction is larger than the max tx size
 };
 
 struct CompactTallyItem {
@@ -202,13 +203,12 @@ public:
     bool CreateZerocoinMintTransaction(const CAmount nValue, CMutableTransaction& txNew, vector<CZerocoinMint>& vMints, CReserveKey* reservekey, int64_t& nFeeRet, std::string& strFailReason, const CCoinControl* coinControl = NULL, const bool isZCSpendChange = false);
     bool CreateZerocoinSpendTransaction(CAmount nValue, int nSecurityLevel, CWalletTx& wtxNew, CReserveKey& reserveKey, CZerocoinSpendReceipt& receipt, vector<CZerocoinMint>& vSelectedMints, vector<CZerocoinMint>& vNewMints, bool fMintChange,  bool fMinimizeChange, CBitcoinAddress* address = NULL);
     bool MintToTxIn(CZerocoinMint zerocoinSelected, int nSecurityLevel, const uint256& hashTxOut, CTxIn& newTxIn, CZerocoinSpendReceipt& receipt);
-    std::string MintZerocoinFromOutPoint(CAmount nValue, CWalletTx& wtxNew, vector<CZerocoinMint>& vMints, const vector<COutPoint> vOutpts);
     std::string MintZerocoin(CAmount nValue, CWalletTx& wtxNew, vector<CZerocoinMint>& vMints, const CCoinControl* coinControl = NULL);
     bool SpendZerocoin(CAmount nValue, int nSecurityLevel, CWalletTx& wtxNew, CZerocoinSpendReceipt& receipt, vector<CZerocoinMint>& vMintsSelected, bool fMintChange, bool fMinimizeChange, CBitcoinAddress* addressTo = NULL);
     std::string ResetMintZerocoin(bool fExtendedSearch);
     std::string ResetSpentZerocoin();
     void ReconsiderZerocoins(std::list<CZerocoinMint>& listMintsRestored);
-    void ZPivBackupWallet();
+    void ZVSXBackupWallet();
 
     /** Zerocin entry changed.
     * @note called with lock cs_wallet held.
@@ -306,17 +306,12 @@ public:
         nAutoCombineThreshold = 0;
     }
 
-    int getZeromintPercentage()
-    {
-        return nZeromintPercentage;
-    }
-
     bool isZeromintEnabled()
     {
         return fEnableZeromint;
     }
 
-    void setZPivAutoBackups(bool fEnabled)
+    void setZVSXAutoBackups(bool fEnabled)
     {
         fBackupMints = fEnabled;
     }
@@ -333,11 +328,6 @@ public:
     }
 
     std::map<uint256, CWalletTx> mapWallet;
-    std::list<CAccountingEntry> laccentries;
-
-    typedef std::pair<CWalletTx*, CAccountingEntry*> TxPair;
-    typedef std::multimap<int64_t, TxPair > TxItems;
-    TxItems wtxOrdered;
 
     int64_t nOrderPosNext;
     std::map<uint256, int> mapRequestCount;
@@ -359,7 +349,7 @@ public:
         return nWalletMaxVersion >= wf;
     }
 
-    void AvailableCoins(std::vector<COutput>& vCoins, bool fOnlyConfirmed = true, const CCoinControl* coinControl = NULL, bool fIncludeZeroValue = false, AvailableCoinsType nCoinType = ALL_COINS, bool fUseIX = false, int nWatchonlyConfig = 1) const;
+    void AvailableCoins(std::vector<COutput>& vCoins, bool fOnlyConfirmed = true, const CCoinControl* coinControl = NULL, bool fIncludeZeroValue = false, AvailableCoinsType nCoinType = ALL_COINS, bool fUseIX = false) const;
     std::map<CBitcoinAddress, std::vector<COutput> > AvailableCoinsByAddress(bool fConfirmed = true, CAmount maxCoinValue = 0);
     bool SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, std::vector<COutput> vCoins, std::set<std::pair<const CWalletTx*, unsigned int> >& setCoinsRet, CAmount& nValueRet) const;
 
@@ -429,13 +419,22 @@ public:
     bool EncryptWallet(const SecureString& strWalletPassphrase);
 
     void GetKeyBirthTimes(std::map<CKeyID, int64_t>& mapKeyBirth) const;
-    unsigned int ComputeTimeSmart(const CWalletTx& wtx) const;
 
     /**
      * Increment the next transaction order id
      * @return next transaction order id
      */
     int64_t IncOrderPosNext(CWalletDB* pwalletdb = NULL);
+
+    typedef std::pair<CWalletTx*, CAccountingEntry*> TxPair;
+    typedef std::multimap<int64_t, TxPair> TxItems;
+
+    /**
+     * Get the wallet's activity log
+     * @return multimap of ordered transactions and accounting entries
+     * @warning Returned pointers are *only* valid within the scope of passed acentries
+     */
+    TxItems OrderedTxItems(std::list<CAccountingEntry>& acentries, std::string strAccount = "");
 
     void MarkDirty();
     bool AddToWallet(const CWalletTx& wtxIn, bool fFromLoadWallet = false);
@@ -462,7 +461,6 @@ public:
     CAmount GetWatchOnlyBalance() const;
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;
-    CAmount GetLockedWatchOnlyBalance() const;
     bool CreateTransaction(CScript scriptPubKey, int64_t nValue, CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, std::string& strFailReason, const CCoinControl* coinControl);
     bool CreateTransaction(const std::vector<std::pair<CScript, CAmount> >& vecSend,
         CWalletTx& wtxNew,
@@ -475,7 +473,6 @@ public:
         CAmount nFeePay = 0);
     bool CreateTransaction(CScript scriptPubKey, const CAmount& nValue, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet, std::string& strFailReason, const CCoinControl* coinControl = NULL, AvailableCoinsType coin_type = ALL_COINS, bool useIX = false, CAmount nFeePay = 0);
     bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, std::string strCommand = "tx");
-    bool AddAccountingEntry(const CAccountingEntry&, CWalletDB & pwalletdb);
     std::string PrepareObfuscationDenominate(int minRounds, int maxRounds);
     int GenerateObfuscationOutputs(int nTotalValue, std::vector<CTxOut>& vout);
     bool CreateCollateralTransaction(CMutableTransaction& txCollateral, std::string& strReason);
@@ -642,9 +639,6 @@ public:
 
     /** MultiSig address added */
     boost::signals2::signal<void(bool fHaveMultiSig)> NotifyMultiSigChanged;
-
-    /** zPIV reset */
-    boost::signals2::signal<void()> NotifyzPIVReset;
 };
 
 
@@ -943,20 +937,314 @@ public:
     }
 
     //! filter decides which addresses will count towards the debit
-    CAmount GetDebit(const isminefilter& filter) const;
-    CAmount GetCredit(const isminefilter& filter) const;
-    CAmount GetImmatureCredit(bool fUseCache = true) const;
-    CAmount GetAvailableCredit(bool fUseCache = true) const;
-    CAmount GetAnonymizableCredit(bool fUseCache = true) const;
-    CAmount GetAnonymizedCredit(bool fUseCache = true) const;
+    CAmount GetDebit(const isminefilter& filter) const
+    {
+        if (vin.empty())
+            return 0;
+
+        CAmount debit = 0;
+        if (filter & ISMINE_SPENDABLE) {
+            if (fDebitCached)
+                debit += nDebitCached;
+            else {
+                nDebitCached = pwallet->GetDebit(*this, ISMINE_SPENDABLE);
+                fDebitCached = true;
+                debit += nDebitCached;
+            }
+        }
+        if (filter & ISMINE_WATCH_ONLY) {
+            if (fWatchDebitCached)
+                debit += nWatchDebitCached;
+            else {
+                nWatchDebitCached = pwallet->GetDebit(*this, ISMINE_WATCH_ONLY);
+                fWatchDebitCached = true;
+                debit += nWatchDebitCached;
+            }
+        }
+        return debit;
+    }
+
+    CAmount GetCredit(const isminefilter& filter) const
+    {
+        // Must wait until coinbase is safely deep enough in the chain before valuing it
+        if (IsCoinBase() && GetBlocksToMaturity() > 0)
+            return 0;
+
+        CAmount credit = 0;
+        if (filter & ISMINE_SPENDABLE) {
+            // GetBalance can assume transactions in mapWallet won't change
+            if (fCreditCached)
+                credit += nCreditCached;
+            else {
+                nCreditCached = pwallet->GetCredit(*this, ISMINE_SPENDABLE);
+                fCreditCached = true;
+                credit += nCreditCached;
+            }
+        }
+        if (filter & ISMINE_WATCH_ONLY) {
+            if (fWatchCreditCached)
+                credit += nWatchCreditCached;
+            else {
+                nWatchCreditCached = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY);
+                fWatchCreditCached = true;
+                credit += nWatchCreditCached;
+            }
+        }
+        return credit;
+    }
+
+    CAmount GetImmatureCredit(bool fUseCache = true) const
+    {
+        if ((IsCoinBase() || IsCoinStake()) && GetBlocksToMaturity() > 0 && IsInMainChain()) {
+            if (fUseCache && fImmatureCreditCached)
+                return nImmatureCreditCached;
+            nImmatureCreditCached = pwallet->GetCredit(*this, ISMINE_SPENDABLE);
+            fImmatureCreditCached = true;
+            return nImmatureCreditCached;
+        }
+
+        return 0;
+    }
+
+    CAmount GetAvailableCredit(bool fUseCache = true) const
+    {
+        if (pwallet == 0)
+            return 0;
+
+        // Must wait until coinbase is safely deep enough in the chain before valuing it
+        if (IsCoinBase() && GetBlocksToMaturity() > 0)
+            return 0;
+
+        if (fUseCache && fAvailableCreditCached)
+            return nAvailableCreditCached;
+
+        CAmount nCredit = 0;
+        uint256 hashTx = GetHash();
+        for (unsigned int i = 0; i < vout.size(); i++) {
+            if (!pwallet->IsSpent(hashTx, i)) {
+                const CTxOut& txout = vout[i];
+                nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                if (!MoneyRange(nCredit))
+                    throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+            }
+        }
+
+        nAvailableCreditCached = nCredit;
+        fAvailableCreditCached = true;
+        return nCredit;
+    }
+
+    CAmount GetAnonymizableCredit(bool fUseCache = true) const
+    {
+        if (pwallet == 0)
+            return 0;
+
+        // Must wait until coinbase is safely deep enough in the chain before valuing it
+        if (IsCoinBase() && GetBlocksToMaturity() > 0)
+            return 0;
+
+        if (fUseCache && fAnonymizableCreditCached)
+            return nAnonymizableCreditCached;
+
+        CAmount nCredit = 0;
+        uint256 hashTx = GetHash();
+        for (unsigned int i = 0; i < vout.size(); i++) {
+            const CTxOut& txout = vout[i];
+            const CTxIn vin = CTxIn(hashTx, i);
+
+            if (pwallet->IsSpent(hashTx, i) || pwallet->IsLockedCoin(hashTx, i)) continue;
+            if (fMasterNode && vout[i].nValue == 250000 * COIN) continue; // do not count MN-like outputs
+
+            const int rounds = pwallet->GetInputObfuscationRounds(vin);
+            if (rounds >= -2 && rounds < nZeromintPercentage) {
+                nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                if (!MoneyRange(nCredit))
+                    throw std::runtime_error("CWalletTx::GetAnonamizableCredit() : value out of range");
+            }
+        }
+
+        nAnonymizableCreditCached = nCredit;
+        fAnonymizableCreditCached = true;
+        return nCredit;
+    }
+
+    CAmount GetAnonymizedCredit(bool fUseCache = true) const
+    {
+        if (pwallet == 0)
+            return 0;
+
+        // Must wait until coinbase is safely deep enough in the chain before valuing it
+        if (IsCoinBase() && GetBlocksToMaturity() > 0)
+            return 0;
+
+        if (fUseCache && fAnonymizedCreditCached)
+            return nAnonymizedCreditCached;
+
+        CAmount nCredit = 0;
+        uint256 hashTx = GetHash();
+        for (unsigned int i = 0; i < vout.size(); i++) {
+            const CTxOut& txout = vout[i];
+            const CTxIn vin = CTxIn(hashTx, i);
+
+            if (pwallet->IsSpent(hashTx, i) || !pwallet->IsDenominated(vin)) continue;
+
+            const int rounds = pwallet->GetInputObfuscationRounds(vin);
+            if (rounds >= nZeromintPercentage) {
+                nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+                if (!MoneyRange(nCredit))
+                    throw std::runtime_error("CWalletTx::GetAnonymizedCredit() : value out of range");
+            }
+        }
+
+        nAnonymizedCreditCached = nCredit;
+        fAnonymizedCreditCached = true;
+        return nCredit;
+    }
+
     // Return sum of unlocked coins
-    CAmount GetUnlockedCredit() const;
-    // Return sum of unlocked coins
-    CAmount GetLockedCredit() const;
-    CAmount GetDenominatedCredit(bool unconfirmed, bool fUseCache = true) const;
-    CAmount GetImmatureWatchOnlyCredit(const bool& fUseCache = true) const;
-    CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache = true) const;        
-    CAmount GetLockedWatchOnlyCredit() const;
+    CAmount GetUnlockedCredit() const
+    {
+        if (pwallet == 0)
+            return 0;
+
+        // Must wait until coinbase is safely deep enough in the chain before valuing it
+        if (IsCoinBase() && GetBlocksToMaturity() > 0)
+            return 0;
+
+        CAmount nCredit = 0;
+        uint256 hashTx = GetHash();
+        for (unsigned int i = 0; i < vout.size(); i++) {
+            const CTxOut& txout = vout[i];
+
+            if (pwallet->IsSpent(hashTx, i) || pwallet->IsLockedCoin(hashTx, i)) continue;
+            if (fMasterNode && vout[i].nValue == 250000 * COIN) continue; // do not count MN-like outputs
+
+            nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+            if (!MoneyRange(nCredit))
+                throw std::runtime_error("CWalletTx::GetUnlockedCredit() : value out of range");
+        }
+
+        return nCredit;
+    }
+
+        // Return sum of unlocked coins
+    CAmount GetLockedCredit() const
+    {
+        if (pwallet == 0)
+            return 0;
+
+        // Must wait until coinbase is safely deep enough in the chain before valuing it
+        if (IsCoinBase() && GetBlocksToMaturity() > 0)
+            return 0;
+
+        CAmount nCredit = 0;
+        uint256 hashTx = GetHash();
+        for (unsigned int i = 0; i < vout.size(); i++) {
+            const CTxOut& txout = vout[i];
+
+            // Skip spent coins
+            if (pwallet->IsSpent(hashTx, i)) continue;
+
+            // Add locked coins
+            if (pwallet->IsLockedCoin(hashTx, i)) {
+                nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+            }
+
+            // Add masternode collaterals which are handled likc locked coins
+            if (fMasterNode && vout[i].nValue == 250000 * COIN) {
+                nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+            }
+
+            if (!MoneyRange(nCredit))
+                throw std::runtime_error("CWalletTx::GetLockedCredit() : value out of range");
+        }
+
+        return nCredit;
+    }
+
+    CAmount GetDenominatedCredit(bool unconfirmed, bool fUseCache = true) const
+    {
+        if (pwallet == 0)
+            return 0;
+
+        // Must wait until coinbase is safely deep enough in the chain before valuing it
+        if (IsCoinBase() && GetBlocksToMaturity() > 0)
+            return 0;
+
+        int nDepth = GetDepthInMainChain(false);
+        if (nDepth < 0) return 0;
+
+        bool isUnconfirmed = !IsFinalTx(*this) || (!IsTrusted() && nDepth == 0);
+        if (unconfirmed != isUnconfirmed) return 0;
+
+        if (fUseCache) {
+            if (unconfirmed && fDenomUnconfCreditCached)
+                return nDenomUnconfCreditCached;
+            else if (!unconfirmed && fDenomConfCreditCached)
+                return nDenomConfCreditCached;
+        }
+
+        CAmount nCredit = 0;
+        uint256 hashTx = GetHash();
+        for (unsigned int i = 0; i < vout.size(); i++) {
+            const CTxOut& txout = vout[i];
+
+            if (pwallet->IsSpent(hashTx, i) || !pwallet->IsDenominatedAmount(vout[i].nValue)) continue;
+
+            nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
+            if (!MoneyRange(nCredit))
+                throw std::runtime_error("CWalletTx::GetDenominatedCredit() : value out of range");
+        }
+
+        if (unconfirmed) {
+            nDenomUnconfCreditCached = nCredit;
+            fDenomUnconfCreditCached = true;
+        } else {
+            nDenomConfCreditCached = nCredit;
+            fDenomConfCreditCached = true;
+        }
+        return nCredit;
+    }
+
+    CAmount GetImmatureWatchOnlyCredit(const bool& fUseCache = true) const
+    {
+        if (IsCoinBase() && GetBlocksToMaturity() > 0 && IsInMainChain()) {
+            if (fUseCache && fImmatureWatchCreditCached)
+                return nImmatureWatchCreditCached;
+            nImmatureWatchCreditCached = pwallet->GetCredit(*this, ISMINE_WATCH_ONLY);
+            fImmatureWatchCreditCached = true;
+            return nImmatureWatchCreditCached;
+        }
+
+        return 0;
+    }
+
+    CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache = true) const
+    {
+        if (pwallet == 0)
+            return 0;
+
+        // Must wait until coinbase is safely deep enough in the chain before valuing it
+        if (IsCoinBase() && GetBlocksToMaturity() > 0)
+            return 0;
+
+        if (fUseCache && fAvailableWatchCreditCached)
+            return nAvailableWatchCreditCached;
+
+        CAmount nCredit = 0;
+        for (unsigned int i = 0; i < vout.size(); i++) {
+            if (!pwallet->IsSpent(GetHash(), i)) {
+                const CTxOut& txout = vout[i];
+                nCredit += pwallet->GetCredit(txout, ISMINE_WATCH_ONLY);
+                if (!MoneyRange(nCredit))
+                    throw std::runtime_error("CWalletTx::GetAvailableCredit() : value out of range");
+            }
+        }
+
+        nAvailableWatchCreditCached = nCredit;
+        fAvailableWatchCreditCached = true;
+        return nCredit;
+    }
 
     CAmount GetChange() const
     {

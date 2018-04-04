@@ -2,6 +2,7 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2017-2018 The Vsync developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -275,7 +276,7 @@ bool CWalletDB::WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccount
     return Write(std::make_pair(std::string("acentry"), std::make_pair(acentry.strAccount, nAccEntryNum)), acentry);
 }
 
-bool CWalletDB::WriteAccountingEntry_Backend(const CAccountingEntry& acentry)
+bool CWalletDB::WriteAccountingEntry(const CAccountingEntry& acentry)
 {
     return WriteAccountingEntry(++nAccountingEntryNumber, acentry);
 }
@@ -760,12 +761,6 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
     if (wss.fAnyUnordered)
         result = ReorderTransactions(pwallet);
 
-    pwallet->laccentries.clear();
-    ListAccountCreditDebit("*", pwallet->laccentries);
-    BOOST_FOREACH(CAccountingEntry& entry, pwallet->laccentries) {
-        pwallet->wtxOrdered.insert(make_pair(entry.nOrderPos, CWallet::TxPair((CWalletTx*)0, &entry)));
-    }
-
     return result;
 }
 
@@ -849,7 +844,7 @@ DBErrors CWalletDB::ZapWalletTx(CWallet* pwallet, vector<CWalletTx>& vWtx)
 void ThreadFlushWalletDB(const string& strFile)
 {
     // Make this thread recognisable as the wallet flushing thread
-    RenameThread("pivx-wallet");
+    RenameThread("vsync-wallet");
 
     static bool fOneThread;
     if (fOneThread)
