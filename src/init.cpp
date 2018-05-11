@@ -207,7 +207,10 @@ void PrepareShutdown()
 #endif
     StopNode();
     DumpMasternodes();
-    DumpBudgets();
+    // Use budget cache only when explicitely wanted
+    if (GetBoolArg("-budgetcache", false)) {
+        DumpBudgets();
+    }
     DumpMasternodePayments();
     UnregisterNodeSignals(GetNodeSignals());
 
@@ -360,6 +363,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-alerts", strprintf(_("Receive and display P2P network alerts (default: %u)"), DEFAULT_ALERTS));
     strUsage += HelpMessageOpt("-blocknotify=<cmd>", _("Execute command when the best block changes (%s in cmd is replaced by block hash)"));
     strUsage += HelpMessageOpt("-blocksizenotify=<cmd>", _("Execute command when the best block changes and its size is over (%s in cmd is replaced by block hash, %d with the block size)"));
+    strUsage += HelpMessageOpt("-budgetcache", _("Cache budget information in budget.dat (default: 0 (no caching))"));
     strUsage += HelpMessageOpt("-checkblocks=<n>", strprintf(_("How many blocks to check at startup (default: %u, 0 = all)"), 500));
     strUsage += HelpMessageOpt("-conf=<file>", strprintf(_("Specify configuration file (default: %s)"), "pivx.conf"));
     if (mode == HMM_BITCOIND) {
@@ -1756,19 +1760,22 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
             LogPrintf("file format is unknown or invalid, please fix it manually\n");
     }
 
-    uiInterface.InitMessage(_("Loading budget cache..."));
+    // Use budget cache only when explicitely wanted
+    if (GetBoolArg("-budgetcache", false)) {
+        uiInterface.InitMessage(_("Loading budget cache..."));
 
-    CBudgetDB budgetdb;
-    CBudgetDB::ReadResult readResult2 = budgetdb.Read(budget);
+        CBudgetDB budgetdb;
+        CBudgetDB::ReadResult readResult2 = budgetdb.Read(budget);
 
-    if (readResult2 == CBudgetDB::FileError)
-        LogPrintf("Missing budget cache - budget.dat, will try to recreate\n");
-    else if (readResult2 != CBudgetDB::Ok) {
-        LogPrintf("Error reading budget.dat: ");
-        if (readResult2 == CBudgetDB::IncorrectFormat)
-            LogPrintf("magic is ok but data has invalid format, will try to recreate\n");
-        else
-            LogPrintf("file format is unknown or invalid, please fix it manually\n");
+        if (readResult2 == CBudgetDB::FileError)
+            LogPrintf("Missing budget cache - budget.dat, will try to recreate\n");
+        else if (readResult2 != CBudgetDB::Ok) {
+            LogPrintf("Error reading budget.dat: ");
+            if (readResult2 == CBudgetDB::IncorrectFormat)
+                LogPrintf("magic is ok but data has invalid format, will try to recreate\n");
+            else
+                LogPrintf("file format is unknown or invalid, please fix it manually\n");
+        }
     }
 
     //flag our cached items so we send them to our peers

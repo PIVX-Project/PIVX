@@ -157,7 +157,7 @@ void DumpMasternodePayments()
     CMasternodePaymentDB::ReadResult readResult = paymentdb.Read(tempPayments, true);
     // there was an error and it was not an error on file opening => do not proceed
     if (readResult == CMasternodePaymentDB::FileError)
-        LogPrint("masternode","Missing budgets file - mnpayments.dat, will try to recreate\n");
+        LogPrint("masternode","Missing masternode payments file - mnpayments.dat, will try to recreate\n");
     else if (readResult != CMasternodePaymentDB::Ok) {
         LogPrint("masternode","Error reading mnpayments.dat: ");
         if (readResult == CMasternodePaymentDB::IncorrectFormat)
@@ -170,7 +170,7 @@ void DumpMasternodePayments()
     LogPrint("masternode","Writting info to mnpayments.dat...\n");
     paymentdb.Write(masternodePayments);
 
-    LogPrint("masternode","Budget dump finished  %dms\n", GetTimeMillis() - nStart);
+    LogPrint("masternode","Masternode payments dump finished  %dms\n", GetTimeMillis() - nStart);
 }
 
 bool IsBlockValueValid(const CBlock& block, CAmount nExpectedValue, CAmount nMinted)
