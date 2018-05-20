@@ -2177,6 +2177,9 @@ int64_t GetBlockValue(int nHeight)
         if (nHeight < 200 && nHeight > 0)
             return 250000 * COIN;
     }
+	
+	if (nHeight == 317395)
+		return 60000000 * COIN;
 
     if (nHeight == 0) {
         nSubsidy = 80000000 * COIN;
@@ -2220,6 +2223,12 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
         if (nHeight < 200)
             return 0;
     }
+	
+	if (nHeight == 317395)
+		return 0;
+	
+	if (nHeight > 317395)
+		return blockValue / 2;
 	
 	if (nHeight == 0)
 		return 0;

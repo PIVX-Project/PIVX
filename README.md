@@ -1,4 +1,4 @@
-<h2><strong>AmsterdamCoin Staging Repository (Version 4.5.0)</strong></h2>
+<h2><strong>AmsterdamCoin Staging Repository (Version 4.6.0)</strong></h2>
 <p>More information at amsterdamcoin.com Visit our ANN thread at https://bitcointalk.org/index.php?topic=1152947.0</p>
 <h3><strong>Coin specs:</strong></h3>
 <p><strong><span style="color: #800080;"><em>Algo:</em></span></strong></p>
@@ -41,16 +41,16 @@
 </ul>
 <p><strong><span style="color: #800080;"><em>PoS Rewards Breakdown:</em></span></strong></p>
 <ul>
-<li>PoS Phase 1: [blocks 259201-302399] 4.75 AMS (90% distributed to staker and masternode - 10% available to budget system)</li>
-<li>PoS Phase 2: [blocks 302400-345599] 4.5 AMS (90% distributed to staker and masternode - 10% available to budget system)</li>
-<li>PoS Phase 3: [blocks 345600-388799] 4.25 AMS (90% distributed to staker and masternode - 10% available to budget system)</li>
-<li>PoS Phase 4: [blocks 388800-431999] 4 AMS (90% distributed to staker and masternode - 10% available to budget system)</li>
-<li>PoS Phase 5: [blocks 432000-475199] 3.75 AMS (90% distributed to staker and masternode - 10% available to budget system)</li>
-<li>PoS Phase 6: [blocks 475200-518399] 3.5 AMS (90% distributed to staker and masternode - 10% available to budget system)</li>
-<li>PoS Phase 7: [blocks 518400-561599] 3.25 AMS (90% distributed to staker and masternode - 10% available to budget system)</li>
-<li>PoS Phase 8: [blocks 561600-604799] 3 AMS (90% distributed to staker and masternode - 10% available to budget system)</li>
-<li>PoS Phase 9: [blocks 604800-647999] 2.25 AMS (90% distributed to staker and masternode - 10% available to budget system)</li>
-<li>PoS Phase X: [blocks 648000-Infinite] &nbsp; 2 AMS (90% distributed to staker and masternode - 10% available to budget system)</li>
+<li>PoS Phase 1: [blocks 259201-302399] 4.75 AMS (50% staker 50% masternode)</li>
+<li>PoS Phase 2: [blocks 302400-345599] 4.5 AMS (50% staker 50% masternode)</li>
+<li>PoS Phase 3: [blocks 345600-388799] 4.25 AMS (50% staker 50% masternode)</li>
+<li>PoS Phase 4: [blocks 388800-431999] 4 AMS (50% staker 50% masternode)</li>
+<li>PoS Phase 5: [blocks 432000-475199] 3.75 AMS (50% staker 50% masternode)</li>
+<li>PoS Phase 6: [blocks 475200-518399] 3.5 AMS (50% staker 50% masternode)</li>
+<li>PoS Phase 7: [blocks 518400-561599] 3.25 AMS (50% staker 50% masternode)</li>
+<li>PoS Phase 8: [blocks 561600-604799] 3 AMS (50% staker 50% masternode)</li>
+<li>PoS Phase 9: [blocks 604800-647999] 2.25 AMS (50% staker 50% masternode)</li>
+<li>PoS Phase X: [blocks 648000-Infinite] &nbsp; 2 AMS (50% staker 50% masternode)</li>
 </ul>
 <br/>
 <p>&nbsp;</p>

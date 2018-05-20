@@ -15,7 +15,7 @@
 
 //! These need to be macros, as clientversion.cpp's and amsterdamcoin*-res.rc's voodoo requires it
 #define CLIENT_VERSION_MAJOR 4
-#define CLIENT_VERSION_MINOR 5
+#define CLIENT_VERSION_MINOR 6
 #define CLIENT_VERSION_REVISION 0
 #define CLIENT_VERSION_BUILD 0
 
