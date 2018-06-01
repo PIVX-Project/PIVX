@@ -580,6 +580,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
     unsigned int nExtraNonce = 0;
+    int nHeightLast = 0;
 
     while (fGenerateBitcoins || fProofOfStake) {
         if (fProofOfStake) {
@@ -610,14 +611,16 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                     continue;
             }
 
-            if (mapHashedBlocks.count(chainActive.Tip()->nHeight)) //search our map of hashed blocks, see if bestblock has been hashed yet
+            if (nHeightLast == chainActive.Tip()->nHeight)
             {
                 if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < max(pwallet->nHashInterval, (unsigned int)1)) // wait half of the nHashDrift with max wait of 3 minutes
                 {
-                    MilliSleep(5000);
+                    MilliSleep(1000);
                     continue;
                 }
             }
+
+            nHeightLast = chainActive.Tip()->nHeight;
         }
 
         //

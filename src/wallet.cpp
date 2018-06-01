@@ -2959,11 +2959,13 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         return false;
 
     if (GetAdjustedTime() - chainActive.Tip()->GetBlockTime() < 60)
-        MilliSleep(10000);
+        MilliSleep(100);
 
     CAmount nCredit = 0;
     CScript scriptPubKeyKernel;
     bool fKernelFound = false;
+    int nHeightStart = chainActive.Height();
+
     for (std::unique_ptr<CStakeInput>& stakeInput : listInputs) {
         // Make sure the wallet is unlocked and shutdown hasn't been requested
         if (IsLocked() || ShutdownRequested())
@@ -2974,6 +2976,10 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         if (!pindex || pindex->nHeight < 1) {
             LogPrintf("*** no pindexfrom\n");
             continue;
+        }
+
+        if (chainActive.Height() != nHeightStart) {
+            return false;
         }
 
         // Read block header
