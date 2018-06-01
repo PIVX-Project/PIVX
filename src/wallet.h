@@ -304,9 +304,9 @@ public:
         fBackupMints = false;
 
         // Stake Settings
-        nHashDrift = 45;
+        nHashDrift = 60;
         nStakeSplitThreshold = 2000;
-        nHashInterval = 22;
+        nHashInterval = 2;
         nStakeSetUpdateTime = 300; // 5 minutes
 
         //MultiSend
