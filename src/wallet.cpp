@@ -4589,7 +4589,7 @@ bool CWallet::MintToTxIn(CZerocoinMint zerocoinSelected, int nSecurityLevel, con
     }
 
     // Construct the CoinSpend object. This acts like a signature on the transaction.
-    libzerocoin::PrivateCoin privateCoin(paramsCoin, denomination);
+    libzerocoin::PrivateCoin privateCoin(paramsCoin, denomination, false); 
     privateCoin.setPublicCoin(pubCoinSelected);
     privateCoin.setRandomness(zerocoinSelected.GetRandomness());
     privateCoin.setSerialNumber(zerocoinSelected.GetSerialNumber());
