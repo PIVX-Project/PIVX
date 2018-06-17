@@ -36,7 +36,7 @@
 #include <QString>
 
 
-MultisigDialog::MultisigDialog(QWidget* parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
+MultisigDialog::MultisigDialog(QWidget* parent) : QDialog(parent),
                                                   ui(new Ui::MultisigDialog),
                                                   model(0)
 {
@@ -220,12 +220,21 @@ void MultisigDialog::on_importAddressButton_clicked(){
     }
 
     vector<string> vRedeem;
-    size_t pos = 0;
 
-    //search redeem input delimited by space
-    while ((pos = sRedeem.find(" ")) != std::string::npos) {
-        vRedeem.push_back(sRedeem.substr(0, pos));
-        sRedeem.erase(0, pos + 1);
+    if(IsHex(sRedeem)) {
+        CDataStream ss(SER_GETHASH, 0);
+        ss << ParseHex(sRedeem);
+        CScript redeem;
+        ss >> redeem;
+        sRedeem = redeem.ToString();
+    } else {
+        size_t pos = 0;
+
+        //search redeem input delimited by space
+        while ((pos = sRedeem.find(" ")) != std::string::npos) {
+            vRedeem.push_back(sRedeem.substr(0, pos));
+            sRedeem.erase(0, pos + 1);
+        }
     }
 
     vector<string> keys(vRedeem.begin()+1, vRedeem.end()-1);
