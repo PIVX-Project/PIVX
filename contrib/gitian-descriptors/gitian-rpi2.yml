@@ -1,5 +1,5 @@
 ---
-name: "pivx-rpi2-2.1.7"
+name: "darknet-rpi2-2.1.7"
 enable_cache: true
 suites:
 - "trusty"
@@ -20,8 +20,8 @@ packages:
 - "python"
 reference_datetime: "2015-06-01 00:00:00"
 remotes:
-- "url": "https://github.com/pivx-project/pivx.git"
-  "dir": "pivx"
+- "url": "https://github.com/darknetpay/darknet.git"
+  "dir": "darknet"
 files:
 - "raspberrypi-tools.tar.gz"
 script: |
@@ -70,7 +70,7 @@ script: |
   done
   export PATH=${WRAP_DIR}:${PATH}
 
-  cd pivx
+  cd darknet
   BASEPREFIX=`pwd`/depends
   # Build dependencies for each host
   for i in $HOSTS; do
@@ -81,13 +81,13 @@ script: |
   ./autogen.sh
   ./configure --prefix=${BASEPREFIX}/`echo "${HOSTS}" | awk '{print $1;}'`
   make NO_QT=1 dist
-  SOURCEDIST=`echo pivx-*.tar.gz`
+  SOURCEDIST=`echo darknet-*.tar.gz`
   DISTNAME=`echo ${SOURCEDIST} | sed 's/.tar.*//'`
   # Correct tar file order
   mkdir -p temp
   pushd temp
   tar xf ../$SOURCEDIST
-  find pivx-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
+  find darknet-* | sort | tar --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
   popd
 
   ORIGPATH="$PATH"

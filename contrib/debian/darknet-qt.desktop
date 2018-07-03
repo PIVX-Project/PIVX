@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Darknet
+Comment=Darknet P2P Cryptocurrency
+Comment[fr]=Darknet, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Darknet, eşten eşe kriptografik sanal para birimi
+Exec=darknet-qt %u
+Terminal=false
+Type=Application
+Icon=darknet128
+MimeType=x-scheme-handler/darknet;
+Categories=Office;Finance;

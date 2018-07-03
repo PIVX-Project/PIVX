@@ -1,5 +1,5 @@
 ---
-name: "pivx-dmg-signer"
+name: "darknet-dmg-signer"
 suites:
 - "trusty"
 architectures:
@@ -7,10 +7,10 @@ architectures:
 packages:
 - "faketime"
 remotes:
-- "url": "https://github.com/pivx-project/pivx-detached-sigs.git"
+- "url": "https://github.com/darknetpay/darknet-detached-sigs.git"
   "dir": "signature"
 files:
-- "pivx-osx-unsigned.tar.gz"
+- "darknet-osx-unsigned.tar.gz"
 script: |
   WRAP_DIR=$HOME/wrapped
   mkdir -p ${WRAP_DIR}
@@ -27,11 +27,11 @@ script: |
     chmod +x ${WRAP_DIR}/${prog}
   done
 
-  UNSIGNED=pivx-osx-unsigned.tar.gz
-  SIGNED=pivx-osx-signed.dmg
+  UNSIGNED=darknet-osx-unsigned.tar.gz
+  SIGNED=darknet-osx-signed.dmg
 
   tar -xf ${UNSIGNED}
   OSX_VOLNAME="$(cat osx_volname)"
   ./detached-sig-apply.sh ${UNSIGNED} signature/osx
-  ${WRAP_DIR}/genisoimage -no-cache-inodes -D -l -probe -V "Pivx-Qt" -no-pad -r -dir-mode 0755 -apple -o uncompressed.dmg signed-app
+  ${WRAP_DIR}/genisoimage -no-cache-inodes -D -l -probe -V "Darknet-Qt" -no-pad -r -dir-mode 0755 -apple -o uncompressed.dmg signed-app
   ${WRAP_DIR}/dmg dmg uncompressed.dmg ${OUTDIR}/${SIGNED}

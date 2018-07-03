@@ -3,7 +3,7 @@ dist: trusty
 
 #workaround for https://github.com/travis-ci/travis-ci/issues/5227
 addons:
-  hostname: pivx-tester
+  hostname: darknet-tester
 
 os: linux
 language: generic
