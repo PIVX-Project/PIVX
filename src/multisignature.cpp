@@ -14,9 +14,17 @@
 
 using namespace std;
 
+void CMultisignatureAddress::CreateEmptyInstance()
+{
+    HandleError("Failed to read redeem script format, returning empty instance.");
+    *this = CMultisignatureAddress();
+}
+
 CMultisignatureAddress::CMultisignatureAddress(std::string strRedeemScript)
 {
-    ParseRedeemScript(strRedeemScript);
+    if(!ParseRedeemScript(strRedeemScript)) {
+        CreateEmptyInstance();
+    }
 }
 
 CMultisignatureAddress::CMultisignatureAddress(int nSignaturesRequired, vector<string> vAddressOwners)
@@ -24,62 +32,103 @@ CMultisignatureAddress::CMultisignatureAddress(int nSignaturesRequired, vector<s
     nSigsRequired = nSignaturesRequired;
     nOwners = (int)vAddressOwners.size();
 
-    try{
-        ValidateConfiguration();
-        ConvertAndValidatePubKeys(move(vAddressOwners));
-        CreateRedeemScript();
-    } catch(const CMultisignatureException& ex) {
-        cout << ex.what() << endl;
+    if(!ValidateConfiguration()) {
+        HandleError("Invalid multisignature configuration");
+        CreateEmptyInstance();
+    }
+
+    if(!ConvertAndValidatePubKeys(move(vAddressOwners))){
+        HandleError("Failed to read public keys");
+        CreateEmptyInstance();
+    }
+
+    CreateRedeemScript();
+
+    if(!AddToWallet()) {
+        HandleError("Failed to add script to wallet");
+        CreateEmptyInstance();
     }
 }
 
 bool CMultisignatureAddress::ValidateConfiguration()
 {//gather pub keys
-    if (nOwners < 1) {
-        throw CMultisignatureException("a Multisignature address requires at least one key to redeem");
-    }
-    if (nOwners < nSigsRequired) {
-        throw CMultisignatureException(strprintf("not enough keys supplied (got %d keys, but need at least %d to redeem)", nOwners, nSigsRequired));
-    }
-    if (nOwners > 15) {
-        throw CMultisignatureException("Number of addresses involved in the Multisignature address creation > 15\nReduce the number");
+    try {
+        if(this->nOwners == -1 || this->nSigsRequired == -1) {
+            throw CMultisignatureException("Failed to read input");
+        }
+        if (nOwners < 1) {
+            throw CMultisignatureException("a Multisignature address requires at least one key to redeem");
+        }
+        if (nOwners < nSigsRequired) {
+            throw CMultisignatureException(
+                strprintf("not enough keys supplied (got %d keys, but need at least %d to redeem)", nOwners,
+                          nSigsRequired
+                ));
+        }
+        if (nOwners > 15) {
+            throw CMultisignatureException(
+                "Number of addresses involved in the Multisignature address creation > 15\nReduce the number"
+            );
+        }
+        return true;
+    } catch (const CMultisignatureException& ex) {
+        HandleError(ex.what());
+        return false;
     }
 }
 
 bool CMultisignatureAddress::ConvertAndValidatePubKeys(vector<string> vstrPubKeys)
 {
-    for(auto& strKey : vstrPubKeys) {
+    try {
+        for (auto &strKey : vstrPubKeys) {
 #ifdef ENABLE_WALLET
-        // Case 1: PIVX address and we have full public key:
-        CBitcoinAddress address(strKey);
-        if (pwalletMain && address.IsValid()) {
-            CKeyID keyID;
-            if (!address.GetKeyID(keyID)) {
-                throw CMultisignatureException(strprintf("%s does not refer to a key", strKey));
-            }
-            CPubKey vchPubKey;
-            if (!pwalletMain->GetPubKey(keyID, vchPubKey))
-                throw CMultisignatureException(strprintf("no full public key for address %s", strKey));
-            if (!vchPubKey.IsFullyValid()){
-                string sKey = strKey.empty()?"(empty)":strKey;
-                throw CMultisignatureException("Invalid public key: " + sKey);
-            }
-            vOwners.emplace_back(vchPubKey);
-        }
-
-        else
-#endif
-        if (IsHex(strKey)) {
-            CPubKey vchPubKey(ParseHex(strKey));
-            if (vchPubKey.IsFullyValid()){
+            // Case 1: PIVX address and we have full public key:
+            CBitcoinAddress address(strKey);
+            if (pwalletMain && address.IsValid()) {
+                CKeyID keyID;
+                if (!address.GetKeyID(keyID)) {
+                    throw CMultisignatureException(strprintf("%s does not refer to a key", strKey));
+                }
+                CPubKey vchPubKey;
+                if (!pwalletMain->GetPubKey(keyID, vchPubKey))
+                    throw CMultisignatureException(strprintf("no full public key for address %s", strKey));
+                if (!vchPubKey.IsFullyValid()){
+                    string sKey = strKey.empty()?"(empty)":strKey;
+                    throw CMultisignatureException("Invalid public key: " + sKey);
+                }
                 vOwners.emplace_back(vchPubKey);
             }
-        } else {
-            throw CMultisignatureException(strprintf(" Invalid public key: %s",strKey));
+
+            else
+#endif
+            if (IsHex(strKey)) {
+                CPubKey vchPubKey(ParseHex(strKey));
+                if (vchPubKey.IsFullyValid()) {
+                    vOwners.emplace_back(vchPubKey);
+                }
+            } else {
+                throw CMultisignatureException(strprintf(" Invalid public key: %s", strKey));
+            }
         }
+        return true;
+    } catch (const CMultisignatureException& ex) {
+        HandleError(ex.what());
+        return false;
     }
 }
 
+bool CMultisignatureAddress::AddToWallet()
+{
+    CScriptID scriptID(scriptRedeem);
+    if(!pwalletMain->AddMultiSig(scriptRedeem)) {
+        return false;
+    }
+
+    pwalletMain->SetAddressBook(scriptID, "new multisig", "receive");
+
+    addressFull = CBitcoinAddress(scriptID);
+    return true;
+}
 
 void CMultisignatureAddress::CreateRedeemScript()
 {
@@ -93,17 +142,23 @@ void CMultisignatureAddress::CreateRedeemScript()
     scriptRedeem << OP_CHECKMULTISIG;
 }
 
-void CMultisignatureAddress::ParseRedeemScript(const string& strRedeemScript)
+bool CMultisignatureAddress::ParseRedeemScript(const string& strRedeemScript)
 {
-    size_t open = strRedeemScript.find_first_of('[');
-    size_t close = strRedeemScript.find_first_of(']');
+    try {
+        size_t open = strRedeemScript.find_first_of('[');
+        size_t close = strRedeemScript.find_first_of(']');
 
-    if(open != string::npos && close != string::npos) {
-        ParseRPCRedeem(strRedeemScript);
-    } else if(IsHex(strRedeemScript)) {
-        ParseHexRedeem(strRedeemScript);
-    } else { // if neither RPC or Hex assume spaced
-        ParseSpacedRedeem(strRedeemScript);
+        if (open != string::npos && close != string::npos) {
+            ParseRPCRedeem(strRedeemScript);
+        } else if (IsHex(strRedeemScript)) {
+            ParseHexRedeem(strRedeemScript);
+        } else { // if neither RPC or Hex assume spaced
+            ParseSpacedRedeem(strRedeemScript);
+        }
+        return true;
+    } catch(const CMultisignatureException& ex) {
+        HandleError(ex.what());
+        return false;
     }
 }
 
@@ -115,7 +170,12 @@ void CMultisignatureAddress::ParseRPCRedeem(const string& strRedeemScript)
     regex_search(strRedeemScript.data(), charactersMatched, sigsRequiredExtractor);
 
     //match result +1 because don't want full match, just the number
-    int nSignature = atoi((*(charactersMatched.begin()+1)).str());
+    int nSignature;
+    try {
+        nSignature = stoi((*(charactersMatched.begin()+1)).str());
+    } catch (...) {
+        throw CMultisignatureException("failed to get amount of signatures required");
+    }
 
     //extract pubkey array
     string substrPubKeys(strRedeemScript.substr(strRedeemScript.find_first_of('['), strRedeemScript.find_first_of(']')));
@@ -138,10 +198,6 @@ void CMultisignatureAddress::ParseRPCRedeem(const string& strRedeemScript)
         it++;
     }
 
-    for(auto i : vstrPubKeys) {
-        cout << i << endl;
-    }
-
     *this = CMultisignatureAddress(nSignature, vstrPubKeys);
 }
 
@@ -161,21 +217,23 @@ void CMultisignatureAddress::ParseSpacedRedeem(const string& strRedeemScript)
 
     boost::split(vstrSplitRedeem, strRedeemScript, [](char c){return c == ' ';});
 
-    for(auto& i : vstrSplitRedeem) {
-        cout << "split:" << i << endl;
+    int nSignatures = -1;
+    try {
+        nSignatures = stoi(vstrSplitRedeem.at(0));
+        vstrSplitRedeem.erase(vstrSplitRedeem.begin());
+    } catch (...) {
+        HandleError("failed to get amount of signatures required");
     }
 
-    auto nSignatures = (int) strtol(vstrSplitRedeem.at(0).data(), nullptr, 10);
-
-    if(errno != 0) {
-        throw CMultisignatureException("failed to read required signatures");
-    }
-
-    strtol(vstrSplitRedeem.back().data(), nullptr, 10);
-
-    if(errno == 0) {
+    if(!IsHex(vstrSplitRedeem.back())) {
         vstrSplitRedeem.pop_back(); //remove total owners if present
     }
 
     *this = CMultisignatureAddress(nSignatures, vector<string>(vstrSplitRedeem.begin(), vstrSplitRedeem.end()));
+}
+
+void CMultisignatureAddress::HandleError(const string& err)
+{
+    strErrorStatus = err;
+    LogPrintf(err.data());
 }

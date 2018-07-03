@@ -18,6 +18,8 @@
 #include <boost/assign/std/vector.hpp>
 #include <boost/foreach.hpp>
 #include <boost/test/unit_test.hpp>
+#include <base58.h>
+#include <multisignature.h>
 
 using namespace std;
 using namespace boost::assign;
@@ -317,6 +319,85 @@ BOOST_AUTO_TEST_SUITE(multisig_tests)
         {
             BOOST_CHECK_MESSAGE(SignSignature(keystore, txFrom, txTo[i], 0), strprintf("SignSignature %d", i));
         }
+    }
+
+    static const string strSecret1 ("YRYJwfAyJ9c2jhi3T2xQyLijGvM7yLTw4izDaNQLxBzgUYrQiPmJ");
+    static const string strSecret2 ("YNZyazHkwUbkmUpEYsBGWwHnHQTy2n9rJy1gS5k54YXVx3pE8n6N");
+    static const int nSigsRequired = 2;
+    static CBitcoinSecret s1, s2;
+    static CPubKey key1, key2;
+    static string strKey1, strKey2;
+    static vector<CPubKey> expectedKeys;
+    static CScript expectedRedeem;
+    static CBitcoinAddress expectedAddress;
+
+    void setUpRedeemParseTests()
+    {
+        s1.SetString(strSecret1);
+        s2.SetString(strSecret2);
+        key1 = s1.GetKey().GetPubKey();
+        key2 = s2.GetKey().GetPubKey();
+        strKey1 = (HexStr(key1));
+        strKey2 = (HexStr(key2));
+        expectedKeys = vector<CPubKey>{key1, key2};
+        expectedRedeem.clear();
+        expectedRedeem << CScript::EncodeOP_N(nSigsRequired);
+        expectedRedeem << ToByteVector(key1);
+        expectedRedeem << ToByteVector(key2);
+        expectedRedeem << CScript::EncodeOP_N(2);
+        expectedRedeem << OP_CHECKMULTISIG;
+        expectedAddress = CBitcoinAddress(CScriptID(expectedRedeem));
+    }
+
+    BOOST_AUTO_TEST_CASE(multisig_from_hex)
+    {
+        setUpRedeemParseTests();
+
+        CMultisignatureAddress addressFromHex(HexStr(expectedRedeem.begin(), expectedRedeem.end()));
+
+        BOOST_CHECK_MESSAGE(addressFromHex.getSignaturesRequired() == 2, "Incorrect number of signatures required.");
+        BOOST_CHECK_MESSAGE(addressFromHex.getAddressOwners() == expectedKeys, "Incorrect public keys");
+        BOOST_CHECK_MESSAGE(addressFromHex.getRedeemScript() == expectedRedeem, "Incorrect redeem script");
+        BOOST_CHECK_MESSAGE(addressFromHex.getAddress() == expectedAddress, "Incorrect address");
+    }
+
+    BOOST_AUTO_TEST_CASE(multisig_from_RPC)
+    {
+        setUpRedeemParseTests();
+
+        string testRedeemRPC =
+            strprintf(
+                R"(%d ["%s","%s"])",
+                nSigsRequired,
+                strKey1,
+                strKey2
+            );
+
+        CMultisignatureAddress addressFromRPC(testRedeemRPC);
+
+        BOOST_CHECK_MESSAGE(addressFromRPC.getSignaturesRequired() == 2, "Incorrect number of signatures required.");
+        BOOST_CHECK_MESSAGE(addressFromRPC.getAddressOwners() == expectedKeys, "Incorrect public keys");
+        BOOST_CHECK_MESSAGE(addressFromRPC.getRedeemScript() == expectedRedeem, "Incorrect redeem script");
+        BOOST_CHECK_MESSAGE(addressFromRPC.getAddress() == expectedAddress, "Incorrect address");
+    }
+
+    BOOST_AUTO_TEST_CASE(multisig_from_spaced)
+    {
+        setUpRedeemParseTests();
+        string testRedeemSpaced =
+            strprintf(
+                "%d %s %s",
+                nSigsRequired,
+                strKey1,
+                strKey2
+            );
+
+        CMultisignatureAddress addressFromSpaced(testRedeemSpaced);
+
+        BOOST_CHECK_MESSAGE(addressFromSpaced.getSignaturesRequired() == 2, "Incorrect number of signatures required.");
+        BOOST_CHECK_MESSAGE(addressFromSpaced.getAddressOwners() == expectedKeys, "Incorrect public keys");
+        BOOST_CHECK_MESSAGE(addressFromSpaced.getRedeemScript() == expectedRedeem, "Incorrect redeem script");
+        BOOST_CHECK_MESSAGE(addressFromSpaced.getAddress() == expectedAddress, "Incorrect address");
     }
 
 

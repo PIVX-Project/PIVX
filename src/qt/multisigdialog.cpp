@@ -220,21 +220,12 @@ void MultisigDialog::on_importAddressButton_clicked(){
     }
 
     vector<string> vRedeem;
+    size_t pos = 0;
 
-    if(IsHex(sRedeem)) {
-        CDataStream ss(SER_GETHASH, 0);
-        ss << ParseHex(sRedeem);
-        CScript redeem;
-        ss >> redeem;
-        sRedeem = redeem.ToString();
-    } else {
-        size_t pos = 0;
-
-        //search redeem input delimited by space
-        while ((pos = sRedeem.find(" ")) != std::string::npos) {
-            vRedeem.push_back(sRedeem.substr(0, pos));
-            sRedeem.erase(0, pos + 1);
-        }
+    //search redeem input delimited by space
+    while ((pos = sRedeem.find(" ")) != std::string::npos) {
+        vRedeem.push_back(sRedeem.substr(0, pos));
+        sRedeem.erase(0, pos + 1);
     }
 
     vector<string> keys(vRedeem.begin()+1, vRedeem.end()-1);
@@ -371,8 +362,8 @@ void MultisigDialog::on_createButton_clicked()
             ui->createButtonStatus->setStyleSheet("QTextEdit{ color: black }");
 
             QString status(strprintf("Transaction has successfully created with a fee of %s.\n"
-                                             "The transaction has been automatically imported to the sign tab.\n"
-                                             "Please continue on to sign the tx from this wallet, to access the hex to send to other owners.", fee).c_str());
+                                     "The transaction has been automatically imported to the sign tab.\n"
+                                     "Please continue on to sign the tx from this wallet, to access the hex to send to other owners.", fee).c_str());
 
             ui->createButtonStatus->setText(status);
             ui->transactionHex->setText(QString::fromStdString(EncodeHexTx(multisigTx)));
@@ -556,16 +547,16 @@ QString MultisigDialog::buildMultisigTxStatusString(bool fComplete, const CMutab
         ui->commitButton->setEnabled(true);
         string sTxId = tx.GetHash().GetHex();
         string sTxComplete   =  "Complete: true!\n"
-                "The commit button has now been enabled for you to finalize the transaction.\n"
-                "Once the commit button is clicked, the transaction will be published and coins transferred "
-                "to their destinations.\nWARNING: THE ACTIONS OF THE COMMIT BUTTON ARE FINAL AND CANNOT BE REVERSED.";
+                                "The commit button has now been enabled for you to finalize the transaction.\n"
+                                "Once the commit button is clicked, the transaction will be published and coins transferred "
+                                "to their destinations.\nWARNING: THE ACTIONS OF THE COMMIT BUTTON ARE FINAL AND CANNOT BE REVERSED.";
 
         return QString(strprintf("%s\nTx Id:\n%s\nTx Hex:\n%s",sTxComplete, sTxId, sTxHex).c_str());
     } else {
         string sTxIncomplete = "Complete: false.\n"
-                "You may now send the hex below to another owner to sign.\n"
-                "Keep in mind the transaction must be passed from one owner to the next for signing.\n"
-                "Ensure all owners have imported the redeem before trying to sign. (besides creator)";
+                               "You may now send the hex below to another owner to sign.\n"
+                               "Keep in mind the transaction must be passed from one owner to the next for signing.\n"
+                               "Ensure all owners have imported the redeem before trying to sign. (besides creator)";
 
         return QString(strprintf("%s\nTx Hex: %s", sTxIncomplete, sTxHex).c_str());
     }
@@ -776,9 +767,9 @@ bool MultisigDialog::createRedeemScript(int m, vector<string> vKeys, CScript& re
             throw runtime_error("a Multisignature address must require at least one key to redeem");
         if (n < m)
             throw runtime_error(
-                    strprintf("not enough keys supplied "
-                                      "(got %d keys, but need at least %d to redeem)",
-                              m, n));
+                strprintf("not enough keys supplied "
+                          "(got %d keys, but need at least %d to redeem)",
+                          m, n));
         if (n > 15)
             throw runtime_error("Number of addresses involved in the Multisignature address creation > 15\nReduce the number");
 
