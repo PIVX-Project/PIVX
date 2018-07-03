@@ -1,0 +1,17 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="ca">locale/darknet_ca.qm</file>
+        <file alias="da">locale/darknet_da.qm</file>
+        <file alias="de">locale/darknet_de.qm</file>
+        <file alias="en">locale/darknet_en.qm</file>
+        <file alias="en_US">locale/darknet_en_US.qm</file>
+        <file alias="es">locale/darknet_es.qm</file>
+        <file alias="fr_FR">locale/darknet_fr_FR.qm</file>
+        <file alias="it">locale/darknet_it.qm</file>
+        <file alias="ja">locale/darknet_ja.qm</file>
+        <file alias="pt">locale/darknet_pt.qm</file>
+        <file alias="ro_RO">locale/darknet_ro_RO.qm</file>
+        <file alias="ru">locale/darknet_ru.qm</file>
+        <file alias="zh_TW">locale/darknet_zh_TW.qm</file>
+    </qresource>
+</RCC>

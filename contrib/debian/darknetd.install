@@ -1,0 +1,2 @@
+usr/local/bin/darknetd usr/bin
+usr/local/bin/darknet-cli usr/bin

@@ -1,0 +1,26 @@
+[Unit]
+Description=DARKNET's distributed currency daemon
+After=network.target
+
+[Service]
+User=darknet
+Group=darknet
+
+Type=forking
+PIDFile=/var/lib/darknetd/darknetd.pid
+
+ExecStart=/usr/bin/darknetd -daemon -pid=/var/lib/darknetd/darknetd.pid \
+          -conf=/etc/darknet/darknet.conf -datadir=/var/lib/darknetd
+
+ExecStop=-/usr/bin/darknet-cli -conf=/etc/darknet/darknet.conf \
+         -datadir=/var/lib/darknetd stop
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

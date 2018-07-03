@@ -7,12 +7,12 @@ reset-files.bash
 *.tar.gz
 
 *.exe
-src/pivx
-src/pivxd
-src/pivx-cli
-src/pivx-tx
-src/test/test_pivx
-src/qt/test/test_pivx-qt
+src/darknet
+src/darknetd
+src/darknet-cli
+src/darknet-tx
+src/test/test_darknet
+src/qt/test/test_darknet-qt
 
 # autoreconf
 Makefile.in
@@ -35,8 +35,8 @@ config.log
 config.status
 configure
 libtool
-src/config/pivx-config.h
-src/config/pivx-config.h.in
+src/config/darknet-config.h
+src/config/darknet-config.h.in
 src/config/stamp-h1
 share/setup.nsi
 share/qt/Info.plist
@@ -61,7 +61,7 @@ src/qt/test/moc*.cpp
 *.o
 *.o-*
 *.patch
-.pivx
+.darknet
 *.a
 *.pb.cc
 *.pb.h
@@ -80,12 +80,12 @@ src/qt/test/moc*.cpp
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-pivx-qt
-PIVX-Qt.app
+darknet-qt
+DARKNET-Qt.app
 
 # Unit-tests
 Makefile.test
-pivx-qt_test
+darknet-qt_test
 src/test/buildenv.py
 
 # Resources cpp
@@ -101,7 +101,7 @@ build
 #lcov
 *.gcno
 /*.info
-test_pivx.coverage/
+test_darknet.coverage/
 total.coverage/
 coverage_percent.txt
 

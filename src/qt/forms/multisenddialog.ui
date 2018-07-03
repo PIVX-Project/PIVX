@@ -61,8 +61,8 @@
     <number>1</number>
    </property>
    <property name="text">
-    <string>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other PIVX addresses after it matures.
-To Add: enter percentage to give and PIVX address to add to the MultiSend vector.
+    <string>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other DARKNET addresses after it matures.
+To Add: enter percentage to give and DARKNET address to add to the MultiSend vector.
 To Delete: Enter address to delete and press delete.
 MultiSend will not be activated unless you have clicked Activate</string>
    </property>
@@ -137,7 +137,7 @@ MultiSend will not be activated unless you have clicked Activate</string>
     <string/>
    </property>
    <property name="icon">
-    <iconset resource="../pivx.qrc">
+    <iconset resource="../darknet.qrc">
      <normaloff>:/icons/address-book</normaloff>:/icons/address-book</iconset>
    </property>
    <property name="shortcut">
@@ -261,7 +261,7 @@ MultiSend will not be activated unless you have clicked Activate</string>
   </widget>
  </widget>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../darknet.qrc"/>
  </resources>
  <connections/>
 </ui>

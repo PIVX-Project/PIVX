@@ -1,0 +1,26 @@
+# /etc/conf.d/darknetd: config file for /etc/init.d/darknetd
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/darknet/darknet.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/darknetd"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/darknetd.pid"
+
+# Where to write darknetd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/darknetd"
+
+# User and group to own darknetd process
+#BITCOIND_USER="darknet"
+#BITCOIND_GROUP="darknet"
+
+# Path to darknetd executable
+#BITCOIND_BIN="/usr/bin/darknetd"
+
+# Nice value to run darknetd under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+BITCOIND_OPTS=""

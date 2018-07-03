@@ -1,0 +1,6 @@
+usr/local/bin/darknet-qt usr/bin
+share/pixmaps/bitcoin32.xpm usr/share/pixmaps
+share/pixmaps/bitcoin16.xpm usr/share/pixmaps
+share/pixmaps/bitcoin128.png usr/share/pixmaps
+debian/darknet-qt.desktop usr/share/applications
+debian/darknet-qt.protocol usr/share/kde4/services/

@@ -100,4 +100,4 @@ AlexMomo
 snogcel
 bertlebbert
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/pivx-project/pivx-project-translations).
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/darknet-project/darknet-project-translations).
