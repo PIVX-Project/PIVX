@@ -45,7 +45,6 @@ CMultisignatureAddress::CMultisignatureAddress(int nSignaturesRequired, vector<s
     CreateRedeemScript();
 
     if(!AddToWallet()) {
-        HandleError("Failed to add script to wallet");
         CreateEmptyInstance();
     }
 }
@@ -72,8 +71,7 @@ bool CMultisignatureAddress::ValidateConfiguration()
         }
         return true;
     } catch (const CMultisignatureException& ex) {
-        HandleError(ex.what());
-        return false;
+        return HandleError(ex.what());
     }
 }
 
@@ -112,16 +110,23 @@ bool CMultisignatureAddress::ConvertAndValidatePubKeys(vector<string> vstrPubKey
         }
         return true;
     } catch (const CMultisignatureException& ex) {
-        HandleError(ex.what());
-        return false;
+        return HandleError(ex.what());
     }
 }
 
 bool CMultisignatureAddress::AddToWallet()
 {
+    if (::IsMine(*pwalletMain, scriptRedeem) == ISMINE_SPENDABLE) {
+        return HandleError("The wallet already contains this script");
+    }
+
+    if(!pwalletMain->AddCScript(scriptRedeem)) {
+        return HandleError("address invalid or already exists");
+    }
+
     CScriptID scriptID(scriptRedeem);
     if(!pwalletMain->AddMultiSig(scriptRedeem)) {
-        return false;
+        return HandleError("Failed to add script to wallet");
     }
 
     pwalletMain->SetAddressBook(scriptID, "new multisig", "receive");
@@ -157,8 +162,7 @@ bool CMultisignatureAddress::ParseRedeemScript(const string& strRedeemScript)
         }
         return true;
     } catch(const CMultisignatureException& ex) {
-        HandleError(ex.what());
-        return false;
+        return HandleError(ex.what());
     }
 }
 
@@ -232,8 +236,9 @@ void CMultisignatureAddress::ParseSpacedRedeem(const string& strRedeemScript)
     *this = CMultisignatureAddress(nSignatures, vector<string>(vstrSplitRedeem.begin(), vstrSplitRedeem.end()));
 }
 
-void CMultisignatureAddress::HandleError(const string& err)
+bool CMultisignatureAddress::HandleError(const string& err)
 {
     strErrorStatus = err;
     LogPrintf(err.data());
+    return false;
 }

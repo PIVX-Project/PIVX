@@ -20,10 +20,10 @@ private:
     std::vector<CPubKey> vOwners;
     int nOwners = -1;
     int nSigsRequired = -1;
-    std::string strErrorStatus = "No errors";
+    std::string strErrorStatus = "";
 
     CMultisignatureAddress() = default;
-    void HandleError(const std::string& err);
+    bool HandleError(const std::string& err);
     bool AddToWallet();
     void CreateEmptyInstance();
     void CreateRedeemScript();
