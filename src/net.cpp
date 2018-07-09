@@ -980,13 +980,14 @@ void ThreadSocketHandler()
         //
         // Accept new connections
         //
+
         BOOST_FOREACH (const ListenSocket& hListenSocket, vhListenSocket) {
             if (hListenSocket.socket != INVALID_SOCKET && FD_ISSET(hListenSocket.socket, &fdsetRecv)) {
                 struct sockaddr_storage sockaddr;
                 socklen_t len = sizeof(sockaddr);
                 SOCKET hSocket = accept(hListenSocket.socket, (struct sockaddr*)&sockaddr, &len);
                 CAddress addr;
-                int nInbound = 0;
+                int nInbound, nOutbound = 0;
 
                 if (hSocket != INVALID_SOCKET)
                     if (!addr.SetSockAddr((const struct sockaddr*)&sockaddr))
@@ -995,9 +996,13 @@ void ThreadSocketHandler()
                 bool whitelisted = hListenSocket.whitelisted || CNode::IsWhitelistedRange(addr);
                 {
                     LOCK(cs_vNodes);
-                    BOOST_FOREACH (CNode* pnode, vNodes)
-                        if (pnode->fInbound)
+                    BOOST_FOREACH (CNode* pnode, vNodes) {
+                        if (pnode->fInbound) {
                             nInbound++;
+                        } else {
+                            nOutbound++;
+                        }
+                    }
                 }
 
                 if (hSocket == INVALID_SOCKET) {
@@ -1007,8 +1012,11 @@ void ThreadSocketHandler()
                 } else if (!IsSelectableSocket(hSocket)) {
                     LogPrintf("connection from %s dropped: non-selectable socket\n", addr.ToString());
                     CloseSocket(hSocket);
-                } else if (nInbound >= nMaxConnections - MAX_OUTBOUND_CONNECTIONS) {
-                    LogPrint("net", "connection from %s dropped (full)\n", addr.ToString());
+                } else if ((nInbound + nOutbound ) >= nMaxConnections) {
+                    LogPrint("net", "connection from %s dropped (max connections reached)\n", addr.ToString());
+                    CloseSocket(hSocket);
+                } else if (nOutbound >= MAX_OUTBOUND_CONNECTIONS) {
+                    LogPrint("net", "connection from %s dropped (max outbound connections reached)\n", addr.ToString());
                     CloseSocket(hSocket);
                 } else if (CNode::IsBanned(addr) && !whitelisted) {
                     LogPrintf("connection from %s dropped (banned)\n", addr.ToString());
