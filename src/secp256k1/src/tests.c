@@ -752,7 +752,7 @@ void run_ecmult_chain(void) {
         secp256k1_scalar_mul(&gn, &gn, &gf);
 
         /* verify */
-        if (i == 51474) {
+        if (i == 50474) {
             char res[132]; int resl = 132;
             secp256k1_gej_get_hex(res, &resl, &x);
             CHECK(strcmp(res, "(D6E96687F9B10D092A6F35439D86CEBEA4535D0D409F53586440BD74B933E830,B95CBCA2C77DA786539BE8FD53354D2D3B4F566AE658045407ED6015EE1B2A88)") == 0);

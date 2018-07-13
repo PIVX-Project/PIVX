@@ -1719,9 +1719,9 @@ Please check the address and try again.</source>
     </message>
     <message>
         <source>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/pivx-project/pivx-project-translations</source>
+https://www.transifex.com/kobrin/smc-project-translations</source>
         <translation>지원 언어가 없거나 번역이 불완전한가요? 번역 기여 도움말:
-https://www.transifex.com/pivx-project/pivx-project-translations</translation>
+https://www.transifex.com/kobrin/smc-project-translations</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -4176,8 +4176,8 @@ rpcpassword=%s
         <translation>환경설정에서 masternodeprivkey를 지정해야 합니다. 도움말을 참조하십시오.</translation>
     </message>
     <message>
-        <source>(51472 could be used only on mainnet)</source>
-        <translation>(51472 은 메인넷에서만 사용될 수 있습니다)</translation>
+        <source>(50472 could be used only on mainnet)</source>
+        <translation>(50472 은 메인넷에서만 사용될 수 있습니다)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4188,8 +4188,8 @@ rpcpassword=%s
         <translation>(기본값: 1)</translation>
     </message>
     <message>
-        <source>(must be 51472 for mainnet)</source>
-        <translation>(메인넷 일경우 51472)</translation>
+        <source>(must be 50472 for mainnet)</source>
+        <translation>(메인넷 일경우 50472)</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>

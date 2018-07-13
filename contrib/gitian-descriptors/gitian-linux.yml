@@ -29,8 +29,8 @@ packages:
 - "python"
 reference_datetime: "2015-06-01 00:00:00"
 remotes:
-- "url": "https://github.com/pivx-project/pivx.git"
-  "dir": "pivx"
+- "url": "https://github.com/kobrin/smc.git"
+  "dir": "smc"
 files: []
 script: |
 
@@ -114,7 +114,7 @@ script: |
   chmod +x ${WRAP_DIR}/${prog}
   done
 
-  cd pivx
+  cd smc
   BASEPREFIX=`pwd`/depends
   # Build dependencies for each host
   for i in $HOSTS; do

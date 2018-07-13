@@ -1719,9 +1719,9 @@ Please check the address and try again.</translation>
     </message>
     <message>
         <source>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/pivx-project/pivx-project-translations</source>
+https://www.transifex.com/kobrin/smc-project-translations</source>
         <translation>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/pivx-project/pivx-project-translations</translation>
+https://www.transifex.com/kobrin/smc-project-translations</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -4166,8 +4166,8 @@ for example: alertnotify=echo %%s | mail -s "PIVX Alert" admin@foo.com
         <translation>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</translation>
     </message>
     <message>
-        <source>(51472 could be used only on mainnet)</source>
-        <translation>(51472 could be used only on mainnet)</translation>
+        <source>(50472 could be used only on mainnet)</source>
+        <translation>(50472 could be used only on mainnet)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4178,8 +4178,8 @@ for example: alertnotify=echo %%s | mail -s "PIVX Alert" admin@foo.com
         <translation>(default: 1)</translation>
     </message>
     <message>
-        <source>(must be 51472 for mainnet)</source>
-        <translation>(must be 51472 for mainnet)</translation>
+        <source>(must be 50472 for mainnet)</source>
+        <translation>(must be 50472 for mainnet)</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>

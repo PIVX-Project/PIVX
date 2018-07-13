@@ -7,7 +7,7 @@ architectures:
 packages:
 - "faketime"
 remotes:
-- "url": "https://github.com/pivx-project/pivx-detached-sigs.git"
+- "url": "https://github.com/kobrin/smc-detached-sigs.git"
   "dir": "signature"
 files:
 - "pivx-osx-unsigned.tar.gz"

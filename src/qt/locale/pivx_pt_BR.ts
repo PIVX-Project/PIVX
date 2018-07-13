@@ -1611,9 +1611,9 @@ Favor verificar o endereço e tente novamente.</translation>
     </message>
     <message>
         <source>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/pivx-project/pivx-project-translations</source>
+https://www.transifex.com/kobrin/smc-project-translations</source>
         <translation>Linguagem não encontrada ou tradução incompleta? Ajude contribuido com traduções aqui:
-https://www.transifex.com/pivx-project/pivx-project-translations</translation>
+https://www.transifex.com/kobrin/smc-project-translations</translation>
     </message>
     <message>
         <source>Connect to the PIVX network through a SOCKS5 proxy.</source>
@@ -3538,8 +3538,8 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <translation>Você deve especificar uma masternodeprivkey na configuração. Favor verificar o manual para obter ajuda.</translation>
     </message>
     <message>
-        <source>(51472 could be used only on mainnet)</source>
-        <translation>(51472 could be used only on mainnet)</translation>
+        <source>(50472 could be used only on mainnet)</source>
+        <translation>(50472 could be used only on mainnet)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -3550,8 +3550,8 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <translation>(padrão: 1)</translation>
     </message>
     <message>
-        <source>(must be 51472 for mainnet)</source>
-        <translation>(deve ser 51472 para mainnet)</translation>
+        <source>(must be 50472 for mainnet)</source>
+        <translation>(deve ser 50472 para mainnet)</translation>
     </message>
     <message>
         <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>

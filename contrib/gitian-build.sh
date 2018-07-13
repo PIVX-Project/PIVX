@@ -17,7 +17,7 @@ osx=true
 SIGNER=
 VERSION=
 commit=false
-url=https://github.com/pivx-project/pivx
+url=https://github.com/kobrin/smc
 proc=2
 mem=2000
 lxc=true
@@ -39,7 +39,7 @@ version		Version number, commit, or branch to build. If building a commit or bra
 
 Options:
 -c|--commit	Indicate that the version argument is for a commit or branch
--u|--url	Specify the URL of the repository. Default is https://github.com/pivx-project/pivx
+-u|--url	Specify the URL of the repository. Default is https://github.com/kobrin/smc
 -v|--verify 	Verify the gitian build
 -b|--build	Do a gitian build
 -s|--sign	Make signed binaries for Windows and Mac OSX
@@ -233,7 +233,7 @@ if [[ $setup = true ]]
 then
     sudo apt-get install ruby apache2 git apt-cacher-ng python-vm-builder qemu-kvm qemu-utils
     git clone https://github.com/pivx-project/gitian.sigs.git
-    git clone https://github.com/pivx-project/pivx-detached-sigs.git
+    git clone https://github.com/kobrin/smc-detached-sigs.git
     git clone https://github.com/devrandom/gitian-builder.git
     pushd ./gitian-builder
     if [[ -n "$USE_LXC" ]]
@@ -266,7 +266,7 @@ then
 	mkdir -p inputs
 	wget -N -P inputs $osslPatchUrl
 	wget -N -P inputs $osslTarUrl
-	make -C ../pivx/depends download SOURCES_PATH=`pwd`/cache/common
+	make -C ../smc/depends download SOURCES_PATH=`pwd`/cache/common
 
 	# Linux
 	if [[ $linux = true ]]
@@ -274,8 +274,8 @@ then
             echo ""
 	    echo "Compiling ${VERSION} Linux"
 	    echo ""
-	    ./bin/gbuild -j ${proc} -m ${mem} --commit pivx=${COMMIT} --url pivx=${url} ../pivx/contrib/gitian-descriptors/gitian-linux.yml
-	    ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-linux.yml
+	    ./bin/gbuild -j ${proc} -m ${mem} --commit pivx=${COMMIT} --url pivx=${url} ../smc/contrib/gitian-descriptors/gitian-linux.yml
+	    ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../smc/contrib/gitian-descriptors/gitian-linux.yml
 	    mv build/out/pivx-*.tar.gz build/out/src/pivx-*.tar.gz ../pivx-binaries/${VERSION}
 	fi
 	# Windows
@@ -284,8 +284,8 @@ then
 	    echo ""
 	    echo "Compiling ${VERSION} Windows"
 	    echo ""
-	    ./bin/gbuild -j ${proc} -m ${mem} --commit pivx=${COMMIT} --url pivx=${url} ../pivx/contrib/gitian-descriptors/gitian-win.yml
-	    ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-win.yml
+	    ./bin/gbuild -j ${proc} -m ${mem} --commit pivx=${COMMIT} --url pivx=${url} ../smc/contrib/gitian-descriptors/gitian-win.yml
+	    ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../smc/contrib/gitian-descriptors/gitian-win.yml
 	    mv build/out/pivx-*-win-unsigned.tar.gz inputs/pivx-win-unsigned.tar.gz
 	    mv build/out/pivx-*.zip build/out/pivx-*.exe ../pivx-binaries/${VERSION}
 	fi
@@ -295,8 +295,8 @@ then
 	    echo ""
 	    echo "Compiling ${VERSION} Mac OSX"
 	    echo ""
-	    ./bin/gbuild -j ${proc} -m ${mem} --commit pivx=${COMMIT} --url pivx=${url} ../pivx/contrib/gitian-descriptors/gitian-osx.yml
-	    ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-osx.yml
+	    ./bin/gbuild -j ${proc} -m ${mem} --commit pivx=${COMMIT} --url pivx=${url} ../smc/contrib/gitian-descriptors/gitian-osx.yml
+	    ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../smc/contrib/gitian-descriptors/gitian-osx.yml
 	    mv build/out/pivx-*-osx-unsigned.tar.gz inputs/pivx-osx-unsigned.tar.gz
 	    mv build/out/pivx-*.tar.gz build/out/pivx-*.dmg ../pivx-binaries/${VERSION}
 	fi
@@ -325,27 +325,27 @@ then
 	echo ""
 	echo "Verifying v${VERSION} Linux"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../pivx/contrib/gitian-descriptors/gitian-linux.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../smc/contrib/gitian-descriptors/gitian-linux.yml
 	# Windows
 	echo ""
 	echo "Verifying v${VERSION} Windows"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../pivx/contrib/gitian-descriptors/gitian-win.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../smc/contrib/gitian-descriptors/gitian-win.yml
 	# Mac OSX
 	echo ""
 	echo "Verifying v${VERSION} Mac OSX"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../pivx/contrib/gitian-descriptors/gitian-osx.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../smc/contrib/gitian-descriptors/gitian-osx.yml
 	# Signed Windows
 	echo ""
 	echo "Verifying v${VERSION} Signed Windows"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../pivx/contrib/gitian-descriptors/gitian-osx-signer.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../smc/contrib/gitian-descriptors/gitian-osx-signer.yml
 	# Signed Mac OSX
 	echo ""
 	echo "Verifying v${VERSION} Signed Mac OSX"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../pivx/contrib/gitian-descriptors/gitian-osx-signer.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../smc/contrib/gitian-descriptors/gitian-osx-signer.yml
 	popd
 fi
 
@@ -360,8 +360,8 @@ then
 	    echo ""
 	    echo "Signing ${VERSION} Windows"
 	    echo ""
-	    ./bin/gbuild -i --commit signature=${COMMIT} ../pivx/contrib/gitian-descriptors/gitian-win-signer.yml
-	    ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-win-signer.yml
+	    ./bin/gbuild -i --commit signature=${COMMIT} ../smc/contrib/gitian-descriptors/gitian-win-signer.yml
+	    ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../smc/contrib/gitian-descriptors/gitian-win-signer.yml
 	    mv build/out/pivx-*win64-setup.exe ../pivx-binaries/${VERSION}
 	    mv build/out/pivx-*win32-setup.exe ../pivx-binaries/${VERSION}
 	fi
@@ -371,8 +371,8 @@ then
 	    echo ""
 	    echo "Signing ${VERSION} Mac OSX"
 	    echo ""
-	    ./bin/gbuild -i --commit signature=${COMMIT} ../pivx/contrib/gitian-descriptors/gitian-osx-signer.yml
-	    ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-osx-signer.yml
+	    ./bin/gbuild -i --commit signature=${COMMIT} ../smc/contrib/gitian-descriptors/gitian-osx-signer.yml
+	    ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../smc/contrib/gitian-descriptors/gitian-osx-signer.yml
 	    mv build/out/pivx-osx-signed.dmg ../pivx-binaries/${VERSION}/pivx-${VERSION}-osx.dmg
 	fi
 	popd

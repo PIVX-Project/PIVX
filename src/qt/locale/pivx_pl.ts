@@ -1225,9 +1225,9 @@ Proszę sprawdzić adres i spróbować ponownie</translation>
     </message>
     <message>
         <source>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/pivx-project/pivx-project-translations</source>
+https://www.transifex.com/kobrin/smc-project-translations</source>
         <translation>Brakuje języka bądź nieukończona pełnego tłumaczenia? Pomóż w tłumaczeniu tutaj:
-https://www.transifex.com/pivx-project/pivx-project-translations </translation>
+https://www.transifex.com/kobrin/smc-project-translations </translation>
     </message>
     <message>
         <source>Connect to the PIVX network through a SOCKS5 proxy.</source>

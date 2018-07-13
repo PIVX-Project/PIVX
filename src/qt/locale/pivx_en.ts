@@ -2167,7 +2167,7 @@ Please check the address and try again.</source>
     <message>
         <location line="+21"/>
         <source>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/pivx-project/pivx-project-translations</source>
+https://www.transifex.com/kobrin/smc-project-translations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5326,8 +5326,8 @@ for example: alertnotify=echo %%s | mail -s &quot;PIVX Alert&quot; admin@foo.com
     </message>
     <message>
         <location line="+3"/>
-        <source>(51472 could be used only on mainnet)</source>
-        <translation type="unfinished">(51472 could be used only on mainnet)</translation>
+        <source>(50472 could be used only on mainnet)</source>
+        <translation type="unfinished">(50472 could be used only on mainnet)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -5341,7 +5341,7 @@ for example: alertnotify=echo %%s | mail -s &quot;PIVX Alert&quot; admin@foo.com
     </message>
     <message>
         <location line="+1"/>
-        <source>(must be 51472 for mainnet)</source>
+        <source>(must be 50472 for mainnet)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -1695,9 +1695,9 @@ Kontroller adressen og prøv igen.</translation>
     </message>
     <message>
         <source>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/pivx-project/pivx-project-translations</source>
+https://www.transifex.com/kobrin/smc-project-translations</source>
         <translation>Det valgte sprog mangler, eller oversættelsen er mangelfuld. Hjælp ved at bidrage med oversættelser her:
-https://www.transifex.com/pivx-project/pivx-project-translations</translation>
+https://www.transifex.com/kobrin/smc-project-translations</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -4118,8 +4118,8 @@ For eksempel: alertnotify=Echo %% | mail - s "PIVX ALARM!" e-mail@administrator.
         <translation>Der skal angives en masternodeprivkey i konfigurationen. For mere information, se i dokumentationen.</translation>
     </message>
     <message>
-        <source>(51472 could be used only on mainnet)</source>
-        <translation>(51472 kunne kun bruges på hovednettet)</translation>
+        <source>(50472 could be used only on mainnet)</source>
+        <translation>(50472 kunne kun bruges på hovednettet)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -4130,8 +4130,8 @@ For eksempel: alertnotify=Echo %% | mail - s "PIVX ALARM!" e-mail@administrator.
         <translation>(default: 1)</translation>
     </message>
     <message>
-        <source>(must be 51472 for mainnet)</source>
-        <translation>(skal være 51472 for hovednettet)</translation>
+        <source>(must be 50472 for mainnet)</source>
+        <translation>(skal være 50472 for hovednettet)</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>

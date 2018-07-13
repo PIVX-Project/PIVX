@@ -1,7 +1,7 @@
 PIVX Core integration/staging repository
 =====================================
 
-[![Build Status](https://travis-ci.org/PIVX-Project/PIVX.svg?branch=master)](https://travis-ci.org/PIVX-Project/PIVX) [![GitHub version](https://badge.fury.io/gh/PIVX-Project%2FPIVX.svg)](https://badge.fury.io/gh/PIVX-Project%2FPIVX)
+[![Build Status](https://travis-ci.org/kobrin/smc.svg?branch=master)](https://travis-ci.org/kobrin/smc) [![GitHub version](https://badge.fury.io/gh/PIVX-Project%2FPIVX.svg)](https://badge.fury.io/gh/PIVX-Project%2FPIVX)
 
 PIVX is a cutting edge cryptocurrency, with many features not available in most other cryptocurrencies.
 - Anonymized transactions using coin mixing technology, we call it _Obfuscation_.
