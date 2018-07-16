@@ -348,7 +348,7 @@ QT_TRANSLATE_NOOP("pivx-core", "Invalid amount for -paytxfee=<amount>: '%s' (mus
 QT_TRANSLATE_NOOP("pivx-core", "Invalid amount for -paytxfee=<amount>: '%s'"),
 QT_TRANSLATE_NOOP("pivx-core", "Invalid amount for -reservebalance=<amount>"),
 QT_TRANSLATE_NOOP("pivx-core", "Invalid amount"),
-QT_TRANSLATE_NOOP("pivx-core", "Invalid masternodeprivkey. Please see documenation."),
+QT_TRANSLATE_NOOP("pivx-core", "Invalid masternodeprivkey. Please see documentation."),
 QT_TRANSLATE_NOOP("pivx-core", "Invalid netmask specified in -whitelist: '%s'"),
 QT_TRANSLATE_NOOP("pivx-core", "Invalid port detected in masternode.conf"),
 QT_TRANSLATE_NOOP("pivx-core", "Invalid private key."),
