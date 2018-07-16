@@ -23,6 +23,11 @@ extern CWallet* pwalletMain;
 
 BOOST_AUTO_TEST_SUITE(rpc_wallet_tests)
 
+bool IsInvalidRequest(UniValue response)
+{
+    return response[0].get_int() == RPC_INVALID_REQUEST;
+}
+
 BOOST_AUTO_TEST_CASE(rpc_addmultisig)
 {
     LOCK(pwalletMain->cs_wallet);
@@ -48,18 +53,18 @@ BOOST_AUTO_TEST_CASE(rpc_addmultisig)
     address.SetString(v.get_str());
     BOOST_CHECK(address.IsValid() && address.IsScript());
 
-    BOOST_CHECK_THROW(addmultisig(createArgs(0), false), runtime_error);
-    BOOST_CHECK_THROW(addmultisig(createArgs(1), false), runtime_error);
-    BOOST_CHECK_THROW(addmultisig(createArgs(2, address1Hex), false), runtime_error);
+    BOOST_CHECK(IsInvalidRequest(addmultisig(createArgs(0), false)));
+    BOOST_CHECK(IsInvalidRequest(addmultisig(createArgs(1), false)));
+    BOOST_CHECK(IsInvalidRequest(addmultisig(createArgs(2, address1Hex), false)));
 
-    BOOST_CHECK_THROW(addmultisig(createArgs(1, ""), false), runtime_error);
-    BOOST_CHECK_THROW(addmultisig(createArgs(1, "NotAValidPubkey"), false), runtime_error);
+    BOOST_CHECK(IsInvalidRequest(addmultisig(createArgs(1, ""), false)));
+    BOOST_CHECK(IsInvalidRequest(addmultisig(createArgs(1, "NotAValidPubkey"), false)));
 
     string short1(address1Hex, address1Hex + sizeof(address1Hex) - 2); // last byte missing
-    BOOST_CHECK_THROW(addmultisig(createArgs(2, short1.c_str()), false), runtime_error);
+    BOOST_CHECK(IsInvalidRequest(addmultisig(createArgs(2, short1.c_str()), false)));
 
     string short2(address1Hex + 1, address1Hex + sizeof(address1Hex)); // first byte missing
-    BOOST_CHECK_THROW(addmultisig(createArgs(2, short2.c_str()), false), runtime_error);
+    BOOST_CHECK(IsInvalidRequest(addmultisig(createArgs(2, short2.c_str()), false)));
 }
 
 BOOST_AUTO_TEST_CASE(rpc_wallet)

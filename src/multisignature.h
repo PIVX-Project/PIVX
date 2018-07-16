@@ -24,7 +24,6 @@ private:
 
     CMultisignatureAddress() = default;
     bool HandleError(const std::string& err);
-    bool AddToWallet();
     void CreateEmptyInstance();
     void CreateRedeemScript();
     bool ValidateConfiguration();
@@ -35,13 +34,17 @@ private:
     void ParseSpacedRedeem(const std::string& strRedeemScript);
 
 public:
-    CMultisignatureAddress(int nSignaturesRequired, std::vector<std::string> vAddressOwners);
     explicit CMultisignatureAddress(std::string strRedeemScript);
-    CScript getRedeemScript() const { return scriptRedeem; }
-    CBitcoinAddress getAddress() const { return addressFull; }
-    int getSignaturesRequired() const { return nSigsRequired; }
-    std::string getErrorStatus() const { return strErrorStatus; }
-    std::vector<CPubKey> getAddressOwners() const { return vOwners; }
+    CMultisignatureAddress(int nSignaturesRequired, const std::vector<std::string>& vAddressOwners);
+    CScript GetRedeemScript() const { return scriptRedeem; }
+    CBitcoinAddress GetAddress() const { return addressFull; }
+    int GetSignaturesRequired() const { return nSigsRequired; }
+    std::string GetErrorStatus() const { return strErrorStatus; }
+    std::vector<CPubKey> GetAddressOwners() const { return vOwners; }
+
+#ifdef ENABLE_WALLET
+    bool AddToWallet(const std::string addressLabel);
+#endif
 };
 
 

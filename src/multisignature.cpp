@@ -14,39 +14,26 @@
 
 using namespace std;
 
-void CMultisignatureAddress::CreateEmptyInstance()
-{
-    HandleError("Failed to read redeem script format, returning empty instance.");
-    *this = CMultisignatureAddress();
-}
-
-CMultisignatureAddress::CMultisignatureAddress(std::string strRedeemScript)
-{
-    if(!ParseRedeemScript(strRedeemScript)) {
-        CreateEmptyInstance();
-    }
-}
-
-CMultisignatureAddress::CMultisignatureAddress(int nSignaturesRequired, vector<string> vAddressOwners)
+CMultisignatureAddress::CMultisignatureAddress(int nSignaturesRequired, const vector<string>& vAddressOwners)
 {
     nSigsRequired = nSignaturesRequired;
     nOwners = (int)vAddressOwners.size();
 
     if(!ValidateConfiguration()) {
-        HandleError("Invalid multisignature configuration");
-        CreateEmptyInstance();
+        return;
     }
 
-    if(!ConvertAndValidatePubKeys(move(vAddressOwners))){
-        HandleError("Failed to read public keys");
-        CreateEmptyInstance();
+    if(!ConvertAndValidatePubKeys(vAddressOwners)){
+        return;
     }
 
     CreateRedeemScript();
+}
 
-    if(!AddToWallet()) {
-        CreateEmptyInstance();
-    }
+
+CMultisignatureAddress::CMultisignatureAddress(string strRedeemScript)
+{
+    ParseRedeemScript(strRedeemScript);
 }
 
 bool CMultisignatureAddress::ValidateConfiguration()
@@ -114,27 +101,6 @@ bool CMultisignatureAddress::ConvertAndValidatePubKeys(vector<string> vstrPubKey
     }
 }
 
-bool CMultisignatureAddress::AddToWallet()
-{
-    if (::IsMine(*pwalletMain, scriptRedeem) == ISMINE_SPENDABLE) {
-        return HandleError("The wallet already contains this script");
-    }
-
-    if(!pwalletMain->AddCScript(scriptRedeem)) {
-        return HandleError("address invalid or already exists");
-    }
-
-    CScriptID scriptID(scriptRedeem);
-    if(!pwalletMain->AddMultiSig(scriptRedeem)) {
-        return HandleError("Failed to add script to wallet");
-    }
-
-    pwalletMain->SetAddressBook(scriptID, "new multisig", "receive");
-
-    addressFull = CBitcoinAddress(scriptID);
-    return true;
-}
-
 void CMultisignatureAddress::CreateRedeemScript()
 {
     scriptRedeem << CScript::EncodeOP_N(nSigsRequired);
@@ -145,6 +111,8 @@ void CMultisignatureAddress::CreateRedeemScript()
     //OP_N for total pubkeys
     scriptRedeem << CScript::EncodeOP_N(nOwners);
     scriptRedeem << OP_CHECKMULTISIG;
+
+    addressFull = CBitcoinAddress(CScriptID(scriptRedeem));
 }
 
 bool CMultisignatureAddress::ParseRedeemScript(const string& strRedeemScript)
@@ -211,15 +179,17 @@ void CMultisignatureAddress::ParseHexRedeem(const string& strRedeemScript)
     ss << ParseHex(strRedeemScript);
     CScript redeem;
     ss >> redeem;
-    redeem.pop_back(); //remove OP_CHECKMULTISIG
     ParseSpacedRedeem(redeem.ToString());
 }
 
 void CMultisignatureAddress::ParseSpacedRedeem(const string& strRedeemScript)
 {
-    vector<string> vstrSplitRedeem;
+    //trim leading and trailing spaces
+    string trimmed = regex_replace(strRedeemScript, regex("^\\s+"), "");
+    trimmed = regex_replace(strRedeemScript, regex("\\s+$"), "");
 
-    boost::split(vstrSplitRedeem, strRedeemScript, [](char c){return c == ' ';});
+    vector<string> vstrSplitRedeem;
+    boost::split(vstrSplitRedeem, trimmed, [](char c){return c == ' ';});
 
     int nSignatures = -1;
     try {
@@ -227,6 +197,10 @@ void CMultisignatureAddress::ParseSpacedRedeem(const string& strRedeemScript)
         vstrSplitRedeem.erase(vstrSplitRedeem.begin());
     } catch (...) {
         HandleError("failed to get amount of signatures required");
+    }
+
+    if(vstrSplitRedeem.back() == "OP_CHECKMULTISIG") {
+        vstrSplitRedeem.pop_back(); //remove OP code
     }
 
     if(!IsHex(vstrSplitRedeem.back())) {
@@ -242,3 +216,33 @@ bool CMultisignatureAddress::HandleError(const string& err)
     LogPrintf(err.data());
     return false;
 }
+
+//wallet only
+#ifdef ENABLE_WALLET
+bool CMultisignatureAddress::AddToWallet(const std::string addressLabel)
+{
+    {
+        LOCK2(cs_main, pwalletMain->cs_wallet);
+
+        try {
+            if (::IsMine(*pwalletMain, scriptRedeem) == ISMINE_SPENDABLE) {
+                return HandleError("The wallet already contains this script");
+            }
+
+            if(!pwalletMain->AddCScript(scriptRedeem)) {
+                return HandleError("address invalid or already exists");
+            }
+
+            CScriptID scriptID(scriptRedeem);
+            if(!pwalletMain->AddMultiSig(scriptRedeem)) {
+                return HandleError("Failed to add script to wallet");
+            }
+
+            pwalletMain->SetAddressBook(scriptID, addressLabel, "receive");
+            return true;
+        } catch(...) {
+            return false;
+        }
+    }
+}
+#endif

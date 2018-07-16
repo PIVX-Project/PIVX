@@ -28,377 +28,390 @@ typedef vector<unsigned char> valtype;
 
 BOOST_AUTO_TEST_SUITE(multisig_tests)
 
-    CScript
-    sign_multisig(CScript scriptPubKey, vector<CKey> keys, CTransaction transaction, int whichIn)
-    {
-        uint256 hash = SignatureHash(scriptPubKey, transaction, whichIn, SIGHASH_ALL);
+CScript
+sign_multisig(CScript scriptPubKey, vector<CKey> keys, CTransaction transaction, int whichIn)
+{
+    uint256 hash = SignatureHash(scriptPubKey, transaction, whichIn, SIGHASH_ALL);
 
-        CScript result;
-        result << OP_0; // CHECKMULTISIG bug workaround
-        BOOST_FOREACH(const CKey &key, keys)
-                    {
-                        vector<unsigned char> vchSig;
-                        BOOST_CHECK(key.Sign(hash, vchSig));
-                        vchSig.push_back((unsigned char)SIGHASH_ALL);
-                        result << vchSig;
-                    }
-        return result;
+    CScript result;
+    result << OP_0; // CHECKMULTISIG bug workaround
+    BOOST_FOREACH(const CKey &key, keys)
+    {
+        vector<unsigned char> vchSig;
+        BOOST_CHECK(key.Sign(hash, vchSig));
+        vchSig.push_back((unsigned char)SIGHASH_ALL);
+        result << vchSig;
+    }
+    return result;
+}
+
+BOOST_AUTO_TEST_CASE(multisig_verify)
+{
+    unsigned int flags = SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC;
+
+    ScriptError err;
+    CKey key[4];
+    for (int i = 0; i < 4; i++)
+        key[i].MakeNewKey(true);
+
+    CScript a_and_b;
+    a_and_b << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
+
+    CScript a_or_b;
+    a_or_b << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
+
+    CScript escrow;
+    escrow << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
+
+    CMutableTransaction txFrom;  // Funding transaction
+    txFrom.vout.resize(3);
+    txFrom.vout[0].scriptPubKey = a_and_b;
+    txFrom.vout[1].scriptPubKey = a_or_b;
+    txFrom.vout[2].scriptPubKey = escrow;
+
+    CMutableTransaction txTo[3]; // Spending transaction
+    for (int i = 0; i < 3; i++)
+    {
+        txTo[i].vin.resize(1);
+        txTo[i].vout.resize(1);
+        txTo[i].vin[0].prevout.n = i;
+        txTo[i].vin[0].prevout.hash = txFrom.GetHash();
+        txTo[i].vout[0].nValue = 1;
     }
 
-    BOOST_AUTO_TEST_CASE(multisig_verify)
+    vector<CKey> keys;
+    CScript s;
+
+    // Test a AND b:
+    keys.clear();
+    keys += key[0],key[1]; // magic operator+= from boost.assign
+    s = sign_multisig(a_and_b, keys, txTo[0], 0);
+    BOOST_CHECK(VerifyScript(s, a_and_b, flags, MutableTransactionSignatureChecker(&txTo[0], 0), &err));
+    BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
+
+    for (int i = 0; i < 4; i++)
     {
-        unsigned int flags = SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC;
-
-        ScriptError err;
-        CKey key[4];
-        for (int i = 0; i < 4; i++)
-            key[i].MakeNewKey(true);
-
-        CScript a_and_b;
-        a_and_b << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
-
-        CScript a_or_b;
-        a_or_b << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
-
-        CScript escrow;
-        escrow << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
-
-        CMutableTransaction txFrom;  // Funding transaction
-        txFrom.vout.resize(3);
-        txFrom.vout[0].scriptPubKey = a_and_b;
-        txFrom.vout[1].scriptPubKey = a_or_b;
-        txFrom.vout[2].scriptPubKey = escrow;
-
-        CMutableTransaction txTo[3]; // Spending transaction
-        for (int i = 0; i < 3; i++)
-        {
-            txTo[i].vin.resize(1);
-            txTo[i].vout.resize(1);
-            txTo[i].vin[0].prevout.n = i;
-            txTo[i].vin[0].prevout.hash = txFrom.GetHash();
-            txTo[i].vout[0].nValue = 1;
-        }
-
-        vector<CKey> keys;
-        CScript s;
-
-        // Test a AND b:
         keys.clear();
-        keys += key[0],key[1]; // magic operator+= from boost.assign
+        keys += key[i];
         s = sign_multisig(a_and_b, keys, txTo[0], 0);
-        BOOST_CHECK(VerifyScript(s, a_and_b, flags, MutableTransactionSignatureChecker(&txTo[0], 0), &err));
-        BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
+        BOOST_CHECK_MESSAGE(!VerifyScript(s, a_and_b, flags, MutableTransactionSignatureChecker(&txTo[0], 0), &err), strprintf("a&b 1: %d", i));
+        BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_INVALID_STACK_OPERATION, ScriptErrorString(err));
 
-        for (int i = 0; i < 4; i++)
+        keys.clear();
+        keys += key[1],key[i];
+        s = sign_multisig(a_and_b, keys, txTo[0], 0);
+        BOOST_CHECK_MESSAGE(!VerifyScript(s, a_and_b, flags, MutableTransactionSignatureChecker(&txTo[0], 0), &err), strprintf("a&b 2: %d", i));
+        BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_EVAL_FALSE, ScriptErrorString(err));
+    }
+
+    // Test a OR b:
+    for (int i = 0; i < 4; i++)
+    {
+        keys.clear();
+        keys += key[i];
+        s = sign_multisig(a_or_b, keys, txTo[1], 0);
+        if (i == 0 || i == 1)
         {
-            keys.clear();
-            keys += key[i];
-            s = sign_multisig(a_and_b, keys, txTo[0], 0);
-            BOOST_CHECK_MESSAGE(!VerifyScript(s, a_and_b, flags, MutableTransactionSignatureChecker(&txTo[0], 0), &err), strprintf("a&b 1: %d", i));
-            BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_INVALID_STACK_OPERATION, ScriptErrorString(err));
-
-            keys.clear();
-            keys += key[1],key[i];
-            s = sign_multisig(a_and_b, keys, txTo[0], 0);
-            BOOST_CHECK_MESSAGE(!VerifyScript(s, a_and_b, flags, MutableTransactionSignatureChecker(&txTo[0], 0), &err), strprintf("a&b 2: %d", i));
+            BOOST_CHECK_MESSAGE(VerifyScript(s, a_or_b, flags, MutableTransactionSignatureChecker(&txTo[1], 0), &err), strprintf("a|b: %d", i));
+            BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
+        }
+        else
+        {
+            BOOST_CHECK_MESSAGE(!VerifyScript(s, a_or_b, flags, MutableTransactionSignatureChecker(&txTo[1], 0), &err), strprintf("a|b: %d", i));
             BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_EVAL_FALSE, ScriptErrorString(err));
         }
+    }
+    s.clear();
+    s << OP_0 << OP_1;
+    BOOST_CHECK(!VerifyScript(s, a_or_b, flags, MutableTransactionSignatureChecker(&txTo[1], 0), &err));
+    BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_SIG_DER, ScriptErrorString(err));
 
-        // Test a OR b:
-        for (int i = 0; i < 4; i++)
+
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
         {
             keys.clear();
-            keys += key[i];
-            s = sign_multisig(a_or_b, keys, txTo[1], 0);
-            if (i == 0 || i == 1)
+            keys += key[i],key[j];
+            s = sign_multisig(escrow, keys, txTo[2], 0);
+            if (i < j && i < 3 && j < 3)
             {
-                BOOST_CHECK_MESSAGE(VerifyScript(s, a_or_b, flags, MutableTransactionSignatureChecker(&txTo[1], 0), &err), strprintf("a|b: %d", i));
+                BOOST_CHECK_MESSAGE(VerifyScript(s, escrow, flags, MutableTransactionSignatureChecker(&txTo[2], 0), &err), strprintf("escrow 1: %d %d", i, j));
                 BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
             }
             else
             {
-                BOOST_CHECK_MESSAGE(!VerifyScript(s, a_or_b, flags, MutableTransactionSignatureChecker(&txTo[1], 0), &err), strprintf("a|b: %d", i));
+                BOOST_CHECK_MESSAGE(!VerifyScript(s, escrow, flags, MutableTransactionSignatureChecker(&txTo[2], 0), &err), strprintf("escrow 2: %d %d", i, j));
                 BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_EVAL_FALSE, ScriptErrorString(err));
             }
         }
-        s.clear();
-        s << OP_0 << OP_1;
-        BOOST_CHECK(!VerifyScript(s, a_or_b, flags, MutableTransactionSignatureChecker(&txTo[1], 0), &err));
-        BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_SIG_DER, ScriptErrorString(err));
+}
 
+BOOST_AUTO_TEST_CASE(multisig_IsStandard)
+{
+    CKey key[4];
+    for (int i = 0; i < 4; i++)
+        key[i].MakeNewKey(true);
 
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++)
-            {
-                keys.clear();
-                keys += key[i],key[j];
-                s = sign_multisig(escrow, keys, txTo[2], 0);
-                if (i < j && i < 3 && j < 3)
-                {
-                    BOOST_CHECK_MESSAGE(VerifyScript(s, escrow, flags, MutableTransactionSignatureChecker(&txTo[2], 0), &err), strprintf("escrow 1: %d %d", i, j));
-                    BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
-                }
-                else
-                {
-                    BOOST_CHECK_MESSAGE(!VerifyScript(s, escrow, flags, MutableTransactionSignatureChecker(&txTo[2], 0), &err), strprintf("escrow 2: %d %d", i, j));
-                    BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_EVAL_FALSE, ScriptErrorString(err));
-                }
-            }
-    }
+    txnouttype whichType;
 
-    BOOST_AUTO_TEST_CASE(multisig_IsStandard)
+    CScript a_and_b;
+    a_and_b << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
+    BOOST_CHECK(::IsStandard(a_and_b, whichType));
+
+    CScript a_or_b;
+    a_or_b  << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
+    BOOST_CHECK(::IsStandard(a_or_b, whichType));
+
+    CScript escrow;
+    escrow << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
+    BOOST_CHECK(::IsStandard(escrow, whichType));
+
+    CScript one_of_four;
+    one_of_four << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << ToByteVector(key[3].GetPubKey()) << OP_4 << OP_CHECKMULTISIG;
+    BOOST_CHECK(!::IsStandard(one_of_four, whichType));
+
+    CScript malformed[6];
+    malformed[0] << OP_3 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
+    malformed[1] << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
+    malformed[2] << OP_0 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
+    malformed[3] << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_0 << OP_CHECKMULTISIG;
+    malformed[4] << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_CHECKMULTISIG;
+    malformed[5] << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey());
+
+    for (int i = 0; i < 6; i++)
+        BOOST_CHECK(!::IsStandard(malformed[i], whichType));
+}
+
+BOOST_AUTO_TEST_CASE(multisig_Solver1)
+{
+    // Tests Solver() that returns lists of keys that are
+    // required to satisfy a ScriptPubKey
+    //
+    // Also tests IsMine() and ExtractDestination()
+    //
+    // Note: ExtractDestination for the multisignature transactions
+    // always returns false for this release, even if you have
+    // one key that would satisfy an (a|b) or 2-of-3 keys needed
+    // to spend an escrow transaction.
+    //
+    CBasicKeyStore keystore, emptykeystore, partialkeystore;
+    CKey key[3];
+    CTxDestination keyaddr[3];
+    for (int i = 0; i < 3; i++)
     {
-        CKey key[4];
-        for (int i = 0; i < 4; i++)
-            key[i].MakeNewKey(true);
+        key[i].MakeNewKey(true);
+        keystore.AddKey(key[i]);
+        keyaddr[i] = key[i].GetPubKey().GetID();
+    }
+    partialkeystore.AddKey(key[0]);
 
+    {
+        vector<valtype> solutions;
         txnouttype whichType;
-
-        CScript a_and_b;
-        a_and_b << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
-        BOOST_CHECK(::IsStandard(a_and_b, whichType));
-
-        CScript a_or_b;
-        a_or_b  << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
-        BOOST_CHECK(::IsStandard(a_or_b, whichType));
-
-        CScript escrow;
-        escrow << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
-        BOOST_CHECK(::IsStandard(escrow, whichType));
-
-        CScript one_of_four;
-        one_of_four << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << ToByteVector(key[3].GetPubKey()) << OP_4 << OP_CHECKMULTISIG;
-        BOOST_CHECK(!::IsStandard(one_of_four, whichType));
-
-        CScript malformed[6];
-        malformed[0] << OP_3 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
-        malformed[1] << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
-        malformed[2] << OP_0 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
-        malformed[3] << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_0 << OP_CHECKMULTISIG;
-        malformed[4] << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_CHECKMULTISIG;
-        malformed[5] << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey());
-
-        for (int i = 0; i < 6; i++)
-            BOOST_CHECK(!::IsStandard(malformed[i], whichType));
+        CScript s;
+        s << ToByteVector(key[0].GetPubKey()) << OP_CHECKSIG;
+        BOOST_CHECK(Solver(s, whichType, solutions));
+        BOOST_CHECK(solutions.size() == 1);
+        CTxDestination addr;
+        BOOST_CHECK(ExtractDestination(s, addr));
+        BOOST_CHECK(addr == keyaddr[0]);
+#ifdef ENABLE_WALLET
+        BOOST_CHECK(IsMine(keystore, s));
+        BOOST_CHECK(!IsMine(emptykeystore, s));
+#endif
     }
-
-    BOOST_AUTO_TEST_CASE(multisig_Solver1)
     {
-        // Tests Solver() that returns lists of keys that are
-        // required to satisfy a ScriptPubKey
-        //
-        // Also tests IsMine() and ExtractDestination()
-        //
-        // Note: ExtractDestination for the multisignature transactions
-        // always returns false for this release, even if you have
-        // one key that would satisfy an (a|b) or 2-of-3 keys needed
-        // to spend an escrow transaction.
-        //
-        CBasicKeyStore keystore, emptykeystore, partialkeystore;
-        CKey key[3];
-        CTxDestination keyaddr[3];
-        for (int i = 0; i < 3; i++)
-        {
-            key[i].MakeNewKey(true);
-            keystore.AddKey(key[i]);
-            keyaddr[i] = key[i].GetPubKey().GetID();
-        }
-        partialkeystore.AddKey(key[0]);
-
-        {
-            vector<valtype> solutions;
-            txnouttype whichType;
-            CScript s;
-            s << ToByteVector(key[0].GetPubKey()) << OP_CHECKSIG;
-            BOOST_CHECK(Solver(s, whichType, solutions));
-            BOOST_CHECK(solutions.size() == 1);
-            CTxDestination addr;
-            BOOST_CHECK(ExtractDestination(s, addr));
-            BOOST_CHECK(addr == keyaddr[0]);
+        vector<valtype> solutions;
+        txnouttype whichType;
+        CScript s;
+        s << OP_DUP << OP_HASH160 << ToByteVector(key[0].GetPubKey().GetID()) << OP_EQUALVERIFY << OP_CHECKSIG;
+        BOOST_CHECK(Solver(s, whichType, solutions));
+        BOOST_CHECK(solutions.size() == 1);
+        CTxDestination addr;
+        BOOST_CHECK(ExtractDestination(s, addr));
+        BOOST_CHECK(addr == keyaddr[0]);
 #ifdef ENABLE_WALLET
-            BOOST_CHECK(IsMine(keystore, s));
+        BOOST_CHECK(IsMine(keystore, s));
         BOOST_CHECK(!IsMine(emptykeystore, s));
 #endif
-        }
-        {
-            vector<valtype> solutions;
-            txnouttype whichType;
-            CScript s;
-            s << OP_DUP << OP_HASH160 << ToByteVector(key[0].GetPubKey().GetID()) << OP_EQUALVERIFY << OP_CHECKSIG;
-            BOOST_CHECK(Solver(s, whichType, solutions));
-            BOOST_CHECK(solutions.size() == 1);
-            CTxDestination addr;
-            BOOST_CHECK(ExtractDestination(s, addr));
-            BOOST_CHECK(addr == keyaddr[0]);
+    }
+    {
+        vector<valtype> solutions;
+        txnouttype whichType;
+        CScript s;
+        s << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
+        BOOST_CHECK(Solver(s, whichType, solutions));
+        BOOST_CHECK_EQUAL(solutions.size(), 4U);
+        CTxDestination addr;
+        BOOST_CHECK(!ExtractDestination(s, addr));
 #ifdef ENABLE_WALLET
-            BOOST_CHECK(IsMine(keystore, s));
-        BOOST_CHECK(!IsMine(emptykeystore, s));
-#endif
-        }
-        {
-            vector<valtype> solutions;
-            txnouttype whichType;
-            CScript s;
-            s << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
-            BOOST_CHECK(Solver(s, whichType, solutions));
-            BOOST_CHECK_EQUAL(solutions.size(), 4U);
-            CTxDestination addr;
-            BOOST_CHECK(!ExtractDestination(s, addr));
-#ifdef ENABLE_WALLET
-            BOOST_CHECK(IsMine(keystore, s));
+        BOOST_CHECK(IsMine(keystore, s));
         BOOST_CHECK(!IsMine(emptykeystore, s));
         BOOST_CHECK(!IsMine(partialkeystore, s));
 #endif
-        }
-        {
-            vector<valtype> solutions;
-            txnouttype whichType;
-            CScript s;
-            s << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
-            BOOST_CHECK(Solver(s, whichType, solutions));
-            BOOST_CHECK_EQUAL(solutions.size(), 4U);
-            vector<CTxDestination> addrs;
-            int nRequired;
-            BOOST_CHECK(ExtractDestinations(s, whichType, addrs, nRequired));
-            BOOST_CHECK(addrs[0] == keyaddr[0]);
-            BOOST_CHECK(addrs[1] == keyaddr[1]);
-            BOOST_CHECK(nRequired == 1);
+    }
+    {
+        vector<valtype> solutions;
+        txnouttype whichType;
+        CScript s;
+        s << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
+        BOOST_CHECK(Solver(s, whichType, solutions));
+        BOOST_CHECK_EQUAL(solutions.size(), 4U);
+        vector<CTxDestination> addrs;
+        int nRequired;
+        BOOST_CHECK(ExtractDestinations(s, whichType, addrs, nRequired));
+        BOOST_CHECK(addrs[0] == keyaddr[0]);
+        BOOST_CHECK(addrs[1] == keyaddr[1]);
+        BOOST_CHECK(nRequired == 1);
 #ifdef ENABLE_WALLET
-            BOOST_CHECK(IsMine(keystore, s));
+        BOOST_CHECK(IsMine(keystore, s));
         BOOST_CHECK(!IsMine(emptykeystore, s));
         BOOST_CHECK(!IsMine(partialkeystore, s));
 #endif
-        }
-        {
-            vector<valtype> solutions;
-            txnouttype whichType;
-            CScript s;
-            s << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
-            BOOST_CHECK(Solver(s, whichType, solutions));
-            BOOST_CHECK(solutions.size() == 5);
-        }
     }
-
-    BOOST_AUTO_TEST_CASE(multisig_Sign)
     {
-        // Test SignSignature() (and therefore the version of Solver() that signs transactions)
-        CBasicKeyStore keystore;
-        CKey key[4];
-        for (int i = 0; i < 4; i++)
-        {
-            key[i].MakeNewKey(true);
-            keystore.AddKey(key[i]);
-        }
-
-        CScript a_and_b;
-        a_and_b << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
-
-        CScript a_or_b;
-        a_or_b  << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
-
-        CScript escrow;
-        escrow << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
-
-        CMutableTransaction txFrom;  // Funding transaction
-        txFrom.vout.resize(3);
-        txFrom.vout[0].scriptPubKey = a_and_b;
-        txFrom.vout[1].scriptPubKey = a_or_b;
-        txFrom.vout[2].scriptPubKey = escrow;
-
-        CMutableTransaction txTo[3]; // Spending transaction
-        for (int i = 0; i < 3; i++)
-        {
-            txTo[i].vin.resize(1);
-            txTo[i].vout.resize(1);
-            txTo[i].vin[0].prevout.n = i;
-            txTo[i].vin[0].prevout.hash = txFrom.GetHash();
-            txTo[i].vout[0].nValue = 1;
-        }
-
-        for (int i = 0; i < 3; i++)
-        {
-            BOOST_CHECK_MESSAGE(SignSignature(keystore, txFrom, txTo[i], 0), strprintf("SignSignature %d", i));
-        }
+        vector<valtype> solutions;
+        txnouttype whichType;
+        CScript s;
+        s << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
+        BOOST_CHECK(Solver(s, whichType, solutions));
+        BOOST_CHECK(solutions.size() == 5);
     }
+}
 
-    static const string strSecret1 ("YRYJwfAyJ9c2jhi3T2xQyLijGvM7yLTw4izDaNQLxBzgUYrQiPmJ");
-    static const string strSecret2 ("YNZyazHkwUbkmUpEYsBGWwHnHQTy2n9rJy1gS5k54YXVx3pE8n6N");
-    static const int nSigsRequired = 2;
-    static CBitcoinSecret s1, s2;
-    static CPubKey key1, key2;
-    static string strKey1, strKey2;
-    static vector<CPubKey> expectedKeys;
-    static CScript expectedRedeem;
-    static CBitcoinAddress expectedAddress;
-
-    void setUpRedeemParseTests()
+BOOST_AUTO_TEST_CASE(multisig_Sign)
+{
+    // Test SignSignature() (and therefore the version of Solver() that signs transactions)
+    CBasicKeyStore keystore;
+    CKey key[4];
+    for (int i = 0; i < 4; i++)
     {
-        s1.SetString(strSecret1);
-        s2.SetString(strSecret2);
-        key1 = s1.GetKey().GetPubKey();
-        key2 = s2.GetKey().GetPubKey();
-        strKey1 = (HexStr(key1));
-        strKey2 = (HexStr(key2));
-        expectedKeys = vector<CPubKey>{key1, key2};
-        expectedRedeem.clear();
-        expectedRedeem << CScript::EncodeOP_N(nSigsRequired);
-        expectedRedeem << ToByteVector(key1);
-        expectedRedeem << ToByteVector(key2);
-        expectedRedeem << CScript::EncodeOP_N(2);
-        expectedRedeem << OP_CHECKMULTISIG;
-        expectedAddress = CBitcoinAddress(CScriptID(expectedRedeem));
+        key[i].MakeNewKey(true);
+        keystore.AddKey(key[i]);
     }
 
-    BOOST_AUTO_TEST_CASE(multisig_from_hex)
+    CScript a_and_b;
+    a_and_b << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
+
+    CScript a_or_b;
+    a_or_b  << OP_1 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << OP_2 << OP_CHECKMULTISIG;
+
+    CScript escrow;
+    escrow << OP_2 << ToByteVector(key[0].GetPubKey()) << ToByteVector(key[1].GetPubKey()) << ToByteVector(key[2].GetPubKey()) << OP_3 << OP_CHECKMULTISIG;
+
+    CMutableTransaction txFrom;  // Funding transaction
+    txFrom.vout.resize(3);
+    txFrom.vout[0].scriptPubKey = a_and_b;
+    txFrom.vout[1].scriptPubKey = a_or_b;
+    txFrom.vout[2].scriptPubKey = escrow;
+
+    CMutableTransaction txTo[3]; // Spending transaction
+    for (int i = 0; i < 3; i++)
     {
-        setUpRedeemParseTests();
-
-        CMultisignatureAddress addressFromHex(HexStr(expectedRedeem.begin(), expectedRedeem.end()));
-
-        BOOST_CHECK_MESSAGE(addressFromHex.getSignaturesRequired() == 2, "Incorrect number of signatures required.");
-        BOOST_CHECK_MESSAGE(addressFromHex.getAddressOwners() == expectedKeys, "Incorrect public keys");
-        BOOST_CHECK_MESSAGE(addressFromHex.getRedeemScript() == expectedRedeem, "Incorrect redeem script");
-        BOOST_CHECK_MESSAGE(addressFromHex.getAddress() == expectedAddress, "Incorrect address");
+        txTo[i].vin.resize(1);
+        txTo[i].vout.resize(1);
+        txTo[i].vin[0].prevout.n = i;
+        txTo[i].vin[0].prevout.hash = txFrom.GetHash();
+        txTo[i].vout[0].nValue = 1;
     }
 
-    BOOST_AUTO_TEST_CASE(multisig_from_RPC)
+    for (int i = 0; i < 3; i++)
     {
-        setUpRedeemParseTests();
-
-        string testRedeemRPC =
-            strprintf(
-                R"(%d ["%s","%s"])",
-                nSigsRequired,
-                strKey1,
-                strKey2
-            );
-
-        CMultisignatureAddress addressFromRPC(testRedeemRPC);
-
-        BOOST_CHECK_MESSAGE(addressFromRPC.getSignaturesRequired() == 2, "Incorrect number of signatures required.");
-        BOOST_CHECK_MESSAGE(addressFromRPC.getAddressOwners() == expectedKeys, "Incorrect public keys");
-        BOOST_CHECK_MESSAGE(addressFromRPC.getRedeemScript() == expectedRedeem, "Incorrect redeem script");
-        BOOST_CHECK_MESSAGE(addressFromRPC.getAddress() == expectedAddress, "Incorrect address");
+        BOOST_CHECK_MESSAGE(SignSignature(keystore, txFrom, txTo[i], 0), strprintf("SignSignature %d", i));
     }
+}
 
-    BOOST_AUTO_TEST_CASE(multisig_from_spaced)
-    {
-        setUpRedeemParseTests();
-        string testRedeemSpaced =
-            strprintf(
-                "%d %s %s",
-                nSigsRequired,
-                strKey1,
-                strKey2
-            );
 
-        CMultisignatureAddress addressFromSpaced(testRedeemSpaced);
+static const string strSecret1 ("YRYJwfAyJ9c2jhi3T2xQyLijGvM7yLTw4izDaNQLxBzgUYrQiPmJ");
+static const string strSecret2 ("YNZyazHkwUbkmUpEYsBGWwHnHQTy2n9rJy1gS5k54YXVx3pE8n6N");
+static const int nSigsRequired = 2;
+static CBitcoinSecret s1, s2;
+static CPubKey key1, key2;
+static string strKey1, strKey2;
+static vector<CPubKey> expectedKeys;
+static CScript expectedRedeem;
+static CBitcoinAddress expectedAddress;
 
-        BOOST_CHECK_MESSAGE(addressFromSpaced.getSignaturesRequired() == 2, "Incorrect number of signatures required.");
-        BOOST_CHECK_MESSAGE(addressFromSpaced.getAddressOwners() == expectedKeys, "Incorrect public keys");
-        BOOST_CHECK_MESSAGE(addressFromSpaced.getRedeemScript() == expectedRedeem, "Incorrect redeem script");
-        BOOST_CHECK_MESSAGE(addressFromSpaced.getAddress() == expectedAddress, "Incorrect address");
-    }
+void setUpRedeemParseTests()
+{
+    s1.SetString(strSecret1);
+    s2.SetString(strSecret2);
+    key1 = s1.GetKey().GetPubKey();
+    key2 = s2.GetKey().GetPubKey();
+    strKey1 = (HexStr(key1));
+    strKey2 = (HexStr(key2));
+    expectedKeys = vector<CPubKey>{key1, key2};
+    expectedRedeem.clear();
+    expectedRedeem << CScript::EncodeOP_N(nSigsRequired);
+    expectedRedeem << ToByteVector(key1);
+    expectedRedeem << ToByteVector(key2);
+    expectedRedeem << CScript::EncodeOP_N(2);
+    expectedRedeem << OP_CHECKMULTISIG;
+    expectedAddress = CBitcoinAddress(CScriptID(expectedRedeem));
+}
+
+BOOST_AUTO_TEST_CASE(multisig_from_redeem_string)
+{
+    setUpRedeemParseTests();
+
+    CMultisignatureAddress addressFromRedeemString(expectedRedeem.ToString());
+
+    BOOST_CHECK_MESSAGE(addressFromRedeemString.GetSignaturesRequired() == 2, "Incorrect number of signatures required.");
+    BOOST_CHECK_MESSAGE(addressFromRedeemString.GetAddressOwners() == expectedKeys, "Incorrect public keys");
+    BOOST_CHECK_MESSAGE(addressFromRedeemString.GetRedeemScript() == expectedRedeem, "Incorrect redeem script");
+    BOOST_CHECK_MESSAGE(addressFromRedeemString.GetAddress() == expectedAddress, "Incorrect address");
+}
+
+BOOST_AUTO_TEST_CASE(multisig_from_hex)
+{
+    setUpRedeemParseTests();
+
+    CMultisignatureAddress addressFromHex(HexStr(expectedRedeem.begin(), expectedRedeem.end()));
+
+    BOOST_CHECK_MESSAGE(addressFromHex.GetSignaturesRequired() == 2, "Incorrect number of signatures required.");
+    BOOST_CHECK_MESSAGE(addressFromHex.GetAddressOwners() == expectedKeys, "Incorrect public keys");
+    BOOST_CHECK_MESSAGE(addressFromHex.GetRedeemScript() == expectedRedeem, "Incorrect redeem script");
+    BOOST_CHECK_MESSAGE(addressFromHex.GetAddress() == expectedAddress, "Incorrect address");
+}
+
+BOOST_AUTO_TEST_CASE(multisig_from_RPC)
+{
+    setUpRedeemParseTests();
+
+    string testRedeemRPC =
+        strprintf(
+            R"(%d ["%s","%s"])",
+            nSigsRequired,
+            strKey1,
+            strKey2
+        );
+
+    CMultisignatureAddress addressFromRPC(testRedeemRPC);
+
+    BOOST_CHECK_MESSAGE(addressFromRPC.GetSignaturesRequired() == 2, "Incorrect number of signatures required.");
+    BOOST_CHECK_MESSAGE(addressFromRPC.GetAddressOwners() == expectedKeys, "Incorrect public keys");
+    BOOST_CHECK_MESSAGE(addressFromRPC.GetRedeemScript() == expectedRedeem, "Incorrect redeem script");
+    BOOST_CHECK_MESSAGE(addressFromRPC.GetAddress() == expectedAddress, "Incorrect address");
+}
+
+BOOST_AUTO_TEST_CASE(multisig_from_spaced)
+{
+    setUpRedeemParseTests();
+    string testRedeemSpaced =
+        strprintf(
+            "%d %s %s",
+            nSigsRequired,
+            strKey1,
+            strKey2
+        );
+
+    CMultisignatureAddress addressFromSpaced(testRedeemSpaced);
+
+    BOOST_CHECK_MESSAGE(addressFromSpaced.GetSignaturesRequired() == 2, "Incorrect number of signatures required.");
+    BOOST_CHECK_MESSAGE(addressFromSpaced.GetAddressOwners() == expectedKeys, "Incorrect public keys");
+    BOOST_CHECK_MESSAGE(addressFromSpaced.GetRedeemScript() == expectedRedeem, "Incorrect redeem script");
+    BOOST_CHECK_MESSAGE(addressFromSpaced.GetAddress() == expectedAddress, "Incorrect address");
+}
 
 
 BOOST_AUTO_TEST_SUITE_END()
