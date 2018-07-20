@@ -380,33 +380,7 @@ public:
 
     bool SetHexBool(const std::string& str)
     {
-        // skip 0x
-        const char* psz = str.c_str();
-        while (isspace(*psz))
-            psz++;
-        bool fNegative = false;
-        if (*psz == '-')
-        {
-            fNegative = true;
-            psz++;
-        }
-        if (psz[0] == '0' && tolower(psz[1]) == 'x')
-            psz += 2;
-        while (isspace(*psz))
-            psz++;
-
-        // hex string to bignum
-        static const signed char phexdigit[256] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,1,2,3,4,5,6,7,8,9,0,0,0,0,0,0, 0,0xa,0xb,0xc,0xd,0xe,0xf,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0xa,0xb,0xc,0xd,0xe,0xf,0,0,0,0,0,0,0,0,0 };
-        *this = 0;
-        while (isxdigit(*psz))
-        {
-            *this <<= 4;
-            int n = phexdigit[(unsigned char)*psz++];
-            *this += n;
-        }
-        if (fNegative)
-            *this = 0 - *this;
-
+        BN_hex2bn(&bn, str.c_str());
         return true;
     }
 
