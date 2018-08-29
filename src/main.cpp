@@ -2574,6 +2574,12 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
     // move best block pointer to prevout block
     view.SetBestBlock(pindex->pprev->GetBlockHash());
 
+    // Check if supermajority for CLTV has changed.
+    bool fPrevCLTV = fCLTVHasMajority.load();
+    fCLTVHasMajority = CBlockIndex::IsSuperMajority(5, chainActive.Tip(), Params().EnforceBlockUpgradeMajority());
+    if (fPrevCLTV && !fCLTVHasMajority.load())
+        LogPrintf("Disconnected to before CHECKLOCKTIMEVERIFY supermajority. Verifications will be skipped.\n");
+
     if (!fVerifyingBlocks) {
         //if block is an accumulator checkpoint block, remove checkpoint and checksums from db
         uint256 nCheckpoint = pindex->nAccumulatorCheckpoint;
@@ -3045,6 +3051,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
             std::vector<CScriptCheck> vChecks;
             unsigned int flags = SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_DERSIG;
+
             if (!CheckInputs(tx, state, view, fScriptChecks, flags, false, nScriptCheckThreads ? &vChecks : NULL))
                 return false;
             control.Add(vChecks);
@@ -3246,6 +3253,10 @@ bool static FlushStateToDisk(CValidationState& state, FlushStateMode mode)
                 }
                 setDirtyBlockIndex.erase(it++);
             }
+
+            bool fIsActiveCLTV = fCLTVHasMajority.load();
+            pblocktree->WriteFlag("CLTVHasMajority", fIsActiveCLTV);
+
             pblocktree->Sync();
             // Finally flush the chainstate (which may refer to block index entries).
             if (!pcoinsTip->Flush())
@@ -4597,6 +4608,14 @@ bool ProcessNewBlock(CValidationState& state, CNode* pfrom, CBlock* pblock, CDis
         // If turned on Auto Combine will scan wallet for dust to combine
         if (pwalletMain->fCombineDust)
             pwalletMain->AutoCombineDust();
+    }
+
+    // If CLTV hasn't been activated check for a supermajority upon accepting new block.
+    if (!fCLTVHasMajority.load() && CBlockIndex::IsSuperMajority(5, chainActive.Tip(),
+            Params().EnforceBlockUpgradeMajority())) {
+
+        fCLTVHasMajority = true;
+        LogPrintf("CHECKLOCKTIMEVERIFY achieved supermajority! Transactions that use CLTV will now be verified.\n");
     }
 
     LogPrintf("%s : ACCEPTED Block %ld in %ld milliseconds with size=%d\n", __func__, GetHeight(), GetTimeMillis() - nStartTime,
