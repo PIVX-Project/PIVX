@@ -18,6 +18,7 @@
 #include "wallet.h"
 #include "walletdb.h"
 #include "zpivchain.h"
+#include "multisignature.h"
 
 #include <stdint.h>
 
@@ -1028,16 +1029,24 @@ UniValue addmultisigaddress(const UniValue& params, bool fHelp)
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
     string strAccount;
-    if (params.size() > 2)
+    if (params.size() > 2) {
         strAccount = AccountFromValue(params[2]);
+    }
 
-    // Construct using pay-to-script-hash:
-    CScript inner = _createmultisig_redeemScript(params);
-    CScriptID innerID(inner);
-    pwalletMain->AddCScript(inner);
+    UniValue keys(params[1].get_array());
+    vector<string> vKeys;
 
-    pwalletMain->SetAddressBook(innerID, strAccount, "send");
-    return CBitcoinAddress(innerID).ToString();
+    for(unsigned int i = 0; i < keys.size(); i++) {
+        vKeys.emplace_back(keys[i].get_str());
+    }
+
+    CMultisignatureAddress addr(params[0].get_int(), vKeys);
+
+    if(addr.GetErrorStatus().empty()) {
+        addr.AddToWallet(strAccount);
+        return addr.GetAddress().ToString();
+    }
+    return JSONRPCError(RPC_INVALID_REQUEST, addr.GetErrorStatus());
 }
 
 

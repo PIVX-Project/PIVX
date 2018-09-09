@@ -9,6 +9,7 @@
 #include <QFrame>
 #include <QString>
 #include <QVBoxLayout>
+#include "multisignature.h"
 #include "script/script.h"
 #include "primitives/transaction.h"
 #include "coins.h"
@@ -46,10 +47,9 @@ private:
     QFrame* createInput(int labelNumber);
     CCoinsViewCache getInputsCoinsViewCache(const std::vector<CTxIn>& vin);
     QString buildMultisigTxStatusString(bool fComplete, const CMutableTransaction& tx);
-    bool createRedeemScript(int m, std::vector<std::string> keys, CScript& redeemRet, std::string& errorRet);
     bool createMultisigTransaction(std::vector<CTxIn> vUserIn, std::vector<CTxOut> vUserOut, string& feeStringRet, string& errorRet);
     bool signMultisigTx(CMutableTransaction& txToSign, std::string& errorMessageRet, QVBoxLayout* keyList = nullptr);
-    bool addMultisig(int m, std::vector<std::string> keys);
+    bool addMultisig(CMultisignatureAddress address);
     bool isFullyVerified(CMutableTransaction& txToVerify);
 
 private slots:

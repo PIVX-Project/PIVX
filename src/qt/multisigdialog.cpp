@@ -34,9 +34,11 @@
 #include <QArgument>
 #include <QtGlobal>
 #include <QString>
+#include <multisignature.h>
+#include <thread>
 
 
-MultisigDialog::MultisigDialog(QWidget* parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
+MultisigDialog::MultisigDialog(QWidget* parent) : QDialog(parent),
                                                   ui(new Ui::MultisigDialog),
                                                   model(0)
 {
@@ -204,7 +206,7 @@ void MultisigDialog::on_addMultisigButton_clicked()
         }
     }
 
-    addMultisig(m, keys);
+    addMultisig(CMultisignatureAddress(m, keys));
 }
 
 void MultisigDialog::on_importAddressButton_clicked(){
@@ -215,63 +217,41 @@ void MultisigDialog::on_importAddressButton_clicked(){
 
     if(sRedeem.empty()){
         ui->addMultisigStatus->setStyleSheet("QLabel { color: red; }");
-        ui->addMultisigStatus->setText("Import box empty!");
+        ui->addMultisigStatus->setText(QApplication::translate("MultisigDialog", "Import box empty!"));
         return;
     }
 
-    vector<string> vRedeem;
-    size_t pos = 0;
-
-    //search redeem input delimited by space
-    while ((pos = sRedeem.find(" ")) != std::string::npos) {
-        vRedeem.push_back(sRedeem.substr(0, pos));
-        sRedeem.erase(0, pos + 1);
-    }
-
-    vector<string> keys(vRedeem.begin()+1, vRedeem.end()-1);
-
-    addMultisig(stoi(vRedeem[0]), keys);
-
-    // rescan to find txs associated with imported address
-    pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
-    pwalletMain->ReacceptWalletTransactions();
+    addMultisig(CMultisignatureAddress(sRedeem));
 }
 
-bool MultisigDialog::addMultisig(int m, vector<string> keys){
-    try{
-        string error;
-        CScript redeem;
+bool MultisigDialog::addMultisig(CMultisignatureAddress addr){
 
-        if(!createRedeemScript(m, keys, redeem, error)){
-            throw runtime_error(error.data());
-        }
-
-        if (::IsMine(*pwalletMain, redeem) == ISMINE_SPENDABLE){
-            throw runtime_error("The wallet already contains this script");
-        }
-
-        if(!pwalletMain->AddCScript(redeem)){
-            throw runtime_error("Failure: address invalid or already exists");
-        }
-
-        CScriptID innerID(redeem);
-        string label = ui->multisigAddressLabel->text().toStdString();
-        pwalletMain->SetAddressBook(innerID, label, "receive");
-        if (!pwalletMain->AddMultiSig(redeem)){
-            throw runtime_error("Failure: unable to add address as watch only");
-        }
-
-        ui->addMultisigStatus->setStyleSheet("QLabel { color: black; }");
-        ui->addMultisigStatus->setText("Multisignature address " +
-                                       QString::fromStdString(CBitcoinAddress(innerID).ToString()) +
-                                       " has been added to the wallet.\nSend the redeem below for other owners to import:\n" +
-                                       QString::fromStdString(redeem.ToString()));
-    }catch(const runtime_error& e) {
+    if(addr.GetErrorStatus() != "") {
         ui->addMultisigStatus->setStyleSheet("QLabel { color: red; }");
-        ui->addMultisigStatus->setText(tr(e.what()));
+        ui->addMultisigStatus->setText(tr(addr.GetErrorStatus().data()));
         return false;
+    } else {
+        if(!addr.AddToWallet(ui->multisigAddressLabel->text().toStdString())) {
+            ui->addMultisigStatus->setStyleSheet("QLabel { color: red; }");
+            ui->addMultisigStatus->setText(tr(addr.GetErrorStatus().data()));
+            return false;
+        } else {
+            ui->addMultisigStatus->setStyleSheet("QLabel { color: black; }");
+            ui->addMultisigStatus->setText(QApplication::translate("MultisigDialog", "Loading Transactions, please be patient..."));
+            QCoreApplication::processEvents(); //update gui
+
+            pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+            pwalletMain->ReacceptWalletTransactions();
+
+            ui->addMultisigStatus->setText(
+                QApplication::translate("MultisigDialog", strprintf("Multisignature address %s has been added to the wallet.\n"
+                                                                    "Send the redeem below for other owners to import:\n %s",
+                                                                  addr.GetAddress().ToString(), addr.GetRedeemScript().ToString()).c_str())
+            );
+        }
+
+        return true;
     }
-    return true;
 }
 
 
@@ -361,11 +341,11 @@ void MultisigDialog::on_createButton_clicked()
             //display status string
             ui->createButtonStatus->setStyleSheet("QTextEdit{ color: black }");
 
-            QString status(strprintf("Transaction has successfully created with a fee of %s.\n"
-                                             "The transaction has been automatically imported to the sign tab.\n"
-                                             "Please continue on to sign the tx from this wallet, to access the hex to send to other owners.", fee).c_str());
+            string status(strprintf("Transaction has successfully created with a fee of %s.\n"
+                                     "The transaction has been automatically imported to the sign tab.\n"
+                                     "Please continue on to sign the tx from this wallet, to access the hex to send to other owners.", fee));
 
-            ui->createButtonStatus->setText(status);
+            ui->createButtonStatus->setText(QApplication::translate("MultisigDialog", status.c_str()));
             ui->transactionHex->setText(QString::fromStdString(EncodeHexTx(multisigTx)));
 
         }
@@ -547,18 +527,18 @@ QString MultisigDialog::buildMultisigTxStatusString(bool fComplete, const CMutab
         ui->commitButton->setEnabled(true);
         string sTxId = tx.GetHash().GetHex();
         string sTxComplete   =  "Complete: true!\n"
-                "The commit button has now been enabled for you to finalize the transaction.\n"
-                "Once the commit button is clicked, the transaction will be published and coins transferred "
-                "to their destinations.\nWARNING: THE ACTIONS OF THE COMMIT BUTTON ARE FINAL AND CANNOT BE REVERSED.";
+                                "The commit button has now been enabled for you to finalize the transaction.\n"
+                                "Once the commit button is clicked, the transaction will be published and coins transferred "
+                                "to their destinations.\nWARNING: THE ACTIONS OF THE COMMIT BUTTON ARE FINAL AND CANNOT BE REVERSED.";
 
-        return QString(strprintf("%s\nTx Id:\n%s\nTx Hex:\n%s",sTxComplete, sTxId, sTxHex).c_str());
+        return QString(QApplication::translate("MultisigDialog", strprintf("%s\nTx Id:\n%s\nTx Hex:\n%s",sTxComplete, sTxId, sTxHex).c_str()));
     } else {
         string sTxIncomplete = "Complete: false.\n"
-                "You may now send the hex below to another owner to sign.\n"
-                "Keep in mind the transaction must be passed from one owner to the next for signing.\n"
-                "Ensure all owners have imported the redeem before trying to sign. (besides creator)";
+                               "You may now send the hex below to another owner to sign.\n"
+                               "Keep in mind the transaction must be passed from one owner to the next for signing.\n"
+                               "Ensure all owners have imported the redeem before trying to sign. (besides creator)";
 
-        return QString(strprintf("%s\nTx Hex: %s", sTxIncomplete, sTxHex).c_str());
+        return QString(QApplication::translate("MultisigDialog", strprintf("%s\nTx Hex: %s", sTxIncomplete, sTxHex).c_str()));
     }
 }
 
@@ -752,81 +732,9 @@ void MultisigDialog::commitMultisigTx()
 #endif
         //disable commit if successfully committed
         ui->commitButton->setEnabled(false);
-        ui->signButtonStatus->setText(strprintf("Transaction has been successfully published with transaction ID:\n %s", tx.GetHash().GetHex()).c_str());
+        ui->signButtonStatus->setText(QApplication::translate("MultisigDialog", strprintf("Transaction has been successfully published with transaction ID:\n %s", tx.GetHash().GetHex()).c_str()));
     }catch(const runtime_error& e){
-        ui->signButtonStatus->setText(e.what());
-    }
-}
-
-bool MultisigDialog::createRedeemScript(int m, vector<string> vKeys, CScript& redeemRet, string& errorRet)
-{
-    try{
-        int n = vKeys.size();
-        //gather pub keys
-        if (n < 1)
-            throw runtime_error("a Multisignature address must require at least one key to redeem");
-        if (n < m)
-            throw runtime_error(
-                    strprintf("not enough keys supplied "
-                                      "(got %d keys, but need at least %d to redeem)",
-                              m, n));
-        if (n > 15)
-            throw runtime_error("Number of addresses involved in the Multisignature address creation > 15\nReduce the number");
-
-        vector<CPubKey> pubkeys;
-        pubkeys.resize(n);
-
-        int i = 0;
-        for(vector<string>::iterator it = vKeys.begin(); it != vKeys.end(); ++it) {
-            string keyString = *it;
-#ifdef ENABLE_WALLET
-            // Case 1: PIVX address and we have full public key:
-            CBitcoinAddress address(keyString);
-            if (pwalletMain && address.IsValid()) {
-                CKeyID keyID;
-                if (!address.GetKeyID(keyID)) {
-                    throw runtime_error(
-                        strprintf("%s does not refer to a key", keyString));
-                }
-                CPubKey vchPubKey;
-                if (!pwalletMain->GetPubKey(keyID, vchPubKey))
-                    throw runtime_error(
-                        strprintf("no full public key for address %s", keyString));
-                if (!vchPubKey.IsFullyValid()){
-                    string sKey = keyString.empty()?"(empty)":keyString;
-                    throw runtime_error(" Invalid public key: " + sKey );
-                }
-                pubkeys[i++] = vchPubKey;
-            }
-
-            //case 2: hex pub key
-            else
-#endif
-            if (IsHex(keyString)) {
-                CPubKey vchPubKey(ParseHex(keyString));
-                if (!vchPubKey.IsFullyValid()){
-                    throw runtime_error(" Invalid public key: " + keyString);
-                }
-                pubkeys[i++] = vchPubKey;
-            } else {
-                throw runtime_error(" Invalid public key: " + keyString);
-            }
-        }
-        //populate redeem script
-        //OP_N for required signatures
-        redeemRet << redeemRet.EncodeOP_N(m);
-        //public keys
-        for(CPubKey& key : pubkeys){
-            vector<unsigned char> vKey= ToByteVector(key);
-            redeemRet << vKey;
-        }
-        //OP_N for total pubkeys
-        redeemRet << redeemRet.EncodeOP_N(pubkeys.size());
-        redeemRet << OP_CHECKMULTISIG;
-        return true;
-    }catch(const runtime_error& e){
-        errorRet = string(e.what());
-        return false;
+        ui->signButtonStatus->setText(QApplication::translate("MultisigDialog", e.what()));
     }
 }
 
