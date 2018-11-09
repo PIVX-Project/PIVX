@@ -9,8 +9,8 @@ reset-files.bash
 *.exe
 src/pivx
 src/syndicated
-src/pivx-cli
-src/pivx-tx
+src/syndicate-cli
+src/syndicate-tx
 src/test/test_pivx
 src/qt/test/test_pivx-qt
 

@@ -54,7 +54,7 @@ PID file:            /var/run/syndicated/syndicated.pid (OpenRC and Upstart)
 The configuration file, PID directory (if applicable) and data directory
 should all be owned by the pivx user and group.  It is advised for security
 reasons to make the configuration file and data directory only readable by the
-pivx user and group.  Access to pivx-cli and other syndicated rpc clients
+pivx user and group.  Access to syndicate-cli and other syndicated rpc clients
 can then be controlled by group membership.
 
 4. Installing Service Configuration

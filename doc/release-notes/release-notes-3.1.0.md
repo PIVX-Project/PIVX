@@ -348,7 +348,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 ### RPC/REST
  - #562 `772160b1b` [Wallet/RPC] Add argument to mint zerocoin from specific UTXO (warrows)
  - #539 `b6a02e9d6` [RPC] Allow watchonly coins to be shown for listunspent (blondfrogs)
- - #543 `e4522ff07` [RPC] Segfault pivx-cli getinfo while loading block index (Mrs-X)
+ - #543 `e4522ff07` [RPC] Segfault syndicate-cli getinfo while loading block index (Mrs-X)
  - #524 `2541b5001` [RPC] Add blocksizenotify command (Mrs-X)
  - #495 `4946224c1` [RPC] Show script verification errors in signrawtransaction result (Fuzzbawls)
  - #468 `00b8b8e72` [RPC/REST] Migrate to libevent based httpd server (Fuzzbawls)

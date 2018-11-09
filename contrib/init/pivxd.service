@@ -12,7 +12,7 @@ PIDFile=/var/lib/syndicated/syndicated.pid
 ExecStart=/usr/bin/syndicated -daemon -pid=/var/lib/syndicated/syndicated.pid \
           -conf=/etc/pivx/pivx.conf -datadir=/var/lib/syndicated
 
-ExecStop=-/usr/bin/pivx-cli -conf=/etc/pivx/pivx.conf \
+ExecStop=-/usr/bin/syndicate-cli -conf=/etc/pivx/pivx.conf \
          -datadir=/var/lib/syndicated stop
 
 Restart=always

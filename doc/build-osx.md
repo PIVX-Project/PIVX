@@ -86,7 +86,7 @@ Creating a release build
 ------------------------
 You can ignore this section if you are building `syndicated` for your own use.
 
-syndicated/pivx-cli binaries are not included in the pivx-Qt.app bundle.
+syndicated/syndicate-cli binaries are not included in the pivx-Qt.app bundle.
 
 If you are building `syndicated` or `pivx-qt` for others, your build machine should be set up
 as follows for maximum compatibility:
@@ -122,5 +122,5 @@ Other commands:
 -------
 
     ./syndicated -daemon # to start the pivx daemon.
-    ./pivx-cli --help  # for a list of command-line options.
-    ./pivx-cli help    # When the daemon is running, to get a list of RPC commands
+    ./syndicate-cli --help  # for a list of command-line options.
+    ./syndicate-cli help    # When the daemon is running, to get a list of RPC commands

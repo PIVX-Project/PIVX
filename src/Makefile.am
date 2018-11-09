@@ -69,7 +69,7 @@ if BUILD_BITCOIND
 endif
 
 if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += pivx-cli pivx-tx
+  bin_PROGRAMS += syndicate-cli syndicate-tx
 endif
 
 .PHONY: FORCE
@@ -398,7 +398,7 @@ libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
 AM_LDFLAGS += $(COMPAT_LDFLAGS)
 endif
 
-# cli: shared between pivx-cli and pivx-qt
+# cli: shared between syndicate-cli and pivx-qt
 libbitcoin_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_cli_a_SOURCES = \
@@ -433,36 +433,36 @@ syndicated_LDADD = \
 
 syndicated_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
 
-# pivx-cli binary #
-pivx_cli_SOURCES = pivx-cli.cpp
-pivx_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-pivx_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-pivx_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# syndicate-cli binary #
+syndicate_cli_SOURCES = syndicate-cli.cpp
+syndicate_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+syndicate_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+syndicate_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-pivx_cli_SOURCES += pivx-cli-res.rc
+syndicate_cli_SOURCES += syndicate-cli-res.rc
 endif
 
-pivx_cli_LDADD = \
+syndicate_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO)
 
-pivx_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+syndicate_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
-# pivx-tx binary #
-pivx_tx_SOURCES = pivx-tx.cpp
-pivx_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-pivx_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-pivx_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# syndicate-tx binary #
+syndicate_tx_SOURCES = syndicate-tx.cpp
+syndicate_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+syndicate_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+syndicate_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-pivx_tx_SOURCES += pivx-tx-res.rc
+syndicate_tx_SOURCES += syndicate-tx-res.rc
 endif
 
-pivx_tx_LDADD = \
+syndicate_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_ZEROCOIN) \
@@ -470,7 +470,7 @@ pivx_tx_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-pivx_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+syndicate_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # bitcoinconsensus library #

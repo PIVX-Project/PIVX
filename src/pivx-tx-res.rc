@@ -17,13 +17,13 @@ BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
             VALUE "CompanyName",        "PIVX"
-            VALUE "FileDescription",    "pivx-tx (CLI PIVX transaction editor utility)"
+            VALUE "FileDescription",    "syndicate-tx (CLI PIVX transaction editor utility)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
-            VALUE "InternalName",       "pivx-tx"
+            VALUE "InternalName",       "syndicate-tx"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "pivx-tx.exe"
-            VALUE "ProductName",        "pivx-tx"
+            VALUE "OriginalFilename",   "syndicate-tx.exe"
+            VALUE "ProductName",        "syndicate-tx"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

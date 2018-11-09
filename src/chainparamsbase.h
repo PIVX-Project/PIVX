@@ -10,7 +10,7 @@
 #include <vector>
 
 /**
- * CBaseChainParams defines the base parameters (shared between pivx-cli and syndicated)
+ * CBaseChainParams defines the base parameters (shared between syndicate-cli and syndicated)
  * of a given instance of the Pivx system.
  */
 class CBaseChainParams
