@@ -22,7 +22,7 @@ Build-Depends: debhelper,
  libqrencode-dev,
  libprotobuf-dev, protobuf-compiler
 Standards-Version: 3.9.2
-Homepage: http://www.pivx.org
+Homepage: http://synx.online
 Vcs-Git: git://github.com/PIVX-Project/PIVX.git
 Vcs-Browser: http://github.com/PIVX-Project/PIVX
 
