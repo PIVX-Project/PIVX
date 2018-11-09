@@ -1,25 +1,25 @@
-# /etc/conf.d/pivxd: config file for /etc/init.d/pivxd
+# /etc/conf.d/syndicated: config file for /etc/init.d/syndicated
 
 # Config file location
 #BITCOIND_CONFIGFILE="/etc/pivx/pivx.conf"
 
 # What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
-#BITCOIND_PIDDIR="/var/run/pivxd"
+#BITCOIND_PIDDIR="/var/run/syndicated"
 
 # What filename to give the pidfile
-#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/pivxd.pid"
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/syndicated.pid"
 
-# Where to write pivxd data (be mindful that the blockchain is large)
-#BITCOIND_DATADIR="/var/lib/pivxd"
+# Where to write syndicated data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/syndicated"
 
-# User and group to own pivxd process
+# User and group to own syndicated process
 #BITCOIND_USER="pivx"
 #BITCOIND_GROUP="pivx"
 
-# Path to pivxd executable
-#BITCOIND_BIN="/usr/bin/pivxd"
+# Path to syndicated executable
+#BITCOIND_BIN="/usr/bin/syndicated"
 
-# Nice value to run pivxd under
+# Nice value to run syndicated under
 #BITCOIND_NICE=0
 
 # Additional options (avoid -conf and -datadir, use flags above)

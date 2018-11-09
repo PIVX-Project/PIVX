@@ -8,7 +8,7 @@ reset-files.bash
 
 *.exe
 src/pivx
-src/pivxd
+src/syndicated
 src/pivx-cli
 src/pivx-tx
 src/test/test_pivx

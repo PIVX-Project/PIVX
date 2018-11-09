@@ -1,6 +1,6 @@
 Mac OS X Build Instructions and Notes
 ====================================
-This guide will show you how to build pivxd (headless client) for OSX.
+This guide will show you how to build syndicated (headless client) for OSX.
 
 Notes
 -----
@@ -40,7 +40,7 @@ Instructions: Homebrew
 
         brew install autoconf automake berkeley-db4 libtool boost miniupnpc openssl pkg-config protobuf qt5 zmq libevent
 
-### Building `pivxd`
+### Building `syndicated`
 
 1. Clone the github tree to get the source code and go into the directory.
 
@@ -52,7 +52,7 @@ Instructions: Homebrew
         export LDFLAGS+=-L/usr/local/opt/openssl/lib
         export CPPFLAGS+=-I/usr/local/opt/openssl/include
 
-3.  Build pivxd:
+3.  Build syndicated:
 
         ./autogen.sh
         ./configure --with-gui=qt5
@@ -62,7 +62,7 @@ Instructions: Homebrew
 
         make check
 
-5.  (Optional) You can also install pivxd to your path:
+5.  (Optional) You can also install syndicated to your path:
 
         make install
 
@@ -84,11 +84,11 @@ Download Qt Creator from http://www.qt.io/download/. Download the "community edi
 
 Creating a release build
 ------------------------
-You can ignore this section if you are building `pivxd` for your own use.
+You can ignore this section if you are building `syndicated` for your own use.
 
-pivxd/pivx-cli binaries are not included in the pivx-Qt.app bundle.
+syndicated/pivx-cli binaries are not included in the pivx-Qt.app bundle.
 
-If you are building `pivxd` or `pivx-qt` for others, your build machine should be set up
+If you are building `syndicated` or `pivx-qt` for others, your build machine should be set up
 as follows for maximum compatibility:
 
 All dependencies should be compiled with these flags:
@@ -103,10 +103,10 @@ bundle is packaged and signed to create the .dmg disk image that is distributed.
 Running
 -------
 
-It's now available at `./pivxd`, provided that you are still in the `src`
+It's now available at `./syndicated`, provided that you are still in the `src`
 directory. We have to first create the RPC configuration file, though.
 
-Run `./pivxd` to get the filename where it should be put, or just try these
+Run `./syndicated` to get the filename where it should be put, or just try these
 commands:
 
     echo -e "rpcuser=pivxrpc\nrpcpassword=$(xxd -l 16 -p /dev/urandom)" > "/Users/${USER}/Library/Application Support/PIVX/pivx.conf"
@@ -121,6 +121,6 @@ you can monitor its process by looking at the debug.log file, like this:
 Other commands:
 -------
 
-    ./pivxd -daemon # to start the pivx daemon.
+    ./syndicated -daemon # to start the pivx daemon.
     ./pivx-cli --help  # for a list of command-line options.
     ./pivx-cli help    # When the daemon is running, to get a list of RPC commands

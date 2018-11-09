@@ -1,11 +1,11 @@
-# bash programmable completion for pivxd(1) and pivx-cli(1)
+# bash programmable completion for syndicated(1) and pivx-cli(1)
 # Copyright (c) 2012,2014 Christian von Roques <roques@mti.ag>
 # Distributed under the MIT/X11 software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-have pivxd && {
+have syndicated && {
 
-# call $pivxd for RPC
+# call $syndicated for RPC
 _pivx_rpc() {
     # determine already specified args necessary for RPC
     local rpcargs=()
@@ -16,7 +16,7 @@ _pivx_rpc() {
                 ;;
         esac
     done
-    $pivxd "${rpcargs[@]}" "$@"
+    $syndicated "${rpcargs[@]}" "$@"
 }
 
 # Add pivx accounts to COMPREPLY
@@ -26,13 +26,13 @@ _pivx_accounts() {
     COMPREPLY=( "${COMPREPLY[@]}" $( compgen -W "$accounts" -- "$cur" ) )
 }
 
-_pivxd() {
+_syndicated() {
     local cur prev words=() cword
-    local pivxd
+    local syndicated
 
-    # save and use original argument to invoke pivxd
-    # pivxd might not be in $PATH
-    pivxd="$1"
+    # save and use original argument to invoke syndicated
+    # syndicated might not be in $PATH
+    syndicated="$1"
 
     COMPREPLY=()
     _get_comp_words_by_ref -n = cur prev words cword
@@ -114,7 +114,7 @@ _pivxd() {
 
             # only parse --help if senseful
             if [[ -z "$cur" || "$cur" =~ ^- ]]; then
-                helpopts=$($pivxd --help 2>&1 | awk '$1 ~ /^-/ { sub(/=.*/, "="); print $1 }' )
+                helpopts=$($syndicated --help 2>&1 | awk '$1 ~ /^-/ { sub(/=.*/, "="); print $1 }' )
             fi
 
             # only parse help if senseful
@@ -133,7 +133,7 @@ _pivxd() {
     esac
 }
 
-complete -F _pivxd pivxd pivx-cli
+complete -F _syndicated syndicated pivx-cli
 }
 
 # Local variables:

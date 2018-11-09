@@ -80,7 +80,7 @@ bool AppInit(int argc, char* argv[])
             strUsage += LicenseInfo();
         } else {
             strUsage += "\n" + _("Usage:") + "\n" +
-                        "  pivxd [options]                     " + _("Start Pivx Core Daemon") + "\n";
+                        "  syndicated [options]                     " + _("Start Pivx Core Daemon") + "\n";
 
             strUsage += "\n" + HelpMessage(HMM_BITCOIND);
         }
@@ -120,7 +120,7 @@ bool AppInit(int argc, char* argv[])
                 fCommandLine = true;
 
         if (fCommandLine) {
-            fprintf(stderr, "Error: There is no RPC client functionality in pivxd anymore. Use the pivx-cli utility instead.\n");
+            fprintf(stderr, "Error: There is no RPC client functionality in syndicated anymore. Use the pivx-cli utility instead.\n");
             exit(1);
         }
 #ifndef WIN32
@@ -171,7 +171,7 @@ int main(int argc, char* argv[])
 {
     SetupEnvironment();
 
-    // Connect pivxd signal handlers
+    // Connect syndicated signal handlers
     noui_connect();
 
     return (AppInit(argc, argv) ? 0 : 1);

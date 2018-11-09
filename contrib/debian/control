@@ -26,7 +26,7 @@ Homepage: http://synx.online
 Vcs-Git: git://github.com/PIVX-Project/PIVX.git
 Vcs-Browser: http://github.com/PIVX-Project/PIVX
 
-Package: pivxd
+Package: syndicated
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: peer-to-peer network based digital currency - daemon
@@ -39,7 +39,7 @@ Description: peer-to-peer network based digital currency - daemon
  Full transaction history is stored locally at each client.  This
  requires 1+ GB of space, slowly growing.
  .
- This package provides the daemon, pivxd, and the CLI tool
+ This package provides the daemon, syndicated, and the CLI tool
  pivx-cli to interact with the daemon.
 
 Package: pivx-qt

@@ -15,7 +15,7 @@ Users updating from a previous version after Tuesday, May 8, 2018 12:00:00 AM GM
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or syndicated/pivx-qt (on Linux).
 
 
 Compatibility
@@ -176,7 +176,7 @@ The PIVX client peer bans now have additional RPC commands to manage peers. Peer
 
 When no `-rpcpassword` is specified, the daemon now uses a special 'cookie' file for authentication. This file is generated with random content when the daemon starts, and deleted when it exits. Its contents are used as authentication token. Read access to this file controls who can access through RPC. By default it is stored in the data directory but its location can be overridden with the option `-rpccookiefile`.
 This is similar to Tor's CookieAuthentication: see https://www.torproject.org/docs/tor-manual.html.en 
-This allows running pivxd without having to do any manual configuration.
+This allows running syndicated without having to do any manual configuration.
 
 
 ### New RPC command

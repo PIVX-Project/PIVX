@@ -7,13 +7,13 @@ User=pivx
 Group=pivx
 
 Type=forking
-PIDFile=/var/lib/pivxd/pivxd.pid
+PIDFile=/var/lib/syndicated/syndicated.pid
 
-ExecStart=/usr/bin/pivxd -daemon -pid=/var/lib/pivxd/pivxd.pid \
-          -conf=/etc/pivx/pivx.conf -datadir=/var/lib/pivxd
+ExecStart=/usr/bin/syndicated -daemon -pid=/var/lib/syndicated/syndicated.pid \
+          -conf=/etc/pivx/pivx.conf -datadir=/var/lib/syndicated
 
 ExecStop=-/usr/bin/pivx-cli -conf=/etc/pivx/pivx.conf \
-         -datadir=/var/lib/pivxd stop
+         -datadir=/var/lib/syndicated stop
 
 Restart=always
 PrivateTmp=true

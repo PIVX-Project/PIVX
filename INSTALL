@@ -8,6 +8,6 @@ Use the autogen script to prepare the build environment.
 
 Always verify the signatures and checksums.
 
-See doc/build-*.md for instructions on building pivxd,
+See doc/build-*.md for instructions on building syndicated,
 the intended-for-services, no-graphical-interface, reference
 implementation of PIVX.

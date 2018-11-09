@@ -1,10 +1,10 @@
 Sample configuration files for:
 
-SystemD: pivxd.service
-Upstart: pivxd.conf
-OpenRC:  pivxd.openrc
-         pivxd.openrcconf
-CentOS:  pivxd.init
+SystemD: syndicated.service
+Upstart: syndicated.conf
+OpenRC:  syndicated.openrc
+         syndicated.openrcconf
+CentOS:  syndicated.init
 
 have been made available to assist packagers in creating node packages here.
 
