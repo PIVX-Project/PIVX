@@ -144,8 +144,8 @@
         <translation>Czy na pewno chcesz zakodować portfel?</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR PIV&lt;/b&gt;!</source>
-        <translation>Ostrzeżenie: Jeżeli zakodujesz portfel i stracisz do niego hasło , UTRACISZ WSZYSTKIE PIV!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR SYNX&lt;/b&gt;!</source>
+        <translation>Ostrzeżenie: Jeżeli zakodujesz portfel i stracisz do niego hasło , UTRACISZ WSZYSTKIE SYNX!</translation>
     </message>
     <message>
         <source>Wallet encrypted</source>
@@ -2021,7 +2021,7 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations </tra
     </message>
     </context>
 <context>
-    <name>ZPivControlDialog</name>
+    <name>ZSynxControlDialog</name>
     <message>
         <source>0</source>
         <translation>0</translation>

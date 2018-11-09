@@ -321,7 +321,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>ZPivControlDialog</name>
+    <name>ZSynxControlDialog</name>
     </context>
 <context>
     <name>syndicate-core</name>

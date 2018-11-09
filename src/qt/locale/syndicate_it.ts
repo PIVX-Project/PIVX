@@ -176,16 +176,16 @@
         <translation>Conferma cifratura portafoglio</translation>
     </message>
     <message>
-        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
-        <translation>Syndicate verrà ora chiuso per completare il processo di cifratura. Ricorda che crittografare il tuo portafoglio non protegge completamente i tuoi PIV dal furto da parte di software malevoli che potrebbero infettare il tuo computer.</translation>
+        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your SYNXs from being stolen by malware infecting your computer.</source>
+        <translation>Syndicate verrà ora chiuso per completare il processo di cifratura. Ricorda che crittografare il tuo portafoglio non protegge completamente i tuoi SYNX dal furto da parte di software malevoli che potrebbero infettare il tuo computer.</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
         <translation>Confermi di voler crittografare il portafoglio?</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR PIV&lt;/b&gt;!</source>
-        <translation>Attenzione: Se crittografi il portafoglio e poi perdi la parola d'ordine, &lt;b&gt;PERDERAI TUTTI I TUOI PIV&lt;7b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR SYNX&lt;/b&gt;!</source>
+        <translation>Attenzione: Se crittografi il portafoglio e poi perdi la parola d'ordine, &lt;b&gt;PERDERAI TUTTI I TUOI SYNX&lt;7b&gt;!</translation>
     </message>
     <message>
         <source>Wallet encrypted</source>
@@ -433,8 +433,8 @@
         <translation>Espora la cronologia delle transazioni</translation>
     </message>
     <message>
-        <source>Privacy Actions for zPIV</source>
-        <translation>Operazioni di privacy per zPIV</translation>
+        <source>Privacy Actions for zSYNX</source>
+        <translation>Operazioni di privacy per zSYNX</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
@@ -738,7 +738,7 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Syndicate network</source>
-        <translation><numerusform>%n connessione attiva alla rete PIVIX</numerusform><numerusform>%n connessioni attive alla rete PIVIX</numerusform></translation>
+        <translation><numerusform>%n connessione attiva alla rete SYNXIX</numerusform><numerusform>%n connessioni attive alla rete SYNXIX</numerusform></translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -1126,8 +1126,8 @@ MultiSend: %1</translation>
         <translation>Questa etichetta diventa rossa se uno dei destinatari riceve un importo inferiore a %1.</translation>
     </message>
     <message>
-        <source>Can vary +/- %1 upiv per input.</source>
-        <translation>Può variare di +/- %1 uPIV per input.</translation>
+        <source>Can vary +/- %1 usynx per input.</source>
+        <translation>Può variare di +/- %1 uSYNX per input.</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1275,7 +1275,7 @@ MultiSend: %1</translation>
     </message>
     <message>
         <source>Welcome to Syndicate Core.</source>
-        <translation>Benvenuto in PIVIX Core.</translation>
+        <translation>Benvenuto in SYNXIX Core.</translation>
     </message>
     <message>
         <source>As this is the first time the program is launched, you can choose where Syndicate Core will store its data.</source>
@@ -1671,12 +1671,12 @@ Per favore controlla l'indirizzo e riprova nuovamente.</translation>
         <translation>Configura Offuscamento</translation>
     </message>
     <message>
-        <source>Use 2 separate masternodes to mix funds up to 10000 PIV</source>
-        <translation>Usa 2 masternodi diversi per mescolare fino a 10000 PIV</translation>
+        <source>Use 2 separate masternodes to mix funds up to 10000 SYNX</source>
+        <translation>Usa 2 masternodi diversi per mescolare fino a 10000 SYNX</translation>
     </message>
     <message>
-        <source>Use 8 separate masternodes to mix funds up to 10000 PIV</source>
-        <translation>Usa 8 masternodi diversi per mixare fino a 10000 PIV</translation>
+        <source>Use 8 separate masternodes to mix funds up to 10000 SYNX</source>
+        <translation>Usa 8 masternodi diversi per mixare fino a 10000 SYNX</translation>
     </message>
     <message>
         <source>Use 16 separate masternodes</source>
@@ -1713,24 +1713,24 @@ Per favore controlla l'indirizzo e riprova nuovamente.</translation>
         <translation>Mappa la porta utilizzando &amp;UPnP</translation>
     </message>
     <message>
-        <source>Enable automatic minting of PIV units to zPIV</source>
-        <translation>Attiva il conio automatico di unità PIV in zPIV</translation>
+        <source>Enable automatic minting of SYNX units to zSYNX</source>
+        <translation>Attiva il conio automatico di unità SYNX in zSYNX</translation>
     </message>
     <message>
-        <source>Enable zPIV Automint</source>
-        <translation>Attiva Conio automatico zPIV</translation>
+        <source>Enable zSYNX Automint</source>
+        <translation>Attiva Conio automatico zSYNX</translation>
     </message>
     <message>
-        <source>Percentage of incoming PIV which get automatically converted to zPIV via Zerocoin Protocol (min: 10%)</source>
-        <translation>Percentuale di PIV in entrata che viene automaticamente convertita in zPIV attraverso il protocollo Zerocoin (min: 10%)</translation>
+        <source>Percentage of incoming SYNX which get automatically converted to zSYNX via Zerocoin Protocol (min: 10%)</source>
+        <translation>Percentuale di SYNX in entrata che viene automaticamente convertita in zSYNX attraverso il protocollo Zerocoin (min: 10%)</translation>
     </message>
     <message>
-        <source>Percentage of autominted zPIV</source>
-        <translation>Percentuale di zPIV Percentuale di zPIV da coniare automaticamente</translation>
+        <source>Percentage of autominted zSYNX</source>
+        <translation>Percentuale di zSYNX Percentuale di zSYNX da coniare automaticamente</translation>
     </message>
     <message>
-        <source>Preferred Automint zPIV Denomination</source>
-        <translation>Denominazione preferita conio automatico zPIV</translation>
+        <source>Preferred Automint zSYNX Denomination</source>
+        <translation>Denominazione preferita conio automatico zSYNX</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -1792,8 +1792,8 @@ Per favore controlla l'indirizzo e riprova nuovamente.</translation>
         <translation>Saldo totale, inclusi tutte le monete non disponibili.</translation>
     </message>
     <message>
-        <source>PIV Balance</source>
-        <translation>Bilancio PIV</translation>
+        <source>SYNX Balance</source>
+        <translation>Bilancio SYNX</translation>
     </message>
     <message>
         <source>Immature:</source>
@@ -1808,14 +1808,14 @@ Per favore controlla l'indirizzo e riprova nuovamente.</translation>
         <translation>Il tuo saldo Syndicate corrente, incluse le transazioni non confermate e non mature</translation>
     </message>
     <message>
-        <source>zPIV Balance</source>
-        <translation>Bilancio zPIV</translation>
+        <source>zSYNX Balance</source>
+        <translation>Bilancio zSYNX</translation>
     </message>
     <message>
         <source>Mature: more than 20 confirmation and more than 1 mint of the same denomination after it was minted.
-These zPIV are spendable.</source>
+These zSYNX are spendable.</source>
         <translation>Maturi: più di 20 conferme e più di 1 conio della stessa denominazione dopo il conio.
-Questi zPIV sono spendibili.</translation>
+Questi zSYNX sono spendibili.</translation>
     </message>
     <message>
         <source>OVERVIEW</source>
@@ -1846,8 +1846,8 @@ Questi zPIV sono spendibili.</translation>
         <translation>Spendibili:</translation>
     </message>
     <message>
-        <source>Locked PIV or Masternode collaterals. These are excluded from zPIV minting.</source>
-        <translation>PIV bloccati o collaterali Masternodo. Questi sono esclusi dal conio di zPIV.</translation>
+        <source>Locked SYNX or Masternode collaterals. These are excluded from zSYNX minting.</source>
+        <translation>SYNX bloccati o collaterali Masternodo. Questi sono esclusi dal conio di zSYNX.</translation>
     </message>
     <message>
         <source>Locked:</source>
@@ -1858,18 +1858,18 @@ Questi zPIV sono spendibili.</translation>
         <translation>Non confermati:</translation>
     </message>
     <message>
-        <source>Your current zPIV balance, unconfirmed and immature zPIV included.</source>
-        <translation>Il tuo saldo zPIV corrente, inclusi zPIV non confermati e non maturi</translation>
+        <source>Your current zSYNX balance, unconfirmed and immature zSYNX included.</source>
+        <translation>Il tuo saldo zSYNX corrente, inclusi zSYNX non confermati e non maturi</translation>
     </message>
     <message>
         <source>Recent transactions</source>
         <translation>Transazioni recenti</translation>
     </message>
     <message>
-        <source>Current percentage of zPIV.
+        <source>Current percentage of zSYNX.
 If AutoMint is enabled this percentage will settle around the configured AutoMint percentage (default = 10%).
 </source>
-        <translation>Percentuale corrente di zPIV.
+        <translation>Percentuale corrente di zSYNX.
 Se il conio automatico è attivato questa percentuale si stabilizzerà all'incirca sulla percentuale stabilita per il conio automatico (percentuale prestabilita = 10%).
 </translation>
     </message>
@@ -1933,12 +1933,12 @@ Per attivare il Conio automatico cambiare 'enablezeromint=0' in 'enablezeromint=
         <translation>0</translation>
     </message>
     <message>
-        <source>zPIV</source>
-        <translation>zPIV</translation>
+        <source>zSYNX</source>
+        <translation>zSYNX</translation>
     </message>
     <message>
-        <source>0.000 000 00 PIV</source>
-        <translation>0.000 000 00 PIV</translation>
+        <source>0.000 000 00 SYNX</source>
+        <translation>0.000 000 00 SYNX</translation>
     </message>
     <message>
         <source>Reset</source>
@@ -1961,16 +1961,16 @@ Per attivare il Conio automatico cambiare 'enablezeromint=0' in 'enablezeromint=
         <translation>PRIVACY</translation>
     </message>
     <message>
-        <source>Enter an amount of Piv to convert to zPIV</source>
-        <translation>Immetti un importo di PIV da convertire in zPIV</translation>
+        <source>Enter an amount of Synx to convert to zSYNX</source>
+        <translation>Immetti un importo di SYNX da convertire in zSYNX</translation>
     </message>
     <message>
-        <source>zPIV Control</source>
-        <translation>Controllo zPIV</translation>
+        <source>zSYNX Control</source>
+        <translation>Controllo zSYNX</translation>
     </message>
     <message>
-        <source>zPIV Selected:</source>
-        <translation>zPIV selezionati:</translation>
+        <source>zSYNX Selected:</source>
+        <translation>zSYNX selezionati:</translation>
     </message>
     <message>
         <source>Quantity Selected:</source>
@@ -1981,23 +1981,23 @@ Per attivare il Conio automatico cambiare 'enablezeromint=0' in 'enablezeromint=
         <translation>Spendi Zerocoin</translation>
     </message>
     <message>
-        <source>Available (mature and spendable) zPIV for spending</source>
-        <translation>zPIV disponibili disponibili per essere spesi (maturi e spendibili)</translation>
+        <source>Available (mature and spendable) zSYNX for spending</source>
+        <translation>zSYNX disponibili disponibili per essere spesi (maturi e spendibili)</translation>
     </message>
     <message>
         <source>Available Balance:</source>
         <translation>Bilancio Disponibile:</translation>
     </message>
     <message>
-        <source>Available (mature and spendable) zPIV for spending
+        <source>Available (mature and spendable) zSYNX for spending
 
-zPIV are mature when they have more than 20 confirmations AND more than 2 mints of the same denomination after them were minted</source>
-        <translation>zPIV disponibili disponibili per essere spesi (maturi e spendibili)
-Gli zPIV sono maturi quando hanno più di 20 conferme E più di 2 conii della stessa denominazione dopo che sono stati coniati</translation>
+zSYNX are mature when they have more than 20 confirmations AND more than 2 mints of the same denomination after them were minted</source>
+        <translation>zSYNX disponibili disponibili per essere spesi (maturi e spendibili)
+Gli zSYNX sono maturi quando hanno più di 20 conferme E più di 2 conii della stessa denominazione dopo che sono stati coniati</translation>
     </message>
     <message>
-        <source>0 zPIV</source>
-        <translation>0 zPIV</translation>
+        <source>0 zSYNX</source>
+        <translation>0 zSYNX</translation>
     </message>
     <message>
         <source>Pay &amp;To:</source>
@@ -2040,31 +2040,31 @@ Gli zPIV sono maturi quando hanno più di 20 conferme E più di 2 conii della st
         <translation>Statistiche Zerocoin:</translation>
     </message>
     <message>
-        <source>Total Balance including unconfirmed and immature zPIV</source>
-        <translation>Saldo totale inclusi zPIV non confermati e non maturi</translation>
+        <source>Total Balance including unconfirmed and immature zSYNX</source>
+        <translation>Saldo totale inclusi zSYNX non confermati e non maturi</translation>
     </message>
     <message>
         <source>Total Zerocoin  Balance:</source>
         <translation>Saldo totale Zerocoin:</translation>
     </message>
     <message>
-        <source>Show the current status of automatic zPIV minting.
+        <source>Show the current status of automatic zSYNX minting.
 
 To change the status (restart required):
 - enable: add 'enablezeromint=1' to syndicate.conf
 - disable: add 'enablezeromint=0' to syndicate.conf
 
 To change the percentage (no restart required):
-- menu Settings-&gt;Options-&gt;Percentage of autominted zPIV
+- menu Settings-&gt;Options-&gt;Percentage of autominted zSYNX
 
 </source>
-        <translation>Mostra lo stato corrente del conio automatico zPIV.
+        <translation>Mostra lo stato corrente del conio automatico zSYNX.
 Per cambiare lo stato (riavvio necessario):
 - attivato: aggiungi 'enablezeromint=1' a syndicate.conf
 - disattivato: aggiungi 'enablezeromint=0' a syndicate.conf
 
 Per cambiare la percentuale (riavvio non necessario):
-- menu Impostazioni-&gt;Opzioni-&gt;Percentuale di zPIV da coniare automaticamente
+- menu Impostazioni-&gt;Opzioni-&gt;Percentuale di zSYNX da coniare automaticamente
 
 </translation>
     </message>
@@ -2209,8 +2209,8 @@ Per cambiare la percentuale (riavvio non necessario):
         <translation>Copia ammontare</translation>
     </message>
     <message>
-        <source>zPIV Mint</source>
-        <translation>Conio zPIV</translation>
+        <source>zSYNX Mint</source>
+        <translation>Conio zSYNX</translation>
     </message>
     <message>
         <source>AutoMint Status:</source>
@@ -2666,14 +2666,14 @@ Per cambiare la percentuale (riavvio non necessario):
     </message>
     </context>
 <context>
-    <name>ZPivControlDialog</name>
+    <name>ZSynxControlDialog</name>
     <message>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <source>zPIV</source>
-        <translation>zPIV</translation>
+        <source>zSYNX</source>
+        <translation>zSYNX</translation>
     </message>
     </context>
 <context>

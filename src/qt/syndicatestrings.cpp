@@ -58,12 +58,12 @@ QT_TRANSLATE_NOOP("syndicate-core", ""
 QT_TRANSLATE_NOOP("syndicate-core", ""
 "Enable SwiftX, show confirmations for locked transactions (bool, default: %s)"),
 QT_TRANSLATE_NOOP("syndicate-core", ""
-"Enable automatic wallet backups triggered after each zPIV minting (0-1, "
+"Enable automatic wallet backups triggered after each zSYNX minting (0-1, "
 "default: %u)"),
 QT_TRANSLATE_NOOP("syndicate-core", ""
-"Enable or disable staking functionality for PIV inputs (0-1, default: %u)"),
+"Enable or disable staking functionality for SYNX inputs (0-1, default: %u)"),
 QT_TRANSLATE_NOOP("syndicate-core", ""
-"Enable or disable staking functionality for zPIV inputs (0-1, default: %u)"),
+"Enable or disable staking functionality for zSYNX inputs (0-1, default: %u)"),
 QT_TRANSLATE_NOOP("syndicate-core", ""
 "Enable spork administration functionality with the appropriate private key."),
 QT_TRANSLATE_NOOP("syndicate-core", ""
@@ -100,10 +100,10 @@ QT_TRANSLATE_NOOP("syndicate-core", ""
 QT_TRANSLATE_NOOP("syndicate-core", ""
 "Failed to find coin set amongst held coins with less than maxNumber of Spends"),
 QT_TRANSLATE_NOOP("syndicate-core", ""
-"Fees (in PIV/Kb) smaller than this are considered zero fee for relaying "
+"Fees (in SYNX/Kb) smaller than this are considered zero fee for relaying "
 "(default: %s)"),
 QT_TRANSLATE_NOOP("syndicate-core", ""
-"Fees (in PIV/Kb) smaller than this are considered zero fee for transaction "
+"Fees (in SYNX/Kb) smaller than this are considered zero fee for transaction "
 "creation (default: %s)"),
 QT_TRANSLATE_NOOP("syndicate-core", ""
 "Flush database activity from memory pool to disk log every <n> megabytes "
@@ -171,7 +171,7 @@ QT_TRANSLATE_NOOP("syndicate-core", ""
 "Show N confirmations for a successfully locked transaction (0-9999, default: "
 "%u)"),
 QT_TRANSLATE_NOOP("syndicate-core", ""
-"Specify custom backup path to add a copy of any automatic zPIV backup. If "
+"Specify custom backup path to add a copy of any automatic zSYNX backup. If "
 "set as dir, every backup generates a timestamped file. If set as file, will "
 "rewrite to that file every backup. If backuppath is set as well, 4 backups "
 "will happen"),
@@ -197,10 +197,10 @@ QT_TRANSLATE_NOOP("syndicate-core", ""
 "Unable to locate enough Obfuscation denominated funds for this transaction."),
 QT_TRANSLATE_NOOP("syndicate-core", ""
 "Unable to locate enough Obfuscation non-denominated funds for this "
-"transaction that are not equal 10000 PIV."),
+"transaction that are not equal 10000 SYNX."),
 QT_TRANSLATE_NOOP("syndicate-core", ""
 "Unable to locate enough funds for this transaction that are not equal 10000 "
-"PIV."),
+"SYNX."),
 QT_TRANSLATE_NOOP("syndicate-core", ""
 "Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: "
 "%s)"),
@@ -321,7 +321,7 @@ QT_TRANSLATE_NOOP("syndicate-core", "Failed to read block"),
 QT_TRANSLATE_NOOP("syndicate-core", "Failed to select a zerocoin"),
 QT_TRANSLATE_NOOP("syndicate-core", "Failed to wipe zerocoinDB"),
 QT_TRANSLATE_NOOP("syndicate-core", "Failed to write coin serial number into wallet"),
-QT_TRANSLATE_NOOP("syndicate-core", "Fee (in PIV/kB) to add to transactions you send (default: %s)"),
+QT_TRANSLATE_NOOP("syndicate-core", "Fee (in SYNX/kB) to add to transactions you send (default: %s)"),
 QT_TRANSLATE_NOOP("syndicate-core", "Finalizing transaction."),
 QT_TRANSLATE_NOOP("syndicate-core", "Force safe mode (default: %u)"),
 QT_TRANSLATE_NOOP("syndicate-core", "Found enough users, signing ( waiting %s )"),
@@ -410,7 +410,7 @@ QT_TRANSLATE_NOOP("syndicate-core", "Randomly drop 1 of every <n> network messag
 QT_TRANSLATE_NOOP("syndicate-core", "Randomly fuzz 1 of every <n> network messages"),
 QT_TRANSLATE_NOOP("syndicate-core", "Rebuild block chain index from current blk000??.dat files"),
 QT_TRANSLATE_NOOP("syndicate-core", "Receive and display P2P network alerts (default: %u)"),
-QT_TRANSLATE_NOOP("syndicate-core", "Reindex the PIV and zPIV money supply statistics"),
+QT_TRANSLATE_NOOP("syndicate-core", "Reindex the SYNX and zSYNX money supply statistics"),
 QT_TRANSLATE_NOOP("syndicate-core", "Reindex the accumulator database"),
 QT_TRANSLATE_NOOP("syndicate-core", "Reindexing zerocoin database..."),
 QT_TRANSLATE_NOOP("syndicate-core", "Reindexing zerocoin failed"),
@@ -462,7 +462,7 @@ QT_TRANSLATE_NOOP("syndicate-core", "Synchronizing budgets..."),
 QT_TRANSLATE_NOOP("syndicate-core", "Synchronizing masternode winners..."),
 QT_TRANSLATE_NOOP("syndicate-core", "Synchronizing masternodes..."),
 QT_TRANSLATE_NOOP("syndicate-core", "Synchronizing sporks..."),
-QT_TRANSLATE_NOOP("syndicate-core", "Syncing zPIV wallet..."),
+QT_TRANSLATE_NOOP("syndicate-core", "Syncing zSYNX wallet..."),
 QT_TRANSLATE_NOOP("syndicate-core", "The coin spend has been used"),
 QT_TRANSLATE_NOOP("syndicate-core", "The new spend coin transaction did not verify"),
 QT_TRANSLATE_NOOP("syndicate-core", "The selected mint coin is an invalid coin"),
@@ -499,11 +499,11 @@ QT_TRANSLATE_NOOP("syndicate-core", "Use UPnP to map the listening port (default
 QT_TRANSLATE_NOOP("syndicate-core", "Use a custom max chain reorganization depth (default: %u)"),
 QT_TRANSLATE_NOOP("syndicate-core", "Use the test network"),
 QT_TRANSLATE_NOOP("syndicate-core", "Username for JSON-RPC connections"),
-QT_TRANSLATE_NOOP("syndicate-core", "Value is below the smallest available denomination (= 1) of zPIV"),
+QT_TRANSLATE_NOOP("syndicate-core", "Value is below the smallest available denomination (= 1) of zSYNX"),
 QT_TRANSLATE_NOOP("syndicate-core", "Value more than Obfuscation pool maximum allows."),
 QT_TRANSLATE_NOOP("syndicate-core", "Verifying blocks..."),
 QT_TRANSLATE_NOOP("syndicate-core", "Verifying wallet..."),
-QT_TRANSLATE_NOOP("syndicate-core", "Version 1 zPIV require a security level of 100 to successfully spend."),
+QT_TRANSLATE_NOOP("syndicate-core", "Version 1 zSYNX require a security level of 100 to successfully spend."),
 QT_TRANSLATE_NOOP("syndicate-core", "Wallet %s resides outside data directory %s"),
 QT_TRANSLATE_NOOP("syndicate-core", "Wallet is locked."),
 QT_TRANSLATE_NOOP("syndicate-core", "Wallet needed to be rewritten: restart Syndicate Core to complete"),

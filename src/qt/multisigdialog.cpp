@@ -417,7 +417,7 @@ bool MultisigDialog::createMultisigTransaction(vector<CTxIn> vUserIn, vector<CTx
         }
 
         if(totalIn < totalOut){
-            throw runtime_error("Not enough PIV provided as input to complete transaction (including fee).");
+            throw runtime_error("Not enough SYNX provided as input to complete transaction (including fee).");
         }
 
         //calculate change amount
@@ -482,7 +482,7 @@ bool MultisigDialog::createMultisigTransaction(vector<CTxIn> vUserIn, vector<CTx
             tx.vout.at(changeIndex).nValue -= fee;
             feeStringRet = strprintf("%d",((double)fee)/COIN).c_str();
         }else{
-            throw runtime_error("Not enough PIV provided to cover fee");
+            throw runtime_error("Not enough SYNX provided to cover fee");
         }
 
         //clear junk from script sigs

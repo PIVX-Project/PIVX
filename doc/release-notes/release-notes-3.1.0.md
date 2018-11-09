@@ -40,48 +40,48 @@ frequently tested on them.
 Notable Changes
 ==============
 
-zPIV Updates
+zSYNX Updates
 --------------
 
-### zPIV Staking
+### zSYNX Staking
 
-zPIV Staking is here! zPIV staking will be activated on the morning of the 8th of May 2018. With the release of zPIV staking, there are effectively 2 versions of zPIV, zPIV minted on the 3.0.6 Syndicate wallet or lower, and zPIV minted on Syndicate wallet version or higher. New features in this release will require the use of zPIV v2, zPIV minted on this wallet release 3.1.0 or later. If you currently hold zPIV v1 and wish to take advantage of zPIV staking and deterministic zPIV, you will need to spend the zPIV v1 to yourself and remint zPIV v2.
-Note: To find your zPIV version, click the privacy tab, then the zPIV Control button then expand the arrows next to the desired denomination.
-
-
-### Deterministic zPIV Seed Keys
-
-zPIV is now associated with a deterministic seed key. With this seed key, users are able to securely backup their zPIV outside of the wallet that the zPIV had been minted on. zPIV can also be transferred from wallet to wallet without the need of transferring the wallet data file.
+zSYNX Staking is here! zSYNX staking will be activated on the morning of the 8th of May 2018. With the release of zSYNX staking, there are effectively 2 versions of zSYNX, zSYNX minted on the 3.0.6 Syndicate wallet or lower, and zSYNX minted on Syndicate wallet version or higher. New features in this release will require the use of zSYNX v2, zSYNX minted on this wallet release 3.1.0 or later. If you currently hold zSYNX v1 and wish to take advantage of zSYNX staking and deterministic zSYNX, you will need to spend the zSYNX v1 to yourself and remint zSYNX v2.
+Note: To find your zSYNX version, click the privacy tab, then the zSYNX Control button then expand the arrows next to the desired denomination.
 
 
-### Updated zPIV minting
+### Deterministic zSYNX Seed Keys
 
-zPIV minting now only requires 1 further mint (down from 2) to mature. zPIV mints still require 20 confirmations.  Mints also require that the 'second' mint is at least two checkpoints deep in the chain (this was already the case, but the logic was not as precise).
-
-
-### zPIV Search
-
-Users will now have the ability to search the blockchain for a specific serial # to see if a zPIV denomination has been spent or not.
+zSYNX is now associated with a deterministic seed key. With this seed key, users are able to securely backup their zSYNX outside of the wallet that the zSYNX had been minted on. zSYNX can also be transferred from wallet to wallet without the need of transferring the wallet data file.
 
 
+### Updated zSYNX minting
 
-PIV/zPIV Staking and Masternode Rewards
+zSYNX minting now only requires 1 further mint (down from 2) to mature. zSYNX mints still require 20 confirmations.  Mints also require that the 'second' mint is at least two checkpoints deep in the chain (this was already the case, but the logic was not as precise).
+
+
+### zSYNX Search
+
+Users will now have the ability to search the blockchain for a specific serial # to see if a zSYNX denomination has been spent or not.
+
+
+
+SYNX/zSYNX Staking and Masternode Rewards
 --------------
 
-### PIV, zPIV and Masternode Payment Schedule
+### SYNX, zSYNX and Masternode Payment Schedule
 
-To encourage the use of zPIV and increase the Syndicate zerocoin anonymity set, the Syndicate payment schedule has been changed to the following:
+To encourage the use of zSYNX and increase the Syndicate zerocoin anonymity set, the Syndicate payment schedule has been changed to the following:
 
-If a user staking zPIV wins the reward for their block, the following zPIV reward will be: 
-- 3 zPIV (3 x 1 denominations) rewarded to the staker, 2 PIV rewarded to the masternode owner and 1 PIV available for the budget. This is a total block reward of 6 PIV, up from 5.
+If a user staking zSYNX wins the reward for their block, the following zSYNX reward will be: 
+- 3 zSYNX (3 x 1 denominations) rewarded to the staker, 2 SYNX rewarded to the masternode owner and 1 SYNX available for the budget. This is a total block reward of 6 SYNX, up from 5.
 
-If a user staking PIV wins the reward, the following amounts will be rewarded: 
-- 2 PIV to the PIV staker, 3 PIV to the Masternode owner and 1 PIV available for the budget. This is a total block reward of 6 PIV, up from 5.
+If a user staking SYNX wins the reward, the following amounts will be rewarded: 
+- 2 SYNX to the SYNX staker, 3 SYNX to the Masternode owner and 1 SYNX available for the budget. This is a total block reward of 6 SYNX, up from 5.
 
 
-### Return change to sender when minting zPIV
+### Return change to sender when minting zSYNX
 
-Previously, zPIV minting would send any change to a newly generated "change address". This has caused confusion among some users, and in some cases insufficient backups of the wallet. The wallet will now find the contributing address which contained the most PIV and return the change from a zPIV mint to that address.
+Previously, zSYNX minting would send any change to a newly generated "change address". This has caused confusion among some users, and in some cases insufficient backups of the wallet. The wallet will now find the contributing address which contained the most SYNX and return the change from a zSYNX mint to that address.
 
 
 User Experience
@@ -97,9 +97,9 @@ The overview tab has been simplified greatly to display only balances that are a
 ### Wallet Options
 
 There have been a number of changes to the tasks that you are able to perform from the wallet options. Users will now have the ability to do the following: 
--	Enable and disable the auto zPIV minting feature. This is enabled by default and the enablezeromint=0 setting in the syndicate.conf file will overwrite the GUI option.
--	The percentage of autominted zPIV can now be set from 1 to 100, changed from 10 – 100.
--	The stake split threshold can now be set VIA the wallet options. This setting is an advanced feature for those wishing to remain staking regular PIV.
+-	Enable and disable the auto zSYNX minting feature. This is enabled by default and the enablezeromint=0 setting in the syndicate.conf file will overwrite the GUI option.
+-	The percentage of autominted zSYNX can now be set from 1 to 100, changed from 10 – 100.
+-	The stake split threshold can now be set VIA the wallet options. This setting is an advanced feature for those wishing to remain staking regular SYNX.
 -	“Unlock for staking and anonymization only” is now selected by default when unlocking the wallet from the User Interface
 
 
@@ -115,7 +115,7 @@ Backup to external devices / locations
 
  The Syndicate wallet can now have user selected directories for automatic backups of the wallet data file (wallet.dat). This can be set by adding the following lines to the syndicate.conf file, found in the Syndicate data directory.
 - backuppath = <directory / full path>
-- zpivbackuppath = <directory / full path>
+- zsynxbackuppath = <directory / full path>
 - custombackupthreshold = <backup limit>
 Note: System write permissions must be appropriate for the location the wallet is being saved to.
 
@@ -127,7 +127,7 @@ Note: System write permissions must be appropriate for the location the wallet i
 ### Details:
 
 * If path is set to directory, the backup will be named `wallet.dat-<year>-<month>-<day>-<hour>-<minute>-<second>`
-* If zPIV backup, auto generated name is `wallet-autozpivbackup.dat-<year>-<month>-<day>-<hour>-<minute>-<second>`
+* If zSYNX backup, auto generated name is `wallet-autozsynxbackup.dat-<year>-<month>-<day>-<hour>-<minute>-<second>`
 * If path set to file, backup will be named `<filename>.dat`
 * walletbackupthreshold enables the user to select the maximum count of backup files to be written before overwriting existing backups.
 
@@ -188,7 +188,7 @@ This allows for a user (such as a third party integration) to query the blockcha
 ### New RPC command 
 `findserial`
 
-Search the zerocoin database for a zerocoinspend transaction that contains the given serial. This will be a helpful tool for the Syndicate support group, which often times sees users say "I didn't spend that zPIV". This RPC call allows for support to grab the serial, and then find the spend tx on the chain.
+Search the zerocoin database for a zerocoinspend transaction that contains the given serial. This will be a helpful tool for the Syndicate support group, which often times sees users say "I didn't spend that zSYNX". This RPC call allows for support to grab the serial, and then find the spend tx on the chain.
 
 
 ### New RPC commands 
@@ -206,11 +206,11 @@ Network Layer 2 Changes (Proposals / Budgets / SwiftX)
 
 ### Monthly Budget Increase
 
-As voted on by the Syndicate masternodes, the monthly budget available to be utilised has been increased to 42,000 PIV / month. This PIV only has the opportunity to be raised once per month (paid to winning proposals) with any unused PIV not created by the blockchain.
+As voted on by the Syndicate masternodes, the monthly budget available to be utilised has been increased to 42,000 SYNX / month. This SYNX only has the opportunity to be raised once per month (paid to winning proposals) with any unused SYNX not created by the blockchain.
 
 ### Budget Finalization Fee
 
-The Syndicate finalization fee for successful proposals has now been reduced, this fee is now 5 PIV down from 50 PIV. The total fee outlay for a successful proposal is now a total of 55 PIV.
+The Syndicate finalization fee for successful proposals has now been reduced, this fee is now 5 SYNX down from 50 SYNX. The total fee outlay for a successful proposal is now a total of 55 SYNX.
 
 
 ### SwiftX Raw Transactions
@@ -248,8 +248,8 @@ When inputting wrong data into the GUI for a SOCKS5 proxy, the wallet would cras
 Minor Enhancements
 --------------
 
--	Enforced v1 zPIV spends to require a security level of 100
--	Updates to zPIV spends to avoid segfaults
+-	Enforced v1 zSYNX spends to require a security level of 100
+-	Updates to zSYNX spends to avoid segfaults
 -	Updates to configuration will now reflect on the privacy tab
 -	Fixed a  bug that would not start masternodes from the Syndicate-Qt masternodes tab
 -	Updated Syndicate-Qt tooltips
@@ -263,12 +263,12 @@ Minor Enhancements
 Further Reading: Version 2 Zerocoins
 ==============
 
-Several critical security flaws in the zerocoin protocol and Syndicate's zerocoin implementation have been patched. Enough has changed that new zerocoins are distinct from old zerocoins, and have been labelled as *version 2*. When using the zPIV Control dialog in the QT wallet, a user is able to see zPIV marked as version 1 or 2.
+Several critical security flaws in the zerocoin protocol and Syndicate's zerocoin implementation have been patched. Enough has changed that new zerocoins are distinct from old zerocoins, and have been labelled as *version 2*. When using the zSYNX Control dialog in the QT wallet, a user is able to see zSYNX marked as version 1 or 2.
 
-zPoS (zPIV staking)
+zPoS (zSYNX staking)
 --------------
 
-Once a zPIV has over 200 confirmations it becomes available to stake. Staking zPIV will consume the exact zerocoin that is staked and replace it with a freshly minted zerocoin of the same denomination as well as a reward of three 1 denomination zPIV. So for example if a 1,000 zPIV denomination is staked, the protocol replaces that with a fresh 1,000 denomination and three1 denomination zPIVs.
+Once a zSYNX has over 200 confirmations it becomes available to stake. Staking zSYNX will consume the exact zerocoin that is staked and replace it with a freshly minted zerocoin of the same denomination as well as a reward of three 1 denomination zSYNX. So for example if a 1,000 zSYNX denomination is staked, the protocol replaces that with a fresh 1,000 denomination and three1 denomination zSYNXs.
 
 Secure Spending
 --------------
@@ -280,7 +280,7 @@ The serial troll situation is mitigated in version 2 by requiring that the seria
 Deterministic Zerocoin Generation
 --------------
 
-Zerocoins, or zPIV, are now deterministically generated using a unique 256 bit seed. Each wallet will generate a new seed on its first run. The deterministic seed is used to generate a string of zPIV that can be recalculated at any time using the seed. Deterministic zPIV allows for users to backup all of their future zPIV by simply recording their seed and keeping it in a safe place (similar to backing up a private key for PIV). The zPIV seed needs to remain in the wallet in order to spend the zPIV after it is generated, if the seed is changed then the coins will not be spendable because the wallet will not have the ability to regenerate all of the private zPIV data from the seed. It is important that users record & backup their seed after their first run of the wallet. If the wallet is locked during the first run, then the seed will be generated the first time the wallet is unlocked.
+Zerocoins, or zSYNX, are now deterministically generated using a unique 256 bit seed. Each wallet will generate a new seed on its first run. The deterministic seed is used to generate a string of zSYNX that can be recalculated at any time using the seed. Deterministic zSYNX allows for users to backup all of their future zSYNX by simply recording their seed and keeping it in a safe place (similar to backing up a private key for SYNX). The zSYNX seed needs to remain in the wallet in order to spend the zSYNX after it is generated, if the seed is changed then the coins will not be spendable because the wallet will not have the ability to regenerate all of the private zSYNX data from the seed. It is important that users record & backup their seed after their first run of the wallet. If the wallet is locked during the first run, then the seed will be generated the first time the wallet is unlocked.
 
 Zerocoin Modulus
 --------------
@@ -294,7 +294,7 @@ Syndicate's zerocoin implementation used the same code from the ZCoin project to
 Detailed release notes follow. This overview includes changes that affect behavior, not code moves, refactors and string updates. For convenience in locating the code changes and accompanying discussion, both the pull request and git merge commit are mentioned.
 
 ### Core Features
- - #582 `cb1632520` [Core] zPIV v2: zPoS dzPIV ezPIV external backup and budget fixes (too many to list)
+ - #582 `cb1632520` [Core] zSYNX v2: zPoS dzSYNX ezSYNX external backup and budget fixes (too many to list)
  - #558 `c7e6f0f7f` [Core] Remove Gitan-OSX warning for High Sierra builds (Mrs-X)
  - #523 `926c073ea` [Core] Give high priority to zerocoinspends to make it into the next block. (presstab)
  - #535 `5e8875feb` [Core] Minor refacturing + unused variable removed (Mrs-X)
@@ -318,7 +318,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #542 `61156def7` [Network] Remove vfReachable and modify IsReachable to only use vfLimited. (Patrick Strateman)
 
 ### GUI
- - #572 `d9b23fe60` [Qt] Refresh zPIV balance after resetting mints or spends (warrows)
+ - #572 `d9b23fe60` [Qt] Refresh zSYNX balance after resetting mints or spends (warrows)
  - #571 `1c8e7cb7b` [Qt] Update privacy tab info about zeromint on config change (warrows)
  - #568 `f226de09e` [Qt] Connect automint icon to the UI automint setting change (warrows)
  - #566 `84f43857c` [Qt] Add automint status bar icon (Fuzzbawls)
@@ -329,7 +329,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #521 `fbb105a00` [Qt] Make "For anonymization and staking only" checked by default (Mrs-X)
  - #508 `2cf3be6bb` [Qt] Fix crash when inputting wrong port for network proxy (warrows)
  - #500 `4c01ba65d` [Qt] Remove duplicate code for updating address book labels. (blondfrogs)
- - #506 `ae72bf4e2` [Qt] Autoscroll to end of zPIV status output (Mrs-X)
+ - #506 `ae72bf4e2` [Qt] Autoscroll to end of zSYNX status output (Mrs-X)
  - #499 `6305264f2` [Qt] Send popup simplified + SwiftTX -> SwiftX (Mrs-X)
  - #490 `ba777e4ef` [Qt] Update MultiSend GUI to allow address labels (blondfrogs)
  - #483 `5b1070365` [Qt] Fixed Dynamic Screen Elements Issue for Multisig (blondfrogs)
@@ -338,7 +338,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #473 `9e2ed8f0f` [Qt] Make toolbar icons bigger (Mrs-X)
  - #462 `c62eabe7b` [Qt] Consistent trx colors for Overview + Transaction tabs (Mrs-X)
  - #472 `b7929bdcf` [Qt] Minor changes and fixes (Mrs-X)
- - #467 `7099831bd` [Qt] Clear PrivacyDialog "zPiv Selected" labels after sending. (presstab)
+ - #467 `7099831bd` [Qt] Clear PrivacyDialog "zSynx Selected" labels after sending. (presstab)
  - #465 `d8e21774d` [Qt] Added controls to the options dialog for enable or disable auto-minting and set required level (lex-dev3)
  - #464 `59fd7d378` [Qt] setstakesplitthreshold value set in Qt GUI (lex-dev3)
  - #452 `219b68dc9` [Qt] Complete re-design of Qt-wallet (Mrs-X)
@@ -361,15 +361,15 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #170 `027f16c64` [RPC] Convert source tree from json_spirit to UniValue (Fuzzbawls)
 
 ### Wallet
- - #570 `8c8350b59` [Wallet] Add a check on zPIV spend to avoid a segfault (warrows)
+ - #570 `8c8350b59` [Wallet] Add a check on zSYNX spend to avoid a segfault (warrows)
  - #565 `80b803201` [Wallet] Increase valid range for automint percentage (Fuzzbawls)
  - #518 `9f6449a70` [Wallet] Combine fees when possible and fix autocombine insufficient funds (warrows)
  - #497 `f21e4456b` [Wallet] Call AutocombineDust less often (warrows)
  - #498 `bfad2a1df` [Wallet] Change the way transaction list is handled (warrows)
  - #477 `93c5f9ff5` [Wallet] Remove potential memory leak (blondfrogs)
  - #488 `d09cf916a` [Wallet] Fixes an autocombinerewards bug with above max size TXs (warrows)
- - #448 `222ef6e6b` [Wallet] Return change to sender when minting zPIV. (presstab)
- - #445 `fc570fc1e` [Wallet] Only require 1 mint to be added before spending zPIV. (presstab)
+ - #448 `222ef6e6b` [Wallet] Return change to sender when minting zSYNX. (presstab)
+ - #445 `fc570fc1e` [Wallet] Only require 1 mint to be added before spending zSYNX. (presstab)
  
 ### Miscellaneous
  - #559 `d2b017217` [Bug] Segfault with -enableswifttx=0 / -enableswifttx=false (Mrs-X)

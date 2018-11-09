@@ -176,16 +176,16 @@
         <translation>Confirmar criptografia de carteira</translation>
     </message>
     <message>
-        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
-        <translation>Syndicate vai fechar agora para finalizar o processo de criptografia. Lembre-se que encriptar sua carteira não pode proteger totalmente suas PIVs de serem roubadas por malwares infectando seu computador.</translation>
+        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your SYNXs from being stolen by malware infecting your computer.</source>
+        <translation>Syndicate vai fechar agora para finalizar o processo de criptografia. Lembre-se que encriptar sua carteira não pode proteger totalmente suas SYNXs de serem roubadas por malwares infectando seu computador.</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
         <translation>Você tem certeza que deseja criptografar sua carteira?</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR PIV&lt;/b&gt;!</source>
-        <translation>Aviso: se você criptografar sua carteira e perder sua senha você &lt;b&gt;PERDERÁ TODAS AS SUAS PIV&lt;b&gt;!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR SYNX&lt;/b&gt;!</source>
+        <translation>Aviso: se você criptografar sua carteira e perder sua senha você &lt;b&gt;PERDERÁ TODAS AS SUAS SYNX&lt;b&gt;!</translation>
     </message>
     <message>
         <source>Wallet encrypted</source>
@@ -409,8 +409,8 @@
         <translation>Olhar histórico de transação</translation>
     </message>
     <message>
-        <source>Privacy Actions for zPIV</source>
-        <translation>Ações privadas para zPIV</translation>
+        <source>Privacy Actions for zSYNX</source>
+        <translation>Ações privadas para zSYNX</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
@@ -1574,32 +1574,32 @@ Favor verificar o endereço e tente novamente.</translation>
         <translation>Favor selecionar o nível de privacidade.</translation>
     </message>
     <message>
-        <source>Use 2 separate masternodes to mix funds up to 10000 PIV</source>
-        <translation>Use 2 masternodes separados para embaralhar fundos até 10000 PIV</translation>
+        <source>Use 2 separate masternodes to mix funds up to 10000 SYNX</source>
+        <translation>Use 2 masternodes separados para embaralhar fundos até 10000 SYNX</translation>
     </message>
     <message>
-        <source>Use 8 separate masternodes to mix funds up to 10000 PIV</source>
-        <translation>Use 8 masternodes separados para embaralhar fundos até 10000 PIV</translation>
+        <source>Use 8 separate masternodes to mix funds up to 10000 SYNX</source>
+        <translation>Use 8 masternodes separados para embaralhar fundos até 10000 SYNX</translation>
     </message>
     <message>
         <source>Use 16 separate masternodes</source>
         <translation>Use 16 masternodes separados</translation>
     </message>
     <message>
-        <source>This option is the quickest and will cost about ~0.025 PIV to anonymize 10000 PIV</source>
-        <translation>Está opção é a mais rápida e vai custar em torno de ~0.025 PIV para anonimizar 10000 PIV</translation>
+        <source>This option is the quickest and will cost about ~0.025 SYNX to anonymize 10000 SYNX</source>
+        <translation>Está opção é a mais rápida e vai custar em torno de ~0.025 SYNX para anonimizar 10000 SYNX</translation>
     </message>
     <message>
-        <source>This option is moderately fast and will cost about 0.05 PIV to anonymize 10000 PIV</source>
-        <translation>Está opção moderamente rápida e vai custar em torno de ~0.05 PIV para anonimizar 10000 PIV</translation>
+        <source>This option is moderately fast and will cost about 0.05 SYNX to anonymize 10000 SYNX</source>
+        <translation>Está opção moderamente rápida e vai custar em torno de ~0.05 SYNX para anonimizar 10000 SYNX</translation>
     </message>
     <message>
         <source>This is the slowest and most secure option. Using maximum anonymity will cost</source>
         <translation>Esta é a opção mais lenta e mais segura. Usando a anonimização máxima vai custar</translation>
     </message>
     <message>
-        <source>0.1 PIV per 10000 PIV you anonymize.</source>
-        <translation>0.1 PIV por 10000 PIV que deixar anônima.</translation>
+        <source>0.1 SYNX per 10000 SYNX you anonymize.</source>
+        <translation>0.1 SYNX por 10000 SYNX que deixar anônima.</translation>
     </message>
     <message>
         <source>Obfuscation Configuration</source>
@@ -1958,12 +1958,12 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
         <translation>0</translation>
     </message>
     <message>
-        <source>zPIV</source>
-        <translation>zPIV</translation>
+        <source>zSYNX</source>
+        <translation>zSYNX</translation>
     </message>
     <message>
-        <source>0.000 000 00 PIV</source>
-        <translation>0.000 000 00 PIV</translation>
+        <source>0.000 000 00 SYNX</source>
+        <translation>0.000 000 00 SYNX</translation>
     </message>
     <message>
         <source>Reset</source>
@@ -2038,8 +2038,8 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
         <translation>Estatísticas zerocoin:</translation>
     </message>
     <message>
-        <source>Total Balance including unconfirmed and immature zPIV</source>
-        <translation>Balanço Total incluindo não confirmadas e imaturas zPIV</translation>
+        <source>Total Balance including unconfirmed and immature zSYNX</source>
+        <translation>Balanço Total incluindo não confirmadas e imaturas zSYNX</translation>
     </message>
     <message>
         <source>Total Zerocoin  Balance:</source>
@@ -2687,8 +2687,8 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
         <translation>Tamanho UTXO:</translation>
     </message>
     <message>
-        <source>0 PIV</source>
-        <translation>0 PIV</translation>
+        <source>0 SYNX</source>
+        <translation>0 SYNX</translation>
     </message>
     <message>
         <source>Transaction Fee:</source>
@@ -2731,8 +2731,8 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
         <translation>Tempo de confirmação:</translation>
     </message>
     <message>
-        <source>If the custom fee is set to 1000 uPIVs and the transaction is only 250 bytes, then "per kilobyte" only pays 250 uPIVs in fee,&lt;br /&gt;while "at least" pays 1000 uPIVs. For transactions bigger than a kilobyte both pay by kilobyte.</source>
-        <translation>Se a taxa padrão estiver definida para 1000 uPIVs e a transação for somente de 250 bytes, então "por kilobyte" pagará somente 250 uPIVs em taxa,&lt;br /&gt; pagará pelo menos 1000 uPIVs. Para transações maiores que um kilobyte ambas pagam por kilobyte.</translation>
+        <source>If the custom fee is set to 1000 uSYNXs and the transaction is only 250 bytes, then "per kilobyte" only pays 250 uSYNXs in fee,&lt;br /&gt;while "at least" pays 1000 uSYNXs. For transactions bigger than a kilobyte both pay by kilobyte.</source>
+        <translation>Se a taxa padrão estiver definida para 1000 uSYNXs e a transação for somente de 250 bytes, então "por kilobyte" pagará somente 250 uSYNXs em taxa,&lt;br /&gt; pagará pelo menos 1000 uSYNXs. Para transações maiores que um kilobyte ambas pagam por kilobyte.</translation>
     </message>
     <message>
         <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for Syndicate transactions than the network can process.</source>
@@ -2783,8 +2783,8 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
         <translation>Adicionar &amp;Recipiente</translation>
     </message>
     <message>
-        <source>Anonymized PIV</source>
-        <translation>PIV anonimizadas</translation>
+        <source>Anonymized SYNX</source>
+        <translation>SYNX anonimizadas</translation>
     </message>
     <message>
         <source>Balance:</source>
@@ -3635,7 +3635,7 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
     </message>
 </context>
 <context>
-    <name>ZPivControlDialog</name>
+    <name>ZSynxControlDialog</name>
     <message>
         <source>Quantity</source>
         <translation>Quantia</translation>
@@ -3645,8 +3645,8 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
         <translation>0</translation>
     </message>
     <message>
-        <source>zPIV</source>
-        <translation>zPIV</translation>
+        <source>zSYNX</source>
+        <translation>zSYNX</translation>
     </message>
     <message>
         <source>Select/Deselect All</source>
@@ -3672,12 +3672,12 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
         <translation>Executar o comando quando uma transação da carteira mudar (%s no cmd será substituído pela TxID)</translation>
     </message>
     <message>
-        <source>Fees (in PIV/Kb) smaller than this are considered zero fee for relaying (default: %s)</source>
-        <translation>Taxas (em PIV/Kb) menores que isso serão consideradas taxa zero para propagação (padrão: %s)</translation>
+        <source>Fees (in SYNX/Kb) smaller than this are considered zero fee for relaying (default: %s)</source>
+        <translation>Taxas (em SYNX/Kb) menores que isso serão consideradas taxa zero para propagação (padrão: %s)</translation>
     </message>
     <message>
-        <source>Fees (in PIV/Kb) smaller than this are considered zero fee for transaction creation (default: %s)</source>
-        <translation>Taxas (em PIV/Kb) menores que isso serão consideradas taxa zero para a criação da transação (padrão: %s)</translation>
+        <source>Fees (in SYNX/Kb) smaller than this are considered zero fee for transaction creation (default: %s)</source>
+        <translation>Taxas (em SYNX/Kb) menores que isso serão consideradas taxa zero para a criação da transação (padrão: %s)</translation>
     </message>
     <message>
         <source>In this mode -genproclimit controls how many blocks are generated immediately.</source>
@@ -3696,8 +3696,8 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
         <translation>Define o tamanho máximo de transações de alta prioridade/taxa baixa em bytes (padrão: %d)</translation>
     </message>
     <message>
-        <source>Unable to locate enough funds for this transaction that are not equal 10000 PIV.</source>
-        <translation>Incapaz de localizar fundos para esta transação que não são iguais a 10000 PIV.</translation>
+        <source>Unable to locate enough funds for this transaction that are not equal 10000 SYNX.</source>
+        <translation>Incapaz de localizar fundos para esta transação que não são iguais a 10000 SYNX.</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
@@ -3896,8 +3896,8 @@ https://www.transifex.com/syndicate-project/syndicate-project-translations</tran
         <translation>Falhou em ler o bloco</translation>
     </message>
     <message>
-        <source>Fee (in PIV/kB) to add to transactions you send (default: %s)</source>
-        <translation>Taxa (em PIV/kB) a adicionar em transações que você enviar (padrão: %s)</translation>
+        <source>Fee (in SYNX/kB) to add to transactions you send (default: %s)</source>
+        <translation>Taxa (em SYNX/kB) a adicionar em transações que você enviar (padrão: %s)</translation>
     </message>
     <message>
         <source>Finalizing transaction.</source>

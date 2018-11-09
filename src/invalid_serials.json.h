@@ -5,8 +5,8 @@
 
 
 
-#ifndef PIVX_INVALID_SERIALS_JSON_H
-#define PIVX_INVALID_SERIALS_JSON_H
+#ifndef SYNX_INVALID_SERIALS_JSON_H
+#define SYNX_INVALID_SERIALS_JSON_H
 
 #include <string>
 
@@ -1190,4 +1190,4 @@ std::string LoadInvalidSerials()
     return str;
 }
 
-#endif //PIVX_INVALID_SERIALS_JSON_H
+#endif //SYNX_INVALID_SERIALS_JSON_H

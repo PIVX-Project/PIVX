@@ -172,16 +172,16 @@
         <translation>Vahvista lompakon salaus</translation>
     </message>
     <message>
-        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
-        <translation>Syndicate sulkeutuu salausprosessin ajaksi. Muista, että lompakon salaus ei voi täysin suojella PIVien varkaudelta, jos tietokoneesi sisältää haittaohjelmia.</translation>
+        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your SYNXs from being stolen by malware infecting your computer.</source>
+        <translation>Syndicate sulkeutuu salausprosessin ajaksi. Muista, että lompakon salaus ei voi täysin suojella SYNXien varkaudelta, jos tietokoneesi sisältää haittaohjelmia.</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
         <translation>Oletko varma että tahdot salata lompakkosi?</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR PIV&lt;/b&gt;!</source>
-        <translation>Varoitus: Jos salaat lompakkosi ja unohdat salausavaimesi, &lt;b&gt;menetät kaikki PIVisi&lt;/b&gt;</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR SYNX&lt;/b&gt;!</source>
+        <translation>Varoitus: Jos salaat lompakkosi ja unohdat salausavaimesi, &lt;b&gt;menetät kaikki SYNXisi&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Wallet encrypted</source>
@@ -1128,11 +1128,11 @@ Please check the address and try again.</source>
         <translation>Valitse yksityisyyden taso.</translation>
     </message>
     <message>
-        <source>Use 2 separate masternodes to mix funds up to 10000 PIV</source>
+        <source>Use 2 separate masternodes to mix funds up to 10000 SYNX</source>
         <translation>Käytä 2 erillistä masternodea sekoittaaksesi enintään 10000 Syndicate</translation>
     </message>
     <message>
-        <source>Use 8 separate masternodes to mix funds up to 10000 PIV</source>
+        <source>Use 8 separate masternodes to mix funds up to 10000 SYNX</source>
         <translation>Käytä 8 erillistä masternodea sekoittaaksesi enintään 10000 Syndicate</translation>
     </message>
     <message>
@@ -1140,11 +1140,11 @@ Please check the address and try again.</source>
         <translation>Käytä 16 erillistä masternodea</translation>
     </message>
     <message>
-        <source>This option is the quickest and will cost about ~0.025 PIV to anonymize 10000 PIV</source>
-        <translation>Tämä vaihtoehto on nopein ja maksaa noin ~0.025 PIV anonymoidaksesi 10000 Syndicate</translation>
+        <source>This option is the quickest and will cost about ~0.025 SYNX to anonymize 10000 SYNX</source>
+        <translation>Tämä vaihtoehto on nopein ja maksaa noin ~0.025 SYNX anonymoidaksesi 10000 Syndicate</translation>
     </message>
     <message>
-        <source>This option is moderately fast and will cost about 0.05 PIV to anonymize 10000 PIV</source>
+        <source>This option is moderately fast and will cost about 0.05 SYNX to anonymize 10000 SYNX</source>
         <translation>Tämä vaihtoehto on suhteellisen nopea ja maksaa 0.05 Syndicate anonymoidaksesi 10000 Syndicate</translation>
     </message>
     <message>
@@ -1152,7 +1152,7 @@ Please check the address and try again.</source>
         <translation>Tämä on hitain ja turvallisin vaihtoehto. Täydesti anonymisoiminen ei maksa mitään.</translation>
     </message>
     <message>
-        <source>0.1 PIV per 10000 PIV you anonymize.</source>
+        <source>0.1 SYNX per 10000 SYNX you anonymize.</source>
         <translation>0.1 per 10000 Syndicate, jotka anonymisoit.</translation>
     </message>
     <message>
@@ -1887,8 +1887,8 @@ Please check the address and try again.</source>
         <translation>Muutos:</translation>
     </message>
     <message>
-        <source>0 PIV</source>
-        <translation>0 PIV</translation>
+        <source>0 SYNX</source>
+        <translation>0 SYNX</translation>
     </message>
     <message>
         <source>Choose...</source>
@@ -2511,7 +2511,7 @@ Please check the address and try again.</source>
     </message>
 </context>
 <context>
-    <name>ZPivControlDialog</name>
+    <name>ZSynxControlDialog</name>
     <message>
         <source>0</source>
         <translation>0</translation>

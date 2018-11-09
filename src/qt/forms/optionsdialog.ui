@@ -133,13 +133,13 @@
        <item>
         <widget class="QCheckBox" name="checkBoxZeromintEnable">
          <property name="toolTip">
-          <string>Enable automatic minting of PIV units to zPIV</string>
+          <string>Enable automatic minting of SYNX units to zSYNX</string>
          </property>
          <property name="layoutDirection">
           <enum>Qt::LeftToRight</enum>
          </property>
          <property name="text">
-          <string>Enable zPIV Automint</string>
+          <string>Enable zSYNX Automint</string>
          </property>
         </widget>
        </item>
@@ -148,10 +148,10 @@
          <item>
           <widget class="QLabel" name="percentage_label">
            <property name="toolTip">
-            <string>Percentage of incoming PIV which get automatically converted to zPIV via Zerocoin Protocol (min: 10%)</string>
+            <string>Percentage of incoming SYNX which get automatically converted to zSYNX via Zerocoin Protocol (min: 10%)</string>
            </property>
            <property name="text">
-            <string>Percentage of autominted zPIV</string>
+            <string>Percentage of autominted zSYNX</string>
            </property>
           </widget>
          </item>
@@ -181,10 +181,10 @@
             </size>
            </property>
            <property name="toolTip">
-            <string>Wait with automatic conversion to Zerocoin until enough PIV for this denomination is available</string>
+            <string>Wait with automatic conversion to Zerocoin until enough SYNX for this denomination is available</string>
            </property>
            <property name="text">
-            <string>Preferred Automint zPIV Denomination</string>
+            <string>Preferred Automint zSYNX Denomination</string>
            </property>
           </widget>
          </item>
@@ -197,7 +197,7 @@
             </size>
            </property>
            <property name="toolTip">
-            <string>Wait with automatic conversion to Zerocoin until enough PIV for this denomination is available</string>
+            <string>Wait with automatic conversion to Zerocoin until enough SYNX for this denomination is available</string>
            </property>
            <property name="maxVisibleItems">
             <number>9</number>

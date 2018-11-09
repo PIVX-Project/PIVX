@@ -1,4 +1,4 @@
-.TH PIVD "1" "February 2017" "syndicated 2.1.4.1"
+.TH SYNXD "1" "February 2017" "syndicated 2.1.4.1"
 .SH NAME
 Syndicate \- peer-to-peer network based digital currency
 .SH SYNOPSIS
@@ -98,7 +98,7 @@ Returns the number of connections to other nodes.
 Returns the proof-of-work difficulty as a multiple of the minimum difficulty.
 .TP
 \fBgetgenerate\fR
-Returns boolean true if server is trying to generate PIV, false otherwise.
+Returns boolean true if server is trying to generate SYNX, false otherwise.
 .TP
 \fBsetgenerate 'generate' ['genproclimit']\fR
 Generation is limited to ['genproclimit'] processors, \-1 is unlimited.
@@ -169,7 +169,7 @@ Returns a list of the last ['count'] transactions for 'account' \- for all accou
 Moves funds between accounts.
 .TP
 \fBsendfrom* <'account'> <'syndicateaddress'> <'amount'> ['minconf=1'] ['comment'] ['comment-to']\fR
-Sends amount from account's balance to 'syndicateaddress'. This method will fail if there is less than amount PIV with ['minconf'] confirmations in the account's balance (unless account is the empty-string-named default account; it behaves like the *sendtoaddress* method). Returns transaction ID on success.
+Sends amount from account's balance to 'syndicateaddress'. This method will fail if there is less than amount SYNX with ['minconf'] confirmations in the account's balance (unless account is the empty-string-named default account; it behaves like the *sendtoaddress* method). Returns transaction ID on success.
 .TP
 \fBsendtoaddress 'syndicateaddress' 'amount' ['comment'] ['comment-to']\fR
 Sends amount from the server's available balance to 'syndicateaddress'. amount is a real and is rounded to the nearest 0.01. Returns transaction id on success.

@@ -1326,9 +1326,9 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="wallet_customzpivbackuppath_label">
+        <widget class="QLabel" name="wallet_customzsynxbackuppath_label">
          <property name="text">
-          <string>Custom zPIV Backup Path:</string>
+          <string>Custom zSYNX Backup Path:</string>
          </property>
          <property name="visible">
           <bool>false</bool>
@@ -1336,7 +1336,7 @@
         </widget>
        </item>
        <item row="4" column="1" colspan="3">
-        <widget class="QLabel" name="wallet_customzpivbackuppath">
+        <widget class="QLabel" name="wallet_customzsynxbackuppath">
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>
