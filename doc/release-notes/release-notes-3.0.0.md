@@ -1,4 +1,4 @@
-PIVX Core version 3.0.0 is now available from:
+Syndicate Core version 3.0.0 is now available from:
 
   <https://github.com/pivx-project/pivx/releases>
 
@@ -12,7 +12,7 @@ Please report bugs using the issue tracker at github:
 Mandatory Update
 ==============
 
-PIVX Core v3.0.0 is a mandatory update for all users. This release contains new consensus rules and improvements that are not backwards compatible with older versions. Users will have a grace period of one week to update their clients before enforcement of this update is enabled.
+Syndicate Core v3.0.0 is a mandatory update for all users. This release contains new consensus rules and improvements that are not backwards compatible with older versions. Users will have a grace period of one week to update their clients before enforcement of this update is enabled.
 
 Users updating from a previous version after the 13th of October will require a full resync of their local blockchain from either the P2P network or by way of the bootstrap.
 
@@ -24,7 +24,7 @@ If you are running an older version, shut it down. Wait until it has completely 
 Compatibility
 ==============
 
-PIVX Core is extensively tested on multiple operating systems using
+Syndicate Core is extensively tested on multiple operating systems using
 the Linux kernel, macOS 10.8+, and Windows Vista and later.
 
 Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support),
@@ -32,7 +32,7 @@ No attempt is made to prevent installing or running the software on Windows XP, 
 can still do so at your own risk but be aware that there are known instabilities and issues.
 Please do not report issues about Windows XP to the issue tracker.
 
-PIVX Core should also work on most other Unix-like systems but is not
+Syndicate Core should also work on most other Unix-like systems but is not
 frequently tested on them.
 
 ### :exclamation::exclamation::exclamation: MacOS 10.13 High Sierra :exclamation::exclamation::exclamation:
@@ -95,11 +95,11 @@ Similar to the concept of Coin Control in the QT wallet, zPIV Control allows use
 Tor Service Integration Improvements
 ---------------------
 
-Integrating with Tor is now easier than ever! Starting with Tor version 0.2.7.1 it is possible, through Tor's control socket API, to create and destroy 'ephemeral' hidden services programmatically. PIVX Core has been updated to make use of this.
+Integrating with Tor is now easier than ever! Starting with Tor version 0.2.7.1 it is possible, through Tor's control socket API, to create and destroy 'ephemeral' hidden services programmatically. Syndicate Core has been updated to make use of this.
 
-This means that if Tor is running (and proper authorization is available), PIVX Core automatically creates a hidden service to listen on, without manual configuration. PIVX Core will also use Tor automatically to connect to other .onion nodes if the control socket can be successfully opened. This will positively affect the number of available .onion nodes and their usage.
+This means that if Tor is running (and proper authorization is available), Syndicate Core automatically creates a hidden service to listen on, without manual configuration. Syndicate Core will also use Tor automatically to connect to other .onion nodes if the control socket can be successfully opened. This will positively affect the number of available .onion nodes and their usage.
 
-This new feature is enabled by default if PIVX Core is listening, and a connection to Tor can be made. It can be configured with the `-listenonion`, `-torcontrol` and `-torpassword` settings. To show verbose debugging information, pass `-debug=tor`.
+This new feature is enabled by default if Syndicate Core is listening, and a connection to Tor can be made. It can be configured with the `-listenonion`, `-torcontrol` and `-torpassword` settings. To show verbose debugging information, pass `-debug=tor`.
 
 3.0.0 Change log
 =================

@@ -1,4 +1,4 @@
-PIVX Core version *3.1.0* is now available from:  <https://github.com/pivx-project/pivx/releases>
+Syndicate Core version *3.1.0* is now available from:  <https://github.com/pivx-project/pivx/releases>
 
 This is a new major version release, including various bug fixes and performance improvements, as well as updated translations.
 
@@ -8,7 +8,7 @@ Please report bugs using the issue tracker at github: <https://github.com/pivx-p
 Mandatory Update
 ==============
 
-PIVX Core v3.1.0 is a mandatory update for all users. This release contains new consensus rules and improvements that are not backwards compatible with older versions. Users will have a grace period of one week to update their clients before enforcement of this update is enabled.
+Syndicate Core v3.1.0 is a mandatory update for all users. This release contains new consensus rules and improvements that are not backwards compatible with older versions. Users will have a grace period of one week to update their clients before enforcement of this update is enabled.
 
 Users updating from a previous version after Tuesday, May 8, 2018 12:00:00 AM GMT will require a full resync of their local blockchain from either the P2P network or by way of the bootstrap.
 
@@ -21,7 +21,7 @@ If you are running an older version, shut it down. Wait until it has completely 
 Compatibility
 ==============
 
-PIVX Core is extensively tested on multiple operating systems using
+Syndicate Core is extensively tested on multiple operating systems using
 the Linux kernel, macOS 10.8+, and Windows Vista and later.
 
 Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support),
@@ -29,7 +29,7 @@ No attempt is made to prevent installing or running the software on Windows XP, 
 can still do so at your own risk but be aware that there are known instabilities and issues.
 Please do not report issues about Windows XP to the issue tracker.
 
-PIVX Core should also work on most other Unix-like systems but is not
+Syndicate Core should also work on most other Unix-like systems but is not
 frequently tested on them.
 
 ### :exclamation::exclamation::exclamation: MacOS 10.13 High Sierra :exclamation::exclamation::exclamation:

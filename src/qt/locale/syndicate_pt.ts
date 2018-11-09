@@ -1250,8 +1250,8 @@
         <translation>Carteira esta bloqueada.</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart PIVX Core to complete</source>
-        <translation>Carteira precisa ser reescrita: reinicie o PIVX Core para completar.</translation>
+        <source>Wallet needed to be rewritten: restart Syndicate Core to complete</source>
+        <translation>Carteira precisa ser reescrita: reinicie o Syndicate Core para completar.</translation>
     </message>
     <message>
         <source>Wallet options:</source>

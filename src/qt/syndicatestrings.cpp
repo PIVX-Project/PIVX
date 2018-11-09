@@ -32,7 +32,7 @@ QT_TRANSLATE_NOOP("pivx-core", ""
 QT_TRANSLATE_NOOP("pivx-core", ""
 "Calculated accumulator checkpoint is not what is recorded by block index"),
 QT_TRANSLATE_NOOP("pivx-core", ""
-"Cannot obtain a lock on data directory %s. PIVX Core is probably already "
+"Cannot obtain a lock on data directory %s. Syndicate Core is probably already "
 "running."),
 QT_TRANSLATE_NOOP("pivx-core", ""
 "Change automatic finalized budget voting behavior. mode=auto: Vote for only "
@@ -192,7 +192,7 @@ QT_TRANSLATE_NOOP("pivx-core", ""
 "the OpenSSL Toolkit <https://www.openssl.org/> and cryptographic software "
 "written by Eric Young and UPnP software written by Thomas Bernard."),
 QT_TRANSLATE_NOOP("pivx-core", ""
-"Unable to bind to %s on this computer. PIVX Core is probably already running."),
+"Unable to bind to %s on this computer. Syndicate Core is probably already running."),
 QT_TRANSLATE_NOOP("pivx-core", ""
 "Unable to locate enough Obfuscation denominated funds for this transaction."),
 QT_TRANSLATE_NOOP("pivx-core", ""
@@ -212,7 +212,7 @@ QT_TRANSLATE_NOOP("pivx-core", ""
 "pay if you send a transaction."),
 QT_TRANSLATE_NOOP("pivx-core", ""
 "Warning: Please check that your computer's date and time are correct! If "
-"your clock is wrong PIVX Core will not work properly."),
+"your clock is wrong Syndicate Core will not work properly."),
 QT_TRANSLATE_NOOP("pivx-core", ""
 "Warning: The network does not appear to fully agree! Some miners appear to "
 "be experiencing issues."),
@@ -268,7 +268,7 @@ QT_TRANSLATE_NOOP("pivx-core", "Connect to a node to retrieve peer addresses, an
 QT_TRANSLATE_NOOP("pivx-core", "Connection options:"),
 QT_TRANSLATE_NOOP("pivx-core", "Copyright (C) 2009-%i The Bitcoin Core Developers"),
 QT_TRANSLATE_NOOP("pivx-core", "Copyright (C) 2014-%i The Dash Core Developers"),
-QT_TRANSLATE_NOOP("pivx-core", "Copyright (C) 2015-%i The PIVX Core Developers"),
+QT_TRANSLATE_NOOP("pivx-core", "Copyright (C) 2015-%i The Syndicate Core Developers"),
 QT_TRANSLATE_NOOP("pivx-core", "Corrupted block database detected"),
 QT_TRANSLATE_NOOP("pivx-core", "Could not parse masternode.conf"),
 QT_TRANSLATE_NOOP("pivx-core", "Debugging/Testing options:"),
@@ -297,7 +297,7 @@ QT_TRANSLATE_NOOP("pivx-core", "Error initializing wallet database environment %
 QT_TRANSLATE_NOOP("pivx-core", "Error loading block database"),
 QT_TRANSLATE_NOOP("pivx-core", "Error loading wallet.dat"),
 QT_TRANSLATE_NOOP("pivx-core", "Error loading wallet.dat: Wallet corrupted"),
-QT_TRANSLATE_NOOP("pivx-core", "Error loading wallet.dat: Wallet requires newer version of PIVX Core"),
+QT_TRANSLATE_NOOP("pivx-core", "Error loading wallet.dat: Wallet requires newer version of Syndicate Core"),
 QT_TRANSLATE_NOOP("pivx-core", "Error opening block database"),
 QT_TRANSLATE_NOOP("pivx-core", "Error reading from database, shutting down."),
 QT_TRANSLATE_NOOP("pivx-core", "Error recovering public key."),
@@ -336,7 +336,7 @@ QT_TRANSLATE_NOOP("pivx-core", "Incompatible mode."),
 QT_TRANSLATE_NOOP("pivx-core", "Incompatible version."),
 QT_TRANSLATE_NOOP("pivx-core", "Incorrect or no genesis block found. Wrong datadir for network?"),
 QT_TRANSLATE_NOOP("pivx-core", "Information"),
-QT_TRANSLATE_NOOP("pivx-core", "Initialization sanity check failed. PIVX Core is shutting down."),
+QT_TRANSLATE_NOOP("pivx-core", "Initialization sanity check failed. Syndicate Core is shutting down."),
 QT_TRANSLATE_NOOP("pivx-core", "Input is not valid."),
 QT_TRANSLATE_NOOP("pivx-core", "Insufficient funds"),
 QT_TRANSLATE_NOOP("pivx-core", "Insufficient funds."),
@@ -506,7 +506,7 @@ QT_TRANSLATE_NOOP("pivx-core", "Verifying wallet..."),
 QT_TRANSLATE_NOOP("pivx-core", "Version 1 zPIV require a security level of 100 to successfully spend."),
 QT_TRANSLATE_NOOP("pivx-core", "Wallet %s resides outside data directory %s"),
 QT_TRANSLATE_NOOP("pivx-core", "Wallet is locked."),
-QT_TRANSLATE_NOOP("pivx-core", "Wallet needed to be rewritten: restart PIVX Core to complete"),
+QT_TRANSLATE_NOOP("pivx-core", "Wallet needed to be rewritten: restart Syndicate Core to complete"),
 QT_TRANSLATE_NOOP("pivx-core", "Wallet options:"),
 QT_TRANSLATE_NOOP("pivx-core", "Wallet window title"),
 QT_TRANSLATE_NOOP("pivx-core", "Warning"),

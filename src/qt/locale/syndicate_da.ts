@@ -645,7 +645,7 @@
         <translation>Værktøjslinier</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX kerne</translation>
     </message>
     <message>
@@ -669,11 +669,11 @@
         <translation>Vis masternoder</translation>
     </message>
     <message>
-        <source>&amp;About PIVX Core</source>
+        <source>&amp;About Syndicate Core</source>
         <translation>&amp;Om PIVX kerne</translation>
     </message>
     <message>
-        <source>Show information about PIVX Core</source>
+        <source>Show information about Syndicate Core</source>
         <translation>Vis information om PIVX kerne</translation>
     </message>
     <message>
@@ -729,11 +729,11 @@
         <translation>Blockexplorer vindue</translation>
     </message>
     <message>
-        <source>Show the PIVX Core help message to get a list with possible PIVX command-line options</source>
+        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
         <translation>Vis hjelpetekster fra PIVX kernen for at få en liste med mulige PIVX kommandolinie-startparametre</translation>
     </message>
     <message>
-        <source>PIVX Core client</source>
+        <source>Syndicate Core client</source>
         <translation>PIVX kerneklient</translation>
     </message>
     <message numerus="yes">
@@ -1231,7 +1231,7 @@ Adresse: %4
         <translation>version</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX kerne</translation>
     </message>
     <message>
@@ -1239,7 +1239,7 @@ Adresse: %4
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About PIVX Core</source>
+        <source>About Syndicate Core</source>
         <translation>om PIVX kerne</translation>
     </message>
     <message>
@@ -1286,15 +1286,15 @@ Adresse: %4
         <translation>Velkommen</translation>
     </message>
     <message>
-        <source>Welcome to PIVX Core.</source>
+        <source>Welcome to Syndicate Core.</source>
         <translation>Velkommen til PIVX kerne</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where PIVX Core will store its data.</source>
+        <source>As this is the first time the program is launched, you can choose where Syndicate Core will store its data.</source>
         <translation>Da det er første gang programmet startes, kan De vælge hvor PIVX kernen skal lagre sine data</translation>
     </message>
     <message>
-        <source>PIVX Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>Syndicate Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation>PIVX kernen vil nu hente og gemme en kopi af PIVX blockchain. Der skal være mindst %1GB ledigt på lagermediet, og behovet vil stige efterhånden som tiden går. Selve tegnebogen vil også blive gemt her.</translation>
     </message>
     <message>
@@ -1306,7 +1306,7 @@ Adresse: %4
         <translation>Anvend en mappe valgt af brugeren</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX kerne</translation>
     </message>
     <message>
@@ -4078,7 +4078,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>PIVX Core is shutting down...</source>
+        <source>Syndicate Core is shutting down...</source>
         <translation>PIVX kernen lukker ned</translation>
     </message>
     <message>
@@ -4228,7 +4228,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX kerne</translation>
     </message>
     <message>
@@ -4244,7 +4244,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>DASH "core" udviklerne</translation>
     </message>
     <message>
-        <source>The PIVX Core developers</source>
+        <source>The Syndicate Core developers</source>
         <translation>PIVX "core" udviklerne</translation>
     </message>
     <message>
@@ -4909,7 +4909,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Beregnet akkumulator kontrolpunkt er ikke det, der er registreret af blok indeks</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. PIVX Core is probably already running.</source>
+        <source>Cannot obtain a lock on data directory %s. Syndicate Core is probably already running.</source>
         <translation>Kan ikke låse datamappen %s. PIVX core kører sandsynligvis allerede.</translation>
     </message>
     <message>
@@ -5086,7 +5086,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Dette produkt anvender software udviklet i OpenSSL projektet til brug i OpenSSL værktøjssættet &lt;https://www.openssl.org/&gt; og kryptosoftware skrevet afEric Young og UPnP software skrevet af Thomas Bernard.</translation>
     </message>
     <message>
-        <source>Unable to bind to %s on this computer. PIVX Core is probably already running.</source>
+        <source>Unable to bind to %s on this computer. Syndicate Core is probably already running.</source>
         <translation>Det var ikke muligt at forbinde %s på denne computer. PIVX kører sandsynligvis allerede.</translation>
     </message>
     <message>
@@ -5114,7 +5114,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Advarsel! -paytxfee er sat meget højt. Det er dette gebyr De kommer til at betale for transaktionen, hvis De gennemfører. </translation>
     </message>
     <message>
-        <source>Warning: Please check that your computer's date and time are correct! If your clock is wrong PIVX Core will not work properly.</source>
+        <source>Warning: Please check that your computer's date and time are correct! If your clock is wrong Syndicate Core will not work properly.</source>
         <translation>Advarsel! Kontroller at computerens dato og tid er korrekt indstillet. Hvis tiden ikke er rigtig, vil PIVX core ikke fungere ordentligt.</translation>
     </message>
     <message>
@@ -5266,8 +5266,8 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Copyright (C) 2014-%i The Dash Core Developers </translation>
     </message>
     <message>
-        <source>Copyright (C) 2015-%i The PIVX Core Developers</source>
-        <translation>Copyright (C) 2015-%i The PIVX Core Developers</translation>
+        <source>Copyright (C) 2015-%i The Syndicate Core Developers</source>
+        <translation>Copyright (C) 2015-%i The Syndicate Core Developers</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -5354,7 +5354,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Fejl ved indlæsning af wallet.dat: Tegnebogen er beskadiget</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of PIVX Core</source>
+        <source>Error loading wallet.dat: Wallet requires newer version of Syndicate Core</source>
         <translation>Fejl ved indlæsning af wallet.dat: Tegnebogen kræver en nyere version af PIVX core</translation>
     </message>
     <message>
@@ -5470,7 +5470,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Info:</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. PIVX Core is shutting down.</source>
+        <source>Initialization sanity check failed. Syndicate Core is shutting down.</source>
         <translation>Initiering af sanitetskontrollen fejlede. PIVX core lukker ned. </translation>
     </message>
     <message>
@@ -6294,7 +6294,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Tegnebogen er låst</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart PIVX Core to complete</source>
+        <source>Wallet needed to be rewritten: restart Syndicate Core to complete</source>
         <translation>Tegnebogen måtte genskrives. Genstart PIVX core for at gøre færdig</translation>
     </message>
     <message>

@@ -16,7 +16,7 @@ BITCOIND_USER=${BITCOIND_USER:-pivx}
 BITCOIND_GROUP=${BITCOIND_GROUP:-pivx}
 BITCOIND_BIN=${BITCOIND_BIN:-/usr/bin/syndicated}
 
-name="PIVX Core Daemon"
+name="Syndicate Core Daemon"
 description="PIVX crypto-currency p2p network daemon"
 
 command="/usr/bin/syndicated"

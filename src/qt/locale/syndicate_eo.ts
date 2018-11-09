@@ -645,7 +645,7 @@
         <translation>Iloj langeto</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX kerno</translation>
     </message>
     <message>
@@ -669,11 +669,11 @@
         <translation>Foliumi mastro-nodo</translation>
     </message>
     <message>
-        <source>&amp;About PIVX Core</source>
+        <source>&amp;About Syndicate Core</source>
         <translation>&amp;Pri PIVX Kerno</translation>
     </message>
     <message>
-        <source>Show information about PIVX Core</source>
+        <source>Show information about Syndicate Core</source>
         <translation>Montri informon pri PIVX Kerno</translation>
     </message>
     <message>
@@ -729,11 +729,11 @@
         <translation>Bloko esplorilo fenestro</translation>
     </message>
     <message>
-        <source>Show the PIVX Core help message to get a list with possible PIVX command-line options</source>
+        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
         <translation>Montri la PIVX Kore help-mesaĝo por havi liston de havebla PIVX komandlinion opciojn</translation>
     </message>
     <message>
-        <source>PIVX Core client</source>
+        <source>Syndicate Core client</source>
         <translation>PIVX Kerno kliento</translation>
     </message>
     <message numerus="yes">
@@ -1223,7 +1223,7 @@ Muktisendi: %1</translation>
         <translation>versio</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX kerno</translation>
     </message>
     <message>
@@ -1231,7 +1231,7 @@ Muktisendi: %1</translation>
         <translation>(%1-bajto)</translation>
     </message>
     <message>
-        <source>About PIVX Core</source>
+        <source>About Syndicate Core</source>
         <translation>Pri PIVX Kerno</translation>
     </message>
     <message>
@@ -1274,15 +1274,15 @@ Muktisendi: %1</translation>
         <translation>Bonvenon</translation>
     </message>
     <message>
-        <source>Welcome to PIVX Core.</source>
+        <source>Welcome to Syndicate Core.</source>
         <translation>Bonvenon al la PIVX Kerno.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where PIVX Core will store its data.</source>
+        <source>As this is the first time the program is launched, you can choose where Syndicate Core will store its data.</source>
         <translation>Ĉar estas la unuan fojon ke la programo estas lanĉita, vi povas elekti kie PIVX kernk storigis sian datumojn. </translation>
     </message>
     <message>
-        <source>PIVX Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>Syndicate Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation>PIVX kerno elŝutos kaj konservi kopion de la PIVX blokĉeno. Almenaŭ %1GB datumoj stokitos en ĉi tiun dosierujo, kaj ĝi kresko kun la tempo. Monujo stokitos en ĉi tiun dosierujo.</translation>
     </message>
     <message>
@@ -1294,7 +1294,7 @@ Muktisendi: %1</translation>
         <translation>Uzi kutimon datumojn dosierujo:</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX kerno</translation>
     </message>
     <message>
@@ -2407,7 +2407,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>PIVX Core is shutting down...</source>
+        <source>Syndicate Core is shutting down...</source>
         <translation>PIVX kerno fermanta...</translation>
     </message>
     </context>
@@ -2461,7 +2461,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX kerno</translation>
     </message>
     <message>
@@ -2473,7 +2473,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
         <translation>La Dash kerno programistoj</translation>
     </message>
     <message>
-        <source>The PIVX Core developers</source>
+        <source>The Syndicate Core developers</source>
         <translation>La PIVX kerno programistoj</translation>
     </message>
     </context>

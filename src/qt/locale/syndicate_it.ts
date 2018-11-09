@@ -645,8 +645,8 @@
         <translation>Schede degli strumenti</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>Send coins to a PIVX address</source>
@@ -669,12 +669,12 @@
         <translation>Esplora i masternodes</translation>
     </message>
     <message>
-        <source>&amp;About PIVX Core</source>
-        <translation>&amp;Informazioni PIVX Core</translation>
+        <source>&amp;About Syndicate Core</source>
+        <translation>&amp;Informazioni Syndicate Core</translation>
     </message>
     <message>
-        <source>Show information about PIVX Core</source>
-        <translation>Visualizza informazioni su PIVX Core</translation>
+        <source>Show information about Syndicate Core</source>
+        <translation>Visualizza informazioni su Syndicate Core</translation>
     </message>
     <message>
         <source>Modify configuration options for PIVX</source>
@@ -729,12 +729,12 @@
         <translation>Finestra Block Explorer</translation>
     </message>
     <message>
-        <source>Show the PIVX Core help message to get a list with possible PIVX command-line options</source>
-        <translation>Mostra il messaggio di aiuto PIVX Core per ottenere un elenco con le possibili opzioni di riga di comando PIVX</translation>
+        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
+        <translation>Mostra il messaggio di aiuto Syndicate Core per ottenere un elenco con le possibili opzioni di riga di comando PIVX</translation>
     </message>
     <message>
-        <source>PIVX Core client</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core client</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to PIVX network</source>
@@ -1219,16 +1219,16 @@ MultiSend: %1</translation>
         <translation>versione</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About PIVX Core</source>
-        <translation>Informazioni su PIVX Core</translation>
+        <source>About Syndicate Core</source>
+        <translation>Informazioni su Syndicate Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -1274,16 +1274,16 @@ MultiSend: %1</translation>
         <translation>Benvenuto</translation>
     </message>
     <message>
-        <source>Welcome to PIVX Core.</source>
+        <source>Welcome to Syndicate Core.</source>
         <translation>Benvenuto in PIVIX Core.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where PIVX Core will store its data.</source>
-        <translation>Essendo il primo avvio dell'applicazione, puoi scegliere dove PIVX Core salverà i propri dati.</translation>
+        <source>As this is the first time the program is launched, you can choose where Syndicate Core will store its data.</source>
+        <translation>Essendo il primo avvio dell'applicazione, puoi scegliere dove Syndicate Core salverà i propri dati.</translation>
     </message>
     <message>
-        <source>PIVX Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>PIVX Core scaricherà e salverà una copia della blockchain PIVX. Verranno salvati almeno %1GB di dati in questa cartella, che cresceranno nel tempo. In questa cartella verrà salvato anche il portafoglio.</translation>
+        <source>Syndicate Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>Syndicate Core scaricherà e salverà una copia della blockchain PIVX. Verranno salvati almeno %1GB di dati in questa cartella, che cresceranno nel tempo. In questa cartella verrà salvato anche il portafoglio.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -1294,8 +1294,8 @@ MultiSend: %1</translation>
         <translation>Utilizza una cartella dati personalizzata:</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -2554,8 +2554,8 @@ Per cambiare la percentuale (riavvio non necessario):
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     </context>
 <context>

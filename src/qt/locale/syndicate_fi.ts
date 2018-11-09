@@ -565,7 +565,7 @@
         <translation>&amp;Apua</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX Ydin</translation>
     </message>
     <message>
@@ -585,11 +585,11 @@
         <translation>Selaa masternodeja</translation>
     </message>
     <message>
-        <source>&amp;About PIVX Core</source>
-        <translation>PIVX Core &amp;ytimestä</translation>
+        <source>&amp;About Syndicate Core</source>
+        <translation>Syndicate Core &amp;ytimestä</translation>
     </message>
     <message>
-        <source>Show information about PIVX Core</source>
+        <source>Show information about Syndicate Core</source>
         <translation>Näytä tietoja PIVX Ytimestä</translation>
     </message>
     <message>
@@ -645,11 +645,11 @@
         <translation>Lohkon tutkija näkymä</translation>
     </message>
     <message>
-        <source>Show the PIVX Core help message to get a list with possible PIVX command-line options</source>
+        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
         <translation>Näytä PIVX Ydin apuviesti saadaksesi lista mahdollisista PIVX komentolinja komennoista.</translation>
     </message>
     <message>
-        <source>PIVX Core client</source>
+        <source>Syndicate Core client</source>
         <translation>PIVX Ydin asiakasohjelma</translation>
     </message>
     <message>
@@ -908,7 +908,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX Ydin</translation>
     </message>
     <message>
@@ -927,11 +927,11 @@
         <translation>Tervetuloa</translation>
     </message>
     <message>
-        <source>Welcome to PIVX Core.</source>
+        <source>Welcome to Syndicate Core.</source>
         <translation>Tervetuloa PIVX Ytimeen.</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX Ydin</translation>
     </message>
     <message>
@@ -2057,7 +2057,7 @@ Please check the address and try again.</source>
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>PIVX Core is shutting down...</source>
+        <source>Syndicate Core is shutting down...</source>
         <translation>PIVX core sammuu...</translation>
     </message>
     <message>
@@ -2199,7 +2199,7 @@ Please check the address and try again.</source>
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>PIVX Ydin</translation>
     </message>
     <message>
@@ -2215,7 +2215,7 @@ Please check the address and try again.</source>
         <translation>Dash Core kehittäjät</translation>
     </message>
     <message>
-        <source>The PIVX Core developers</source>
+        <source>The Syndicate Core developers</source>
         <translation>PIVX core kehittäjät</translation>
     </message>
     <message>
@@ -2568,7 +2568,7 @@ Please check the address and try again.</source>
         <translation>Virhe ladattaessa wallet.dat tiedostoa: Lompakko korruptoitunut</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of PIVX Core</source>
+        <source>Error loading wallet.dat: Wallet requires newer version of Syndicate Core</source>
         <translation>Virhe ladattaessa wallet.dat tiedostoa: Lompakko vaatii uudemman version PIVX Coresta</translation>
     </message>
     <message>

@@ -645,8 +645,8 @@
         <translation>Onglets de la barre d'outils</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>Send coins to a PIVX address</source>
@@ -669,12 +669,12 @@
         <translation>Afficher les masternodes</translation>
     </message>
     <message>
-        <source>&amp;About PIVX Core</source>
-        <translation>A &amp;propos de PIVX Core</translation>
+        <source>&amp;About Syndicate Core</source>
+        <translation>A &amp;propos de Syndicate Core</translation>
     </message>
     <message>
-        <source>Show information about PIVX Core</source>
-        <translation>Afficher les information concernant PIVX Core</translation>
+        <source>Show information about Syndicate Core</source>
+        <translation>Afficher les information concernant Syndicate Core</translation>
     </message>
     <message>
         <source>Modify configuration options for PIVX</source>
@@ -729,12 +729,12 @@
         <translation>Fenêtre de Explorateur de Bloc</translation>
     </message>
     <message>
-        <source>Show the PIVX Core help message to get a list with possible PIVX command-line options</source>
-        <translation>Afficher les message d'aide de PIVX Core pour avoir les options pour ligne de commande</translation>
+        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
+        <translation>Afficher les message d'aide de Syndicate Core pour avoir les options pour ligne de commande</translation>
     </message>
     <message>
-        <source>PIVX Core client</source>
-        <translation>PIVX Core client</translation>
+        <source>Syndicate Core client</source>
+        <translation>Syndicate Core client</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to PIVX network</source>
@@ -1211,16 +1211,16 @@ Adresse : %4
         <translation>version</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About PIVX Core</source>
-        <translation>A propos de PIVX Core</translation>
+        <source>About Syndicate Core</source>
+        <translation>A propos de Syndicate Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -1262,12 +1262,12 @@ Adresse : %4
         <translation>Bienvenu</translation>
     </message>
     <message>
-        <source>Welcome to PIVX Core.</source>
-        <translation>Bienvenue à PIVX Core</translation>
+        <source>Welcome to Syndicate Core.</source>
+        <translation>Bienvenue à Syndicate Core</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where PIVX Core will store its data.</source>
-        <translation>Comme c'est la première fois que le programme est lancé, vous pouvez choisir où PIVX Core va stocker ses données.</translation>
+        <source>As this is the first time the program is launched, you can choose where Syndicate Core will store its data.</source>
+        <translation>Comme c'est la première fois que le programme est lancé, vous pouvez choisir où Syndicate Core va stocker ses données.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -1278,8 +1278,8 @@ Adresse : %4
         <translation>Utiliser un répertoire spécifique de données </translation>
     </message>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -4080,8 +4080,8 @@ Soit monnayer des dénominations plus élevées (moins d'intrants sont nécessai
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     </context>
 <context>
@@ -4461,7 +4461,7 @@ Soit monnayer des dénominations plus élevées (moins d'intrants sont nécessai
         <translation>Erreur de chargement du fichier wallet.dat: Portefeuille corrompu</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of PIVX Core</source>
+        <source>Error loading wallet.dat: Wallet requires newer version of Syndicate Core</source>
         <translation>Erreur de chargement du fichier wallet.dat: Le portefeuille nécessite une version plus récente du PIVX core</translation>
     </message>
     <message>
@@ -5053,8 +5053,8 @@ Soit monnayer des dénominations plus élevées (moins d'intrants sont nécessai
         <translation>Le portefeuille est vérouillé.</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart PIVX Core to complete</source>
-        <translation>Le portefeuille doit être réécrit: redémarrez PIVX Core pour terminer</translation>
+        <source>Wallet needed to be rewritten: restart Syndicate Core to complete</source>
+        <translation>Le portefeuille doit être réécrit: redémarrez Syndicate Core pour terminer</translation>
     </message>
     <message>
         <source>Wallet options:</source>

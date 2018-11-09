@@ -569,8 +569,8 @@
         <translation>Panel nástrojov Záložky</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>Send coins to a PIVX address</source>
@@ -589,12 +589,12 @@
         <translation>Prezrieť masternody</translation>
     </message>
     <message>
-        <source>&amp;About PIVX Core</source>
-        <translation>O PIVX Core</translation>
+        <source>&amp;About Syndicate Core</source>
+        <translation>O Syndicate Core</translation>
     </message>
     <message>
-        <source>Show information about PIVX Core</source>
-        <translation>Zobraziť informácie o PIVX Core</translation>
+        <source>Show information about Syndicate Core</source>
+        <translation>Zobraziť informácie o Syndicate Core</translation>
     </message>
     <message>
         <source>Modify configuration options for PIVX</source>
@@ -649,12 +649,12 @@
         <translation>Okno blockchain prehliadača</translation>
     </message>
     <message>
-        <source>Show the PIVX Core help message to get a list with possible PIVX command-line options</source>
-        <translation>Zobraziť pomocnú správu programu PIVX Core a získajte zoznam možností príkazového riadka PIVX</translation>
+        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
+        <translation>Zobraziť pomocnú správu programu Syndicate Core a získajte zoznam možností príkazového riadka PIVX</translation>
     </message>
     <message>
-        <source>PIVX Core client</source>
-        <translation>PIVX Core klient</translation>
+        <source>Syndicate Core client</source>
+        <translation>Syndicate Core klient</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -867,15 +867,15 @@ MultiSend: %1</translation>
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     </context>
 <context>
     <name>Intro</name>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -1185,8 +1185,8 @@ MultiSend: %1</translation>
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     </context>
 <context>

@@ -557,8 +557,8 @@
         <translation>Tabs 工具列</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>Send coins to a PIVX address</source>
@@ -577,12 +577,12 @@
         <translation>瀏覽 Masternodes</translation>
     </message>
     <message>
-        <source>&amp;About PIVX Core</source>
-        <translation>&amp;關於 PIVX Core</translation>
+        <source>&amp;About Syndicate Core</source>
+        <translation>&amp;關於 Syndicate Core</translation>
     </message>
     <message>
-        <source>Show information about PIVX Core</source>
-        <translation>顯示 PIVX Core 相關資訊</translation>
+        <source>Show information about Syndicate Core</source>
+        <translation>顯示 Syndicate Core 相關資訊</translation>
     </message>
     <message>
         <source>Modify configuration options for PIVX</source>
@@ -637,12 +637,12 @@
         <translation>區塊鏈瀏覽視窗</translation>
     </message>
     <message>
-        <source>Show the PIVX Core help message to get a list with possible PIVX command-line options</source>
-        <translation>顯示 PIVX Core 幫助訊息以取得 PIVX 命令列表選項</translation>
+        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
+        <translation>顯示 Syndicate Core 幫助訊息以取得 PIVX 命令列表選項</translation>
     </message>
     <message>
-        <source>PIVX Core client</source>
-        <translation>PIVX Core 客戶端</translation>
+        <source>Syndicate Core client</source>
+        <translation>Syndicate Core 客戶端</translation>
     </message>
     </context>
 <context>
@@ -671,15 +671,15 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     </context>
 <context>
     <name>Intro</name>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     </context>
 <context>
@@ -893,8 +893,8 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     </context>
 <context>

@@ -509,7 +509,7 @@
         <translation>&amp;Pomoc</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>&amp;Rdzeń PIVX</translation>
     </message>
     <message>
@@ -529,11 +529,11 @@
         <translation>Przeglądaj masternodes</translation>
     </message>
     <message>
-        <source>&amp;About PIVX Core</source>
+        <source>&amp;About Syndicate Core</source>
         <translation>&amp;O rdzeniu bitcoina</translation>
     </message>
     <message>
-        <source>Show information about PIVX Core</source>
+        <source>Show information about Syndicate Core</source>
         <translation>Pokaż informacje o rdzeniu bitcoina</translation>
     </message>
     <message>
@@ -585,11 +585,11 @@
         <translation>Okno eksplorera bloków</translation>
     </message>
     <message>
-        <source>Show the PIVX Core help message to get a list with possible PIVX command-line options</source>
+        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
         <translation>Pokaż wiadomość pomocy rdzenia PIVX, aby dostać listę możliwych opcji PIVX command-line</translation>
     </message>
     <message>
-        <source>PIVX Core client</source>
+        <source>Syndicate Core client</source>
         <translation>Rdzeń PIVX klient</translation>
     </message>
     <message>
@@ -899,7 +899,7 @@ MultiWysyłlka: %1</translation>
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>&amp;Rdzeń PIVX</translation>
     </message>
     </context>
@@ -914,7 +914,7 @@ MultiWysyłlka: %1</translation>
         <translation>Użyj niestandardowej ścieżki danych</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>&amp;Rdzeń PIVX</translation>
     </message>
     <message>
@@ -1929,7 +1929,7 @@ https://www.transifex.com/pivx-project/pivx-project-translations </translation>
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>PIVX Core</source>
+        <source>Syndicate Core</source>
         <translation>&amp;Rdzeń PIVX</translation>
     </message>
     </context>

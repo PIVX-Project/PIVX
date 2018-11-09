@@ -645,8 +645,8 @@
         <translation>Alatna traka kartica</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>Send coins to a PIVX address</source>
@@ -669,12 +669,12 @@
         <translation>Pretraži masternodes</translation>
     </message>
     <message>
-        <source>&amp;About PIVX Core</source>
-        <translation>O PIVX Core</translation>
+        <source>&amp;About Syndicate Core</source>
+        <translation>O Syndicate Core</translation>
     </message>
     <message>
-        <source>Show information about PIVX Core</source>
-        <translation>Prikaz informacija o PIVX Core-u</translation>
+        <source>Show information about Syndicate Core</source>
+        <translation>Prikaz informacija o Syndicate Core-u</translation>
     </message>
     <message>
         <source>Modify configuration options for PIVX</source>
@@ -729,11 +729,11 @@
         <translation>Prozor Block preglednika</translation>
     </message>
     <message>
-        <source>Show the PIVX Core help message to get a list with possible PIVX command-line options</source>
-        <translation>Pokažite poruku PIVX Core pomoći da biste dobili popis s mogućim PIVX opcijama naredbenog retka</translation>
+        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
+        <translation>Pokažite poruku Syndicate Core pomoći da biste dobili popis s mogućim PIVX opcijama naredbenog retka</translation>
     </message>
     <message>
-        <source>PIVX Core client</source>
+        <source>Syndicate Core client</source>
         <translation>PIVIX Core Klijent</translation>
     </message>
     <message numerus="yes">
@@ -1231,16 +1231,16 @@ Višestruko slanje: %1</translation>
         <translation>verzija</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About PIVX Core</source>
-        <translation>O PIVX Core</translation>
+        <source>About Syndicate Core</source>
+        <translation>O Syndicate Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -1286,16 +1286,16 @@ Višestruko slanje: %1</translation>
         <translation>Dobrodošli</translation>
     </message>
     <message>
-        <source>Welcome to PIVX Core.</source>
-        <translation>Dobrodošli u PIVX Core.</translation>
+        <source>Welcome to Syndicate Core.</source>
+        <translation>Dobrodošli u Syndicate Core.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where PIVX Core will store its data.</source>
-        <translation>Budući da je prvi put pokrenut program, možete odabrati gdje će PIVX Core pohraniti svoje podatke.</translation>
+        <source>As this is the first time the program is launched, you can choose where Syndicate Core will store its data.</source>
+        <translation>Budući da je prvi put pokrenut program, možete odabrati gdje će Syndicate Core pohraniti svoje podatke.</translation>
     </message>
     <message>
-        <source>PIVX Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>PIVX Core preuzima i pohranjuje kopiju PIVX blok-lanca. Barem će %1GB podataka biti pohranjeno u ovom direktoriju i to će s vremenom rasti. Novčanik će također biti pohranjena u ovom direktoriju.</translation>
+        <source>Syndicate Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>Syndicate Core preuzima i pohranjuje kopiju PIVX blok-lanca. Barem će %1GB podataka biti pohranjeno u ovom direktoriju i to će s vremenom rasti. Novčanik će također biti pohranjena u ovom direktoriju.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -1306,8 +1306,8 @@ Višestruko slanje: %1</translation>
         <translation>Koristite prilagođeni direktorij podataka:</translation>
     </message>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -4079,8 +4079,8 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>PIVX Core is shutting down...</source>
-        <translation>PIVX Core se zatvara ...</translation>
+        <source>Syndicate Core is shutting down...</source>
+        <translation>Syndicate Core se zatvara ...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -4229,8 +4229,8 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>PIVX Core</source>
-        <translation>PIVX Core</translation>
+        <source>Syndicate Core</source>
+        <translation>Syndicate Core</translation>
     </message>
     <message>
         <source>Version %1</source>
@@ -4245,8 +4245,8 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Dash Core programeri</translation>
     </message>
     <message>
-        <source>The PIVX Core developers</source>
-        <translation>PIVX Core programeri</translation>
+        <source>The Syndicate Core developers</source>
+        <translation>Syndicate Core programeri</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -4911,8 +4911,8 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Izračunata kontrolna točka akumulatora nije ono što se bilježi indeksom blokova</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. PIVX Core is probably already running.</source>
-        <translation>Nije moguće dobiti zaključavanje na direktoriju podataka %s. PIVX Core vjerojatno već radi.</translation>
+        <source>Cannot obtain a lock on data directory %s. Syndicate Core is probably already running.</source>
+        <translation>Nije moguće dobiti zaključavanje na direktoriju podataka %s. Syndicate Core vjerojatno već radi.</translation>
     </message>
     <message>
         <source>Change automatic finalized budget voting behavior. mode=auto: Vote for only exact finalized budget match to my generated budget. (string, default: auto)</source>
@@ -5087,8 +5087,8 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Ovaj proizvod uključuje softver razvijen od strane OpenSSL projekta za uporabu u OpenSSL Toolkitu i kriptografskom softveru kojeg je napisao Eric Young i UPnP softver koji je napisao Thomas Bernard.</translation>
     </message>
     <message>
-        <source>Unable to bind to %s on this computer. PIVX Core is probably already running.</source>
-        <translation>Nije moguće vezati se na %s na ovom računalu. PIVX Core vjerojatno već radi.</translation>
+        <source>Unable to bind to %s on this computer. Syndicate Core is probably already running.</source>
+        <translation>Nije moguće vezati se na %s na ovom računalu. Syndicate Core vjerojatno već radi.</translation>
     </message>
     <message>
         <source>Unable to locate enough Obfuscation denominated funds for this transaction.</source>
@@ -5115,8 +5115,8 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Upozorenje: -paytxfee je vrlo visoka! To je transakcijska naknada koju ćete platiti ako šaljete transakciju.</translation>
     </message>
     <message>
-        <source>Warning: Please check that your computer's date and time are correct! If your clock is wrong PIVX Core will not work properly.</source>
-        <translation>Upozorenje: Provjerite jesu li datum i vrijeme vašeg računala točni! Ako je vaš sat pogrešan, PIVX Core neće raditi ispravno.</translation>
+        <source>Warning: Please check that your computer's date and time are correct! If your clock is wrong Syndicate Core will not work properly.</source>
+        <translation>Upozorenje: Provjerite jesu li datum i vrijeme vašeg računala točni! Ako je vaš sat pogrešan, Syndicate Core neće raditi ispravno.</translation>
     </message>
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
@@ -5267,8 +5267,8 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Autorska prava (C) 2014-%i The Dash Core Developers</translation>
     </message>
     <message>
-        <source>Copyright (C) 2015-%i The PIVX Core Developers</source>
-        <translation>Autorska prava (C) 2015-%i The PIVX Core Developers</translation>
+        <source>Copyright (C) 2015-%i The Syndicate Core Developers</source>
+        <translation>Autorska prava (C) 2015-%i The Syndicate Core Developers</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
@@ -5356,7 +5356,7 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Pogreška pri učitavanju wallet.dat: novčanik oštećen</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of PIVX Core</source>
+        <source>Error loading wallet.dat: Wallet requires newer version of Syndicate Core</source>
         <translation>Pogreška prilikom učitavanja wallet.dat: Novčanik zahtijeva noviju verziju PIVX jezgre</translation>
     </message>
     <message>
@@ -5472,8 +5472,8 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Informacije</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. PIVX Core is shutting down.</source>
-        <translation>Provjera ispravnosti inicijalizacije nije uspjela. PIVX Core se zatvara.</translation>
+        <source>Initialization sanity check failed. Syndicate Core is shutting down.</source>
+        <translation>Provjera ispravnosti inicijalizacije nije uspjela. Syndicate Core se zatvara.</translation>
     </message>
     <message>
         <source>Input is not valid.</source>
@@ -6295,8 +6295,8 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Novčanik zaključan.</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart PIVX Core to complete</source>
-        <translation>Potrebno je prepisati novčanik: ponovo pokrenite PIVX Core</translation>
+        <source>Wallet needed to be rewritten: restart Syndicate Core to complete</source>
+        <translation>Potrebno je prepisati novčanik: ponovo pokrenite Syndicate Core</translation>
     </message>
     <message>
         <source>Wallet options:</source>

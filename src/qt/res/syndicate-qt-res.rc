@@ -20,13 +20,13 @@ BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
             VALUE "CompanyName",        "PIVX"
-            VALUE "FileDescription",    "PIVX Core (OSS GUI client for PIVX)"
+            VALUE "FileDescription",    "Syndicate Core (OSS GUI client for PIVX)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "pivx-qt"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT/X11 software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
             VALUE "OriginalFilename",   "pivx-qt.exe"
-            VALUE "ProductName",        "PIVX Core"
+            VALUE "ProductName",        "Syndicate Core"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END
