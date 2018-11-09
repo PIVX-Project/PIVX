@@ -3155,7 +3155,7 @@
        <string notr="true">border: 1px solid #61696c;margin-left:4px;</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="btnConvertPivx">
+     <widget class="QPushButton" name="btnConvertSyndicate">
       <property name="geometry">
        <rect>
         <x>260</x>

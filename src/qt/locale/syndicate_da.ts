@@ -2928,7 +2928,7 @@ Maksimum tilladt:</translation>
         <translation>Ingen 'Betal til' adresse, der er oprettet, skaber lokal betaling</translation>
     </message>
     <message>
-        <source>Invalid Pivx Address</source>
+        <source>Invalid Syndicate Address</source>
         <translation> Ugyldig Syndicate adresse</translation>
     </message>
     <message>

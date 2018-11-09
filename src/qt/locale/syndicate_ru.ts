@@ -2927,7 +2927,7 @@ Maximum allowed: </source>
         <translation>Не предоставляется адрес «Pay To», создающий местный платеж</translation>
     </message>
     <message>
-        <source>Invalid Pivx Address</source>
+        <source>Invalid Syndicate Address</source>
         <translation>неправильный Syndicate адрес</translation>
     </message>
     <message>

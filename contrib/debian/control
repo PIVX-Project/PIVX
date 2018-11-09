@@ -55,4 +55,4 @@ Description: peer-to-peer network based digital currency - Qt GUI
  Full transaction history is stored locally at each client.  This
  requires 1+ GB of space, slowly growing.
  .
- This package provides Pivx-Qt, a GUI for Syndicate based on Qt.
+ This package provides Syndicate-Qt, a GUI for Syndicate based on Qt.

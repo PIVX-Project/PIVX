@@ -2920,7 +2920,7 @@ Maximal erlaubt:</translation>
         <translation>Keine "Pay To"-Adresse zur Verfügung. Erstelle lokale Zahlung</translation>
     </message>
     <message>
-        <source>Invalid Pivx Address</source>
+        <source>Invalid Syndicate Address</source>
         <translation>Ungültige Syndicate-Adresse </translation>
     </message>
     <message>

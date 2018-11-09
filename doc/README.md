@@ -42,7 +42,7 @@ The following are developer notes on how to build Syndicate on your native platf
 
 Development
 ---------------------
-The Pivx repo's [root README](https://github.com/SyndicateLtd/SyndicateQt/blob/master/README.md) contains relevant information on the development process and automated testing.
+The Syndicate repo's [root README](https://github.com/SyndicateLtd/SyndicateQt/blob/master/README.md) contains relevant information on the development process and automated testing.
 
 - [Developer Notes](developer-notes.md)
 - [Multiwallet Qt Development](multiwallet-qt.md)

@@ -2929,8 +2929,8 @@ Maximaal toegestaan:</translation>
         <translation>Geen 'Betaal aan' adres verstrekt, lokale betaling wordt gemaakt</translation>
     </message>
     <message>
-        <source>Invalid Pivx Address</source>
-        <translation>Ongeldig Pivx addres</translation>
+        <source>Invalid Syndicate Address</source>
+        <translation>Ongeldig Syndicate addres</translation>
     </message>
     <message>
         <source>Invalid Send Amount</source>

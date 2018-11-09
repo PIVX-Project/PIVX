@@ -2926,8 +2926,8 @@ Maksimalno dopušteno:</translation>
         <translation>Nije dodijeljena adresa "Plati", stvarajući lokalnu uplatu</translation>
     </message>
     <message>
-        <source>Invalid Pivx Address</source>
-        <translation>Nevažeća Pivx Adresa</translation>
+        <source>Invalid Syndicate Address</source>
+        <translation>Nevažeća Syndicate Adresa</translation>
     </message>
     <message>
         <source>Invalid Send Amount</source>

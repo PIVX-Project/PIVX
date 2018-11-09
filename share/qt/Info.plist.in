@@ -38,7 +38,7 @@
   <true/>
 
   <key>CFBundleIdentifier</key>
-  <string>io.syndicate.Pivx-Qt</string>
+  <string>io.syndicate.Syndicate-Qt</string>
 
   <key>CFBundleURLTypes</key>
   <array>
@@ -46,7 +46,7 @@
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleURLName</key>
-      <string>io.syndicate.PivxPayment</string>
+      <string>io.syndicate.SyndicatePayment</string>
       <key>CFBundleURLSchemes</key>
       <array>
         <string>syndicate</string>
@@ -60,7 +60,7 @@
       <key>UTTypeIdentifier</key>
       <string>io.syndicate.paymentrequest</string>
       <key>UTTypeDescription</key>
-      <string>Pivx payment request</string>
+      <string>Syndicate payment request</string>
       <key>UTTypeConformsTo</key>
       <array>
         <string>public.data</string>

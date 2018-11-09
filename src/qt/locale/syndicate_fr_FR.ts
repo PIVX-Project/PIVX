@@ -2860,8 +2860,8 @@ Maximum autorisé:</translation>
         <translation>Aucune adresse 'Payer à' de fournie, création d'un paiement local</translation>
     </message>
     <message>
-        <source>Invalid Pivx Address</source>
-        <translation>Adresse Pivx incorrecte</translation>
+        <source>Invalid Syndicate Address</source>
+        <translation>Adresse Syndicate incorrecte</translation>
     </message>
     <message>
         <source>Invalid Send Amount</source>

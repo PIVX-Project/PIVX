@@ -2004,8 +2004,8 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
         <translation>Mesaĝo: eniri kvanto &gt; 0.</translation>
     </message>
     <message>
-        <source>Invalid Pivx Address</source>
-        <translation>Nevalida Pivx adreso</translation>
+        <source>Invalid Syndicate Address</source>
+        <translation>Nevalida Syndicate adreso</translation>
     </message>
     <message>
         <source>Confirm send coins</source>

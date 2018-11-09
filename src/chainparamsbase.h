@@ -12,7 +12,7 @@
 
 /**
  * CBaseChainParams defines the base parameters (shared between syndicate-cli and syndicated)
- * of a given instance of the Pivx system.
+ * of a given instance of the Syndicate system.
  */
 class CBaseChainParams
 {

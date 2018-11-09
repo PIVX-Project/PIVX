@@ -94,10 +94,10 @@ void OptionsModel::Init()
         settings.setValue("nPreferredDenom", 0);
     nPreferredDenom = settings.value("nPreferredDenom", "0").toLongLong();
 
-    if (!settings.contains("nAnonymizePivxAmount"))
-        settings.setValue("nAnonymizePivxAmount", 1000);
+    if (!settings.contains("nAnonymizeSyndicateAmount"))
+        settings.setValue("nAnonymizeSyndicateAmount", 1000);
 
-    nAnonymizePivxAmount = settings.value("nAnonymizePivxAmount").toLongLong();
+    nAnonymizeSyndicateAmount = settings.value("nAnonymizeSyndicateAmount").toLongLong();
 
     if (!settings.contains("fShowMasternodesTab"))
         settings.setValue("fShowMasternodesTab", masternodeConfig.getCount());
@@ -171,8 +171,8 @@ void OptionsModel::Init()
         SoftSetArg("-zeromintpercentage", settings.value("nZeromintPercentage").toString().toStdString());
     if (settings.contains("nPreferredDenom"))
         SoftSetArg("-preferredDenom", settings.value("nPreferredDenom").toString().toStdString());
-    if (settings.contains("nAnonymizePivxAmount"))
-        SoftSetArg("-anonymizesyndicateamount", settings.value("nAnonymizePivxAmount").toString().toStdString());
+    if (settings.contains("nAnonymizeSyndicateAmount"))
+        SoftSetArg("-anonymizesyndicateamount", settings.value("nAnonymizeSyndicateAmount").toString().toStdString());
 
     language = settings.value("language").toString();
 }
@@ -265,8 +265,8 @@ QVariant OptionsModel::data(const QModelIndex& index, int role) const
             return QVariant(nZeromintPercentage);
         case ZeromintPrefDenom:
             return QVariant(nPreferredDenom);
-        case AnonymizePivxAmount:
-            return QVariant(nAnonymizePivxAmount);
+        case AnonymizeSyndicateAmount:
+            return QVariant(nAnonymizeSyndicateAmount);
         case Listen:
             return settings.value("fListen");
         default:
@@ -399,10 +399,10 @@ bool OptionsModel::setData(const QModelIndex& index, const QVariant& value, int 
             settings.setValue("fHideOrphans", fHideOrphans);
             emit hideOrphansChanged(fHideOrphans);
             break;
-        case AnonymizePivxAmount:
-            nAnonymizePivxAmount = value.toInt();
-            settings.setValue("nAnonymizePivxAmount", nAnonymizePivxAmount);
-            emit anonymizePivxAmountChanged(nAnonymizePivxAmount);
+        case AnonymizeSyndicateAmount:
+            nAnonymizeSyndicateAmount = value.toInt();
+            settings.setValue("nAnonymizeSyndicateAmount", nAnonymizeSyndicateAmount);
+            emit anonymizeSyndicateAmountChanged(nAnonymizeSyndicateAmount);
             break;
         case CoinControlFeatures:
             fCoinControlFeatures = value.toBool();

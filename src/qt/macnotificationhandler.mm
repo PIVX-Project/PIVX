@@ -16,7 +16,7 @@
 - (NSString *)__bundleIdentifier
 {
     if (self == [NSBundle mainBundle]) {
-        return @"io.syndicate.Pivx-Qt";
+        return @"io.syndicate.Syndicate-Qt";
     } else {
         return [self __bundleIdentifier];
     }
