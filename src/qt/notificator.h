@@ -7,7 +7,7 @@
 #define BITCOIN_QT_NOTIFICATOR_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/pivx-config.h"
+#include "config/syndicate-config.h"
 #endif
 
 #include <QIcon>
