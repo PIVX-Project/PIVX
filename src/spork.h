@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2016 The Dash developers
-// Copyright (c) 2016-2018 The XVIP developers
+// Copyright (c) 2016-2018 The PIVX developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -84,7 +84,7 @@ public:
 
     uint256 GetHash()
     {
-        uint256 n = HashQuark(BEGIN(nSporkID), END(nTimeSigned));
+        uint256 n = HashX11(BEGIN(nSporkID), END(nTimeSigned));
         return n;
     }
 
