@@ -1,6 +1,6 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2015-2017 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
@@ -68,11 +68,11 @@ AddressBookPage::AddressBookPage(Mode mode, Tabs tab, QWidget* parent) : QDialog
     }
     switch (tab) {
     case SendingTab:
-        ui->labelExplanation->setText(tr("These are your PIVX addresses for sending payments. Always check the amount and the receiving address before sending coins."));
+        ui->labelExplanation->setText(tr("These are your Syndicate addresses for sending payments. Always check the amount and the receiving address before sending coins."));
         ui->deleteAddress->setVisible(true);
         break;
     case ReceivingTab:
-        ui->labelExplanation->setText(tr("These are your PIVX addresses for receiving payments. It is recommended to use a new receiving address for each transaction."));
+        ui->labelExplanation->setText(tr("These are your Syndicate addresses for receiving payments. It is recommended to use a new receiving address for each transaction."));
         ui->deleteAddress->setVisible(false);
         break;
     }

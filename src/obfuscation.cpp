@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2015-2017 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
@@ -778,7 +778,7 @@ void CObfuscationPool::ChargeRandomFees()
 
                 Being that Obfuscation has "no fees" we need to have some kind of cost associated
                 with using it to stop abuse. Otherwise it could serve as an attack vector and
-                allow endless transaction that would bloat PIVX and make it unusable. To
+                allow endless transaction that would bloat Syndicate and make it unusable. To
                 stop these kinds of attacks 1 in 10 successful transactions are charged. This
                 adds up to a cost of 0.001 PIV per transaction on average.
             */
@@ -2287,7 +2287,7 @@ void ThreadCheckObfuScationPool()
     if (fLiteMode) return; //disable all Obfuscation/Masternode related functionality
 
     // Make this thread recognisable as the wallet flushing thread
-    RenameThread("pivx-obfuscation");
+    RenameThread("syndicate-obfuscation");
 
     unsigned int c = 0;
 

@@ -1,6 +1,6 @@
 # Copyright (c) 2014 The Bitcoin Core developers
 # Copyright (c) 2014-2015 The Dash developers
-# Copyright (c) 2015-2017 The PIVX developers
+# Copyright (c) 2015-2017 The XVIP developers
 # Copyright (c) 2016-2018 The Syndicate developers
 # Distributed under the MIT/X11 software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -67,7 +67,7 @@ def initialize_datadir(dirname, n):
     datadir = os.path.join(dirname, "node"+str(n))
     if not os.path.isdir(datadir):
         os.makedirs(datadir)
-    with open(os.path.join(datadir, "pivx.conf"), 'w') as f:
+    with open(os.path.join(datadir, "syndicate.conf"), 'w') as f:
         f.write("regtest=1\n");
         f.write("rpcuser=rt\n");
         f.write("rpcpassword=rt\n");
@@ -130,7 +130,7 @@ def initialize_chain(test_dir):
         from_dir = os.path.join("cache", "node"+str(i))
         to_dir = os.path.join(test_dir,  "node"+str(i))
         shutil.copytree(from_dir, to_dir)
-        initialize_datadir(test_dir, i) # Overwrite port/rpcport in pivx.conf
+        initialize_datadir(test_dir, i) # Overwrite port/rpcport in syndicate.conf
 
 def initialize_chain_clean(test_dir, num_nodes):
     """

@@ -1,7 +1,7 @@
 <!--- Remove this description and sections that do not apply -->
 
 This issue tracker is only for technical issues related to Syndicate Core.
-General PIVX questions and/or support requests and are best directed to the [PIVX Discord](https://discord.synx.online).
+General Syndicate questions and/or support requests and are best directed to the [Syndicate Discord](https://discord.synx.online).
 
 ### Describe the issue
 

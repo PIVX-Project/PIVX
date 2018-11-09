@@ -1,13 +1,13 @@
 Syndicate Core version 2.2.1 is now available from:
 
-  <https://github.com/pivx-project/pivx/releases>
+  <https://github.com/SyndicateLtd/SyndicateQt/releases>
 
 This is a new minor version release, including various bug fixes and
 performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/pivx-project/pivx/issues>
+  <https://github.com/SyndicateLtd/SyndicateQt/issues>
 
 Compatibility
 ==============
@@ -45,7 +45,7 @@ blockchain.
 Additional progress has been made to prevent the wallet crashes that are causing
 the corrupted databases, for example removing the Trading Window (explained below)
 and fixing several other minor memory leaks that were inherited from the version
-of Bitcoin that PIVX was forked from.
+of Bitcoin that Syndicate was forked from.
 
 RPC Changes
 -----------
@@ -118,4 +118,4 @@ Thanks to everyone who directly contributed to this release:
 - Spock
 - presstab
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/).
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/syndicate-project-translations/).

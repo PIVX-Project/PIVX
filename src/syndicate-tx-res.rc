@@ -16,8 +16,8 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "PIVX"
-            VALUE "FileDescription",    "syndicate-tx (CLI PIVX transaction editor utility)"
+            VALUE "CompanyName",        "Syndicate"
+            VALUE "FileDescription",    "syndicate-tx (CLI Syndicate transaction editor utility)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "syndicate-tx"
             VALUE "LegalCopyright",     COPYRIGHT_STR

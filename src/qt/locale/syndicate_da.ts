@@ -62,11 +62,11 @@
         <translation>Modtageradresse</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <source>These are your Syndicate addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation>Dine adresser til at sende betalinger med. Kontroller altid både beløb og modtageradresse før afsendelse.</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <source>These are your Syndicate addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
         <translation>Dette er dine modtager adresser. Det anbefales at anvende en ny adresse til hver transaktion</translation>
     </message>
     <message>
@@ -176,8 +176,8 @@
         <translation>Bekræft, og tegnebogen krypteres.</translation>
     </message>
     <message>
-        <source>PIVX will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
-        <translation>PIVX vil lukke ned for at færdiggøre kryptograferingsprocesserne. Husk at kryptering alene ikke sikrer mod tyveri af mønterne fra malware eller virus på computeren.</translation>
+        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
+        <translation>Syndicate vil lukke ned for at færdiggøre kryptograferingsprocesserne. Husk at kryptering alene ikke sikrer mod tyveri af mønterne fra malware eller virus på computeren.</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -254,12 +254,12 @@
         <translation>Adresse</translation>
     </message>
     <message>
-        <source>Enter a PIVX Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.</source>
-        <translation>Indtast en PIVX-adresse, som du gerne vil kryptere ved hjælp af BIP 38. Indtast en adgangskode i mellemkassen. Tryk på krypteringen for at beregne den krypterede private nøgle.</translation>
+        <source>Enter a Syndicate Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.</source>
+        <translation>Indtast en Syndicate-adresse, som du gerne vil kryptere ved hjælp af BIP 38. Indtast en adgangskode i mellemkassen. Tryk på krypteringen for at beregne den krypterede private nøgle.</translation>
     </message>
     <message>
-        <source>The PIVX address to encrypt</source>
-        <translation>PIVX-adressen for at kryptere</translation>
+        <source>The Syndicate address to encrypt</source>
+        <translation>Syndicate-adressen for at kryptere</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -290,8 +290,8 @@
         <translation>Kopier den aktuelle underskrift til udklipsholderen.</translation>
     </message>
     <message>
-        <source>Encrypt the private key for this PIVX address</source>
-        <translation>Krypter den private nøgle for denne PIVX-adresse</translation>
+        <source>Encrypt the private key for this Syndicate address</source>
+        <translation>Krypter den private nøgle for denne Syndicate-adresse</translation>
     </message>
     <message>
         <source>Reset all fields</source>
@@ -646,15 +646,15 @@
     </message>
     <message>
         <source>Syndicate Core</source>
-        <translation>PIVX kerne</translation>
+        <translation>Syndicate kerne</translation>
     </message>
     <message>
-        <source>Send coins to a PIVX address</source>
-        <translation>Send mønter til en PIVX adresse</translation>
+        <source>Send coins to a Syndicate address</source>
+        <translation>Send mønter til en Syndicate adresse</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and pivx: URIs)</source>
-        <translation>Anmod om betaling (genrerer QR kode og PIVX URL)</translation>
+        <source>Request payments (generates QR codes and syndicate: URIs)</source>
+        <translation>Anmod om betaling (genrerer QR kode og Syndicate URL)</translation>
     </message>
     <message>
         <source>&amp;Privacy</source>
@@ -670,23 +670,23 @@
     </message>
     <message>
         <source>&amp;About Syndicate Core</source>
-        <translation>&amp;Om PIVX kerne</translation>
+        <translation>&amp;Om Syndicate kerne</translation>
     </message>
     <message>
         <source>Show information about Syndicate Core</source>
-        <translation>Vis information om PIVX kerne</translation>
+        <translation>Vis information om Syndicate kerne</translation>
     </message>
     <message>
-        <source>Modify configuration options for PIVX</source>
-        <translation>Ret konfigurationsindstillinger for PIVX</translation>
+        <source>Modify configuration options for Syndicate</source>
+        <translation>Ret konfigurationsindstillinger for Syndicate</translation>
     </message>
     <message>
-        <source>Sign messages with your PIVX addresses to prove you own them</source>
-        <translation>Underskriv beskeder med Deres PIVX adresser for at bekræfte at De ejer dem.</translation>
+        <source>Sign messages with your Syndicate addresses to prove you own them</source>
+        <translation>Underskriv beskeder med Deres Syndicate adresser for at bekræfte at De ejer dem.</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified PIVX addresses</source>
-        <translation>Verificer besked for at sikre, at den er underskrevet med den opgivne PIVX adresse</translation>
+        <source>Verify messages to ensure they were signed with specified Syndicate addresses</source>
+        <translation>Verificer besked for at sikre, at den er underskrevet med den opgivne Syndicate adresse</translation>
     </message>
     <message>
         <source>&amp;BIP38 tool</source>
@@ -717,8 +717,8 @@
         <translation>ÅbnMasternode konfigurationsfil</translation>
     </message>
     <message>
-        <source>Open a PIVX: URI or payment request</source>
-        <translation>Åbn en PIVX URl eller betalingsanmodning</translation>
+        <source>Open a Syndicate: URI or payment request</source>
+        <translation>Åbn en Syndicate URl eller betalingsanmodning</translation>
     </message>
     <message>
         <source>&amp;Blockchain explorer</source>
@@ -729,16 +729,16 @@
         <translation>Blockexplorer vindue</translation>
     </message>
     <message>
-        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
-        <translation>Vis hjelpetekster fra PIVX kernen for at få en liste med mulige PIVX kommandolinie-startparametre</translation>
+        <source>Show the Syndicate Core help message to get a list with possible Syndicate command-line options</source>
+        <translation>Vis hjelpetekster fra Syndicate kernen for at få en liste med mulige Syndicate kommandolinie-startparametre</translation>
     </message>
     <message>
         <source>Syndicate Core client</source>
-        <translation>PIVX kerneklient</translation>
+        <translation>Syndicate kerneklient</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to PIVX network</source>
-        <translation><numerusform>%n aktiv forbindelse til PIVX-netværk</numerusform><numerusform>%n aktiv forbindelse(s) til PIVX netværk</numerusform></translation>
+        <source>%n active connection(s) to Syndicate network</source>
+        <translation><numerusform>%n aktiv forbindelse til Syndicate-netværk</numerusform><numerusform>%n aktiv forbindelse(s) til Syndicate netværk</numerusform></translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -892,8 +892,8 @@ Adresse: %4
         <translation>Tekstmærke</translation>
     </message>
     <message>
-        <source>Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (pivx.conf).</source>
-        <translation>Ikke alle transaktioner vil blive vist. For at vise alle transaktioner må De sætte "txindex=1" i konfigurationsfilen (pivx.conf).</translation>
+        <source>Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (syndicate.conf).</source>
+        <translation>Ikke alle transaktioner vil blive vist. For at vise alle transaktioner må De sætte "txindex=1" i konfigurationsfilen (syndicate.conf).</translation>
     </message>
 </context>
 <context>
@@ -1185,8 +1185,8 @@ Adresse: %4
         <translation>Ret afsenderadresse</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid PIVX address.</source>
-        <translation>Den indtastede adresse %1 er ikke en gyldig PIVX adresse</translation>
+        <source>The entered address "%1" is not a valid Syndicate address.</source>
+        <translation>Den indtastede adresse %1 er ikke en gyldig Syndicate adresse</translation>
     </message>
     <message>
         <source>The entered address "%1" is already in the address book.</source>
@@ -1232,7 +1232,7 @@ Adresse: %4
     </message>
     <message>
         <source>Syndicate Core</source>
-        <translation>PIVX kerne</translation>
+        <translation>Syndicate kerne</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
@@ -1240,7 +1240,7 @@ Adresse: %4
     </message>
     <message>
         <source>About Syndicate Core</source>
-        <translation>om PIVX kerne</translation>
+        <translation>om Syndicate kerne</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -1287,15 +1287,15 @@ Adresse: %4
     </message>
     <message>
         <source>Welcome to Syndicate Core.</source>
-        <translation>Velkommen til PIVX kerne</translation>
+        <translation>Velkommen til Syndicate kerne</translation>
     </message>
     <message>
         <source>As this is the first time the program is launched, you can choose where Syndicate Core will store its data.</source>
-        <translation>Da det er første gang programmet startes, kan De vælge hvor PIVX kernen skal lagre sine data</translation>
+        <translation>Da det er første gang programmet startes, kan De vælge hvor Syndicate kernen skal lagre sine data</translation>
     </message>
     <message>
-        <source>Syndicate Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>PIVX kernen vil nu hente og gemme en kopi af PIVX blockchain. Der skal være mindst %1GB ledigt på lagermediet, og behovet vil stige efterhånden som tiden går. Selve tegnebogen vil også blive gemt her.</translation>
+        <source>Syndicate Core will download and store a copy of the Syndicate block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>Syndicate kernen vil nu hente og gemme en kopi af Syndicate blockchain. Der skal være mindst %1GB ledigt på lagermediet, og behovet vil stige efterhånden som tiden går. Selve tegnebogen vil også blive gemt her.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -1307,7 +1307,7 @@ Adresse: %4
     </message>
     <message>
         <source>Syndicate Core</source>
-        <translation>PIVX kerne</translation>
+        <translation>Syndicate kerne</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1448,12 +1448,12 @@ Adresse: %4
         <translation>Indtast modtageradresse</translation>
     </message>
     <message>
-        <source>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other PIVX addresses after it matures.
-To Add: enter percentage to give and PIVX address to add to the MultiSend vector.
+        <source>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other Syndicate addresses after it matures.
+To Add: enter percentage to give and Syndicate address to add to the MultiSend vector.
 To Delete: Enter address to delete and press delete.
 MultiSend will not be activated unless you have clicked Activate</source>
-        <translation>Multisend tillader at De automatisk kan sende op til 100% af Deres belønninger fra såvel indskud som masternodebelønninger til en liste over andre PIVX adressater når den er tilstrækkelig stor. 
-For at tilføje: Indtast procentsatsen De ønsker at overføre samt den PIVX adresse som skal modtage via Multisendsystemet. 
+        <translation>Multisend tillader at De automatisk kan sende op til 100% af Deres belønninger fra såvel indskud som masternodebelønninger til en liste over andre Syndicate adressater når den er tilstrækkelig stor. 
+For at tilføje: Indtast procentsatsen De ønsker at overføre samt den Syndicate adresse som skal modtage via Multisendsystemet. 
 For at fjerne: Indtast adressen som skal slettes og klik på slet. 
 Multisend vil ikke fungere med mindre systemet er aktiveret.</translation>
     </message>
@@ -1812,16 +1812,16 @@ Vær tålmodig efter at du har klikket på import.</translation>
         <translation>Tilsløringskonfiguration</translation>
     </message>
     <message>
-        <source>Obfuscation was successfully set to basic (%1 and 2 rounds). You can change this at any time by opening PIVX's configuration screen.</source>
-        <translation>Tilsløring blev sat til grundlæggende (%1 og 2 gennemløb) De kan ændre dette hvornår De vil ved at åbne PIVX konfigurationsbillede.</translation>
+        <source>Obfuscation was successfully set to basic (%1 and 2 rounds). You can change this at any time by opening Syndicate's configuration screen.</source>
+        <translation>Tilsløring blev sat til grundlæggende (%1 og 2 gennemløb) De kan ændre dette hvornår De vil ved at åbne Syndicate konfigurationsbillede.</translation>
     </message>
     <message>
-        <source>Obfuscation was successfully set to high (%1 and 8 rounds). You can change this at any time by opening PIVX's configuration screen.</source>
-        <translation>Tilsløring blev sat til høj (%1 og 8 gennemløb) De kan ændre dette hvornår De vil ved at åbne PIVX konfigurationsbillede.</translation>
+        <source>Obfuscation was successfully set to high (%1 and 8 rounds). You can change this at any time by opening Syndicate's configuration screen.</source>
+        <translation>Tilsløring blev sat til høj (%1 og 8 gennemløb) De kan ændre dette hvornår De vil ved at åbne Syndicate konfigurationsbillede.</translation>
     </message>
     <message>
-        <source>Obfuscation was successfully set to maximum (%1 and 16 rounds). You can change this at any time by opening PIVX's configuration screen.</source>
-        <translation>Tilsløring blev sat til maksimum (%1 og 16 gennemløb) De kan ændre dette hvornår De vil ved at åbne PIVX konfigurationsbillede.</translation>
+        <source>Obfuscation was successfully set to maximum (%1 and 16 rounds). You can change this at any time by opening Syndicate's configuration screen.</source>
+        <translation>Tilsløring blev sat til maksimum (%1 og 16 gennemløb) De kan ændre dette hvornår De vil ved at åbne Syndicate konfigurationsbillede.</translation>
     </message>
 </context>
 <context>
@@ -1882,8 +1882,8 @@ Vær tålmodig efter at du har klikket på import.</translation>
         <translation>Hvis De slår "brug af ubekræftede penge tilbage" vil penge tilbage &lt;br/&gt; ikke kunne benyttes før transaktionen er bekræftet mindst en gang. &lt;br/&gt;Dette har også indflydelse på opgørelsen af saldoen.</translation>
     </message>
     <message>
-        <source>Automatically open the PIVX client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Åbn PIVX klientporten på ruteren automatisk. Virker kun hvis UPnP er slået til i ruteren. </translation>
+        <source>Automatically open the Syndicate client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Åbn Syndicate klientporten på ruteren automatisk. Virker kun hvis UPnP er slået til i ruteren. </translation>
     </message>
     <message>
         <source>Accept connections from outside</source>
@@ -1902,12 +1902,12 @@ Vær tålmodig efter at du har klikket på import.</translation>
         <translation>Ekspert</translation>
     </message>
     <message>
-        <source>Automatically start PIVX after logging in to the system.</source>
-        <translation>Start PIVX automatisk, når der logges på systemet</translation>
+        <source>Automatically start Syndicate after logging in to the system.</source>
+        <translation>Start Syndicate automatisk, når der logges på systemet</translation>
     </message>
     <message>
-        <source>&amp;Start PIVX on system login</source>
-        <translation>&amp;start PIVX når der logges på systemet</translation>
+        <source>&amp;Start Syndicate on system login</source>
+        <translation>&amp;start Syndicate når der logges på systemet</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
@@ -1934,14 +1934,14 @@ Vær tålmodig efter at du har klikket på import.</translation>
         <translation>&amp;netværk</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting PIVX.</source>
-        <translation>Vælg sprog her. Ændringerne træder i kraft næste gang PIVX klienten startes</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting Syndicate.</source>
+        <translation>Vælg sprog her. Ændringerne træder i kraft næste gang Syndicate klienten startes</translation>
     </message>
     <message>
         <source>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/pivx-project/pivx-project-translations</source>
+https://www.transifex.com/syndicate-project/syndicate-project-translations</source>
         <translation>Det valgte sprog mangler, eller oversættelsen er mangelfuld. Hjælp ved at bidrage med oversættelser her:
-https://www.transifex.com/pivx-project/pivx-project-translations</translation>
+https://www.transifex.com/syndicate-project/syndicate-project-translations</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -1976,8 +1976,8 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <translation>Indtastningsgrænse for indsats:</translation>
     </message>
     <message>
-        <source>Connect to the PIVX network through a SOCKS5 proxy.</source>
-        <translation>Tilslut PIVX netværket gennem en SOCKS5 PROXY</translation>
+        <source>Connect to the Syndicate network through a SOCKS5 proxy.</source>
+        <translation>Tilslut Syndicate netværket gennem en SOCKS5 PROXY</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -2155,8 +2155,8 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <translation>Nuværende låst balance i kun-adresser</translation>
     </message>
     <message>
-        <source>Your current PIVX balance, unconfirmed and immature transactions included</source>
-        <translation>Din nuværende PIVX-saldo, ubekræftede og umodne transaktioner inkluderet</translation>
+        <source>Your current Syndicate balance, unconfirmed and immature transactions included</source>
+        <translation>Din nuværende Syndicate-saldo, ubekræftede og umodne transaktioner inkluderet</translation>
     </message>
     <message>
         <source>zPIV Balance</source>
@@ -2175,8 +2175,8 @@ Immature: confirmed, but less than 1 mint of the same denomination after it was 
 Uplettet: bekræftet, men mindre end 1 minutter med samme betegnelse, efter at den blev mønnet</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</source>
-        <translation>De viste informationer kan være uddaterede. Deres tegnebog synkronisere automatism med PIVX netværket så snart en forbindelse er etalbleret, men denne proces er ikke færdiggjort endnu. </translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Syndicate network after a connection is established, but this process has not completed yet.</source>
+        <translation>De viste informationer kan være uddaterede. Deres tegnebog synkronisere automatism med Syndicate netværket så snart en forbindelse er etalbleret, men denne proces er ikke færdiggjort endnu. </translation>
     </message>
     <message>
         <source>OVERVIEW</source>
@@ -2254,14 +2254,14 @@ Hvis AutoMint er aktiveret, vil denne procentdel sætte sig omkring den konfigur
         <translation>AutoMint er i øjeblikket aktiveret og indstillet til</translation>
     </message>
     <message>
-        <source>To disable AutoMint add 'enablezeromint=0' in pivx.conf.</source>
-        <translation>To disable AutoMint add 'enablezeromint=0' in pivx.conf.</translation>
+        <source>To disable AutoMint add 'enablezeromint=0' in syndicate.conf.</source>
+        <translation>To disable AutoMint add 'enablezeromint=0' in syndicate.conf.</translation>
     </message>
     <message>
         <source>AutoMint is currently disabled.
-To enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in pivx.conf</source>
+To enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in syndicate.conf</source>
         <translation>AutoMint er for øjeblikket deaktiveret
-For at aktivere AutoMint-ændring 'enablezeromint = 0' til 'enablezeromint = 1' i pivx.conf</translation>
+For at aktivere AutoMint-ændring 'enablezeromint = 0' til 'enablezeromint = 1' i syndicate.conf</translation>
     </message>
 </context>
 <context>
@@ -2287,11 +2287,11 @@ For at aktivere AutoMint-ændring 'enablezeromint = 0' til 'enablezeromint = 1' 
         <translation>Ugyldig betalingsadresse: %1</translation>
     </message>
     <message>
-        <source>Cannot start pivx: click-to-pay handler</source>
-        <translation>Kan ikke starte PIVX "klik for at betale" systemet</translation>
+        <source>Cannot start syndicate: click-to-pay handler</source>
+        <translation>Kan ikke starte Syndicate "klik for at betale" systemet</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid PIVX address or malformed URI parameters.</source>
+        <source>URI cannot be parsed! This can be caused by an invalid Syndicate address or malformed URI parameters.</source>
         <translation>URl kan ikke fortolkes! Det kan skyldes en ugyldig adresse, eller forkerte URl parametre.</translation>
     </message>
     <message>
@@ -2377,8 +2377,8 @@ For at aktivere AutoMint-ændring 'enablezeromint = 0' til 'enablezeromint = 1' 
         <translation>Zerocoin Aktioner:</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</source>
-        <translation>De viste informationer kan være uddaterede. Deres tegnebog synkronisere automatism med PIVX netværket så snart en forbindelse er etalbleret, men denne proces er ikke færdiggjort endnu. </translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Syndicate network after a connection is established, but this process has not completed yet.</source>
+        <translation>De viste informationer kan være uddaterede. Deres tegnebog synkronisere automatism med Syndicate netværket så snart en forbindelse er etalbleret, men denne proces er ikke færdiggjort endnu. </translation>
     </message>
     <message>
         <source>Mint Zerocoin</source>
@@ -2501,8 +2501,8 @@ zPIV er modne, når de har mere end 20 bekræftelser OG mere end 2 minutter med 
         <translation>Betal &amp;Til</translation>
     </message>
     <message>
-        <source>The PIVX address to send the payment to. Creates local payment to yourself when empty.</source>
-        <translation>PIVX-adressen for at sende betalingen til. Opretter lokal betaling til dig selv, når du er tom.</translation>
+        <source>The Syndicate address to send the payment to. Creates local payment to yourself when empty.</source>
+        <translation>Syndicate-adressen for at sende betalingen til. Opretter lokal betaling til dig selv, når du er tom.</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -2578,8 +2578,8 @@ Uplettet: bekræftet, men mindre end 1 minutter med samme betegnelse, efter at d
         <source>Show the current status of automatic zPIV minting.
 
 To change the status (restart required):
-- enable: add 'enablezeromint=1' to pivx.conf
-- disable: add 'enablezeromint=0' to pivx.conf
+- enable: add 'enablezeromint=1' to syndicate.conf
+- disable: add 'enablezeromint=0' to syndicate.conf
 
 To change the percentage (no restart required):
 - menu Settings-&gt;Options-&gt;Percentage of autominted zPIV
@@ -2588,8 +2588,8 @@ To change the percentage (no restart required):
         <translation>Vis den aktuelle status for automatisk zPIV minting.øj
 
 For at ændre status (genstart kræves):.
-- aktiver: tilføj 'enablezeromint = 1' til pivx.conf
-- deaktiver: tilføj 'enablezeromint = 0' til pivx.conf
+- aktiver: tilføj 'enablezeromint = 1' til syndicate.conf
+- deaktiver: tilføj 'enablezeromint = 0' til syndicate.conf
 
 For at ændre procentdelen (ingen genstart kræves):.
 - menu Indstillinger-&gt; Indstillinger-&gt; Procentdel af automatiseret zPIV
@@ -2929,7 +2929,7 @@ Maksimum tilladt:</translation>
     </message>
     <message>
         <source>Invalid Pivx Address</source>
-        <translation> Ugyldig PIVX adresse</translation>
+        <translation> Ugyldig Syndicate adresse</translation>
     </message>
     <message>
         <source>Invalid Send Amount</source>
@@ -3030,8 +3030,8 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Beløb</translation>
     </message>
     <message>
-        <source>Enter a PIVX address (e.g. %1)</source>
-        <translation>Indtast en PIVX adresse (F.eks. %1)</translation>
+        <source>Enter a Syndicate address (e.g. %1)</source>
+        <translation>Indtast en Syndicate adresse (F.eks. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -3168,8 +3168,8 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Block chain</translation>
     </message>
     <message>
-        <source>Open the PIVX debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Åbn PIVX debug logfilen fra den aktuelle datamappe. Det kan godt tage lidt tid hvis filen er meget stor.</translation>
+        <source>Open the Syndicate debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Åbn Syndicate debug logfilen fra den aktuelle datamappe. Det kan godt tage lidt tid hvis filen er meget stor.</translation>
     </message>
     <message>
         <source>Number of Masternodes</source>
@@ -3384,8 +3384,8 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Ud:</translation>
     </message>
     <message>
-        <source>Welcome to the PIVX RPC console.</source>
-        <translation>Velkommen til PIVX RPC konsollet</translation>
+        <source>Welcome to the Syndicate RPC console.</source>
+        <translation>Velkommen til Syndicate RPC konsollet</translation>
     </message>
     <message>
         <source>&amp;Disconnect Node</source>
@@ -3511,16 +3511,16 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Valgfri opmærkning som tilknyttes den nye modtageradresse.</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the PIVX network.</source>
-        <translation>Valgfri besked som vedhæftes betalingsanmodnigen, og som bliver vist når anmodningen åbnes. Note: Beskeden fremsendes ikke sammen med betalingen, når denne sendes ud på PIVX netværket.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Syndicate network.</source>
+        <translation>Valgfri besked som vedhæftes betalingsanmodnigen, og som bliver vist når anmodningen åbnes. Note: Beskeden fremsendes ikke sammen med betalingen, når denne sendes ud på Syndicate netværket.</translation>
     </message>
     <message>
         <source>RECEIVE</source>
         <translation>MODTAGE</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened.&lt;br&gt;Note: The message will not be sent with the payment over the PIVX network.</source>
-        <translation>Valgfri besked som vedhæftes betalingsanmodnigen, og som bliver vist når anmodningen åbnes. &lt;br&gt;Note: Beskeden fremsendes ikke sammen med betalingen, når denne sendes ud på PIVX netværket.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened.&lt;br&gt;Note: The message will not be sent with the payment over the Syndicate network.</source>
+        <translation>Valgfri besked som vedhæftes betalingsanmodnigen, og som bliver vist når anmodningen åbnes. &lt;br&gt;Note: Beskeden fremsendes ikke sammen med betalingen, når denne sendes ud på Syndicate netværket.</translation>
     </message>
     <message>
         <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
@@ -3812,7 +3812,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Hvis den brugerfastsatte gebyrbetaling er sat til 1000 uPIVs og transaktionen kun fylder 250 bytes, så vil "pr. kilobyte" kun udbetale 250 uPIV i gebyr, &lt;br /&gt; mens "Total-mindst" udbetaler 1000 uPIVs. For transaktioner større end en kilobyte betales i begge tilfælde i forhold til antallet af kilobytes </translation>
     </message>
     <message>
-        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for PIVX transactions than the network can process.</source>
+        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for Syndicate transactions than the network can process.</source>
         <translation>Betaling af mindste transaktionsgebyr vil være fint så længe der er færre transaktioner end der er plads til i blokkene. &lt;br /&gt; Men opmærksomheden henledes på, at det kan resultere i en transaktion der aldrig bliver bekræftet i det øjeblik der er større behov for transaktioner end netværket har plads til. </translation>
     </message>
     <message>
@@ -3908,8 +3908,8 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Split blok værktøjet virker ikke med flere adresser. Prøv igen</translation>
     </message>
     <message>
-        <source>Warning: Invalid PIVX address</source>
-        <translation>Advarsel! Ugyldig PIVX adresse</translation>
+        <source>Warning: Invalid Syndicate address</source>
+        <translation>Advarsel! Ugyldig Syndicate adresse</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -4011,8 +4011,8 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Betal &amp;Til</translation>
     </message>
     <message>
-        <source>The PIVX address to send the payment to</source>
-        <translation>PIVX adressen, som betalingen skal sendes til</translation>
+        <source>The Syndicate address to send the payment to</source>
+        <translation>Syndicate adressen, som betalingen skal sendes til</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -4051,8 +4051,8 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Besked</translation>
     </message>
     <message>
-        <source>A message that was attached to the PIVX: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the PIVX network.</source>
-        <translation>En besked, der var vedhæftet til PIVX: URl wil blive gemt sammen med transaktionen som reference. Note: Beskeden bliver medsendt transaktionen over netværket.</translation>
+        <source>A message that was attached to the Syndicate: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Syndicate network.</source>
+        <translation>En besked, der var vedhæftet til Syndicate: URl wil blive gemt sammen med transaktionen som reference. Note: Beskeden bliver medsendt transaktionen over netværket.</translation>
     </message>
     <message>
         <source>This is an unverified payment request.</source>
@@ -4079,7 +4079,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     <name>ShutdownWindow</name>
     <message>
         <source>Syndicate Core is shutting down...</source>
-        <translation>PIVX kernen lukker ned</translation>
+        <translation>Syndicate kernen lukker ned</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -4101,8 +4101,8 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>De kan underskrive beskeder med Deres adresser or at bevise ejerskab. Vær forsigtig med at underskrive noget De er usikker på såsom forsøg op at narre Dem til at oplyse Deres identitet. Skriv kun under på noget De kan stå inde for, og som De er enig i. </translation>
     </message>
     <message>
-        <source>The PIVX address to sign the message with</source>
-        <translation>Den PIVX adresse, der skal bruges til at underskrive beskeden med.</translation>
+        <source>The Syndicate address to sign the message with</source>
+        <translation>Den Syndicate adresse, der skal bruges til at underskrive beskeden med.</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -4133,16 +4133,16 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Kopier den aktuelle underskrift til udklipsholderen.</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this PIVX address</source>
-        <translation>Underskriv beskeden for at bevise, at De ejer denne PIVX adresse.</translation>
+        <source>Sign the message to prove you own this Syndicate address</source>
+        <translation>Underskriv beskeden for at bevise, at De ejer denne Syndicate adresse.</translation>
     </message>
     <message>
-        <source>The PIVX address the message was signed with</source>
-        <translation>Beskeden er underskrevet med denne PIVX adresse</translation>
+        <source>The Syndicate address the message was signed with</source>
+        <translation>Beskeden er underskrevet med denne Syndicate adresse</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified PIVX address</source>
-        <translation>verificer beskeden for at sikre, at den blev underskrevet med den rigtige PIVX adresse.</translation>
+        <source>Verify the message to ensure it was signed with the specified Syndicate address</source>
+        <translation>verificer beskeden for at sikre, at den blev underskrevet med den rigtige Syndicate adresse.</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -4229,7 +4229,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     <name>SplashScreen</name>
     <message>
         <source>Syndicate Core</source>
-        <translation>PIVX kerne</translation>
+        <translation>Syndicate kerne</translation>
     </message>
     <message>
         <source>Version %1</source>
@@ -4245,7 +4245,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     </message>
     <message>
         <source>The Syndicate Core developers</source>
-        <translation>PIVX "core" udviklerne</translation>
+        <translation>Syndicate "core" udviklerne</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -4883,7 +4883,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     </message>
 </context>
 <context>
-    <name>pivx-core</name>
+    <name>syndicate-core</name>
     <message>
         <source>(1 = keep tx meta data e.g. account owner and payment request information, 2 = drop tx meta data)</source>
         <translation>(1 = beholdtx metadata. For eksempel information om kontoejer og betalngsanmodninger, 2 = drop TX metadata)</translation>
@@ -4910,7 +4910,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     </message>
     <message>
         <source>Cannot obtain a lock on data directory %s. Syndicate Core is probably already running.</source>
-        <translation>Kan ikke låse datamappen %s. PIVX core kører sandsynligvis allerede.</translation>
+        <translation>Kan ikke låse datamappen %s. Syndicate core kører sandsynligvis allerede.</translation>
     </message>
     <message>
         <source>Change automatic finalized budget voting behavior. mode=auto: Vote for only exact finalized budget match to my generated budget. (string, default: auto)</source>
@@ -5039,7 +5039,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     </message>
     <message>
         <source>Obfuscation uses exact denominated amounts to send funds, you might simply need to anonymize some more coins.</source>
-        <translation>Tilsløring bruger hele det tilslørede designerede beløb til at sende betalinger. De kan blot tilsløre yderligere PIVX</translation>
+        <translation>Tilsløring bruger hele det tilslørede designerede beløb til at sende betalinger. De kan blot tilsløre yderligere Syndicate</translation>
     </message>
     <message>
         <source>Output debugging information (default: %u, supplying &lt;category&gt; is optional)</source>
@@ -5087,7 +5087,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     </message>
     <message>
         <source>Unable to bind to %s on this computer. Syndicate Core is probably already running.</source>
-        <translation>Det var ikke muligt at forbinde %s på denne computer. PIVX kører sandsynligvis allerede.</translation>
+        <translation>Det var ikke muligt at forbinde %s på denne computer. Syndicate kører sandsynligvis allerede.</translation>
     </message>
     <message>
         <source>Unable to locate enough Obfuscation denominated funds for this transaction.</source>
@@ -5115,7 +5115,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     </message>
     <message>
         <source>Warning: Please check that your computer's date and time are correct! If your clock is wrong Syndicate Core will not work properly.</source>
-        <translation>Advarsel! Kontroller at computerens dato og tid er korrekt indstillet. Hvis tiden ikke er rigtig, vil PIVX core ikke fungere ordentligt.</translation>
+        <translation>Advarsel! Kontroller at computerens dato og tid er korrekt indstillet. Hvis tiden ikke er rigtig, vil Syndicate core ikke fungere ordentligt.</translation>
     </message>
     <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
@@ -5355,7 +5355,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     </message>
     <message>
         <source>Error loading wallet.dat: Wallet requires newer version of Syndicate Core</source>
-        <translation>Fejl ved indlæsning af wallet.dat: Tegnebogen kræver en nyere version af PIVX core</translation>
+        <translation>Fejl ved indlæsning af wallet.dat: Tegnebogen kræver en nyere version af Syndicate core</translation>
     </message>
     <message>
         <source>Error opening block database</source>
@@ -5471,7 +5471,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     </message>
     <message>
         <source>Initialization sanity check failed. Syndicate Core is shutting down.</source>
-        <translation>Initiering af sanitetskontrollen fejlede. PIVX core lukker ned. </translation>
+        <translation>Initiering af sanitetskontrollen fejlede. Syndicate core lukker ned. </translation>
     </message>
     <message>
         <source>Input is not valid.</source>
@@ -5582,8 +5582,8 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
 </translation>
     </message>
     <message>
-        <source>Disable all PIVX specific functionality (Masternodes, Zerocoin, SwiftX, Budgeting) (0-1, default: %u)</source>
-        <translation>Slå alle PIVX funktioner fra (Masternoder, Tilsløring, SwiftTX, Budgetting)(0-1,default:%u)</translation>
+        <source>Disable all Syndicate specific functionality (Masternodes, Zerocoin, SwiftX, Budgeting) (0-1, default: %u)</source>
+        <translation>Slå alle Syndicate funktioner fra (Masternoder, Tilsløring, SwiftTX, Budgetting)(0-1,default:%u)</translation>
     </message>
     <message>
         <source>Enable SwiftX, show confirmations for locked transactions (bool, default: %s)</source>
@@ -6295,7 +6295,7 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     </message>
     <message>
         <source>Wallet needed to be rewritten: restart Syndicate Core to complete</source>
-        <translation>Tegnebogen måtte genskrives. Genstart PIVX core for at gøre færdig</translation>
+        <translation>Tegnebogen måtte genskrives. Genstart Syndicate core for at gøre færdig</translation>
     </message>
     <message>
         <source>Wallet options:</source>

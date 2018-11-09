@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The PIVX developers
+// Copyright (c) 2015-2018 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -370,7 +370,7 @@ public:
 
     //check to see if we should vote on this
     void AutoCheck();
-    //total pivx paid out by this budget
+    //total syndicate paid out by this budget
     CAmount GetTotalPayout();
     //vote on this finalized budget as a masternode
     void SubmitVote();

@@ -1,7 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The PIVX developers
+// Copyright (c) 2015-2018 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -157,7 +157,7 @@ UniValue getrawtransaction(const UniValue& params, bool fHelp)
             "         \"reqSigs\" : n,            (numeric) The required sigs\n"
             "         \"type\" : \"pubkeyhash\",  (string) The type, eg 'pubkeyhash'\n"
             "         \"addresses\" : [           (json array of string)\n"
-            "           \"pivxaddress\"        (string) pivx address\n"
+            "           \"syndicateaddress\"        (string) syndicate address\n"
             "           ,...\n"
             "         ]\n"
             "       }\n"
@@ -212,9 +212,9 @@ UniValue listunspent(const UniValue& params, bool fHelp)
             "\nArguments:\n"
             "1. minconf          (numeric, optional, default=1) The minimum confirmations to filter\n"
             "2. maxconf          (numeric, optional, default=9999999) The maximum confirmations to filter\n"
-            "3. \"addresses\"    (string) A json array of pivx addresses to filter\n"
+            "3. \"addresses\"    (string) A json array of syndicate addresses to filter\n"
             "    [\n"
-            "      \"address\"   (string) pivx address\n"
+            "      \"address\"   (string) syndicate address\n"
             "      ,...\n"
             "    ]\n"
             "4. watchonlyconfig  (numberic, optional, default=1) 1 = list regular unspent transactions, 2 = list only watchonly transactions,  3 = list all unspent transactions (including watchonly)\n"
@@ -224,7 +224,7 @@ UniValue listunspent(const UniValue& params, bool fHelp)
             "  {\n"
             "    \"txid\" : \"txid\",        (string) the transaction id \n"
             "    \"vout\" : n,               (numeric) the vout value\n"
-            "    \"address\" : \"address\",  (string) the pivx address\n"
+            "    \"address\" : \"address\",  (string) the syndicate address\n"
             "    \"account\" : \"account\",  (string) The associated account, or \"\" for the default account\n"
             "    \"scriptPubKey\" : \"key\", (string) the script key\n"
             "    \"amount\" : x.xxx,         (numeric) the transaction amount in btc\n"
@@ -253,7 +253,7 @@ UniValue listunspent(const UniValue& params, bool fHelp)
             const UniValue& input = inputs[inx];
             CBitcoinAddress address(input.get_str());
             if (!address.IsValid())
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid PIVX address: ") + input.get_str());
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid Syndicate address: ") + input.get_str());
             if (setAddress.count(address))
                 throw JSONRPCError(RPC_INVALID_PARAMETER, string("Invalid parameter, duplicated address: ") + input.get_str());
             setAddress.insert(address);
@@ -337,7 +337,7 @@ UniValue createrawtransaction(const UniValue& params, bool fHelp)
             "     ]\n"
             "2. \"addresses\"           (string, required) a json object with addresses as keys and amounts as values\n"
             "    {\n"
-            "      \"address\": x.xxx   (numeric, required) The key is the pivx address, the value is the btc amount\n"
+            "      \"address\": x.xxx   (numeric, required) The key is the syndicate address, the value is the btc amount\n"
             "      ,...\n"
             "    }\n"
 
@@ -377,7 +377,7 @@ UniValue createrawtransaction(const UniValue& params, bool fHelp)
     BOOST_FOREACH(const string& name_, addrList) {
         CBitcoinAddress address(name_);
         if (!address.IsValid())
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid PIVX address: ")+name_);
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid Syndicate address: ")+name_);
 
         if (setAddress.count(address))
             throw JSONRPCError(RPC_INVALID_PARAMETER, string("Invalid parameter, duplicated address: ")+name_);
@@ -430,7 +430,7 @@ UniValue decoderawtransaction(const UniValue& params, bool fHelp)
             "         \"reqSigs\" : n,            (numeric) The required sigs\n"
             "         \"type\" : \"pubkeyhash\",  (string) The type, eg 'pubkeyhash'\n"
             "         \"addresses\" : [           (json array of string)\n"
-            "           \"12tvKAXCxZjSmdNbao16dKXC8tRWfcF5oc\"   (string) pivx address\n"
+            "           \"12tvKAXCxZjSmdNbao16dKXC8tRWfcF5oc\"   (string) syndicate address\n"
             "           ,...\n"
             "         ]\n"
             "       }\n"
@@ -473,7 +473,7 @@ UniValue decodescript(const UniValue& params, bool fHelp)
             "  \"type\":\"type\", (string) The output type\n"
             "  \"reqSigs\": n,    (numeric) The required signatures\n"
             "  \"addresses\": [   (json array of string)\n"
-            "     \"address\"     (string) pivx address\n"
+            "     \"address\"     (string) syndicate address\n"
             "     ,...\n"
             "  ],\n"
             "  \"p2sh\",\"address\" (string) script address\n"

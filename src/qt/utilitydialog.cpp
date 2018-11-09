@@ -1,6 +1,6 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2015-2017 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
@@ -69,7 +69,7 @@ HelpMessageDialog::HelpMessageDialog(QWidget* parent, bool about) : QDialog(pare
     } else {
         setWindowTitle(tr("Command-line options"));
         QString header = tr("Usage:") + "\n" +
-                         "  pivx-qt [" + tr("command-line options") + "]                     " + "\n";
+                         "  syndicate-qt [" + tr("command-line options") + "]                     " + "\n";
         QTextCursor cursor(ui->helpMessage->document());
         cursor.insertText(version);
         cursor.insertBlock();

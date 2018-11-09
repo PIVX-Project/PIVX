@@ -510,15 +510,15 @@
     </message>
     <message>
         <source>Syndicate Core</source>
-        <translation>&amp;Rdzeń PIVX</translation>
+        <translation>&amp;Rdzeń Syndicate</translation>
     </message>
     <message>
-        <source>Send coins to a PIVX address</source>
-        <translation>Wyślij monety do adresu PIVX</translation>
+        <source>Send coins to a Syndicate address</source>
+        <translation>Wyślij monety do adresu Syndicate</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and pivx: URIs)</source>
-        <translation>Zarządaj płatności (generuje kod QR i pivx:URI)</translation>
+        <source>Request payments (generates QR codes and syndicate: URIs)</source>
+        <translation>Zarządaj płatności (generuje kod QR i syndicate:URI)</translation>
     </message>
     <message>
         <source>&amp;Masternodes</source>
@@ -537,16 +537,16 @@
         <translation>Pokaż informacje o rdzeniu bitcoina</translation>
     </message>
     <message>
-        <source>Modify configuration options for PIVX</source>
-        <translation>Modyfikuj opcje konfiguracji PIVX</translation>
+        <source>Modify configuration options for Syndicate</source>
+        <translation>Modyfikuj opcje konfiguracji Syndicate</translation>
     </message>
     <message>
-        <source>Sign messages with your PIVX addresses to prove you own them</source>
-        <translation>Zatwierdź wiadomość z twoimi adresami PIVX, by udowodnić, że jesteś w ich posiadaniu</translation>
+        <source>Sign messages with your Syndicate addresses to prove you own them</source>
+        <translation>Zatwierdź wiadomość z twoimi adresami Syndicate, by udowodnić, że jesteś w ich posiadaniu</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified PIVX addresses</source>
-        <translation>Zweryfikuj wiadomości by upewnić się, że zostały zatwierdzone z podanego adresu PIVX</translation>
+        <source>Verify messages to ensure they were signed with specified Syndicate addresses</source>
+        <translation>Zweryfikuj wiadomości by upewnić się, że zostały zatwierdzone z podanego adresu Syndicate</translation>
     </message>
     <message>
         <source>&amp;BIP38 tool</source>
@@ -573,8 +573,8 @@
         <translation>Otwórz &amp;Plik konfiguracji Masternode</translation>
     </message>
     <message>
-        <source>Open a PIVX: URI or payment request</source>
-        <translation>Otwórz PIVX: URI i żądanie zapłaty</translation>
+        <source>Open a Syndicate: URI or payment request</source>
+        <translation>Otwórz Syndicate: URI i żądanie zapłaty</translation>
     </message>
     <message>
         <source>&amp;Blockchain explorer</source>
@@ -585,12 +585,12 @@
         <translation>Okno eksplorera bloków</translation>
     </message>
     <message>
-        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
-        <translation>Pokaż wiadomość pomocy rdzenia PIVX, aby dostać listę możliwych opcji PIVX command-line</translation>
+        <source>Show the Syndicate Core help message to get a list with possible Syndicate command-line options</source>
+        <translation>Pokaż wiadomość pomocy rdzenia Syndicate, aby dostać listę możliwych opcji Syndicate command-line</translation>
     </message>
     <message>
         <source>Syndicate Core client</source>
-        <translation>Rdzeń PIVX klient</translation>
+        <translation>Rdzeń Syndicate klient</translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -900,7 +900,7 @@ MultiWysyłlka: %1</translation>
     <name>HelpMessageDialog</name>
     <message>
         <source>Syndicate Core</source>
-        <translation>&amp;Rdzeń PIVX</translation>
+        <translation>&amp;Rdzeń Syndicate</translation>
     </message>
     </context>
 <context>
@@ -915,7 +915,7 @@ MultiWysyłlka: %1</translation>
     </message>
     <message>
         <source>Syndicate Core</source>
-        <translation>&amp;Rdzeń PIVX</translation>
+        <translation>&amp;Rdzeń Syndicate</translation>
     </message>
     <message>
         <source>Error</source>
@@ -1190,12 +1190,12 @@ Proszę sprawdzić adres i spróbować ponownie</translation>
         <translation>Zezwól na przychodzące połączenia</translation>
     </message>
     <message>
-        <source>Automatically start PIVX after logging in to the system.</source>
-        <translation>Automatycznie uruchom PIVX po zalogowaniu do systemu</translation>
+        <source>Automatically start Syndicate after logging in to the system.</source>
+        <translation>Automatycznie uruchom Syndicate po zalogowaniu do systemu</translation>
     </message>
     <message>
-        <source>&amp;Start PIVX on system login</source>
-        <translation>&amp;Uruchom PIVX podczas logowania do systemu</translation>
+        <source>&amp;Start Syndicate on system login</source>
+        <translation>&amp;Uruchom Syndicate podczas logowania do systemu</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
@@ -1214,18 +1214,18 @@ Proszę sprawdzić adres i spróbować ponownie</translation>
         <translation>&amp;Sieć</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting PIVX.</source>
-        <translation>Język interfejsu użytkownika może być wybrany tutaj. Ustawienia ulegną zmianie po restarcie PIVX</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting Syndicate.</source>
+        <translation>Język interfejsu użytkownika może być wybrany tutaj. Ustawienia ulegną zmianie po restarcie Syndicate</translation>
     </message>
     <message>
         <source>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/pivx-project/pivx-project-translations</source>
+https://www.transifex.com/syndicate-project/syndicate-project-translations</source>
         <translation>Brakuje języka bądź nieukończona pełnego tłumaczenia? Pomóż w tłumaczeniu tutaj:
-https://www.transifex.com/pivx-project/pivx-project-translations </translation>
+https://www.transifex.com/syndicate-project/syndicate-project-translations </translation>
     </message>
     <message>
-        <source>Connect to the PIVX network through a SOCKS5 proxy.</source>
-        <translation>Połącz z siecią PIVX poprzez SOCKS5 proxy.</translation>
+        <source>Connect to the Syndicate network through a SOCKS5 proxy.</source>
+        <translation>Połącz z siecią Syndicate poprzez SOCKS5 proxy.</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -1463,8 +1463,8 @@ https://www.transifex.com/pivx-project/pivx-project-translations </translation>
         <translation>Liczba</translation>
     </message>
     <message>
-        <source>Enter a PIVX address (e.g. %1)</source>
-        <translation>Wprowadź adres PIVX (np. %1)</translation>
+        <source>Enter a Syndicate address (e.g. %1)</source>
+        <translation>Wprowadź adres Syndicate (np. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1894,8 +1894,8 @@ https://www.transifex.com/pivx-project/pivx-project-translations </translation>
         <translation>Alt+P</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this PIVX address</source>
-        <translation>Zatwierdź wiadomość, aby udowodnić, że podany adres PIVX jest w twoim posiadaniu</translation>
+        <source>Sign the message to prove you own this Syndicate address</source>
+        <translation>Zatwierdź wiadomość, aby udowodnić, że podany adres Syndicate jest w twoim posiadaniu</translation>
     </message>
     <message>
         <source>Clear &amp;All</source>
@@ -1930,7 +1930,7 @@ https://www.transifex.com/pivx-project/pivx-project-translations </translation>
     <name>SplashScreen</name>
     <message>
         <source>Syndicate Core</source>
-        <translation>&amp;Rdzeń PIVX</translation>
+        <translation>&amp;Rdzeń Syndicate</translation>
     </message>
     </context>
 <context>
@@ -2028,7 +2028,7 @@ https://www.transifex.com/pivx-project/pivx-project-translations </translation>
     </message>
     </context>
 <context>
-    <name>pivx-core</name>
+    <name>syndicate-core</name>
     <message>
         <source>Error</source>
         <translation>Błąd</translation>

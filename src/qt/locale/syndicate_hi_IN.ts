@@ -324,7 +324,7 @@
     <name>ZPivControlDialog</name>
     </context>
 <context>
-    <name>pivx-core</name>
+    <name>syndicate-core</name>
     <message>
         <source>Information</source>
         <translation>जानकारी</translation>

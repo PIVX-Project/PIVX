@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The PIVX developers
+// Copyright (c) 2015-2018 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -197,7 +197,7 @@ void PrepareShutdown()
     /// for example if the data directory was found to be locked.
     /// Be sure that anything that writes files or flushes caches only does this if the respective
     /// module was initialized.
-    RenameThread("pivx-shutoff");
+    RenameThread("syndicate-shutoff");
     mempool.AddTransactionsUpdated(1);
     StopHTTPRPC();
     StopREST();
@@ -366,7 +366,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-blocknotify=<cmd>", _("Execute command when the best block changes (%s in cmd is replaced by block hash)"));
     strUsage += HelpMessageOpt("-blocksizenotify=<cmd>", _("Execute command when the best block changes and its size is over (%s in cmd is replaced by block hash, %d with the block size)"));
     strUsage += HelpMessageOpt("-checkblocks=<n>", strprintf(_("How many blocks to check at startup (default: %u, 0 = all)"), 500));
-    strUsage += HelpMessageOpt("-conf=<file>", strprintf(_("Specify configuration file (default: %s)"), "pivx.conf"));
+    strUsage += HelpMessageOpt("-conf=<file>", strprintf(_("Specify configuration file (default: %s)"), "syndicate.conf"));
     if (mode == HMM_BITCOIND) {
 #if !defined(WIN32)
         strUsage += HelpMessageOpt("-daemon", _("Run in the background as a daemon and accept commands"));
@@ -484,7 +484,7 @@ std::string HelpMessage(HelpMessageMode mode)
         strUsage += HelpMessageOpt("-stopafterblockimport", strprintf(_("Stop running after importing blocks from disk (default: %u)"), 0));
         strUsage += HelpMessageOpt("-sporkkey=<privkey>", _("Enable spork administration functionality with the appropriate private key."));
     }
-    string debugCategories = "addrman, alert, bench, coindb, db, lock, rand, rpc, selectcoins, tor, mempool, net, proxy, http, libevent, pivx, (obfuscation, swiftx, masternode, mnpayments, mnbudget, zero)"; // Don't translate these and qt below
+    string debugCategories = "addrman, alert, bench, coindb, db, lock, rand, rpc, selectcoins, tor, mempool, net, proxy, http, libevent, syndicate, (obfuscation, swiftx, masternode, mnpayments, mnbudget, zero)"; // Don't translate these and qt below
     if (mode == HMM_BITCOIN_QT)
         debugCategories += ", qt";
     strUsage += HelpMessageOpt("-debug=<category>", strprintf(_("Output debugging information (default: %u, supplying <category> is optional)"), 0) + ". " +
@@ -514,7 +514,7 @@ std::string HelpMessage(HelpMessageMode mode)
     }
     strUsage += HelpMessageOpt("-shrinkdebugfile", _("Shrink debug.log file on client startup (default: 1 when no -debug)"));
     strUsage += HelpMessageOpt("-testnet", _("Use the test network"));
-    strUsage += HelpMessageOpt("-litemode=<n>", strprintf(_("Disable all PIVX specific functionality (Masternodes, Zerocoin, SwiftX, Budgeting) (0-1, default: %u)"), 0));
+    strUsage += HelpMessageOpt("-litemode=<n>", strprintf(_("Disable all Syndicate specific functionality (Masternodes, Zerocoin, SwiftX, Budgeting) (0-1, default: %u)"), 0));
 
 #ifdef ENABLE_WALLET
     strUsage += HelpMessageGroup(_("Staking options:"));
@@ -546,7 +546,7 @@ std::string HelpMessage(HelpMessageMode mode)
 #endif // ENABLE_WALLET
     strUsage += HelpMessageOpt("-reindexzerocoin=<n>", strprintf(_("Delete all zerocoin spends and mints that have been recorded to the blockchain database and reindex them (0-1, default: %u)"), 0));
 
-//    strUsage += "  -anonymizepivxamount=<n>     " + strprintf(_("Keep N PIV anonymized (default: %u)"), 0) + "\n";
+//    strUsage += "  -anonymizesyndicateamount=<n>     " + strprintf(_("Keep N PIV anonymized (default: %u)"), 0) + "\n";
 //    strUsage += "  -liquidityprovider=<n>       " + strprintf(_("Provide liquidity to Obfuscation by infrequently mixing coins on a continual basis (0-100, default: %u, 1=very frequent, high fees, 100=very infrequent, low fees)"), 0) + "\n";
 
     strUsage += HelpMessageGroup(_("SwiftX options:"));
@@ -631,7 +631,7 @@ struct CImportingNow {
 
 void ThreadImport(std::vector<boost::filesystem::path> vImportFiles)
 {
-    RenameThread("pivx-loadblk");
+    RenameThread("syndicate-loadblk");
 
     // -reindex
     if (fReindex) {
@@ -689,7 +689,7 @@ void ThreadImport(std::vector<boost::filesystem::path> vImportFiles)
 }
 
 /** Sanity checks
- *  Ensure that PIVX is running in a usable environment with all
+ *  Ensure that Syndicate is running in a usable environment with all
  *  necessary library support.
  */
 bool InitSanityCheck(void)
@@ -721,7 +721,7 @@ bool AppInitServers(boost::thread_group& threadGroup)
     return true;
 }
 
-/** Initialize pivx.
+/** Initialize syndicate.
  *  @pre Parameters should be parsed and config file should be read.
  */
 bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
@@ -1002,7 +1002,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (strWalletFile != boost::filesystem::basename(strWalletFile) + boost::filesystem::extension(strWalletFile))
         return InitError(strprintf(_("Wallet %s resides outside data directory %s"), strWalletFile, strDataDir));
 #endif
-    // Make sure only a single PIVX process is using the data directory.
+    // Make sure only a single Syndicate process is using the data directory.
     boost::filesystem::path pathLockFile = GetDataDir() / ".lock";
     FILE* file = fopen(pathLockFile.string().c_str(), "a"); // empty lock file; created if it doesn't exist.
     if (file) fclose(file);
@@ -1018,7 +1018,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (GetBoolArg("-shrinkdebugfile", !fDebug))
         ShrinkDebugFile();
     LogPrintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    LogPrintf("PIVX version %s (%s)\n", FormatFullVersion(), CLIENT_DATE);
+    LogPrintf("Syndicate version %s (%s)\n", FormatFullVersion(), CLIENT_DATE);
     LogPrintf("Using OpenSSL version %s\n", SSLeay_version(SSLEAY_VERSION));
 #ifdef ENABLE_WALLET
     LogPrintf("Using BerkeleyDB version %s\n", DbEnv::version(0, 0, 0));
@@ -1351,7 +1351,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // ********************************************************* Step 7: load block chain
 
-    //PIVX: Load Accumulator Checkpoints according to network (main/test/regtest)
+    //Syndicate: Load Accumulator Checkpoints according to network (main/test/regtest)
     assert(AccumulatorCheckpoints::LoadCheckpoints(Params().NetworkIDString()));
 
     fReindex = GetBoolArg("-reindex", false);
@@ -1413,7 +1413,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
                 delete zerocoinDB;
                 delete pSporkDB;
 
-                //PIVX specific: zerocoin and spork DB's
+                //Syndicate specific: zerocoin and spork DB's
                 zerocoinDB = new CZerocoinDB(0, false, fReindex);
                 pSporkDB = new CSporkDB(0, false, false);
 
@@ -1425,7 +1425,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
                 if (fReindex)
                     pblocktree->WriteReindexing(true);
 
-                // PIVX: load previous sessions sporks if we have them.
+                // Syndicate: load previous sessions sporks if we have them.
                 uiInterface.InitMessage(_("Loading sporks..."));
                 LoadSporksFromDB();
 
@@ -1489,7 +1489,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
                                 listAccCheckpointsNoDB.emplace_back(pindex->nAccumulatorCheckpoint);
                             pindex = chainActive.Next(pindex);
                         }
-                        // PIVX: recalculate Accumulator Checkpoints that failed to database properly
+                        // Syndicate: recalculate Accumulator Checkpoints that failed to database properly
                         if (!listAccCheckpointsNoDB.empty()) {
                             uiInterface.InitMessage(_("Calculating missing accumulators..."));
                             LogPrintf("%s : finding missing checkpoints\n", __func__);
@@ -1849,7 +1849,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 //        nZeromintPercentage = 99999;
 //    }
 //
-//    nAnonymizePivxAmount = GetArg("-anonymizepivxamount", 0);
+//    nAnonymizePivxAmount = GetArg("-anonymizesyndicateamount", 0);
 //    if (nAnonymizePivxAmount > 999999) nAnonymizePivxAmount = 999999;
 //    if (nAnonymizePivxAmount < 2) nAnonymizePivxAmount = 2;
 
@@ -1865,7 +1865,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     LogPrintf("fLiteMode %d\n", fLiteMode);
     LogPrintf("nSwiftTXDepth %d\n", nSwiftTXDepth);
-    LogPrintf("Anonymize PIVX Amount %d\n", nAnonymizePivxAmount);
+    LogPrintf("Anonymize Syndicate Amount %d\n", nAnonymizePivxAmount);
     LogPrintf("Budget Mode %s\n", strBudgetMode.c_str());
 
     /* Denominations

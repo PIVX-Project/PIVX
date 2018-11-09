@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 The PIVX developers
+// Copyright (c) 2017-2018 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -478,7 +478,7 @@ void BlockExplorer::showEvent(QShowEvent*)
         updateNavButtons();
 
         if (!GetBoolArg("-txindex", true)) {
-            QString Warning = tr("Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (pivx.conf).");
+            QString Warning = tr("Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (syndicate.conf).");
             QMessageBox::warning(this, "Syndicate Core Blockchain Explorer", Warning, QMessageBox::Ok);
         }
     }

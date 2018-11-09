@@ -1,13 +1,13 @@
 Syndicate Core version 3.0.4 is now available from:
 
-  <https://github.com/pivx-project/pivx/releases>
+  <https://github.com/SyndicateLtd/SyndicateQt/releases>
 
 This is a new minor-revision version release, including various bug fixes and
 performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/pivx-project/pivx/issues>
+  <https://github.com/SyndicateLtd/SyndicateQt/issues>
 
 
 Mandatory Update
@@ -21,7 +21,7 @@ Users will have a grace period to update their clients before versions prior to 
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or syndicated/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/Syndicate-Qt (on Mac) or syndicated/syndicate-qt (on Linux).
 
 
 Compatibility
@@ -105,7 +105,7 @@ git merge commit are mentioned.
 - #307 `dbd801d` Remove hard-coded GIT_ARCHIVE define (Jon Spock)
 - #314 `f1c830a` Fix issue causing crash when syndicated --help was invoked (Jon Spock)
 - #326 `8b6a13e` Combine 2 LogPrintf statement to reduce debug.log clutter (Jon Spock)
-- #328 `a6c18c8` [Main] PIVX not responding on user quitting app (Aaron Langford)
+- #328 `a6c18c8` [Main] Syndicate not responding on user quitting app (Aaron Langford)
 
 
 Credits
@@ -120,4 +120,4 @@ Thanks to everyone who directly contributed to this release:
 - rejectedpromise
 - aaronlangford31
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/).
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/syndicate-project-translations/).

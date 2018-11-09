@@ -1,6 +1,6 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2015-2017 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
@@ -18,7 +18,7 @@ OpenURIDialog::OpenURIDialog(QWidget* parent) : QDialog(parent, Qt::WindowSystem
                                                 ui(new Ui::OpenURIDialog)
 {
     ui->setupUi(this);
-    ui->uriEdit->setPlaceholderText("pivx:");
+    ui->uriEdit->setPlaceholderText("syndicate:");
 }
 
 OpenURIDialog::~OpenURIDialog()
@@ -48,5 +48,5 @@ void OpenURIDialog::on_selectFileButton_clicked()
     if (filename.isEmpty())
         return;
     QUrl fileUri = QUrl::fromLocalFile(filename);
-    ui->uriEdit->setText("pivx:?r=" + QUrl::toPercentEncoding(fileUri.toString()));
+    ui->uriEdit->setText("syndicate:?r=" + QUrl::toPercentEncoding(fileUri.toString()));
 }

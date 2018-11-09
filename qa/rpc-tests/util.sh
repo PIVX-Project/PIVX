@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Copyright (c) 2014 The Bitcoin Core developers
 # Copyright (c) 2014-2015 The Dash developers
-# Copyright (c) 2015-2017 The PIVX developers
+# Copyright (c) 2015-2017 The XVIP developers
 # Copyright (c) 2016-2018 The Syndicate developers
 # Distributed under the MIT/X11 software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -23,7 +23,7 @@ function ExtractKey {
 function CreateDataDir {
   DIR=$1
   mkdir -p $DIR
-  CONF=$DIR/pivx.conf
+  CONF=$DIR/syndicate.conf
   echo "regtest=1" >> $CONF
   echo "keypool=2" >> $CONF
   echo "rpcuser=rt" >> $CONF

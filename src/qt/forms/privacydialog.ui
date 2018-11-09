@@ -191,7 +191,7 @@
                         <item>
                          <widget class="QLabel" name="labelzPIVSyncStatus">
                           <property name="toolTip">
-                           <string>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</string>
+                           <string>The displayed information may be out of date. Your wallet automatically synchronizes with the Syndicate network after a connection is established, but this process has not completed yet.</string>
                           </property>
                           <property name="styleSheet">
                            <string notr="true">QLabel { color: red; }</string>
@@ -953,7 +953,7 @@ zPIV are mature when they have more than 20 confirmations AND more than 2 mints 
                              </size>
                             </property>
                             <property name="toolTip">
-                             <string>The PIVX address to send the payment to. Creates local payment to yourself when empty.</string>
+                             <string>The Syndicate address to send the payment to. Creates local payment to yourself when empty.</string>
                             </property>
                            </widget>
                           </item>
@@ -966,7 +966,7 @@ zPIV are mature when they have more than 20 confirmations AND more than 2 mints 
                              <string/>
                             </property>
                             <property name="icon">
-                             <iconset resource="../pivx.qrc">
+                             <iconset resource="../syndicate.qrc">
                               <normaloff>:/icons/address-book</normaloff>:/icons/address-book</iconset>
                             </property>
                             <property name="shortcut">
@@ -983,7 +983,7 @@ zPIV are mature when they have more than 20 confirmations AND more than 2 mints 
                              <string/>
                             </property>
                             <property name="icon">
-                             <iconset resource="../pivx.qrc">
+                             <iconset resource="../syndicate.qrc">
                               <normaloff>:/icons/editpaste</normaloff>:/icons/editpaste</iconset>
                             </property>
                             <property name="shortcut">
@@ -1720,8 +1720,8 @@ Immature: confirmed, but less than 1 mint of the same denomination after it was 
                            <string>Show the current status of automatic zPIV minting.
 
 To change the status (restart required):
-- enable: add 'enablezeromint=1' to pivx.conf
-- disable: add 'enablezeromint=0' to pivx.conf
+- enable: add 'enablezeromint=1' to syndicate.conf
+- disable: add 'enablezeromint=0' to syndicate.conf
 
 To change the percentage (no restart required):
 - menu Settings-&gt;Options-&gt;Percentage of autominted zPIV
@@ -2840,7 +2840,7 @@ To change the percentage (no restart required):
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../syndicate.qrc"/>
  </resources>
  <connections/>
 </ui>

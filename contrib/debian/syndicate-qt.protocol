@@ -1,6 +1,6 @@
 [Protocol]
-exec=pivx-qt '%u'
-protocol=pivx
+exec=syndicate-qt '%u'
+protocol=syndicate
 input=none
 output=none
 helper=true

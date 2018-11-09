@@ -1,10 +1,10 @@
 UNIX BUILD NOTES
 ====================
-Some notes on how to build PIVX in Unix.
+Some notes on how to build Syndicate in Unix.
 
 Note
 ---------------------
-Always use absolute paths to configure and compile pivx and the dependencies,
+Always use absolute paths to configure and compile syndicate and the dependencies,
 for example, when specifying the path of the dependency:
 
 	../dist/configure --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX
@@ -22,7 +22,7 @@ make
 make install # optional
 ```
 
-This will build pivx-qt as well if the dependencies are met.
+This will build syndicate-qt as well if the dependencies are met.
 
 Dependencies
 ---------------------
@@ -85,7 +85,7 @@ Optional:
 Dependencies for the GUI: Ubuntu & Debian
 -----------------------------------------
 
-If you want to build PIVX-Qt, make sure that the required packages for Qt development
+If you want to build Syndicate-Qt, make sure that the required packages for Qt development
 are installed. Qt 5 is necessary to build the GUI.
 If both Qt 4 and Qt 5 are installed, Qt 5 will be used.
 To build without GUI pass `--without-gui`.
@@ -98,7 +98,7 @@ libqrencode (optional) can be installed with:
 
     sudo apt-get install libqrencode-dev
 
-Once these are installed, they will be found by configure and a pivx-qt executable will be
+Once these are installed, they will be found by configure and a syndicate-qt executable will be
 built by default.
 
 Notes
@@ -134,7 +134,7 @@ It is recommended to use Berkeley DB 4.8. If you have to build it yourself:
 ```bash
 PIVX_ROOT=$(pwd)
 
-# Pick some path to install BDB to, here we create a directory within the pivx directory
+# Pick some path to install BDB to, here we create a directory within the syndicate directory
 BDB_PREFIX="${PIVX_ROOT}/db4"
 mkdir -p $BDB_PREFIX
 
@@ -168,7 +168,7 @@ If you need to build Boost yourself:
 
 Security
 --------
-To help make your PIVX installation more secure by making certain attacks impossible to
+To help make your Syndicate installation more secure by making certain attacks impossible to
 exploit even if a vulnerability is found, binaries are hardened by default.
 This can be disabled with:
 
@@ -200,7 +200,7 @@ Hardening enables the following features:
 
 * Non-executable Stack
     If the stack is executable then trivial stack based buffer overflow exploits are possible if
-    vulnerable buffers are found. By default, pivx should be built with a non-executable stack
+    vulnerable buffers are found. By default, syndicate should be built with a non-executable stack
     but if one of the libraries it uses asks for an executable stack or someone makes a mistake
     and uses a compiler extension which requires an executable stack, it will silently build an
     executable without the non-executable stack protection.

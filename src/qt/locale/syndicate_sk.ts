@@ -62,12 +62,12 @@
         <translation>Prijímacia adresa</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Toto sú vaše PIVX adresy na odosielanie platieb. Pred odoslaním vždy skontrolujte výšku a adresu prijemcu.</translation>
+        <source>These are your Syndicate addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Toto sú vaše Syndicate adresy na odosielanie platieb. Pred odoslaním vždy skontrolujte výšku a adresu prijemcu.</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Toto sú vaše PIVX adresy na prijímanie platieb. Pre každú transakciu sa odporúča použiť novú prijímaciu adresu.</translation>
+        <source>These are your Syndicate addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Toto sú vaše Syndicate adresy na prijímanie platieb. Pre každú transakciu sa odporúča použiť novú prijímaciu adresu.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -172,8 +172,8 @@
         <translation>Potvrďte šifrovanie peňaženky</translation>
     </message>
     <message>
-        <source>PIVX will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
-        <translation>PIVX sa teraz ukončí, aby dokončil proces šifrovania. Nezabudnite, že šifrovanie peňaženky nemôže úplne ochrániť vaše PIV pred odcudzením škodlivým softvérom, ktorý infikuje váš počítač.</translation>
+        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
+        <translation>Syndicate sa teraz ukončí, aby dokončil proces šifrovania. Nezabudnite, že šifrovanie peňaženky nemôže úplne ochrániť vaše PIV pred odcudzením škodlivým softvérom, ktorý infikuje váš počítač.</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -573,12 +573,12 @@
         <translation>Syndicate Core</translation>
     </message>
     <message>
-        <source>Send coins to a PIVX address</source>
-        <translation>Odoslať mince na adresu PIVX</translation>
+        <source>Send coins to a Syndicate address</source>
+        <translation>Odoslať mince na adresu Syndicate</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and pivx: URIs)</source>
-        <translation>Vyžiadať platby (generuje QR kódy a pivx: identifikátory URI)</translation>
+        <source>Request payments (generates QR codes and syndicate: URIs)</source>
+        <translation>Vyžiadať platby (generuje QR kódy a syndicate: identifikátory URI)</translation>
     </message>
     <message>
         <source>&amp;Masternodes</source>
@@ -597,16 +597,16 @@
         <translation>Zobraziť informácie o Syndicate Core</translation>
     </message>
     <message>
-        <source>Modify configuration options for PIVX</source>
-        <translation>Zmeňte možnosti konfigurácie pre PIVX</translation>
+        <source>Modify configuration options for Syndicate</source>
+        <translation>Zmeňte možnosti konfigurácie pre Syndicate</translation>
     </message>
     <message>
-        <source>Sign messages with your PIVX addresses to prove you own them</source>
-        <translation>Podpíšte správy pomocou adresy PIVX, aby ste preukázali, že ich vlastníte</translation>
+        <source>Sign messages with your Syndicate addresses to prove you own them</source>
+        <translation>Podpíšte správy pomocou adresy Syndicate, aby ste preukázali, že ich vlastníte</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified PIVX addresses</source>
-        <translation>Overte správy, aby sa zabezpečilo, že boli podpísané zadanými PIVX adresami</translation>
+        <source>Verify messages to ensure they were signed with specified Syndicate addresses</source>
+        <translation>Overte správy, aby sa zabezpečilo, že boli podpísané zadanými Syndicate adresami</translation>
     </message>
     <message>
         <source>&amp;BIP38 tool</source>
@@ -637,8 +637,8 @@
         <translation>Otvoriť konfiguračný súbor masternodu</translation>
     </message>
     <message>
-        <source>Open a PIVX: URI or payment request</source>
-        <translation>Otvorte PIVX: URI alebo žiadosť o platbu</translation>
+        <source>Open a Syndicate: URI or payment request</source>
+        <translation>Otvorte Syndicate: URI alebo žiadosť o platbu</translation>
     </message>
     <message>
         <source>&amp;Blockchain explorer</source>
@@ -649,8 +649,8 @@
         <translation>Okno blockchain prehliadača</translation>
     </message>
     <message>
-        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
-        <translation>Zobraziť pomocnú správu programu Syndicate Core a získajte zoznam možností príkazového riadka PIVX</translation>
+        <source>Show the Syndicate Core help message to get a list with possible Syndicate command-line options</source>
+        <translation>Zobraziť pomocnú správu programu Syndicate Core a získajte zoznam možností príkazového riadka Syndicate</translation>
     </message>
     <message>
         <source>Syndicate Core client</source>
@@ -776,8 +776,8 @@ MultiSend: %1</translation>
         <translation>TextLabel</translation>
     </message>
     <message>
-        <source>Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (pivx.conf).</source>
-        <translation>Nie všetky transakcie sa zobrazia. Ak chcete zobraziť všetky transakcie, musíte v konfiguračnom súbore (pivx.conf) nastaviť txindex = 1.</translation>
+        <source>Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (syndicate.conf).</source>
+        <translation>Nie všetky transakcie sa zobrazia. Ak chcete zobraziť všetky transakcie, musíte v konfiguračnom súbore (syndicate.conf) nastaviť txindex = 1.</translation>
     </message>
 </context>
 <context>
@@ -1114,8 +1114,8 @@ MultiSend: %1</translation>
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
-        <source>The PIVX address to sign the message with</source>
-        <translation>Adresa PIVX, ktorou chcete správu podpísať</translation>
+        <source>The Syndicate address to sign the message with</source>
+        <translation>Adresa Syndicate, ktorou chcete správu podpísať</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -1138,16 +1138,16 @@ MultiSend: %1</translation>
         <translation>Skopírujte aktuálny podpis do schránky</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this PIVX address</source>
-        <translation>Podpíšte správu, aby ste preukázali, že ste vlastníkom tejto PIVX adresy</translation>
+        <source>Sign the message to prove you own this Syndicate address</source>
+        <translation>Podpíšte správu, aby ste preukázali, že ste vlastníkom tejto Syndicate adresy</translation>
     </message>
     <message>
-        <source>The PIVX address the message was signed with</source>
-        <translation>PIVX adresa, ktorou bola správa podpísaná</translation>
+        <source>The Syndicate address the message was signed with</source>
+        <translation>Syndicate adresa, ktorou bola správa podpísaná</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified PIVX address</source>
-        <translation>Skontrolujte správu, aby ste sa uistili, že bola podpísaná zadanou PIVX adresou</translation>
+        <source>Verify the message to ensure it was signed with the specified Syndicate address</source>
+        <translation>Skontrolujte správu, aby ste sa uistili, že bola podpísaná zadanou Syndicate adresou</translation>
     </message>
     <message>
         <source>Reset all sign message fields</source>
@@ -1284,7 +1284,7 @@ MultiSend: %1</translation>
     <name>ZPivControlDialog</name>
     </context>
 <context>
-    <name>pivx-core</name>
+    <name>syndicate-core</name>
     <message>
         <source>Error</source>
         <translation>Chyba</translation>

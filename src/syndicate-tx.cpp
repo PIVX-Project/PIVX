@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2015-2017 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
@@ -51,8 +51,8 @@ static bool AppInitRawTx(int argc, char* argv[])
         // First part of help message is specific to this utility
         std::string strUsage = _("Pivx Core syndicate-tx utility version") + " " + FormatFullVersion() + "\n\n" +
                                _("Usage:") + "\n" +
-                               "  syndicate-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded pivx transaction") + "\n" +
-                               "  syndicate-tx [options] -create [commands]   " + _("Create hex-encoded pivx transaction") + "\n" +
+                               "  syndicate-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded syndicate transaction") + "\n" +
+                               "  syndicate-tx [options] -create [commands]   " + _("Create hex-encoded syndicate transaction") + "\n" +
                                "\n";
 
         fprintf(stdout, "%s", strUsage.c_str());
@@ -570,7 +570,7 @@ static int CommandLineRawTx(int argc, char* argv[])
             if (argc < 2)
                 throw runtime_error("too few parameters");
 
-            // param: hex-encoded pivx transaction
+            // param: hex-encoded syndicate transaction
             string strHexTx(argv[1]);
             if (strHexTx == "-") // "-" implies standard input
                 strHexTx = readStdin();

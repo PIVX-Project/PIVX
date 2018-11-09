@@ -1,19 +1,19 @@
 Syndicate Core version 3.0.6 is now available from:
 
-  <https://github.com/pivx-project/pivx/releases>
+  <https://github.com/SyndicateLtd/SyndicateQt/releases>
 
 This is a new minor-revision version release, including various bug fixes and
 performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/pivx-project/pivx/issues>
+  <https://github.com/SyndicateLtd/SyndicateQt/issues>
 
 
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or syndicated/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/Syndicate-Qt (on Mac) or syndicated/syndicate-qt (on Linux).
 
 
 Compatibility
@@ -40,7 +40,7 @@ Notable Changes
 
 Automated Database Corruption Repair
 ---------------------
-There have been cases of blockchain database corruption that can occur when PIVX client is not closed gracefully. The most common cases of corruption have been identified and the wallet will now automatically fix most of these corruptions. Certain corruption states are still unable to be fixed, but now provide more detailed error messages to the user as well as prompting the user to reindex their database.
+There have been cases of blockchain database corruption that can occur when Syndicate client is not closed gracefully. The most common cases of corruption have been identified and the wallet will now automatically fix most of these corruptions. Certain corruption states are still unable to be fixed, but now provide more detailed error messages to the user as well as prompting the user to reindex their database.
 
 More Accurate Error Messages
 ---------------------
@@ -52,7 +52,7 @@ Many 3rd party services have reported that their debug logs have been overloaded
 
 Removal of Heavy Running Transaction Search Code
 ---------------------
-Many areas of the block validation code use a "slow" transaction search, which searches redundantly for transactions. This "slow" search has been removed upstream in Bitcoin and is now removed in PIVX. This provides a more efficient syncing process and generally better performing wallet.
+Many areas of the block validation code use a "slow" transaction search, which searches redundantly for transactions. This "slow" search has been removed upstream in Bitcoin and is now removed in Syndicate. This provides a more efficient syncing process and generally better performing wallet.
 
 Sync Fix for Block 908000
 ---------------------
@@ -116,4 +116,4 @@ Thanks to everyone who directly contributed to this release:
 - sonic
 - whateverpal
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/).
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/syndicate-project-translations/).

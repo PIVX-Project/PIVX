@@ -1,6 +1,6 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2015-2017 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
@@ -185,7 +185,7 @@ bool Intro::pickDataDirectory()
         settings.setValue("strDataDir", dataDir);
     }
     /* Only override -datadir if different from the default, to make it possible to
-     * override -datadir in the pivx.conf file in the default data directory
+     * override -datadir in the syndicate.conf file in the default data directory
      * (to be consistent with syndicated behavior)
      */
     if (dataDir != getDefaultDataDirectory())

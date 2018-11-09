@@ -45,7 +45,7 @@
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_SM">
            <property name="toolTip">
-            <string>The PIVX address to sign the message with</string>
+            <string>The Syndicate address to sign the message with</string>
            </property>
           </widget>
          </item>
@@ -58,7 +58,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/address-book</normaloff>:/icons/address-book</iconset>
            </property>
            <property name="shortcut">
@@ -75,7 +75,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/editpaste</normaloff>:/icons/editpaste</iconset>
            </property>
            <property name="shortcut">
@@ -125,7 +125,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/editcopy</normaloff>:/icons/editcopy</iconset>
            </property>
           </widget>
@@ -137,13 +137,13 @@
          <item>
           <widget class="QPushButton" name="signMessageButton_SM">
            <property name="toolTip">
-            <string>Sign the message to prove you own this PIVX address</string>
+            <string>Sign the message to prove you own this Syndicate address</string>
            </property>
            <property name="text">
             <string>Sign &amp;Message</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/edit</normaloff>:/icons/edit</iconset>
            </property>
            <property name="autoDefault">
@@ -160,7 +160,7 @@
             <string>Clear &amp;All</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
            </property>
            <property name="autoDefault">
@@ -240,7 +240,7 @@
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_VM">
            <property name="toolTip">
-            <string>The PIVX address the message was signed with</string>
+            <string>The Syndicate address the message was signed with</string>
            </property>
           </widget>
          </item>
@@ -253,7 +253,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/address-book</normaloff>:/icons/address-book</iconset>
            </property>
            <property name="shortcut">
@@ -274,13 +274,13 @@
          <item>
           <widget class="QPushButton" name="verifyMessageButton_VM">
            <property name="toolTip">
-            <string>Verify the message to ensure it was signed with the specified PIVX address</string>
+            <string>Verify the message to ensure it was signed with the specified Syndicate address</string>
            </property>
            <property name="text">
             <string>Verify &amp;Message</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/transaction_0</normaloff>:/icons/transaction_0</iconset>
            </property>
            <property name="autoDefault">
@@ -297,7 +297,7 @@
             <string>Clear &amp;All</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
            </property>
            <property name="autoDefault">
@@ -363,7 +363,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../syndicate.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -97,7 +97,7 @@
             <string>&amp;Add Address / Key</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
            </property>
            <property name="autoDefault">
@@ -194,7 +194,7 @@
             <string>C&amp;reate</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/filesave</normaloff>:/icons/filesave</iconset>
            </property>
            <property name="autoDefault">
@@ -268,7 +268,7 @@ Please be patient after clicking import.</string>
             <string>&amp;Import Redeem</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/receiving_addresses</normaloff>:/icons/receiving_addresses</iconset>
            </property>
           </widget>
@@ -374,7 +374,7 @@ Please be patient after clicking import.</string>
                 <string>Add a Raw Input</string>
                </property>
                <property name="icon">
-                <iconset resource="../pivx.qrc">
+                <iconset resource="../syndicate.qrc">
                  <normaloff>:/css/default</normaloff>:/css/default</iconset>
                </property>
               </widget>
@@ -446,7 +446,7 @@ Please be patient after clicking import.</string>
                 <string>Add &amp;Destination</string>
                </property>
                <property name="icon">
-                <iconset resource="../pivx.qrc">
+                <iconset resource="../syndicate.qrc">
                  <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
                </property>
               </widget>
@@ -530,7 +530,7 @@ Please be patient after clicking import.</string>
                 <string>Cr&amp;eate</string>
                </property>
                <property name="icon">
-                <iconset resource="../pivx.qrc">
+                <iconset resource="../syndicate.qrc">
                  <normaloff>:/icons/export</normaloff>:/icons/export</iconset>
                </property>
                <property name="autoDefault">
@@ -651,7 +651,7 @@ txScrollArea:{
                 <string>S&amp;ign</string>
                </property>
                <property name="icon">
-                <iconset resource="../pivx.qrc">
+                <iconset resource="../syndicate.qrc">
                  <normaloff>:/icons/edit</normaloff>:/icons/edit</iconset>
                </property>
                <property name="autoDefault">
@@ -683,7 +683,7 @@ txScrollArea:{
                 <string>Co&amp;mmit</string>
                </property>
                <property name="icon">
-                <iconset resource="../pivx.qrc">
+                <iconset resource="../syndicate.qrc">
                  <normaloff>:/icons/send</normaloff>:/icons/send</iconset>
                </property>
                <property name="autoDefault">
@@ -708,7 +708,7 @@ txScrollArea:{
                   <string>Add Private &amp;Key</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="../pivx.qrc">
+                  <iconset resource="../syndicate.qrc">
                    <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
                  </property>
                 </widget>
@@ -815,7 +815,7 @@ txScrollArea:{
   </layout>
  </widget>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../syndicate.qrc"/>
  </resources>
  <connections/>
 </ui>

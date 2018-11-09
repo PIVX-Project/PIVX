@@ -62,12 +62,12 @@
         <translation>Adrese za primanje</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>To su vaše PIVX adrese za slanje plaćanja. Uvijek provjerite iznos i adresu primatelja prije slanja novca.</translation>
+        <source>These are your Syndicate addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>To su vaše Syndicate adrese za slanje plaćanja. Uvijek provjerite iznos i adresu primatelja prije slanja novca.</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>To su vaše PIVX adrese za primanje uplata. Preporuča se upotreba nove adrese primanja za svaku transakciju.</translation>
+        <source>These are your Syndicate addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>To su vaše Syndicate adrese za primanje uplata. Preporuča se upotreba nove adrese primanja za svaku transakciju.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -172,8 +172,8 @@
         <translation>Potvrdite šifriranje novčanika</translation>
     </message>
     <message>
-        <source>PIVX will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
-        <translation>PIVX se sada zatvara kako bi dovršio proces šifriranja. Ne zaboravite da šifriranje vašeg novčanika ne može u potpunosti zaštititi vaše PIV od krađe zlonamjernog softvera koji zarazi vaše računalo.</translation>
+        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
+        <translation>Syndicate se sada zatvara kako bi dovršio proces šifriranja. Ne zaboravite da šifriranje vašeg novčanika ne može u potpunosti zaštititi vaše PIV od krađe zlonamjernog softvera koji zarazi vaše računalo.</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -605,12 +605,12 @@
         <translation>Syndicate Core</translation>
     </message>
     <message>
-        <source>Send coins to a PIVX address</source>
-        <translation>Pošaljite kovanice na PIVX adresu</translation>
+        <source>Send coins to a Syndicate address</source>
+        <translation>Pošaljite kovanice na Syndicate adresu</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and pivx: URIs)</source>
-        <translation>Zahtjev za plaćanja (generira QR kodove i pivx: URI)</translation>
+        <source>Request payments (generates QR codes and syndicate: URIs)</source>
+        <translation>Zahtjev za plaćanja (generira QR kodove i syndicate: URI)</translation>
     </message>
     <message>
         <source>&amp;Privacy</source>
@@ -626,23 +626,23 @@
     </message>
     <message>
         <source>&amp;About Syndicate Core</source>
-        <translation>&amp; O PIVX Coreu</translation>
+        <translation>&amp; O Syndicate Coreu</translation>
     </message>
     <message>
         <source>Show information about Syndicate Core</source>
-        <translation>Prikaz informacija o PIVX Coreu</translation>
+        <translation>Prikaz informacija o Syndicate Coreu</translation>
     </message>
     <message>
-        <source>Modify configuration options for PIVX</source>
-        <translation>Izmijenite opcije konfiguracije za PIVX</translation>
+        <source>Modify configuration options for Syndicate</source>
+        <translation>Izmijenite opcije konfiguracije za Syndicate</translation>
     </message>
     <message>
-        <source>Sign messages with your PIVX addresses to prove you own them</source>
-        <translation>Potpišite poruke s vašim PIVX adresama kako biste dokazali da ih posjedujete</translation>
+        <source>Sign messages with your Syndicate addresses to prove you own them</source>
+        <translation>Potpišite poruke s vašim Syndicate adresama kako biste dokazali da ih posjedujete</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified PIVX addresses</source>
-        <translation>Potvrdite poruke kako biste bili sigurni da su potpisani s određenim PIVX adresama</translation>
+        <source>Verify messages to ensure they were signed with specified Syndicate addresses</source>
+        <translation>Potvrdite poruke kako biste bili sigurni da su potpisani s određenim Syndicate adresama</translation>
     </message>
     <message>
         <source>&amp;BIP38 tool</source>
@@ -1118,8 +1118,8 @@
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
-        <source>The PIVX address to sign the message with</source>
-        <translation>PIVX adresa za potpisivanje poruke s</translation>
+        <source>The Syndicate address to sign the message with</source>
+        <translation>Syndicate adresa za potpisivanje poruke s</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -1142,16 +1142,16 @@
         <translation>Kopirajte trenutačni potpis u međuspremnik sustava</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this PIVX address</source>
-        <translation>Potpišite poruku da biste dokazali da ste vlasnik ove PIVX adrese</translation>
+        <source>Sign the message to prove you own this Syndicate address</source>
+        <translation>Potpišite poruku da biste dokazali da ste vlasnik ove Syndicate adrese</translation>
     </message>
     <message>
-        <source>The PIVX address the message was signed with</source>
-        <translation>PIVX adresa s kojom je potpisana poruka</translation>
+        <source>The Syndicate address the message was signed with</source>
+        <translation>Syndicate adresa s kojom je potpisana poruka</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified PIVX address</source>
-        <translation>Potvrdite poruku kako biste bili sigurni da je potpisan s navedenom PIVX adresom</translation>
+        <source>Verify the message to ensure it was signed with the specified Syndicate address</source>
+        <translation>Potvrdite poruku kako biste bili sigurni da je potpisan s navedenom Syndicate adresom</translation>
     </message>
     <message>
         <source>Reset all sign message fields</source>
@@ -1352,7 +1352,7 @@
     </message>
     </context>
 <context>
-    <name>pivx-core</name>
+    <name>syndicate-core</name>
     <message>
         <source>Error</source>
         <translation>Greška</translation>

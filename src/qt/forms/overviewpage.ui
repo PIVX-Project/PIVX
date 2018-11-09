@@ -259,7 +259,7 @@
                           <cursorShape>WhatsThisCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</string>
+                          <string>The displayed information may be out of date. Your wallet automatically synchronizes with the Syndicate network after a connection is established, but this process has not completed yet.</string>
                          </property>
                          <property name="styleSheet">
                           <string notr="true">QLabel { color: red; }</string>
@@ -737,7 +737,7 @@
                        <item row="5" column="0">
                         <widget class="QLabel" name="labelTotalText">
                          <property name="toolTip">
-                          <string>Your current PIVX balance, unconfirmed and immature transactions included</string>
+                          <string>Your current Syndicate balance, unconfirmed and immature transactions included</string>
                          </property>
                          <property name="text">
                           <string>Total:</string>
@@ -756,7 +756,7 @@
                           <cursorShape>IBeamCursor</cursorShape>
                          </property>
                          <property name="toolTip">
-                          <string>Your current PIVX balance, unconfirmed and immature transactions included</string>
+                          <string>Your current Syndicate balance, unconfirmed and immature transactions included</string>
                          </property>
                          <property name="text">
                           <string notr="true">0.000 000 00 PIV</string>
@@ -1111,7 +1111,7 @@ Immature: confirmed, but less than 1 mint of the same denomination after it was 
                        <cursorShape>WhatsThisCursor</cursorShape>
                       </property>
                       <property name="toolTip">
-                       <string>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</string>
+                       <string>The displayed information may be out of date. Your wallet automatically synchronizes with the Syndicate network after a connection is established, but this process has not completed yet.</string>
                       </property>
                       <property name="styleSheet">
                        <string notr="true">QLabel { color: red; }</string>

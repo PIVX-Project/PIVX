@@ -2,43 +2,43 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-bin_PROGRAMS += qt/pivx-qt
+bin_PROGRAMS += qt/syndicate-qt
 EXTRA_LIBRARIES += qt/libbitcoinqt.a
 
-# pivx qt core #
+# syndicate qt core #
 QT_TS = \
-  qt/locale/pivx_bg.ts \
-  qt/locale/pivx_ca.ts \
-  qt/locale/pivx_cs.ts \
-  qt/locale/pivx_da.ts \
-  qt/locale/pivx_de.ts \
-  qt/locale/pivx_en.ts \
-  qt/locale/pivx_en_US.ts \
-  qt/locale/pivx_eo.ts \
-  qt/locale/pivx_es.ts \
-  qt/locale/pivx_es_ES.ts \
-  qt/locale/pivx_fi.ts \
-  qt/locale/pivx_fr_FR.ts \
-  qt/locale/pivx_hi_IN.ts \
-  qt/locale/pivx_hr.ts \
-  qt/locale/pivx_hr_HR.ts \
-  qt/locale/pivx_it.ts \
-  qt/locale/pivx_ja.ts \
-  qt/locale/pivx_ko_KR.ts \
-  qt/locale/pivx_lt_LT.ts \
-  qt/locale/pivx_nl.ts \
-  qt/locale/pivx_pl.ts \
-  qt/locale/pivx_pt.ts \
-  qt/locale/pivx_pt_BR.ts \
-  qt/locale/pivx_ro_RO.ts \
-  qt/locale/pivx_ru.ts \
-  qt/locale/pivx_sk.ts \
-  qt/locale/pivx_sv.ts \
-  qt/locale/pivx_tr.ts \
-  qt/locale/pivx_uk.ts \
-  qt/locale/pivx_vi.ts \
-  qt/locale/pivx_zh_CN.ts \
-  qt/locale/pivx_zh_TW.ts
+  qt/locale/syndicate_bg.ts \
+  qt/locale/syndicate_ca.ts \
+  qt/locale/syndicate_cs.ts \
+  qt/locale/syndicate_da.ts \
+  qt/locale/syndicate_de.ts \
+  qt/locale/syndicate_en.ts \
+  qt/locale/syndicate_en_US.ts \
+  qt/locale/syndicate_eo.ts \
+  qt/locale/syndicate_es.ts \
+  qt/locale/syndicate_es_ES.ts \
+  qt/locale/syndicate_fi.ts \
+  qt/locale/syndicate_fr_FR.ts \
+  qt/locale/syndicate_hi_IN.ts \
+  qt/locale/syndicate_hr.ts \
+  qt/locale/syndicate_hr_HR.ts \
+  qt/locale/syndicate_it.ts \
+  qt/locale/syndicate_ja.ts \
+  qt/locale/syndicate_ko_KR.ts \
+  qt/locale/syndicate_lt_LT.ts \
+  qt/locale/syndicate_nl.ts \
+  qt/locale/syndicate_pl.ts \
+  qt/locale/syndicate_pt.ts \
+  qt/locale/syndicate_pt_BR.ts \
+  qt/locale/syndicate_ro_RO.ts \
+  qt/locale/syndicate_ru.ts \
+  qt/locale/syndicate_sk.ts \
+  qt/locale/syndicate_sv.ts \
+  qt/locale/syndicate_tr.ts \
+  qt/locale/syndicate_uk.ts \
+  qt/locale/syndicate_vi.ts \
+  qt/locale/syndicate_zh_CN.ts \
+  qt/locale/syndicate_zh_TW.ts
 
 QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
@@ -125,16 +125,16 @@ BITCOIN_MM = \
   qt/macnotificationhandler.mm
 
 QT_MOC = \
-  qt/pivx.moc \
+  qt/syndicate.moc \
   qt/bitcoinamountfield.moc \
   qt/intro.moc \
   qt/overviewpage.moc \
   qt/rpcconsole.moc
 
-QT_QRC_CPP = qt/qrc_pivx.cpp
-QT_QRC = qt/pivx.qrc
-QT_QRC_LOCALE_CPP = qt/qrc_pivx_locale.cpp
-QT_QRC_LOCALE = qt/pivx_locale.qrc
+QT_QRC_CPP = qt/qrc_syndicate.cpp
+QT_QRC = qt/syndicate.qrc
+QT_QRC_LOCALE_CPP = qt/qrc_syndicate_locale.cpp
+QT_QRC_LOCALE = qt/syndicate_locale.qrc
 
 PROTOBUF_CC = qt/paymentrequest.pb.cc
 PROTOBUF_H = qt/paymentrequest.pb.h
@@ -258,12 +258,12 @@ RES_ICONS = \
   qt/res/icons/tx_input.png \
   qt/res/icons/tx_output.png \
   qt/res/icons/tx_mined.png \
-  qt/res/icons/unit_pivx.png \
-  qt/res/icons/unit_mpivx.png \
-  qt/res/icons/unit_upivx.png \
-  qt/res/icons/unit_tpivx.png \
-  qt/res/icons/unit_tmpivx.png \
-  qt/res/icons/unit_tupivx.png
+  qt/res/icons/unit_syndicate.png \
+  qt/res/icons/unit_msyndicate.png \
+  qt/res/icons/unit_usyndicate.png \
+  qt/res/icons/unit_tsyndicate.png \
+  qt/res/icons/unit_tmsyndicate.png \
+  qt/res/icons/unit_tusyndicate.png
 
 BITCOIN_QT_CPP = \
   qt/bantablemodel.cpp \
@@ -337,7 +337,7 @@ RES_IMAGES = \
   qt/res/images/about.png \
   qt/res/images/splash.png \
   qt/res/images/splash_testnet.png \
-  qt/res/images/pivx_logo_horizontal.png \
+  qt/res/images/syndicate_logo_horizontal.png \
   qt/res/images/downArrow_dark.png \
   qt/res/images/downArrow_small_dark.png \
   qt/res/images/downArrow_small.png \
@@ -355,7 +355,7 @@ RES_CSS = \
 
 RES_MOVIES = $(wildcard $(srcdir)/qt/res/movies/spinner-*.png)
 
-BITCOIN_RC = qt/res/pivx-qt-res.rc
+BITCOIN_RC = qt/res/syndicate-qt-res.rc
 
 BITCOIN_QT_INCLUDES = -I$(builddir)/qt -I$(srcdir)/qt -I$(srcdir)/qt/forms \
   -I$(builddir)/qt/forms
@@ -377,72 +377,72 @@ QT_FORMS_H=$(join $(dir $(QT_FORMS_UI)),$(addprefix ui_, $(notdir $(QT_FORMS_UI:
 # Most files will depend on the forms and moc files as includes. Generate them
 # before anything else.
 $(QT_MOC): $(QT_FORMS_H)
-$(qt_libbitcoinqt_a_OBJECTS) $(qt_pivx_qt_OBJECTS) : | $(QT_MOC)
+$(qt_libbitcoinqt_a_OBJECTS) $(qt_syndicate_qt_OBJECTS) : | $(QT_MOC)
 
 #Generating these with a half-written protobuf header leads to wacky results.
 #This makes sure it's done.
 $(QT_MOC): $(PROTOBUF_H)
 $(QT_MOC_CPP): $(PROTOBUF_H)
 
-# pivx-qt binary #
-qt_pivx_qt_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
+# syndicate-qt binary #
+qt_syndicate_qt_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
   $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS)
-qt_pivx_qt_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
+qt_syndicate_qt_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
 qt_bitcoin_qt_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
 
-qt_pivx_qt_SOURCES = qt/pivx.cpp
+qt_syndicate_qt_SOURCES = qt/syndicate.cpp
 if TARGET_DARWIN
-  qt_pivx_qt_SOURCES += $(BITCOIN_MM)
+  qt_syndicate_qt_SOURCES += $(BITCOIN_MM)
 endif
 if TARGET_WINDOWS
-  qt_pivx_qt_SOURCES += $(BITCOIN_RC)
+  qt_syndicate_qt_SOURCES += $(BITCOIN_RC)
 endif
-qt_pivx_qt_LDADD = qt/libbitcoinqt.a $(LIBBITCOIN_SERVER)
+qt_syndicate_qt_LDADD = qt/libbitcoinqt.a $(LIBBITCOIN_SERVER)
 if ENABLE_WALLET
-qt_pivx_qt_LDADD += $(LIBBITCOIN_WALLET)
+qt_syndicate_qt_LDADD += $(LIBBITCOIN_WALLET)
 endif
 if ENABLE_ZMQ
-qt_pivx_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+qt_syndicate_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
 endif
-qt_pivx_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBBITCOIN_ZEROCOIN) $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) \
+qt_syndicate_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBBITCOIN_ZEROCOIN) $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) \
   $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
   $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
-qt_pivx_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
-qt_pivx_qt_LIBTOOLFLAGS = --tag CXX
+qt_syndicate_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+qt_syndicate_qt_LIBTOOLFLAGS = --tag CXX
 
 #locale/foo.ts -> locale/foo.qm
 QT_QM=$(QT_TS:.ts=.qm)
 
 SECONDARY: $(QT_QM)
 
-$(srcdir)/qt/pivxstrings.cpp: $(libbitcoin_server_a_SOURCES) $(libbitcoin_wallet_a_SOURCES) $(libbitcoin_common_a_SOURCES) $(libbitcoin_zmq_a_SOURCES) $(libbitcoin_util_a_SOURCES)
+$(srcdir)/qt/syndicatestrings.cpp: $(libbitcoin_server_a_SOURCES) $(libbitcoin_wallet_a_SOURCES) $(libbitcoin_common_a_SOURCES) $(libbitcoin_zmq_a_SOURCES) $(libbitcoin_util_a_SOURCES)
 	@test -n $(XGETTEXT) || echo "xgettext is required for updating translations"
 	$(AM_V_GEN) cd $(srcdir); XGETTEXT=$(XGETTEXT) PACKAGE_NAME="$(PACKAGE_NAME)" $(PYTHON) ../share/qt/extract_strings_qt.py $^
 
-translate: $(srcdir)/qt/pivxstrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(BITCOIN_MM)
+translate: $(srcdir)/qt/syndicatestrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(BITCOIN_MM)
 	@test -n $(LUPDATE) || echo "lupdate is required for updating translations"
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts $(srcdir)/qt/locale/pivx_en.ts
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts $(srcdir)/qt/locale/syndicate_en.ts
 
 $(QT_QRC_LOCALE_CPP): $(QT_QRC_LOCALE) $(QT_QM)
 	@test -f $(RCC)
 	@cp -f $< $(@D)/temp_$(<F)
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name pivx_locale $(@D)/temp_$(<F) | \
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name syndicate_locale $(@D)/temp_$(<F) | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
 	@rm $(@D)/temp_$(<F)
 
 $(QT_QRC_CPP): $(QT_QRC) $(QT_FORMS_H) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(RES_MOVIES) $(PROTOBUF_H)
 	@test -f $(RCC)
-	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name pivx $< | \
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name syndicate $< | \
 	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
 
-CLEAN_QT = $(nodist_qt_libbitcoinqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda qt/*.gcno qt/temp_pivx_locale.qrc
+CLEAN_QT = $(nodist_qt_libbitcoinqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda qt/*.gcno qt/temp_syndicate_locale.qrc
 
 CLEANFILES += $(CLEAN_QT)
 
-pivx_qt_clean: FORCE
-	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_pivx_qt_OBJECTS) qt/pivx-qt$(EXEEXT) $(LIBBITCOINQT)
+syndicate_qt_clean: FORCE
+	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_syndicate_qt_OBJECTS) qt/syndicate-qt$(EXEEXT) $(LIBBITCOINQT)
 
-pivx_qt : qt/pivx-qt$(EXEEXT)
+syndicate_qt : qt/syndicate-qt$(EXEEXT)
 
 ui_%.h: %.ui
 	@test -f $(UIC)

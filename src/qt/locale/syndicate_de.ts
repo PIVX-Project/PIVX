@@ -62,12 +62,12 @@
         <translation>Empfangsadressen</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Dies sind ihre PIVX-Adressen zum Tätigen von Überweisungen. Bitte prüfen Sie den Betrag und die Empfangsadresse, bevor Sie PIV überweisen.</translation>
+        <source>These are your Syndicate addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Dies sind ihre Syndicate-Adressen zum Tätigen von Überweisungen. Bitte prüfen Sie den Betrag und die Empfangsadresse, bevor Sie PIV überweisen.</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Dies sind ihre PIVX-Adressen zum Empfangen von Zahlungen. Es wird empfohlen für jede Transaktion eine neue Empfangsadresse zu verwenden.</translation>
+        <source>These are your Syndicate addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Dies sind ihre Syndicate-Adressen zum Empfangen von Zahlungen. Es wird empfohlen für jede Transaktion eine neue Empfangsadresse zu verwenden.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -176,7 +176,7 @@
         <translation>Verschlüsselung der Wallet bestätigen</translation>
     </message>
     <message>
-        <source>PIVX will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
+        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
         <translation>Die Anwendung wird nun geschlossen um die Verschlüsselung abzuschließen. Bitte bedenken Sie, dass auch die Verschlüsselung nicht sicher vor Diebstahl ihrer PIVs durch Schadsoftware schützt, die ihren Computer befällt.</translation>
     </message>
     <message>
@@ -254,12 +254,12 @@
         <translation>Adresse:</translation>
     </message>
     <message>
-        <source>Enter a PIVX Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.</source>
-        <translation>Bitte die PIVX-Adresse eingeben, welche mittels BIP 38 verschlüsselt werden soll. Bitte ein Passwort in die mittlere Box eintragen. Klicken Sie auf "Verschlüsslen" um den privaten Schlüssel zu generieren.</translation>
+        <source>Enter a Syndicate Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.</source>
+        <translation>Bitte die Syndicate-Adresse eingeben, welche mittels BIP 38 verschlüsselt werden soll. Bitte ein Passwort in die mittlere Box eintragen. Klicken Sie auf "Verschlüsslen" um den privaten Schlüssel zu generieren.</translation>
     </message>
     <message>
-        <source>The PIVX address to encrypt</source>
-        <translation>Die zu verschlüsselnde PIVX-Adresse</translation>
+        <source>The Syndicate address to encrypt</source>
+        <translation>Die zu verschlüsselnde Syndicate-Adresse</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -290,8 +290,8 @@
         <translation>Kopiert die aktuelle Signatur in die Zwischenablage</translation>
     </message>
     <message>
-        <source>Encrypt the private key for this PIVX address</source>
-        <translation>Den privaten Schlüssel für diese PIVX-Adresse verschlüsseln</translation>
+        <source>Encrypt the private key for this Syndicate address</source>
+        <translation>Den privaten Schlüssel für diese Syndicate-Adresse verschlüsseln</translation>
     </message>
     <message>
         <source>Reset all fields</source>
@@ -649,12 +649,12 @@
         <translation>Syndicate Core</translation>
     </message>
     <message>
-        <source>Send coins to a PIVX address</source>
-        <translation>An eine PIVX-Adresse überweisen</translation>
+        <source>Send coins to a Syndicate address</source>
+        <translation>An eine Syndicate-Adresse überweisen</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and pivx: URIs)</source>
-        <translation>Zahlung anfordern (QR-Code Generierung und pivx: URIs)</translation>
+        <source>Request payments (generates QR codes and syndicate: URIs)</source>
+        <translation>Zahlung anfordern (QR-Code Generierung und syndicate: URIs)</translation>
     </message>
     <message>
         <source>&amp;Privacy</source>
@@ -677,16 +677,16 @@
         <translation>Zeigt Informationen über Syndicate Core</translation>
     </message>
     <message>
-        <source>Modify configuration options for PIVX</source>
-        <translation>Konfiguration von PIVX verändern</translation>
+        <source>Modify configuration options for Syndicate</source>
+        <translation>Konfiguration von Syndicate verändern</translation>
     </message>
     <message>
-        <source>Sign messages with your PIVX addresses to prove you own them</source>
-        <translation>Unterschreibt eine Nachricht mit Ihrer PIVX-Adresse und beweist, dass sie Ihnen gehört</translation>
+        <source>Sign messages with your Syndicate addresses to prove you own them</source>
+        <translation>Unterschreibt eine Nachricht mit Ihrer Syndicate-Adresse und beweist, dass sie Ihnen gehört</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified PIVX addresses</source>
-        <translation>Überprüft eine Nachricht um zu prüfen ob diese mit einer bestimmten PIVX-Adresse signiert wurde</translation>
+        <source>Verify messages to ensure they were signed with specified Syndicate addresses</source>
+        <translation>Überprüft eine Nachricht um zu prüfen ob diese mit einer bestimmten Syndicate-Adresse signiert wurde</translation>
     </message>
     <message>
         <source>&amp;BIP38 tool</source>
@@ -713,8 +713,8 @@
         <translation>Öffne Masternode Einstellungsdatei</translation>
     </message>
     <message>
-        <source>Open a PIVX: URI or payment request</source>
-        <translation>Öffne eine PIVX: URI oder Zahlungsanfrage</translation>
+        <source>Open a Syndicate: URI or payment request</source>
+        <translation>Öffne eine Syndicate: URI oder Zahlungsanfrage</translation>
     </message>
     <message>
         <source>&amp;Blockchain explorer</source>
@@ -725,16 +725,16 @@
         <translation>Blockchain Betrachter Fenster</translation>
     </message>
     <message>
-        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
-        <translation>Zeige die PIVX-Core Hilfe, um mögliche PIVX Kommando-Zeilen-Optionen anzuzeigen</translation>
+        <source>Show the Syndicate Core help message to get a list with possible Syndicate command-line options</source>
+        <translation>Zeige die Syndicate-Core Hilfe, um mögliche Syndicate Kommando-Zeilen-Optionen anzuzeigen</translation>
     </message>
     <message>
         <source>Syndicate Core client</source>
         <translation>Syndicate Core Client</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to PIVX network</source>
-        <translation><numerusform>%n aktive Verbindung(en) zum PIVX Netzwerk</numerusform><numerusform>%n aktive Verbindung(en) zum PIVX Netzwerk</numerusform></translation>
+        <source>%n active connection(s) to Syndicate network</source>
+        <translation><numerusform>%n aktive Verbindung(en) zum Syndicate Netzwerk</numerusform><numerusform>%n aktive Verbindung(en) zum Syndicate Netzwerk</numerusform></translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -887,8 +887,8 @@ Adresse: %4</translation>
         <translation>TextEtikett</translation>
     </message>
     <message>
-        <source>Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (pivx.conf).</source>
-        <translation>Nicht alle Transaktionen können anzezeigt werden. Um alle Transaktionen zu sehen, müssen sie die Option  "txindex=1" in der "pivx.conf" Konfigurationsdatei hinzufügen.</translation>
+        <source>Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (syndicate.conf).</source>
+        <translation>Nicht alle Transaktionen können anzezeigt werden. Um alle Transaktionen zu sehen, müssen sie die Option  "txindex=1" in der "syndicate.conf" Konfigurationsdatei hinzufügen.</translation>
     </message>
 </context>
 <context>
@@ -1180,8 +1180,8 @@ Adresse: %4</translation>
         <translation>Zahlungsadresse bearbeiten</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid PIVX address.</source>
-        <translation>Die eingegebene Adresse "%1" ist keine gültige PIVX-Adresse.</translation>
+        <source>The entered address "%1" is not a valid Syndicate address.</source>
+        <translation>Die eingegebene Adresse "%1" ist keine gültige Syndicate-Adresse.</translation>
     </message>
     <message>
         <source>The entered address "%1" is already in the address book.</source>
@@ -1289,7 +1289,7 @@ Adresse: %4</translation>
         <translation>Da dies das erste Mal ist, dass Sie Syndicate Core starten, legen Sie jetzt bitte fest, an welchem Ort die Daten gespeichert werden sollen.</translation>
     </message>
     <message>
-        <source>Syndicate Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>Syndicate Core will download and store a copy of the Syndicate block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation>Syndicate Core wird die Blockchain laden und lokal speichern. Dafür sind mindestens %1GB freier Speicherplatz erforderlich. Der Speicherbedarf wird mit der Zeit anwachsen. Die Wallet wird ebenfalls in diesem Verzeichnis gespeichert.</translation>
     </message>
     <message>
@@ -1439,12 +1439,12 @@ Adresse: %4</translation>
         <translation>Zieladresse eingeben</translation>
     </message>
     <message>
-        <source>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other PIVX addresses after it matures.
-To Add: enter percentage to give and PIVX address to add to the MultiSend vector.
+        <source>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other Syndicate addresses after it matures.
+To Add: enter percentage to give and Syndicate address to add to the MultiSend vector.
 To Delete: Enter address to delete and press delete.
 MultiSend will not be activated unless you have clicked Activate</source>
-        <translation>MultiSend ermöglicht es automatisch bis zu 100% Ihrer Stake- oder Masternode-Belohnung zu einer Liste von anderen PIVX-Adressen zu senden.
-Zum hinzufügen: Gebe den Prozentsätze ein, um die PIVX-Adressen des MultiSend-Vektor hinzuzufügen.
+        <translation>MultiSend ermöglicht es automatisch bis zu 100% Ihrer Stake- oder Masternode-Belohnung zu einer Liste von anderen Syndicate-Adressen zu senden.
+Zum hinzufügen: Gebe den Prozentsätze ein, um die Syndicate-Adressen des MultiSend-Vektor hinzuzufügen.
 Zum entfernen: Gebe die zu löschende Adresse ein und drücke löschen.
 MultiSend wird nicht aktiviert bis Sie auf Aktivieren geklickt haben.</translation>
     </message>
@@ -1803,15 +1803,15 @@ Bitte haben Sie etwas Geduld, nachdem Sie auf Importieren geklickt haben.</trans
         <translation>Verschleierungskonfiguration</translation>
     </message>
     <message>
-        <source>Obfuscation was successfully set to basic (%1 and 2 rounds). You can change this at any time by opening PIVX's configuration screen.</source>
+        <source>Obfuscation was successfully set to basic (%1 and 2 rounds). You can change this at any time by opening Syndicate's configuration screen.</source>
         <translation>Verschleierung erfolgreich auf normal gesetzt (%1 und 2 Runden). Sie können dies jederzeit in den PIVXs Konfigurationen ändern.</translation>
     </message>
     <message>
-        <source>Obfuscation was successfully set to high (%1 and 8 rounds). You can change this at any time by opening PIVX's configuration screen.</source>
+        <source>Obfuscation was successfully set to high (%1 and 8 rounds). You can change this at any time by opening Syndicate's configuration screen.</source>
         <translation>Verschleierung erfolgreich auf hohen gesetzt (%1 und 8 Runden). Sie können dies jederzeit in den PIVXs Konfigurationen ändern.</translation>
     </message>
     <message>
-        <source>Obfuscation was successfully set to maximum (%1 and 16 rounds). You can change this at any time by opening PIVX's configuration screen.</source>
+        <source>Obfuscation was successfully set to maximum (%1 and 16 rounds). You can change this at any time by opening Syndicate's configuration screen.</source>
         <translation>Verschleierung erfolgreich auf maximal gesetzt (%1 und 16 Runden). Sie können dies jederzeit in den PIVXs Konfigurationen ändern.</translation>
     </message>
 </context>
@@ -1873,8 +1873,8 @@ Bitte haben Sie etwas Geduld, nachdem Sie auf Importieren geklickt haben.</trans
         <translation>Wenn Sie das Ausgeben von unbestätigten Wechselgeld deaktivieren, so kann das Wechselgeld von einer Transaktion &lt;br/&gt;nicht verwendet werden, bis mindestens eine Bestätigung vorliegt.&lt;br/&gt;Dies hat auch Auswirkungen auf ihre Bilanzberechnung.</translation>
     </message>
     <message>
-        <source>Automatically open the PIVX client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Automatisches öffnen des PIVX-Client-Port im Router. Dies funktioniert nur, wenn ihr Router UPnP unterstützt und es eingeschaltet ist.</translation>
+        <source>Automatically open the Syndicate client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Automatisches öffnen des Syndicate-Client-Port im Router. Dies funktioniert nur, wenn ihr Router UPnP unterstützt und es eingeschaltet ist.</translation>
     </message>
     <message>
         <source>Accept connections from outside</source>
@@ -1893,12 +1893,12 @@ Bitte haben Sie etwas Geduld, nachdem Sie auf Importieren geklickt haben.</trans
         <translation>Experte</translation>
     </message>
     <message>
-        <source>Automatically start PIVX after logging in to the system.</source>
-        <translation>PIVX automatisch nach dem Login starten.</translation>
+        <source>Automatically start Syndicate after logging in to the system.</source>
+        <translation>Syndicate automatisch nach dem Login starten.</translation>
     </message>
     <message>
-        <source>&amp;Start PIVX on system login</source>
-        <translation>PIVX automatisch beim System Login &amp;starten.</translation>
+        <source>&amp;Start Syndicate on system login</source>
+        <translation>Syndicate automatisch beim System Login &amp;starten.</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
@@ -1925,14 +1925,14 @@ Bitte haben Sie etwas Geduld, nachdem Sie auf Importieren geklickt haben.</trans
         <translation>&amp;Netzwerk</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting PIVX.</source>
+        <source>The user interface language can be set here. This setting will take effect after restarting Syndicate.</source>
         <translation>Die Sprache der Benutzeroberfläche kann hier festgelegt werden. Diese Einstellung wird nach einem Neustart realisiert.</translation>
     </message>
     <message>
         <source>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/pivx-project/pivx-project-translations</source>
+https://www.transifex.com/syndicate-project/syndicate-project-translations</source>
         <translation>Sprache fehlt oder ist unvollständig? Helfe mit und trage zur Übersetzung bei unter:
-https://www.transifex.com/pivx-project/pivx-project-translations</translation>
+https://www.transifex.com/syndicate-project/syndicate-project-translations</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -1967,8 +1967,8 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <translation>Staff Split-Schwelle:</translation>
     </message>
     <message>
-        <source>Connect to the PIVX network through a SOCKS5 proxy.</source>
-        <translation>Durch einen SOCKS5 Proxy mit dem PIVX Netzwerk verbinden.</translation>
+        <source>Connect to the Syndicate network through a SOCKS5 proxy.</source>
+        <translation>Durch einen SOCKS5 Proxy mit dem Syndicate Netzwerk verbinden.</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -2146,8 +2146,8 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <translation>Der aktuelle gesperrte Kontostand in Nur-Uhr-Adressen</translation>
     </message>
     <message>
-        <source>Your current PIVX balance, unconfirmed and immature transactions included</source>
-        <translation>Ihr aktueller PIVX-Saldo, unbestätigte und unreife Transaktionen sind enthalten</translation>
+        <source>Your current Syndicate balance, unconfirmed and immature transactions included</source>
+        <translation>Ihr aktueller Syndicate-Saldo, unbestätigte und unreife Transaktionen sind enthalten</translation>
     </message>
     <message>
         <source>zPIV Balance</source>
@@ -2166,8 +2166,8 @@ Immature: confirmed, but less than 1 mint of the same denomination after it was 
 Unreif: Bestätigt, aber keine Prägung in der selben Stückelung seit erfolgter Prägung</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</source>
-        <translation>Die angezeigte Information ist möglicherweise nicht mehr aktuell. Ihre Wallet synchronisiert sich automatisch mit dem PIVX-Netzwerk, nachdem eine Verbindung hergestellt wurde. Aber dieser Vorgang ist noch nicht abgeschlossen.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Syndicate network after a connection is established, but this process has not completed yet.</source>
+        <translation>Die angezeigte Information ist möglicherweise nicht mehr aktuell. Ihre Wallet synchronisiert sich automatisch mit dem Syndicate-Netzwerk, nachdem eine Verbindung hergestellt wurde. Aber dieser Vorgang ist noch nicht abgeschlossen.</translation>
     </message>
     <message>
         <source>OVERVIEW</source>
@@ -2246,14 +2246,14 @@ Falls das automatische Prägen aktiviert ist, wird sich dieser Prozentsatz um de
         <translation>Automatisches Prägen ist aktiv und eingestellt auf</translation>
     </message>
     <message>
-        <source>To disable AutoMint add 'enablezeromint=0' in pivx.conf.</source>
-        <translation>Um das automatische Prägen zu deaktivieren, füge 'enablezeromint=0' in pivx.conf ein.</translation>
+        <source>To disable AutoMint add 'enablezeromint=0' in syndicate.conf.</source>
+        <translation>Um das automatische Prägen zu deaktivieren, füge 'enablezeromint=0' in syndicate.conf ein.</translation>
     </message>
     <message>
         <source>AutoMint is currently disabled.
-To enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in pivx.conf</source>
+To enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in syndicate.conf</source>
         <translation>Das automatische Prägen ist deaktiviert.
-Um das automatische Prägen zu aktivieren ändere 'enablezeromint=0' zu 'enablezeromint=1' in pivx.conf</translation>
+Um das automatische Prägen zu aktivieren ändere 'enablezeromint=0' zu 'enablezeromint=1' in syndicate.conf</translation>
     </message>
 </context>
 <context>
@@ -2279,12 +2279,12 @@ Um das automatische Prägen zu aktivieren ändere 'enablezeromint=0' zu 'enablez
         <translation>Ungültige Zahlungsaufforderungsadresse %1</translation>
     </message>
     <message>
-        <source>Cannot start pivx: click-to-pay handler</source>
-        <translation>Kann PIVX nicht starten: click-to-pay Handler</translation>
+        <source>Cannot start syndicate: click-to-pay handler</source>
+        <translation>Kann Syndicate nicht starten: click-to-pay Handler</translation>
     </message>
     <message>
-        <source>URI cannot be parsed! This can be caused by an invalid PIVX address or malformed URI parameters.</source>
-        <translation>URI kann nicht analysiert werden! Dies kann durch eine ungültige PIVX-Adresse oder fehlerhafte URI-Parameter verursacht worden sein.</translation>
+        <source>URI cannot be parsed! This can be caused by an invalid Syndicate address or malformed URI parameters.</source>
+        <translation>URI kann nicht analysiert werden! Dies kann durch eine ungültige Syndicate-Adresse oder fehlerhafte URI-Parameter verursacht worden sein.</translation>
     </message>
     <message>
         <source>Payment request file cannot be read! This can be caused by an invalid payment request file.</source>
@@ -2369,8 +2369,8 @@ Um das automatische Prägen zu aktivieren ändere 'enablezeromint=0' zu 'enablez
         <translation>Zerocoin Aktionen:</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</source>
-        <translation>Die angezeigte Information ist möglicherweise nicht mehr aktuell. Ihre Wallet synchronisiert sich automatisch mit dem PIVX-Netzwerk, nachdem eine Verbindung hergestellt wurde. Aber dieser Vorgang ist noch nicht abgeschlossen.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Syndicate network after a connection is established, but this process has not completed yet.</source>
+        <translation>Die angezeigte Information ist möglicherweise nicht mehr aktuell. Ihre Wallet synchronisiert sich automatisch mit dem Syndicate-Netzwerk, nachdem eine Verbindung hergestellt wurde. Aber dieser Vorgang ist noch nicht abgeschlossen.</translation>
     </message>
     <message>
         <source>Mint Zerocoin</source>
@@ -2493,8 +2493,8 @@ zPIV sind ausgereift wenn sie mehr als 20 Bestätigungen und mehr als 2 Prägung
         <translation>E&amp;mpfänger:</translation>
     </message>
     <message>
-        <source>The PIVX address to send the payment to. Creates local payment to yourself when empty.</source>
-        <translation>Die PIVX-Adresse, an die die Zahlung gesendet wird. Erstellt eine lokale Zahlung an Sie selbst, wenn die Zeile leer ist.</translation>
+        <source>The Syndicate address to send the payment to. Creates local payment to yourself when empty.</source>
+        <translation>Die Syndicate-Adresse, an die die Zahlung gesendet wird. Erstellt eine lokale Zahlung an Sie selbst, wenn die Zeile leer ist.</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -2570,8 +2570,8 @@ Unreif: Bestätigt, aber keine Prägung in der selben Stückelung seit erfolgter
         <source>Show the current status of automatic zPIV minting.
 
 To change the status (restart required):
-- enable: add 'enablezeromint=1' to pivx.conf
-- disable: add 'enablezeromint=0' to pivx.conf
+- enable: add 'enablezeromint=1' to syndicate.conf
+- disable: add 'enablezeromint=0' to syndicate.conf
 
 To change the percentage (no restart required):
 - menu Settings-&gt;Options-&gt;Percentage of autominted zPIV
@@ -2580,8 +2580,8 @@ To change the percentage (no restart required):
         <translation>Zeigt den aktuellen Status der automatischen zPIV-Prägung an
 
 Um den Status zu ändern (Neustart erforderlich): 
-- enable: füge 'enablezeromint = 1' zu pivx.conf hinzu
-- disable: füge 'enablezeromint = 0' zu pivx.conf hinzu
+- enable: füge 'enablezeromint = 1' zu syndicate.conf hinzu
+- disable: füge 'enablezeromint = 0' zu syndicate.conf hinzu
 
 Um den Prozentsatz zu ändern (kein Neustart erforderlich): 
 - Menü Einstellungen-&gt; Optionen-&gt; Prozentsatz der autom. zPIV
@@ -2921,7 +2921,7 @@ Maximal erlaubt:</translation>
     </message>
     <message>
         <source>Invalid Pivx Address</source>
-        <translation>Ungültige PIVX-Adresse </translation>
+        <translation>Ungültige Syndicate-Adresse </translation>
     </message>
     <message>
         <source>Invalid Send Amount</source>
@@ -3022,8 +3022,8 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
         <translation>Betrag</translation>
     </message>
     <message>
-        <source>Enter a PIVX address (e.g. %1)</source>
-        <translation>PIVX-Adresse eingeben (z.B. %1)</translation>
+        <source>Enter a Syndicate address (e.g. %1)</source>
+        <translation>Syndicate-Adresse eingeben (z.B. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -3160,8 +3160,8 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
         <translation>Blockchain</translation>
     </message>
     <message>
-        <source>Open the PIVX debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Öffne PIVX-Debug-Protokolldatei aus dem aktuellen Datenverzeichnis. Dies kann bei großen Protokolldateien einige Sekunden dauern.</translation>
+        <source>Open the Syndicate debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Öffne Syndicate-Debug-Protokolldatei aus dem aktuellen Datenverzeichnis. Dies kann bei großen Protokolldateien einige Sekunden dauern.</translation>
     </message>
     <message>
         <source>Number of Masternodes</source>
@@ -3376,8 +3376,8 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
         <translation>Out:</translation>
     </message>
     <message>
-        <source>Welcome to the PIVX RPC console.</source>
-        <translation>Willkommen in der PIVX RPC-Konsole.</translation>
+        <source>Welcome to the Syndicate RPC console.</source>
+        <translation>Willkommen in der Syndicate RPC-Konsole.</translation>
     </message>
     <message>
         <source>&amp;Disconnect Node</source>
@@ -3503,16 +3503,16 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
         <translation>Ein optionales Etikett, das mit der neuen Empfangsadresse verknüpft werden soll.</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the PIVX network.</source>
-        <translation>Eine optionale Nachricht an die Zahlungsaufforderung anhängen, die bei der Eröffnung der Anforderung angezeigt wird. Hinweis: Die Nachricht wird nicht mit der Zahlung über das PIVX-Netzwerk gesendet.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Syndicate network.</source>
+        <translation>Eine optionale Nachricht an die Zahlungsaufforderung anhängen, die bei der Eröffnung der Anforderung angezeigt wird. Hinweis: Die Nachricht wird nicht mit der Zahlung über das Syndicate-Netzwerk gesendet.</translation>
     </message>
     <message>
         <source>RECEIVE</source>
         <translation>EMPFANGEN</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened.&lt;br&gt;Note: The message will not be sent with the payment over the PIVX network.</source>
-        <translation>Eine optionale Nachricht an die Zahlungsaufforderung anhängen, die bei der Eröffnung der Anforderung angezeigt wird.&lt;br&gt;Hinweis: Die Nachricht wird nicht mit der Zahlung über das PIVX-Netzwerk gesendet.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened.&lt;br&gt;Note: The message will not be sent with the payment over the Syndicate network.</source>
+        <translation>Eine optionale Nachricht an die Zahlungsaufforderung anhängen, die bei der Eröffnung der Anforderung angezeigt wird.&lt;br&gt;Hinweis: Die Nachricht wird nicht mit der Zahlung über das Syndicate-Netzwerk gesendet.</translation>
     </message>
     <message>
         <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
@@ -3804,8 +3804,8 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
         <translation>Wenn die kundenspezifische Gebühr auf 1000 uPIVs eingestellt ist und die Transaktion nur 250 Bytes beträgt, dann zahlt man "pro Kilobyte" nur 250 uPIVs an Gebühren,&lt;br /&gt;während man "insgesamt mindestens" 1000 uPIVs bezahlt. Für Transaktionen, die größer sind als ein Kilobyte, bezahlen sie per Kilobyte.</translation>
     </message>
     <message>
-        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for PIVX transactions than the network can process.</source>
-        <translation>Nur die minimale Gebühr zu zahlen ist nur gut, solange es weniger Transaktionsvolumen als Platz in den Blocken gibt.&lt;br /&gt;Aber seien Sie sich bewusst, dass dies in einer niemals bestätigende Transaktion enden kann, sobald die Nachfrage nach PIVX-Transaktionen höher ist, als was das Netzwerk verarbeiten kann.</translation>
+        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for Syndicate transactions than the network can process.</source>
+        <translation>Nur die minimale Gebühr zu zahlen ist nur gut, solange es weniger Transaktionsvolumen als Platz in den Blocken gibt.&lt;br /&gt;Aber seien Sie sich bewusst, dass dies in einer niemals bestätigende Transaktion enden kann, sobald die Nachfrage nach Syndicate-Transaktionen höher ist, als was das Netzwerk verarbeiten kann.</translation>
     </message>
     <message>
         <source>normal</source>
@@ -3900,8 +3900,8 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
         <translation>Das Split-Block-Tool funktioniert nicht mit mehreren Adressen. Versuchen Sie es erneut.</translation>
     </message>
     <message>
-        <source>Warning: Invalid PIVX address</source>
-        <translation>Warnung: Ungültige PIVX-Adresse</translation>
+        <source>Warning: Invalid Syndicate address</source>
+        <translation>Warnung: Ungültige Syndicate-Adresse</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -4003,8 +4003,8 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
         <translation>E&amp;mpfänger:</translation>
     </message>
     <message>
-        <source>The PIVX address to send the payment to</source>
-        <translation>PIVX-Adresse, an die überwiesen werden soll</translation>
+        <source>The Syndicate address to send the payment to</source>
+        <translation>Syndicate-Adresse, an die überwiesen werden soll</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -4043,8 +4043,8 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
         <translation>Nachricht:</translation>
     </message>
     <message>
-        <source>A message that was attached to the PIVX: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the PIVX network.</source>
-        <translation>Eine an die PIVX-URI angefügte Nachricht, die zusammen mit der Transaktion gespeichert wird. Hinweis: Diese Nachricht wird nicht über das PIVX-Netzwerk gesendet.</translation>
+        <source>A message that was attached to the Syndicate: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Syndicate network.</source>
+        <translation>Eine an die Syndicate-URI angefügte Nachricht, die zusammen mit der Transaktion gespeichert wird. Hinweis: Diese Nachricht wird nicht über das Syndicate-Netzwerk gesendet.</translation>
     </message>
     <message>
         <source>This is an unverified payment request.</source>
@@ -4093,8 +4093,8 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
         <translation>Sie können Nachrichten mit Ihren Adressen signieren, um zu beweisen, dass Sie diese besitzen. Seien Sie vorsichtig nichts fragwürdiges zu unterschreiben, da Phishing-Angriffe versuchen können, Sie dazu zu bringen, Ihre Identität zu überschreiben. Unterschreiben Sie nur ganz detaillierte Aussagen, denen Sie zustimmen.</translation>
     </message>
     <message>
-        <source>The PIVX address to sign the message with</source>
-        <translation>PIVX Adresse mit welcher die Nachricht signiert werden soll</translation>
+        <source>The Syndicate address to sign the message with</source>
+        <translation>Syndicate Adresse mit welcher die Nachricht signiert werden soll</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -4125,16 +4125,16 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
         <translation>Kopiert die aktuelle Signatur in die Zwischenablage</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this PIVX address</source>
-        <translation>Signiere die Nachricht um zu Beweisen, dass du diese PIVX Adresse besitzt</translation>
+        <source>Sign the message to prove you own this Syndicate address</source>
+        <translation>Signiere die Nachricht um zu Beweisen, dass du diese Syndicate Adresse besitzt</translation>
     </message>
     <message>
-        <source>The PIVX address the message was signed with</source>
-        <translation>Die PIVX Adresse mit welcher die Nachricht signiert wurde.</translation>
+        <source>The Syndicate address the message was signed with</source>
+        <translation>Die Syndicate Adresse mit welcher die Nachricht signiert wurde.</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified PIVX address</source>
-        <translation>Überprüfen Sie die Nachricht, um sicherzustellen, dass sie mit der angegebenen PIVX-Adresse signiert wurde.</translation>
+        <source>Verify the message to ensure it was signed with the specified Syndicate address</source>
+        <translation>Überprüfen Sie die Nachricht, um sicherzustellen, dass sie mit der angegebenen Syndicate-Adresse signiert wurde.</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -4875,7 +4875,7 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
     </message>
 </context>
 <context>
-    <name>pivx-core</name>
+    <name>syndicate-core</name>
     <message>
         <source>(1 = keep tx meta data e.g. account owner and payment request information, 2 = drop tx meta data)</source>
         <translation>(1 = behalte Tx-Meta-Daten z.B. Betrag, Besitzer und Zahlungsanforderungsinformationen, 2 = verwerfe Tx-Meta-Daten)</translation>
@@ -5573,8 +5573,8 @@ Präge entweder höhere Stückelungen (damit weniger Eingaben benötigt werdenn)
 </translation>
     </message>
     <message>
-        <source>Disable all PIVX specific functionality (Masternodes, Zerocoin, SwiftX, Budgeting) (0-1, default: %u)</source>
-        <translation>Deaktivieren Sie alle PIVX-spezifischen Funktionen (Masternodes, Zerocoin, SwiftX, Budgetierung) (0-1, Standard: %u)</translation>
+        <source>Disable all Syndicate specific functionality (Masternodes, Zerocoin, SwiftX, Budgeting) (0-1, default: %u)</source>
+        <translation>Deaktivieren Sie alle Syndicate-spezifischen Funktionen (Masternodes, Zerocoin, SwiftX, Budgetierung) (0-1, Standard: %u)</translation>
     </message>
     <message>
         <source>Enable SwiftX, show confirmations for locked transactions (bool, default: %s)</source>

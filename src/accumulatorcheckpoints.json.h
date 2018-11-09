@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The PIVX developers
+// Copyright (c) 2018 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.

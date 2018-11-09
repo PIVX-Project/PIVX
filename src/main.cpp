@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The PIVX developers
+// Copyright (c) 2015-2018 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -52,7 +52,7 @@ using namespace std;
 using namespace libzerocoin;
 
 #if defined(NDEBUG)
-#error "PIVX cannot be compiled without assertions."
+#error "Syndicate cannot be compiled without assertions."
 #endif
 
 /**
@@ -2440,7 +2440,7 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
         const CTransaction& tx = block.vtx[i];
 
         /** UNDO ZEROCOIN DATABASING
-         * note we only undo zerocoin databasing in the following statement, value to and from PIVX
+         * note we only undo zerocoin databasing in the following statement, value to and from Syndicate
          * addresses should still be handled by the typical bitcoin based undo code
          * */
         if (tx.ContainsZerocoins()) {
@@ -2583,7 +2583,7 @@ static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck()
 {
-    RenameThread("pivx-scriptch");
+    RenameThread("syndicate-scriptch");
     scriptcheckqueue.Thread();
 }
 
@@ -2722,7 +2722,7 @@ bool RecalculatePIVSupply(int nHeightStart)
 
 bool ReindexAccumulators(list<uint256>& listMissingCheckpoints, string& strError)
 {
-    // PIVX: recalculate Accumulator Checkpoints that failed to database properly
+    // Syndicate: recalculate Accumulator Checkpoints that failed to database properly
     if (!listMissingCheckpoints.empty()) {
         uiInterface.ShowProgress(_("Calculating missing accumulators..."), 0);
         LogPrintf("%s : finding missing checkpoints\n", __func__);
@@ -4087,7 +4087,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
                 nHeight = (*mi).second->nHeight + 1;
         }
 
-        // PIVX
+        // Syndicate
         // It is entierly possible that we don't have enough data and this could fail
         // (i.e. the block could indeed be valid). Store the block for later consideration
         // but issue an initial reject message.
@@ -5560,7 +5560,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             return false;
         }
 
-        // PIVX: We use certain sporks during IBD, so check to see if they are
+        // Syndicate: We use certain sporks during IBD, so check to see if they are
         // available. If not, ask the first peer connected for them.
         bool fMissingSporks = !pSporkDB->SporkExists(SPORK_14_NEW_PROTOCOL_ENFORCEMENT) &&
                 !pSporkDB->SporkExists(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2) &&

@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The PIVX developers
+// Copyright (c) 2015-2018 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -83,7 +83,7 @@ static void InitMessage(const std::string& message)
  */
 static std::string Translate(const char* psz)
 {
-    return QCoreApplication::translate("pivx-core", psz).toStdString();
+    return QCoreApplication::translate("syndicate-core", psz).toStdString();
 }
 
 static QString GetLangTerritory()
@@ -130,11 +130,11 @@ static void initTranslations(QTranslator& qtTranslatorBase, QTranslator& qtTrans
     if (qtTranslator.load("qt_" + lang_territory, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         QApplication::installTranslator(&qtTranslator);
 
-    // Load e.g. bitcoin_de.qm (shortcut "de" needs to be defined in pivx.qrc)
+    // Load e.g. bitcoin_de.qm (shortcut "de" needs to be defined in syndicate.qrc)
     if (translatorBase.load(lang, ":/translations/"))
         QApplication::installTranslator(&translatorBase);
 
-    // Load e.g. bitcoin_de_DE.qm (shortcut "de_DE" needs to be defined in pivx.qrc)
+    // Load e.g. bitcoin_de_DE.qm (shortcut "de_DE" needs to be defined in syndicate.qrc)
     if (translator.load(lang_territory, ":/translations/"))
         QApplication::installTranslator(&translator);
 }
@@ -177,7 +177,7 @@ private:
     void handleRunawayException(std::exception* e);
 };
 
-/** Main PIVX application object */
+/** Main Syndicate application object */
 class BitcoinApplication : public QApplication
 {
     Q_OBJECT
@@ -235,7 +235,7 @@ private:
     void startThread();
 };
 
-#include "pivx.moc"
+#include "syndicate.moc"
 
 BitcoinCore::BitcoinCore() : QObject()
 {
@@ -460,7 +460,7 @@ void BitcoinApplication::initializeResult(int retval)
 
 #ifdef ENABLE_WALLET
         // Now that initialization/startup is done, process any command-line
-        // PIVX: URIs or payment requests:
+        // Syndicate: URIs or payment requests:
         connect(paymentServer, SIGNAL(receivedPaymentRequest(SendCoinsRecipient)),
             window, SLOT(handlePaymentRequest(SendCoinsRecipient)));
         connect(window, SIGNAL(receivedURI(QString)),
@@ -482,7 +482,7 @@ void BitcoinApplication::shutdownResult(int retval)
 
 void BitcoinApplication::handleRunawayException(const QString& message)
 {
-    QMessageBox::critical(0, "Runaway exception", BitcoinGUI::tr("A fatal error occurred. PIVX can no longer continue safely and will quit.") + QString("\n\n") + message);
+    QMessageBox::critical(0, "Runaway exception", BitcoinGUI::tr("A fatal error occurred. Syndicate can no longer continue safely and will quit.") + QString("\n\n") + message);
     ::exit(1);
 }
 
@@ -506,8 +506,8 @@ int main(int argc, char* argv[])
 // Do not refer to data directory yet, this can be overridden by Intro::pickDataDirectory
 
 /// 2. Basic Qt initialization (not dependent on parameters or configuration)
-    Q_INIT_RESOURCE(pivx_locale);
-    Q_INIT_RESOURCE(pivx);
+    Q_INIT_RESOURCE(syndicate_locale);
+    Q_INIT_RESOURCE(syndicate);
 
     BitcoinApplication app(argc, argv);
 #if QT_VERSION > 0x050100
@@ -554,7 +554,7 @@ int main(int argc, char* argv[])
     if (!Intro::pickDataDirectory())
         return 0;
 
-    /// 6. Determine availability of data directory and parse pivx.conf
+    /// 6. Determine availability of data directory and parse syndicate.conf
     /// - Do not call GetDataDir(true) before this step finishes
     if (!boost::filesystem::is_directory(GetDataDir(false))) {
         QMessageBox::critical(0, QObject::tr("Syndicate Core"),
@@ -611,7 +611,7 @@ int main(int argc, char* argv[])
         exit(0);
 
     // Start up the payment server early, too, so impatient users that click on
-    // pivx: links repeatedly have their payment requests routed to this process:
+    // syndicate: links repeatedly have their payment requests routed to this process:
     app.createPaymentServer();
 #endif
 

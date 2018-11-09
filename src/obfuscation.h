@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2015-2017 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
@@ -495,7 +495,7 @@ public:
 
     void GetDenominationsToString(int nDenom, std::string& strDenom);
 
-    /// Get the denominations for a specific amount of pivx.
+    /// Get the denominations for a specific amount of syndicate.
     int GetDenominationsByAmount(CAmount nAmount, int nDenomTarget = 0); // is not used anymore?
     int GetDenominationsByAmounts(std::vector<CAmount>& vecAmount);
 

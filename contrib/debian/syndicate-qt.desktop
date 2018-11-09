@@ -1,12 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=PIVX
-Comment=PIVX P2P Cryptocurrency
-Comment[fr]=PIVX, monnaie virtuelle cryptographique pair à pair
-Comment[tr]=PIVX, eşten eşe kriptografik sanal para birimi
-Exec=pivx-qt %u
+Name=Syndicate
+Comment=Syndicate P2P Cryptocurrency
+Comment[fr]=Syndicate, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Syndicate, eşten eşe kriptografik sanal para birimi
+Exec=syndicate-qt %u
 Terminal=false
 Type=Application
-Icon=pivx128
-MimeType=x-scheme-handler/pivx;
+Icon=syndicate128
+MimeType=x-scheme-handler/syndicate;
 Categories=Office;Finance;

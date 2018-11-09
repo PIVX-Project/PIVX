@@ -40,12 +40,12 @@
         <file alias="tx_input">res/icons/tx_input.png</file>
         <file alias="tx_output">res/icons/tx_output.png</file>
         <file alias="tx_inout">res/icons/tx_inout.png</file>
-        <file alias="unit_pivx">res/icons/unit_pivx.png</file>
-        <file alias="unit_mpivx">res/icons/unit_mpivx.png</file>
-        <file alias="unit_upivx">res/icons/unit_upivx.png</file>
-        <file alias="unit_tpivx">res/icons/unit_tpivx.png</file>
-        <file alias="unit_tmpivx">res/icons/unit_tmpivx.png</file>
-        <file alias="unit_tupivx">res/icons/unit_tupivx.png</file>
+        <file alias="unit_syndicate">res/icons/unit_syndicate.png</file>
+        <file alias="unit_msyndicate">res/icons/unit_msyndicate.png</file>
+        <file alias="unit_usyndicate">res/icons/unit_usyndicate.png</file>
+        <file alias="unit_tsyndicate">res/icons/unit_tsyndicate.png</file>
+        <file alias="unit_tmsyndicate">res/icons/unit_tmsyndicate.png</file>
+        <file alias="unit_tusyndicate">res/icons/unit_tusyndicate.png</file>
         <file alias="lock_closed">res/icons/lock_closed.png</file>
         <file alias="lock_open">res/icons/lock_open.png</file>
         <file alias="key">res/icons/key.png</file>
@@ -64,7 +64,7 @@
     </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>
-        <file alias="pivx_logo_horizontal">res/images/pivx_logo_horizontal.png</file>
+        <file alias="syndicate_logo_horizontal">res/images/syndicate_logo_horizontal.png</file>
         <file alias="downArrow">res/images/downArrow_dark.png</file>
         <file alias="downArrow_small">res/images/downArrow_small_dark.png</file>
         <file alias="downArrow_small_white">res/images/downArrow_small.png</file>

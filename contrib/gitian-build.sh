@@ -17,7 +17,7 @@ osx=true
 SIGNER=
 VERSION=
 commit=false
-url=https://github.com/pivx-project/pivx
+url=https://github.com/SyndicateLtd/SyndicateQt
 proc=2
 mem=2000
 lxc=true
@@ -31,7 +31,7 @@ commitFiles=true
 read -d '' usage <<- EOF
 Usage: $scriptName [-c|u|v|b|s|B|o|h|j|m|] signer version
 
-Run this script from the directory containing the pivx, gitian-builder, gitian.sigs, and pivx-detached-sigs.
+Run this script from the directory containing the syndicate, gitian-builder, gitian.sigs, and syndicate-detached-sigs.
 
 Arguments:
 signer          GPG signer to sign each build assert file
@@ -39,7 +39,7 @@ version        Version number, commit, or branch to build. If building a commit 
 
 Options:
 -c|--commit    Indicate that the version argument is for a commit or branch
--u|--url    Specify the URL of the repository. Default is https://github.com/pivx-project/pivx
+-u|--url    Specify the URL of the repository. Default is https://github.com/SyndicateLtd/SyndicateQt
 -v|--verify     Verify the gitian build
 -b|--build    Do a gitian build
 -s|--sign    Make signed binaries for Windows and Mac OSX
@@ -237,8 +237,8 @@ echo ${COMMIT}
 if [[ $setup = true ]]
 then
     sudo apt-get install ruby apache2 git apt-cacher-ng python-vm-builder qemu-kvm qemu-utils
-    git clone https://github.com/pivx-project/gitian.sigs.git
-    git clone https://github.com/pivx-project/pivx-detached-sigs.git
+    git clone https://github.com/SyndicateLtd/gitian.sigs.git
+    git clone https://github.com/SyndicateLtd/syndicate-detached-sigs.git
     git clone https://github.com/devrandom/gitian-builder.git
     pushd ./gitian-builder
     if [[ -n "$USE_LXC" ]]
@@ -252,7 +252,7 @@ then
 fi
 
 # Set up build
-pushd ./pivx
+pushd ./syndicate
 git fetch
 git checkout ${COMMIT}
 popd
@@ -261,7 +261,7 @@ popd
 if [[ $build = true ]]
 then
     # Make output folder
-    mkdir -p ./pivx-binaries/${VERSION}
+    mkdir -p ./syndicate-binaries/${VERSION}
 
     # Build Dependencies
     echo ""
@@ -271,7 +271,7 @@ then
     mkdir -p inputs
     wget -N -P inputs $osslPatchUrl
     wget -N -P inputs $osslTarUrl
-    make -C ../pivx/depends download SOURCES_PATH=`pwd`/cache/common
+    make -C ../syndicate/depends download SOURCES_PATH=`pwd`/cache/common
 
     # Linux
     if [[ $linux = true ]]
@@ -279,9 +279,9 @@ then
         echo ""
         echo "Compiling ${VERSION} Linux"
         echo ""
-        ./bin/gbuild -j ${proc} -m ${mem} --commit pivx=${COMMIT} --url pivx=${url} ../pivx/contrib/gitian-descriptors/gitian-linux.yml
-        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-linux.yml
-        mv build/out/pivx-*.tar.gz build/out/src/pivx-*.tar.gz ../pivx-binaries/${VERSION}
+        ./bin/gbuild -j ${proc} -m ${mem} --commit syndicate=${COMMIT} --url syndicate=${url} ../syndicate/contrib/gitian-descriptors/gitian-linux.yml
+        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../syndicate/contrib/gitian-descriptors/gitian-linux.yml
+        mv build/out/syndicate-*.tar.gz build/out/src/syndicate-*.tar.gz ../syndicate-binaries/${VERSION}
     fi
     # Windows
     if [[ $windows = true ]]
@@ -289,10 +289,10 @@ then
         echo ""
         echo "Compiling ${VERSION} Windows"
         echo ""
-        ./bin/gbuild -j ${proc} -m ${mem} --commit pivx=${COMMIT} --url pivx=${url} ../pivx/contrib/gitian-descriptors/gitian-win.yml
-        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-win.yml
-        mv build/out/pivx-*-win-unsigned.tar.gz inputs/pivx-win-unsigned.tar.gz
-        mv build/out/pivx-*.zip build/out/pivx-*.exe ../pivx-binaries/${VERSION}
+        ./bin/gbuild -j ${proc} -m ${mem} --commit syndicate=${COMMIT} --url syndicate=${url} ../syndicate/contrib/gitian-descriptors/gitian-win.yml
+        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../syndicate/contrib/gitian-descriptors/gitian-win.yml
+        mv build/out/syndicate-*-win-unsigned.tar.gz inputs/syndicate-win-unsigned.tar.gz
+        mv build/out/syndicate-*.zip build/out/syndicate-*.exe ../syndicate-binaries/${VERSION}
     fi
     # Mac OSX
     if [[ $osx = true ]]
@@ -300,10 +300,10 @@ then
         echo ""
         echo "Compiling ${VERSION} Mac OSX"
         echo ""
-        ./bin/gbuild -j ${proc} -m ${mem} --commit pivx=${COMMIT} --url pivx=${url} ../pivx/contrib/gitian-descriptors/gitian-osx.yml
-        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-osx.yml
-        mv build/out/pivx-*-osx-unsigned.tar.gz inputs/pivx-osx-unsigned.tar.gz
-        mv build/out/pivx-*.tar.gz build/out/pivx-*.dmg ../pivx-binaries/${VERSION}
+        ./bin/gbuild -j ${proc} -m ${mem} --commit syndicate=${COMMIT} --url syndicate=${url} ../syndicate/contrib/gitian-descriptors/gitian-osx.yml
+        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../syndicate/contrib/gitian-descriptors/gitian-osx.yml
+        mv build/out/syndicate-*-osx-unsigned.tar.gz inputs/syndicate-osx-unsigned.tar.gz
+        mv build/out/syndicate-*.tar.gz build/out/syndicate-*.dmg ../syndicate-binaries/${VERSION}
     fi
     # AArch64
     if [[ $aarch64 = true ]]
@@ -311,9 +311,9 @@ then
         echo ""
         echo "Compiling ${VERSION} AArch64"
         echo ""
-        ./bin/gbuild -j ${proc} -m ${mem} --commit pivx=${COMMIT} --url pivx=${url} ../pivx/contrib/gitian-descriptors/gitian-aarch64.yml
-        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-aarch64 --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-aarch64.yml
-        mv build/out/pivx-*.tar.gz build/out/src/pivx-*.tar.gz ../pivx-binaries/${VERSION}
+        ./bin/gbuild -j ${proc} -m ${mem} --commit syndicate=${COMMIT} --url syndicate=${url} ../syndicate/contrib/gitian-descriptors/gitian-aarch64.yml
+        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-aarch64 --destination ../gitian.sigs/ ../syndicate/contrib/gitian-descriptors/gitian-aarch64.yml
+        mv build/out/syndicate-*.tar.gz build/out/src/syndicate-*.tar.gz ../syndicate-binaries/${VERSION}
     fi
     popd
 
@@ -341,32 +341,32 @@ then
     echo ""
     echo "Verifying v${VERSION} Linux"
     echo ""
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../pivx/contrib/gitian-descriptors/gitian-linux.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../syndicate/contrib/gitian-descriptors/gitian-linux.yml
     # Windows
     echo ""
     echo "Verifying v${VERSION} Windows"
     echo ""
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../pivx/contrib/gitian-descriptors/gitian-win.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../syndicate/contrib/gitian-descriptors/gitian-win.yml
     # Mac OSX
     echo ""
     echo "Verifying v${VERSION} Mac OSX"
     echo ""
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../pivx/contrib/gitian-descriptors/gitian-osx.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../syndicate/contrib/gitian-descriptors/gitian-osx.yml
     # AArch64
     echo ""
     echo "Verifying v${VERSION} AArch64"
     echo ""
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-aarch64 ../pivx/contrib/gitian-descriptors/gitian-aarch64.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-aarch64 ../syndicate/contrib/gitian-descriptors/gitian-aarch64.yml
     # Signed Windows
     echo ""
     echo "Verifying v${VERSION} Signed Windows"
     echo ""
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../pivx/contrib/gitian-descriptors/gitian-osx-signer.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../syndicate/contrib/gitian-descriptors/gitian-osx-signer.yml
     # Signed Mac OSX
     echo ""
     echo "Verifying v${VERSION} Signed Mac OSX"
     echo ""
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../pivx/contrib/gitian-descriptors/gitian-osx-signer.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../syndicate/contrib/gitian-descriptors/gitian-osx-signer.yml
     popd
 fi
 
@@ -381,10 +381,10 @@ then
         echo ""
         echo "Signing ${VERSION} Windows"
         echo ""
-        ./bin/gbuild -i --commit signature=${COMMIT} ../pivx/contrib/gitian-descriptors/gitian-win-signer.yml
-        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-win-signer.yml
-        mv build/out/pivx-*win64-setup.exe ../pivx-binaries/${VERSION}
-        mv build/out/pivx-*win32-setup.exe ../pivx-binaries/${VERSION}
+        ./bin/gbuild -i --commit signature=${COMMIT} ../syndicate/contrib/gitian-descriptors/gitian-win-signer.yml
+        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../syndicate/contrib/gitian-descriptors/gitian-win-signer.yml
+        mv build/out/syndicate-*win64-setup.exe ../syndicate-binaries/${VERSION}
+        mv build/out/syndicate-*win32-setup.exe ../syndicate-binaries/${VERSION}
     fi
     # Sign Mac OSX
     if [[ $osx = true ]]
@@ -392,9 +392,9 @@ then
         echo ""
         echo "Signing ${VERSION} Mac OSX"
         echo ""
-        ./bin/gbuild -i --commit signature=${COMMIT} ../pivx/contrib/gitian-descriptors/gitian-osx-signer.yml
-        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-osx-signer.yml
-        mv build/out/pivx-osx-signed.dmg ../pivx-binaries/${VERSION}/pivx-${VERSION}-osx.dmg
+        ./bin/gbuild -i --commit signature=${COMMIT} ../syndicate/contrib/gitian-descriptors/gitian-osx-signer.yml
+        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../syndicate/contrib/gitian-descriptors/gitian-osx-signer.yml
+        mv build/out/syndicate-osx-signed.dmg ../syndicate-binaries/${VERSION}/syndicate-${VERSION}-osx.dmg
     fi
     popd
 

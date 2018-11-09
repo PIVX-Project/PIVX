@@ -62,12 +62,12 @@
         <translation>Gavimo adresai</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Tai jūsų PIVX adresai mokėjimų išsiuntimams. Visada patikrinkite sumą ir gavėjo adresą prieš siųsdami monetas.</translation>
+        <source>These are your Syndicate addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Tai jūsų Syndicate adresai mokėjimų išsiuntimams. Visada patikrinkite sumą ir gavėjo adresą prieš siųsdami monetas.</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Tai jūsų PIVX adresai mokėjimų gavimams. Rekomenduojama naudoti naują adresą kiekvienam pavedimui.</translation>
+        <source>These are your Syndicate addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Tai jūsų Syndicate adresai mokėjimų gavimams. Rekomenduojama naudoti naują adresą kiekvienam pavedimui.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -176,8 +176,8 @@
         <translation>Patvirtinkite piniginės užšifravimą.</translation>
     </message>
     <message>
-        <source>PIVX will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
-        <translation>Dabar PIVX išsijungs, kad būtų užbaigtas šifravimo procesas. Atminkite, kad jūsų piniginės užšifravimas negali visiškai apsaugoti jūsų PIV nuo kenkėjiškų programų, užkrėsto jūsų kompiuterio.</translation>
+        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
+        <translation>Dabar Syndicate išsijungs, kad būtų užbaigtas šifravimo procesas. Atminkite, kad jūsų piniginės užšifravimas negali visiškai apsaugoti jūsų PIV nuo kenkėjiškų programų, užkrėsto jūsų kompiuterio.</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -254,12 +254,12 @@
         <translation>Adresas:</translation>
     </message>
     <message>
-        <source>Enter a PIVX Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.</source>
+        <source>Enter a Syndicate Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.</source>
         <translation>Įveskite Pivx adresą, kurį norėtumėte užšifruoti naudojant BIP 38. Vidiniame laukelyje įrašykite slaptą frazę. Paspauskite užšifruoti, jei norite gauti užšifruotą privatųjį raktą.</translation>
     </message>
     <message>
-        <source>The PIVX address to encrypt</source>
-        <translation>PIVX adresas, kurį norite užšifruoti</translation>
+        <source>The Syndicate address to encrypt</source>
+        <translation>Syndicate adresas, kurį norite užšifruoti</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -290,8 +290,8 @@
         <translation>Kopijuoti dabartinį parašą</translation>
     </message>
     <message>
-        <source>Encrypt the private key for this PIVX address</source>
-        <translation>Užšifruoti šio PIVX adreso privatų raktą</translation>
+        <source>Encrypt the private key for this Syndicate address</source>
+        <translation>Užšifruoti šio Syndicate adreso privatų raktą</translation>
     </message>
     <message>
         <source>Reset all fields</source>
@@ -649,12 +649,12 @@
         <translation>Syndicate Core</translation>
     </message>
     <message>
-        <source>Send coins to a PIVX address</source>
-        <translation>Siųsti monetas į PIVX adresą</translation>
+        <source>Send coins to a Syndicate address</source>
+        <translation>Siųsti monetas į Syndicate adresą</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and pivx: URIs)</source>
-        <translation>Prašyti mokėjimų (sugeneruoja QR kodus ir pivx URI)</translation>
+        <source>Request payments (generates QR codes and syndicate: URIs)</source>
+        <translation>Prašyti mokėjimų (sugeneruoja QR kodus ir syndicate URI)</translation>
     </message>
     <message>
         <source>&amp;Privacy</source>
@@ -677,16 +677,16 @@
         <translation>Rodyti informaciją apie Syndicate Core</translation>
     </message>
     <message>
-        <source>Modify configuration options for PIVX</source>
-        <translation>Keisti PIVX konfigūravimo parinktis</translation>
+        <source>Modify configuration options for Syndicate</source>
+        <translation>Keisti Syndicate konfigūravimo parinktis</translation>
     </message>
     <message>
-        <source>Sign messages with your PIVX addresses to prove you own them</source>
-        <translation>Pasirašykite pranešimus naudodami savo PIVX adresus, kad įrodytumėte, kad juos turite</translation>
+        <source>Sign messages with your Syndicate addresses to prove you own them</source>
+        <translation>Pasirašykite pranešimus naudodami savo Syndicate adresus, kad įrodytumėte, kad juos turite</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified PIVX addresses</source>
-        <translation>Patvirtinkite pranešimus, kad jie būtų pasirašyti su nurodytais PIVX adresais</translation>
+        <source>Verify messages to ensure they were signed with specified Syndicate addresses</source>
+        <translation>Patvirtinkite pranešimus, kad jie būtų pasirašyti su nurodytais Syndicate adresais</translation>
     </message>
     <message>
         <source>&amp;BIP38 tool</source>
@@ -717,8 +717,8 @@
         <translation>Atidaryti Masternod'o konfigūracijos failą</translation>
     </message>
     <message>
-        <source>Open a PIVX: URI or payment request</source>
-        <translation>Atidaryti PIVX: URI arba mokėjimo prašymą</translation>
+        <source>Open a Syndicate: URI or payment request</source>
+        <translation>Atidaryti Syndicate: URI arba mokėjimo prašymą</translation>
     </message>
     <message>
         <source>&amp;Blockchain explorer</source>
@@ -729,16 +729,16 @@
         <translation>Blokų naršyklės langas</translation>
     </message>
     <message>
-        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
-        <translation>Rodyti Syndicate Core žinyną, kad gautumėte sąrašą su galimomis PIVX komandinės eilutės parinktimis</translation>
+        <source>Show the Syndicate Core help message to get a list with possible Syndicate command-line options</source>
+        <translation>Rodyti Syndicate Core žinyną, kad gautumėte sąrašą su galimomis Syndicate komandinės eilutės parinktimis</translation>
     </message>
     <message>
         <source>Syndicate Core client</source>
         <translation>Syndicate Core piniginė</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to PIVX network</source>
-        <translation><numerusform>%n aktyvių prisijungimų PIVX tinkle ()</numerusform><numerusform>%n aktyvių prisijungimų PIVX tinkle ()</numerusform><numerusform>%n aktyvių prisijungimų PIVX tinkle ()</numerusform><numerusform>%n aktyvių prisijungimų PIVX tinkle ()</numerusform></translation>
+        <source>%n active connection(s) to Syndicate network</source>
+        <translation><numerusform>%n aktyvių prisijungimų Syndicate tinkle ()</numerusform><numerusform>%n aktyvių prisijungimų Syndicate tinkle ()</numerusform><numerusform>%n aktyvių prisijungimų Syndicate tinkle ()</numerusform><numerusform>%n aktyvių prisijungimų Syndicate tinkle ()</numerusform></translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -892,8 +892,8 @@ MultiSend: %1</translation>
         <translation>Teksto etiketė</translation>
     </message>
     <message>
-        <source>Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (pivx.conf).</source>
-        <translation>Ne visi pavedimai bus rodomi. Norėdami peržiūrėti visus pavedimus, reikia nustatyti txindex = 1 konfigūracijos faile (pivx.conf).</translation>
+        <source>Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (syndicate.conf).</source>
+        <translation>Ne visi pavedimai bus rodomi. Norėdami peržiūrėti visus pavedimus, reikia nustatyti txindex = 1 konfigūracijos faile (syndicate.conf).</translation>
     </message>
 </context>
 <context>
@@ -1177,8 +1177,8 @@ MultiSend: %1</translation>
         <translation>Keisti siuntimo adresą</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid PIVX address.</source>
-        <translation>Įvestas adresas "%1" nėra galiojantis PIVX adresas.</translation>
+        <source>The entered address "%1" is not a valid Syndicate address.</source>
+        <translation>Įvestas adresas "%1" nėra galiojantis Syndicate adresas.</translation>
     </message>
     <message>
         <source>The entered address "%1" is already in the address book.</source>
@@ -1286,8 +1286,8 @@ MultiSend: %1</translation>
         <translation>Kadangi programa paleista pirmą kartą, galite pasirinkti kur Syndicate Core saugos savo duomenis.</translation>
     </message>
     <message>
-        <source>Syndicate Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Syndicate Core atsisiųs ir saugos PIVX blockchain'o kopiją. Šiame kataloge bus saugomas ne mažesnis kaip %1GB duomenų kiekis, kuris laikui bėgant augs. Piniginė taip pat bus saugoma šiame kataloge.</translation>
+        <source>Syndicate Core will download and store a copy of the Syndicate block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>Syndicate Core atsisiųs ir saugos Syndicate blockchain'o kopiją. Šiame kataloge bus saugomas ne mažesnis kaip %1GB duomenų kiekis, kuris laikui bėgant augs. Piniginė taip pat bus saugoma šiame kataloge.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -1440,12 +1440,12 @@ MultiSend: %1</translation>
         <translation>Įveskite adresą kuriam norite siųsti</translation>
     </message>
     <message>
-        <source>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other PIVX addresses after it matures.
-To Add: enter percentage to give and PIVX address to add to the MultiSend vector.
+        <source>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other Syndicate addresses after it matures.
+To Add: enter percentage to give and Syndicate address to add to the MultiSend vector.
 To Delete: Enter address to delete and press delete.
 MultiSend will not be activated unless you have clicked Activate</source>
-        <translation>MultiSend leidžia automatiškai išsiųsti iki 100% jūsų stake'inimo ar masternod'ų atlygio į kitus PIVX adresus.
-Norėdami pridėti: įveskite pateiktą procentą ir PIVX adresą, kurį norite pridėti prie MultiSend sąrašo.
+        <translation>MultiSend leidžia automatiškai išsiųsti iki 100% jūsų stake'inimo ar masternod'ų atlygio į kitus Syndicate adresus.
+Norėdami pridėti: įveskite pateiktą procentą ir Syndicate adresą, kurį norite pridėti prie MultiSend sąrašo.
 Norėdami ištrinti: įveskite adresą, kurį norite ištrinti, ir paspauskite ištrinti
 MultiSend nebus aktyvuotas, nebent paspausite "Įjungti"</translation>
     </message>
@@ -1782,16 +1782,16 @@ Patikrinkite adresą ir bandykite dar kartą.</translation>
         <translation>Obfuscation Konfigūracija</translation>
     </message>
     <message>
-        <source>Obfuscation was successfully set to basic (%1 and 2 rounds). You can change this at any time by opening PIVX's configuration screen.</source>
-        <translation>Obfuscation buvo sėkmingai nustatytas į paprastą (%1 ir 2 raundai). Bet kada galite tai pakeisti, atidarę PIVX konfigūracijos ekraną.</translation>
+        <source>Obfuscation was successfully set to basic (%1 and 2 rounds). You can change this at any time by opening Syndicate's configuration screen.</source>
+        <translation>Obfuscation buvo sėkmingai nustatytas į paprastą (%1 ir 2 raundai). Bet kada galite tai pakeisti, atidarę Syndicate konfigūracijos ekraną.</translation>
     </message>
     <message>
-        <source>Obfuscation was successfully set to high (%1 and 8 rounds). You can change this at any time by opening PIVX's configuration screen.</source>
-        <translation>Obfuscation buvo sėkmingai nustatytas į aukštą (%1 ir 8 raundai). Bet kada galite tai pakeisti, atidarę PIVX konfigūracijos ekraną.</translation>
+        <source>Obfuscation was successfully set to high (%1 and 8 rounds). You can change this at any time by opening Syndicate's configuration screen.</source>
+        <translation>Obfuscation buvo sėkmingai nustatytas į aukštą (%1 ir 8 raundai). Bet kada galite tai pakeisti, atidarę Syndicate konfigūracijos ekraną.</translation>
     </message>
     <message>
-        <source>Obfuscation was successfully set to maximum (%1 and 16 rounds). You can change this at any time by opening PIVX's configuration screen.</source>
-        <translation>Obfuscation buvo sėkmingai nustatytas į maksimumą (%1 ir 16 raundai). Bet kada galite tai pakeisti, atidarę PIVX konfigūracijos ekraną.</translation>
+        <source>Obfuscation was successfully set to maximum (%1 and 16 rounds). You can change this at any time by opening Syndicate's configuration screen.</source>
+        <translation>Obfuscation buvo sėkmingai nustatytas į maksimumą (%1 ir 16 raundai). Bet kada galite tai pakeisti, atidarę Syndicate konfigūracijos ekraną.</translation>
     </message>
 </context>
 <context>
@@ -1844,12 +1844,12 @@ Patikrinkite adresą ir bandykite dar kartą.</translation>
         <translation>Ekspertas</translation>
     </message>
     <message>
-        <source>Automatically start PIVX after logging in to the system.</source>
-        <translation>Automatiškai paleisti PIVX prisijungus prie sistemos.</translation>
+        <source>Automatically start Syndicate after logging in to the system.</source>
+        <translation>Automatiškai paleisti Syndicate prisijungus prie sistemos.</translation>
     </message>
     <message>
-        <source>&amp;Start PIVX on system login</source>
-        <translation>&amp;Paleisti PIVX sistemai įsijungiant</translation>
+        <source>&amp;Start Syndicate on system login</source>
+        <translation>&amp;Paleisti Syndicate sistemai įsijungiant</translation>
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
@@ -1876,14 +1876,14 @@ Patikrinkite adresą ir bandykite dar kartą.</translation>
         <translation>&amp;Tinklas</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting PIVX.</source>
-        <translation>Čia galite nustatyti vartotojo sąsajos kalbą. Šis nustatymas įsigalios iš naujo paleidus "PIVX".</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting Syndicate.</source>
+        <translation>Čia galite nustatyti vartotojo sąsajos kalbą. Šis nustatymas įsigalios iš naujo paleidus "Syndicate".</translation>
     </message>
     <message>
         <source>Language missing or translation incomplete? Help contributing translations here:
-https://www.transifex.com/pivx-project/pivx-project-translations</source>
+https://www.transifex.com/syndicate-project/syndicate-project-translations</source>
         <translation>Trūksta kalbos arba vertimas nebaigtas? Padėkite prisidėdami prie vertimų čia: 
-https://www.transifex.com/pivx-project/pivx-project-translations</translation>
+https://www.transifex.com/syndicate-project/syndicate-project-translations</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -1910,8 +1910,8 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <translation>Pageidautinas zPIV Automatinio Nukaldinimo Nominalas</translation>
     </message>
     <message>
-        <source>Connect to the PIVX network through a SOCKS5 proxy.</source>
-        <translation>Jungtis prie PIVX tinklo naudojant SOCKS5 tarpinį serverį.</translation>
+        <source>Connect to the Syndicate network through a SOCKS5 proxy.</source>
+        <translation>Jungtis prie Syndicate tinklo naudojant SOCKS5 tarpinį serverį.</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -2053,8 +2053,8 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <translation>Dabartinis bendras užrakintas balansas tik žiūrėjimo adresuose</translation>
     </message>
     <message>
-        <source>Your current PIVX balance, unconfirmed and immature transactions included</source>
-        <translation>Jūsų dabartinis PIVX balansas, įskaitant nepatvirtintus ir nesubrendusius sandorius</translation>
+        <source>Your current Syndicate balance, unconfirmed and immature transactions included</source>
+        <translation>Jūsų dabartinis Syndicate balansas, įskaitant nepatvirtintus ir nesubrendusius sandorius</translation>
     </message>
     <message>
         <source>zPIV Balance</source>
@@ -2073,8 +2073,8 @@ Immature: confirmed, but less than 1 mint of the same denomination after it was 
 Nesubrendusios: patvirtintos, bet mažiau nei 1 konvertacijos to pačio nominalo po to, kai buvo konvertuotas.</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</source>
-        <translation>Rodoma informacija gali būti pasenusi. Jūsų piniginė automatiškai sinchronizuojasi su PIVX tinklu po ryšio aktyvavimo, tačiau šis procesas dar nebaigtas.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Syndicate network after a connection is established, but this process has not completed yet.</source>
+        <translation>Rodoma informacija gali būti pasenusi. Jūsų piniginė automatiškai sinchronizuojasi su Syndicate tinklu po ryšio aktyvavimo, tačiau šis procesas dar nebaigtas.</translation>
     </message>
     <message>
         <source>OVERVIEW</source>
@@ -2141,8 +2141,8 @@ Nesubrendusios: patvirtintos, bet mažiau nei 1 konvertacijos to pačio nominalo
         <translation>AutoMint šiuo metu įgalintas ir nustatytas</translation>
     </message>
     <message>
-        <source>To disable AutoMint add 'enablezeromint=0' in pivx.conf.</source>
-        <translation>Norėdami išjungti Automatinį Kalimą pridėkite 'enablezeromint=0' pivx.conf faile.</translation>
+        <source>To disable AutoMint add 'enablezeromint=0' in syndicate.conf.</source>
+        <translation>Norėdami išjungti Automatinį Kalimą pridėkite 'enablezeromint=0' syndicate.conf faile.</translation>
     </message>
     </context>
 <context>
@@ -2156,8 +2156,8 @@ Nesubrendusios: patvirtintos, bet mažiau nei 1 konvertacijos to pačio nominalo
         <translation>Netinkamas mokėjimo adresas %1</translation>
     </message>
     <message>
-        <source>Cannot start pivx: click-to-pay handler</source>
-        <translation>Nepavyksta paleisti pivx: apdorojimo "spustelėjimo ir apmokėjimo" funkcijos klaida</translation>
+        <source>Cannot start syndicate: click-to-pay handler</source>
+        <translation>Nepavyksta paleisti syndicate: apdorojimo "spustelėjimo ir apmokėjimo" funkcijos klaida</translation>
     </message>
     <message>
         <source>Payment request file cannot be read! This can be caused by an invalid payment request file.</source>
@@ -2210,8 +2210,8 @@ Nesubrendusios: patvirtintos, bet mažiau nei 1 konvertacijos to pačio nominalo
         <translation>Zerocoin Veiksmai:</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the PIVX network after a connection is established, but this process has not completed yet.</source>
-        <translation>Rodoma informacija gali būti pasenusi. Jūsų piniginė automatiškai sinchronizuojasi su PIVX tinklu po ryšio aktyvavimo, tačiau šis procesas dar nebaigtas.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Syndicate network after a connection is established, but this process has not completed yet.</source>
+        <translation>Rodoma informacija gali būti pasenusi. Jūsų piniginė automatiškai sinchronizuojasi su Syndicate tinklu po ryšio aktyvavimo, tačiau šis procesas dar nebaigtas.</translation>
     </message>
     <message>
         <source>Mint Zerocoin</source>
@@ -2651,8 +2651,8 @@ Nesubrendusios: patvirtintos, bet mažiau nei 1 konvertacijos tos pačio nominal
         <translation>Suma</translation>
     </message>
     <message>
-        <source>Enter a PIVX address (e.g. %1)</source>
-        <translation>Įveskite PIVX adresą (pvz. %1)</translation>
+        <source>Enter a Syndicate address (e.g. %1)</source>
+        <translation>Įveskite Syndicate adresą (pvz. %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -2829,8 +2829,8 @@ Nesubrendusios: patvirtintos, bet mažiau nei 1 konvertacijos tos pačio nominal
         <translation>Iš:</translation>
     </message>
     <message>
-        <source>Welcome to the PIVX RPC console.</source>
-        <translation>Sveiki atvykę į PIVX RPC konsolę.</translation>
+        <source>Welcome to the Syndicate RPC console.</source>
+        <translation>Sveiki atvykę į Syndicate RPC konsolę.</translation>
     </message>
     <message>
         <source>never</source>
@@ -3158,8 +3158,8 @@ Nesubrendusios: patvirtintos, bet mažiau nei 1 konvertacijos tos pačio nominal
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
-        <source>The PIVX address to sign the message with</source>
-        <translation>PIVX adresas, kuriuo pasirašyti žinute</translation>
+        <source>The Syndicate address to sign the message with</source>
+        <translation>Syndicate adresas, kuriuo pasirašyti žinute</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -3182,16 +3182,16 @@ Nesubrendusios: patvirtintos, bet mažiau nei 1 konvertacijos tos pačio nominal
         <translation>Kopijuoti dabartinį parašą</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this PIVX address</source>
-        <translation>Pažymėkite žinutę, kad įrodytumėte, jog jūs šio PIVX adreso savininkas</translation>
+        <source>Sign the message to prove you own this Syndicate address</source>
+        <translation>Pažymėkite žinutę, kad įrodytumėte, jog jūs šio Syndicate adreso savininkas</translation>
     </message>
     <message>
-        <source>The PIVX address the message was signed with</source>
-        <translation>PIVX adresas, kurio buvo pasirašyta žinutė</translation>
+        <source>The Syndicate address the message was signed with</source>
+        <translation>Syndicate adresas, kurio buvo pasirašyta žinutė</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified PIVX address</source>
-        <translation>Patikrinkite pranešimą, kad jis būtų pasirašytas su nurodytu PIVX adresu</translation>
+        <source>Verify the message to ensure it was signed with the specified Syndicate address</source>
+        <translation>Patikrinkite pranešimą, kad jis būtų pasirašytas su nurodytu Syndicate adresu</translation>
     </message>
     <message>
         <source>Reset all sign message fields</source>
@@ -3460,7 +3460,7 @@ Nesubrendusios: patvirtintos, bet mažiau nei 1 konvertacijos tos pačio nominal
     </message>
     </context>
 <context>
-    <name>pivx-core</name>
+    <name>syndicate-core</name>
     <message>
         <source>(default: %s)</source>
         <translation>(numatytas: %s)</translation>

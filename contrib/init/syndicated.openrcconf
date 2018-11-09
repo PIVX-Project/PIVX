@@ -1,7 +1,7 @@
 # /etc/conf.d/syndicated: config file for /etc/init.d/syndicated
 
 # Config file location
-#BITCOIND_CONFIGFILE="/etc/pivx/pivx.conf"
+#BITCOIND_CONFIGFILE="/etc/syndicate/syndicate.conf"
 
 # What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
 #BITCOIND_PIDDIR="/var/run/syndicated"
@@ -13,8 +13,8 @@
 #BITCOIND_DATADIR="/var/lib/syndicated"
 
 # User and group to own syndicated process
-#BITCOIND_USER="pivx"
-#BITCOIND_GROUP="pivx"
+#BITCOIND_USER="syndicate"
+#BITCOIND_GROUP="syndicate"
 
 # Path to syndicated executable
 #BITCOIND_BIN="/usr/bin/syndicated"

@@ -62,12 +62,12 @@
         <translation>Indirizzi di ricezione</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Questi sono gli indirizzi PIVX per l'invio di pagamenti. Controlla sempre l'importo e l'indirizzo di ricezione prima di inviare valuta.</translation>
+        <source>These are your Syndicate addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Questi sono gli indirizzi Syndicate per l'invio di pagamenti. Controlla sempre l'importo e l'indirizzo di ricezione prima di inviare valuta.</translation>
     </message>
     <message>
-        <source>These are your PIVX addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Questi sono gli indirizzi PIVX per la ricezione di pagamenti. Si raccomanda di utilizzare un indirizzo diverso per ogni transazione.</translation>
+        <source>These are your Syndicate addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Questi sono gli indirizzi Syndicate per la ricezione di pagamenti. Si raccomanda di utilizzare un indirizzo diverso per ogni transazione.</translation>
     </message>
     <message>
         <source>&amp;Copy Address</source>
@@ -176,8 +176,8 @@
         <translation>Conferma cifratura portafoglio</translation>
     </message>
     <message>
-        <source>PIVX will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
-        <translation>PIVX verrà ora chiuso per completare il processo di cifratura. Ricorda che crittografare il tuo portafoglio non protegge completamente i tuoi PIV dal furto da parte di software malevoli che potrebbero infettare il tuo computer.</translation>
+        <source>Syndicate will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
+        <translation>Syndicate verrà ora chiuso per completare il processo di cifratura. Ricorda che crittografare il tuo portafoglio non protegge completamente i tuoi PIV dal furto da parte di software malevoli che potrebbero infettare il tuo computer.</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -254,12 +254,12 @@
         <translation>Indirizzo:</translation>
     </message>
     <message>
-        <source>Enter a PIVX Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.</source>
-        <translation>Inserire un indirizzo PIVX da crittografare utilizzando BIP 38. Inserire una password nel campo centrale. Cliccare su "cripta" per generare la chiave privata crittografata.</translation>
+        <source>Enter a Syndicate Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.</source>
+        <translation>Inserire un indirizzo Syndicate da crittografare utilizzando BIP 38. Inserire una password nel campo centrale. Cliccare su "cripta" per generare la chiave privata crittografata.</translation>
     </message>
     <message>
-        <source>The PIVX address to encrypt</source>
-        <translation>Indirizzo PIVX da crittografare</translation>
+        <source>The Syndicate address to encrypt</source>
+        <translation>Indirizzo Syndicate da crittografare</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -290,8 +290,8 @@
         <translation>Copiare la firma corrente negli Appunti di sistema</translation>
     </message>
     <message>
-        <source>Encrypt the private key for this PIVX address</source>
-        <translation>Crittografa la chiave privata per questo indirizzo PIVX</translation>
+        <source>Encrypt the private key for this Syndicate address</source>
+        <translation>Crittografa la chiave privata per questo indirizzo Syndicate</translation>
     </message>
     <message>
         <source>Reset all fields</source>
@@ -649,12 +649,12 @@
         <translation>Syndicate Core</translation>
     </message>
     <message>
-        <source>Send coins to a PIVX address</source>
-        <translation>Invia valuta all'indirizzo PIVX</translation>
+        <source>Send coins to a Syndicate address</source>
+        <translation>Invia valuta all'indirizzo Syndicate</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and pivx: URIs)</source>
-        <translation>Richiedi pagamenti (genera codici QR e pivx: URIs)</translation>
+        <source>Request payments (generates QR codes and syndicate: URIs)</source>
+        <translation>Richiedi pagamenti (genera codici QR e syndicate: URIs)</translation>
     </message>
     <message>
         <source>&amp;Privacy</source>
@@ -677,16 +677,16 @@
         <translation>Visualizza informazioni su Syndicate Core</translation>
     </message>
     <message>
-        <source>Modify configuration options for PIVX</source>
-        <translation>Modifica le opzioni di configurazione per PIVX</translation>
+        <source>Modify configuration options for Syndicate</source>
+        <translation>Modifica le opzioni di configurazione per Syndicate</translation>
     </message>
     <message>
-        <source>Sign messages with your PIVX addresses to prove you own them</source>
-        <translation>Firma i messaggi con i tuoi indirizzi PIVX per dimostrare di essere il proprietario </translation>
+        <source>Sign messages with your Syndicate addresses to prove you own them</source>
+        <translation>Firma i messaggi con i tuoi indirizzi Syndicate per dimostrare di essere il proprietario </translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified PIVX addresses</source>
-        <translation>Verifica i messaggi per assicurarsi che siano stati firmati con indirizzi PIVX specifici</translation>
+        <source>Verify messages to ensure they were signed with specified Syndicate addresses</source>
+        <translation>Verifica i messaggi per assicurarsi che siano stati firmati con indirizzi Syndicate specifici</translation>
     </message>
     <message>
         <source>&amp;BIP38 tool</source>
@@ -717,8 +717,8 @@
         <translation>Apri file di configurazione del Masternodo</translation>
     </message>
     <message>
-        <source>Open a PIVX: URI or payment request</source>
-        <translation>Apri un PIVX: URI o richiesta di pagamento</translation>
+        <source>Open a Syndicate: URI or payment request</source>
+        <translation>Apri un Syndicate: URI o richiesta di pagamento</translation>
     </message>
     <message>
         <source>&amp;Blockchain explorer</source>
@@ -729,15 +729,15 @@
         <translation>Finestra Block Explorer</translation>
     </message>
     <message>
-        <source>Show the Syndicate Core help message to get a list with possible PIVX command-line options</source>
-        <translation>Mostra il messaggio di aiuto Syndicate Core per ottenere un elenco con le possibili opzioni di riga di comando PIVX</translation>
+        <source>Show the Syndicate Core help message to get a list with possible Syndicate command-line options</source>
+        <translation>Mostra il messaggio di aiuto Syndicate Core per ottenere un elenco con le possibili opzioni di riga di comando Syndicate</translation>
     </message>
     <message>
         <source>Syndicate Core client</source>
         <translation>Syndicate Core</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to PIVX network</source>
+        <source>%n active connection(s) to Syndicate network</source>
         <translation><numerusform>%n connessione attiva alla rete PIVIX</numerusform><numerusform>%n connessioni attive alla rete PIVIX</numerusform></translation>
     </message>
     <message>
@@ -888,8 +888,8 @@ MultiSend: %1</translation>
         <translation>Etichetta</translation>
     </message>
     <message>
-        <source>Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (pivx.conf).</source>
-        <translation>Non tutte le transazioni verranno visualizzate. Per vedere tutte le transazioni è necessario aggiungere txindex=1 nel file di configurazione (pivx.conf)</translation>
+        <source>Not all transactions will be shown. To view all transactions you need to set txindex=1 in the configuration file (syndicate.conf).</source>
+        <translation>Non tutte le transazioni verranno visualizzate. Per vedere tutte le transazioni è necessario aggiungere txindex=1 nel file di configurazione (syndicate.conf)</translation>
     </message>
 </context>
 <context>
@@ -1173,8 +1173,8 @@ MultiSend: %1</translation>
         <translation>Modifica indirizzo di invio</translation>
     </message>
     <message>
-        <source>The entered address "%1" is not a valid PIVX address.</source>
-        <translation>L'indirizzo inserito "%1" non è un indirizzo PIVX valido.</translation>
+        <source>The entered address "%1" is not a valid Syndicate address.</source>
+        <translation>L'indirizzo inserito "%1" non è un indirizzo Syndicate valido.</translation>
     </message>
     <message>
         <source>The entered address "%1" is already in the address book.</source>
@@ -1282,8 +1282,8 @@ MultiSend: %1</translation>
         <translation>Essendo il primo avvio dell'applicazione, puoi scegliere dove Syndicate Core salverà i propri dati.</translation>
     </message>
     <message>
-        <source>Syndicate Core will download and store a copy of the PIVX block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Syndicate Core scaricherà e salverà una copia della blockchain PIVX. Verranno salvati almeno %1GB di dati in questa cartella, che cresceranno nel tempo. In questa cartella verrà salvato anche il portafoglio.</translation>
+        <source>Syndicate Core will download and store a copy of the Syndicate block chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>Syndicate Core scaricherà e salverà una copia della blockchain Syndicate. Verranno salvati almeno %1GB di dati in questa cartella, che cresceranno nel tempo. In questa cartella verrà salvato anche il portafoglio.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -1436,12 +1436,12 @@ MultiSend: %1</translation>
         <translation>Inserire indirizzo destinatario</translation>
     </message>
     <message>
-        <source>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other PIVX addresses after it matures.
-To Add: enter percentage to give and PIVX address to add to the MultiSend vector.
+        <source>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other Syndicate addresses after it matures.
+To Add: enter percentage to give and Syndicate address to add to the MultiSend vector.
 To Delete: Enter address to delete and press delete.
 MultiSend will not be activated unless you have clicked Activate</source>
-        <translation>MultiSend ti permette di inviare automaticamente ad una lista di indirizzi PIVX fino al 100% delle ricompense di stake o masternodi, dopo che queste sono mature.
-Per Aggiunger: inserisci la percentuale da inviare e l'indirizzo PIVX da aggiungere al vettore MultiSend.
+        <translation>MultiSend ti permette di inviare automaticamente ad una lista di indirizzi Syndicate fino al 100% delle ricompense di stake o masternodi, dopo che queste sono mature.
+Per Aggiunger: inserisci la percentuale da inviare e l'indirizzo Syndicate da aggiungere al vettore MultiSend.
 Per Eliminare: Inserisci l'indirizzo da eliminare e premi elimina.
 MultiSend non verrà attivato a meno che tu non prema su Attiva</translation>
     </message>
@@ -1804,8 +1804,8 @@ Per favore controlla l'indirizzo e riprova nuovamente.</translation>
         <translation>Saldo corrente bloccato in indirizzi sola-lettura.</translation>
     </message>
     <message>
-        <source>Your current PIVX balance, unconfirmed and immature transactions included</source>
-        <translation>Il tuo saldo PIVX corrente, incluse le transazioni non confermate e non mature</translation>
+        <source>Your current Syndicate balance, unconfirmed and immature transactions included</source>
+        <translation>Il tuo saldo Syndicate corrente, incluse le transazioni non confermate e non mature</translation>
     </message>
     <message>
         <source>zPIV Balance</source>
@@ -1878,14 +1878,14 @@ Se il conio automatico è attivato questa percentuale si stabilizzerà all'incir
         <translation>AutoMint è attivo e impostato su</translation>
     </message>
     <message>
-        <source>To disable AutoMint add 'enablezeromint=0' in pivx.conf.</source>
-        <translation>Per disabilitare il conio automatico aggiungi 'enablezeromint=0' in pivx.conf.</translation>
+        <source>To disable AutoMint add 'enablezeromint=0' in syndicate.conf.</source>
+        <translation>Per disabilitare il conio automatico aggiungi 'enablezeromint=0' in syndicate.conf.</translation>
     </message>
     <message>
         <source>AutoMint is currently disabled.
-To enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in pivx.conf</source>
+To enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in syndicate.conf</source>
         <translation>Conio automatico è correntemente disattivato.
-Per attivare il Conio automatico cambiare 'enablezeromint=0' in 'enablezeromint=1' in pivx.conf</translation>
+Per attivare il Conio automatico cambiare 'enablezeromint=0' in 'enablezeromint=1' in syndicate.conf</translation>
     </message>
 </context>
 <context>
@@ -2051,8 +2051,8 @@ Gli zPIV sono maturi quando hanno più di 20 conferme E più di 2 conii della st
         <source>Show the current status of automatic zPIV minting.
 
 To change the status (restart required):
-- enable: add 'enablezeromint=1' to pivx.conf
-- disable: add 'enablezeromint=0' to pivx.conf
+- enable: add 'enablezeromint=1' to syndicate.conf
+- disable: add 'enablezeromint=0' to syndicate.conf
 
 To change the percentage (no restart required):
 - menu Settings-&gt;Options-&gt;Percentage of autominted zPIV
@@ -2060,8 +2060,8 @@ To change the percentage (no restart required):
 </source>
         <translation>Mostra lo stato corrente del conio automatico zPIV.
 Per cambiare lo stato (riavvio necessario):
-- attivato: aggiungi 'enablezeromint=1' a pivx.conf
-- disattivato: aggiungi 'enablezeromint=0' a pivx.conf
+- attivato: aggiungi 'enablezeromint=1' a syndicate.conf
+- disattivato: aggiungi 'enablezeromint=0' a syndicate.conf
 
 Per cambiare la percentuale (riavvio non necessario):
 - menu Impostazioni-&gt;Opzioni-&gt;Percentuale di zPIV da coniare automaticamente
@@ -2483,8 +2483,8 @@ Per cambiare la percentuale (riavvio non necessario):
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
-        <source>The PIVX address to sign the message with</source>
-        <translation>L'indirizzo PIVX per firmare il messaggio con</translation>
+        <source>The Syndicate address to sign the message with</source>
+        <translation>L'indirizzo Syndicate per firmare il messaggio con</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -2507,16 +2507,16 @@ Per cambiare la percentuale (riavvio non necessario):
         <translation>Copiare la firma corrente negli Appunti di sistema</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this PIVX address</source>
-        <translation>Firmare il messaggio per dimostrare di possedere questo indirizzo PIVX</translation>
+        <source>Sign the message to prove you own this Syndicate address</source>
+        <translation>Firmare il messaggio per dimostrare di possedere questo indirizzo Syndicate</translation>
     </message>
     <message>
-        <source>The PIVX address the message was signed with</source>
-        <translation>L'indirizzo PIVX con cui è stato firmato il messaggio</translation>
+        <source>The Syndicate address the message was signed with</source>
+        <translation>L'indirizzo Syndicate con cui è stato firmato il messaggio</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified PIVX address</source>
-        <translation>Verificare il messaggio per assicurarsi che sia stato firmato con l'indirizzo PIVX specificato </translation>
+        <source>Verify the message to ensure it was signed with the specified Syndicate address</source>
+        <translation>Verificare il messaggio per assicurarsi che sia stato firmato con l'indirizzo Syndicate specificato </translation>
     </message>
     <message>
         <source>Reset all sign message fields</source>
@@ -2677,7 +2677,7 @@ Per cambiare la percentuale (riavvio non necessario):
     </message>
     </context>
 <context>
-    <name>pivx-core</name>
+    <name>syndicate-core</name>
     <message>
         <source>Error</source>
         <translation>Errore</translation>

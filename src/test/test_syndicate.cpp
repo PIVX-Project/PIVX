@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2017 The PIVX developers
+// Copyright (c) 2017 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -42,7 +42,7 @@ struct TestingSetup {
 #ifdef ENABLE_WALLET
         bitdb.MakeMock();
 #endif
-        pathTemp = GetTempPath() / strprintf("test_pivx_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
+        pathTemp = GetTempPath() / strprintf("test_syndicate_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
         boost::filesystem::create_directories(pathTemp);
         mapArgs["-datadir"] = pathTemp.string();
         pblocktree = new CBlockTreeDB(1 << 20, true);

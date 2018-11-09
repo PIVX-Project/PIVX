@@ -30,7 +30,7 @@
        <item>
         <widget class="QLabel" name="infoLabel_ENC">
          <property name="text">
-          <string>Enter a PIVX Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.</string>
+          <string>Enter a Syndicate Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.</string>
          </property>
          <property name="textFormat">
           <enum>Qt::PlainText</enum>
@@ -61,7 +61,7 @@
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_ENC">
            <property name="toolTip">
-            <string>The PIVX address to encrypt</string>
+            <string>The Syndicate address to encrypt</string>
            </property>
           </widget>
          </item>
@@ -74,7 +74,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/address-book</normaloff>:/icons/address-book</iconset>
            </property>
            <property name="shortcut">
@@ -91,7 +91,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/editpaste</normaloff>:/icons/editpaste</iconset>
            </property>
            <property name="shortcut">
@@ -170,7 +170,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/editcopy</normaloff>:/icons/editcopy</iconset>
            </property>
           </widget>
@@ -182,13 +182,13 @@
          <item>
           <widget class="QPushButton" name="encryptKeyButton_ENC">
            <property name="toolTip">
-            <string>Encrypt the private key for this PIVX address</string>
+            <string>Encrypt the private key for this Syndicate address</string>
            </property>
            <property name="text">
             <string>Encrypt &amp;Key</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/edit</normaloff>:/icons/edit</iconset>
            </property>
            <property name="autoDefault">
@@ -205,7 +205,7 @@
             <string>Clear &amp;All</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
            </property>
            <property name="autoDefault">
@@ -311,7 +311,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/editpaste</normaloff>:/icons/editpaste</iconset>
            </property>
            <property name="shortcut">
@@ -359,7 +359,7 @@
             <string>Decrypt &amp;Key</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/transaction_0</normaloff>:/icons/transaction_0</iconset>
            </property>
            <property name="autoDefault">
@@ -376,7 +376,7 @@
             <string>Clear &amp;All</string>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../syndicate.qrc">
              <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
            </property>
            <property name="autoDefault">
@@ -477,7 +477,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../syndicate.qrc"/>
  </resources>
  <connections/>
 </ui>

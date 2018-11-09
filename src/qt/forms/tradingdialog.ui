@@ -445,7 +445,7 @@
       <string>Buy PIV</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx.qrc">
+      <iconset resource="../syndicate.qrc">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -1754,7 +1754,7 @@
       <string>Sell PIV</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx">
+      <iconset resource="../syndicate">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -2941,10 +2941,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>Generate PIVX Deposit Address</string>
+      <string>Generate Syndicate Deposit Address</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx.qrc">
+      <iconset resource="../syndicate.qrc">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -3206,7 +3206,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap resource="../pivx.qrc">:/icons/transaction_1</pixmap>
+       <pixmap resource="../syndicate.qrc">:/icons/transaction_1</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -3253,7 +3253,7 @@
       <string>Update API Keys</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx.qrc">
+      <iconset resource="../syndicate.qrc">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -3408,7 +3408,7 @@
   </widget>
  </widget>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../syndicate.qrc"/>
  </resources>
  <connections/>
 </ui>

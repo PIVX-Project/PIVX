@@ -1,10 +1,10 @@
 # Copyright (c) 2013-2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-TESTS += test/test_pivx test/bitcoin-util-test.py
-bin_PROGRAMS += test/test_pivx
+TESTS += test/test_syndicate test/bitcoin-util-test.py
+bin_PROGRAMS += test/test_syndicate
 TEST_SRCDIR = test
-TEST_BINARY=test/test_pivx$(EXEEXT)
+TEST_BINARY=test/test_syndicate$(EXEEXT)
 
 
 EXTRA_DIST += \
@@ -36,7 +36,7 @@ RAW_TEST_FILES = test/data/alertTests.raw
 
 GENERATED_TEST_FILES = $(JSON_TEST_FILES:.json=.json.h) $(RAW_TEST_FILES:.raw=.raw.h)
 
-# test_pivx binary #
+# test_syndicate binary #
 BITCOIN_TESTS =\
   test/zerocoin_implementation_tests.cpp\
   test/zerocoin_denomination_tests.cpp\
@@ -75,7 +75,7 @@ BITCOIN_TESTS =\
   test/sighash_tests.cpp \
   test/sigopcount_tests.cpp \
   test/skiplist_tests.cpp \
-  test/test_pivx.cpp \
+  test/test_syndicate.cpp \
   test/timedata_tests.cpp \
   test/torcontrol_tests.cpp \
   test/transaction_tests.cpp \
@@ -90,23 +90,23 @@ BITCOIN_TESTS += \
   test/rpc_wallet_tests.cpp
 endif
 
-test_test_pivx_SOURCES = $(BITCOIN_TESTS) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
-test_test_pivx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -I$(builddir)/test/ $(TESTDEFS)
-test_test_pivx_LDADD = $(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBBITCOIN_ZEROCOIN) \
+test_test_syndicate_SOURCES = $(BITCOIN_TESTS) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
+test_test_syndicate_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -I$(builddir)/test/ $(TESTDEFS)
+test_test_syndicate_LDADD = $(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBBITCOIN_ZEROCOIN) \
   $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS)
 if ENABLE_WALLET
-test_test_pivx_LDADD += $(LIBBITCOIN_WALLET)
+test_test_syndicate_LDADD += $(LIBBITCOIN_WALLET)
 endif
 test_test_bitcoin_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
-test_test_pivx_LDADD += $(LIBBITCOIN_CONSENSUS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
-test_test_pivx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
+test_test_syndicate_LDADD += $(LIBBITCOIN_CONSENSUS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
+test_test_syndicate_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
 
 if ENABLE_ZMQ
-test_test_pivx_LDADD += $(ZMQ_LIBS)
+test_test_syndicate_LDADD += $(ZMQ_LIBS)
 endif
 
-nodist_test_test_pivx_SOURCES = $(GENERATED_TEST_FILES)
+nodist_test_test_syndicate_SOURCES = $(GENERATED_TEST_FILES)
 
 $(BITCOIN_TESTS): $(GENERATED_TEST_FILES)
 
@@ -114,13 +114,13 @@ CLEAN_BITCOIN_TEST = test/*.gcda test/*.gcno $(GENERATED_TEST_FILES)
 
 CLEANFILES += $(CLEAN_BITCOIN_TEST)
 
-pivx_test: $(TEST_BINARY)
+syndicate_test: $(TEST_BINARY)
 
-pivx_test_check: $(TEST_BINARY) FORCE
+syndicate_test_check: $(TEST_BINARY) FORCE
 	$(MAKE) check-TESTS TESTS=$^
 
-pivx_test_clean : FORCE
-	rm -f $(CLEAN_BITCOIN_TEST) $(test_test_pivx_OBJECTS) $(TEST_BINARY)
+syndicate_test_clean : FORCE
+	rm -f $(CLEAN_BITCOIN_TEST) $(test_test_syndicate_OBJECTS) $(TEST_BINARY)
 
 check-local:
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C secp256k1 check

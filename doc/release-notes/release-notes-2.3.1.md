@@ -1,18 +1,18 @@
 Syndicate Core version 2.3.1 is now available from:
 
-  <https://github.com/pivx-project/pivx/releases>
+  <https://github.com/SyndicateLtd/SyndicateQt/releases>
 
 This is a new minor version release, including various bug fixes and
 performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/pivx-project/pivx/issues>
+  <https://github.com/SyndicateLtd/SyndicateQt/issues>
 
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or syndicated/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/Syndicate-Qt (on Mac) or syndicated/syndicate-qt (on Linux).
 
 Compatibility
 ==============
@@ -159,7 +159,7 @@ Result:
     "BlockEnd": n,                (numeric) Proposal ending block
     "TotalPaymentCount": n,       (numeric) Number of payments
     "RemainingPaymentCount": n,   (numeric) Number of remaining payments
-    "PaymentAddress": "xxxx",     (string) PIVX address of payment
+    "PaymentAddress": "xxxx",     (string) Syndicate address of payment
     "Ratio": x.xxx,               (numeric) Ratio of yeas vs nays
     "Yeas": n,                    (numeric) Number of yea votes
     "Nays": n,                    (numeric) Number of nay votes
@@ -210,4 +210,4 @@ Thanks to everyone who directly contributed to this release:
 - Mrs-X
 - amirabrams
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/).
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/syndicate-project-translations/).

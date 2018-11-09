@@ -1,6 +1,6 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2017 The PIVX developers
+// Copyright (c) 2015-2017 The XVIP developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Copyright (c) 2016-2018 The Syndicate developers
 // Distributed under the MIT/X11 software license, see the accompanying
@@ -105,7 +105,7 @@ void EditAddressDialog::accept()
             break;
         case AddressTableModel::INVALID_ADDRESS:
             QMessageBox::warning(this, windowTitle(),
-                tr("The entered address \"%1\" is not a valid PIVX address.").arg(ui->addressEdit->text()),
+                tr("The entered address \"%1\" is not a valid Syndicate address.").arg(ui->addressEdit->text()),
                 QMessageBox::Ok, QMessageBox::Ok);
             break;
         case AddressTableModel::DUPLICATE_ADDRESS:
