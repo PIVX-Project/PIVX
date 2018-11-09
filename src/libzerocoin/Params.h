@@ -10,6 +10,7 @@
 * @license    This project is released under the MIT license.
 **/
 // Copyright (c) 2017 The PIVX developers
+// Copyright (c) 2016-2018 The Syndicate developers
 
 #ifndef PARAMS_H_
 #define PARAMS_H_
