@@ -2077,7 +2077,7 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
 {
     if (nHeight < 346000) {
         return GetSeeSaw(blockValue, nMasternodeCount, nHeight);
-    else
+    else {
         return blockValue * .70;
     }
 }
