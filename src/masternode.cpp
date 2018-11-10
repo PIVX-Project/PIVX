@@ -227,19 +227,19 @@ CAmount CMasternode::CollateralValue(int nHeight)
 {
     CAmount mnCollateral = 0;
     if (nHeight <= 432799 && nHeight >= 346000) {
-        nSubsidy = 5000 * COIN;
+        mnCollateral = 5000 * COIN;
     } else if (nHeight <= 519599 && nHeight >= 432800) {
-        nSubsidy = 10000 * COIN;
+        mnCollateral = 10000 * COIN;
     } else if (nHeight <= 606399 && nHeight >= 519600) {
-        nSubsidy = 15000 * COIN;
+        mnCollateral = 15000 * COIN;
     } else if (nHeight <= 693199 && nHeight >= 606400) {
-        nSubsidy = 20000 * COIN;
+        mnCollateral = 20000 * COIN;
     } else if (nHeight <= 779999 && nHeight >= 693200) {
-        nSubsidy = 25000 * COIN;
+        mnCollateral = 25000 * COIN;
     } else if (nHeight >= 780000) {
-        nSubsidy = 25000 * COIN;
+        mnCollateral = 25000 * COIN;
     } else
-        nSubsidy = 5000 * COIN;
+        mnCollateral = 5000 * COIN;
     }
     return mnCollateral;
 }
