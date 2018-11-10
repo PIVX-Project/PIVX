@@ -131,6 +131,7 @@ private:
     QAction* openBlockExplorerAction;
     QAction* showHelpMessageAction;
     QAction* multiSendAction;
+    QAction* importPrivateKeyAction;
 
     QSystemTrayIcon* trayIcon;
     QMenu* trayIconMenu;

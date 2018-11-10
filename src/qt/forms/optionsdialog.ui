@@ -132,6 +132,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="checkBoxZeromintEnable">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Enable automatic minting of SYNX units to zSYNX</string>
          </property>
@@ -147,6 +150,9 @@
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
           <widget class="QLabel" name="percentage_label">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="toolTip">
             <string>Percentage of incoming SYNX which get automatically converted to zSYNX via Zerocoin Protocol (min: 10%)</string>
            </property>
@@ -157,8 +163,11 @@
          </item>
          <item>
           <widget class="QSpinBox" name="zeromintPercentage">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="minimum">
-            <number>1</number>
+            <number>10</number>
            </property>
            <property name="maximum">
             <number>100</number>
@@ -174,6 +183,9 @@
          </property>
          <item>
           <widget class="QLabel" name="labelPreferredDenom">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -190,6 +202,9 @@
          </item>
          <item>
           <widget class="QComboBox" name="preferredDenom">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>

@@ -121,6 +121,8 @@ public slots:
     void lockWallet();
     /** Toggle wallet lock state */
     void toggleLockWallet();
+    /** Ask for and import a private key */
+    void importPrivateKey();
 
     /** Show used sending addresses */
     void usedSendingAddresses();

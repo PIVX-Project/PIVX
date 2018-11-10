@@ -36,6 +36,7 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QVBoxLayout>
+#include <QInputDialog> 
 
 WalletView::WalletView(QWidget* parent) : QStackedWidget(parent),
                                           clientModel(0),
@@ -409,6 +410,70 @@ void WalletView::toggleLockWallet()
 
     else if (encStatus == walletModel->Unlocked || encStatus == walletModel->UnlockedForAnonymizationOnly) {
             walletModel->setWalletLocked(true);
+    }
+}
+
+// Helper to import a private key instead of making the user go to the debug console
+void WalletView::importPrivateKey()
+{
+    bool ok;
+    QString privKey = QInputDialog::getText(0, tr(PACKAGE_NAME), tr("Enter a Syndicate private key to import into your wallet."), QLineEdit::Normal, "", &ok);
+    if (ok && !privKey.isEmpty()) {
+
+        LOCK2(cs_main, pwalletMain->cs_wallet);
+
+        WalletModel::UnlockContext ctx(walletModel->requestUnlock(AskPassphraseDialog::Context::Unlock_Full));
+        if (!ctx.isValid())  // Unlock wallet was cancelled
+            return;
+
+        CBitcoinSecret vchSecret;
+        if (!vchSecret.SetString(privKey.toStdString())) {
+            QMessageBox::critical(0, tr(PACKAGE_NAME), tr("This doesn't appear to be a Syndicate private key."));
+            return;
+        }
+
+        CKey key = vchSecret.GetKey();
+        if (!key.IsValid()) {
+            QMessageBox::critical(0, tr(PACKAGE_NAME), tr("Private key outside allowed range."));
+            return;
+        }
+
+        CPubKey pubkey = key.GetPubKey();
+        assert(key.VerifyPubKey(pubkey));
+        CKeyID vchAddress = pubkey.GetID();
+        {
+            pwalletMain->MarkDirty();
+            pwalletMain->SetAddressBook(vchAddress, "", "receive");
+
+            if (pwalletMain->HaveKey(vchAddress)) {
+                QMessageBox::critical(0, tr(PACKAGE_NAME), tr("This key has already been added."));
+                return;
+            }
+
+            pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = 1;
+
+            if (!pwalletMain->AddKeyPubKey(key, pubkey)) {
+                QMessageBox::critical(0, tr(PACKAGE_NAME), tr("Error adding key to wallet."));
+                return;
+            }
+
+            // whenever a key is imported, we need to scan the whole chain
+            pwalletMain->nTimeFirstKey = 1; // 0 would be considered 'no value'
+
+            QMessageBox msgBox;
+            msgBox.setText(tr("Key successfully added to wallet."));
+            msgBox.setInformativeText("Rescan now? (Select No if you have more keys to import)");
+            msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+            msgBox.setDefaultButton(QMessageBox::No);
+
+            if (msgBox.exec() == QMessageBox::Yes)
+            {
+                // rescan to find txs associated with imported address
+                pwalletMain->ScanForWalletTransactions(chainActive.Genesis(), true);
+                QMessageBox::information(0, tr(PACKAGE_NAME), tr("Rescan complete."));
+            }
+        }
+        return;
     }
 }
 
