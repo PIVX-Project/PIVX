@@ -42,6 +42,13 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(paren
     ui->setupUi(this);
     GUIUtil::restoreWindowGeometry("nOptionsDialogWindow", this->size(), this);
 
+    /* Hide zero coin stuff */
+    ui->checkBoxZeromintEnable->setVisible(false);
+    ui->percentage_label->setVisible(false);
+    ui->labelPreferredDenom->setVisible(false);
+    ui->zeromintPercentage->setVisible(false);
+    ui->preferredDenom->setVisible(false);
+
     /* Main elements init */
     ui->databaseCache->setMinimum(nMinDbCache);
     ui->databaseCache->setMaximum(nMaxDbCache);

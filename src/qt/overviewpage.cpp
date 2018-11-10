@@ -325,6 +325,8 @@ void OverviewPage::updateWatchOnlyLabels(bool showWatchOnly)
     ui->labelWatchLocked->setVisible(showWatchOnly);     // show watch-only total balance
     ui->labelWatchTotal->setVisible(showWatchOnly);     // show watch-only total balance
 
+    ui->frame_ZerocoinBalances->setVisible(false);
+
     if (!showWatchOnly) {
         ui->labelWatchImmature->hide();
     } else {
