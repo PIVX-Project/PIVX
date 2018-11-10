@@ -125,6 +125,12 @@ public:
         MASTERNODE_POS_ERROR
     };
 
+    enum CollateralStatus {
+        COLLATERAL_OK,
+        COLLATERAL_NOT_FOUND,
+        COLLATERAL_INVALID_AMOUNT
+    };
+
     CTxIn vin;
     CService addr;
     CPubKey pubKeyCollateralAddress;

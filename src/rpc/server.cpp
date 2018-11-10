@@ -283,7 +283,6 @@ static const CRPCCommand vRPCCommands[] =
         //  category              name                      actor (function)         okSafeMode threadSafe reqWallet
         //  --------------------- ------------------------  -----------------------  ---------- ---------- ---------
         /* Overall control/query calls */
-        {"control", "getinfo", &getinfo, true, false, false}, /* uses wallet if enabled */
         {"control", "help", &help, true, true, false},
         {"control", "stop", &stop, true, true, false},
 
@@ -302,7 +301,6 @@ static const CRPCCommand vRPCCommands[] =
 
         /* Block chain and UTXO */
         {"blockchain", "findserial", &findserial, true, false, false},
-        {"blockchain", "getaccumulatorvalues", &getaccumulatorvalues, true, false, false},
         {"blockchain", "getblockchaininfo", &getblockchaininfo, true, false, false},
         {"blockchain", "getbestblockhash", &getbestblockhash, true, false, false},
         {"blockchain", "getblockcount", &getblockcount, true, false, false},
@@ -380,7 +378,6 @@ static const CRPCCommand vRPCCommands[] =
         {"syndicate", "getnextsuperblock", &getnextsuperblock, true, true, false},
         {"syndicate", "getbudgetprojection", &getbudgetprojection, true, true, false},
         {"syndicate", "getbudgetinfo", &getbudgetinfo, true, true, false},
-        {"syndicate", "mnbudgetrawvote", &mnbudgetrawvote, true, true, false},
         {"syndicate", "mnfinalbudget", &mnfinalbudget, true, true, false},
         {"syndicate", "checkbudgets", &checkbudgets, true, true, false},
         {"syndicate", "mnsync", &mnsync, true, true, false},
@@ -435,28 +432,7 @@ static const CRPCCommand vRPCCommands[] =
         {"wallet", "signmessage", &signmessage, true, false, true},
         {"wallet", "walletlock", &walletlock, true, false, true},
         {"wallet", "walletpassphrasechange", &walletpassphrasechange, true, false, true},
-        {"wallet", "walletpassphrase", &walletpassphrase, true, false, true},
-
-        {"zerocoin", "getzerocoinbalance", &getzerocoinbalance, false, false, true},
-        {"zerocoin", "listmintedzerocoins", &listmintedzerocoins, false, false, true},
-        {"zerocoin", "listspentzerocoins", &listspentzerocoins, false, false, true},
-        {"zerocoin", "listzerocoinamounts", &listzerocoinamounts, false, false, true},
-        {"zerocoin", "mintzerocoin", &mintzerocoin, false, false, true},
-        {"zerocoin", "spendzerocoin", &spendzerocoin, false, false, true},
-        {"zerocoin", "spendzerocoinmints", &spendzerocoinmints, false, false, true},
-        {"zerocoin", "resetmintzerocoin", &resetmintzerocoin, false, false, true},
-        {"zerocoin", "resetspentzerocoin", &resetspentzerocoin, false, false, true},
-        {"zerocoin", "getarchivedzerocoin", &getarchivedzerocoin, false, false, true},
-        {"zerocoin", "importzerocoins", &importzerocoins, false, false, true},
-        {"zerocoin", "exportzerocoins", &exportzerocoins, false, false, true},
-        {"zerocoin", "reconsiderzerocoins", &reconsiderzerocoins, false, false, true},
-        {"zerocoin", "getspentzerocoinamount", &getspentzerocoinamount, false, false, false},
-        {"zerocoin", "getzsynxseed", &getzsynxseed, false, false, true},
-        {"zerocoin", "setzsynxseed", &setzsynxseed, false, false, true},
-        {"zerocoin", "generatemintlist", &generatemintlist, false, false, true},
-        {"zerocoin", "searchdzsynx", &searchdzsynx, false, false, true},
-        {"zerocoin", "dzsynxstate", &dzsynxstate, false, false, true}
-
+        {"wallet", "walletpassphrase", &walletpassphrase, true, false, true}
 #endif // ENABLE_WALLET
 };
 

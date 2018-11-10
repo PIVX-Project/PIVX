@@ -982,36 +982,3 @@ UniValue findserial(const UniValue& params, bool fHelp)
     ret.push_back(Pair("txid", txid.GetHex()));
     return ret;
 }
-
-UniValue getaccumulatorvalues(const UniValue& params, bool fHelp)
-{
-    if (fHelp || params.size() != 1)
-        throw runtime_error(
-            "getaccumulatorvalues \"height\"\n"
-                    "\nReturns the accumulator values associated with a block height\n"
-
-                    "\nArguments:\n"
-                    "1. height   (numeric, required) the height of the checkpoint.\n"
-
-                    "\nExamples:\n" +
-            HelpExampleCli("getaccumulatorvalues", "\"height\"") + HelpExampleRpc("getaccumulatorvalues", "\"height\""));
-
-    int nHeight = params[0].get_int();
-
-    CBlockIndex* pindex = chainActive[nHeight];
-    if (!pindex)
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "invalid block height");
-
-    UniValue ret(UniValue::VARR);
-    for (libzerocoin::CoinDenomination denom : libzerocoin::zerocoinDenomList) {
-        CBigNum bnValue;
-        if(!GetAccumulatorValueFromDB(pindex->nAccumulatorCheckpoint, denom, bnValue))
-            throw JSONRPCError(RPC_DATABASE_ERROR, "failed to find value in database");
-
-        UniValue obj(UniValue::VOBJ);
-        obj.push_back(Pair(std::to_string(denom), bnValue.GetHex()));
-        ret.push_back(obj);
-    }
-
-    return ret;
-}
