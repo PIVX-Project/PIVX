@@ -83,9 +83,9 @@ UniValue masternode(const UniValue& params, bool fHelp)
             "  status       - Print masternode status information\n"
             "  list         - Print list of all known masternodes (see masternodelist for more info)\n"
             "  list-conf    - Print masternode.conf in JSON format\n"
-            "  winners      - Print list of masternode winners\n");
+            "  winners      - Print list of masternode winners\n"
             // SYNX BEGIN
-            "  collateral   - Print actual masternode collateral value\n"
+            "  collateral   - Print actual masternode collateral value\n");
             // SYNX END
 
     if (strCommand == "list") {
