@@ -2077,6 +2077,7 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
 {
     if (nHeight < 346000) {
         return GetSeeSaw(blockValue, nMasternodeCount, nHeight);
+    }
     else {
         return blockValue * .70;
     }
@@ -4011,8 +4012,9 @@ bool CheckWork(const CBlock block, CBlockIndex* const pindexPrev)
     if (block.IsProofOfStake()) {
         uint256 hashProofOfStake;
         uint256 hash = block.GetHash();
+        unique_ptr<CStakeInput> stake;
 
-        if(!CheckProofOfStake(block, hashProofOfStake)) {
+        if(!CheckProofOfStake(block, hashProofOfStake, stake)) {
             LogPrintf("WARNING: ProcessBlock(): check proof-of-stake failed for block %s\n", hash.ToString().c_str());
             return false;
         }
