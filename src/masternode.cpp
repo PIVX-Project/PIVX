@@ -238,7 +238,7 @@ CAmount CMasternode::CollateralValue(int nHeight)
         mnCollateral = 25000 * COIN;
     } else if (nHeight >= 780000) {
         mnCollateral = 25000 * COIN;
-    } else
+    } else {
         mnCollateral = 5000 * COIN;
     }
     return mnCollateral;
