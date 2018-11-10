@@ -287,9 +287,14 @@ crypto_libbitcoin_crypto_a_SOURCES = \
   crypto/aes_helper.c \
   crypto/blake.c \
   crypto/bmw.c \
+  crypto/cubehash.c \
+  crypto/echo.c \
   crypto/groestl.c \
   crypto/jh.c \
   crypto/keccak.c \
+  crypto/luffa.c \
+  crypto/shavite.c \
+  crypto/simd.c \
   crypto/skein.c \
   crypto/common.h \
   crypto/sha256.h \
@@ -302,9 +307,14 @@ crypto_libbitcoin_crypto_a_SOURCES = \
   crypto/ripemd160.h \
   crypto/sph_blake.h \
   crypto/sph_bmw.h \
+  crypto/sph_cubehash.h \
+  crypto/sph_echo.h \
   crypto/sph_groestl.h \
   crypto/sph_jh.h \
   crypto/sph_keccak.h \
+  crypto/sph_luffa.h \
+  crypto/sph_shavite.h \
+  crypto/sph_simd.h \
   crypto/sph_skein.h \
   crypto/sph_types.h
 
