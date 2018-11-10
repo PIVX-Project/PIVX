@@ -456,11 +456,14 @@ vector<COutput> CActiveMasternode::SelectCoinsMasternode()
     }
 
     // Filter
+    // SYNX BEGIN  
     BOOST_FOREACH (const COutput& out, vCoins) {
-        if (out.tx->vout[out.i].nValue == 10000 * COIN) { //exactly
+    //  if (out.tx->vout[out.i].nValue == 5000 * COIN) { //exactly
+        if (CMasternode::CheckCollateral(COutPoint(out.tx->GetHash(), out.i)) == CMasternode::COLLATERAL_OK) {
             filteredCoins.push_back(out);
-        }
+        } 
     }
+    // SYNX END 
     return filteredCoins;
 }
 

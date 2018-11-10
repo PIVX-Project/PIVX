@@ -194,6 +194,14 @@ public:
 
     uint256 CalculateScore(int mod = 1, int64_t nBlockHeight = 0);
 
+    // SYNX BEGIN
+    static CollateralStatus CheckCollateral(const COutPoint& outpoint);
+    static CollateralStatus CheckCollateral(const COutPoint& outpoint, int& nHeightRet);
+
+    bool CollateralValueCheck(int nHeight, CAmount TxValue);
+    static CAmount CollateralValue(int nHeight);
+    // SYNX END 
+
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>

@@ -2110,11 +2110,15 @@ bool CObfuScationSigner::IsVinAssociatedWithPubkey(CTxIn& vin, CPubKey& pubkey)
     CTransaction txVin;
     uint256 hash;
     if (GetTransaction(vin.prevout.hash, txVin, hash, true)) {
-        BOOST_FOREACH (CTxOut out, txVin.vout) {
-            if (out.nValue == 10000 * COIN) {
-                if (out.scriptPubKey == payee2) return true;
-            }
-        }
+        // SYNX BEGIN
+        // BOOST_FOREACH (CTxOut out, txVin.vout) {
+        //     if (out.nValue == 5000 * COIN) {
+        //         if (out.scriptPubKey == payee2) return true;
+        //     }
+        // }
+        for (unsigned int i = 0; i < txVin.vout.size(); ++i)
+            if (CMasternode::CheckCollateral(COutPoint(txVin.GetHash(), i)) == CMasternode::COLLATERAL_OK && txVin.vout[i].scriptPubKey == payee2) return true;
+        // SYNX END
     }
 
     return false;

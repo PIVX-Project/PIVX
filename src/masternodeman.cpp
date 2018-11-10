@@ -983,19 +983,23 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
 
         // make sure it's still unspent
         //  - this is checked later by .check() in many places and by ThreadCheckObfuScationPool()
-
-        CValidationState state;
-        CMutableTransaction tx = CMutableTransaction();
-        CTxOut vout = CTxOut(9999.99 * COIN, obfuScationPool.collateralPubKey);
-        tx.vin.push_back(vin);
-        tx.vout.push_back(vout);
+        
+        // SYNX BEGIN
+        // CValidationState state;
+        // CMutableTransaction tx = CMutableTransaction();
+        // CTxOut vout = CTxOut(4999.99 * COIN, obfuScationPool.collateralPubKey);
+        // tx.vin.push_back(vin);
+        // tx.vout.push_back(vout);
 
         bool fAcceptable = false;
         {
             TRY_LOCK(cs_main, lockMain);
             if (!lockMain) return;
             fAcceptable = AcceptableInputs(mempool, state, CTransaction(tx), false, NULL);
+            // fAcceptable = AcceptableInputs(mempool, state, CTransaction(tx), false, NULL);
+            fAcceptable = CMasternode::CheckCollateral(vin.prevout) == CMasternode::COLLATERAL_OK;
         }
+        // SYNX END
 
         if (fAcceptable) {
             if (GetInputAge(vin) < MASTERNODE_MIN_CONFIRMATIONS) {
@@ -1049,14 +1053,15 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
             }
         } else {
             LogPrint("masternode","dsee - Rejected Masternode entry %s\n", vin.prevout.hash.ToString());
-
-            int nDoS = 0;
-            if (state.IsInvalid(nDoS)) {
-                LogPrint("masternode","dsee - %s from %i %s was not accepted into the memory pool\n", tx.GetHash().ToString().c_str(),
-                    pfrom->GetId(), pfrom->cleanSubVer.c_str());
-                if (nDoS > 0)
-                    Misbehaving(pfrom->GetId(), nDoS);
-            }
+            // SYNX BEGIN
+            // int nDoS = 0;
+            // if (state.IsInvalid(nDoS)) {
+            //     LogPrint("masternode","dsee - %s from %i %s was not accepted into the memory pool\n", tx.GetHash().ToString().c_str(),
+            //         pfrom->GetId(), pfrom->cleanSubVer.c_str());
+            //     if (nDoS > 0)
+            //         Misbehaving(pfrom->GetId(), nDoS);
+            // }
+            // SYNX END 
         }
     }
 

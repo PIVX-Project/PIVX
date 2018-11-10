@@ -912,46 +912,33 @@ std::string CBudgetManager::GetRequiredPaymentsString(int nBlockHeight)
 
 CAmount CBudgetManager::GetTotalBudget(int nHeight)
 {
-    if (chainActive.Tip() == NULL) return 0;
+    if (chainActive.Tip() == NULL) 
+        return 0;
 
-    if (Params().NetworkID() == CBaseChainParams::TESTNET) {
-        CAmount nSubsidy = 500 * COIN;
-        return ((nSubsidy / 100) * 10) * 146;
-    }
+    CAmount nSubsidy = 0; 
 
-    //get block value and calculate from that
-    CAmount nSubsidy = 0;
-    if (nHeight <= Params().LAST_POW_BLOCK() && nHeight >= 151200) {
-        nSubsidy = 50 * COIN;
-    } else if (nHeight <= 302399 && nHeight > Params().LAST_POW_BLOCK()) {
-        nSubsidy = 50 * COIN;
-    } else if (nHeight <= 345599 && nHeight >= 302400) {
-        nSubsidy = 45 * COIN;
-    } else if (nHeight <= 388799 && nHeight >= 345600) {
-        nSubsidy = 40 * COIN;
-    } else if (nHeight <= 431999 && nHeight >= 388800) {
-        nSubsidy = 35 * COIN;
-    } else if (nHeight <= 475199 && nHeight >= 432000) {
-        nSubsidy = 30 * COIN;
-    } else if (nHeight <= 518399 && nHeight >= 475200) {
-        nSubsidy = 25 * COIN;
-    } else if (nHeight <= 561599 && nHeight >= 518400) {
-        nSubsidy = 20 * COIN;
-    } else if (nHeight <= 604799 && nHeight >= 561600) {
-        nSubsidy = 15 * COIN;
-    } else if (nHeight <= 647999 && nHeight >= 604800) {
-        nSubsidy = 10 * COIN;
-    } else if (nHeight >= Params().Zerocoin_Block_V2_Start()) {
-        nSubsidy = 10 * COIN;
-    } else {
+    // get block value and calculate from that
+    if (nHeight <= 432799 && nHeight >= 346000) {
+        nSubsidy = 9 * COIN;
+    } else if (nHeight <= 519599 && nHeight >= 432800) {
+        nSubsidy = 8 * COIN;
+    } else if (nHeight <= 606399 && nHeight >= 519600) {
+        nSubsidy = 7 * COIN;
+    } else if (nHeight <= 693199 && nHeight >= 606400) {
+        nSubsidy = 6 * COIN;
+    } else if (nHeight <= 779999 && nHeight >= 693200) {
         nSubsidy = 5 * COIN;
+    } else if (nHeight >= 780000) {
+        nSubsidy = 5 * COIN;
+    } else
+        nSubsidy = 10 * COIN;
     }
 
     // Amount of blocks in a months period of time (using 1 minutes per) = (60*24*30)
-    if (nHeight <= 172800) {
-        return 648000 * COIN;
+    if (nHeight <= 346000) {
+        return nSubsidy * 10 * 60 * 24 * 30 * 12;
     } else {
-        return ((nSubsidy / 100) * 10) * 1440 * 30;
+        return ((nSubsidy / 100) * 10) * 60 * 24 * 30;
     }
 }
 
@@ -1149,7 +1136,7 @@ void CBudgetManager::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
 
 
         mapSeenMasternodeBudgetVotes.insert(make_pair(vote.GetHash(), vote));
-        if (!vote.SignatureValid(true)) {
+        if (!vote.SignatureValid(false)) {
             if (masternodeSync.IsSynced()) {
                 LogPrintf("CBudgetManager::ProcessMessage() : mvote - signature invalid\n");
                 Misbehaving(pfrom->GetId(), 20);
@@ -1223,7 +1210,7 @@ void CBudgetManager::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         }
 
         mapSeenFinalizedBudgetVotes.insert(make_pair(vote.GetHash(), vote));
-        if (!vote.SignatureValid(true)) {
+        if (!vote.SignatureValid(false)) {
             if (masternodeSync.IsSynced()) {
                 LogPrintf("CBudgetManager::ProcessMessage() : fbvote - signature invalid\n");
                 Misbehaving(pfrom->GetId(), 20);

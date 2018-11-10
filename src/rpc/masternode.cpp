@@ -58,7 +58,11 @@ UniValue masternode(const UniValue& params, bool fHelp)
         (strCommand != "start" && strCommand != "start-alias" && strCommand != "start-many" && strCommand != "start-all" && strCommand != "start-missing" &&
             strCommand != "start-disabled" && strCommand != "list" && strCommand != "list-conf" && strCommand != "count" && strCommand != "enforce" &&
             strCommand != "debug" && strCommand != "current" && strCommand != "winners" && strCommand != "genkey" && strCommand != "connect" &&
-            strCommand != "outputs" && strCommand != "status" && strCommand != "calcscore"))
+            // strCommand != "outputs" && strCommand != "status" && strCommand != "calcscore"))
+            // SYNX BEGIN 
+            strCommand != "outputs" && strCommand != "status" && strCommand != "calcscore" && strCommand != "collateral"))
+            // SYNX END
+
         throw runtime_error(
             "masternode \"command\"...\n"
             "\nSet of commands to execute masternode related actions\n"
@@ -80,6 +84,9 @@ UniValue masternode(const UniValue& params, bool fHelp)
             "  list         - Print list of all known masternodes (see masternodelist for more info)\n"
             "  list-conf    - Print masternode.conf in JSON format\n"
             "  winners      - Print list of masternode winners\n");
+            // SYNX BEGIN
+            "  collateral   - Print actual masternode collateral value\n"
+            // SYNX END
 
     if (strCommand == "list") {
         UniValue newParams(UniValue::VARR);
@@ -183,6 +190,19 @@ UniValue masternode(const UniValue& params, bool fHelp)
         }
         return getmasternodescores(newParams, fHelp);
     }
+
+    // SYNX BEGIN
+    if (strCommand == "collateral") {
+        LOCK(cs_main);
+
+        CMasternode cm;
+        CAmount nValue = cm.CollateralValue(chainActive.Height());
+
+        if (nValue == 0)
+            return "unknown";
+        return ValueFromAmount(nValue);
+    }
+    // SYNX END 
 
     return NullUniValue;
 }

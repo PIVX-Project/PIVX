@@ -148,13 +148,14 @@ public:
         nZerocoinStartTime = 2147483000;            // GMT: Tuesday, January 19, 2038 3:03:20 AM
         nBlockEnforceSerialRange = 2147483000;      // Enforce serial range starting this block
         nBlockRecalculateAccumulators = 2147483000; // Trigger a recalculation of accumulators
-        nBlockFirstFraudulent = 2147483000;         //First block that bad serials emerged (currently we do not have any)
+        nBlockFirstFraudulent = 2147483000;         // First block that bad serials emerged (currently we do not have any)
         nBlockLastGoodCheckpoint = 2147483000;      // Last valid accumulator checkpoint (currently we do not have any)
         nBlockEnforceInvalidUTXO = 2147483000;      // Start enforcing the invalid UTXO's
-        nInvalidAmountFiltered = 268200*COIN; //Amount of invalid coins filtered through exchanges, that should be considered valid
-        nBlockZerocoinV2 = 1153160; //!> The block that zerocoin v2 becomes active - roughly Tuesday, May 8, 2018 4:00:00 AM GMT
-        nEnforceNewSporkKey = 1525158000; //!> Sporks signed after (GMT): Tuesday, May 1, 2018 7:00:00 AM GMT must use the new spork key
-        nRejectOldSporkKey = 1527811200; //!> Fully reject old spork key after (GMT): Friday, June 1, 2018 12:00:00 AM
+        nBlockZerocoinV2 = 2147483000;              // !> The block that zerocoin v2 becomes active - roughly Tuesday, May 8, 2018 4:00:00 AM GMT
+        // SYNX BEGIN
+        nMasternodeCollateralMinimum = 5000;     // starting MN collateral
+        nMasternodeCollateralMaximum = 25000;    // MN collateral at infinity
+        // SYNX END 
 
         /**
          * Build the genesis block. Note that the output of the genesis coinbase cannot
@@ -208,7 +209,6 @@ public:
 
         nPoolMaxTransactions = 3;
         strSporkKey = "0494b3488594838306c1b91a8e4a802de046bd3f815c707f56a95f31ce8c55c947f4c2e878633fe288a35974952be12e819fe591677f845a99a85273142864b993";
-        strSporkKeyOld = "0494b3488594838306c1b91a8e4a802de046bd3f815c707f56a95f31ce8c55c947f4c2e878633fe288a35974952be12e819fe591677f845a99a85273142864b993";
         strObfuscationPoolDummyAddress = "SXmCHzNQXcgiHsS5fukBf95jxyPzqQP2it";
         nStartMasternodePayments = 1518696182; // GMT: Thursday, 15. February 2018 12:03:02
 
@@ -271,13 +271,14 @@ public:
         nZerocoinStartTime = 2147483000;            // GMT: Tuesday, January 19, 2038 3:03:20 AM
         nBlockEnforceSerialRange = 2147483000;      // Enforce serial range starting this block
         nBlockRecalculateAccumulators = 2147483000; // Trigger a recalculation of accumulators
-        nBlockFirstFraudulent = 2147483000;         //First block that bad serials emerged (currently we do not have any)
+        nBlockFirstFraudulent = 2147483000;         // First block that bad serials emerged (currently we do not have any)
         nBlockLastGoodCheckpoint = 2147483000;      // Last valid accumulator checkpoint (currently we do not have any)
         nBlockEnforceInvalidUTXO = 2147483000;      // Start enforcing the invalid UTXO's
-        nInvalidAmountFiltered = 0; //Amount of invalid coins filtered through exchanges, that should be considered valid
-        nBlockZerocoinV2 = 444020; //!> The block that zerocoin v2 becomes active
-        nEnforceNewSporkKey = 1521604800; //!> Sporks signed after Wednesday, March 21, 2018 4:00:00 AM GMT must use the new spork key
-        nRejectOldSporkKey = 1522454400; //!> Reject old spork key after Saturday, March 31, 2018 12:00:00 AM GMT
+        nBlockZerocoinV2 = 2147483000;              // !> The block that zerocoin v2 becomes active
+        // SYNX BEGIN
+        nMasternodeCollateralMinimum = 5000;     // starting MN collateral
+        nMasternodeCollateralMaximum = 25000;    // MN collateral at infinity
+        // SYNX END 
 
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nTime = 152051740;
@@ -308,7 +309,6 @@ public:
 
         nPoolMaxTransactions = 2;
         strSporkKey = "043c24f895d703d1a0837cff95d81c240e9c2a4e66e68ba5d7a607c971e131034b14747d8e7c08b2f3a7a7268eed34ad22b92a97a27eac494bedfbdfee3433959e";
-        strSporkKeyOld = "043c24f895d703d1a0837cff95d81c240e9c2a4e66e68ba5d7a607c971e131034b14747d8e7c08b2f3a7a7268eed34ad22b92a97a27eac494bedfbdfee3433959e";
         strObfuscationPoolDummyAddress = "gDkRMa4ceYWWN9VYK4ZDnQN21XHjTj45yY";
         nStartMasternodePayments = 1518696183;
 
