@@ -265,7 +265,7 @@ public:
         nMaxMoneyOut = 398360470 * COIN;
 
         /** Height or Time Based Activations **/
-        nLastPOWBlock = 512;                        // PoW End
+        nLastPOWBlock = 128;                        // PoW End
         nModifierUpdateBlock = 2147483000;          // Modify block on height (currently we do not have any)
         nZerocoinStartHeight = 2147483000;          // Zerocoin start height (currently we do not have any)
         nZerocoinStartTime = 2147483000;            // GMT: Tuesday, January 19, 2038 3:03:20 AM

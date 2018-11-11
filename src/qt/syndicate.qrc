@@ -63,6 +63,7 @@
         <file alias="default">res/css/default.css</file>
     </qresource>
     <qresource prefix="/images">
+        <file alias="pivx_logo_horizontal">res/images/syndicate_logo_horizontal.png</file>
         <file alias="about">res/images/about.png</file>
         <file alias="downArrow">res/images/downArrow_dark.png</file>
         <file alias="downArrow_small">res/images/downArrow_small_dark.png</file>
