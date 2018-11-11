@@ -2,7 +2,7 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
-// Copyright (c) 2016-2018 The Syndicate developers
+// Copyright (c) 2018 The Syndicate Ltd developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -128,12 +128,13 @@ CAmount AmountFromValue(const UniValue& value)
 
 UniValue ValueFromAmount(const CAmount& amount)
 {
+    bool superBlock = (amount % (((432000 * 12) / 2) * COIN)) == 0;
+    CAmount sbAmount = (superBlock ? (amount / (((432000 * 12) / 2) * COIN)) : amount);
     bool sign = amount < 0;
-    int64_t n_abs = (sign ? -amount : amount);
+    int64_t n_abs = (sign ? -amount : sbAmount);
     int64_t quotient = n_abs / COIN;
     int64_t remainder = n_abs % COIN;
-    return UniValue(UniValue::VNUM,
-            strprintf("%s%d.%08d", sign ? "-" : "", quotient, remainder));
+    return UniValue(UniValue::VNUM, strprintf("%s%d.%08d", sign ? "-" : "", quotient, remainder));
 }
 
 uint256 ParseHashV(const UniValue& v, string strName)

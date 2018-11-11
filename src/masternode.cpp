@@ -1,6 +1,6 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
-// Copyright (c) 2016-2018 The Syndicate developers
+// Copyright (c) 2018 The Syndicate Ltd developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -226,6 +226,26 @@ bool CMasternode::CollateralValueCheck(int nHeight, CAmount TxValue)
 CAmount CMasternode::CollateralValue(int nHeight)
 {
     CAmount mnCollateral = 0;
+
+    if (Params().NetworkID() == CBaseChainParams::TESTNET) {
+        if (nHeight <= 659 && nHeight >= 600) {
+            mnCollateral = 5000 * COIN;
+        } else if (nHeight <= 719 && nHeight >= 660) {
+            mnCollateral = 10000 * COIN;
+        } else if (nHeight <= 779 && nHeight >= 720) {
+            mnCollateral = 15000 * COIN;
+        } else if (nHeight <= 939 && nHeight >= 780) {
+            mnCollateral = 20000 * COIN;
+        } else if (nHeight <= 999 && nHeight >= 940) {
+            mnCollateral = 25000 * COIN;
+        } else if (nHeight >= 1000) {
+            mnCollateral = 25000 * COIN;
+        } else {
+            mnCollateral = 5000 * COIN;
+        }
+        return mnCollateral;
+    }
+
     if (nHeight <= 432799 && nHeight >= 346000) {
         mnCollateral = 5000 * COIN;
     } else if (nHeight <= 519599 && nHeight >= 432800) {

@@ -2,7 +2,7 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
-// Copyright (c) 2016-2018 The Syndicate developers
+// Copyright (c) 2018 The Syndicate Ltd developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1769,6 +1769,30 @@ double ConvertBitsToDouble(unsigned int nBits)
 int64_t GetBlockValue(int nHeight)
 {
     int64_t nSubsidy = 0; 
+
+    if (Params().NetworkID() == CBaseChainParams::TESTNET) {
+        if (nHeight == 0) {
+            nSubsidy = 0 * COIN; // Genesis block
+        } else if (nHeight == 1) {
+            return 30000001 * COIN; // PREMINE: Current available SYNX 30.000.000
+        } else if (nHeight <= 659 && nHeight >= 600) {
+            nSubsidy = 9 * COIN;
+        } else if (nHeight <= 719 && nHeight >= 660) {
+            nSubsidy = 8 * COIN;
+        } else if (nHeight <= 779 && nHeight >= 720) {
+            nSubsidy = 7 * COIN;
+        } else if (nHeight <= 939 && nHeight >= 780) {
+            nSubsidy = 6 * COIN;
+        } else if (nHeight <= 999 && nHeight >= 940) {
+            nSubsidy = 5 * COIN;
+        } else if (nHeight >= 1000) {
+            nSubsidy = 5 * COIN;
+        } else {
+            nSubsidy = 10 * COIN;
+        }
+        return nSubsidy;
+    }
+
     if (nHeight == 0) {
         nSubsidy = 0 * COIN; // Genesis block
     } else if (nHeight == 1) {
@@ -1806,7 +1830,7 @@ CAmount GetSeeSaw(const CAmount& blockValue, int nMasternodeCount, int nHeight)
                 nMasternodeCount = mnodeman.size();
         }
 
-        int64_t mNodeCoins = nMasternodeCount * 5000 * COIN;
+        int64_t mNodeCoins = nMasternodeCount * 5000 * COIN; // 5000 it's OK
         if (mNodeCoins == 0) {
             ret = 0;
         } else {
@@ -2075,6 +2099,15 @@ CAmount GetSeeSaw(const CAmount& blockValue, int nMasternodeCount, int nHeight)
 
 int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCount, bool isZSYNXStake)
 {
+    if (Params().NetworkID() == CBaseChainParams::TESTNET) {
+        if (nHeight < 600) {
+            return GetSeeSaw(blockValue, nMasternodeCount, nHeight);
+        }
+        else {
+            return blockValue * .70;
+        }
+    }
+
     if (nHeight < 346000) {
         return GetSeeSaw(blockValue, nMasternodeCount, nHeight);
     }

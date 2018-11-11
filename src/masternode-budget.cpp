@@ -1,6 +1,6 @@
 // Copyright (c) 2014-2015 The Dash developers
 // Copyright (c) 2015-2018 The PIVX developers
-// Copyright (c) 2016-2018 The Syndicate developers
+// Copyright (c) 2018 The Syndicate Ltd developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -916,6 +916,31 @@ CAmount CBudgetManager::GetTotalBudget(int nHeight)
         return 0;
 
     CAmount nSubsidy = 0; 
+
+    if (Params().NetworkID() == CBaseChainParams::TESTNET) {
+        if (nHeight <= 659 && nHeight >= 600) {
+            nSubsidy = 9 * COIN;
+        } else if (nHeight <= 719 && nHeight >= 660) {
+            nSubsidy = 8 * COIN;
+        } else if (nHeight <= 779 && nHeight >= 720) {
+            nSubsidy = 7 * COIN;
+        } else if (nHeight <= 939 && nHeight >= 780) {
+            nSubsidy = 6 * COIN;
+        } else if (nHeight <= 999 && nHeight >= 940) {
+            nSubsidy = 5 * COIN;
+        } else if (nHeight >= 1000) {
+            nSubsidy = 5 * COIN;
+        } else {
+            nSubsidy = 10 * COIN;
+        }
+
+        // Amount of blocks in a months period of time (using 1 minutes per) = (60*24*30)
+        if (nHeight <= 600) {
+            return nSubsidy * 10 * 60 * 24 * 30 * 12;
+        } else {
+            return ((nSubsidy / 100) * 10) * 60 * 24 * 30;
+        }
+    }
 
     // get block value and calculate from that
     if (nHeight <= 432799 && nHeight >= 346000) {
