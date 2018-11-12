@@ -30,7 +30,7 @@ More information at [synx.online](http://synx.online) Visit our ANN thread at [B
 
 <table>
 <th>Phase</th><th>Block Height</th><th>Reward</th><th>Masternodes & Stakers</th><th>Masternode collateral</th><th>Budget</th>
-<tr><td>Phase 1</td><td>513-345999</td><td>10 SYNX</td><td>Seesaw</td><td>10% (1 SYNX)</td></tr>
+<tr><td>Phase 1</td><td>513-345999</td><td>10 SYNX</td><td>Seesaw</td><td>5000</td><td>10% (1 SYNX)</td></tr>
 <tr><td>Phase 2</td><td>346000-432799</td><td>9 SYNX</td><td>70% (6.3 SYNX)</td><td>5000</td><td>10% (0.9 SYNX)</td></tr>
 <tr><td>Phase 3</td><td>432800-519599</td><td>8 SYNX</td><td>70% (5.6 SYNX)</td><td>10000</td><td>10% (0.8 SYNX)</td></tr>
 <tr><td>Phase 4</td><td>519600-606399</td><td>7 SYNX</td><td>70% (4.9 SYNX)</td><td>15000</td><td>10% (0.7 SYNX)</td></tr>
