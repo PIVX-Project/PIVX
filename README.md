@@ -16,7 +16,6 @@ More information at [synx.online](http://synx.online) Visit our ANN thread at [B
 <tr><td>Block Time</td><td>60 Seconds</td></tr>
 <tr><td>Difficulty Retargeting</td><td>Every Block</td></tr>
 <tr><td>Max Coin Supply (PoS Phase)</td><td>Infinite</td></tr>
-<tr><td>Premine</td><td>30,000,000 SYNX</td></tr>
 </table>
 
 ### PoW Rewards Breakdown
