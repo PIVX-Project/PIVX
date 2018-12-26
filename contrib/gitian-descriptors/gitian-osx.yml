@@ -31,7 +31,7 @@ remotes:
 - "url": "https://github.com/pivx-project/pivx.git"
   "dir": "pivx"
 files:
-- "MacOSX10.11.sdk.tar.gz"
+- "MacOSX10.11.sdk.tar.xz"
 script: |
   WRAP_DIR=$HOME/wrapped
   HOSTS="x86_64-apple-darwin14"
@@ -88,7 +88,7 @@ script: |
   BASEPREFIX=`pwd`/depends
 
   mkdir -p ${BASEPREFIX}/SDKs
-  tar -C ${BASEPREFIX}/SDKs -xf ${BUILD_DIR}/MacOSX10.11.sdk.tar.gz
+  tar -C ${BASEPREFIX}/SDKs -xvf ${BUILD_DIR}/MacOSX10.11.sdk.tar.xz
 
   # Build dependencies for each host
   for i in $HOSTS; do
