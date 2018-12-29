@@ -51,8 +51,9 @@ def build():
     os.chdir('gitian-builder')
     os.makedirs('inputs', exist_ok=True)
 
-    subprocess.check_call(['wget', '-N', '-P', 'inputs', 'http://downloads.sourceforge.net/project/osslsigncode/osslsigncode/osslsigncode-1.7.1.tar.gz'])
-    subprocess.check_call(['wget', '-N', '-P', 'inputs', 'https://bitcoincore.org/cfields/osslsigncode-Backports-to-1.7.1.patch'])
+    subprocess.check_call(['wget', '-O', 'inputs/osslsigncode-1.7.1.tar.xz', '-N', '-P', 'inputs', 'https://github.com/cevap/osslsigncode/releases/download/v1.7.1/osslsigncode-1.7.1.tar.xz'])
+    subprocess.check_call(['wget', '-O', 'inputs/osslsigncode-Backports-to-1.7.1.patch', '-N', '-P', 'inputs', 'https://github.com/cevap/osslsigncode/releases/download/v1.7.1/osslsigncode-Backports-to-1.7.1.patch'])
+    subprocess.check_call(['wget', '-O', 'inputs/MacOSX10.11.sdk.tar.xz', '-N', '-P', 'inputs', 'https://github.com/gitianuser/MacOSX-SDKs/releases/download/MacOSX10.11.sdk/MacOSX10.11.sdk.tar.xz'])
     subprocess.check_call(['make', '-C', '../PIVX/depends', 'download', 'SOURCES_PATH=' + os.getcwd() + '/cache/common'])
 
     if args.linux:

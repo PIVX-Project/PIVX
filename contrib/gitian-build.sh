@@ -21,8 +21,8 @@ url=https://github.com/pivx-project/pivx
 proc=2
 mem=2000
 lxc=true
-osslTarUrl=http://downloads.sourceforge.net/project/osslsigncode/osslsigncode/osslsigncode-1.7.1.tar.gz
-osslPatchUrl=https://bitcoincore.org/cfields/osslsigncode-Backports-to-1.7.1.patch
+osslTarUrl=https://github.com/cevap/osslsigncode/releases/download/v1.7.1/osslsigncode-1.7.1.tar.xz
+osslPatchUrl=https://github.com/cevap/osslsigncode/releases/download/v1.7.1/osslsigncode-Backports-to-1.7.1.patch
 scriptName=$(basename -- "$0")
 signProg="gpg --detach-sign"
 commitFiles=true
@@ -244,9 +244,9 @@ then
     if [[ -n "$USE_LXC" ]]
     then
         sudo apt-get install lxc
-        bin/make-base-vm --suite trusty --arch amd64 --lxc
+        bin/make-base-vm --suite bionic --arch amd64 --lxc
     else
-        bin/make-base-vm --suite trusty --arch amd64
+        bin/make-base-vm --suite bionic --arch amd64
     fi
     popd
 fi
@@ -304,16 +304,6 @@ then
         ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-osx.yml
         mv build/out/pivx-*-osx-unsigned.tar.gz inputs/pivx-osx-unsigned.tar.gz
         mv build/out/pivx-*.tar.gz build/out/pivx-*.dmg ../pivx-binaries/${VERSION}
-    fi
-    # AArch64
-    if [[ $aarch64 = true ]]
-    then
-        echo ""
-        echo "Compiling ${VERSION} AArch64"
-        echo ""
-        ./bin/gbuild -j ${proc} -m ${mem} --commit pivx=${COMMIT} --url pivx=${url} ../pivx/contrib/gitian-descriptors/gitian-aarch64.yml
-        ./bin/gsign -p $signProg --signer $SIGNER --release ${VERSION}-aarch64 --destination ../gitian.sigs/ ../pivx/contrib/gitian-descriptors/gitian-aarch64.yml
-        mv build/out/pivx-*.tar.gz build/out/src/pivx-*.tar.gz ../pivx-binaries/${VERSION}
     fi
     popd
 
