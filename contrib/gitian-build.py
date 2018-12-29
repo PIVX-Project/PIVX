@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2018 The Bitcoin Core developers
+# Copyright (c) 2018 The Ion Core developers
+# Copyright (c) 2018 The PIVX Core developers
 
 import argparse
 import os
