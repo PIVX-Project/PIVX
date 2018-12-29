@@ -2,6 +2,8 @@
 # Copyright (c) 2018 The Bitcoin Core developers
 # Copyright (c) 2018 The Ion Core developers
 # Copyright (c) 2018 The PIVX Core developers
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 import argparse
 import os
@@ -56,7 +58,6 @@ def build():
 
     subprocess.check_call(['wget', '-O', 'inputs/osslsigncode-1.7.1.tar.xz', '-N', '-P', 'inputs', 'https://github.com/cevap/osslsigncode/releases/download/v1.7.1/osslsigncode-1.7.1.tar.xz'])
     subprocess.check_call(['wget', '-O', 'inputs/osslsigncode-Backports-to-1.7.1.patch', '-N', '-P', 'inputs', 'https://github.com/cevap/osslsigncode/releases/download/v1.7.1/osslsigncode-Backports-to-1.7.1.patch'])
-    subprocess.check_call(['wget', '-O', 'inputs/MacOSX10.11.sdk.tar.xz', '-N', '-P', 'inputs', 'https://github.com/gitianuser/MacOSX-SDKs/releases/download/MacOSX10.11.sdk/MacOSX10.11.sdk.tar.xz'])
     subprocess.check_call(['make', '-C', '../PIVX/depends', 'download', 'SOURCES_PATH=' + os.getcwd() + '/cache/common'])
 
     if args.linux:
@@ -204,7 +205,10 @@ def main():
             os.environ['LXC_GUEST_IP'] = '10.0.3.5'
 
     # Disable for MacOS if no SDK found
-    if args.macos and not os.path.isfile('gitian-builder/inputs/MacOSX10.11.sdk.tar.gz'):
+    if args.macos and not os.path.isfile('gitian-builder/inputs/MacOSX10.11.sdk.tar.xz'):
+        subprocess.check_call(['wget', '-O', 'gitian-builder/inputs/MacOSX10.11.sdk.tar.xz', '-N', '-P', 'gitian-builder/inputs', 'https://github.com/gitianuser/MacOSX-SDKs/releases/download/MacOSX10.11.sdk/MacOSX10.11.sdk.tar.xz'])
+ 
+    if args.macos and not os.path.isfile('gitian-builder/inputs/MacOSX10.11.sdk.tar.xz'):
         print('Cannot build for MacOS, SDK does not exist. Will build for other OSes')
         args.macos = False
 
