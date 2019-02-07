@@ -86,10 +86,6 @@ static const int MAX_ADDNODE_CONNECTIONS = 16;
 static const int INBOUND_EVICTION_PROTECTION_TIME = 1;
 /** -listen default */
 static const bool DEFAULT_LISTEN = true;
-/** The maximum number of entries in mapAskFor */
-static const size_t MAPASKFOR_MAX_SZ = MAX_INV_SZ;
-/** The maximum number of entries in setAskFor (larger due to getdata latency)*/
-static const size_t SETASKFOR_MAX_SZ = 2 * MAX_INV_SZ;
 /** The maximum number of peer connections to maintain. */
 static const unsigned int DEFAULT_MAX_PEER_CONNECTIONS = 125;
 /** Disconnected peers are added to setOffsetDisconnectedPeers only if node has less than ENOUGH_CONNECTIONS */
@@ -568,8 +564,6 @@ bool validateMasternodeIP(const std::string& addrStr);          // valid, reacha
 extern bool fDiscover;
 extern bool fListen;
 
-extern limitedmap<CInv, int64_t> mapAlreadyAskedFor;
-
 /** Subversion as sent to the P2P network in `version` messages */
 extern std::string strSubVersion;
 
@@ -773,8 +767,6 @@ public:
     // Set of tier two messages ids we still have to announce.
     std::vector<CInv> vInventoryTierTwoToSend;
     RecursiveMutex cs_inventory;
-    std::multimap<int64_t, CInv> mapAskFor;
-    std::set<uint256> setAskFor;
     std::vector<uint256> vBlockRequested;
     std::chrono::microseconds nNextInvSend{0};
     // Used for BIP35 mempool sending, also protected by cs_inventory
@@ -924,10 +916,6 @@ public:
             vInventoryTierTwoToSend.emplace_back(inv);
         }
     }
-
-    void AskFor(const CInv& inv, int64_t doubleRequestDelay = 2 * 60 * 1000000);
-    // inv response received, clear it from the waiting inv set.
-    void AskForInvReceived(const uint256& invHash);
 
     void CloseSocketDisconnect();
     bool DisconnectOldProtocol(int nVersionIn, int nVersionRequired);
