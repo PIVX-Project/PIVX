@@ -59,6 +59,7 @@
         <file alias="explorer">res/icons/explorer.png</file>
         <file alias="automint_inactive">res/icons/automint_inactive.png</file>
         <file alias="onion">res/icons/onion.png</file>
+        <file alias="bitcoin_regtest">res/icons/bitcoin_regtest.png</file>
     </qresource>
     <qresource prefix="/css">
         <file alias="default">res/css/default.css</file>
@@ -78,6 +79,7 @@
         <file alias="walletFrame">res/images/walletFrame.png</file>
         <file alias="splash">res/images/splash.png</file>
         <file alias="splash_testnet">res/images/splash_testnet.png</file>
+        <file alias="splash_regtest">res/images/splash_regtest.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
