@@ -1,0 +1,14 @@
+# http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.0.html
+
+[Desktop Entry]
+Type=Application
+Version=3.1.99
+Encoding=UTF-8
+Name=Pivx-Qt Regtest
+Icon=${SNAP}/qt-regtest.ico
+MimeType=x-scheme-handler/pivx;
+Exec=pivx.qt-regtest %u
+Terminal=false
+Categories=Office;Finance;
+Comment=PIVX Core Regression Test (by PIVX-Project)
+Keywords=internet;pivx;regtest;qt;crypto;currency;snap;snapcraft;PIVX-Project;project;daemon;cli;qt;zerocoin;zpiv

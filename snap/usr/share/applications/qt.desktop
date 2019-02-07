@@ -1,0 +1,14 @@
+# http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.0.html
+
+[Desktop Entry]
+Type=Application
+Version=3.1.99
+Encoding=UTF-8
+Name=Pivx-Qt
+Icon=${SNAP}/qt.png
+MimeType=x-scheme-handler/pivx;
+Exec=pivx.qt %u
+Terminal=false
+Categories=Office;Finance;
+Comment=PIVX Core (by PIVX-Project)
+Keywords=internet;pivx;main;qt;crypto;currency;snap;snapcraft;project;zerocoin;zpiv
