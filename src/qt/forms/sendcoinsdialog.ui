@@ -493,7 +493,7 @@
                         <enum>Qt::ActionsContextMenu</enum>
                        </property>
                        <property name="text">
-                        <string notr="true">0.00 PIV</string>
+                        <string notr="true">0.00 VPX</string>
                        </property>
                        <property name="textInteractionFlags">
                         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -573,7 +573,7 @@
                         <enum>Qt::ActionsContextMenu</enum>
                        </property>
                        <property name="text">
-                        <string notr="true">0.00 PIV</string>
+                        <string notr="true">0.00 VPX</string>
                        </property>
                        <property name="textInteractionFlags">
                         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -653,7 +653,7 @@
                         <enum>Qt::ActionsContextMenu</enum>
                        </property>
                        <property name="text">
-                        <string notr="true">0.00 PIV</string>
+                        <string notr="true">0.00 VPX</string>
                        </property>
                        <property name="textInteractionFlags">
                         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -682,7 +682,7 @@
                         <enum>Qt::ActionsContextMenu</enum>
                        </property>
                        <property name="text">
-                        <string notr="true">0.00 PIV</string>
+                        <string notr="true">0.00 VPX</string>
                        </property>
                        <property name="textInteractionFlags">
                         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -849,7 +849,7 @@
                 <item>
                  <widget class="QLabel" name="labelBlockSize">
                   <property name="text">
-                   <string>0 PIV</string>
+                   <string>0 VPX</string>
                   </property>
                  </widget>
                 </item>
@@ -1016,7 +1016,7 @@
                     </size>
                    </property>
                    <property name="toolTip">
-                    <string>SwiftX technology allows for near instant transactions - A flat fee of 0.01 PIV applies</string>
+                    <string>SwiftX technology allows for near instant transactions - A flat fee of 0.01 VPX applies</string>
                    </property>
                    <property name="text">
                     <string>SwiftX</string>
@@ -1397,7 +1397,7 @@
                       <item>
                        <widget class="QCheckBox" name="checkBoxMinimumFee">
                         <property name="toolTip">
-                         <string>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for PIVX transactions than the network can process.</string>
+                         <string>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for VPX transactions than the network can process.</string>
                         </property>
                         <property name="text">
                          <string/>
@@ -1410,7 +1410,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="toolTip">
-                         <string>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for PIVX transactions than the network can process.</string>
+                         <string>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks.&lt;br /&gt;But be aware that this can end up in a never confirming transaction once there is more demand for VPX transactions than the network can process.</string>
                         </property>
                         <property name="text">
                          <string>(read the tooltip)</string>
@@ -1639,7 +1639,7 @@
               <string>S&amp;end</string>
              </property>
              <property name="icon">
-              <iconset resource="../pivx.qrc">
+              <iconset resource="../vpx.qrc">
                <normaloff>:/icons/send</normaloff>:/icons/send</iconset>
              </property>
              <property name="autoDefault">
@@ -1665,7 +1665,7 @@
               <string>Clear &amp;All</string>
              </property>
              <property name="icon">
-              <iconset resource="../pivx.qrc">
+              <iconset resource="../vpx.qrc">
                <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
              </property>
              <property name="autoDefault">
@@ -1682,7 +1682,7 @@
               <string>Add &amp;Recipient</string>
              </property>
              <property name="icon">
-              <iconset resource="../pivx.qrc">
+              <iconset resource="../vpx.qrc">
                <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
              </property>
              <property name="autoDefault">
@@ -1714,7 +1714,7 @@
                 <bool>false</bool>
                </property>
                <property name="text">
-                <string>Anonymized PIV</string>
+                <string>Anonymized VPX</string>
                </property>
               </widget>
              </item>
@@ -1737,7 +1737,7 @@
                 <cursorShape>IBeamCursor</cursorShape>
                </property>
                <property name="text">
-                <string notr="true">123.456 PIV</string>
+                <string notr="true">123.456 VPX</string>
                </property>
                <property name="textInteractionFlags">
                 <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -1770,7 +1770,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../vpx.qrc"/>
  </resources>
  <connections/>
  <buttongroups>

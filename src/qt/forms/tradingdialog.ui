@@ -442,10 +442,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>Buy PIV</string>
+      <string>Buy VPX</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx.qrc">
+      <iconset resource="../vpx.qrc">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -512,7 +512,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>PIV</string>
+      <string>VPX</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_5">
@@ -1704,7 +1704,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>PIV</string>
+      <string>VPX</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="UnitsInputPIV">
@@ -1751,10 +1751,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>Sell PIV</string>
+      <string>Sell VPX</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx">
+      <iconset resource="../vpx">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -1777,7 +1777,7 @@
          </font>
         </property>
         <property name="text">
-         <string>PIV Available:</string>
+         <string>VPX Available:</string>
         </property>
        </widget>
       </item>
@@ -2221,7 +2221,7 @@
          </font>
         </property>
         <property name="text">
-         <string>PIV</string>
+         <string>VPX</string>
         </property>
        </widget>
       </item>
@@ -2762,7 +2762,7 @@
       </font>
      </property>
      <property name="text">
-      <string>PIV Balance:</string>
+      <string>VPX Balance:</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_12">
@@ -2813,7 +2813,7 @@
       </font>
      </property>
      <property name="text">
-      <string>PIV Available:</string>
+      <string>VPX Available:</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_14">
@@ -2832,7 +2832,7 @@
       </font>
      </property>
      <property name="text">
-      <string>PIV Pending:</string>
+      <string>VPX Pending:</string>
      </property>
     </widget>
     <widget class="QLabel" name="PIVPendingLabel">
@@ -2928,7 +2928,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Bittrex PIV Deposit Address:</string>
+      <string>Bittrex VPX Deposit Address:</string>
      </property>
     </widget>
     <widget class="QPushButton" name="GenDepositBTN">
@@ -2941,10 +2941,10 @@
       </rect>
      </property>
      <property name="text">
-      <string>Generate PIVX Deposit Address</string>
+      <string>Generate VPX Deposit Address</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx.qrc">
+      <iconset resource="../vpx.qrc">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -3155,7 +3155,7 @@
        <string notr="true">border: 1px solid #61696c;margin-left:4px;</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="btnConvertPivx">
+     <widget class="QPushButton" name="btnConvertVpx">
       <property name="geometry">
        <rect>
         <x>260</x>
@@ -3206,7 +3206,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap resource="../pivx.qrc">:/icons/transaction_1</pixmap>
+       <pixmap resource="../vpx.qrc">:/icons/transaction_1</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -3253,7 +3253,7 @@
       <string>Update API Keys</string>
      </property>
      <property name="icon">
-      <iconset resource="../pivx.qrc">
+      <iconset resource="../vpx.qrc">
        <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
      </property>
     </widget>
@@ -3408,7 +3408,7 @@
   </widget>
  </widget>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../vpx.qrc"/>
  </resources>
  <connections/>
 </ui>

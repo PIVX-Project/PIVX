@@ -1,12 +1,12 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The PIVX developers
+// Copyright (c) 2015-2018 The VPX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_UINT256_H
-#define PIVX_UINT256_H
+#ifndef VPX_UINT256_H
+#define VPX_UINT256_H
 
 #include <assert.h>
 #include <cstring>
@@ -410,4 +410,4 @@ inline uint512 uint512S(const std::string& str)
     return rv;
 }
 
-#endif // PIVX_UINT256_H
+#endif // VPX_UINT256_H

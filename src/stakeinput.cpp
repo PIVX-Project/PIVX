@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 The PIVX developers
+// Copyright (c) 2017-2018 The VPX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -40,7 +40,7 @@ uint32_t CZPivStake::GetChecksum()
     return nChecksum;
 }
 
-// The zPIV block index is the first appearance of the accumulator checksum that was used in the spend
+// The zVPX block index is the first appearance of the accumulator checksum that was used in the spend
 // note that this also means when staking that this checksum should be from a block that is beyond 60 minutes old and
 // 100 blocks deep.
 CBlockIndex* CZPivStake::GetIndexFrom()
@@ -93,7 +93,7 @@ bool CZPivStake::GetModifier(uint64_t& nStakeModifier)
 
 CDataStream CZPivStake::GetUniqueness()
 {
-    //The unique identifier for a zPIV is a hash of the serial
+    //The unique identifier for a zVPX is a hash of the serial
     CDataStream ss(SER_GETHASH, 0);
     ss << hashSerial;
     return ss;
@@ -122,23 +122,23 @@ bool CZPivStake::CreateTxIn(CWallet* pwallet, CTxIn& txIn, uint256 hashTxOut)
 
 bool CZPivStake::CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount nTotal)
 {
-    //Create an output returning the zPIV that was staked
+    //Create an output returning the zVPX that was staked
     CTxOut outReward;
     libzerocoin::CoinDenomination denomStaked = libzerocoin::AmountToZerocoinDenomination(this->GetValue());
     CDeterministicMint dMint;
     if (!pwallet->CreateZPIVOutPut(denomStaked, outReward, dMint))
-        return error("%s: failed to create zPIV output", __func__);
+        return error("%s: failed to create zVPX output", __func__);
     vout.emplace_back(outReward);
 
     //Add new staked denom to our wallet
     if (!pwallet->DatabaseMint(dMint))
-        return error("%s: failed to database the staked zPIV", __func__);
+        return error("%s: failed to database the staked zVPX", __func__);
 
     for (unsigned int i = 0; i < 3; i++) {
         CTxOut out;
         CDeterministicMint dMintReward;
         if (!pwallet->CreateZPIVOutPut(libzerocoin::CoinDenomination::ZQ_ONE, out, dMintReward))
-            return error("%s: failed to create zPIV output", __func__);
+            return error("%s: failed to create zVPX output", __func__);
         vout.emplace_back(out);
 
         if (!pwallet->DatabaseMint(dMintReward))
@@ -164,7 +164,7 @@ bool CZPivStake::MarkSpent(CWallet *pwallet, const uint256& txid)
     return true;
 }
 
-//!PIV Stake
+//!VPX Stake
 bool CPivStake::SetInput(CTransaction txPrev, unsigned int n)
 {
     this->txFrom = txPrev;
@@ -240,7 +240,7 @@ bool CPivStake::GetModifier(uint64_t& nStakeModifier)
 
 CDataStream CPivStake::GetUniqueness()
 {
-    //The unique identifier for a PIV stake is the outpoint
+    //The unique identifier for a VPX stake is the outpoint
     CDataStream ss(SER_NETWORK, 0);
     ss << nPosition << txFrom.GetHash();
     return ss;

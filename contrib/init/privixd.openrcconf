@@ -1,0 +1,33 @@
+# /etc/conf.d/privixd: config file for /etc/init.d/privixd
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/vpx/vpx.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/privixd"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/privixd.pid"
+
+# Where to write privixd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/privixd"
+
+# User and group to own privixd process
+#BITCOIND_USER="vpx"
+#BITCOIND_GROUP="vpx"
+
+# Path to privixd executable
+#BITCOIND_BIN="/usr/bin/privixd"
+
+# Nice value to run privixd under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#BITCOIND_OPTS=""
+
+# The timeout in seconds OpenRC will wait for bitcoind to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+BITCOIND_SIGTERM_TIMEOUT=60

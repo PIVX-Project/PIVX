@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 The PIVX developers
+// Copyright (c) 2017-2018 The VPX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,7 +21,7 @@ CzPIVWallet::CzPIVWallet(std::string strWalletFile)
     uint256 hashSeed;
     bool fFirstRun = !walletdb.ReadCurrentSeedHash(hashSeed);
 
-    //Check for old db version of storing zpiv seed
+    //Check for old db version of storing zvpx seed
     if (fFirstRun) {
         uint256 seed;
         if (walletdb.ReadZPIVSeed_deprecated(seed)) {
@@ -30,10 +30,10 @@ CzPIVWallet::CzPIVWallet(std::string strWalletFile)
             hashSeed = Hash(seed.begin(), seed.end());
             if (pwalletMain->AddDeterministicSeed(seed)) {
                 if (walletdb.EraseZPIVSeed_deprecated()) {
-                    LogPrintf("%s: Updated zPIV seed databasing\n", __func__);
+                    LogPrintf("%s: Updated zVPX seed databasing\n", __func__);
                     fFirstRun = false;
                 } else {
-                    LogPrintf("%s: failed to remove old zpiv seed\n", __func__);
+                    LogPrintf("%s: failed to remove old zvpx seed\n", __func__);
                 }
             }
         }
@@ -55,7 +55,7 @@ CzPIVWallet::CzPIVWallet(std::string strWalletFile)
         key.MakeNewKey(true);
         seed = key.GetPrivKey_256();
         seedMaster = seed;
-        LogPrintf("%s: first run of zpiv wallet detected, new seed generated. Seedhash=%s\n", __func__, Hash(seed.begin(), seed.end()).GetHex());
+        LogPrintf("%s: first run of zvpx wallet detected, new seed generated. Seedhash=%s\n", __func__, Hash(seed.begin(), seed.end()).GetHex());
     } else if (!pwalletMain->GetDeterministicSeed(hashSeed, seed)) {
         LogPrintf("%s: failed to get deterministic seed for hashseed %s\n", __func__, hashSeed.GetHex());
         return;

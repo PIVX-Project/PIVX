@@ -1,9 +1,9 @@
-// Copyright (c) 2018 The PIVX developers
+// Copyright (c) 2018 The VPX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_ZPIVTRACKER_H
-#define PIVX_ZPIVTRACKER_H
+#ifndef VPX_ZPIVTRACKER_H
+#define VPX_ZPIVTRACKER_H
 
 #include "primitives/zerocoin.h"
 #include <list>
@@ -49,4 +49,4 @@ public:
     void Clear();
 };
 
-#endif //PIVX_ZPIVTRACKER_H
+#endif //VPX_ZPIVTRACKER_H

@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2016-2018 The PIVX developers
+// Copyright (c) 2016-2018 The VPX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_PUBKEY_H
-#define PIVX_PUBKEY_H
+#ifndef VPX_PUBKEY_H
+#define VPX_PUBKEY_H
 
 #include "hash.h"
 #include "serialize.h"
@@ -263,4 +263,4 @@ public:
     ~ECCVerifyHandle();
 };
 
-#endif // PIVX_PUBKEY_H
+#endif // VPX_PUBKEY_H

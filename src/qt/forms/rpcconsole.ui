@@ -354,7 +354,7 @@
        <item row="16" column="0">
         <widget class="QPushButton" name="openDebugLogfileButton">
          <property name="toolTip">
-          <string>Open the PIVX debug log file from the current data directory. This can take a few seconds for large log files.</string>
+          <string>Open the VPX debug log file from the current data directory. This can take a few seconds for large log files.</string>
          </property>
          <property name="text">
           <string>&amp;Open</string>
@@ -423,7 +423,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../pivx.qrc">
+            <iconset resource="../vpx.qrc">
              <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
            </property>
            <property name="shortcut">
@@ -1328,7 +1328,7 @@
        <item row="4" column="0">
         <widget class="QLabel" name="wallet_customzpivbackuppath_label">
          <property name="text">
-          <string>Custom zPIV Backup Path:</string>
+          <string>Custom zVPX Backup Path:</string>
          </property>
          <property name="visible">
           <bool>false</bool>
@@ -1637,7 +1637,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../pivx.qrc"/>
+  <include location="../vpx.qrc"/>
  </resources>
  <connections/>
 </ui>

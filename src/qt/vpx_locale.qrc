@@ -1,0 +1,36 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="bg">locale/vpx_bg.qm</file>
+        <file alias="ca">locale/vpx_ca.qm</file>
+        <file alias="cs">locale/vpx_cs.qm</file>
+        <file alias="da">locale/vpx_da.qm</file>
+        <file alias="de">locale/vpx_de.qm</file>
+        <file alias="en">locale/vpx_en.qm</file>
+        <file alias="en_US">locale/vpx_en_US.qm</file>
+        <file alias="eo">locale/vpx_eo.qm</file>
+        <file alias="es">locale/vpx_es.qm</file>
+        <file alias="es_ES">locale/vpx_es_ES.qm</file>
+        <file alias="fi">locale/vpx_fi.qm</file>
+        <file alias="fr_FR">locale/vpx_fr_FR.qm</file>
+        <file alias="hi_IN">locale/vpx_hi_IN.qm</file>
+        <file alias="hr">locale/vpx_hr.qm</file>
+        <file alias="hr_HR">locale/vpx_hr_HR.qm</file>
+        <file alias="it">locale/vpx_it.qm</file>
+        <file alias="ja">locale/vpx_ja.qm</file>
+        <file alias="ko_KR">locale/vpx_ko_KR.qm</file>
+        <file alias="lt_LT">locale/vpx_lt_LT.qm</file>
+        <file alias="nl">locale/vpx_nl.qm</file>
+        <file alias="pl">locale/vpx_pl.qm</file>
+        <file alias="pt">locale/vpx_pt.qm</file>
+        <file alias="pt_BR">locale/vpx_pt_BR.qm</file>
+        <file alias="ro_RO">locale/vpx_ro_RO.qm</file>
+        <file alias="ru">locale/vpx_ru.qm</file>
+        <file alias="sk">locale/vpx_sk.qm</file>
+        <file alias="sv">locale/vpx_sv.qm</file>
+        <file alias="tr">locale/vpx_tr.qm</file>
+        <file alias="uk">locale/vpx_uk.qm</file>
+        <file alias="vi">locale/vpx_vi.qm</file>
+        <file alias="zh_CN">locale/vpx_zh_CN.qm</file>
+        <file alias="zh_TW">locale/vpx_zh_TW.qm</file>
+    </qresource>
+</RCC>

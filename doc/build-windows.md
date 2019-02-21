@@ -1,12 +1,12 @@
 WINDOWS BUILD NOTES
 ====================
 
-Below are some notes on how to build Pivx Core for Windows.
+Below are some notes on how to build Vpx Core for Windows.
 
-The options known to work for building Pivx Core on Windows are:
+The options known to work for building Vpx Core on Windows are:
 
 * On Linux using the [Mingw-w64](https://mingw-w64.org/doku.php) cross compiler tool chain. Ubuntu Bionic 18.04 is required
-and is the platform used to build the Pivx Core Windows release binaries.
+and is the platform used to build the Vpx Core Windows release binaries.
 * On Windows using [Windows
 Subsystem for Linux (WSL)](https://msdn.microsoft.com/commandline/wsl/about) and the Mingw-w64 cross compiler tool chain.
 
@@ -79,18 +79,18 @@ Ubuntu Bionic 18.04 <sup>[1](#footnote1)</sup>:
 
 Once the toolchain is installed the build steps are common:
 
-Note that for WSL the Pivx Core source path should be somewhere in the default mount file system, for
-example /usr/src/pivx, AND not under /mnt/d/. If this is not the case the dependency autoconf scripts may fail.
+Note that for WSL the Vpx Core source path should be somewhere in the default mount file system, for
+example /usr/src/vpx, AND not under /mnt/d/. If this is not the case the dependency autoconf scripts may fail.
 This means you should not use a directory that is located directly on the host Windows file system to perform the build.
 
 Acquire the source in the usual way:
 
-    git clone https://github.com/PIVX-Project/PIVX.git
+    git clone https://github.com/VPX-Project/VPX.git
 
 Once the source code is ready the build steps are below.
 
     PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g') # strip out problematic Windows %PATH% imported var
-    cd PIVX/depends/
+    cd VPX/depends/
     make HOST=x86_64-w64-mingw32
     cd ..
     ./autogen.sh # not required when building from tarball
@@ -107,18 +107,18 @@ For Ubuntu Bionic 18.04 and Windows Subsystem for Linux <sup>[1](#footnote1)</su
 
     sudo update-alternatives --config i686-w64-mingw32-g++  # Set the default mingw32 g++ compiler option to posix.
 
-Note that for WSL the Pivx Core source path should be somewhere in the default mount file system, for
-example /usr/src/pivx, AND not under /mnt/d/. If this is not the case the dependency autoconf scripts may fail.
+Note that for WSL the Vpx Core source path should be somewhere in the default mount file system, for
+example /usr/src/vpx, AND not under /mnt/d/. If this is not the case the dependency autoconf scripts may fail.
 This means you should not use a directory that is located directly on the host Windows file system to perform the build.
 
 Acquire the source in the usual way:
 
-    git clone https://github.com/PIVX-Project/PIVX.git
+    git clone https://github.com/VPX-Project/VPX.git
 
 Then build using:
 
     PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g') # strip out problematic Windows %PATH% imported var
-    cd PIVX/depends/
+    cd VPX/depends/
     make HOST=i686-w64-mingw32
     cd ..
     ./autogen.sh # not required when building from tarball
@@ -135,9 +135,9 @@ Installation
 After building using the Windows subsystem it can be useful to copy the compiled
 executables to a directory on the Windows drive in the same directory structure
 as they appear in the release `.zip` archive. This can be done in the following
-way. This will install to `c:\workspace\pivx`, for example:
+way. This will install to `c:\workspace\vpx`, for example:
 
-    make install DESTDIR=/mnt/c/workspace/pivx
+    make install DESTDIR=/mnt/c/workspace/vpx
 
 Footnotes
 ---------
@@ -146,5 +146,5 @@ Footnotes
 compiler options to allow a choice between either posix or win32 threads. The default option is win32 threads which is the more
 efficient since it will result in binary code that links directly with the Windows kernel32.lib. Unfortunately, the headers
 required to support win32 threads conflict with some of the classes in the C++11 standard library in particular std::mutex.
-It's not possible to build the Pivx Core code using the win32 version of the Mingw-w64 cross compilers (at least not without
-modifying headers in the Pivx Core source code).
+It's not possible to build the Vpx Core code using the win32 version of the Mingw-w64 cross compilers (at least not without
+modifying headers in the Vpx Core source code).

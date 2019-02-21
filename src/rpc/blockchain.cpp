@@ -1,7 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The PIVX developers
+// Copyright (c) 2015-2018 The VPX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -249,7 +249,7 @@ UniValue getrawmempool(const UniValue& params, bool fHelp)
             "{                           (json object)\n"
             "  \"transactionid\" : {       (json object)\n"
             "    \"size\" : n,             (numeric) transaction size in bytes\n"
-            "    \"fee\" : n,              (numeric) transaction fee in pivx\n"
+            "    \"fee\" : n,              (numeric) transaction fee in vpx\n"
             "    \"time\" : n,             (numeric) local time transaction entered pool in seconds since 1 Jan 1970 GMT\n"
             "    \"height\" : n,           (numeric) block height when transaction entered pool\n"
             "    \"startingpriority\" : n, (numeric) priority when transaction entered pool\n"
@@ -332,15 +332,15 @@ UniValue getblock(const UniValue& params, bool fHelp)
             "  \"moneysupply\" : \"supply\"       (numeric) The money supply when this block was added to the blockchain\n"
             "  \"zPIVsupply\" :\n"
             "  {\n"
-            "     \"1\" : n,            (numeric) supply of 1 zPIV denomination\n"
-            "     \"5\" : n,            (numeric) supply of 5 zPIV denomination\n"
-            "     \"10\" : n,           (numeric) supply of 10 zPIV denomination\n"
-            "     \"50\" : n,           (numeric) supply of 50 zPIV denomination\n"
-            "     \"100\" : n,          (numeric) supply of 100 zPIV denomination\n"
-            "     \"500\" : n,          (numeric) supply of 500 zPIV denomination\n"
-            "     \"1000\" : n,         (numeric) supply of 1000 zPIV denomination\n"
-            "     \"5000\" : n,         (numeric) supply of 5000 zPIV denomination\n"
-            "     \"total\" : n,        (numeric) The total supply of all zPIV denominations\n"
+            "     \"1\" : n,            (numeric) supply of 1 zVPX denomination\n"
+            "     \"5\" : n,            (numeric) supply of 5 zVPX denomination\n"
+            "     \"10\" : n,           (numeric) supply of 10 zVPX denomination\n"
+            "     \"50\" : n,           (numeric) supply of 50 zVPX denomination\n"
+            "     \"100\" : n,          (numeric) supply of 100 zVPX denomination\n"
+            "     \"500\" : n,          (numeric) supply of 500 zVPX denomination\n"
+            "     \"1000\" : n,         (numeric) supply of 1000 zVPX denomination\n"
+            "     \"5000\" : n,         (numeric) supply of 5000 zVPX denomination\n"
+            "     \"total\" : n,        (numeric) The total supply of all zVPX denominations\n"
             "  }\n"
             "}\n"
 
@@ -493,8 +493,8 @@ UniValue gettxout(const UniValue& params, bool fHelp)
             "     \"hex\" : \"hex\",        (string) \n"
             "     \"reqSigs\" : n,          (numeric) Number of required signatures\n"
             "     \"type\" : \"pubkeyhash\", (string) The type, eg pubkeyhash\n"
-            "     \"addresses\" : [          (array of string) array of pivx addresses\n"
-            "     \"pivxaddress\"   	 	(string) pivx address\n"
+            "     \"addresses\" : [          (array of string) array of vpx addresses\n"
+            "     \"vpxaddress\"   	 	(string) vpx address\n"
             "        ,...\n"
             "     ]\n"
             "  },\n"

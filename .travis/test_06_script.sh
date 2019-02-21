@@ -34,7 +34,7 @@ BEGIN_FOLD distdir
 DOCKER_EXEC make distdir VERSION=$HOST
 END_FOLD
 
-cd "pivx-$HOST" || (echo "could not enter distdir pivx-$HOST"; exit 1)
+cd "vpx-$HOST" || (echo "could not enter distdir vpx-$HOST"; exit 1)
 
 BEGIN_FOLD configure
 DOCKER_EXEC ./configure --cache-file=../config.cache $BITCOIN_CONFIG_ALL $BITCOIN_CONFIG || ( cat config.log && false)
@@ -52,7 +52,7 @@ fi
 
 if [ "$RUN_BENCH" = "true" ]; then
   BEGIN_FOLD bench
-  DOCKER_EXEC LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/depends/$HOST/lib $OUTDIR/bin/bench_pivx -scaling=0.001
+  DOCKER_EXEC LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/depends/$HOST/lib $OUTDIR/bin/bench_vpx -scaling=0.001
   END_FOLD
 fi
 

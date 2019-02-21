@@ -1,9 +1,9 @@
-// Copyright (c) 2017-2018 The PIVX developers
+// Copyright (c) 2017-2018 The VPX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_ZPIVWALLET_H
-#define PIVX_ZPIVWALLET_H
+#ifndef VPX_ZPIVWALLET_H
+#define VPX_ZPIVWALLET_H
 
 #include <map>
 #include "libzerocoin/Coin.h"
@@ -46,4 +46,4 @@ private:
     uint512 GetZerocoinSeed(uint32_t n);
 };
 
-#endif //PIVX_ZPIVWALLET_H
+#endif //VPX_ZPIVWALLET_H

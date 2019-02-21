@@ -1,7 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The PIVX developers
+// Copyright (c) 2015-2018 The VPX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -266,11 +266,11 @@ UniValue stop(const UniValue& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "stop\n"
-            "\nStop PIVX server.");
+            "\nStop VPX server.");
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
     StartShutdown();
-    return "PIVX server stopping";
+    return "VPX server stopping";
 }
 
 
@@ -356,37 +356,37 @@ static const CRPCCommand vRPCCommands[] =
         {"hidden", "reconsiderblock", &reconsiderblock, true, true, false},
         {"hidden", "setmocktime", &setmocktime, true, false, false},
 
-        /* PIVX features */
-        {"pivx", "masternode", &masternode, true, true, false},
-        {"pivx", "listmasternodes", &listmasternodes, true, true, false},
-        {"pivx", "getmasternodecount", &getmasternodecount, true, true, false},
-        {"pivx", "masternodeconnect", &masternodeconnect, true, true, false},
-        {"pivx", "createmasternodebroadcast", &createmasternodebroadcast, true, true, false},
-        {"pivx", "decodemasternodebroadcast", &decodemasternodebroadcast, true, true, false},
-        {"pivx", "relaymasternodebroadcast", &relaymasternodebroadcast, true, true, false},
-        {"pivx", "masternodecurrent", &masternodecurrent, true, true, false},
-        {"pivx", "masternodedebug", &masternodedebug, true, true, false},
-        {"pivx", "startmasternode", &startmasternode, true, true, false},
-        {"pivx", "createmasternodekey", &createmasternodekey, true, true, false},
-        {"pivx", "getmasternodeoutputs", &getmasternodeoutputs, true, true, false},
-        {"pivx", "listmasternodeconf", &listmasternodeconf, true, true, false},
-        {"pivx", "getmasternodestatus", &getmasternodestatus, true, true, false},
-        {"pivx", "getmasternodewinners", &getmasternodewinners, true, true, false},
-        {"pivx", "getmasternodescores", &getmasternodescores, true, true, false},
-        {"pivx", "mnbudget", &mnbudget, true, true, false},
-        {"pivx", "preparebudget", &preparebudget, true, true, false},
-        {"pivx", "submitbudget", &submitbudget, true, true, false},
-        {"pivx", "mnbudgetvote", &mnbudgetvote, true, true, false},
-        {"pivx", "getbudgetvotes", &getbudgetvotes, true, true, false},
-        {"pivx", "getnextsuperblock", &getnextsuperblock, true, true, false},
-        {"pivx", "getbudgetprojection", &getbudgetprojection, true, true, false},
-        {"pivx", "getbudgetinfo", &getbudgetinfo, true, true, false},
-        {"pivx", "mnbudgetrawvote", &mnbudgetrawvote, true, true, false},
-        {"pivx", "mnfinalbudget", &mnfinalbudget, true, true, false},
-        {"pivx", "checkbudgets", &checkbudgets, true, true, false},
-        {"pivx", "mnsync", &mnsync, true, true, false},
-        {"pivx", "spork", &spork, true, true, false},
-        {"pivx", "getpoolinfo", &getpoolinfo, true, true, false},
+        /* VPX features */
+        {"vpx", "masternode", &masternode, true, true, false},
+        {"vpx", "listmasternodes", &listmasternodes, true, true, false},
+        {"vpx", "getmasternodecount", &getmasternodecount, true, true, false},
+        {"vpx", "masternodeconnect", &masternodeconnect, true, true, false},
+        {"vpx", "createmasternodebroadcast", &createmasternodebroadcast, true, true, false},
+        {"vpx", "decodemasternodebroadcast", &decodemasternodebroadcast, true, true, false},
+        {"vpx", "relaymasternodebroadcast", &relaymasternodebroadcast, true, true, false},
+        {"vpx", "masternodecurrent", &masternodecurrent, true, true, false},
+        {"vpx", "masternodedebug", &masternodedebug, true, true, false},
+        {"vpx", "startmasternode", &startmasternode, true, true, false},
+        {"vpx", "createmasternodekey", &createmasternodekey, true, true, false},
+        {"vpx", "getmasternodeoutputs", &getmasternodeoutputs, true, true, false},
+        {"vpx", "listmasternodeconf", &listmasternodeconf, true, true, false},
+        {"vpx", "getmasternodestatus", &getmasternodestatus, true, true, false},
+        {"vpx", "getmasternodewinners", &getmasternodewinners, true, true, false},
+        {"vpx", "getmasternodescores", &getmasternodescores, true, true, false},
+        {"vpx", "mnbudget", &mnbudget, true, true, false},
+        {"vpx", "preparebudget", &preparebudget, true, true, false},
+        {"vpx", "submitbudget", &submitbudget, true, true, false},
+        {"vpx", "mnbudgetvote", &mnbudgetvote, true, true, false},
+        {"vpx", "getbudgetvotes", &getbudgetvotes, true, true, false},
+        {"vpx", "getnextsuperblock", &getnextsuperblock, true, true, false},
+        {"vpx", "getbudgetprojection", &getbudgetprojection, true, true, false},
+        {"vpx", "getbudgetinfo", &getbudgetinfo, true, true, false},
+        {"vpx", "mnbudgetrawvote", &mnbudgetrawvote, true, true, false},
+        {"vpx", "mnfinalbudget", &mnfinalbudget, true, true, false},
+        {"vpx", "checkbudgets", &checkbudgets, true, true, false},
+        {"vpx", "mnsync", &mnsync, true, true, false},
+        {"vpx", "spork", &spork, true, true, false},
+        {"vpx", "getpoolinfo", &getpoolinfo, true, true, false},
 
 #ifdef ENABLE_WALLET
         /* Wallet */
@@ -622,7 +622,7 @@ std::vector<std::string> CRPCTable::listCommands() const
 
 std::string HelpExampleCli(string methodname, string args)
 {
-    return "> pivx-cli " + methodname + " " + args + "\n";
+    return "> privix-cli " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleRpc(string methodname, string args)

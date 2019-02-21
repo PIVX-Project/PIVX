@@ -9,7 +9,7 @@
  * @copyright  Copyright 2013 Ian Miers, Christina Garman and Matthew Green
  * @license    This project is released under the MIT license.
  **/
-// Copyright (c) 2017-2018 The PIVX developers
+// Copyright (c) 2017-2018 The VPX developers
 
 #ifndef COINSPEND_H_
 #define COINSPEND_H_
@@ -39,7 +39,7 @@ class CoinSpend
 public:
 
     //! \param paramsV1 - if this is a V1 zerocoin, then use params that existed with initial modulus, ignored otherwise
-    //! \param paramsV2 - params that begin when V2 zerocoins begin on the PIVX network
+    //! \param paramsV2 - params that begin when V2 zerocoins begin on the VPX network
     //! \param strm - a serialized CoinSpend
     template <typename Stream>
     CoinSpend(const ZerocoinParams* paramsV1, const ZerocoinParams* paramsV2, Stream& strm) :

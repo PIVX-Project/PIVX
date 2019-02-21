@@ -1,13 +1,13 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2012 The Bitcoin developers
-// Copyright (c) 2017-2018 The PIVX developers
+// Copyright (c) 2017-2018 The VPX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef BITCOIN_BIGNUM_H
 #define BITCOIN_BIGNUM_H
 
 #if defined HAVE_CONFIG_H
-#include "config/pivx-config.h"
+#include "config/vpx-config.h"
 #endif
 
 #include <stdexcept>

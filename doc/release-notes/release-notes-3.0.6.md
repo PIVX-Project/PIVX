@@ -1,25 +1,25 @@
-PIVX Core version 3.0.6 is now available from:
+VPX Core version 3.0.6 is now available from:
 
-  <https://github.com/pivx-project/pivx/releases>
+  <https://github.com/vpx-project/vpx/releases>
 
 This is a new minor-revision version release, including various bug fixes and
 performance improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at github:
 
-  <https://github.com/pivx-project/pivx/issues>
+  <https://github.com/vpx-project/vpx/issues>
 
 
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/VPX-Qt (on Mac) or privixd/privix-qt (on Linux).
 
 
 Compatibility
 ==============
 
-PIVX Core is extensively tested on multiple operating systems using
+VPX Core is extensively tested on multiple operating systems using
 the Linux kernel, macOS 10.8+, and Windows Vista and later.
 
 Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support),
@@ -27,7 +27,7 @@ No attempt is made to prevent installing or running the software on Windows XP, 
 can still do so at your own risk but be aware that there are known instabilities and issues.
 Please do not report issues about Windows XP to the issue tracker.
 
-PIVX Core should also work on most other Unix-like systems but is not
+VPX Core should also work on most other Unix-like systems but is not
 frequently tested on them.
 
 ### :exclamation::exclamation::exclamation: MacOS 10.13 High Sierra :exclamation::exclamation::exclamation:
@@ -40,7 +40,7 @@ Notable Changes
 
 Automated Database Corruption Repair
 ---------------------
-There have been cases of blockchain database corruption that can occur when PIVX client is not closed gracefully. The most common cases of corruption have been identified and the wallet will now automatically fix most of these corruptions. Certain corruption states are still unable to be fixed, but now provide more detailed error messages to the user as well as prompting the user to reindex their database.
+There have been cases of blockchain database corruption that can occur when VPX client is not closed gracefully. The most common cases of corruption have been identified and the wallet will now automatically fix most of these corruptions. Certain corruption states are still unable to be fixed, but now provide more detailed error messages to the user as well as prompting the user to reindex their database.
 
 More Accurate Error Messages
 ---------------------
@@ -52,19 +52,19 @@ Many 3rd party services have reported that their debug logs have been overloaded
 
 Removal of Heavy Running Transaction Search Code
 ---------------------
-Many areas of the block validation code use a "slow" transaction search, which searches redundantly for transactions. This "slow" search has been removed upstream in Bitcoin and is now removed in PIVX. This provides a more efficient syncing process and generally better performing wallet.
+Many areas of the block validation code use a "slow" transaction search, which searches redundantly for transactions. This "slow" search has been removed upstream in Bitcoin and is now removed in VPX. This provides a more efficient syncing process and generally better performing wallet.
 
 Sync Fix for Block 908000
 ---------------------
-Many wallets were having trouble getting past block 908000. This block recalculates certain aspects of the money supply and zPIV transactions, and is known to take longer to sync. Code has been added to allow block 908000 to be validated without the user needing to enter any special commands into the debug console.
+Many wallets were having trouble getting past block 908000. This block recalculates certain aspects of the money supply and zVPX transactions, and is known to take longer to sync. Code has been added to allow block 908000 to be validated without the user needing to enter any special commands into the debug console.
 
 Working Testnet
 ---------------------
 Testnet is now accessible with this release of the wallet. Testnet can be accessed using the `-testnet` startup flag.
 
-zPIV Spending Fix
+zVPX Spending Fix
 ---------------------
-zPIV that were minted between block 891730 and 895400 were experiencing an error initializing the accumulator witness data correctly, causing an inability to spend those mints. This has been fixed.
+zVPX that were minted between block 891730 and 895400 were experiencing an error initializing the accumulator witness data correctly, causing an inability to spend those mints. This has been fixed.
 
 
 3.0.6 Change log
@@ -83,14 +83,14 @@ git merge commit are mentioned.
 ### Block and Transaction Handling
 - #395 `5c5a9c6` [Main] Avoid slow transaction search with txindex enabled (Fuzzbawls)
 - #405 `e415420` [Main] Automate database corruption fix caused by out of sync txdb. (presstab)
-- #408 `beae959` Fix "accumulator does not verify" when spending zPIV. (presstab)
+- #408 `beae959` Fix "accumulator does not verify" when spending zVPX. (presstab)
 - #418 `90b0310` Fix edge case segfault. (presstab)
 
 ### P2P Protocol and Network Code
 - #393 `58ec23f` [Testnet] Adjust testnet chainparams to new hard coded values. (presstab)
 
 ### Wallet
-- #412 `2fb5f17` Double check tx size when creating zPIV tx's. (presstab)
+- #412 `2fb5f17` Double check tx size when creating zVPX tx's. (presstab)
 
 ### GUI
 - #384 `7897f60` [Qt] Periodic make translate (Fuzzbawls)
@@ -116,4 +116,4 @@ Thanks to everyone who directly contributed to this release:
 - sonic
 - whateverpal
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/).
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/vpx-project-translations/).

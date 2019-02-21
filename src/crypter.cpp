@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2013 The Bitcoin developers
-// Copyright (c) 2017-2018 The PIVX developers
+// Copyright (c) 2017-2018 The VPX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -259,7 +259,7 @@ bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn)
 
             uint256 nSeed;
             if (!GetDeterministicSeed(hashSeed, nSeed)) {
-                return error("Failed to read zPIV seed from DB. Wallet is probably corrupt.");
+                return error("Failed to read zVPX seed from DB. Wallet is probably corrupt.");
             }
             pwalletMain->zwalletMain->SetMasterSeed(nSeed, false);
         } else {
@@ -268,7 +268,7 @@ bool CCryptoKeyStore::Unlock(const CKeyingMaterial& vMasterKeyIn)
             CKey key;
             key.MakeNewKey(true);
             uint256 seed = key.GetPrivKey_256();
-            LogPrintf("%s: first run of zpiv wallet detected, new seed generated. Seedhash=%s\n", __func__, Hash(seed.begin(), seed.end()).GetHex());
+            LogPrintf("%s: first run of zvpx wallet detected, new seed generated. Seedhash=%s\n", __func__, Hash(seed.begin(), seed.end()).GetHex());
             pwalletMain->zwalletMain->SetMasterSeed(seed, true);
             pwalletMain->zwalletMain->GenerateMintPool();
         }

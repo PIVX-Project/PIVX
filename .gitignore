@@ -7,12 +7,12 @@ reset-files.bash
 *.tar.gz
 
 *.exe
-src/pivx
-src/pivxd
-src/pivx-cli
-src/pivx-tx
-src/test/test_pivx
-src/qt/test/test_pivx-qt
+src/vpx
+src/privixd
+src/privix-cli
+src/privix-tx
+src/test/test_vpx
+src/qt/test/test_vpx-qt
 
 # autoreconf
 Makefile.in
@@ -38,8 +38,8 @@ confdefs.h
 conftest.cpp
 conftest.err
 libtool
-src/config/pivx-config.h
-src/config/pivx-config.h.in
+src/config/vpx-config.h
+src/config/vpx-config.h.in
 src/config/stamp-h1
 share/setup.nsi
 share/qt/Info.plist
@@ -65,7 +65,7 @@ src/qt/test/moc*.cpp
 *.o
 *.o-*
 *.patch
-.pivx
+.vpx
 *.a
 *.pb.cc
 *.pb.h
@@ -84,13 +84,13 @@ src/qt/test/moc*.cpp
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-pivx-qt
-PIVX-Qt.app
+privix-qt
+VPX-Qt.app
 background.tiff*
 
 # Unit-tests
 Makefile.test
-pivx-qt_test
+privix-qt_test
 src/test/buildenv.py
 
 # Resources cpp
@@ -106,7 +106,7 @@ build
 #lcov
 *.gcno
 /*.info
-test_pivx.coverage/
+test_vpx.coverage/
 total.coverage/
 coverage_percent.txt
 
@@ -131,3 +131,8 @@ libbitcoinconsensus.pc
 .idea
 CMakeLists.txt
 cmake-build-debug
+.vs/Privix/v15/.suo
+.vs/Privix/v15/Browse.VC.db
+.vs/Privix/v15/Browse.VC.opendb
+.vs/ProjectSettings.json
+.vs/slnx.sqlite
