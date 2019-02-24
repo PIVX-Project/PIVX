@@ -2365,7 +2365,7 @@ To enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in pivx.conf<
         <translation>ReScan</translation>
     </message>
     <message>
-        <source>Status and/or Mesages from the last Mint Action.</source>
+        <source>Status and/or Messages from the last Mint Action.</source>
         <translation>Son mint Eyleminden Durum ve / veya Mesajlar</translation>
     </message>
     <message>

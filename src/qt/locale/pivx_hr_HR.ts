@@ -2434,7 +2434,7 @@ Da biste omogućili, promjenite postavke AutoMint 'enablezeromint=0' na 'enablez
         <translation>Ponovno pretraži</translation>
     </message>
     <message>
-        <source>Status and/or Mesages from the last Mint Action.</source>
+        <source>Status and/or Messages from the last Mint Action.</source>
         <translation>Status i/ili poruke od zadnje Mint akcije</translation>
     </message>
     <message>

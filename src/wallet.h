@@ -227,7 +227,7 @@ public:
     void InitAutoConvertAddresses();
 
 
-    /** Zerocin entry changed.
+    /** Zerocoin entry changed.
     * @note called with lock cs_wallet held.
     */
     boost::signals2::signal<void(CWallet* wallet, const std::string& pubCoin, const std::string& isUsed, ChangeType status)> NotifyZerocoinChanged;

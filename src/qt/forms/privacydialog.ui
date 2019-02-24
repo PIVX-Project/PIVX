@@ -670,7 +670,7 @@
                          </font>
                         </property>
                         <property name="toolTip">
-                         <string>Status and/or Mesages from the last Mint Action.</string>
+                         <string>Status and/or Messages from the last Mint Action.</string>
                         </property>
                         <property name="frameShape">
                          <enum>QFrame::Panel</enum>

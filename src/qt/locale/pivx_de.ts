@@ -2425,7 +2425,7 @@ Um das automatische Prägen zu aktivieren ändere 'enablezeromint=0' zu 'enablez
         <translation>Erneut Scannen</translation>
     </message>
     <message>
-        <source>Status and/or Mesages from the last Mint Action.</source>
+        <source>Status and/or Messages from the last Mint Action.</source>
         <translation>Status und/oder Mitteilungen aus der letzten Prägung</translation>
     </message>
     <message>
