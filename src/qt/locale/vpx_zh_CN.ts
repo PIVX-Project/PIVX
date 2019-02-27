@@ -172,8 +172,8 @@
         <translation>确认钱包加密</translation>
     </message>
     <message>
-        <source>VPX will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
-        <translation>VPX将关闭以完成加密过程。但是，仅仅加密您的钱包是不够的，因为它并不能阻止恶意软件从您的电脑里面偷取PIVs。</translation>
+        <source>VPX will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your VPXs from being stolen by malware infecting your computer.</source>
+        <translation>VPX将关闭以完成加密过程。但是，仅仅加密您的钱包是不够的，因为它并不能阻止恶意软件从您的电脑里面偷取VPXs。</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>

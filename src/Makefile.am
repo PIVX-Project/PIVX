@@ -181,12 +181,12 @@ BITCOIN_CORE_H = \
   wallet.h \
   wallet_ismine.h \
   walletdb.h \
-  zpivchain.h \
-  zpivtracker.h \
-  zpivwallet.h \
+  zvpxchain.h \
+  zvpxtracker.h \
+  zvpxwallet.h \
   genwit.h \
   concurrentqueue.h \
-  lightzpivthread.h \
+  lightzvpxthread.h \
   zmq/zmqabstractnotifier.h \
   zmq/zmqconfig.h \
   zmq/zmqnotificationinterface.h \
@@ -234,7 +234,7 @@ libbitcoin_server_a_SOURCES = \
   txdb.cpp \
   txmempool.cpp \
   validationinterface.cpp \
-  zpivchain.cpp \
+  zvpxchain.cpp \
   $(BITCOIN_CORE_H)
 
 if ENABLE_ZMQ
@@ -274,11 +274,11 @@ libbitcoin_wallet_a_SOURCES = \
   wallet.cpp \
   wallet_ismine.cpp \
   walletdb.cpp \
-  zpivwallet.cpp \
-  zpivtracker.cpp \
+  zvpxwallet.cpp \
+  zvpxtracker.cpp \
   stakeinput.cpp \
   genwit.cpp \
-  lightzpivthread.cpp \
+  lightzvpxthread.cpp \
   $(BITCOIN_CORE_H)
 
 # crypto primitives library
@@ -419,15 +419,15 @@ nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # privixd binary #
-vpxd_SOURCES = privixd.cpp
-vpxd_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-vpxd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-vpxd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+privixd_SOURCES = privixd.cpp
+privixd_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+privixd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+privixd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-vpxd_SOURCES += privixd-res.rc
+privixd_SOURCES += privixd-res.rc
 endif
-vpxd_LDADD = \
+privixd_LDADD = \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_WALLET) \
   $(LIBBITCOIN_COMMON) \
@@ -441,7 +441,7 @@ vpxd_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-vpxd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+privixd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
 
 # privix-cli binary #
 vpx_cli_SOURCES = privix-cli.cpp

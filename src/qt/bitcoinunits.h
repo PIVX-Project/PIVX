@@ -58,8 +58,8 @@ public:
      */
     enum Unit {
         VPX,
-        mPIV,
-        uPIV
+        mVPX,
+        uVPX
     };
 
     enum SeparatorStyle {

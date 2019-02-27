@@ -176,7 +176,7 @@
         <translation>Conferma cifratura portafoglio</translation>
     </message>
     <message>
-        <source>VPX will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
+        <source>VPX will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your VPXs from being stolen by malware infecting your computer.</source>
         <translation>VPX verrà ora chiuso per completare il processo di cifratura. Ricorda che crittografare il tuo portafoglio non protegge completamente i tuoi VPX dal furto da parte di software malevoli che potrebbero infettare il tuo computer.</translation>
     </message>
     <message>
@@ -738,7 +738,7 @@
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to VPX network</source>
-        <translation><numerusform>%n connessione attiva alla rete PIVIX</numerusform><numerusform>%n connessioni attive alla rete PIVIX</numerusform></translation>
+        <translation><numerusform>%n connessione attiva alla rete VPXIX</numerusform><numerusform>%n connessioni attive alla rete VPXIX</numerusform></translation>
     </message>
     <message>
         <source>Synchronizing with network...</source>
@@ -1126,8 +1126,8 @@ MultiSend: %1</translation>
         <translation>Questa etichetta diventa rossa se uno dei destinatari riceve un importo inferiore a %1.</translation>
     </message>
     <message>
-        <source>Can vary +/- %1 upiv per input.</source>
-        <translation>Può variare di +/- %1 uPIV per input.</translation>
+        <source>Can vary +/- %1 uvpx per input.</source>
+        <translation>Può variare di +/- %1 uVPX per input.</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1275,7 +1275,7 @@ MultiSend: %1</translation>
     </message>
     <message>
         <source>Welcome to VPX Core.</source>
-        <translation>Benvenuto in PIVIX Core.</translation>
+        <translation>Benvenuto in VPXIX Core.</translation>
     </message>
     <message>
         <source>As this is the first time the program is launched, you can choose where VPX Core will store its data.</source>

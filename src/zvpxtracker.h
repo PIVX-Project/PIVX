@@ -2,16 +2,16 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef VPX_ZPIVTRACKER_H
-#define VPX_ZPIVTRACKER_H
+#ifndef VPX_ZVPXTRACKER_H
+#define VPX_ZVPXTRACKER_H
 
 #include "primitives/zerocoin.h"
 #include <list>
 
 class CDeterministicMint;
-class CzPIVWallet;
+class CzVPXWallet;
 
-class CzPIVTracker
+class CzVPXTracker
 {
 private:
     bool fInitialized;
@@ -20,9 +20,9 @@ private:
     std::map<uint256, uint256> mapPendingSpends; //serialhash, txid of spend
     bool UpdateStatusInternal(const std::set<uint256>& setMempool, CMintMeta& mint);
 public:
-    CzPIVTracker(std::string strWalletFile);
-    ~CzPIVTracker();
-    void Add(const CDeterministicMint& dMint, bool isNew = false, bool isArchived = false, CzPIVWallet* zPIVWallet = NULL);
+    CzVPXTracker(std::string strWalletFile);
+    ~CzVPXTracker();
+    void Add(const CDeterministicMint& dMint, bool isNew = false, bool isArchived = false, CzVPXWallet* zVPXWallet = NULL);
     void Add(const CZerocoinMint& mint, bool isNew = false, bool isArchived = false);
     bool Archive(CMintMeta& meta);
     bool HasPubcoin(const CBigNum& bnValue) const;
@@ -49,4 +49,4 @@ public:
     void Clear();
 };
 
-#endif //VPX_ZPIVTRACKER_H
+#endif //VPX_ZVPXTRACKER_H

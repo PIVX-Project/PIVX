@@ -181,7 +181,7 @@
       <string>Asks</string>
      </property>
     </widget>
-    <widget class="QLabel" name="PIVSupply">
+    <widget class="QLabel" name="VPXSupply">
      <property name="geometry">
       <rect>
        <x>540</x>
@@ -197,7 +197,7 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="PIVDemand">
+    <widget class="QLabel" name="PRIVIXDemand">
      <property name="geometry">
       <rect>
        <x>160</x>
@@ -432,7 +432,7 @@
     <attribute name="title">
      <string>Buy</string>
     </attribute>
-    <widget class="QPushButton" name="BuyPIV">
+    <widget class="QPushButton" name="BuyVPX">
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -1707,7 +1707,7 @@
       <string>VPX</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="UnitsInputPIV">
+    <widget class="QLineEdit" name="UnitsInputVPX">
      <property name="geometry">
       <rect>
        <x>310</x>
@@ -1741,7 +1741,7 @@
       </font>
      </property>
     </widget>
-    <widget class="QPushButton" name="SellPIVBTN">
+    <widget class="QPushButton" name="SellVPXBTN">
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -1782,7 +1782,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="PIVAvailableLabel">
+       <widget class="QLabel" name="VPXAvailableLabel">
         <property name="palette">
          <palette>
           <active>
@@ -2213,7 +2213,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="labelPIV">
+       <widget class="QLabel" name="labelVPX">
         <property name="font">
          <font>
           <weight>75</weight>
@@ -2733,7 +2733,7 @@
       <string>TextLabel</string>
      </property>
     </widget>
-    <widget class="QLabel" name="PIVBalanceLabel">
+    <widget class="QLabel" name="VPXBalanceLabel">
      <property name="geometry">
       <rect>
        <x>150</x>
@@ -2784,7 +2784,7 @@
       <string>BTC Balance:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="PIVAvailableLabel_2">
+    <widget class="QLabel" name="VPXAvailableLabel_2">
      <property name="geometry">
       <rect>
        <x>150</x>
@@ -2835,7 +2835,7 @@
       <string>VPX Pending:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="PIVPendingLabel">
+    <widget class="QLabel" name="VPXPendingLabel">
      <property name="geometry">
       <rect>
        <x>150</x>

@@ -4,8 +4,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
 
-#ifndef VPX_LIGHTZPIVTHREAD_H
-#define VPX_LIGHTZPIVTHREAD_H
+#ifndef VPX_LIGHTZVPXTHREAD_H
+#define VPX_LIGHTZVPXTHREAD_H
 
 #include <atomic>
 #include "genwit.h"
@@ -50,22 +50,22 @@ public:
         return true;
     }
 
-    void StartLightZpivThread(boost::thread_group& threadGroup) {
+    void StartLightZvpxThread(boost::thread_group& threadGroup) {
         LogPrintf("%s thread start\n", "vpx-light-thread");
-        threadIns = boost::thread(boost::bind(&CLightWorker::ThreadLightZPIVSimplified, this));
+        threadIns = boost::thread(boost::bind(&CLightWorker::ThreadLightZVPXSimplified, this));
     }
 
-    void StopLightZpivThread() {
+    void StopLightZvpxThread() {
         threadIns.interrupt();
         LogPrintf("%s thread interrupted\n", "vpx-light-thread");
     }
 
 private:
 
-    void ThreadLightZPIVSimplified();
+    void ThreadLightZVPXSimplified();
 
     void rejectWork(CGenWit& wit, int blockHeight, uint32_t errorNumber);
 
 };
 
-#endif //VPX_LIGHTZPIVTHREAD_H
+#endif //VPX_LIGHTZVPXTHREAD_H

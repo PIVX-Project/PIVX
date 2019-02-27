@@ -126,7 +126,7 @@ bool CZPivStake::CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount nT
     CTxOut outReward;
     libzerocoin::CoinDenomination denomStaked = libzerocoin::AmountToZerocoinDenomination(this->GetValue());
     CDeterministicMint dMint;
-    if (!pwallet->CreateZPIVOutPut(denomStaked, outReward, dMint))
+    if (!pwallet->CreateZVPXOutPut(denomStaked, outReward, dMint))
         return error("%s: failed to create zVPX output", __func__);
     vout.emplace_back(outReward);
 
@@ -137,7 +137,7 @@ bool CZPivStake::CreateTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount nT
     for (unsigned int i = 0; i < 3; i++) {
         CTxOut out;
         CDeterministicMint dMintReward;
-        if (!pwallet->CreateZPIVOutPut(libzerocoin::CoinDenomination::ZQ_ONE, out, dMintReward))
+        if (!pwallet->CreateZVPXOutPut(libzerocoin::CoinDenomination::ZQ_ONE, out, dMintReward))
             return error("%s: failed to create zVPX output", __func__);
         vout.emplace_back(out);
 
@@ -155,12 +155,12 @@ bool CZPivStake::GetTxFrom(CTransaction& tx)
 
 bool CZPivStake::MarkSpent(CWallet *pwallet, const uint256& txid)
 {
-    CzPIVTracker* zpivTracker = pwallet->zpivTracker.get();
+    CzVPXTracker* zvpxTracker = pwallet->zvpxTracker.get();
     CMintMeta meta;
-    if (!zpivTracker->GetMetaFromStakeHash(hashSerial, meta))
+    if (!zvpxTracker->GetMetaFromStakeHash(hashSerial, meta))
         return error("%s: tracker does not have serialhash", __func__);
 
-    zpivTracker->SetPubcoinUsed(meta.hashPubcoin, txid);
+    zvpxTracker->SetPubcoinUsed(meta.hashPubcoin, txid);
     return true;
 }
 

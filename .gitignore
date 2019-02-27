@@ -136,3 +136,6 @@ cmake-build-debug
 .vs/Privix/v15/Browse.VC.opendb
 .vs/ProjectSettings.json
 .vs/slnx.sqlite
+.vs/VSWorkspaceState.json
+.vs/Privix/v15/ipch/AutoPCH/836de5bbb547ef83/MAIN.ipch
+.vs/Privix/v15/ipch/AutoPCH/a1d60a0fc7a8a4da/INIT.ipch

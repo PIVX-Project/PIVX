@@ -115,7 +115,7 @@ Backup to external devices / locations
 
  The VPX wallet can now have user selected directories for automatic backups of the wallet data file (wallet.dat). This can be set by adding the following lines to the vpx.conf file, found in the VPX data directory.
 - backuppath = <directory / full path>
-- zpivbackuppath = <directory / full path>
+- zvpxbackuppath = <directory / full path>
 - custombackupthreshold = <backup limit>
 Note: System write permissions must be appropriate for the location the wallet is being saved to.
 
@@ -127,7 +127,7 @@ Note: System write permissions must be appropriate for the location the wallet i
 ### Details:
 
 * If path is set to directory, the backup will be named `wallet.dat-<year>-<month>-<day>-<hour>-<minute>-<second>`
-* If zVPX backup, auto generated name is `wallet-autozpivbackup.dat-<year>-<month>-<day>-<hour>-<minute>-<second>`
+* If zVPX backup, auto generated name is `wallet-autozvpxbackup.dat-<year>-<month>-<day>-<hour>-<minute>-<second>`
 * If path set to file, backup will be named `<filename>.dat`
 * walletbackupthreshold enables the user to select the maximum count of backup files to be written before overwriting existing backups.
 
@@ -268,7 +268,7 @@ Several critical security flaws in the zerocoin protocol and VPX's zerocoin impl
 zPoS (zVPX staking)
 --------------
 
-Once a zVPX has over 200 confirmations it becomes available to stake. Staking zVPX will consume the exact zerocoin that is staked and replace it with a freshly minted zerocoin of the same denomination as well as a reward of three 1 denomination zVPX. So for example if a 1,000 zVPX denomination is staked, the protocol replaces that with a fresh 1,000 denomination and three1 denomination zPIVs.
+Once a zVPX has over 200 confirmations it becomes available to stake. Staking zVPX will consume the exact zerocoin that is staked and replace it with a freshly minted zerocoin of the same denomination as well as a reward of three 1 denomination zVPX. So for example if a 1,000 zVPX denomination is staked, the protocol replaces that with a fresh 1,000 denomination and three1 denomination zVPXs.
 
 Secure Spending
 --------------
@@ -294,7 +294,7 @@ VPX's zerocoin implementation used the same code from the ZCoin project to impor
 Detailed release notes follow. This overview includes changes that affect behavior, not code moves, refactors and string updates. For convenience in locating the code changes and accompanying discussion, both the pull request and git merge commit are mentioned.
 
 ### Core Features
- - #582 `cb1632520` [Core] zVPX v2: zPoS dzPIV ezPIV external backup and budget fixes (too many to list)
+ - #582 `cb1632520` [Core] zVPX v2: zPoS dzVPX ezVPX external backup and budget fixes (too many to list)
  - #558 `c7e6f0f7f` [Core] Remove Gitan-OSX warning for High Sierra builds (Mrs-X)
  - #523 `926c073ea` [Core] Give high priority to zerocoinspends to make it into the next block. (presstab)
  - #535 `5e8875feb` [Core] Minor refacturing + unused variable removed (Mrs-X)

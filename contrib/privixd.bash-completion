@@ -3,7 +3,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-_vpxd() {
+_privixd() {
     local cur prev words=() cword
     local privixd
 
@@ -45,7 +45,7 @@ _vpxd() {
             ;;
     esac
 } &&
-complete -F _vpxd privixd privix-qt
+complete -F _privixd privixd privix-qt
 
 # Local variables:
 # mode: shell-script

@@ -180,7 +180,7 @@ def start_node(i, dirname, extra_args=None, rpchost=None):
 
 def start_nodes(num_nodes, dirname, extra_args=None, rpchost=None):
     """
-    Start multiple vpxds, return RPC connections to them
+    Start multiple privixds, return RPC connections to them
     """
     if extra_args is None: extra_args = [ None for i in range(num_nodes) ]
     return [ start_node(i, dirname, extra_args[i], rpchost) for i in range(num_nodes) ]

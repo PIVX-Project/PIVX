@@ -89,7 +89,7 @@ use old versions of Upstart and do not supply the start-stop-daemon uitility.
 Copy privixd.init to /etc/init.d/privixd. Test by running "service privixd start".
 
 Using this script, you can adjust the path and flags to the privixd program by
-setting the VPXD and FLAGS environment variables in the file
+setting the PRIVIXD and FLAGS environment variables in the file
 /etc/sysconfig/privixd. You can also use the DAEMONOPTS environment variable here.
 
 5. Auto-respawn

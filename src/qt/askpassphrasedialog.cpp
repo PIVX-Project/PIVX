@@ -75,7 +75,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
     }
 
     // Set checkbox "For anonymization, automint, and staking only" depending on from where we were called
-    if (context == Context::Unlock_Menu || context == Context::Mint_zPIV || context == Context::BIP_38 || context == Context::UI_Vote) {
+    if (context == Context::Unlock_Menu || context == Context::Mint_zVPX || context == Context::BIP_38 || context == Context::UI_Vote) {
         ui->anonymizationCheckBox->setChecked(true);
     }
     else {
@@ -83,7 +83,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
     }
 
     // It doesn't make sense to show the checkbox for sending VPX because you wouldn't check it anyway.
-    if (context == Context::Send_PIV || context == Context::Send_zPIV) {
+    if (context == Context::Send_VPX || context == Context::Send_zVPX) {
         ui->anonymizationCheckBox->hide();
     }
 
@@ -133,7 +133,7 @@ void AskPassphraseDialog::accept()
                         "<qt>" +
                             tr("VPX will close now to finish the encryption process. "
                                "Remember that encrypting your wallet cannot fully protect "
-                               "your PIVs from being stolen by malware infecting your computer.") +
+                               "your VPXs from being stolen by malware infecting your computer.") +
                             "<br><br><b>" +
                             tr("IMPORTANT: Any previous backups you have made of your wallet file "
                                "should be replaced with the newly generated, encrypted wallet file. "

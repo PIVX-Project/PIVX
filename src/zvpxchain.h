@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef VPX_ZPIVCHAIN_H
-#define VPX_ZPIVCHAIN_H
+#ifndef VPX_ZVPXCHAIN_H
+#define VPX_ZVPXCHAIN_H
 
 #include "libzerocoin/Coin.h"
 #include "libzerocoin/Denominations.h"
@@ -39,4 +39,4 @@ bool TxOutToPublicCoin(const CTxOut& txout, libzerocoin::PublicCoin& pubCoin, CV
 std::list<libzerocoin::CoinDenomination> ZerocoinSpendListFromBlock(const CBlock& block, bool fFilterInvalid);
 
 
-#endif //VPX_ZPIVCHAIN_H
+#endif //VPX_ZVPXCHAIN_H

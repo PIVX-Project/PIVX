@@ -5,11 +5,11 @@
 //
 
 
-#include "lightzpivthread.h"
+#include "lightzvpxthread.h"
 #include "main.h"
 
 /****** Thread ********/
-void CLightWorker::ThreadLightZPIVSimplified() {
+void CLightWorker::ThreadLightZVPXSimplified() {
     RenameThread("vpx-light-thread");
     isWorkerRunning = true;
     while (true) {
@@ -62,7 +62,7 @@ void CLightWorker::ThreadLightZPIVSimplified() {
                         );
 
                     } catch (NotEnoughMintsException e) {
-                        LogPrintStr(std::string("ThreadLightZPIVSimplified: ") + e.message + "\n");
+                        LogPrintStr(std::string("ThreadLightZVPXSimplified: ") + e.message + "\n");
                         rejectWork(genWit, blockHeight, NOT_ENOUGH_MINTS);
                         continue;
                     }
@@ -96,7 +96,7 @@ void CLightWorker::ThreadLightZPIVSimplified() {
             }
         } catch (std::exception& e) {
             //std::cout << "exception in light loop, closing it. " << e.what() << std::endl;
-            PrintExceptionContinue(&e, "lightzpivthread");
+            PrintExceptionContinue(&e, "lightzvpxthread");
             break;
         }
     }

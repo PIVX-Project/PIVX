@@ -1348,7 +1348,7 @@
                       <item>
                        <widget class="QRadioButton" name="radioCustomPerKilobyte">
                         <property name="toolTip">
-                         <string>If the custom fee is set to 1000 uPIVs and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 uPIVs in fee,&lt;br /&gt;while &quot;at least&quot; pays 1000 uPIVs. For transactions bigger than a kilobyte both pay by kilobyte.</string>
+                         <string>If the custom fee is set to 1000 uVPXs and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 uVPXs in fee,&lt;br /&gt;while &quot;at least&quot; pays 1000 uVPXs. For transactions bigger than a kilobyte both pay by kilobyte.</string>
                         </property>
                         <property name="text">
                          <string>per kilobyte</string>
@@ -1364,7 +1364,7 @@
                       <item>
                        <widget class="QRadioButton" name="radioCustomAtLeast">
                         <property name="toolTip">
-                         <string>If the custom fee is set to 1000 uPIVs and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 uPIVs in fee,&lt;br /&gt;while &quot;total at least&quot; pays 1000 uPIVs. For transactions bigger than a kilobyte both pay by kilobyte.</string>
+                         <string>If the custom fee is set to 1000 uVPXs and the transaction is only 250 bytes, then &quot;per kilobyte&quot; only pays 250 uVPXs in fee,&lt;br /&gt;while &quot;total at least&quot; pays 1000 uVPXs. For transactions bigger than a kilobyte both pay by kilobyte.</string>
                         </property>
                         <property name="text">
                          <string>total at least</string>
@@ -1709,7 +1709,7 @@
               <number>3</number>
              </property>
              <item>
-              <widget class="QCheckBox" name="checkzPIV">
+              <widget class="QCheckBox" name="checkzVPX">
                <property name="enabled">
                 <bool>false</bool>
                </property>

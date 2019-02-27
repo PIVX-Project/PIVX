@@ -172,7 +172,7 @@
                       <item>
                        <layout class="QHBoxLayout" name="horizontalLayout_3">
                         <item>
-                         <widget class="QLabel" name="labelzPIVActions">
+                         <widget class="QLabel" name="labelzVPXActions">
                           <property name="font">
                            <font>
                             <pointsize>12</pointsize>
@@ -189,7 +189,7 @@
                          </widget>
                         </item>
                         <item>
-                         <widget class="QLabel" name="labelzPIVSyncStatus">
+                         <widget class="QLabel" name="labelzVPXSyncStatus">
                           <property name="toolTip">
                            <string>The displayed information may be out of date. Your wallet automatically synchronizes with the VPX network after a connection is established, but this process has not completed yet.</string>
                           </property>
@@ -370,7 +370,7 @@
                       <item>
                        <layout class="QHBoxLayout" name="horizontalLayout_4">
                         <item>
-                         <widget class="QPushButton" name="pushButtonMintzPIV">
+                         <widget class="QPushButton" name="pushButtonMintzVPX">
                           <property name="minimumSize">
                            <size>
                             <width>131</width>
@@ -402,14 +402,14 @@
                          </widget>
                         </item>
                         <item>
-                         <widget class="QLabel" name="labelzPIV_2">
+                         <widget class="QLabel" name="labelzVPX_2">
                           <property name="text">
                            <string>zVPX</string>
                           </property>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QLabel" name="labelzPIVAmountText">
+                         <widget class="QLabel" name="labelzVPXAmountText">
                           <property name="toolTip">
                            <string>Available for minting are coins which are confirmed and not locked or Masternode collaterals.</string>
                           </property>
@@ -422,7 +422,7 @@
                          </widget>
                         </item>
                         <item>
-                         <widget class="QLabel" name="labelzPIVAmountValue">
+                         <widget class="QLabel" name="labelzVPXAmountValue">
                           <property name="font">
                            <font>
                             <weight>75</weight>
@@ -797,7 +797,7 @@
                       <item>
                        <layout class="QHBoxLayout" name="horizontalLayout_6">
                         <item>
-                         <widget class="QPushButton" name="pushButtonSpendzPIV">
+                         <widget class="QPushButton" name="pushButtonSpendzVPX">
                           <property name="minimumSize">
                            <size>
                             <width>131</width>
@@ -813,7 +813,7 @@
                          </widget>
                         </item>
                         <item>
-                         <widget class="QLabel" name="labelzPIVBalanceText">
+                         <widget class="QLabel" name="labelzVPXBalanceText">
                           <property name="toolTip">
                            <string>Available (mature and spendable) zVPX for spending</string>
                           </property>
@@ -1034,7 +1034,7 @@ zVPX are mature when they have more than 20 confirmations AND more than 2 mints 
                            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                           </property>
                           <property name="buddy">
-                           <cstring>zPIVpayAmount</cstring>
+                           <cstring>zVPXpayAmount</cstring>
                           </property>
                          </widget>
                         </item>
@@ -1044,10 +1044,10 @@ zVPX are mature when they have more than 20 confirmations AND more than 2 mints 
                            <number>0</number>
                           </property>
                           <item>
-                           <widget class="QLineEdit" name="zPIVpayAmount"/>
+                           <widget class="QLineEdit" name="zVPXpayAmount"/>
                           </item>
                           <item>
-                           <widget class="QLabel" name="labelzPIV">
+                           <widget class="QLabel" name="labelzVPX">
                             <property name="minimumSize">
                              <size>
                               <width>55</width>
@@ -1139,7 +1139,7 @@ zVPX are mature when they have more than 20 confirmations AND more than 2 mints 
                       <item>
                        <layout class="QHBoxLayout" name="horizontalLayout_21">
                         <item>
-                         <widget class="QLabel" name="labelzPIVStats">
+                         <widget class="QLabel" name="labelzVPXStats">
                           <property name="font">
                            <font>
                             <pointsize>12</pointsize>

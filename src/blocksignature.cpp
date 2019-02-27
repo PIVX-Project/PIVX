@@ -4,7 +4,7 @@
 
 #include "blocksignature.h"
 #include "main.h"
-#include "zpivchain.h"
+#include "zvpxchain.h"
 
 bool SignBlockWithKey(CBlock& block, const CKey& key)
 {
@@ -67,8 +67,8 @@ bool CheckBlockSignature(const CBlock& block)
      *  UTXO: The public key that signs must match the public key associated with the first utxo of the coinstake tx.
      */
     CPubKey pubkey;
-    bool fzPIVStake = block.vtx[1].IsZerocoinSpend();
-    if (fzPIVStake) {
+    bool fzVPXStake = block.vtx[1].IsZerocoinSpend();
+    if (fzVPXStake) {
         libzerocoin::CoinSpend spend = TxInToZerocoinSpend(block.vtx[1].vin[0]);
         pubkey = spend.getPubKey();
     } else {
