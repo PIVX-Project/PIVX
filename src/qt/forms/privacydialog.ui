@@ -73,7 +73,6 @@
              <string>PRIVACY</string>
             </property>
            </widget>
-    
           </item>
           <item>
       <widget class="QLabel" name="labelOverviewInMaintainence">
