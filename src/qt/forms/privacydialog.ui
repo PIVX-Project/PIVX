@@ -73,7 +73,39 @@
              <string>PRIVACY</string>
             </property>
            </widget>
+    
           </item>
+          <item>
+      <widget class="QLabel" name="labelOverviewInMaintainence">
+            <property name="minimumSize">
+             <size>
+              <width>464</width>
+              <height>60</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>60</height>
+             </size>
+            </property>
+            <property name="font">
+             <font >
+              <pointsize>15</pointsize>
+              <weight>75</weight>
+              <bold>false</bold>
+        
+             </font>
+
+            </property>
+              <property name="styleSheet">
+                           <string notr="true">QLabel { color: #00a9ff; }</string>
+                          </property>
+            <property name="text">
+             <string>Info:zPIV is currently undergoing maintenance.</string>
+            </property>
+           </widget>
+           </item>
           <item>
            <spacer name="horizontalSpacer_1">
             <property name="orientation">
