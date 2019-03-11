@@ -93,12 +93,10 @@
               <pointsize>15</pointsize>
               <weight>75</weight>
               <bold>false</bold>
-        
              </font>
-
             </property>
               <property name="styleSheet">
-                           <string notr="true">QLabel { color: #00a9ff; }</string>
+            <string notr="true">QLabel { color: #00a9ff; }</string>
                           </property>
             <property name="text">
              <string>Info:zPIV is currently undergoing maintenance.</string>
