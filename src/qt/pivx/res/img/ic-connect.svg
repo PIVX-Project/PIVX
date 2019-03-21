@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_connect" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#fff}.cls-2{fill:none}
+        </style>
+    </defs>
+    <g id="Group_8843" data-name="Group 8843">
+        <g id="Group_8839" data-name="Group 8839">
+            <circle id="Ellipse_602" cx="2" cy="2" r="2" class="cls-1" data-name="Ellipse 602" transform="translate(10 16)"/>
+        </g>
+        <g id="Group_8840" data-name="Group 8840">
+            <path id="Path_18896" d="M20.733 9.393a12.935 12.935 0 0 0-17.466 0l-1.346-1.48a14.937 14.937 0 0 1 20.158 0z" class="cls-1" data-name="Path 18896"/>
+        </g>
+        <g id="Group_8841" data-name="Group 8841">
+            <path id="Path_18897" d="M18.046 12.349a8.955 8.955 0 0 0-12.092 0l-1.346-1.48a10.957 10.957 0 0 1 14.784 0z" class="cls-1" data-name="Path 18897"/>
+        </g>
+        <g id="Group_8842" data-name="Group 8842">
+            <path id="Path_18898" d="M8.642 15.305L7.3 13.826a6.972 6.972 0 0 1 9.408 0l-1.346 1.479a5.1 5.1 0 0 0-6.72 0z" class="cls-1" data-name="Path 18898"/>
+        </g>
+    </g>
+    <path id="Rectangle_4416" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4416"/>
+</svg>

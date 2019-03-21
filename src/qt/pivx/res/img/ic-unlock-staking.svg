@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_unlock_staking" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:none}.cls-2{fill:#fff}
+        </style>
+    </defs>
+    <g id="Group_8891" data-name="Group 8891">
+        <path id="Rectangle_4445" d="M0 0h24v24H0z" class="cls-1" data-name="Rectangle 4445"/>
+    </g>
+    <path id="Path_18910" d="M19.448 11.966l1.259-1.259-1.414-1.414-1.259 1.259A10.963 10.963 0 0 0 13 8.191V7A5 5 0 0 0 3 7v1H2v10h7.16l2-2H4v-6h8v5.16l2-2v-2.635a8.992 8.992 0 0 1 2.611 1.45l-8.818 8.818 1.414 1.414 8.818-8.818A8.948 8.948 0 0 1 20 19v1h2v-1a10.953 10.953 0 0 0-2.552-7.034zM11 8H5V7a3 3 0 0 1 6 0z" class="cls-2" data-name="Path 18910"/>
+</svg>

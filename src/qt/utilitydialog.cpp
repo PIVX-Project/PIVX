@@ -159,7 +159,7 @@ ShutdownWindow::ShutdownWindow(QWidget* parent, Qt::WindowFlags f) : QWidget(par
     setLayout(layout);
 }
 
-void ShutdownWindow::showShutdownWindow(BitcoinGUI* window)
+void ShutdownWindow::showShutdownWindow(QMainWindow* window)
 {
     if (!window)
         return;

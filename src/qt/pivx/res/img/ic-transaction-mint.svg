@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic-transaction-mint" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#707070}.cls-2{fill:none}
+        </style>
+    </defs>
+    <g id="Group_8823" data-name="Group 8823">
+        <path id="Path_18880" d="M8 12a4 4 0 1 0 4-4 4 4 0 0 0-4 4zm6 0a2 2 0 1 1-2-2 2 2 0 0 1 2 2z" class="cls-1" data-name="Path 18880"/>
+        <path id="Path_18881" d="M7 8H5.092A7.987 7.987 0 0 1 20 12h2A9.988 9.988 0 0 0 4 6.025V5H2v5h5z" class="cls-1" data-name="Path 18881"/>
+        <path id="Path_18882" d="M17 16h1.91A7.988 7.988 0 0 1 4 12H2a9.988 9.988 0 0 0 18 5.976V19h2v-5h-5z" class="cls-1" data-name="Path 18882"/>
+    </g>
+    <path id="Rectangle_4408" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4408"/>
+</svg>

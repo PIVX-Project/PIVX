@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_staking_off" width="24" height="24" viewBox="0 0 24 24" shape-rendering="geometricPrecision">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#7c7687}.cls-2{fill:none}
+        </style>
+    </defs>
+    <path id="Path_18914" d="M18 6V4.854a3 3 0 0 0-5.964-.3L12 4.586l-.033-.033A3 3 0 0 0 6 5v1H2v6h2v10h16V12h2V6zm-4-.586V5a1 1 0 0 1 2 0v1h-2.586zM13 8v8h-2V8zM8 5a1 1 0 0 1 2 0v.414l.586.586H8zM4 8h5v2H4zm14 12H6v-8h3v6h6v-6h3zm2-10h-5V8h5z" class="cls-1" data-name="Path 18914"/>
+    <path id="Rectangle_4527" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4527"/>
+</svg>

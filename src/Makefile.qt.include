@@ -65,7 +65,8 @@ QT_FORMS_UI = \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/transactiondescdialog.ui \
-  qt/forms/zpivcontroldialog.ui
+  qt/forms/zpivcontroldialog.ui \
+  qt/pivx/forms/navmenuwidget.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
@@ -76,6 +77,7 @@ QT_MOC_CPP = \
   qt/moc_bitcoinaddressvalidator.cpp \
   qt/moc_bitcoinamountfield.cpp \
   qt/moc_bitcoingui.cpp \
+  qt/pivx/moc_PIVXGUI.cpp \
   qt/moc_bitcoinunits.cpp \
   qt/moc_blockexplorer.cpp \
   qt/moc_clientmodel.cpp \
@@ -120,7 +122,8 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp \
-  qt/moc_zpivcontroldialog.cpp
+  qt/moc_zpivcontroldialog.cpp \
+  qt/pivx/moc_navmenuwidget.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -151,6 +154,7 @@ BITCOIN_QT_H = \
   qt/bitcoinaddressvalidator.h \
   qt/bitcoinamountfield.h \
   qt/bitcoingui.h \
+  qt/pivx/PIVXGUI.h \
   qt/bitcoinunits.h \
   qt/blockexplorer.h \
   qt/clientmodel.h \
@@ -202,7 +206,8 @@ BITCOIN_QT_H = \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
   qt/winshutdownmonitor.h \
-  qt/zpivcontroldialog.h
+  qt/zpivcontroldialog.h \
+  qt/pivx/navmenuwidget.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -272,13 +277,156 @@ RES_ICONS = \
   qt/res/icons/unit_tupivx.png \
   qt/res/icons/yesvote.png \
   qt/res/icons/novote.png \
-  qt/res/icons/abstainvote.png
+  qt/res/icons/abstainvote.png \
+  qt/pivx/res/img/bg-multi-number-dark.svg \
+  qt/pivx/res/img/ic-check-locked.svg \
+  qt/pivx/res/img/ic-nav-address.svg \
+  qt/pivx/res/img/ic-update.svg \
+  qt/pivx/res/img/bg-multi-number.svg \
+  qt/pivx/res/img/ic-check-mint-off.svg \
+  qt/pivx/res/img/ic-nav-dashboard-active.svg \
+  qt/pivx/res/img/ic-wallet-status-locked.svg \
+  qt/pivx/res/img/bg-splash.jpg \
+  qt/pivx/res/img/ic-check-mint.svg \
+  qt/pivx/res/img/ic-nav-dashboard-hover.svg \
+  qt/pivx/res/img/ic-wallet-status-staking.svg \
+  qt/pivx/res/img/bg-splash@2x.jpg \
+  qt/pivx/res/img/ic-check-peers-off.svg \
+  qt/pivx/res/img/ic-nav-dashboard.svg \
+  qt/pivx/res/img/ic-wallet-status-unlocked.svg \
+  qt/pivx/res/img/bg-splash@3x.jpg \
+  qt/pivx/res/img/ic-check-peers.svg \
+  qt/pivx/res/img/ic-nav-master-active.svg \
+  qt/pivx/res/img/ic-watch-password-white.svg \
+  qt/pivx/res/img/bg-welcome-container.jpg \
+  qt/pivx/res/img/ic-check-staking-off.svg \
+  qt/pivx/res/img/ic-nav-master-hover.svg \
+  qt/pivx/res/img/ic-watch-password.svg \
+  qt/pivx/res/img/bg-welcome.jpg \
+  qt/pivx/res/img/ic-check-staking.svg \
+  qt/pivx/res/img/ic-nav-master.svg \
+  qt/pivx/res/img/img-dashboard-banner.jpg \
+  qt/pivx/res/img/btn-radio-active.svg \
+  qt/pivx/res/img/ic-check-sync-off.svg \
+  qt/pivx/res/img/ic-nav-privacy-active.svg \
+  qt/pivx/res/img/img-empty-contacts.svg \
+  qt/pivx/res/img/btn-radio-off.svg \
+  qt/pivx/res/img/ic-check-sync.png \
+  qt/pivx/res/img/ic-nav-privacy-hover.svg \
+  qt/pivx/res/img/img-empty-dark-contacts.svg \
+  qt/pivx/res/img/ic-check-sync.svg \
+  qt/pivx/res/img/ic-nav-privacy.svg \
+  qt/pivx/res/img/img-empty-dark-error.svg \
+  qt/pivx/res/img/ic-add-label.svg \
+  qt/pivx/res/img/ic-check-theme-dark.svg \
+  qt/pivx/res/img/ic-nav-receive-active.svg \
+  qt/pivx/res/img/img-empty-dark-masternode.svg \
+  qt/pivx/res/img/ic-add-liliac.svg \
+  qt/pivx/res/img/ic-check-theme-light.svg \
+  qt/pivx/res/img/ic-nav-receive-hover.svg \
+  qt/pivx/res/img/img-empty-dark-multisend.svg \
+  qt/pivx/res/img/ic-add-purple.svg \
+  qt/pivx/res/img/ic-check-white.svg \
+  qt/pivx/res/img/ic-nav-receive.svg \
+  qt/pivx/res/img/img-empty-dark-peers.svg \
+  qt/pivx/res/img/ic-add.svg \
+  qt/pivx/res/img/ic-check.svg \
+  qt/pivx/res/img/ic-nav-send-active.svg \
+  qt/pivx/res/img/img-empty-dark-staking-off.svg \
+  qt/pivx/res/img/ic-address-book-grey.svg \
+  qt/pivx/res/img/ic-chevron-left.svg \
+  qt/pivx/res/img/ic-nav-send-hover.svg \
+  qt/pivx/res/img/img-empty-dark-transactions.svg \
+  qt/pivx/res/img/ic-address-book-white.svg \
+  qt/pivx/res/img/ic-chevron-right.svg \
+  qt/pivx/res/img/ic-nav-send.svg \
+  qt/pivx/res/img/img-empty-error.svg \
+  qt/pivx/res/img/ic-address-book.svg \
+  qt/pivx/res/img/ic-clear-liliac.svg \
+  qt/pivx/res/img/ic-nav-settings-active.svg \
+  qt/pivx/res/img/img-empty-masternode.svg \
+  qt/pivx/res/img/ic-address-send-white.svg \
+  qt/pivx/res/img/ic-clear-purple.svg \
+  qt/pivx/res/img/ic-nav-settings-hover.svg \
+  qt/pivx/res/img/img-empty-multisend.svg \
+  qt/pivx/res/img/ic-address-send.svg \
+  qt/pivx/res/img/ic-close-white.svg \
+  qt/pivx/res/img/ic-nav-settings.svg \
+  qt/pivx/res/img/img-empty-peers.svg \
+  qt/pivx/res/img/ic-arrow-drop-down-white.svg \
+  qt/pivx/res/img/ic-close.svg \
+  qt/pivx/res/img/ic-radio-liliac-on.svg \
+  qt/pivx/res/img/img-empty-staking-off.svg \
+  qt/pivx/res/img/ic-arrow-drop-down.svg \
+  qt/pivx/res/img/ic-coin-piv.svg \
+  qt/pivx/res/img/ic-receive-off.svg \
+  qt/pivx/res/img/img-empty-staking-on.svg \
+  qt/pivx/res/img/ic-arrow-drop-up-white.svg \
+  qt/pivx/res/img/ic-coin-zpiv.png \
+  qt/pivx/res/img/ic-receive-on.svg \
+  qt/pivx/res/img/img-empty-transactions.svg \
+  qt/pivx/res/img/ic-arrow-drop-up.svg \
+  qt/pivx/res/img/ic-coin-zpiv.svg \
+  qt/pivx/res/img/ic-received.svg \
+  qt/pivx/res/img/img-logo-pivx.png \
+  qt/pivx/res/img/ic-arrow-drop-white-down.svg \
+  qt/pivx/res/img/ic-combo-box.svg \
+  qt/pivx/res/img/ic-send.svg \
+  qt/pivx/res/img/img-logo-pivx@2x.png \
+  qt/pivx/res/img/ic-arrow-purple-down.svg \
+  qt/pivx/res/img/ic-connect.svg \
+  qt/pivx/res/img/ic-submenu-lock.svg \
+  qt/pivx/res/img/img-logo-pivx@3x.png \
+  qt/pivx/res/img/ic-arrow-right-white.svg \
+  qt/pivx/res/img/ic-copy-liliac.svg \
+  qt/pivx/res/img/ic-submenu-staking.svg \
+  qt/pivx/res/img/img-nav-logo-pivx.png \
+  qt/pivx/res/img/ic-arrow-right.svg \
+  qt/pivx/res/img/ic-copy.svg \
+  qt/pivx/res/img/ic-submenu-unlock.svg \
+  qt/pivx/res/img/img-nav-logo.png \
+  qt/pivx/res/img/ic-arrow-white-left.svg \
+  qt/pivx/res/img/ic-exit.svg \
+  qt/pivx/res/img/ic-switch-liliac-on.svg \
+  qt/pivx/res/img/img-nav-logo.svg \
+  qt/pivx/res/img/ic-arrow-white-right.svg \
+  qt/pivx/res/img/ic-expand.svg \
+  qt/pivx/res/img/ic-switch-off.svg \
+  qt/pivx/res/img/img-qr-test-big.png \
+  qt/pivx/res/img/ic-check-active.svg \
+  qt/pivx/res/img/ic-folder.svg \
+  qt/pivx/res/img/ic-switch-on.svg \
+  qt/pivx/res/img/img-qr-test.png \
+  qt/pivx/res/img/ic-check-box.svg \
+  qt/pivx/res/img/ic-label-liliac.svg \
+  qt/pivx/res/img/ic-transaction-mint.svg \
+  qt/pivx/res/img/img-qr.svg \
+  qt/pivx/res/img/ic-check-connect-off.svg \
+  qt/pivx/res/img/ic-label.svg \
+  qt/pivx/res/img/ic-transaction-received.svg \
+  qt/pivx/res/img/img-welcome-step1.png \
+  qt/pivx/res/img/ic-check-connect.svg \
+  qt/pivx/res/img/ic-menu-hover.svg \
+  qt/pivx/res/img/ic-transaction-sent.svg \
+  qt/pivx/res/img/img-welcome-step2.png \
+  qt/pivx/res/img/ic-check-dark.svg \
+  qt/pivx/res/img/ic-mint.svg \
+  qt/pivx/res/img/ic-transaction-staked.svg \
+  qt/pivx/res/img/img-welcome-step3.png \
+  qt/pivx/res/img/ic-check-liliac-on.svg \
+  qt/pivx/res/img/ic-nav-address-active.svg \
+  qt/pivx/res/img/ic-unlock-staking.svg \
+  qt/pivx/res/img/img-welcome-step4.png \
+  qt/pivx/res/img/ic-check-locked-off.svg \
+  qt/pivx/res/img/ic-nav-address-hover.svg \
+  qt/pivx/res/img/ic-update-liliac.svg
 
 BITCOIN_QT_BASE_CPP = \
   qt/bantablemodel.cpp \
   qt/bitcoinaddressvalidator.cpp \
   qt/bitcoinamountfield.cpp \
   qt/bitcoingui.cpp \
+  qt/pivx/PIVXGUI.cpp \
   qt/bitcoinunits.cpp \
   qt/blockexplorer.cpp \
   qt/clientmodel.cpp \
@@ -336,7 +484,8 @@ BITCOIN_QT_WALLET_CPP = \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
   qt/walletview.cpp \
-  qt/zpivcontroldialog.cpp
+  qt/zpivcontroldialog.cpp \
+  qt/pivx/navmenuwidget.cpp
 
 BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP)
 if TARGET_WINDOWS

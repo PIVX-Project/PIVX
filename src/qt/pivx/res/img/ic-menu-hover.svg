@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#707070}.cls-2{fill:none}
+        </style>
+    </defs>
+    <g id="ic-menu-hover" transform="translate(-1305 -403.703)">
+        <g id="Group_8259" data-name="Group 8259" transform="translate(1315 405.702)">
+            <circle id="Ellipse_34" cx="2.326" cy="2.326" r="2.326" class="cls-1" data-name="Ellipse 34"/>
+            <circle id="Ellipse_35" cx="2.326" cy="2.326" r="2.326" class="cls-1" data-name="Ellipse 35" transform="translate(0 15.349)"/>
+            <circle id="Ellipse_36" cx="2.326" cy="2.326" r="2.326" class="cls-1" data-name="Ellipse 36" transform="translate(0 7.674)"/>
+        </g>
+        <path id="Rectangle_3773" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 3773" transform="translate(1305 403.703)"/>
+    </g>
+</svg>

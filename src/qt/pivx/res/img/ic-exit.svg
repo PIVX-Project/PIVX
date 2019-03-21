@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style type="text/css">
+            .cls-1{opacity:.7}.cls-2{fill:none}.cls-3{fill:#fff}
+        </style>
+    </defs>
+    <g id="ic_exit" class="cls-1">
+        <g id="Group_9069" data-name="Group 9069">
+            <path id="Path_19023" d="M0 0h24v24H0z" class="cls-2" data-name="Path 19023"/>
+        </g>
+        <g id="Group_9070" data-name="Group 9070">
+            <path id="Path_19024" d="M17 8.544V2H2v17.819l12 2.4V20h3v-6.456h-2V18h-1V4.181L13.1 4H15v4.544zM12 19.78l-8-1.6V4.22l8 1.6z" class="cls-3" data-name="Path 19024"/>
+            <path id="Path_19025" d="M18.707 7.337l-1.414 1.414 1.293 1.293H15v2h3.586l-1.293 1.293 1.414 1.414 3.707-3.707z" class="cls-3" data-name="Path 19025"/>
+        </g>
+    </g>
+</svg>

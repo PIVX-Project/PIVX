@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style type="text/css">
+            .cls-1{opacity:.6}.cls-2{fill:none}
+        </style>
+    </defs>
+    <g id="ic-expand" class="cls-1">
+        <g id="Group_8821" data-name="Group 8821">
+            <path id="Path_18875" d="M4 5.54l5.3 5.176 1.4-1.431L5.285 4H8V2H2v6h2z" data-name="Path 18875"/>
+            <path id="Path_18876" d="M20 18.586l-5.293-5.293-1.414 1.414L18.586 20H16v2h6v-6h-2z" data-name="Path 18876"/>
+            <path id="Path_18877" d="M9.284 13.3L4 18.715V16H2v6h6v-2H5.541l5.175-5.3z" data-name="Path 18877"/>
+            <path id="Path_18878" d="M16 2v2h2.586l-5.293 5.293 1.414 1.414L20 5.414V8h2V2z" data-name="Path 18878"/>
+        </g>
+        <path id="Rectangle_4404" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4404"/>
+    </g>
+</svg>

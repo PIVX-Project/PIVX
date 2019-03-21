@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="24px" viewBox="0 0 28 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Sub Menu Locked</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Sub-Menu-Locked" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic-check-locked-off" transform="translate(9.000000, 2.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <path d="M4,8 L4,6 C3.99994077,4.38249159 4.97405118,2.92414756 6.46826658,2.30474964 C7.96248199,1.68535172 9.68267203,2.02682593 10.827,3.17 L12.239,1.754 C10.5222395,0.0401820593 7.94240817,-0.4712843 5.70165075,0.457933006 C3.46089333,1.38715031 2.00011249,3.57421382 2,6 L2,8 L0,8 L0,20 L16,20 L16,8 L4,8 Z M14,18 L2,18 L2,10 L14,10 L14,18 Z" id="Path_18909"></path>
+        </g>
+    </g>
+</svg>

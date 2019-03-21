@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_unlocked" width="24" height="24" viewBox="0 0 24 24" shape-rendering="geometricPrecision">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#7c7687}.cls-2{fill:none}
+        </style>
+    </defs>
+    <path id="Path_18909" d="M8 10V8a4 4 0 0 1 6.827-2.83l1.412-1.416A6 6 0 0 0 6 8v2H4v12h16V10zm10 10H6v-8h12z" class="cls-1" data-name="Path 18909"/>
+    <path id="Rectangle_4444" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4444"/>
+</svg>

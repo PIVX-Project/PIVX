@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" shape-rendering="geometricPrecision">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#b088ff;fill-rule:evenodd}.cls-2{fill:none}
+        </style>
+    </defs>
+    <g id="check_active" transform="translate(-290 -244)">
+        <g id="Group_8199" data-name="Group 8199" transform="translate(291 245)">
+            <path id="check_on_light" d="M22.556 3H5.444A2.452 2.452 0 0 0 3 5.444v17.112A2.452 2.452 0 0 0 5.444 25h17.112A2.452 2.452 0 0 0 25 22.556V5.444A2.452 2.452 0 0 0 22.556 3zm-11 17.111l-6.112-5.876 1.712-1.645 4.4 4.231 9.289-8.932 1.711 1.645-11 10.577z" class="cls-1" transform="translate(-3 -3)"/>
+        </g>
+        <path id="Rectangle_4538" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4538" transform="translate(290 244)"/>
+    </g>
+</svg>

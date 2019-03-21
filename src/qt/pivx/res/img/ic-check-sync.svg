@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" shape-rendering="geometricPrecision">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Top Bar Sync</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Top-Bar-Sync" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(3.000000, 2.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <path d="M9,17 C6.7091695,17.0037775 4.56252572,15.8824243 3.257,14 L6,14 L6,12 L1.91846539e-13,12 L1.91846539e-13,18 L2,18 L2,15.628 C4.38512581,18.6101588 8.39479686,19.7586985 11.9970926,18.491591 C15.5993884,17.2244835 18.0070568,13.8186446 18.0000155,10 L16,10 C15.9950416,13.8639376 12.8639376,16.9950416 9,17 Z" id="Path_18901"></path>
+            <path d="M16,2 L16,4.37 C13.6140871,1.38879836 9.60454793,0.241226531 6.0026343,1.50864989 C2.40072068,2.77607325 -0.00669322382,6.18161043 -1.39212059e-05,10 L2,10 C1.99972549,6.94124698 3.98547525,4.23651555 6.90387111,3.32058119 C9.82226696,2.40464683 12.9974156,3.48963768 14.745,6 L12,6 L12,8 L18,8 L18,2 L16,2 Z" id="Path_18902"></path>
+        </g>
+    </g>
+</svg>

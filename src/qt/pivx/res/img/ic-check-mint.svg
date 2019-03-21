@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_mint_off" width="24" height="24" viewBox="0 0 24 24" shape-rendering="geometricPrecision">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#fff}.cls-2{fill:none}
+        </style>
+    </defs>
+    <g id="Group_9004" data-name="Group 9004">
+        <path id="Path_18964" d="M6 5h12v2.586l-.793-.793-1.414 1.414L19 11.414l3.207-3.207-1.414-1.414-.793.793V3H4v7h2z" class="cls-1" data-name="Path 18964"/>
+        <path id="Path_18965" d="M12 8a4 4 0 1 0 4 4 4 4 0 0 0-4-4zm0 6a2 2 0 1 1 2-2 2 2 0 0 1-2 2z" class="cls-1" data-name="Path 18965"/>
+        <path id="Path_18966" d="M18 19H6v-2.586l.793.793 1.414-1.414L5 12.586l-3.207 3.207 1.414 1.414.793-.793V21h16v-7h-2z" class="cls-1" data-name="Path 18966"/>
+    </g>
+    <path id="Rectangle_4647" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4647"/>
+</svg>
