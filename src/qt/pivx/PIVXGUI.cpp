@@ -64,6 +64,7 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         QHBoxLayout* centralWidgetLayouot = new QHBoxLayout();
         centralWidget->setLayout(centralWidgetLayouot);
         centralWidgetLayouot->setContentsMargins(0,0,0,0);
+        centralWidgetLayouot->setSpacing(0);
 
         centralWidget->setProperty("cssClass", "container");
 
@@ -75,6 +76,7 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         this->setContentsMargins(0,0,0,0);
 
         QFrame *container = new QFrame(centralWidget);
+        container->setContentsMargins(0,0,0,0);
         centralWidgetLayouot->addWidget(container);
 
         // Then topbar + the stackedWidget
@@ -83,12 +85,16 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         container->setLayout(baseScreensContainer);
 
         // Insert the topbar
-        //topbar = new TopBar(this);
-        //baseScreensContainer->addWidget(topbar);
+        topBar = new TopBar(this);
+        topBar->setContentsMargins(0,0,0,0);
+        baseScreensContainer->addWidget(topBar);
 
         // Now stacked widget
-        //stackedContainer = new QStackedWidget(this);
-        //baseScreensContainer->addWidget(stackedContainer);
+        stackedContainer = new QStackedWidget(this);
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        stackedContainer->setSizePolicy(sizePolicy);
+        stackedContainer->setContentsMargins(0,0,0,0);
+        baseScreensContainer->addWidget(stackedContainer);
 
     } else
 #endif

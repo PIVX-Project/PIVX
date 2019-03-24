@@ -53,7 +53,7 @@ margin:0px;</string>
        <number>10</number>
       </property>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="imgLogo">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -62,10 +62,6 @@ margin:0px;</string>
         </property>
         <property name="text">
          <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="resource.qrc">
-          <normaloff>:/res/img/img-nav-logo.png</normaloff>:/res/img/img-nav-logo.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -76,7 +72,7 @@ margin:0px;</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnDashboard">
+       <widget class="QToolButton" name="btnDashboard">
         <property name="minimumSize">
          <size>
           <width>100</width>
@@ -104,7 +100,7 @@ margin:0px;</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnSend">
+       <widget class="QToolButton" name="btnSend">
         <property name="minimumSize">
          <size>
           <width>100</width>
@@ -129,7 +125,7 @@ margin:0px;</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnReceive">
+       <widget class="QToolButton" name="btnReceive">
         <property name="minimumSize">
          <size>
           <width>100</width>
@@ -148,32 +144,7 @@ margin:0px;</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnAddress">
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>80</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>32</width>
-          <height>32</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="autoExclusive">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnPrivacy">
+       <widget class="QToolButton" name="btnAddress">
         <property name="minimumSize">
          <size>
           <width>100</width>
@@ -198,7 +169,7 @@ margin:0px;</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnMaster">
+       <widget class="QToolButton" name="btnPrivacy">
         <property name="minimumSize">
          <size>
           <width>100</width>
@@ -223,7 +194,32 @@ margin:0px;</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnSettings">
+       <widget class="QToolButton" name="btnMaster">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoExclusive">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="btnSettings">
         <property name="minimumSize">
          <size>
           <width>100</width>
@@ -275,8 +271,6 @@ margin:0px;</string>
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="resource.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

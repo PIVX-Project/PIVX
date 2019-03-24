@@ -10,8 +10,10 @@
 #endif
 
 #include <QMainWindow>
+#include <QStackedWidget>
 
 #include "qt/pivx/navmenuwidget.h"
+#include "qt/pivx/topbar.h"
 
 
 class ClientModel;
@@ -37,6 +39,14 @@ public:
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
     */
     void setClientModel(ClientModel* clientModel);
+
+    void showHide(bool show){
+        // TODO: Implement me.
+    }
+    // TODO: Change me..
+    int getNavWidth(){
+        return 100;
+    }
 
 #ifdef ENABLE_WALLET
     /** Set the wallet model.
@@ -66,6 +76,8 @@ private:
 
     // Frame
     NavMenuWidget *navMenu;
+    TopBar *topBar;
+    QStackedWidget *stackedContainer;
 
 signals:
     /** Signal raised when a URI was entered or dragged to the GUI */

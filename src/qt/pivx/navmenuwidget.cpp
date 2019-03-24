@@ -1,8 +1,7 @@
 #include "qt/pivx/navmenuwidget.h"
 #include "qt/pivx/forms/ui_navmenuwidget.h"
 #include <QFile>
-
-#include "qt/pivx/PIVXGUI.h"
+#include "PIVXGUI.h"
 
 NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
     QWidget(parent),
@@ -11,10 +10,11 @@ NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //this->setStyleSheet(parent->styleSheet());
-    setFixedWidth(100);
+    this->setFixedWidth(100);
 
     ui->navContainer_2->setProperty("cssClass", "container-nav");
+
+    ui->imgLogo->setProperty("cssClass", "img-nav-logo");
 
     // App version
     ui->labelVersion->setText("v 1.0.0");
@@ -23,32 +23,33 @@ NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
     // Buttons
 
     ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
-    ui->btnDashboard->setText("HOME");
-    ui->btnDashboard->setStyleSheet("padding-top: 25px;");
+    ui->btnDashboard->setText("HOME\n");
+    ui->btnDashboard->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnSend->setProperty("cssClass", "btn-nav-send");
-    ui->btnSend->setText("SEND");
-    ui->btnSend->setStyleSheet("padding-top: 25px;");
+    ui->btnSend->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    ui->btnSend->setText("SEND\n");
 
     ui->btnAddress->setProperty("cssClass", "btn-nav-address");
-    ui->btnAddress->setText("CONTACTS");
-    ui->btnAddress->setStyleSheet("padding-top: 25px;");
+    ui->btnAddress->setText("CONTACTS\n");
+    ui->btnAddress->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
-    ui->btnPrivacy->setText("PRIVACY");
-    ui->btnPrivacy->setStyleSheet("padding-top: 25px;");
+    ui->btnPrivacy->setText("PRIVACY\n");
+    ui->btnPrivacy->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnMaster->setProperty("cssClass", "btn-nav-master");
     ui->btnMaster->setText("MASTER\nNODES");
-    ui->btnMaster->setStyleSheet("padding-top: 32px;");
+    ui->btnMaster->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
-    ui->btnSettings->setText("SETTINGS");
-    ui->btnSettings->setStyleSheet("padding-top: 25px;");
+    ui->btnSettings->setText("SETTINGS\n");
+    ui->btnSettings->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    ui->btnReceive->setText("RECEIVE");
-    ui->btnReceive->setStyleSheet("padding-top: 25px;");
+    ui->btnReceive->setText("RECEIVE\n");
+    ui->btnReceive->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
 
 
 
