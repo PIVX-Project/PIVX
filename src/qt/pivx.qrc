@@ -124,147 +124,147 @@
         <file alias="spinner-034">res/movies/spinner-034.png</file>
     </qresource>
     <qresource prefix="/">
-        <file>pivx/res/img/bg-splash.jpg</file>
-        <file>pivx/res/img/bg-splash@2x.jpg</file>
-        <file>pivx/res/img/bg-splash@3x.jpg</file>
-        <file>pivx/res/img/bg-welcome-container.jpg</file>
-        <file>pivx/res/img/bg-welcome.jpg</file>
-        <file>pivx/res/img/img-dashboard-banner.jpg</file>
-        <file>pivx/res/img/ic-check-sync.png</file>
-        <file>pivx/res/img/ic-coin-zpiv.png</file>
-        <file>pivx/res/img/img-logo-pivx.png</file>
-        <file>pivx/res/img/img-logo-pivx@2x.png</file>
-        <file>pivx/res/img/img-logo-pivx@3x.png</file>
-        <file>pivx/res/img/img-nav-logo-pivx.png</file>
-        <file>pivx/res/img/img-nav-logo.png</file>
-        <file>pivx/res/img/img-qr-test-big.png</file>
-        <file>pivx/res/img/img-qr-test.png</file>
-        <file>pivx/res/img/img-welcome-step1.png</file>
-        <file>pivx/res/img/img-welcome-step2.png</file>
-        <file>pivx/res/img/img-welcome-step3.png</file>
-        <file>pivx/res/img/img-welcome-step4.png</file>
-        <file>pivx/res/img/bg-multi-number-dark.svg</file>
-        <file>pivx/res/img/bg-multi-number.svg</file>
-        <file>pivx/res/img/btn-radio-active.svg</file>
-        <file>pivx/res/img/btn-radio-off.svg</file>
-        <file>pivx/res/img/ic-add-label.svg</file>
-        <file>pivx/res/img/ic-add-liliac.svg</file>
-        <file>pivx/res/img/ic-add-purple.svg</file>
-        <file>pivx/res/img/ic-add.svg</file>
-        <file>pivx/res/img/ic-address-book-grey.svg</file>
-        <file>pivx/res/img/ic-address-book-white.svg</file>
-        <file>pivx/res/img/ic-address-book.svg</file>
-        <file>pivx/res/img/ic-address-send-white.svg</file>
-        <file>pivx/res/img/ic-address-send.svg</file>
-        <file>pivx/res/img/ic-arrow-drop-down-white.svg</file>
-        <file>pivx/res/img/ic-arrow-drop-down.svg</file>
-        <file>pivx/res/img/ic-arrow-drop-up-white.svg</file>
-        <file>pivx/res/img/ic-arrow-drop-up.svg</file>
-        <file>pivx/res/img/ic-arrow-drop-white-down.svg</file>
-        <file>pivx/res/img/ic-arrow-purple-down.svg</file>
-        <file>pivx/res/img/ic-arrow-right-white.svg</file>
-        <file>pivx/res/img/ic-arrow-right.svg</file>
-        <file>pivx/res/img/ic-arrow-white-left.svg</file>
-        <file>pivx/res/img/ic-arrow-white-right.svg</file>
-        <file>pivx/res/img/ic-check-active.svg</file>
-        <file>pivx/res/img/ic-check-box.svg</file>
-        <file>pivx/res/img/ic-check-connect-off.svg</file>
-        <file>pivx/res/img/ic-check-connect.svg</file>
-        <file>pivx/res/img/ic-check-dark.svg</file>
-        <file>pivx/res/img/ic-check-liliac-on.svg</file>
-        <file>pivx/res/img/ic-check-locked-off.svg</file>
-        <file>pivx/res/img/ic-check-locked.svg</file>
-        <file>pivx/res/img/ic-check-mint-off.svg</file>
-        <file>pivx/res/img/ic-check-mint.svg</file>
-        <file>pivx/res/img/ic-check-peers-off.svg</file>
-        <file>pivx/res/img/ic-check-peers.svg</file>
-        <file>pivx/res/img/ic-check-staking-off.svg</file>
-        <file>pivx/res/img/ic-check-staking.svg</file>
-        <file>pivx/res/img/ic-check-sync-off.svg</file>
-        <file>pivx/res/img/ic-check-sync.svg</file>
-        <file>pivx/res/img/ic-check-theme-dark.svg</file>
-        <file>pivx/res/img/ic-check-theme-light.svg</file>
-        <file>pivx/res/img/ic-check-white.svg</file>
-        <file>pivx/res/img/ic-check.svg</file>
-        <file>pivx/res/img/ic-chevron-left.svg</file>
-        <file>pivx/res/img/ic-chevron-right.svg</file>
-        <file>pivx/res/img/ic-clear-liliac.svg</file>
-        <file>pivx/res/img/ic-clear-purple.svg</file>
-        <file>pivx/res/img/ic-close-white.svg</file>
-        <file>pivx/res/img/ic-close.svg</file>
-        <file>pivx/res/img/ic-coin-piv.svg</file>
-        <file>pivx/res/img/ic-coin-zpiv.svg</file>
-        <file>pivx/res/img/ic-combo-box.svg</file>
-        <file>pivx/res/img/ic-connect.svg</file>
-        <file>pivx/res/img/ic-copy-liliac.svg</file>
-        <file>pivx/res/img/ic-copy.svg</file>
-        <file>pivx/res/img/ic-exit.svg</file>
-        <file>pivx/res/img/ic-expand.svg</file>
-        <file>pivx/res/img/ic-folder.svg</file>
-        <file>pivx/res/img/ic-label-liliac.svg</file>
-        <file>pivx/res/img/ic-label.svg</file>
-        <file>pivx/res/img/ic-menu-hover.svg</file>
-        <file>pivx/res/img/ic-mint.svg</file>
-        <file>pivx/res/img/ic-nav-address-active.svg</file>
-        <file>pivx/res/img/ic-nav-address-hover.svg</file>
-        <file>pivx/res/img/ic-nav-address.svg</file>
-        <file>pivx/res/img/ic-nav-dashboard-active.svg</file>
-        <file>pivx/res/img/ic-nav-dashboard-hover.svg</file>
-        <file>pivx/res/img/ic-nav-dashboard.svg</file>
-        <file>pivx/res/img/ic-nav-master-active.svg</file>
-        <file>pivx/res/img/ic-nav-master-hover.svg</file>
-        <file>pivx/res/img/ic-nav-master.svg</file>
-        <file>pivx/res/img/ic-nav-privacy-active.svg</file>
-        <file>pivx/res/img/ic-nav-privacy-hover.svg</file>
-        <file>pivx/res/img/ic-nav-privacy.svg</file>
+        <file alias="bg-splash">pivx/res/img/bg-splash.jpg</file>
+        <file alias="bg-splash-2x">pivx/res/img/bg-splash@2x.jpg</file>
+        <file alias="bg-splash-3x">pivx/res/img/bg-splash@3x.jpg</file>
+        <file alias="bg-welcome-container">pivx/res/img/bg-welcome-container.jpg</file>
+        <file alias="bg-welcome">pivx/res/img/bg-welcome.jpg</file>
+        <file alias="img-dashboard-banner">pivx/res/img/img-dashboard-banner.jpg</file>
+        <file alias="ic-check-sync">pivx/res/img/ic-check-sync.png</file>
+        <file alias="ic-coin-zpiv">pivx/res/img/ic-coin-zpiv.png</file>
+        <file alias="img-logo-pivx">pivx/res/img/img-logo-pivx.png</file>
+        <file alias="img-logo-pivx-2x">pivx/res/img/img-logo-pivx@2x.png</file>
+        <file alias="img-logo-pivx-3x">pivx/res/img/img-logo-pivx@3x.png</file>
+        <file alias="img-nav-logo-pivx">pivx/res/img/img-nav-logo-pivx.png</file>
+        <file alias="img-nav-logo">pivx/res/img/img-nav-logo.png</file>
+        <file alias="img-qr-test-big">pivx/res/img/img-qr-test-big.png</file>
+        <file alias="img-qr-test">pivx/res/img/img-qr-test.png</file>
+        <file alias="img-welcome-step1">pivx/res/img/img-welcome-step1.png</file>
+        <file alias="img-welcome-step2">pivx/res/img/img-welcome-step2.png</file>
+        <file alias="img-welcome-step3">pivx/res/img/img-welcome-step3.png</file>
+        <file alias="img-welcome-step4">pivx/res/img/img-welcome-step4.png</file>
+        <file alias="bg-multi-number-dark">pivx/res/img/bg-multi-number-dark.svg</file>
+        <file alias="bg-multi-number">pivx/res/img/bg-multi-number.svg</file>
+        <file alias="btn-radio-active">pivx/res/img/btn-radio-active.svg</file>
+        <file alias="btn-radio-off">pivx/res/img/btn-radio-off.svg</file>
+        <file alias="ic-add-label">pivx/res/img/ic-add-label.svg</file>
+        <file alias="ic-add-liliac">pivx/res/img/ic-add-liliac.svg</file>
+        <file alias="ic-add-purple">pivx/res/img/ic-add-purple.svg</file>
+        <file alias="ic-add">pivx/res/img/ic-add.svg</file>
+        <file alias="ic-address-book-grey">pivx/res/img/ic-address-book-grey.svg</file>
+        <file alias="ic-address-book-white">pivx/res/img/ic-address-book-white.svg</file>
+        <file alias="ic-address-book">pivx/res/img/ic-address-book.svg</file>
+        <file alias="ic-address-send-white">pivx/res/img/ic-address-send-white.svg</file>
+        <file alias="ic-address-send">pivx/res/img/ic-address-send.svg</file>
+        <file alias="ic-arrow-drop-down-white">pivx/res/img/ic-arrow-drop-down-white.svg</file>
+        <file alias="ic-arrow-drop-down">pivx/res/img/ic-arrow-drop-down.svg</file>
+        <file alias="ic-arrow-drop-up-white">pivx/res/img/ic-arrow-drop-up-white.svg</file>
+        <file alias="ic-arrow-drop-up">pivx/res/img/ic-arrow-drop-up.svg</file>
+        <file alias="ic-arrow-drop-white-down">pivx/res/img/ic-arrow-drop-white-down.svg</file>
+        <file alias="ic-arrow-purple-down">pivx/res/img/ic-arrow-purple-down.svg</file>
+        <file alias="ic-arrow-right-white">pivx/res/img/ic-arrow-right-white.svg</file>
+        <file alias="ic-arrow-right">pivx/res/img/ic-arrow-right.svg</file>
+        <file alias="ic-arrow-white-left">pivx/res/img/ic-arrow-white-left.svg</file>
+        <file alias="ic-arrow-white-right">pivx/res/img/ic-arrow-white-right.svg</file>
+        <file alias="ic-check-active">pivx/res/img/ic-check-active.svg</file>
+        <file alias="ic-check-box">pivx/res/img/ic-check-box.svg</file>
+        <file alias="ic-check-connect-off">pivx/res/img/ic-check-connect-off.svg</file>
+        <file alias="ic-check-connect">pivx/res/img/ic-check-connect.svg</file>
+        <file alias="ic-check-dark">pivx/res/img/ic-check-dark.svg</file>
+        <file alias="ic-check-liliac-on">pivx/res/img/ic-check-liliac-on.svg</file>
+        <file alias="ic-check-locked-off">pivx/res/img/ic-check-locked-off.svg</file>
+        <file alias="ic-check-locked">pivx/res/img/ic-check-locked.svg</file>
+        <file alias="ic-check-mint-off">pivx/res/img/ic-check-mint-off.svg</file>
+        <file alias="ic-check-mint">pivx/res/img/ic-check-mint.svg</file>
+        <file alias="ic-check-peers-off">pivx/res/img/ic-check-peers-off.svg</file>
+        <file alias="ic-check-peers">pivx/res/img/ic-check-peers.svg</file>
+        <file alias="ic-check-staking-off">pivx/res/img/ic-check-staking-off.svg</file>
+        <file alias="ic-check-staking">pivx/res/img/ic-check-staking.svg</file>
+        <file alias="ic-check-sync-off">pivx/res/img/ic-check-sync-off.svg</file>
+        <file alias="ic-check-sync">pivx/res/img/ic-check-sync.svg</file>
+        <file alias="ic-check-theme-dark">pivx/res/img/ic-check-theme-dark.svg</file>
+        <file alias="ic-check-theme-light">pivx/res/img/ic-check-theme-light.svg</file>
+        <file alias="ic-check-white">pivx/res/img/ic-check-white.svg</file>
+        <file alias="ic-check">pivx/res/img/ic-check.svg</file>
+        <file alias="ic-chevron-left">pivx/res/img/ic-chevron-left.svg</file>
+        <file alias="ic-chevron-right">pivx/res/img/ic-chevron-right.svg</file>
+        <file alias="ic-clear-liliac">pivx/res/img/ic-clear-liliac.svg</file>
+        <file alias="ic-clear-purple">pivx/res/img/ic-clear-purple.svg</file>
+        <file alias="ic-close-white">pivx/res/img/ic-close-white.svg</file>
+        <file alias="ic-close">pivx/res/img/ic-close.svg</file>
+        <file alias="ic-coin-piv">pivx/res/img/ic-coin-piv.svg</file>
+        <file alias="ic-coin-zpiv">pivx/res/img/ic-coin-zpiv.svg</file>
+        <file alias="ic-combo-box">pivx/res/img/ic-combo-box.svg</file>
+        <file alias="ic-connect">pivx/res/img/ic-connect.svg</file>
+        <file alias="ic-copy-liliac">pivx/res/img/ic-copy-liliac.svg</file>
+        <file alias="ic-copy">pivx/res/img/ic-copy.svg</file>
+        <file alias="ic-exit">pivx/res/img/ic-exit.svg</file>
+        <file alias="ic-expand">pivx/res/img/ic-expand.svg</file>
+        <file alias="ic-folder">pivx/res/img/ic-folder.svg</file>
+        <file alias="ic-label-liliac">pivx/res/img/ic-label-liliac.svg</file>
+        <file alias="ic-label">pivx/res/img/ic-label.svg</file>
+        <file alias="ic-menu-hover">pivx/res/img/ic-menu-hover.svg</file>
+        <file alias="ic-mint">pivx/res/img/ic-mint.svg</file>
+        <file alias="ic-nav-address-active">pivx/res/img/ic-nav-address-active.svg</file>
+        <file alias="ic-nav-address-hover">pivx/res/img/ic-nav-address-hover.svg</file>
+        <file alias="ic-nav-address">pivx/res/img/ic-nav-address.svg</file>
+        <file alias="ic-nav-dashboard-active">pivx/res/img/ic-nav-dashboard-active.svg</file>
+        <file alias="ic-nav-dashboard-hover">pivx/res/img/ic-nav-dashboard-hover.svg</file>
+        <file alias="ic-nav-dashboard">pivx/res/img/ic-nav-dashboard.svg</file>
+        <file alias="ic-nav-master-active">pivx/res/img/ic-nav-master-active.svg</file>
+        <file alias="ic-nav-master-hover">pivx/res/img/ic-nav-master-hover.svg</file>
+        <file alias="ic-nav-master">pivx/res/img/ic-nav-master.svg</file>
+        <file alias="ic-nav-privacy-active">pivx/res/img/ic-nav-privacy-active.svg</file>
+        <file alias="ic-nav-privacy-hover">pivx/res/img/ic-nav-privacy-hover.svg</file>
+        <file alias="ic-nav-privacy">pivx/res/img/ic-nav-privacy.svg</file>
         <file alias="ic-nav-receive-active">pivx/res/img/ic-nav-receive-active.svg</file>
         <file alias="ic-nav-receive-hover">pivx/res/img/ic-nav-receive-hover.svg</file>
         <file alias="ic-nav-receive">pivx/res/img/ic-nav-receive.svg</file>
-        <file>pivx/res/img/ic-nav-send-active.svg</file>
-        <file>pivx/res/img/ic-nav-send-hover.svg</file>
-        <file>pivx/res/img/ic-nav-send.svg</file>
-        <file>pivx/res/img/ic-nav-settings-active.svg</file>
-        <file>pivx/res/img/ic-nav-settings-hover.svg</file>
-        <file>pivx/res/img/ic-nav-settings.svg</file>
-        <file>pivx/res/img/ic-radio-liliac-on.svg</file>
-        <file>pivx/res/img/ic-receive-off.svg</file>
-        <file>pivx/res/img/ic-receive-on.svg</file>
-        <file>pivx/res/img/ic-received.svg</file>
-        <file>pivx/res/img/ic-send.svg</file>
-        <file>pivx/res/img/ic-submenu-lock.svg</file>
-        <file>pivx/res/img/ic-submenu-staking.svg</file>
-        <file>pivx/res/img/ic-submenu-unlock.svg</file>
-        <file>pivx/res/img/ic-switch-liliac-on.svg</file>
-        <file>pivx/res/img/ic-switch-off.svg</file>
-        <file>pivx/res/img/ic-switch-on.svg</file>
-        <file>pivx/res/img/ic-transaction-mint.svg</file>
-        <file>pivx/res/img/ic-transaction-received.svg</file>
-        <file>pivx/res/img/ic-transaction-sent.svg</file>
-        <file>pivx/res/img/ic-transaction-staked.svg</file>
-        <file>pivx/res/img/ic-unlock-staking.svg</file>
-        <file>pivx/res/img/ic-update-liliac.svg</file>
-        <file>pivx/res/img/ic-update.svg</file>
-        <file>pivx/res/img/ic-wallet-status-locked.svg</file>
-        <file>pivx/res/img/ic-wallet-status-staking.svg</file>
-        <file>pivx/res/img/ic-wallet-status-unlocked.svg</file>
-        <file>pivx/res/img/ic-watch-password-white.svg</file>
-        <file>pivx/res/img/ic-watch-password.svg</file>
-        <file>pivx/res/img/img-empty-contacts.svg</file>
-        <file>pivx/res/img/img-empty-dark-contacts.svg</file>
-        <file>pivx/res/img/img-empty-dark-error.svg</file>
-        <file>pivx/res/img/img-empty-dark-masternode.svg</file>
-        <file>pivx/res/img/img-empty-dark-multisend.svg</file>
-        <file>pivx/res/img/img-empty-dark-peers.svg</file>
-        <file>pivx/res/img/img-empty-dark-staking-off.svg</file>
-        <file>pivx/res/img/img-empty-dark-transactions.svg</file>
-        <file>pivx/res/img/img-empty-error.svg</file>
-        <file>pivx/res/img/img-empty-masternode.svg</file>
-        <file>pivx/res/img/img-empty-multisend.svg</file>
-        <file>pivx/res/img/img-empty-peers.svg</file>
-        <file>pivx/res/img/img-empty-staking-off.svg</file>
-        <file>pivx/res/img/img-empty-staking-on.svg</file>
-        <file>pivx/res/img/img-empty-transactions.svg</file>
-        <file>pivx/res/img/img-nav-logo.svg</file>
-        <file>pivx/res/img/img-qr.svg</file>
+        <file alias="ic-nav-send-active">pivx/res/img/ic-nav-send-active.svg</file>
+        <file alias="ic-nav-send-hover">pivx/res/img/ic-nav-send-hover.svg</file>
+        <file alias="ic-nav-send">pivx/res/img/ic-nav-send.svg</file>
+        <file alias="ic-nav-settings-active">pivx/res/img/ic-nav-settings-active.svg</file>
+        <file alias="ic-nav-settings-hover">pivx/res/img/ic-nav-settings-hover.svg</file>
+        <file alias="ic-nav-settings">pivx/res/img/ic-nav-settings.svg</file>
+        <file alias="ic-radio-liliac-on">pivx/res/img/ic-radio-liliac-on.svg</file>
+        <file alias="ic-receive-off">pivx/res/img/ic-receive-off.svg</file>
+        <file alias="ic-receive-on">pivx/res/img/ic-receive-on.svg</file>
+        <file alias="ic-received">pivx/res/img/ic-received.svg</file>
+        <file alias="ic-send">pivx/res/img/ic-send.svg</file>
+        <file alias="ic-submenu-lock">pivx/res/img/ic-submenu-lock.svg</file>
+        <file alias="ic-submenu-staking">pivx/res/img/ic-submenu-staking.svg</file>
+        <file alias="ic-submenu-unlock">pivx/res/img/ic-submenu-unlock.svg</file>
+        <file alias="ic-switch-liliac-on">pivx/res/img/ic-switch-liliac-on.svg</file>
+        <file alias="ic-switch-off">pivx/res/img/ic-switch-off.svg</file>
+        <file alias="ic-switch-on">pivx/res/img/ic-switch-on.svg</file>
+        <file alias="ic-transaction-mint">pivx/res/img/ic-transaction-mint.svg</file>
+        <file alias="ic-transaction-received">pivx/res/img/ic-transaction-received.svg</file>
+        <file alias="ic-transaction-sent">pivx/res/img/ic-transaction-sent.svg</file>
+        <file alias="ic-transaction-staked">pivx/res/img/ic-transaction-staked.svg</file>
+        <file alias="ic-unlock-staking">pivx/res/img/ic-unlock-staking.svg</file>
+        <file alias="ic-update-liliac">pivx/res/img/ic-update-liliac.svg</file>
+        <file alias="ic-update">pivx/res/img/ic-update.svg</file>
+        <file alias="ic-wallet-status-locked">pivx/res/img/ic-wallet-status-locked.svg</file>
+        <file alias="ic-wallet-status-staking">pivx/res/img/ic-wallet-status-staking.svg</file>
+        <file alias="ic-wallet-status-unlocked">pivx/res/img/ic-wallet-status-unlocked.svg</file>
+        <file alias="ic-watch-password-white">pivx/res/img/ic-watch-password-white.svg</file>
+        <file alias="ic-watch-password">pivx/res/img/ic-watch-password.svg</file>
+        <file alias="img-empty-contacts">pivx/res/img/img-empty-contacts.svg</file>
+        <file alias="img-empty-dark-contacts">pivx/res/img/img-empty-dark-contacts.svg</file>
+        <file alias="img-empty-dark-error">pivx/res/img/img-empty-dark-error.svg</file>
+        <file alias="img-empty-dark-masternode">pivx/res/img/img-empty-dark-masternode.svg</file>
+        <file alias="img-empty-dark-multisend">pivx/res/img/img-empty-dark-multisend.svg</file>
+        <file alias="img-empty-dark-peers">pivx/res/img/img-empty-dark-peers.svg</file>
+        <file alias="img-empty-dark-staking-off">pivx/res/img/img-empty-dark-staking-off.svg</file>
+        <file alias="img-empty-dark-transactions">pivx/res/img/img-empty-dark-transactions.svg</file>
+        <file alias="img-empty-error">pivx/res/img/img-empty-error.svg</file>
+        <file alias="img-empty-masternode">pivx/res/img/img-empty-masternode.svg</file>
+        <file alias="img-empty-multisend">pivx/res/img/img-empty-multisend.svg</file>
+        <file alias="img-empty-peers">pivx/res/img/img-empty-peers.svg</file>
+        <file alias="img-empty-staking-off">pivx/res/img/img-empty-staking-off.svg</file>
+        <file alias="img-empty-staking-on">pivx/res/img/img-empty-staking-on.svg</file>
+        <file alias="img-empty-transactions">pivx/res/img/img-empty-transactions.svg</file>
+        <file alias="img-nav-logo">pivx/res/img/img-nav-logo.svg</file>
+        <file alias="img-qr">pivx/res/img/img-qr.svg</file>
     </qresource>
 </RCC>
