@@ -2106,9 +2106,9 @@ UniValue settxfee(const UniValue& params, bool fHelp)
 
     // Amount
     CAmount nAmount = 0;
-    if (params[0].get_real() != 0.0)
+    if (params[0].get_real() != 0.0) {
         nAmount = AmountFromValue(params[0]); // rejects 0.0 amounts
-
+    } else throw runtime_error("0 fees are sometimes possible but not guaranteed. You may pay a fee.");
     payTxFee = CFeeRate(nAmount, 1000);
     return true;
 }
