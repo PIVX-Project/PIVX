@@ -67,7 +67,7 @@ void NavMenuWidget::onSendClicked(){
 }
 
 void NavMenuWidget::onDashboardClicked(){
-    //window->goToDashboard();
+    window->goToDashboard();
 }
 
 void NavMenuWidget::onAddressClicked(){

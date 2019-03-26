@@ -71,7 +71,10 @@ QT_FORMS_UI = \
   qt/pivx/forms/expandablebutton.ui \
   qt/pivx/forms/receivedialog.ui \
   qt/pivx/forms/walletpassworddialog.ui \
-  qt/pivx/forms/topbar.ui
+  qt/pivx/forms/topbar.ui \
+  qt/pivx/forms/txdetaildialog.ui \
+  qt/pivx/forms/txrow.ui \
+  qt/pivx/forms/dashboardwidget.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
@@ -131,9 +134,13 @@ QT_MOC_CPP = \
   qt/pivx/moc_navmenuwidget.cpp \
   qt/pivx/moc_lockunlock.cpp \
   qt/pivx/moc_expandablebutton.cpp \
+  qt/pivx/moc_furabstractlistitemdelegate.cpp \
   qt/pivx/moc_receivedialog.cpp \
   qt/pivx/moc_walletpassworddialog.cpp \
-  qt/pivx/moc_topbar.cpp
+  qt/pivx/moc_topbar.cpp \
+  qt/pivx/moc_txdetaildialog.cpp \
+  qt/pivx/moc_txrow.cpp \
+  qt/pivx/moc_dashboardwidget.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -220,10 +227,16 @@ BITCOIN_QT_H = \
   qt/pivx/navmenuwidget.h \
   qt/pivx/lockunlock.h \
   qt/pivx/receivedialog.h \
+  qt/pivx/furlistrow.h \
+  qt/pivx/furabstractlistitemdelegate.h \
+  qt/pivx/txviewholder.h \
   qt/pivx/qtutils.h \
   qt/pivx/expandablebutton.h \
   qt/pivx/walletpassworddialog.h \
-  qt/pivx/topbar.h
+  qt/pivx/topbar.h \
+  qt/pivx/txdetaildialog.h \
+  qt/pivx/txrow.h \
+  qt/pivx/dashboardwidget.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -504,10 +517,15 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/navmenuwidget.cpp \
   qt/pivx/lockunlock.cpp \
   qt/pivx/receivedialog.cpp \
+  qt/pivx/furabstractlistitemdelegate.cpp \
+  qt/pivx/txviewholder.cpp \
   qt/pivx/qtutils.cpp \
   qt/pivx/expandablebutton.cpp \
   qt/pivx/walletpassworddialog.cpp \
-  qt/pivx/topbar.cpp
+  qt/pivx/topbar.cpp \
+  qt/pivx/txdetaildialog.cpp \
+  qt/pivx/txrow.cpp \
+  qt/pivx/dashboardwidget.cpp
 
 BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP)
 if TARGET_WINDOWS

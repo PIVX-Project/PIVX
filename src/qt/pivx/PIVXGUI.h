@@ -11,13 +11,16 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <QSystemTrayIcon>
 
 #include "qt/pivx/navmenuwidget.h"
 #include "qt/pivx/topbar.h"
+#include "qt/pivx/dashboardwidget.h"
 
 
 class ClientModel;
 class NetworkStyle;
+class Notificator;
 class WalletModel;
 
 
@@ -40,13 +43,8 @@ public:
     */
     void setClientModel(ClientModel* clientModel);
 
-    void showHide(bool show){
-        // TODO: Implement me.
-    }
-    // TODO: Change me..
-    int getNavWidth(){
-        return 100;
-    }
+    //
+    void goToDashboard();
 
 #ifdef ENABLE_WALLET
     /** Set the wallet model.
@@ -56,6 +54,15 @@ public:
     bool addWallet(const QString& name, WalletModel* walletModel);
     bool setCurrentWallet(const QString& name);
     void removeAllWallets();
+
+
+    void showHide(bool show){
+        // TODO: Implement me.
+    }
+    // TODO: Change me..
+    int getNavWidth(){
+        return 100;
+    }
 #endif // ENABLE_WALLET
 
 protected:
@@ -73,11 +80,19 @@ private:
     //WalletFrame* walletFrame;
 
 
-
     // Frame
     NavMenuWidget *navMenu;
     TopBar *topBar;
     QStackedWidget *stackedContainer;
+
+    DashboardWidget *dashboard;
+
+
+    //
+    QSystemTrayIcon* trayIcon;
+    Notificator* notificator;
+
+    void createTrayIcon(const NetworkStyle* networkStyle);
 
 signals:
     /** Signal raised when a URI was entered or dragged to the GUI */

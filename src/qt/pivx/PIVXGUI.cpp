@@ -10,10 +10,12 @@
 
 #include <qt/guiutil.h>
 #include "networkstyle.h"
+#include "notificator.h"
 
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QApplication>
 
 
 #include "util.h"
@@ -61,6 +63,7 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
     if(enableWallet){
 
         QFrame* centralWidget = new QFrame(this);
+        this->setMinimumWidth(1200);
         QHBoxLayout* centralWidgetLayouot = new QHBoxLayout();
         centralWidget->setLayout(centralWidgetLayouot);
         centralWidgetLayouot->setContentsMargins(0,0,0,0);
@@ -96,6 +99,13 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         stackedContainer->setContentsMargins(0,0,0,0);
         baseScreensContainer->addWidget(stackedContainer);
 
+        // Init
+        dashboard = new DashboardWidget(this, this);
+
+        // Add to parent
+        stackedContainer->addWidget(dashboard);
+        stackedContainer->setCurrentWidget(dashboard);
+
     } else
 #endif
     {
@@ -103,6 +113,23 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
     }
 
 
+    // Create system tray icon and notification
+    createTrayIcon(networkStyle);
+
+}
+
+
+void PIVXGUI::createTrayIcon(const NetworkStyle* networkStyle)
+{
+#ifndef Q_OS_MAC
+    trayIcon = new QSystemTrayIcon(this);
+    QString toolTip = tr("PIVX Core client") + " " + networkStyle->getTitleAddText();
+    trayIcon->setToolTip(toolTip);
+    trayIcon->setIcon(networkStyle->getAppIcon());
+    trayIcon->hide();
+#endif
+
+    notificator = new Notificator(QApplication::applicationName(), trayIcon, this);
 }
 
 //
@@ -121,15 +148,26 @@ void PIVXGUI::setClientModel(ClientModel* clientModel) {
     // TODO: Complete me..
 }
 
+void PIVXGUI::goToDashboard() {
 
-// Wallet methods..
+}
+
+
 #ifdef ENABLE_WALLET
 bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
 {
-    //if (!walletFrame)
-    //    return false;
-    //setWalletActionsEnabled(true);
-    //return walletFrame->addWallet(name, walletModel);
+    // Single wallet supported for now..
+    if(!stackedContainer || !clientModel || !walletModel)
+        return false;
+
+    // todo: show out of sync warning..
+    // todo: complete this next method
+    //connect(walletView, SIGNAL(showNormalIfMinimized()), gui, SLOT(showNormalIfMinimized()));
+
+    // set the model for every view
+    dashboard->setWalletModel(walletModel);
+
+
     return true;
 }
 

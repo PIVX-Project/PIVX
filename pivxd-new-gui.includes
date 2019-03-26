@@ -29,3 +29,5 @@ src/univalue
 src/univalue/include
 src/univalue/lib
 src/zmq
+src/qt/pivx
+src/qt/pivx/forms
