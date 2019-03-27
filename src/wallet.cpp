@@ -4210,7 +4210,7 @@ void CWallet::AutoCombineDust()
             nTotalRewardsValue += out.Value();
 
             // Combine until our total is enough above the threshold to remain above after adjustments
-            if ((nTotalRewardsValue-nTotalRewardsValue/10) > nAutoCombineThreshold * COIN)
+            if ((nTotalRewardsValue - nTotalRewardsValue / 10) > nAutoCombineThreshold * COIN)
                 break;
 
             // Around 180 bytes per input. We use 190 to be certain
