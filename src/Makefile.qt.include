@@ -65,7 +65,8 @@ QT_FORMS_UI = \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/transactiondescdialog.ui \
-  qt/forms/zpivcontroldialog.ui \
+  qt/pivx/forms/coincontrolzpivdialog.ui \
+  qt/pivx/forms/snackbar.ui \
   qt/pivx/forms/navmenuwidget.ui \
   qt/pivx/forms/lockunlock.ui \
   qt/pivx/forms/expandablebutton.ui \
@@ -86,7 +87,10 @@ QT_FORMS_UI = \
   qt/pivx/forms/sendcustomfeedialog.ui \
   qt/pivx/forms/sendchangeaddressdialog.ui \
   qt/pivx/forms/sendmultirow.ui \
-  qt/pivx/forms/send.ui
+  qt/pivx/forms/send.ui \
+  qt/pivx/forms/addnewaddressdialog.ui \
+  qt/pivx/forms/requestdialog.ui \
+  qt/pivx/forms/receivewidget.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
@@ -142,7 +146,8 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp \
-  qt/moc_zpivcontroldialog.cpp \
+  qt/pivx/moc_coincontrolzpivdialog.cpp \
+  qt/pivx/moc_snackbar.cpp \
   qt/pivx/moc_navmenuwidget.cpp \
   qt/pivx/moc_lockunlock.cpp \
   qt/pivx/moc_expandablebutton.cpp \
@@ -165,7 +170,10 @@ QT_MOC_CPP = \
   qt/pivx/moc_sendcustomfeedialog.cpp \
   qt/pivx/moc_sendchangeaddressdialog.cpp \
   qt/pivx/moc_sendmultirow.cpp \
-  qt/pivx/moc_send.cpp
+  qt/pivx/moc_send.cpp \
+  qt/pivx/moc_addnewaddressdialog.cpp \
+  qt/pivx/moc_requestdialog.cpp \
+  qt/pivx/moc_receivewidget.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -248,7 +256,8 @@ BITCOIN_QT_H = \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
   qt/winshutdownmonitor.h \
-  qt/zpivcontroldialog.h \
+  qt/pivx/coincontrolzpivdialog.h \
+  qt/pivx/snackbar.h \
   qt/pivx/navmenuwidget.h \
   qt/pivx/lockunlock.h \
   qt/pivx/receivedialog.h \
@@ -274,7 +283,10 @@ BITCOIN_QT_H = \
   qt/pivx/sendcustomfeedialog.h \
   qt/pivx/sendchangeaddressdialog.h \
   qt/pivx/sendmultirow.h \
-  qt/pivx/send.h
+  qt/pivx/send.h \
+  qt/pivx/addnewaddressdialog.h \
+  qt/pivx/requestdialog.h \
+  qt/pivx/receivewidget.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -551,7 +563,8 @@ BITCOIN_QT_WALLET_CPP = \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
   qt/walletview.cpp \
-  qt/zpivcontroldialog.cpp \
+  qt/pivx/coincontrolzpivdialog.cpp \
+  qt/pivx/snackbar.cpp \
   qt/pivx/navmenuwidget.cpp \
   qt/pivx/lockunlock.cpp \
   qt/pivx/receivedialog.cpp \
@@ -576,7 +589,10 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/sendcustomfeedialog.cpp \
   qt/pivx/sendchangeaddressdialog.cpp \
   qt/pivx/sendmultirow.cpp \
-  qt/pivx/send.cpp
+  qt/pivx/send.cpp \
+  qt/pivx/addnewaddressdialog.cpp \
+  qt/pivx/requestdialog.cpp \
+  qt/pivx/receivewidget.cpp
 
 
 

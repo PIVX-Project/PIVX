@@ -88,7 +88,7 @@ void NavMenuWidget::onSettingsClicked(){
 }
 
 void NavMenuWidget::onReceiveClicked(){
-    //window->goToReceive();
+    window->goToReceive();
 }
 
 NavMenuWidget::~NavMenuWidget()
