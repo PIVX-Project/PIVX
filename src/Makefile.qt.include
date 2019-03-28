@@ -74,7 +74,19 @@ QT_FORMS_UI = \
   qt/pivx/forms/topbar.ui \
   qt/pivx/forms/txdetaildialog.ui \
   qt/pivx/forms/txrow.ui \
-  qt/pivx/forms/dashboardwidget.ui
+  qt/pivx/forms/dashboardwidget.ui \
+  qt/pivx/forms/coincontrolpivwidget.ui \
+  qt/pivx/forms/coincontrolzpivdialog.ui \
+  qt/pivx/forms/addresslabelrow.ui \
+  qt/pivx/forms/contactdropdownrow.ui \
+  qt/pivx/forms/optionbutton.ui \
+  qt/pivx/forms/myaddressrow.ui \
+  qt/pivx/forms/sendchangeaddressdialog.ui \
+  qt/pivx/forms/sendconfirmdialog.ui \
+  qt/pivx/forms/sendcustomfeedialog.ui \
+  qt/pivx/forms/sendchangeaddressdialog.ui \
+  qt/pivx/forms/sendmultirow.ui \
+  qt/pivx/forms/send.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
@@ -140,7 +152,20 @@ QT_MOC_CPP = \
   qt/pivx/moc_topbar.cpp \
   qt/pivx/moc_txdetaildialog.cpp \
   qt/pivx/moc_txrow.cpp \
-  qt/pivx/moc_dashboardwidget.cpp
+  qt/pivx/moc_dashboardwidget.cpp \
+  qt/pivx/moc_coincontrolpivwidget.cpp \
+  qt/pivx/moc_coincontrolzpivdialog.cpp \
+  qt/pivx/moc_addresslabelrow.cpp \
+  qt/pivx/moc_contactdropdownrow.cpp \
+  qt/pivx/moc_optionbutton.cpp \
+  qt/pivx/moc_myaddressrow.cpp \
+  qt/pivx/moc_contactsdropdown.cpp \
+  qt/pivx/moc_sendchangeaddressdialog.cpp \
+  qt/pivx/moc_sendconfirmdialog.cpp \
+  qt/pivx/moc_sendcustomfeedialog.cpp \
+  qt/pivx/moc_sendchangeaddressdialog.cpp \
+  qt/pivx/moc_sendmultirow.cpp \
+  qt/pivx/moc_send.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -236,7 +261,20 @@ BITCOIN_QT_H = \
   qt/pivx/topbar.h \
   qt/pivx/txdetaildialog.h \
   qt/pivx/txrow.h \
-  qt/pivx/dashboardwidget.h
+  qt/pivx/dashboardwidget.h \
+  qt/pivx/coincontrolpivwidget.h \
+  qt/pivx/coincontrolzpivdialog.h \
+  qt/pivx/addresslabelrow.h \
+  qt/pivx/contactdropdownrow.h \
+  qt/pivx/optionbutton.h \
+  qt/pivx/myaddressrow.h \
+  qt/pivx/contactsdropdown.h \
+  qt/pivx/sendchangeaddressdialog.h \
+  qt/pivx/sendconfirmdialog.h \
+  qt/pivx/sendcustomfeedialog.h \
+  qt/pivx/sendchangeaddressdialog.h \
+  qt/pivx/sendmultirow.h \
+  qt/pivx/send.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -525,7 +563,23 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/topbar.cpp \
   qt/pivx/txdetaildialog.cpp \
   qt/pivx/txrow.cpp \
-  qt/pivx/dashboardwidget.cpp
+  qt/pivx/dashboardwidget.cpp \
+  qt/pivx/coincontrolpivwidget.cpp \
+  qt/pivx/coincontrolzpivdialog.cpp \
+  qt/pivx/addresslabelrow.cpp \
+  qt/pivx/contactdropdownrow.cpp \
+  qt/pivx/contactsdropdown.cpp \
+  qt/pivx/optionbutton.cpp \
+  qt/pivx/myaddressrow.cpp \
+  qt/pivx/sendchangeaddressdialog.cpp \
+  qt/pivx/sendconfirmdialog.cpp \
+  qt/pivx/sendcustomfeedialog.cpp \
+  qt/pivx/sendchangeaddressdialog.cpp \
+  qt/pivx/sendmultirow.cpp \
+  qt/pivx/send.cpp
+
+
+
 
 BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP)
 if TARGET_WINDOWS

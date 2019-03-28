@@ -16,6 +16,7 @@
 #include "qt/pivx/navmenuwidget.h"
 #include "qt/pivx/topbar.h"
 #include "qt/pivx/dashboardwidget.h"
+#include "qt/pivx/send.h"
 
 
 class ClientModel;
@@ -45,6 +46,7 @@ public:
 
     //
     void goToDashboard();
+    void goToSend();
 
 #ifdef ENABLE_WALLET
     /** Set the wallet model.
@@ -86,6 +88,7 @@ private:
     QStackedWidget *stackedContainer;
 
     DashboardWidget *dashboard;
+    SendWidget *sendWidget;
 
 
     //
@@ -99,7 +102,6 @@ signals:
     void receivedURI(const QString& uri);
     /** Restart handling */
     void requestedRestart(QStringList args);
-
 };
 
 

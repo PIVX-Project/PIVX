@@ -138,3 +138,24 @@ void updateStyle(QWidget* widget){
     widget->style()->polish(widget);
     widget->update();
 }
+
+
+QColor getRowColor(bool isLightTheme, bool isHovered, bool isSelected){
+    if(isLightTheme){
+        if (isSelected) {
+            return QColor("#25b088ff");
+        }else if(isHovered){
+            return QColor("#25bababa");
+        } else{
+            return QColor("#ffffff");
+        }
+    }else{
+        if (isSelected) {
+            return QColor("#25b088ff");
+        }else if(isHovered){
+            return QColor("#25bababa");
+        } else{
+            return QColor("#0f0b16");
+        }
+    }
+}

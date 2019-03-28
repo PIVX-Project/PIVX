@@ -4,17 +4,22 @@
 #include <QWidget>
 #include <QColor>
 
+template <class T=QWidget*>
 class FurListRow{
 
 public:
     FurListRow(){}
-    virtual ~FurListRow(){}
+    virtual inline ~FurListRow(){}
 
-    virtual QWidget* createHolder(int){
+    virtual inline T createHolder(int){
        return nullptr;
     }
 
-    virtual QColor rectColor(bool isHovered, bool isSelected){
+    virtual inline void init(T, bool isHovered, bool isSelected) const{
+
+    }
+
+    virtual inline QColor rectColor(bool isHovered, bool isSelected){
         return QColor();
     }
 };

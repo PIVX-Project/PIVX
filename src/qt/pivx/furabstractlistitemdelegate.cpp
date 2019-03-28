@@ -1,7 +1,7 @@
 #include "qt/pivx/furabstractlistitemdelegate.h"
 #include "qt/pivx/moc_furabstractlistitemdelegate.cpp"
 
-FurAbstractListItemDelegate::FurAbstractListItemDelegate(int _rowHeight, FurListRow *_row, QObject *parent) :
+FurAbstractListItemDelegate::FurAbstractListItemDelegate(int _rowHeight, FurListRow<> *_row, QObject *parent) :
     QAbstractItemDelegate(parent), rowHeight(_rowHeight), row(_row){}
 
 void FurAbstractListItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
@@ -28,7 +28,7 @@ void FurAbstractListItemDelegate::paint(QPainter *painter, const QStyleOptionVie
     painter->restore();
 }
 
-FurListRow* FurAbstractListItemDelegate::getRowFactory(){
+FurListRow<>* FurAbstractListItemDelegate::getRowFactory(){
     return this->row;
 }
 

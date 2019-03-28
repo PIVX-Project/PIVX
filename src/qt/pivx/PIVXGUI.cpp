@@ -101,9 +101,11 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
 
         // Init
         dashboard = new DashboardWidget(this, this);
+        sendWidget = new SendWidget(this, this);
 
         // Add to parent
         stackedContainer->addWidget(dashboard);
+        stackedContainer->addWidget(sendWidget);
         stackedContainer->setCurrentWidget(dashboard);
 
     } else
@@ -149,7 +151,11 @@ void PIVXGUI::setClientModel(ClientModel* clientModel) {
 }
 
 void PIVXGUI::goToDashboard() {
+    stackedContainer->setCurrentWidget(dashboard);
+}
 
+void PIVXGUI::goToSend() {
+    stackedContainer->setCurrentWidget(sendWidget);
 }
 
 

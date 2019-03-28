@@ -1,7 +1,7 @@
 #ifndef FURABSTRACTLISTITEMDELEGATE_H
 #define FURABSTRACTLISTITEMDELEGATE_H
 
-#include "furlistrow.h"
+#include "qt/pivx/furlistrow.h"
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -20,18 +20,16 @@ class FurAbstractListItemDelegate : public QAbstractItemDelegate
 {
     Q_OBJECT
 public:
-    FurAbstractListItemDelegate(int _rowHeight, FurListRow* _row, QObject *parent=nullptr);
-    ~FurAbstractListItemDelegate(){};
+    FurAbstractListItemDelegate(int _rowHeight, FurListRow<>* _row, QObject *parent=nullptr);
 
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
-                      const QModelIndex &index ) const override;
+                      const QModelIndex &index ) const;
 
-    FurListRow *getRowFactory();
-
+    FurListRow<> *getRowFactory();
 private:
     int rowHeight = 0;
-    FurListRow* row = nullptr;
+    FurListRow<>* row = nullptr;
 
 };
 
