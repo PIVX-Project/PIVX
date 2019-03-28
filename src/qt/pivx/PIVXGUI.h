@@ -12,6 +12,7 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 #include <QSystemTrayIcon>
+#include <QLabel>
 
 #include "qt/pivx/navmenuwidget.h"
 #include "qt/pivx/topbar.h"
@@ -52,6 +53,16 @@ public:
     void goToReceive();
     void goToAddresses();
 
+
+    void resizeEvent(QResizeEvent *event) override;
+    void showHide(bool show);
+    int getNavWidth();
+signals:
+    void themeChanged(bool isLightTheme, QString& theme);
+    void windowResizeEvent(QResizeEvent* event);
+public slots:
+    void changeTheme(bool isLightTheme);
+
 #ifdef ENABLE_WALLET
     /** Set the wallet model.
         The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending
@@ -60,15 +71,6 @@ public:
     bool addWallet(const QString& name, WalletModel* walletModel);
     bool setCurrentWallet(const QString& name);
     void removeAllWallets();
-
-
-    void showHide(bool show){
-        // TODO: Implement me.
-    }
-    // TODO: Change me..
-    int getNavWidth(){
-        return 100;
-    }
 #endif // ENABLE_WALLET
 
 protected:
@@ -96,10 +98,12 @@ private:
     ReceiveWidget *receiveWidget;
     AddressesWidget *addressesWidget;
 
-
     //
     QSystemTrayIcon* trayIcon;
     Notificator* notificator;
+
+    QLabel *op = nullptr;
+    bool opEnabled = false;
 
     void createTrayIcon(const NetworkStyle* networkStyle);
 

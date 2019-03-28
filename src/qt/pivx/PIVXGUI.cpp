@@ -12,10 +12,13 @@
 #include "networkstyle.h"
 #include "notificator.h"
 
+#include "qt/pivx/qtutils.h"
+
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QApplication>
+#include <QColor>
 
 
 #include "util.h"
@@ -70,6 +73,7 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         centralWidgetLayouot->setSpacing(0);
 
         centralWidget->setProperty("cssClass", "container");
+        centralWidget->setStyleSheet("padding:0px; border:none; margin:0px;");
 
         // First the nav
         navMenu = new NavMenuWidget(this);
@@ -169,6 +173,61 @@ void PIVXGUI::goToReceive() {
 void PIVXGUI::goToAddresses() {
     stackedContainer->setCurrentWidget(addressesWidget);
 }
+
+
+void PIVXGUI::changeTheme(bool isLightTheme){
+    // Change theme in all of the childs here..
+
+    QString css = isLightTheme ? getLightTheme() : getDarkTheme();
+    this->setStyleSheet(css);
+
+    // Notify
+    emit themeChanged(isLightTheme, css);
+
+    // Update style
+    updateStyle(this);
+}
+
+void PIVXGUI::resizeEvent(QResizeEvent* event){
+    // Parent..
+    QMainWindow::resizeEvent(event);
+    // background
+    showHide(opEnabled);
+    // Notify
+    emit windowResizeEvent(event);
+}
+
+void PIVXGUI::showHide(bool show){
+    if(!op) op = new QLabel(this);
+    if(!show){
+        op->setVisible(false);
+        opEnabled = false;
+    }else{
+        QColor bg("#000000");
+        bg.setAlpha(200);
+        if(!isLightTheme()){
+            bg = QColor("#00000000");
+            bg.setAlpha(150);
+        }
+
+        QPalette palette;
+        palette.setColor(QPalette::Window, bg);
+        op->setAutoFillBackground(true);
+        op->setPalette(palette);
+        op->setWindowFlags(Qt::CustomizeWindowHint);
+        op->move(0,0);
+        op->show();
+        op->activateWindow();
+        op->resize(width(), height());
+        op->setVisible(true);
+        opEnabled = true;
+    }
+}
+
+int PIVXGUI::getNavWidth(){
+    return this->navMenu->width();
+}
+
 
 
 #ifdef ENABLE_WALLET
