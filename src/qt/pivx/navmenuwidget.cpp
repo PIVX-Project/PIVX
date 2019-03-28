@@ -71,7 +71,7 @@ void NavMenuWidget::onDashboardClicked(){
 }
 
 void NavMenuWidget::onAddressClicked(){
-    //window->goToAddressBook();
+    window->goToAddresses();
 }
 
 

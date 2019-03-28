@@ -18,6 +18,7 @@
 #include "qt/pivx/dashboardwidget.h"
 #include "qt/pivx/send.h"
 #include "qt/pivx/receivewidget.h"
+#include "qt/pivx/addresseswidget.h"
 
 
 class ClientModel;
@@ -49,6 +50,7 @@ public:
     void goToDashboard();
     void goToSend();
     void goToReceive();
+    void goToAddresses();
 
 #ifdef ENABLE_WALLET
     /** Set the wallet model.
@@ -92,6 +94,7 @@ private:
     DashboardWidget *dashboard;
     SendWidget *sendWidget;
     ReceiveWidget *receiveWidget;
+    AddressesWidget *addressesWidget;
 
 
     //

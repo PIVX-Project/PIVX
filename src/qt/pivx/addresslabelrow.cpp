@@ -11,12 +11,16 @@ AddressLabelRow::AddressLabelRow(bool isLightTheme, bool isHover , QWidget *pare
     ui->lblAddress->setProperty("cssClass", "text-list-body1");
     ui->lblLabel->setProperty("cssClass", "text-list-title1");
 
+    updateState(isLightTheme, isHover, false);
+}
+
+void AddressLabelRow::updateState(bool isLightTheme, bool isHovered, bool isSelected){
     if(isLightTheme)
         ui->lblDivisory->setStyleSheet("background-color:#bababa");
     else
         ui->lblDivisory->setStyleSheet("background-color:#40ffffff");
 
-    ui->btnMenu->setVisible(isHover);
+     ui->btnMenu->setVisible(isHovered);
 }
 
 void AddressLabelRow::enterEvent(QEvent *) {
