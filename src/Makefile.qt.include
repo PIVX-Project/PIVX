@@ -92,7 +92,10 @@ QT_FORMS_UI = \
   qt/pivx/forms/requestdialog.ui \
   qt/pivx/forms/receivewidget.ui \
   qt/pivx/forms/tooltipmenu.ui \
-  qt/pivx/forms/addresseswidget.ui
+  qt/pivx/forms/addresseswidget.ui \
+  qt/pivx/forms/defaultdialog.ui \
+  qt/pivx/forms/denomgenerationdialog.ui \
+  qt/pivx/forms/privacywidget.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
@@ -177,7 +180,10 @@ QT_MOC_CPP = \
   qt/pivx/moc_requestdialog.cpp \
   qt/pivx/moc_receivewidget.cpp \
   qt/pivx/moc_tooltipmenu.cpp \
-  qt/pivx/moc_addresseswidget.cpp
+  qt/pivx/moc_addresseswidget.cpp \
+  qt/pivx/moc_defaultdialog.cpp \
+  qt/pivx/moc_denomgenerationdialog.cpp \
+  qt/pivx/moc_privacywidget.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -292,7 +298,10 @@ BITCOIN_QT_H = \
   qt/pivx/requestdialog.h \
   qt/pivx/receivewidget.h \
   qt/pivx/tooltipmenu.h \
-  qt/pivx/addresseswidget.h
+  qt/pivx/addresseswidget.h \
+  qt/pivx/defaultdialog.h \
+  qt/pivx/denomgenerationdialog.h \
+  qt/pivx/privacywidget.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -600,7 +609,11 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/requestdialog.cpp \
   qt/pivx/receivewidget.cpp \
   qt/pivx/tooltipmenu.cpp \
-  qt/pivx/addresseswidget.cpp
+  qt/pivx/addresseswidget.cpp \
+  qt/pivx/defaultdialog.cpp \
+  qt/pivx/denomgenerationdialog.cpp \
+  qt/pivx/privacywidget.cpp
+
 
 
 

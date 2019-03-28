@@ -76,7 +76,7 @@ void NavMenuWidget::onAddressClicked(){
 
 
 void NavMenuWidget::onPrivacyClicked(){
-    //window->goToPrivacy();
+    window->goToPrivacy();
 }
 
 void NavMenuWidget::onMasterNodesClicked(){
