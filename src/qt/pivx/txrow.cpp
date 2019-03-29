@@ -1,6 +1,9 @@
 #include "qt/pivx/txrow.h"
 #include "qt/pivx/forms/ui_txrow.h"
 
+#include "guiutil.h"
+
+
 TxRow::TxRow(bool isLightTheme, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TxRow)
@@ -10,13 +13,27 @@ TxRow::TxRow(bool isLightTheme, QWidget *parent) :
     ui->lblAddress->setProperty("cssClass", "text-list-body1");
     ui->lblDate->setProperty("cssClass", "text-list-caption");
 
+    updateStatus(isLightTheme, false, false);
+}
+
+void TxRow::updateStatus(bool isLightTheme, bool isHover, bool isSelected){
     if(isLightTheme)
         ui->lblDivisory->setStyleSheet("background-color:#bababa");
     else
         ui->lblDivisory->setStyleSheet("background-color:#40ffffff");
-
 }
 
+void TxRow::setDate(QDateTime date){
+    ui->lblDate->setText(GUIUtil::dateTimeStr(date));
+}
+
+void TxRow::setLabel(QString str){
+    ui->lblAddress->setText(str);
+}
+
+void TxRow::setAmount(QString str){
+    ui->lblAmount->setText(str);
+}
 
 TxRow::~TxRow()
 {

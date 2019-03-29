@@ -33,7 +33,7 @@ public:
         return new AddressLabelRow(isLightTheme, false);
     }
 
-    void init(QWidget* holder, bool isHovered, bool isSelected) const override{
+    void init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const override{
         static_cast<AddressLabelRow*>(holder)->updateState(isLightTheme, isHovered, isSelected);
     }
 

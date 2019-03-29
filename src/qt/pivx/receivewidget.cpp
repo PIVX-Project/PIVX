@@ -32,7 +32,7 @@ public:
         return new MyAddressRow();
     }
 
-    void init(QWidget* holder, bool isHovered, bool isSelected) const override{
+    void init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const override{
         //static_cast<MyAddressRow*>(holder)->update(isLightTheme, isHovered, isSelected);
     }
 

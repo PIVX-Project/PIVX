@@ -11,6 +11,8 @@
 #include <QSettings>
 #include <QStringList>
 
+#include <iostream>
+
 BitcoinUnits::BitcoinUnits(QObject* parent) : QAbstractListModel(parent),
                                               unitlist(availableUnits())
 {
@@ -164,7 +166,18 @@ QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, Separator
     if (num_decimals <= 0)
         return quotient_str;
 
-    return quotient_str + QString(".") + remainder_str;
+    // Clean remainder
+    QString cleanRemainder = remainder_str;
+    for(int i = (remainder_str.length() -1); i > 1; i--)
+    {
+        if (remainder_str.at(i) == "0") {
+            cleanRemainder = cleanRemainder.left(cleanRemainder.lastIndexOf("0"));
+        }else
+            break;
+    }
+
+
+    return quotient_str + QString(".") + cleanRemainder;
 }
 
 

@@ -15,7 +15,7 @@ public:
        return nullptr;
     }
 
-    virtual inline void init(T, bool isHovered, bool isSelected) const{
+    virtual inline void init(T, const QModelIndex&, bool isHovered, bool isSelected) const{
 
     }
 

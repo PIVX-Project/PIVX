@@ -3,8 +3,8 @@
 #include "qt/pivx/txdetaildialog.h"
 #include "qt/pivx/txrow.h"
 #include "qt/pivx/qtutils.h"
-#include "qt/pivx/txviewholder.h"
 #include "walletmodel.h"
+#include "optionsmodel.h"
 #include <QFile>
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -12,8 +12,7 @@
 #include <QModelIndex>
 #include <QObject>
 #include <QPaintEngine>
-
-#include "QGraphicsDropShadowEffect"
+#include <QGraphicsDropShadowEffect>
 #include <iostream>
 
 /*
@@ -39,11 +38,12 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    txHolder = new TxViewHolder(isLightTheme());
     txViewDelegate = new FurAbstractListItemDelegate(
                 DECORATION_SIZE,
-                new TxViewHolder(isLightTheme()),
+                txHolder,
                 this
-                );
+    );
 
     // Load css.
     this->setStyleSheet(parent->styleSheet());
@@ -250,8 +250,24 @@ void DashboardWidget::changeChartColors(){
 }
 
 void DashboardWidget::setWalletModel(WalletModel* model){
-    txModel = model->getTransactionTableModel();
-    ui->listTransactions->setModel(this->txModel);
+    walletModel = model;
+    if (model && model->getOptionsModel()) {
+        txModel = model->getTransactionTableModel();
+        ui->listTransactions->setModel(this->txModel);
+        ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
+    }
+    // update the display unit, to not use the default ("PIV")
+    updateDisplayUnit();
+}
+
+void DashboardWidget::updateDisplayUnit()
+{
+    if (walletModel && walletModel->getOptionsModel()) {
+        nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
+
+        txHolder->setDisplayUnit(nDisplayUnit);
+        ui->listTransactions->update();
+    }
 }
 
 void DashboardWidget::onSortTxPressed(){

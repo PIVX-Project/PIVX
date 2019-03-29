@@ -322,7 +322,7 @@ QString TransactionTableModel::lookupAddress(const std::string& address, bool to
         description += label;
     }
     if (label.isEmpty() || tooltip) {
-        description += QString(" (") + QString::fromStdString(address) + QString(")");
+        description += QString::fromStdString(address);
     }
     return description;
 }

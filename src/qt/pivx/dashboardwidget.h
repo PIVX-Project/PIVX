@@ -4,7 +4,7 @@
 #include "qt/pivx/furabstractlistitemdelegate.h"
 #include "qt/pivx/furlistrow.h"
 #include "transactiontablemodel.h"
-#include "qt/pivx/txrow.h"
+#include "qt/pivx/txviewholder.h"
 
 #include <QWidget>
 #include <QLineEdit>
@@ -60,13 +60,17 @@ private slots:
     void changeTheme(bool isLightTheme, QString &theme);
     void changeChartColors();
     void onSortTxPressed();
+    void updateDisplayUnit();
 private:
     Ui::DashboardWidget *ui;
     PIVXGUI* window;
     // Painter delegate
     FurAbstractListItemDelegate* txViewDelegate;
+    TxViewHolder* txHolder;
     // Model
+    WalletModel* walletModel;
     TransactionTableModel* txModel;
+    int nDisplayUnit = -1;
 
     /*
     // Chart
