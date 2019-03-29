@@ -35,6 +35,50 @@ void TxRow::setAmount(QString str){
     ui->lblAmount->setText(str);
 }
 
+// TODO: Agregar send to zPIV and receive zPIV icons..
+void TxRow::setType(bool isLightTheme, TransactionRecord::Type type){
+    QString path;
+    QString css;
+    switch (type) {
+        case TransactionRecord::StakeMint:
+        case TransactionRecord::ZerocoinMint:
+            path = "://ic-transaction-mint";
+            css = "text-list-amount-send";
+            break;
+        case TransactionRecord::Generated:
+        case TransactionRecord::StakeZPIV:
+        case TransactionRecord::MNReward:
+            path = "://ic-transaction-staked";
+            css = "text-list-amount-send";
+            break;
+        case TransactionRecord::RecvWithObfuscation:
+        case TransactionRecord::RecvWithAddress:
+        case TransactionRecord::RecvFromOther:
+        case TransactionRecord::RecvFromZerocoinSpend:
+            path = "://ic-transaction-received";
+            css = "text-list-amount-receive";
+            break;
+        case TransactionRecord::SendToAddress:
+        case TransactionRecord::SendToOther:
+        case TransactionRecord::ZerocoinSpend:
+        case TransactionRecord::ZerocoinSpend_Change_zPiv:
+        case TransactionRecord::ZerocoinSpend_FromMe:
+            path = "://ic-transaction-sent";
+            css = "text-list-amount-send";
+            break;
+        default:
+            path = ":/icons/tx_inout";
+            break;
+    }
+    if (!isLightTheme){
+        path += "-dark";
+    }
+    ui->lblAmount->setProperty("cssClass", css);
+    QPixmap pixmap(path);
+    QIcon buttonIcon(pixmap);
+    ui->icon->setIcon(buttonIcon);
+}
+
 TxRow::~TxRow()
 {
     delete ui;

@@ -391,7 +391,7 @@ QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord* wtx
     case TransactionRecord::SendToAddress:
     case TransactionRecord::SendToOther:
     case TransactionRecord::ZerocoinSpend:
-        return QIcon(":/icons/tx_output");
+        return QIcon("://ic-transaction-sent");
     default:
         return QIcon(":/icons/tx_inout");
     }

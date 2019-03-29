@@ -2,30 +2,20 @@
 #include "qt/pivx/txrow.h"
 
 #include "transactiontablemodel.h"
+#include "transactionrecord.h"
 #include "bitcoingui.h"
 #include <QModelIndex>
+#include <iostream>
 
 QWidget* TxViewHolder::createHolder(int pos){
-    TxRow *row = new TxRow(isLightTheme);
-    // TODO: move this to other class
-    if(pos % 5 == 2){
-        row->sendRow(isLightTheme);
-    }else if(pos % 5 == 1){
-        row->stakeRow(isLightTheme);
-    }else if (pos % 5 == 0){
-        row->receiveRow(isLightTheme);
-    }else if (pos % 5 == 3){
-        row->zPIVStakeRow(isLightTheme);
-    }else{
-        row->mintRow(isLightTheme);
-    }
-    return row;
+    return new TxRow(isLightTheme);
 }
 
 void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const{
     TxRow *txRow = static_cast<TxRow*>(holder);
     txRow->updateStatus(isLightTheme, isHovered, isSelected);
 
+    TransactionRecord *rec = static_cast<TransactionRecord*>(index.internalPointer());
     QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
     QString address = index.data(Qt::DisplayRole).toString();
     qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
@@ -38,6 +28,7 @@ void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered
     txRow->setDate(date);
     txRow->setLabel(label);
     txRow->setAmount(amountText);
+    txRow->setType(isLightTheme, rec->type);
 }
 
 QColor TxViewHolder::rectColor(bool isHovered, bool isSelected){

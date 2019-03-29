@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QDateTime>
+#include "transactionrecord.h"
 
 namespace Ui {
 class TxRow;
@@ -27,6 +28,7 @@ public:
     void setDate(QDateTime);
     void setLabel(QString);
     void setAmount(QString);
+    void setType(bool isLightTheme, TransactionRecord::Type type);
 
 private:
     Ui::TxRow *ui;
