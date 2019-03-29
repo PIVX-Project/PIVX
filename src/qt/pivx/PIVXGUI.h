@@ -22,6 +22,7 @@
 #include "qt/pivx/addresseswidget.h"
 #include "qt/pivx/privacywidget.h"
 #include "qt/pivx/settings/settingswidget.h"
+#include "qt/rpcconsole.h"
 
 
 class ClientModel;
@@ -49,14 +50,6 @@ public:
     */
     void setClientModel(ClientModel* clientModel);
 
-    //
-    void goToDashboard();
-    void goToSend();
-    void goToReceive();
-    void goToAddresses();
-    void goToPrivacy();
-    void goToSettings();
-
 
     void resizeEvent(QResizeEvent *event) override;
     void showHide(bool show);
@@ -66,6 +59,13 @@ signals:
     void windowResizeEvent(QResizeEvent* event);
 public slots:
     void changeTheme(bool isLightTheme);
+    void goToDashboard();
+    void goToSend();
+    void goToReceive();
+    void goToAddresses();
+    void goToPrivacy();
+    void goToMasterNodes();
+    void goToSettings();
 
 #ifdef ENABLE_WALLET
     /** Set the wallet model.
@@ -97,12 +97,14 @@ private:
     TopBar *topBar;
     QStackedWidget *stackedContainer;
 
-    DashboardWidget *dashboard;
-    SendWidget *sendWidget;
-    ReceiveWidget *receiveWidget;
-    AddressesWidget *addressesWidget;
-    PrivacyWidget *privacyWidget;
-    SettingsWidget* settingsWidget;
+    DashboardWidget *dashboard = nullptr;
+    SendWidget *sendWidget = nullptr;
+    ReceiveWidget *receiveWidget = nullptr;
+    AddressesWidget *addressesWidget = nullptr;
+    PrivacyWidget *privacyWidget = nullptr;
+    SettingsWidget* settingsWidget = nullptr;
+
+    RPCConsole* rpcConsole = nullptr;
 
     //
     QSystemTrayIcon* trayIcon;
@@ -113,12 +115,15 @@ private:
 
     void createTrayIcon(const NetworkStyle* networkStyle);
 
+    void showTop(QWidget *view);
+
 signals:
     /** Signal raised when a URI was entered or dragged to the GUI */
     void receivedURI(const QString& uri);
     /** Restart handling */
     void requestedRestart(QStringList args);
 
+    void connectActions();
 };
 
 

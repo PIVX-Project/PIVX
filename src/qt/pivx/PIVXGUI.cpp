@@ -19,6 +19,8 @@
 #include <QVBoxLayout>
 #include <QApplication>
 #include <QColor>
+#include <QShortcut>
+#include <QKeySequence>
 
 
 #include "util.h"
@@ -123,13 +125,54 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
     } else
 #endif
     {
-        // Add the rpc console instead.
+        // When compiled without wallet or -disablewallet is provided,
+        // the central widget is the rpc console.
+        rpcConsole = new RPCConsole(enableWallet ? this : 0);
+        setCentralWidget(rpcConsole);
     }
 
 
     // Create system tray icon and notification
     createTrayIcon(networkStyle);
 
+    // Connect events
+    connectActions();
+
+}
+
+static Qt::Modifier shortKey
+#ifdef Q_OS_MAC
+     = Qt::CTRL;
+#else
+     = Qt::ALT;
+#endif
+
+
+/**
+ * Here add every event connection
+ */
+void PIVXGUI::connectActions() {
+
+    QShortcut *homeShort = new QShortcut(this);
+    QShortcut *sendShort = new QShortcut(this);
+    QShortcut *receiveShort = new QShortcut(this);
+    QShortcut *addressesShort = new QShortcut(this);
+    QShortcut *privacyShort = new QShortcut(this);
+    QShortcut *settingsShort = new QShortcut(this);
+
+    homeShort->setKey(QKeySequence(shortKey + Qt::Key_1));
+    sendShort->setKey(QKeySequence(shortKey + Qt::Key_2));
+    receiveShort->setKey(QKeySequence(shortKey + Qt::Key_3));
+    addressesShort->setKey(QKeySequence(shortKey + Qt::Key_4));
+    privacyShort->setKey(QKeySequence(shortKey + Qt::Key_5));
+    settingsShort->setKey(QKeySequence(shortKey + Qt::Key_6));
+
+    connect(homeShort, SIGNAL(activated()), this, SLOT(goToDashboard()));
+    connect(sendShort, SIGNAL(activated()), this, SLOT(goToSend()));
+    connect(receiveShort, SIGNAL(activated()), this, SLOT(goToReceive()));
+    connect(addressesShort, SIGNAL(activated()), this, SLOT(goToAddresses()));
+    connect(privacyShort, SIGNAL(activated()), this, SLOT(goToPrivacy()));
+    connect(settingsShort, SIGNAL(activated()), this, SLOT(goToSettings()));
 }
 
 
@@ -162,30 +205,48 @@ void PIVXGUI::setClientModel(ClientModel* clientModel) {
     // TODO: Complete me..
 }
 
-void PIVXGUI::goToDashboard() {
-    stackedContainer->setCurrentWidget(dashboard);
+
+
+void PIVXGUI::goToDashboard(){
+    if(stackedContainer->currentWidget() != dashboard){
+        stackedContainer->setCurrentWidget(dashboard);
+        topBar->showBottom();
+    }
 }
 
-void PIVXGUI::goToSend() {
-    stackedContainer->setCurrentWidget(sendWidget);
+
+
+
+void PIVXGUI::goToSend(){
+    showTop(sendWidget);
 }
 
-void PIVXGUI::goToReceive() {
-    stackedContainer->setCurrentWidget(receiveWidget);
+void PIVXGUI::goToAddresses(){
+    showTop(addressesWidget);
 }
 
-void PIVXGUI::goToAddresses() {
-    stackedContainer->setCurrentWidget(addressesWidget);
+void PIVXGUI::goToPrivacy(){
+    showTop(privacyWidget);
 }
 
-void PIVXGUI::goToPrivacy() {
-    stackedContainer->setCurrentWidget(privacyWidget);
+void PIVXGUI::goToMasterNodes(){
+    //showTop(masterNodesWidget);
 }
 
-void PIVXGUI::goToSettings() {
-    stackedContainer->setCurrentWidget(settingsWidget);
+void PIVXGUI::goToSettings(){
+    showTop(settingsWidget);
 }
 
+void PIVXGUI::goToReceive(){
+    showTop(receiveWidget);
+}
+
+void PIVXGUI::showTop(QWidget* view){
+    if(stackedContainer->currentWidget() != view){
+        stackedContainer->setCurrentWidget(view);
+        topBar->showTop();
+    }
+}
 
 void PIVXGUI::changeTheme(bool isLightTheme){
     // Change theme in all of the childs here..
@@ -239,7 +300,6 @@ void PIVXGUI::showHide(bool show){
 int PIVXGUI::getNavWidth(){
     return this->navMenu->width();
 }
-
 
 
 #ifdef ENABLE_WALLET
