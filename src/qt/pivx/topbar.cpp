@@ -7,6 +7,16 @@
 #include "qt/pivx/receivedialog.h"
 #include "qt/pivx/walletpassworddialog.h"
 
+#include "bitcoinunits.h"
+#include "clientmodel.h"
+#include "qt/guiconstants.h"
+#include "qt/guiutil.h"
+#include "optionsmodel.h"
+#include "qt/platformstyle.h"
+#include "wallet.h"
+#include "walletmodel.h"
+
+
 TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TopBar),
@@ -235,4 +245,80 @@ void TopBar::showBottom()
 TopBar::~TopBar()
 {
     delete ui;
+}
+
+void TopBar::setClientModel(ClientModel *model){
+    this->clientModel = model;
+}
+
+void TopBar::setWalletModel(WalletModel *model){
+    this->walletModel = model;
+
+    updateBalances(walletModel->getBalance(), walletModel->getUnconfirmedBalance(), walletModel->getImmatureBalance(),
+               walletModel->getZerocoinBalance(), walletModel->getUnconfirmedZerocoinBalance(), walletModel->getImmatureZerocoinBalance(),
+               walletModel->getWatchBalance(), walletModel->getWatchUnconfirmedBalance(), walletModel->getWatchImmatureBalance());
+
+    connect(model, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)), this,
+            SLOT(updateBalances(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)));
+    connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+
+    // TODO: Complete me..
+    // update the display unit, to not use the default ("PIVX")
+    updateDisplayUnit();
+
+    //refreshWalletStatus();
+}
+
+void TopBar::updateDisplayUnit()
+{
+    if (walletModel && walletModel->getOptionsModel()) {
+        nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
+        if (nDisplayUnit != -1)
+            updateBalances(walletModel->getBalance(), walletModel->getUnconfirmedBalance(), walletModel->getImmatureBalance(),
+                           walletModel->getZerocoinBalance(), walletModel->getUnconfirmedZerocoinBalance(), walletModel->getImmatureZerocoinBalance(),
+                           walletModel->getWatchBalance(), walletModel->getWatchUnconfirmedBalance(), walletModel->getWatchImmatureBalance());
+
+        // TODO: Update txdelegate->unit with the current unit
+        //ui->listTransactions->update();
+    }
+}
+
+void TopBar::updateBalances(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
+                            const CAmount& zerocoinBalance, const CAmount& unconfirmedZerocoinBalance, const CAmount& immatureZerocoinBalance,
+                            const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance){
+
+    CAmount nLockedBalance = 0;
+    CAmount nWatchOnlyLockedBalance = 0;
+    if (!walletModel) {
+        nLockedBalance = walletModel->getLockedBalance();
+    }
+
+    // PIV Balance
+    CAmount nTotalBalance = balance + unconfirmedBalance;
+    CAmount pivAvailableBalance = balance - immatureBalance - nLockedBalance;
+    CAmount nUnlockedBalance = nTotalBalance - nLockedBalance;
+
+    // zPIV Balance
+    CAmount matureZerocoinBalance = zerocoinBalance - unconfirmedZerocoinBalance - immatureZerocoinBalance;
+
+    // Set
+    QString totalPiv = formatBalance(pivAvailableBalance);
+    QString totalzPiv = formatBalance(matureZerocoinBalance);
+    // Top
+    ui->labelAmountTopPiv->setText(totalPiv);
+    ui->labelAmountTopzPiv->setText(totalzPiv);
+
+    // Expanded
+    ui->labelAmountPiv->setText(totalPiv);
+    ui->labelAmountzPiv->setText(totalzPiv);
+
+    ui->labelPendingPiv->setText(formatBalance(unconfirmedBalance));
+    ui->labelPendingzPiv->setText(formatBalance(unconfirmedZerocoinBalance));
+
+    ui->labelImmaturePiv->setText(formatBalance(immatureBalance));
+    ui->labelImmaturezPiv->setText(formatBalance(immatureZerocoinBalance));
+}
+
+QString TopBar::formatBalance(CAmount amount){
+    return BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, amount, false, BitcoinUnits::separatorAlways);
 }

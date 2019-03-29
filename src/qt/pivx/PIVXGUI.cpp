@@ -314,6 +314,7 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     //connect(walletView, SIGNAL(showNormalIfMinimized()), gui, SLOT(showNormalIfMinimized()));
 
     // set the model for every view
+    topBar->setWalletModel(walletModel);
     dashboard->setWalletModel(walletModel);
 
 

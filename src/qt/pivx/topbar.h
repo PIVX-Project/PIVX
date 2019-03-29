@@ -1,11 +1,13 @@
 #ifndef TOPBAR_H
 #define TOPBAR_H
 
-#include "lockunlock.h"
-
 #include <QWidget>
+#include "lockunlock.h"
+#include "amount.h"
 
 class PIVXGUI;
+class WalletModel;
+class ClientModel;
 
 namespace Ui {
 class TopBar;
@@ -23,6 +25,14 @@ public:
     void showBottom();
     void showPasswordDialog();
 
+    void setWalletModel(WalletModel *model);
+    void setClientModel(ClientModel *model);
+public slots:
+    void updateBalances(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
+                        const CAmount& zerocoinBalance, const CAmount& unconfirmedZerocoinBalance, const CAmount& immatureZerocoinBalance,
+                        const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+    void updateDisplayUnit();
+
 private slots:
     void onBtnReceiveClicked();
     void onThemeClicked();
@@ -34,6 +44,12 @@ private:
     PIVXGUI* mainWindow;
     LockUnlock *lockUnlockWidget = nullptr;
     bool chkBtnLock,chkBtnUnlock, chkBtnStaking;
+    WalletModel *walletModel;
+    ClientModel *clientModel;
+
+    int nDisplayUnit = -1;
+
+    QString formatBalance(CAmount amount);
 };
 
 #endif // TOPBAR_H
