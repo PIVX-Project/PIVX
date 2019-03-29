@@ -103,6 +103,12 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     // Sort Transactions
 
     ui->comboBoxSort->setProperty("cssClass", "btn-combo");
+    ui->comboBoxSort->setEditable(true);
+    SortEdit* lineEdit = new SortEdit(ui->comboBoxSort);
+    lineEdit->setReadOnly(true);
+    lineEdit->setAlignment(Qt::AlignRight);
+    ui->comboBoxSort->setLineEdit(lineEdit);
+    connect(lineEdit, SIGNAL(Mouse_Pressed()), this, SLOT(onSortTxPressed()));
 
     QListView * listView = new QListView();
 
@@ -246,6 +252,10 @@ void DashboardWidget::changeChartColors(){
 void DashboardWidget::setWalletModel(WalletModel* model){
     txModel = model->getTransactionTableModel();
     ui->listTransactions->setModel(this->txModel);
+}
+
+void DashboardWidget::onSortTxPressed(){
+    ui->comboBoxSort->showPopup();
 }
 
 void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){

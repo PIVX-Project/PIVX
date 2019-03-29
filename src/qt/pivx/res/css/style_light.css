@@ -954,6 +954,20 @@ QLineEdit[cssClass="edit-primary-book"]:hover {
     border: 1px solid #707070;
 }
 
+*[cssClass="edit-primary-book-error"] {
+    border:  1px solid #f84444;
+    background-image: url("://ic-address_book_grey");
+    background-position:right center;
+    background-repeat:no-repeat;
+    background-color:#ffffff;
+    font-size:18px;
+    border-radius: 2px;
+    padding:8px;
+    padding-right: 34px;
+    color: #707070;
+    text-align:left;
+}
+
 *[cssClass="edit-primary-multi-book"] {
     border:  1px solid #bababa;
     background-image: url("://ic-address-send");
@@ -981,6 +995,21 @@ QLineEdit[cssClass="edit-primary-multi-book"]:hover {
     border: 1px solid #707070;
 }
 
+*[cssClass="edit-primary-multi-book-error"] {
+    border:  1px solid #f84444;
+    background-image: url("://ic-address-send");
+    background-position:right center;
+    background-repeat:no-repeat;
+    background-color:#ffffff;
+    font-size:18px;
+    border-radius: 2px;
+    padding:8px;
+    padding-right: 60px;
+    padding-left: 14px;
+    color: #707070;
+    text-align:left;
+}
+
 *[cssClass="edit-primary-book-send"] {
     border:  1px solid #bababa;
     background-image: url("://ic-address-send");
@@ -1005,6 +1034,20 @@ QLineEdit[cssClass="edit-primary-book-send"]:focus:hover {
 
 QLineEdit[cssClass="edit-primary-book-send"]:hover {
     border: 1px solid #707070;
+}
+
+*[cssClass="edit-primary-book-send-error"] {
+    border:  1px solid #f84444;
+    background-image: url("://ic-address-send");
+    background-position:right center;
+    background-repeat:no-repeat;
+    background-color:#ffffff;
+    font-size:18px;
+    border-radius: 2px;
+    padding:8px;
+    padding-right: 60px;
+    color: #707070;
+    text-align:left;
 }
 
 
@@ -1149,6 +1192,15 @@ QPushButton[cssClass="btn-text-primary"] {
 }
 
 
+QPushButton[cssClass="btn-text-primary"]:hover {
+    color: #44375f;
+}
+
+QPushButton[cssClass="btn-text-primary"]:pressed {
+    color: #575756;
+}
+
+
 
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
@@ -1174,6 +1226,16 @@ QLineEdit[cssClass="edit-primary"]:focus:hover {
 
 QLineEdit[cssClass="edit-primary"]:hover {
     border: 1px solid #707070;
+}
+
+
+QLineEdit[cssClass="edit-primary-error"] {
+    border:  1px solid #f84444;
+    background-color:#ffffff;
+    font-size:18px;
+    border-radius: 2px;
+    padding:8px;
+    color: #707070;
 }
 
 QPushButton[cssClass="btn-expand"] {
@@ -1727,6 +1789,15 @@ QLineEdit[cssClass="edit-primary-dialog"]:focus:hover {
 
 QLineEdit[cssClass="edit-primary-dialog"]:hover {
     border: 1px solid #707070;
+}
+
+QLineEdit[cssClass="edit-primary-dialog-error"] {
+    border:  1px solid #f84444;
+    background-color:#ffffff;
+    font-size:18px;
+    border-radius: 2px;
+    padding:8px;
+    color: #707070;
 }
 
 

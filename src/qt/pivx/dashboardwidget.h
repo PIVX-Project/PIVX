@@ -7,7 +7,7 @@
 #include "qt/pivx/txrow.h"
 
 #include <QWidget>
-
+#include <QLineEdit>
 /*
 #include <QBarCategoryAxis>
 #include <QBarSet>
@@ -23,6 +23,22 @@ class WalletModel;
 namespace Ui {
 class DashboardWidget;
 }
+
+class SortEdit : public QLineEdit{
+    Q_OBJECT
+public:
+    explicit SortEdit(QWidget* parent = nullptr) : QLineEdit(parent){}
+
+    inline void mousePressEvent(QMouseEvent *) override{
+        emit Mouse_Pressed();
+    }
+
+    ~SortEdit() override{}
+
+    signals:
+            void Mouse_Pressed();
+
+};
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -43,6 +59,7 @@ private slots:
 
     void changeTheme(bool isLightTheme, QString &theme);
     void changeChartColors();
+    void onSortTxPressed();
 private:
     Ui::DashboardWidget *ui;
     PIVXGUI* window;
