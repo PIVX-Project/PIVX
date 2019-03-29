@@ -84,7 +84,7 @@ void NavMenuWidget::onMasterNodesClicked(){
 }
 
 void NavMenuWidget::onSettingsClicked(){
-    //window->goToSettings();
+    window->goToSettings();
 }
 
 void NavMenuWidget::onReceiveClicked(){

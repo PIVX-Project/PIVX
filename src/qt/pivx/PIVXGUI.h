@@ -21,6 +21,7 @@
 #include "qt/pivx/receivewidget.h"
 #include "qt/pivx/addresseswidget.h"
 #include "qt/pivx/privacywidget.h"
+#include "qt/pivx/settings/settingswidget.h"
 
 
 class ClientModel;
@@ -54,6 +55,7 @@ public:
     void goToReceive();
     void goToAddresses();
     void goToPrivacy();
+    void goToSettings();
 
 
     void resizeEvent(QResizeEvent *event) override;
@@ -100,6 +102,7 @@ private:
     ReceiveWidget *receiveWidget;
     AddressesWidget *addressesWidget;
     PrivacyWidget *privacyWidget;
+    SettingsWidget* settingsWidget;
 
     //
     QSystemTrayIcon* trayIcon;
