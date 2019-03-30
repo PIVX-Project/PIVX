@@ -9,9 +9,11 @@
 #endif
 
 #include <qt/guiutil.h>
+#include "clientmodel.h"
+#include "optionsmodel.h"
 #include "networkstyle.h"
 #include "notificator.h"
-
+#include "ui_interface.h"
 #include "qt/pivx/qtutils.h"
 
 
@@ -21,6 +23,9 @@
 #include <QColor>
 #include <QShortcut>
 #include <QKeySequence>
+
+// TODO: Remove this..
+#include <QMessageBox>
 
 
 #include "util.h"
@@ -199,14 +204,104 @@ PIVXGUI::~PIVXGUI() {
 
 
 
-
-
 void PIVXGUI::setClientModel(ClientModel* clientModel) {
     this->clientModel = clientModel;
-    // TODO: Complete me..
-    topBar->setClientModel(clientModel);
+    if(this->clientModel) {
+        // TODO: Complete me..
+        topBar->setClientModel(clientModel);
+
+        // Receive and report messages from client model
+        connect(clientModel, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
+
+        if (rpcConsole) {
+            rpcConsole->setClientModel(clientModel);
+        }
+
+        if (trayIcon) {
+            trayIcon->show();
+        }
+    }
 }
 
+
+/**
+ * TODO remove QMessageBox for the snackbar..
+ */
+void PIVXGUI::message(const QString& title, const QString& message, unsigned int style, bool* ret)
+{
+    QString strTitle = tr("PIVX Core"); // default title
+    // Default to information icon
+    int nMBoxIcon = QMessageBox::Information;
+    int nNotifyIcon = Notificator::Information;
+
+    QString msgType;
+
+    // Prefer supplied title over style based title
+    if (!title.isEmpty()) {
+        msgType = title;
+    } else {
+        switch (style) {
+            case CClientUIInterface::MSG_ERROR:
+                msgType = tr("Error");
+                break;
+            case CClientUIInterface::MSG_WARNING:
+                msgType = tr("Warning");
+                break;
+            case CClientUIInterface::MSG_INFORMATION:
+                msgType = tr("Information");
+                break;
+            default:
+                break;
+        }
+    }
+    // Append title to "PIVX - "
+    if (!msgType.isEmpty())
+        strTitle += " - " + msgType;
+
+    // Check for error/warning icon
+    if (style & CClientUIInterface::ICON_ERROR) {
+        nMBoxIcon = QMessageBox::Critical;
+        nNotifyIcon = Notificator::Critical;
+    } else if (style & CClientUIInterface::ICON_WARNING) {
+        nMBoxIcon = QMessageBox::Warning;
+        nNotifyIcon = Notificator::Warning;
+    }
+
+    // Display message
+    if (style & CClientUIInterface::MODAL) {
+        // Check for buttons, use OK as default, if none was supplied
+        QMessageBox::StandardButton buttons;
+        if (!(buttons = (QMessageBox::StandardButton)(style & CClientUIInterface::BTN_MASK)))
+            buttons = QMessageBox::Ok;
+
+        showNormalIfMinimized();
+        QMessageBox mBox((QMessageBox::Icon)nMBoxIcon, strTitle, message, buttons, this);
+        int r = mBox.exec();
+        if (ret != NULL)
+            *ret = r == QMessageBox::Ok;
+    } else
+        notificator->notify((Notificator::Class)nNotifyIcon, strTitle, message);
+}
+
+
+void PIVXGUI::showNormalIfMinimized(bool fToggleHidden)
+{
+    if (!clientModel)
+        return;
+
+    // activateWindow() (sometimes) helps with keyboard focus on Windows
+    if (isHidden()) {
+        show();
+        activateWindow();
+    } else if (isMinimized()) {
+        showNormal();
+        activateWindow();
+    } else if (GUIUtil::isObscured(this)) {
+        raise();
+        activateWindow();
+    } else if (fToggleHidden)
+        hide();
+}
 
 
 void PIVXGUI::goToDashboard(){
@@ -215,9 +310,6 @@ void PIVXGUI::goToDashboard(){
         topBar->showBottom();
     }
 }
-
-
-
 
 void PIVXGUI::goToSend(){
     showTop(sendWidget);

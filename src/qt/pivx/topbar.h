@@ -35,6 +35,7 @@ public slots:
 
     void setNumConnections(int count);
     void setNumBlocks(int count);
+    void updateAutoMintStatus();
 
 private slots:
     void onBtnReceiveClicked();

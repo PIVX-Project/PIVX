@@ -5,8 +5,8 @@
 
 NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
     QWidget(parent),
-    window(mainWindow),
-    ui(new Ui::NavMenuWidget)
+    ui(new Ui::NavMenuWidget),
+    window(mainWindow)
 {
     ui->setupUi(this);
 
