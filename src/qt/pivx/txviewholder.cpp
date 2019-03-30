@@ -20,10 +20,10 @@ void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered
     QString address = index.data(Qt::DisplayRole).toString();
     qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
     bool isConfirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
-
+    QString amountText = BitcoinUnits::formatWithUnit(nDisplayUnit, amount, true, BitcoinUnits::separatorAlways);
     QModelIndex indexType = index.siblingAtColumn(TransactionTableModel::Type);
     QString label = indexType.data(Qt::DisplayRole).toString() + " " + address;
-    QString amountText = BitcoinUnits::formatWithUnit(nDisplayUnit, amount, true, BitcoinUnits::separatorAlways);
+
 
     txRow->setDate(date);
     txRow->setLabel(label);

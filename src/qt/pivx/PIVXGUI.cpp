@@ -35,7 +35,7 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
     /* Open CSS when configured */
     this->setStyleSheet(GUIUtil::loadStyleSheet());
 
-    GUIUtil::restoreWindowGeometry("nWindow", QSize(1200, 700), this);
+    GUIUtil::restoreWindowGeometry("nWindow", QSize(1024, 600), this);
 
     QString windowTitle = tr("PIVX Core") + " - ";
 #ifdef ENABLE_WALLET
@@ -68,7 +68,8 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
     if(enableWallet){
 
         QFrame* centralWidget = new QFrame(this);
-        this->setMinimumWidth(1200);
+        this->setMinimumWidth(1024);
+        this->setMinimumHeight(600);
         QHBoxLayout* centralWidgetLayouot = new QHBoxLayout();
         centralWidget->setLayout(centralWidgetLayouot);
         centralWidgetLayouot->setContentsMargins(0,0,0,0);
