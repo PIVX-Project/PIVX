@@ -19,8 +19,8 @@ void FurAbstractListItemDelegate::paint(QPainter *painter, const QStyleOptionVie
 
     painter->translate(option.rect.topLeft());
     QWidget *row = this->row->createHolder(index.row());
-    this->row->init(row, index, isStateHovered, isStateSelected);
     row->setStyleSheet(qobject_cast<QWidget*>(parent())->styleSheet());
+    this->row->init(row, index, isStateHovered, isStateSelected);
     row->setAttribute(Qt::WA_DontShowOnScreen, true);
     row->setGeometry(option.rect);
     row->resize(option.rect.width(),option.rect.height());

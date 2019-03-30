@@ -9,6 +9,7 @@
 #include <QString>
 #include <QColor>
 #include <QSettings>
+#include <QPixmap>
 #include <QStandardPaths>
 #include "qt/pivx/PIVXGUI.h"
 
@@ -25,6 +26,8 @@ void openSnackbar(QWidget *parent, PIVXGUI *gui, QString text){
     return;
 }
 
+//
+QPixmap encodeToQr(QString str, QString &errorStr);
 
 // Helpers
 void updateStyle(QWidget* widget);

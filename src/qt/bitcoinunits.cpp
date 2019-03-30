@@ -140,7 +140,6 @@ QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, Separator
     // Note: not using straight sprintf here because we do NOT want
     // localized number formatting.
     if (!valid(unit)){
-        std::cout << unit << std::endl;
         return QString(); // Refuse to format invalid unit
     }
     qint64 n = (qint64)nIn;

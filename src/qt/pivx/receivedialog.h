@@ -2,6 +2,9 @@
 #define RECEIVEDIALOG_H
 
 #include <QDialog>
+#include <QPixmap>
+
+class SendCoinsRecipient;
 
 namespace Ui {
 class ReceiveDialog;
@@ -15,10 +18,14 @@ public:
     explicit ReceiveDialog(QWidget *parent = nullptr);
     ~ReceiveDialog();
 
+    void updateQr(QString address);
+
 private slots:
     void onCopy();
 private:
     Ui::ReceiveDialog *ui;
+    QPixmap *qrImage;
+    SendCoinsRecipient *info = nullptr;
 };
 
 #endif // RECEIVEDIALOG_H

@@ -1,5 +1,7 @@
 #include "qt/pivx/receivedialog.h"
 #include "qt/pivx/forms/ui_receivedialog.h"
+#include "qt/pivx/qtutils.h"
+#include "walletmodel.h"
 #include <QFile>
 
 ReceiveDialog::ReceiveDialog(QWidget *parent) :
@@ -49,8 +51,24 @@ ReceiveDialog::ReceiveDialog(QWidget *parent) :
     connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(onCopy()));
 }
 
+void ReceiveDialog::updateQr(QString address){
+    if(!info) info = new SendCoinsRecipient();
+    info->address = address;
+    QString uri = GUIUtil::formatBitcoinURI(*info);
+    ui->labelQrImg->setText("");
+    ui->labelAddress->setText(address);
+    QString error;
+    QPixmap pixmap = encodeToQr(uri, error);
+    if(!pixmap.isNull()){
+        qrImage = &pixmap;
+        ui->labelQrImg->setPixmap(qrImage->scaled(ui->labelQrImg->width(), ui->labelQrImg->height()));
+    }else{
+        ui->labelQrImg->setText(!error.isEmpty() ? error : "Error encoding address");
+    }
+}
+
 void ReceiveDialog::onCopy(){
-    // TODO: copy to clipboard..
+    GUIUtil::setClipboard(info->address);
     accept();
 }
 

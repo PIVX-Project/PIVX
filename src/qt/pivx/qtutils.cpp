@@ -1,6 +1,8 @@
 #include "qt/pivx/qtutils.h"
 
-//#include "snackbar.h"
+#include "qt/pivx/snackbar.h"
+#include "qrencode.h"
+#include "guiconstants.h"
 
 #include <QFile>
 #include <QStyle>
@@ -17,8 +19,7 @@ bool openDialog(QDialog *widget, PIVXGUI *gui){
     animation->start(QAbstractAnimation::DeleteWhenStopped);
     widget->activateWindow();
     widget->raise();
-    bool res = widget->exec();
-    return res;
+    return widget->exec();
 }
 
 void closeDialog(QDialog *widget, PIVXGUI *gui){
@@ -80,6 +81,32 @@ bool openDialogWithOpaqueBackgroundFullScreen(QDialog *widget, PIVXGUI *gui){
     return res;
 }
 
+QPixmap encodeToQr(QString str, QString &errorStr){
+    if (!str.isEmpty()) {
+        // limit URI length
+        if (str.length() > MAX_URI_LENGTH) {
+            errorStr = "Resulting URI too long, try to reduce the text for label / message.";
+            return QPixmap();
+        } else {
+            QRcode* code = QRcode_encodeString(str.toUtf8().constData(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);
+            if (!code) {
+                errorStr = "Error encoding URI into QR Code.";
+                return QPixmap();
+            }
+            QImage myImage = QImage(code->width + 8, code->width + 8, QImage::Format_RGB32);
+            myImage.fill(0xffffff);
+            unsigned char* p = code->data;
+            for (int y = 0; y < code->width; y++) {
+                for (int x = 0; x < code->width; x++) {
+                    myImage.setPixel(x + 4, y + 4, ((*p & 1) ? 0x0 : 0xffffff));
+                    p++;
+                }
+            }
+            QRcode_free(code);
+            return QPixmap::fromImage(myImage);
+        }
+    }
+}
 
 QString getLightTheme(){
     QFile qFile(":/res/css/style_light.css");

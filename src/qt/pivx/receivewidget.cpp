@@ -9,9 +9,7 @@
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/furlistrow.h"
 #include "walletmodel.h"
-#include "qrencode.h"
 #include "guiutil.h"
-#include "guiconstants.h"
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -91,15 +89,6 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelDate->setText("Dec. 19, 2018");
     ui->labelDate->setProperty("cssClass", "text-subtitle");
 
-    // QR image
-
-    QPixmap pixmap(":/res/img/img-qr-test-big.png");
-    ui->labelQrImg->setPixmap(pixmap.scaled(
-                                  ui->labelQrImg->width(),
-                                  ui->labelQrImg->height(),
-                                  Qt::KeepAspectRatio)
-                              );
-
     // Options
 
     ui->btnMyAddresses->setTitleClassAndText("btn-title-grey", "My Addresses");
@@ -165,32 +154,14 @@ void ReceiveWidget::updateQr(QString address){
     info->address = address;
     QString uri = GUIUtil::formatBitcoinURI(*info);
     ui->labelQrImg->setText("");
-    if (!uri.isEmpty()) {
-        // limit URI length
-        if (uri.length() > MAX_URI_LENGTH) {
-            ui->labelQrImg->setText(tr("Resulting URI too long, try to reduce the text for label / message."));
-        } else {
-            QRcode* code = QRcode_encodeString(uri.toUtf8().constData(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);
-            if (!code) {
-                ui->labelQrImg->setText(tr("Error encoding URI into QR Code."));
-                return;
-            }
-            QImage myImage = QImage(code->width + 8, code->width + 8, QImage::Format_RGB32);
-            myImage.fill(0xffffff);
-            unsigned char* p = code->data;
-            for (int y = 0; y < code->width; y++) {
-                for (int x = 0; x < code->width; x++) {
-                    myImage.setPixel(x + 4, y + 4, ((*p & 1) ? 0x0 : 0xffffff));
-                    p++;
-                }
-            }
-            QRcode_free(code);
 
-            QPixmap pixmap = QPixmap::fromImage(myImage);
-            qrImage = &pixmap;
-            ui->labelQrImg->setPixmap(qrImage->scaled(ui->labelQrImg->width(), ui->labelQrImg->height()));
-            //ui->btnSaveAs->setEnabled(true);
-        }
+    QString error;
+    QPixmap pixmap = encodeToQr(uri, error);
+    if(!pixmap.isNull()){
+        qrImage = &pixmap;
+        ui->labelQrImg->setPixmap(qrImage->scaled(ui->labelQrImg->width(), ui->labelQrImg->height()));
+    }else{
+        ui->labelQrImg->setText(!error.isEmpty() ? error : "Error encoding address");
     }
 }
 

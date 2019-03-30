@@ -459,7 +459,6 @@ QString AddressTableModel::getLastUnusedAddress() const{
     LOCK(wallet->cs_wallet);
     if(!wallet->mapAddressBook.empty()) {
         for (std::map<CTxDestination, CAddressBookData>::iterator it = wallet->mapAddressBook.end(); it != wallet->mapAddressBook.begin(); --it) {
-            std::cout << it->second.name << std::endl;
             if(it->second.purpose == "receive"){
                 const CBitcoinAddress& address = it->first;
                 bool fMine = IsMine(*wallet, address.Get());
