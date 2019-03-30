@@ -1,5 +1,6 @@
 #include "qt/pivx/expandablebutton.h"
 #include "qt/pivx/forms/ui_expandablebutton.h"
+#include "qt/pivx/qtutils.h"
 #include <QParallelAnimationGroup>
 #include <QPropertyAnimation>
 #include <QStyle>
@@ -22,14 +23,15 @@ ExpandableButton::ExpandableButton(QWidget *parent) :
 void ExpandableButton::setButtonClassStyle(const char *name, const QVariant &value, bool forceUpdate){
     ui->pushButton->setProperty(name, value);
     if(forceUpdate){
-        ui->pushButton->style()->unpolish(ui->pushButton);
-        ui->pushButton->style()->polish(ui->pushButton);
-        ui->pushButton->update();
+        updateStyle(ui->pushButton);
     }
 }
 
 void ExpandableButton::setButtonText(const QString _text){
     this->text = _text;
+    if(this->isExpanded){
+        ui->pushButton->setText(_text);
+    }
 }
 
 void ExpandableButton::setText2(QString text2)
@@ -55,6 +57,7 @@ void ExpandableButton::setSmall()
 {
     ui->pushButton->setText("");
     this->setMaximumWidth(36);
+    this->isExpanded = false;
     update();
 }
 
@@ -62,6 +65,7 @@ void ExpandableButton::enterEvent(QEvent *) {
     if(!this->isAnimating){
         this->isAnimating = true;
         this->setMaximumWidth(100);
+        this->isExpanded = true;
 
 //        animation = new QPropertyAnimation(this, "maximumWidth");
 //        animation->setDuration(3000);

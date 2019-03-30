@@ -34,6 +34,7 @@ public slots:
     void updateDisplayUnit();
 
     void setNumConnections(int count);
+    void setNumBlocks(int count);
 
 private slots:
     void onBtnReceiveClicked();

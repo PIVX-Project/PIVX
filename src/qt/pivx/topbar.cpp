@@ -254,6 +254,8 @@ void TopBar::setClientModel(ClientModel *model){
         setNumConnections(clientModel->getNumConnections());
         connect(clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)));
 
+        setNumBlocks(clientModel->getNumBlocks());
+        connect(clientModel, SIGNAL(numBlocksChanged(int)), this, SLOT(setNumBlocks(int)));
 
     }
 }
@@ -263,6 +265,84 @@ void TopBar::setNumConnections(int count)
     ui->pushButtonConnection->setChecked(count > 0);
     // TODO: Check if really want to put the number of connections here
     ui->pushButtonConnection->setButtonText(tr("%n active connection(s)", "", count));
+}
+
+void TopBar::setNumBlocks(int count) {
+    if (!clientModel)
+        return;
+
+    // Acquire current block source
+    enum BlockSource blockSource = clientModel->getBlockSource();
+    std::string text;
+    switch (blockSource) {
+        case BLOCK_SOURCE_NETWORK:
+            text = "Synchronizing..";
+            break;
+        case BLOCK_SOURCE_DISK:
+            text = "Importing blocks from disk..";
+            break;
+        case BLOCK_SOURCE_REINDEX:
+            text = "Reindexing blocks on disk..";
+            break;
+        case BLOCK_SOURCE_NONE:
+            // Case: not Importing, not Reindexing and no network connection
+            text = "No block source available..";
+            ui->pushButtonSync->setChecked(false);
+            break;
+    }
+
+    if (masternodeSync.IsBlockchainSynced()) {
+        if (masternodeSync.IsSynced()) {
+            // Node synced
+            text = "Synced";
+            // TODO: Set synced icon to pushButtonSync here..
+        }else{
+
+            // TODO: Show out of sync warning
+
+            int nAttempt = masternodeSync.RequestedMasternodeAttempt < MASTERNODE_SYNC_THRESHOLD ?
+                       masternodeSync.RequestedMasternodeAttempt + 1 :
+                       MASTERNODE_SYNC_THRESHOLD;
+            int progress = nAttempt + (masternodeSync.RequestedMasternodeAssets - 1) * MASTERNODE_SYNC_THRESHOLD;
+            text = std::string("Synchronizing additional data: %p%", progress);
+        }
+
+        //strSyncStatus = QString(masternodeSync.GetSyncStatus().c_str());
+        //progressBarLabel->setText(strSyncStatus);
+        //tooltip = strSyncStatus + QString("<br>") + tooltip;
+
+    }else{
+        // Represent time from last generated block in human readable text
+        QDateTime lastBlockDate = clientModel->getLastBlockDate();
+        QDateTime currentDate = QDateTime::currentDateTime();
+        int secs = lastBlockDate.secsTo(currentDate);
+
+        QString timeBehindText;
+        const int HOUR_IN_SECONDS = 60 * 60;
+        const int DAY_IN_SECONDS = 24 * 60 * 60;
+        const int WEEK_IN_SECONDS = 7 * 24 * 60 * 60;
+        const int YEAR_IN_SECONDS = 31556952; // Average length of year in Gregorian calendar
+        if (secs < 2 * DAY_IN_SECONDS) {
+            timeBehindText = tr("%n hour(s)", "", secs / HOUR_IN_SECONDS);
+        } else if (secs < 2 * WEEK_IN_SECONDS) {
+            timeBehindText = tr("%n day(s)", "", secs / DAY_IN_SECONDS);
+        } else if (secs < YEAR_IN_SECONDS) {
+            timeBehindText = tr("%n week(s)", "", secs / WEEK_IN_SECONDS);
+        } else {
+            int years = secs / YEAR_IN_SECONDS;
+            int remainder = secs % YEAR_IN_SECONDS;
+            timeBehindText = tr("%1 and %2").arg(tr("%n year(s)", "", years)).arg(tr("%n week(s)", "", remainder / WEEK_IN_SECONDS));
+        }
+        QString timeBehind(" behind. Scanning block ");
+        QString str = timeBehindText + timeBehind + QString::number(count);
+        text = str.toUtf8().constData();
+
+    }
+
+    ui->pushButtonSync->setButtonText(tr(text.data()));
+
+    // TODO: Complete me.. add master nodes sync..
+
 }
 
 void TopBar::setWalletModel(WalletModel *model){

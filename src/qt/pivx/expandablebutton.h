@@ -59,6 +59,7 @@ private:
     QString text;
     std::atomic<bool> isAnimating;
     QPropertyAnimation *animation = nullptr;
+    bool isExpanded = false;
 
     bool keepExpanded = false;
 };
