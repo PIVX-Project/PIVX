@@ -451,6 +451,27 @@ int AddressTableModel::lookupAddress(const QString& address) const
     }
 }
 
+/**
+ * Return last created unused address --> TODO: complete "unused"..
+ * @return
+ */
+QString AddressTableModel::getLastUnusedAddress() const{
+    LOCK(wallet->cs_wallet);
+    if(!wallet->mapAddressBook.empty()) {
+        for (std::map<CTxDestination, CAddressBookData>::iterator it = wallet->mapAddressBook.end(); it != wallet->mapAddressBook.begin(); --it) {
+            std::cout << it->second.name << std::endl;
+            if(it->second.purpose == "receive"){
+                const CBitcoinAddress& address = it->first;
+                bool fMine = IsMine(*wallet, address.Get());
+                if(fMine){
+                    return QString::fromStdString(address.ToString());
+                }
+            }
+        }
+    }
+    return QString();
+}
+
 void AddressTableModel::emitDataChanged(int idx)
 {
     emit dataChanged(index(idx, 0, QModelIndex()), index(idx, columns.length() - 1, QModelIndex()));

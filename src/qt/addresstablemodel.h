@@ -74,6 +74,11 @@ public:
      */
     int lookupAddress(const QString& address) const;
 
+    /**
+     * Return last unused address
+     */
+    QString getLastUnusedAddress() const;
+
     EditStatus getEditStatus() const { return editStatus; }
 
 private:

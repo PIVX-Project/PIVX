@@ -9,12 +9,16 @@
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/furlistrow.h"
 #include "walletmodel.h"
+#include "qrencode.h"
+#include "guiutil.h"
+#include "guiconstants.h"
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QSettings>
 #include <QModelIndex>
 #include <QFile>
+#include <QClipboard>
 
 #include <iostream>
 
@@ -141,11 +145,53 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
     // Connect
     connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
     connect(ui->pushButtonLabel, SIGNAL(clicked()), this, SLOT(onLabelClicked()));
+    connect(ui->pushButtonCopy, SIGNAL(clicked()), this, SLOT(onCopyClicked()));
 }
 
 void ReceiveWidget::setWalletModel(WalletModel* model){
-    this->addressTableModel = model->getAddressTableModel();
-    ui->listViewAddress->setModel(this->addressTableModel);
+    this->walletModel = model;
+    if(walletModel) {
+        this->addressTableModel = model->getAddressTableModel();
+        ui->listViewAddress->setModel(this->addressTableModel);
+
+        QString latestAddress = this->addressTableModel->getLastUnusedAddress();
+        if(!info) info = new SendCoinsRecipient();
+        ui->labelAddress->setText(!latestAddress.isEmpty() ? latestAddress : tr("No address"));
+        updateQr(latestAddress);
+    }
+}
+
+void ReceiveWidget::updateQr(QString address){
+    info->address = address;
+    QString uri = GUIUtil::formatBitcoinURI(*info);
+    ui->labelQrImg->setText("");
+    if (!uri.isEmpty()) {
+        // limit URI length
+        if (uri.length() > MAX_URI_LENGTH) {
+            ui->labelQrImg->setText(tr("Resulting URI too long, try to reduce the text for label / message."));
+        } else {
+            QRcode* code = QRcode_encodeString(uri.toUtf8().constData(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);
+            if (!code) {
+                ui->labelQrImg->setText(tr("Error encoding URI into QR Code."));
+                return;
+            }
+            QImage myImage = QImage(code->width + 8, code->width + 8, QImage::Format_RGB32);
+            myImage.fill(0xffffff);
+            unsigned char* p = code->data;
+            for (int y = 0; y < code->width; y++) {
+                for (int x = 0; x < code->width; x++) {
+                    myImage.setPixel(x + 4, y + 4, ((*p & 1) ? 0x0 : 0xffffff));
+                    p++;
+                }
+            }
+            QRcode_free(code);
+
+            QPixmap pixmap = QPixmap::fromImage(myImage);
+            qrImage = &pixmap;
+            ui->labelQrImg->setPixmap(qrImage->scaled(ui->labelQrImg->width(), ui->labelQrImg->height()));
+            //ui->btnSaveAs->setEnabled(true);
+        }
+    }
 }
 
 void ReceiveWidget::onLabelClicked(){
@@ -153,6 +199,12 @@ void ReceiveWidget::onLabelClicked(){
     //window->showHide(true);
     //AddNewContactDialog* dialog = new AddNewContactDialog(window);
     //openDialogWithOpaqueBackgroundY(dialog, window, 3.5, 6);
+}
+
+void ReceiveWidget::onCopyClicked(){
+    GUIUtil::setClipboard(GUIUtil::formatBitcoinURI(*info));
+    // TODO: Add snackbar..
+    //openToastDialog("Address copied", mainWindow->getGUI());
 }
 
 

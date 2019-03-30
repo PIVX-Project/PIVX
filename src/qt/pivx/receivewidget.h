@@ -6,9 +6,11 @@
 
 #include <QSpacerItem>
 #include <QWidget>
+#include <QPixmap>
 
 class PIVXGUI;
 class WalletModel;
+class SendCoinsRecipient;
 
 namespace Ui {
 class ReceiveWidget;
@@ -35,14 +37,23 @@ public slots:
 private slots:
     void changeTheme(bool isLightTheme, QString &theme);
     void onLabelClicked();
+    void onCopyClicked();
 private:
     Ui::ReceiveWidget *ui;
     PIVXGUI* window;
 
     FurAbstractListItemDelegate *delegate;
-    AddressTableModel* addressTableModel;
+    WalletModel *walletModel = nullptr;
+    AddressTableModel* addressTableModel = nullptr;
 
     QSpacerItem *spacer = nullptr;
+
+    // Cached last address, todo: use a pointer here..
+    SendCoinsRecipient *info = nullptr;
+    // Cached qr
+    QPixmap *qrImage = nullptr;
+
+    void updateQr(QString address);
 
 };
 

@@ -679,6 +679,8 @@ src/qt/pivx/receivedialog.cpp
 src/qt/pivx/receivedialog.cpp
 src/qt/pivx/receivedialog.h
 src/qt/pivx/receivedialog.h
+src/qt/pivx/receivewidget.cpp
+src/qt/pivx/receivewidget.h
 src/qt/pivx/topbar.cpp
 src/qt/pivx/topbar.cpp
 src/qt/pivx/topbar.h

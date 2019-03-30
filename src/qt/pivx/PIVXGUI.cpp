@@ -410,6 +410,7 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     // set the model for every view
     topBar->setWalletModel(walletModel);
     dashboard->setWalletModel(walletModel);
+    receiveWidget->setWalletModel(walletModel);
 
 
     return true;
