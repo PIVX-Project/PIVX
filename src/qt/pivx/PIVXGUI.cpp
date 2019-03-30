@@ -204,6 +204,7 @@ PIVXGUI::~PIVXGUI() {
 void PIVXGUI::setClientModel(ClientModel* clientModel) {
     this->clientModel = clientModel;
     // TODO: Complete me..
+    topBar->setClientModel(clientModel);
 }
 
 

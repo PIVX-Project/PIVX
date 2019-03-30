@@ -33,6 +33,8 @@ public slots:
                         const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
     void updateDisplayUnit();
 
+    void setNumConnections(int count);
+
 private slots:
     void onBtnReceiveClicked();
     void onThemeClicked();

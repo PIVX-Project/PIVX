@@ -249,6 +249,20 @@ TopBar::~TopBar()
 
 void TopBar::setClientModel(ClientModel *model){
     this->clientModel = model;
+    if(clientModel){
+        // Keep up to date with client
+        setNumConnections(clientModel->getNumConnections());
+        connect(clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)));
+
+
+    }
+}
+
+void TopBar::setNumConnections(int count)
+{
+    ui->pushButtonConnection->setChecked(count > 0);
+    // TODO: Check if really want to put the number of connections here
+    ui->pushButtonConnection->setButtonText(tr("%n active connection(s)", "", count));
 }
 
 void TopBar::setWalletModel(WalletModel *model){
