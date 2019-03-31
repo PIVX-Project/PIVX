@@ -35,7 +35,14 @@ public:
     }
 
     void init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const override{
-        //static_cast<MyAddressRow*>(holder)->update(isLightTheme, isHovered, isSelected);
+        MyAddressRow *row = static_cast<MyAddressRow*>(holder);
+
+        QString address = index.data(Qt::DisplayRole).toString();
+        QModelIndex sibling = index.siblingAtColumn(AddressTableModel::Label);
+        QString label = sibling.data(Qt::DisplayRole).toString();
+
+        row->updateView(address, label);
+
     }
 
     QColor rectColor(bool isHovered, bool isSelected) override{
@@ -142,6 +149,7 @@ void ReceiveWidget::setWalletModel(WalletModel* model){
     if(walletModel) {
         this->addressTableModel = model->getAddressTableModel();
         ui->listViewAddress->setModel(this->addressTableModel);
+        ui->listViewAddress->setModelColumn(AddressTableModel::Address);
 
         QString latestAddress = this->addressTableModel->getLastUnusedAddress();
         if(!info) info = new SendCoinsRecipient();

@@ -15,6 +15,8 @@ public:
     explicit MyAddressRow(QWidget *parent = nullptr);
     ~MyAddressRow();
 
+    void updateView(QString address, QString label);
+
 private:
     Ui::MyAddressRow *ui;
 };
