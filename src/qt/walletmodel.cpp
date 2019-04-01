@@ -244,7 +244,7 @@ bool WalletModel::validateAddress(const QString& address)
     return addressParsed.IsValid();
 }
 
-void WalletModel::updateAddressBookLabels(const CTxDestination& dest, const std::string& strName, const std::string& strPurpose)
+bool WalletModel::updateAddressBookLabels(const CTxDestination& dest, const std::string& strName, const std::string& strPurpose)
 {
     LOCK(wallet->cs_wallet);
 
@@ -252,9 +252,9 @@ void WalletModel::updateAddressBookLabels(const CTxDestination& dest, const std:
 
     // Check if we have a new address or an updated label
     if (mi == wallet->mapAddressBook.end()) {
-        wallet->SetAddressBook(dest, strName, strPurpose);
+        return wallet->SetAddressBook(dest, strName, strPurpose);
     } else if (mi->second.name != strName) {
-        wallet->SetAddressBook(dest, strName, ""); // "" means don't change purpose
+        return wallet->SetAddressBook(dest, strName, ""); // "" means don't change purpose
     }
 }
 

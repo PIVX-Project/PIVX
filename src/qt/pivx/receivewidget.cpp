@@ -1,7 +1,7 @@
 #include "qt/pivx/receivewidget.h"
 #include "qt/pivx/forms/ui_receivewidget.h"
 #include "qt/pivx/requestdialog.h"
-//#include "qt/pivx/addnewcontactdialog.h"
+#include "qt/pivx/addnewcontactdialog.h"
 #include "qt/pivx/qtutils.h"
 
 #include "qt/pivx/PIVXGUI.h"
@@ -10,6 +10,8 @@
 #include "qt/pivx/furlistrow.h"
 #include "walletmodel.h"
 #include "guiutil.h"
+#include "base58.h"
+#include "script/standard.h"
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -174,10 +176,27 @@ void ReceiveWidget::updateQr(QString address){
 }
 
 void ReceiveWidget::onLabelClicked(){
-    // TODO: CHeck this..
-    //window->showHide(true);
-    //AddNewContactDialog* dialog = new AddNewContactDialog(window);
-    //openDialogWithOpaqueBackgroundY(dialog, window, 3.5, 6);
+    if(walletModel) {
+        window->showHide(true);
+        // TODO: Open this to "update" the label if the address already has it.
+        AddNewContactDialog *dialog = new AddNewContactDialog(window);
+        if (openDialogWithOpaqueBackgroundY(dialog, window, 3.5, 6)) {
+            QString label = dialog->getLabel();
+            const CBitcoinAddress address = CBitcoinAddress(info->address.toUtf8().constData());
+            if (!label.isEmpty() && walletModel->updateAddressBookLabels(
+                    address.Get(),
+                    label.toUtf8().constData(),
+                    "receive"
+            )
+                    ) {
+                // Show snackbar
+                // update label status (icon color)
+
+            } else {
+                // Show snackbar error
+            }
+        }
+    }
 }
 
 void ReceiveWidget::onCopyClicked(){

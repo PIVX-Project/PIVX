@@ -685,6 +685,10 @@ src/qt/pivx/topbar.cpp
 src/qt/pivx/topbar.cpp
 src/qt/pivx/topbar.h
 src/qt/pivx/topbar.h
+src/qt/pivx/txrow.cpp
+src/qt/pivx/txrow.h
+src/qt/pivx/txviewholder.cpp
+src/qt/pivx/txviewholder.h
 src/qt/pivx/walletpassworddialog.cpp
 src/qt/pivx/walletpassworddialog.cpp
 src/qt/pivx/walletpassworddialog.h

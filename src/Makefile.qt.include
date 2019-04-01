@@ -88,6 +88,7 @@ QT_FORMS_UI = \
   qt/pivx/forms/sendmultirow.ui \
   qt/pivx/forms/send.ui \
   qt/pivx/forms/addnewaddressdialog.ui \
+  qt/pivx/forms/addnewcontactdialog.ui \
   qt/pivx/forms/requestdialog.ui \
   qt/pivx/forms/receivewidget.ui \
   qt/pivx/forms/tooltipmenu.ui \
@@ -196,6 +197,7 @@ QT_MOC_CPP = \
   qt/pivx/moc_sendmultirow.cpp \
   qt/pivx/moc_send.cpp \
   qt/pivx/moc_addnewaddressdialog.cpp \
+  qt/pivx/moc_addnewcontactdialog.cpp \
   qt/pivx/moc_requestdialog.cpp \
   qt/pivx/moc_receivewidget.cpp \
   qt/pivx/moc_tooltipmenu.cpp \
@@ -334,6 +336,7 @@ BITCOIN_QT_H = \
   qt/pivx/sendmultirow.h \
   qt/pivx/send.h \
   qt/pivx/addnewaddressdialog.h \
+  qt/pivx/addnewcontactdialog.h \
   qt/pivx/requestdialog.h \
   qt/pivx/receivewidget.h \
   qt/pivx/tooltipmenu.h \
@@ -665,6 +668,7 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/sendmultirow.cpp \
   qt/pivx/send.cpp \
   qt/pivx/addnewaddressdialog.cpp \
+  qt/pivx/addnewcontactdialog.cpp \
   qt/pivx/requestdialog.cpp \
   qt/pivx/receivewidget.cpp \
   qt/pivx/tooltipmenu.cpp \
