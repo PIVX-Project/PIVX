@@ -21,6 +21,7 @@
 #include "qt/pivx/receivewidget.h"
 #include "qt/pivx/addresseswidget.h"
 #include "qt/pivx/privacywidget.h"
+#include "qt/pivx/snackbar.h"
 #include "qt/pivx/settings/settingswidget.h"
 #include "qt/rpcconsole.h"
 
@@ -75,7 +76,7 @@ public slots:
        @param[in] ret       pointer to a bool that will be modified to whether Ok was clicked (modal only)
     */
     void message(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
-
+    void messageInfo(const QString& message);
 #ifdef ENABLE_WALLET
     /** Set the wallet model.
         The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending
@@ -112,6 +113,8 @@ private:
     AddressesWidget *addressesWidget = nullptr;
     PrivacyWidget *privacyWidget = nullptr;
     SettingsWidget* settingsWidget = nullptr;
+
+    SnackBar *snackBar = nullptr;
 
     RPCConsole* rpcConsole = nullptr;
 

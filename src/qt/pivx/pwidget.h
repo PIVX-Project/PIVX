@@ -16,6 +16,9 @@ class PWidget : public QWidget
 public:
     explicit PWidget(PIVXGUI* _window = nullptr, QWidget *parent = nullptr);
 
+signals:
+    void message(QString &message);
+
 protected slots:
     void changeTheme(bool isLightTheme, QString &theme);
 

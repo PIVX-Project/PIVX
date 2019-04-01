@@ -191,9 +191,10 @@ void ReceiveWidget::onLabelClicked(){
                     ) {
                 // Show snackbar
                 // update label status (icon color)
-
+                window->messageInfo(tr("Address label saved"));
             } else {
                 // Show snackbar error
+                window->messageInfo(tr("Error storing address label"));
             }
         }
     }
@@ -201,8 +202,7 @@ void ReceiveWidget::onLabelClicked(){
 
 void ReceiveWidget::onCopyClicked(){
     GUIUtil::setClipboard(GUIUtil::formatBitcoinURI(*info));
-    // TODO: Add snackbar..
-    //openToastDialog("Address copied", mainWindow->getGUI());
+    window->messageInfo(tr("Address copied"));
 }
 
 
