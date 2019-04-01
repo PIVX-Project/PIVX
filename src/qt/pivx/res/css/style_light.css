@@ -2225,28 +2225,28 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 *[cssClass="img-empty-master"] {
-    background-image: url(://img-empty-masternode);
+    background-image: url("://img-empty-masternode");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-transactions"] {
-    background-image: url(://img-empty-transactions);
+    background-image: url("://img-empty-transactions");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-peers"] {
-    background-image: url(://img-empty-peers);
+    background-image: url("://img-empty-peers");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-contacts"] {
-    background-image: url(://img-empty-contacts);
+    background-image: url("://img-empty-contacts");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;
@@ -2254,21 +2254,21 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 *[cssClass="img-empty-error"] {
-    background-image: url(://img-empty-error);
+    background-image: url("://img-empty-error");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-multisend"] {
-    background-image: url(://img-empty-multisend);
+    background-image: url("://img-empty-multisend");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-staking-on"] {
-    background-image: url(://img-empty-staking-on);
+    background-image: url("://img-empty-staking-on");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;
@@ -2276,14 +2276,14 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 *[cssClass="img-empty-staking-off"] {
-    background-image: url(://img-empty-staking-off);
+    background-image: url("://img-empty-staking-off");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-privacy"] {
-    background-image: url(://img-empty-privacy);
+    background-image: url("://img-empty-privacy");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;
@@ -2297,7 +2297,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 QPushButton[cssClass="ic-multi-number"] {
     border:0;
     background-color:transparent;
-    background-image: url(://bg-multi-number);
+    background-image: url("://bg-multi-number");
     background-position:center;
     background-repeat:no-repeat;
     font-size:12px;
