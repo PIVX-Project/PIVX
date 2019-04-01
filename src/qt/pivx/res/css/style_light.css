@@ -166,6 +166,8 @@ QPushButton[cssClass="img-nav-logo"] {
 }
 
 *[cssClass="btn-nav-send"]:hover {
+    qproperty-icon: url("://ic-nav-send-hover");
+    qproperty-iconSize: 24px 40px;
     background-color: transparent;
     color: #FFFFFF;
 }
@@ -191,6 +193,8 @@ QPushButton[cssClass="img-nav-logo"] {
 }
 
 *[cssClass="btn-nav-address"]:hover {
+    qproperty-icon: url("://ic-nav-address-hover");
+    qproperty-iconSize: 24px 40px;
     background-color: transparent;
     color: #FFFFFF;
 }
@@ -216,6 +220,8 @@ QPushButton[cssClass="img-nav-logo"] {
 }
 
 *[cssClass="btn-nav-privacy"]:hover {
+    qproperty-icon: url("://ic-nav-privacy-hover");
+    qproperty-iconSize: 24px 40px;
     background-color: transparent;
     color: #FFFFFF;
 }
@@ -230,6 +236,7 @@ QPushButton[cssClass="img-nav-logo"] {
 }
 
 *[cssClass="btn-nav-master"]:checked {
+    qproperty-icon: url("://ic-nav-master-active");
     background-color: qlineargradient(x1:0, x2: 1, stop: 0 #3c2559, stop: 1 #1f162b);
     font-size:14px;
     color: #B088FF;
@@ -1256,7 +1263,7 @@ HH      SPLASH
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="bg-splash"] {
-    border-image: url("://bg-welcome.jpg") 0 0 0 0 stretch stretch;
+    border-image: url("://bg-welcome") 0 0 0 0 stretch stretch;
     background-color:#000000;
 }
 
@@ -1398,11 +1405,11 @@ QCheckBox::indicator {
 }
 
 QCheckBox::indicator:unchecked {
-    image: url(://ic-check-box);
+    image: url("://ic-check-box");
 }
 
 QCheckBox::indicator:checked {
-    image: url(://ic-check-active);
+    image: url("://ic-check-active");
 }
 
 
@@ -1414,11 +1421,11 @@ QCheckBox[cssClass="btn-watch-password"] {
 
 
 QCheckBox[cssClass="btn-watch-password"]::indicator:unchecked {
-    image: url(://ic-watch-password);
+    image: url("://ic-watch-password");
 }
 
 QCheckBox[cssClass="btn-watch-password"]::indicator:checked {
-    image: url(://ic-watch-password);
+    image: url("://ic-watch-password");
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
@@ -1427,7 +1434,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 QComboBox[cssClass="btn-combo-coins"] {
-    background-image: url(://ic-arrow-drop-white-down);
+    background-image: url("://ic-arrow-drop-white-down");
     background-position:right center;
     background-repeat:no-repeat;
     background-color:#5c4b7d;
@@ -1458,7 +1465,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 QComboBox[cssClass="btn-combo"] {
-    background-image: url(://ic-arrow-drop-down);
+    background-image: url("://ic-arrow-drop-down");
     background-position:right center;
     background-repeat:no-repeat;
     background-color:#ffffff;
@@ -1470,7 +1477,7 @@ QComboBox[cssClass="btn-combo"] {
 }
 
 QComboBox[cssClass="btn-combo-edit"] {
-    background-image: url(://ic-arrow-drop-down);
+    background-image: url("://ic-arrow-drop-down");
     background-position:right center;
     background-repeat:no-repeat;
     background-color:#ffffff;
@@ -1483,7 +1490,7 @@ QComboBox[cssClass="btn-combo-edit"] {
 
 
 QComboBox[cssClass="btn-combo-options"] {
-    background-image: url(://ic-combo-box);
+    background-image: url("://ic-combo-box");
     background-position:right center;
     background-repeat:no-repeat;
     background-color:#FFFFFF;
@@ -1495,7 +1502,7 @@ QComboBox[cssClass="btn-combo-options"] {
 
 
 QComboBox {
-    background-image: url(://ic-arrow-drop-down);
+    background-image: url("://ic-arrow-drop-down");
     background-position:right center;
     background-repeat:no-repeat;
     background-color:transparent;
@@ -1588,13 +1595,13 @@ QRadioButton::indicator {
 }
 
 QRadioButton::indicator:checked {
-    background: url(://btn-radio-active);
+    background: url("://btn-radio-active");
     background-repeat:no-repeat;
     background-position:center;
 }
 
 QRadioButton::indicator:unchecked {
-    background: url(://btn-radio-off);
+    background: url("://btn-radio-off");
     background-repeat:no-repeat;
     background-position:center;
 }
@@ -1689,7 +1696,7 @@ QPushButton[cssClass="btn-name-check"]:checked {
 }
 
 QPushButton[cssClass="ic-step-confirm"] {
-    background-image: url(://ic-check-white);
+    background-image: url("://ic-check-white");
     background-position:center;
     background-repeat:no-repeat;
     border-radius:11px;
@@ -1807,7 +1814,7 @@ QLineEdit[cssClass="edit-primary-dialog-error"] {
 
 
 QComboBox[cssClass="btn-combo-edit-dialog"] {
-    background-image: url(://ic-arrow-drop-down);
+    background-image: url("://ic-arrow-drop-down");
     background-position:right center;
     background-repeat:no-repeat;
     background-color:#ffffff;
@@ -1819,7 +1826,7 @@ QComboBox[cssClass="btn-combo-edit-dialog"] {
 }
 
 QComboBox[cssClass="btn-combo-dialog"] {
-    background-image: url(://ic-arrow-drop-down);
+    background-image: url("://ic-arrow-drop-down");
     background-position:right center;
     background-repeat:no-repeat;
     background-color:#ffffff;
@@ -1836,7 +1843,7 @@ HH      SETTINGS
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 QPushButton[cssClass="btn-settings-check"] {
-    background-image: url(://ic-arrow-drop-down);
+    background-image: url("://ic-arrow-drop-down");
     background-position:right center;
     background-repeat:no-repeat;
     background-color: #FFFFFF;
@@ -1848,7 +1855,7 @@ QPushButton[cssClass="btn-settings-check"] {
 }
 
 QPushButton[cssClass="btn-settings-check"]:checked {
-    background-image: url(://ic-arrow-drop-up);
+    background-image: url("://ic-arrow-drop-up");
     background-position:right center;
     background-repeat:no-repeat;
     background-color:#FFFFFF;
@@ -1897,7 +1904,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="ic-arrow-down"] {
-    background: url(://ic-arrow-drop-down);
+    background: url("://ic-arrow-drop-down");
     background-repeat:no-repeat;
     background-position:center;
 }
@@ -1953,7 +1960,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 QPushButton[cssClass="btn-faq-exit"] {
-    background: url(://ic-exit);
+    background: url("://ic-exit");
     background-repeat:no-repeat;
     background-position:right center;
     background-color:transparent;
@@ -2044,14 +2051,14 @@ HH       WELCOME
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 QPushButton[cssClass="btn-close-white"] {
-    background: url(://ic-close-white);
+    background: url("://ic-close-white");
     background-repeat:no-repeat;
     background-position:center;
     background-color:transparent;
 }
 
 QPushButton[cssClass="ic-step-confirm-welcome"] {
-    background-image: url(://ic-check-white);
+    background-image: url("://ic-check-white");
     background-position:center;
     background-repeat:no-repeat;
     border:  1px solid #6C529D;
@@ -2071,7 +2078,7 @@ QPushButton[cssClass="ic-step-confirm-welcome"] {
 
 
 *[cssClass="container-welcome"] {
-    border-image: url(://bg-welcome.jpg) 0 0 0 0 stretch stretch;
+    border-image: url("://bg-welcome") 0 0 0 0 stretch stretch;
     background-color:#000000;
 }
 
@@ -2086,7 +2093,7 @@ QPushButton[cssClass="ic-step-confirm-welcome"] {
 }
 
 *[cssClass="container-welcome-stack"] {
-    background-image: url(://bg-welcome-container.jpg);
+    background-image: url("://bg-welcome-container");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;
@@ -2225,67 +2232,58 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 *[cssClass="img-empty-master"] {
-    background-image: url("://img-empty-masternode");
-    background-position:center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://img-empty-masternode");
+    qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-transactions"] {
-    background-image: url("://img-empty-transactions");
-    background-position:center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://img-empty-transactions.svg");
+    qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-peers"] {
-    background-image: url("://img-empty-peers");
-    background-position:center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://img-empty-peers");
+    qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-contacts"] {
-    background-image: url("://img-empty-contacts");
-    background-position:center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://img-empty-contacts");
+    qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }
 
 
 *[cssClass="img-empty-error"] {
-    background-image: url("://img-empty-error");
-    background-position:center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://img-empty-error");
+    qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-multisend"] {
-    background-image: url("://img-empty-multisend");
-    background-position:center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://img-empty-multisend");
+    qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-staking-on"] {
-    background-image: url("://img-empty-staking-on");
-    background-position:center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://img-empty-staking-on");
+    qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }
 
 
 *[cssClass="img-empty-staking-off"] {
-    background-image: url("://img-empty-staking-off");
-    background-position:center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://img-empty-staking-off");
+    qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }
 
 *[cssClass="img-empty-privacy"] {
-    background-image: url("://img-empty-privacy");
-    background-position:center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://img-empty-privacy");
+    qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }
 

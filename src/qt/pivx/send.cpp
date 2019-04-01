@@ -78,32 +78,11 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelSubtitleAddress->setText("Enter a PIVX address or contact label");
     ui->labelSubtitleAddress->setProperty("cssClass", "text-title");
 
-    ui->lineEditAddress->setPlaceholderText("Add address");
-    ui->lineEditAddress->setProperty("cssClass", "edit-primary-book-send");
-    ui->lineEditAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->stackedWidget_2->setGraphicsEffect(shadowEffect);
 
     /* Amount */
 
     ui->labelSubtitleAmount->setText("Amount");
     ui->labelSubtitleAmount->setProperty("cssClass", "text-title");
-
-    ui->lineEditAmount->setPlaceholderText("0.00 zPIV ");
-    ui->lineEditAmount->setProperty("cssClass", "edit-primary");
-    ui->lineEditAmount->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditAmount->setGraphicsEffect(shadowEffect2);
-
-
-    /* Description */
-
-    ui->labelSubtitleDescription->setText("Label address (optional)");
-    ui->labelSubtitleDescription->setProperty("cssClass", "text-title");
-
-    ui->lineEditDescription->setPlaceholderText("Add descripcion ");
-    ui->lineEditDescription->setProperty("cssClass", "edit-primary");
-    ui->lineEditDescription->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditDescription->setGraphicsEffect(shadowEffect3);
-
 
     // Buttons
 
@@ -155,7 +134,7 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelAmountRemaining->setProperty("cssClass", "text-body1");
 
     // Contact Button
-
+/*
     btnContacts->setProperty("cssClass", "btn-dropdown");
     btnContacts->setCheckable(true);
 
@@ -171,6 +150,7 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     int posXX = ui->lineEditAddress->width() - 30;
     int posYY = 12;
     btnContacts->move(450, posYY);
+*/
 
     // Icon Send
     ui->stackedWidget->addWidget(coinIcon);
@@ -187,9 +167,8 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     int posY = 20;
     coinIcon->move(posX, posY);
 
-    // Show multirow
-    sendMultiRow = new SendMultiRow(this);
-    ui->scrollArea->setWidget(sendMultiRow);
+    // Entry
+    addEntry();
 
     // Connect
     connect(ui->pushLeft, SIGNAL(clicked()), this, SLOT(onPIVSelected()));
@@ -198,15 +177,92 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     connect(btnContacts, SIGNAL(clicked()), this, SLOT(onContactsClicked()));
 
     connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
+    connect(ui->pushButtonAddRecipient, SIGNAL(clicked()), this, SLOT(onAddEntryClicked()));
+    connect(ui->pushButtonClear, SIGNAL(clicked()), this, SLOT(clearEntries()));
 }
 
+void SendWidget::setClientModel(ClientModel* clientModel)
+{
+    this->clientModel = clientModel;
+
+    if (clientModel) {
+        // TODO: Complete me..
+        //connect(clientModel, SIGNAL(numBlocksChanged(int)), this, SLOT(updateSmartFeeLabel()));
+    }
+}
+
+void SendWidget::setModel(WalletModel* model) {
+    this->walletModel = model;
+
+    if (model && model->getOptionsModel()) {
+        for(SendMultiRow *entry : entries){
+            if(entry){
+                // TODO: complete me?
+                //entry->setModel();
+            }
+        }
+
+        // TODO: Unit display complete me
+        //connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+        //updateDisplayUnit();
+
+        // TODO: Coin control complet eme
+        // Coin Control
+        //connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(coinControlUpdateLabels()));
+        //connect(model->getOptionsModel(), SIGNAL(coinControlFeaturesChanged(bool)), this, SLOT(coinControlFeatureChanged(bool)));
+        //ui->frameCoinControl->setVisible(model->getOptionsModel()->getCoinControlFeatures());
+        //coinControlUpdateLabels();
+
+        // TODO: fee section, check sendDialog, same method
+
+    }
+
+
+}
+
+void SendWidget::clearEntries(){
+    int num = entries.size();
+    for (int i = 0; i < num; ++i) {
+        ui->scrollAreaWidgetContents->layout()->takeAt(0)->widget()->deleteLater();
+    }
+    entries.clear();
+
+    addEntry();
+}
+
+void SendWidget::addEntry(){
+    if(entries.empty()){
+        SendMultiRow *sendMultiRow = new SendMultiRow(this);
+        entries.push_back(sendMultiRow);
+        ui->scrollAreaWidgetContents->layout()->addWidget(sendMultiRow);
+    } else {
+        if (entries.size() == 1) {
+            SendMultiRow *entry = entries.front();
+            entry->hideLabels();
+            entry->setNumber(1);
+        }
+
+        SendMultiRow *sendMultiRow = new SendMultiRow(this);
+        entries.push_back(sendMultiRow);
+        sendMultiRow->setNumber(entries.size());
+        sendMultiRow->hideLabels();
+        ui->scrollAreaWidgetContents->layout()->addWidget(sendMultiRow);
+    }
+}
+
+void SendWidget::onAddEntryClicked(){
+    // TODO: Validations here..
+    addEntry();
+}
 
 void SendWidget::resizeEvent(QResizeEvent *event)
  {
+    /*
     int posXX = ui->lineEditAddress->width() - 30;
     int posYY = 12;
     btnContacts->move(posXX, posYY);
-    resizeMenu();
+    */
+    //resizeMenu();
     QWidget::resizeEvent(event);
  }
 
@@ -258,6 +314,8 @@ void SendWidget::onzPIVSelected(){
 
 
 void SendWidget::onContactsClicked(){
+
+    /*
     int height = ui->stackedWidget_2->height() * 8;
     int width = ui->stackedWidget_2->width();
 
@@ -289,9 +347,11 @@ void SendWidget::onContactsClicked(){
     pos.setY(pos.y() + ((ui->lineEditAddress->height() - 4)  * 3));
     menuContacts->move(pos);
     menuContacts->show();
+    */
 }
 
 void SendWidget::resizeMenu(){
+    /*
     if(menuContacts && menuContacts->isVisible()){
         int width = ui->stackedWidget_2->width();
         menuContacts->resizeList(width, menuContacts->height());
@@ -303,6 +363,7 @@ void SendWidget::resizeMenu(){
         pos.setY(pos.y() + ((ui->lineEditAddress->height() - 4)  * 3));
         menuContacts->move(pos);
     }
+    */
 }
 
 void SendWidget::changeTheme(bool isLightTheme, QString& theme){
