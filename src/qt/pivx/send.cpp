@@ -9,6 +9,7 @@
 #include "qt/pivx/coincontrolpivwidget.h"
 #include "qt/pivx/sendconfirmdialog.h"
 #include "qt/pivx/myaddressrow.h"
+#include "optionsmodel.h"
 
 #include <QFile>
 #include <QGraphicsDropShadowEffect>
@@ -185,8 +186,7 @@ void SendWidget::setModel(WalletModel* model) {
     if (model && model->getOptionsModel()) {
         for(SendMultiRow *entry : entries){
             if(entry){
-                // TODO: complete me?
-                //entry->setModel();
+                entry->setModel(model);
             }
         }
 
@@ -209,7 +209,7 @@ void SendWidget::setModel(WalletModel* model) {
 }
 
 void SendWidget::clearEntries(){
-    int num = entries.size();
+    int num = entries.length();
     for (int i = 0; i < num; ++i) {
         ui->scrollAreaWidgetContents->layout()->takeAt(0)->widget()->deleteLater();
     }
@@ -219,23 +219,24 @@ void SendWidget::clearEntries(){
 }
 
 void SendWidget::addEntry(){
-    if(entries.empty()){
+    if(entries.isEmpty()){
         SendMultiRow *sendMultiRow = new SendMultiRow(this);
-        entries.push_back(sendMultiRow);
+        entries.append(sendMultiRow);
         ui->scrollAreaWidgetContents->layout()->addWidget(sendMultiRow);
     } else {
-        if (entries.size() == 1) {
-            SendMultiRow *entry = entries.front();
+        if (entries.length() == 1) {
+            SendMultiRow *entry = entries.at(0);
             entry->hideLabels();
             entry->setNumber(1);
-        }else if(entries.size() == MAX_SEND_POPUP_ENTRIES){
+        }else if(entries.length() == MAX_SEND_POPUP_ENTRIES){
             // TODO: Snackbar notifying that it surpassed the max amount of entries
             return;
         }
 
         SendMultiRow *sendMultiRow = new SendMultiRow(this);
-        entries.push_back(sendMultiRow);
-        sendMultiRow->setNumber(entries.size());
+        sendMultiRow->setModel(this->walletModel);
+        entries.append(sendMultiRow);
+        sendMultiRow->setNumber(entries.length());
         sendMultiRow->hideLabels();
         ui->scrollAreaWidgetContents->layout()->addWidget(sendMultiRow);
     }
@@ -296,12 +297,12 @@ void SendWidget::onSendClicked(){
             // TODO: Notify the user..
             return;
         }
-        //send(recipients, strFee, formatted);
+        send(recipients);
         return;
     }
 
     // already unlocked or not encrypted at all
-    //send(recipients, strFee, formatted);
+    send(recipients);
 
 
     /*
@@ -310,6 +311,105 @@ void SendWidget::onSendClicked(){
     openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
      */
 
+}
+
+void SendWidget::send(QList<SendCoinsRecipient> recipients){
+    // prepare transaction for getting txFee earlier
+    WalletModelTransaction currentTransaction(recipients);
+    WalletModel::SendCoinsReturn prepareStatus;
+
+    // TODO: Coin control
+    //if (model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
+    //    prepareStatus = model->prepareTransaction(currentTransaction, CoinControlDialog::coinControl);
+    //else
+    prepareStatus = walletModel->prepareTransaction(currentTransaction);
+
+
+    // process prepareStatus and on error generate message shown to user
+    processSendCoinsReturn(prepareStatus,
+                           BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(),
+                                                        currentTransaction.getTransactionFee()),
+                           true
+    );
+
+    if (prepareStatus.status != WalletModel::OK) {
+        // TODO: Check why this??
+        //fNewRecipientAllowed = true;
+        return;
+    }
+
+    CAmount txFee = currentTransaction.getTransactionFee();
+
+    std::cout << "hey, final" << std::endl;
+
+}
+
+
+void SendWidget::processSendCoinsReturn(const WalletModel::SendCoinsReturn& sendCoinsReturn, const QString& msgArg, bool fPrepare)
+{
+    bool fAskForUnlock = false;
+
+    QPair<QString, CClientUIInterface::MessageBoxFlags> msgParams;
+    // Default to a warning message, override if error message is needed
+    msgParams.second = CClientUIInterface::MSG_WARNING;
+
+    // This comment is specific to SendCoinsDialog usage of WalletModel::SendCoinsReturn.
+    // WalletModel::TransactionCommitFailed is used only in WalletModel::sendCoins()
+    // all others are used only in WalletModel::prepareTransaction()
+    switch (sendCoinsReturn.status) {
+        case WalletModel::InvalidAddress:
+            msgParams.first = tr("The recipient address is not valid, please recheck.");
+            break;
+        case WalletModel::InvalidAmount:
+            msgParams.first = tr("The amount to pay must be larger than 0.");
+            break;
+        case WalletModel::AmountExceedsBalance:
+            msgParams.first = tr("The amount exceeds your balance.");
+            break;
+        case WalletModel::AmountWithFeeExceedsBalance:
+            msgParams.first = tr("The total exceeds your balance when the %1 transaction fee is included.").arg(msgArg);
+            break;
+        case WalletModel::DuplicateAddress:
+            msgParams.first = tr("Duplicate address found, can only send to each address once per send operation.");
+            break;
+        case WalletModel::TransactionCreationFailed:
+            msgParams.first = tr("Transaction creation failed!");
+            msgParams.second = CClientUIInterface::MSG_ERROR;
+            break;
+        case WalletModel::TransactionCommitFailed:
+            msgParams.first = tr("The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
+            msgParams.second = CClientUIInterface::MSG_ERROR;
+            break;
+        case WalletModel::AnonymizeOnlyUnlocked:
+            // Unlock is only need when the coins are send
+            if(!fPrepare)
+                fAskForUnlock = true;
+            else
+                msgParams.first = tr("Error: The wallet was unlocked only to anonymize coins.");
+            break;
+
+        case WalletModel::InsaneFee:
+            msgParams.first = tr("A fee %1 times higher than %2 per kB is considered an insanely high fee.").arg(10000).arg(BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), ::minRelayTxFee.GetFeePerK()));
+            break;
+            // included to prevent a compiler warning.
+        case WalletModel::OK:
+        default:
+            return;
+    }
+
+    // Unlock wallet if it wasn't fully unlocked already
+    if(fAskForUnlock) {
+        walletModel->requestUnlock(AskPassphraseDialog::Context::Unlock_Full, false);
+        if(walletModel->getEncryptionStatus () != WalletModel::Unlocked) {
+            msgParams.first = tr("Error: The wallet was unlocked only to anonymize coins. Unlock canceled.");
+        }
+        else {
+            // Wallet unlocked
+            return;
+        }
+    }
+
+    emit message(tr("Send Coins"), msgParams.first, msgParams.second);
 }
 
 

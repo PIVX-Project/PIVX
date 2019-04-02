@@ -2238,7 +2238,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="img-empty-transactions"] {
-    qproperty-icon: url("://img-empty-transactions.svg");
+    qproperty-icon: url("://img-empty-transactions");
     qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }
