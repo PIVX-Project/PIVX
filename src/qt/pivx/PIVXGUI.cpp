@@ -144,6 +144,13 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
     // Connect events
     connectActions();
 
+    // TODO: Add event filter??
+    // // Install event filter to be able to catch status tip events (QEvent::StatusTip)
+    //    this->installEventFilter(this);
+
+    // Subscribe to notifications from core
+    subscribeToCoreSignals();
+
 }
 
 static Qt::Modifier shortKey
@@ -197,7 +204,15 @@ void PIVXGUI::createTrayIcon(const NetworkStyle* networkStyle)
 
 //
 PIVXGUI::~PIVXGUI() {
+    // Unsubscribe from notifications from core
+    unsubscribeFromCoreSignals();
 
+    GUIUtil::saveWindowGeometry("nWindow", this);
+    if (trayIcon) // Hide tray icon, as deleting will let it linger until quit (on Ubuntu)
+        trayIcon->hide();
+#ifdef Q_OS_MAC
+    MacDockIconHandler::cleanup();
+#endif
 }
 
 
@@ -221,6 +236,35 @@ void PIVXGUI::setClientModel(ClientModel* clientModel) {
             trayIcon->show();
         }
     }
+}
+
+
+void PIVXGUI::changeEvent(QEvent* e)
+{
+    QMainWindow::changeEvent(e);
+#ifndef Q_OS_MAC // Ignored on Mac
+    if (e->type() == QEvent::WindowStateChange) {
+        if (clientModel && clientModel->getOptionsModel() && clientModel->getOptionsModel()->getMinimizeToTray()) {
+            QWindowStateChangeEvent* wsevt = static_cast<QWindowStateChangeEvent*>(e);
+            if (!(wsevt->oldState() & Qt::WindowMinimized) && isMinimized()) {
+                QTimer::singleShot(0, this, SLOT(hide()));
+                e->ignore();
+            }
+        }
+    }
+#endif
+}
+
+void PIVXGUI::closeEvent(QCloseEvent* event)
+{
+#ifndef Q_OS_MAC // Ignored on Mac
+    if (clientModel && clientModel->getOptionsModel()) {
+        if (!clientModel->getOptionsModel()->getMinimizeOnClose()) {
+            QApplication::quit();
+        }
+    }
+#endif
+    QMainWindow::closeEvent(event);
 }
 
 
@@ -277,7 +321,7 @@ void PIVXGUI::message(const QString& title, const QString& message, unsigned int
     // Display message
     if (style & CClientUIInterface::MODAL) {
         // Check for buttons, use OK as default, if none was supplied
-        LogPrintf("ERROR PIVXGUI..");
+        LogPrintf("ERROR PIVXGUI..\n");
         QMessageBox::StandardButton buttons;
         if (!(buttons = (QMessageBox::StandardButton)(style & CClientUIInterface::BTN_MASK)))
             buttons = QMessageBox::Ok;
@@ -439,3 +483,34 @@ void PIVXGUI::removeAllWallets()
     //walletFrame->removeAllWallets();
 }
 #endif // ENABLE_WALLET
+
+
+static bool ThreadSafeMessageBox(PIVXGUI* gui, const std::string& message, const std::string& caption, unsigned int style)
+{
+    bool modal = (style & CClientUIInterface::MODAL);
+    // The SECURE flag has no effect in the Qt GUI.
+    // bool secure = (style & CClientUIInterface::SECURE);
+    style &= ~CClientUIInterface::SECURE;
+    bool ret = false;
+    // In case of modal message, use blocking connection to wait for user to click a button
+    QMetaObject::invokeMethod(gui, "message",
+                              modal ? GUIUtil::blockingGUIThreadConnection() : Qt::QueuedConnection,
+                              Q_ARG(QString, QString::fromStdString(caption)),
+                              Q_ARG(QString, QString::fromStdString(message)),
+                              Q_ARG(unsigned int, style),
+                              Q_ARG(bool*, &ret));
+    return ret;
+}
+
+
+void PIVXGUI::subscribeToCoreSignals()
+{
+    // Connect signals to client
+    uiInterface.ThreadSafeMessageBox.connect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
+}
+
+void PIVXGUI::unsubscribeFromCoreSignals()
+{
+    // Disconnect signals from client
+    uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
+}

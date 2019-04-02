@@ -88,9 +88,11 @@ public slots:
 #endif // ENABLE_WALLET
 
 protected:
-    /*
+
     void changeEvent(QEvent* e);
     void closeEvent(QCloseEvent* event);
+
+    /*
     void dragEnterEvent(QDragEnterEvent* event);
     void dropEvent(QDropEvent* event);
     bool eventFilter(QObject* object, QEvent* event);
@@ -126,8 +128,12 @@ private:
     bool opEnabled = false;
 
     void createTrayIcon(const NetworkStyle* networkStyle);
-
     void showTop(QWidget *view);
+
+    /** Connect core signals to GUI client */
+    void subscribeToCoreSignals();
+    /** Disconnect core signals from GUI client */
+    void unsubscribeFromCoreSignals();
 
 private slots:
     /** Show window if hidden, unminimize when minimized, rise when obscured or show if hidden and fToggleHidden is true */
