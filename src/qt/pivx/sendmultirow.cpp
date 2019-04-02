@@ -1,6 +1,12 @@
 #include "qt/pivx/sendmultirow.h"
 #include "qt/pivx/forms/ui_sendmultirow.h"
 #include <QGraphicsDropShadowEffect>
+#include <QDoubleValidator>
+
+#include "optionsmodel.h"
+#include "guiutil.h"
+#include "bitcoinunits.h"
+#include "qt/pivx/qtutils.h"
 
 SendMultiRow::SendMultiRow(QWidget *parent) :
     QWidget(parent),
@@ -24,7 +30,8 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
     ui->stackedAddress->setGraphicsEffect(shadowEffect);
 
     ui->lineEditAmount->setPlaceholderText("0.00 zPIV ");
-    ui->lineEditAmount->setProperty("cssClass", "edit-primary");
+    setCssEditLine(ui->lineEditAmount, true, false);
+    ui->lineEditAmount->setValidator(new QDoubleValidator(0, 100000000000, 7, this) );
     ui->lineEditAmount->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEditAmount->setGraphicsEffect(shadowEffect);
 
@@ -76,14 +83,49 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
     iconNumber->move(posIconX, posIconY);
 
     // TODO: add validator --> there is a class in the core QValidateLineEdit and some methods..
+    connect(ui->lineEditAmount, SIGNAL(textChanged(const QString&)), this, SLOT(amountChanged(const QString&)));
+    connect(ui->lineEditAddress, SIGNAL(textChanged(const QString&)), this, SLOT(addressChanged(const QString&)));
+
 }
+
+void SendMultiRow::amountChanged(const QString& amount){
+    CAmount value = getAmountValue(amount);
+    if(value > 0){
+        // BitcoinUnits::format(displayUnit, value, false, BitcoinUnits::separatorAlways);
+        ui->lineEditAmount->setText(amount);
+    }
+}
+
+/**
+ * Returns -1 if the value is invalid
+ */
+CAmount SendMultiRow::getAmountValue(QString amount){
+    bool isValid = false;
+    CAmount value = GUIUtil::parseValue(amount, displayUnit, &isValid);
+    return isValid ? value : -1;
+}
+
+bool SendMultiRow::addressChanged(const QString& str){
+    QString trimmedStr = str.trimmed();
+    bool valid = model->validateAddress(trimmedStr);
+    if (!valid){
+        ui->lineEditAddress->setProperty("cssClass","edit-primary-multi-book-error");
+    }else{
+        ui->lineEditAddress->setProperty("cssClass","edit-primary-multi-book");
+    }
+    updateStyle(ui->lineEditAddress);
+    return valid;
+}
+
 
 void SendMultiRow::setModel(WalletModel* model) {
     this->model = model;
 
     // TODO:Complete me..
-    //if (model && model->getOptionsModel())
-    //    connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+    if (model && model->getOptionsModel()) {
+        displayUnit = model->getOptionsModel()->getDisplayUnit();
+        //connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+    }
 
     clear();
 }
@@ -106,32 +148,29 @@ bool SendMultiRow::validate()
     // Check input validity
     bool retval = true;
 
-    /* TODO: Complete me..
     // Skip checks for payment request
     if (recipient.paymentRequest.IsInitialized())
         return retval;
 
-    if (!model->validateAddress(ui->payTo->text())) {
-        ui->payTo->setValid(false);
-        retval = false;
-    }
+    // Check address validity, returns false if it's invalid
+    retval = addressChanged(ui->lineEditAddress->text());
 
-    if (!ui->payAmount->validate()) {
+    CAmount value = getAmountValue(ui->lineEditAmount->text());
+    if(value == -1){
         retval = false;
     }
 
     // Sending a zero amount is invalid
-    if (ui->payAmount->value(0) <= 0) {
-        ui->payAmount->setValid(false);
+    if (value <= 0) {
+        setCssEditLine(ui->lineEditAmount, false, true);
         retval = false;
     }
 
     // Reject dust outputs:
-    if (retval && GUIUtil::isDust(ui->payTo->text(), ui->payAmount->value())) {
-        ui->payAmount->setValid(false);
+    if (retval && GUIUtil::isDust(ui->lineEditAddress->text(), value)) {
+        setCssEditLine(ui->lineEditAmount, false, true);
         retval = false;
     }
-     */
 
     return retval;
 }
@@ -142,12 +181,18 @@ SendCoinsRecipient SendMultiRow::getValue() {
         return recipient;
 
     // Normal payment
-    recipient.address = ui->lineEditAddress->text();
+    QString addressStr = ui->lineEditAddress->text();
+    QString trimmedStr = addressStr.trimmed();
+    recipient.address = trimmedStr;
     recipient.label = ui->lineEditDescription->text();
 
     // TODO: Convert this into a value..
-    // ui->lineEditAmount->text();
-    //recipient.amount =
+    CAmount value = getAmountValue(ui->lineEditAmount->text());
+    if(value == -1){
+        // Invalid value..
+        // todo: Notificate user..
+    }
+    recipient.amount = value;
     //recipient.message = ui->messageTextLabel->text();
 
     return recipient;

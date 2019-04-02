@@ -42,6 +42,9 @@ QString dateTimeStr(qint64 nTime);
 // Render PIVX addresses in monospace font
 QFont bitcoinAddressFont();
 
+// Parse string into a CAmount value
+CAmount parseValue(const QString& text, int displayUnit, bool* valid_out = 0);
+
 // Set up widgets for address and amounts
 void setupAddressWidget(QValidatedLineEdit* widget, QWidget* parent);
 void setupAmountWidget(QLineEdit* widget, QWidget* parent);

@@ -224,6 +224,7 @@ void PIVXGUI::setClientModel(ClientModel* clientModel) {
     if(this->clientModel) {
         // TODO: Complete me..
         topBar->setClientModel(clientModel);
+        sendWidget->setClientModel(clientModel);
 
         // Receive and report messages from client model
         connect(clientModel, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
@@ -463,6 +464,7 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     topBar->setWalletModel(walletModel);
     dashboard->setWalletModel(walletModel);
     receiveWidget->setWalletModel(walletModel);
+    sendWidget->setModel(walletModel);
 
 
     return true;

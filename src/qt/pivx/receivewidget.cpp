@@ -201,7 +201,7 @@ void ReceiveWidget::onLabelClicked(){
 }
 
 void ReceiveWidget::onCopyClicked(){
-    GUIUtil::setClipboard(GUIUtil::formatBitcoinURI(*info));
+    GUIUtil::setClipboard(info->address);
     window->messageInfo(tr("Address copied"));
 }
 

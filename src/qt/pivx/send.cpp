@@ -42,18 +42,6 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     shadowEffect->setYOffset(3);
     shadowEffect->setBlurRadius(6);
 
-    QGraphicsDropShadowEffect* shadowEffect2 = new QGraphicsDropShadowEffect();
-    shadowEffect2->setColor(QColor(0, 0, 0, 22));
-    shadowEffect2->setXOffset(0);
-    shadowEffect2->setYOffset(3);
-    shadowEffect2->setBlurRadius(6);
-
-    QGraphicsDropShadowEffect* shadowEffect3 = new QGraphicsDropShadowEffect();
-    shadowEffect3->setColor(QColor(0, 0, 0, 22));
-    shadowEffect3->setXOffset(0);
-    shadowEffect3->setYOffset(3);
-    shadowEffect3->setBlurRadius(6);
-
     /* Title */
     ui->labelTitle->setText("Send");
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
@@ -240,6 +228,9 @@ void SendWidget::addEntry(){
             SendMultiRow *entry = entries.front();
             entry->hideLabels();
             entry->setNumber(1);
+        }else if(entries.size() == MAX_SEND_POPUP_ENTRIES){
+            // TODO: Snackbar notifying that it surpassed the max amount of entries
+            return;
         }
 
         SendMultiRow *sendMultiRow = new SendMultiRow(this);
@@ -268,9 +259,56 @@ void SendWidget::resizeEvent(QResizeEvent *event)
 
 
 void SendWidget::onSendClicked(){
+
+    if (!walletModel || !walletModel->getOptionsModel())
+        return;
+
+    QList<SendCoinsRecipient> recipients;
+
+    for (SendMultiRow* entry : entries){
+        // TODO: Check what is the UTXO splitter here..
+
+        // Validate send..
+        if(entry && entry->validate()) {
+            recipients.append(entry->getValue());
+        }else{
+            // Invalid entry.. todo: notificate user about this.
+            return;
+        }
+
+    }
+
+    if (recipients.isEmpty()) {
+        //todo: notificate user about this.
+        return;
+    }
+
+    // request unlock only if was locked or unlocked for mixing:
+    // this way we let users unlock by walletpassphrase or by menu
+    // and make many transactions while unlocking through this dialog
+    // will call relock
+    WalletModel::EncryptionStatus encStatus = walletModel->getEncryptionStatus();
+    if (encStatus == walletModel->Locked || encStatus == walletModel->UnlockedForAnonymizationOnly) {
+        WalletModel::UnlockContext ctx(walletModel->requestUnlock(AskPassphraseDialog::Context::Send_PIV, true));
+        if (!ctx.isValid()) {
+            // Unlock wallet was cancelled
+            //TODO: Check what is this --> fNewRecipientAllowed = true;
+            // TODO: Notify the user..
+            return;
+        }
+        //send(recipients, strFee, formatted);
+        return;
+    }
+
+    // already unlocked or not encrypted at all
+    //send(recipients, strFee, formatted);
+
+
+    /*
     window->showHide(true);
     SendConfirmDialog* dialog = new SendConfirmDialog(window);
     openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
+     */
 
 }
 

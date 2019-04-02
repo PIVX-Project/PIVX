@@ -186,3 +186,9 @@ QColor getRowColor(bool isLightTheme, bool isHovered, bool isSelected){
         }
     }
 }
+
+void setCssEditLine(QLineEdit *edit, bool isValid, bool forceUpdate){
+    edit->setProperty("cssClass", isValid ? "edit-primary" : "edit-primary-error");
+    if(forceUpdate)
+        updateStyle(edit);
+}
