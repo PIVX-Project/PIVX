@@ -266,5 +266,7 @@
         <file alias="img-empty-transactions">pivx/res/img/img-empty-transactions.svg</file>
         <file alias="img-nav-logo">pivx/res/img/img-nav-logo.svg</file>
         <file alias="img-qr">pivx/res/img/img-qr.svg</file>
+        <file alias="ic-contact-arrow-down">pivx/res/img/ic-contact-arrow-down.svg</file>
+        <file alias="ic-contact-arrow-down-white">pivx/res/img/ic-contact-arrow-down-white.svg</file>
     </qresource>
 </RCC>

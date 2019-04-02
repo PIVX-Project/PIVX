@@ -255,9 +255,21 @@ void DashboardWidget::setWalletModel(WalletModel* model){
         txModel = model->getTransactionTableModel();
         ui->listTransactions->setModel(this->txModel);
         ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
+
+        if(txModel->columnCount(QModelIndex()) == 0){
+            ui->emptyContainer->setVisible(true);
+            ui->listTransactions->setVisible(false);
+            connect(txModel, SIGNAL(firstTxArrived()), this, SLOT(showList()));
+        }
+        // TODO: Update empty view when first txes appears..
     }
     // update the display unit, to not use the default ("PIV")
     updateDisplayUnit();
+}
+
+void DashboardWidget::showList(){
+    ui->emptyContainer->setVisible(false);
+    ui->listTransactions->setVisible(true);
 }
 
 void DashboardWidget::updateDisplayUnit()

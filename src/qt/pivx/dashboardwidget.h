@@ -61,6 +61,7 @@ private slots:
     void changeChartColors();
     void onSortTxPressed();
     void updateDisplayUnit();
+    void showList();
 private:
     Ui::DashboardWidget *ui;
     PIVXGUI* window;

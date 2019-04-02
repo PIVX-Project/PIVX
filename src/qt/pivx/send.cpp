@@ -29,7 +29,7 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
 
     /* Containers */
     ui->left->setProperty("cssClass", "container");
-    ui->left->setContentsMargins(0,20,20,20);
+    ui->left->setContentsMargins(0,20,0,20);
     ui->right->setProperty("cssClass", "container-right");
     ui->right->setContentsMargins(20,10,20,20);
 

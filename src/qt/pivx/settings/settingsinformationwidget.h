@@ -16,6 +16,9 @@ public:
     explicit SettingsInformationWidget(PIVXGUI* _window, QWidget *parent = nullptr);
     ~SettingsInformationWidget();
 
+
+    void loadClientModel() override;
+
 private:
     Ui::SettingsInformationWidget *ui;
 };

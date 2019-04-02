@@ -11,8 +11,7 @@
 SendMultiRow::SendMultiRow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SendMultiRow),
-    iconNumber(new QPushButton()),
-    btnContact(new QPushButton())
+    iconNumber(new QPushButton())
 {
     ui->setupUi(this);
 
@@ -47,21 +46,7 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
 
     // Button Contact
 
-    btnContact->setProperty("cssClass", "btn-dropdown");
-    btnContact->setCheckable(true);
-
-    QSize BUTTON_CONTACT_SIZE = QSize(24, 24);
-    btnContact->setMinimumSize(BUTTON_CONTACT_SIZE);
-    btnContact->setMaximumSize(BUTTON_CONTACT_SIZE);
-
-    ui->stackedAddress->addWidget(btnContact);
-
-    btnContact->show();
-    btnContact->raise();
-
-    int posBtnXX = ui->lineEditAddress->width() - 20;
-    int posBtnYY = 12;
-    btnContact->move(posBtnXX, posBtnYY);
+    btnContact = ui->lineEditAddress->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
 
 
     // Icon Number
@@ -85,6 +70,7 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
     // TODO: add validator --> there is a class in the core QValidateLineEdit and some methods..
     connect(ui->lineEditAmount, SIGNAL(textChanged(const QString&)), this, SLOT(amountChanged(const QString&)));
     connect(ui->lineEditAddress, SIGNAL(textChanged(const QString&)), this, SLOT(addressChanged(const QString&)));
+    connect(btnContact, SIGNAL(triggered()), this, SIGNAL(onContactsClicked(this)));
 
 }
 
@@ -228,13 +214,9 @@ void SendMultiRow::showLabels(){
     iconNumber->setVisible(false);
 }
 
-void SendMultiRow::resizeEvent(QResizeEvent *event)
- {
-    int posXX = ui->lineEditAddress->width() - 20;
-    int posYY = 12;
-    btnContact->move(posXX, posYY);
+void SendMultiRow::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
- }
+}
 
 SendMultiRow::~SendMultiRow()
 {

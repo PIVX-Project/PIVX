@@ -74,6 +74,9 @@ public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
     bool processingQueuedTransactions() { return fProcessingQueuedTransactions; }
 
+signals:
+    void firstTxArrived();
+
 private:
     CWallet* wallet;
     WalletModel* walletModel;

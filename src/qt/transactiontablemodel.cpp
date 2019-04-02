@@ -239,6 +239,10 @@ void TransactionTableModel::updateTransaction(const QString& hash, int status, b
     updated.SetHex(hash.toStdString());
 
     priv->updateWallet(updated, status, showTransaction);
+
+    if(priv->size() == 1){
+        emit firstTxArrived();
+    }
 }
 
 void TransactionTableModel::updateConfirmations()

@@ -1,5 +1,6 @@
 #include "qt/pivx/settings/settingsinformationwidget.h"
 #include "qt/pivx/settings/forms/ui_settingsinformationwidget.h"
+#include "clientmodel.h"
 
 SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *parent) :
     PWidget(_window,parent),
@@ -107,6 +108,20 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
 
     ui->pushButtonBackups->setText("Wallet file");
     ui->pushButtonBackups->setProperty("cssClass", "btn-secundary");
+}
+
+
+void SettingsInformationWidget::loadClientModel(){
+    if (clientModel && clientModel->getPeerTableModel() && clientModel->getBanTableModel()) {
+        // Provide initial values
+        /* TODO: Complete me..
+        ui->clientVersion->setText(model->formatFullVersion());
+        ui->clientName->setText(model->clientName());
+        ui->buildDate->setText(model->formatBuildDate());
+        ui->startupTime->setText(model->formatClientStartupTime());
+        ui->networkName->setText(QString::fromStdString(Params().NetworkIDString()));
+         */
+    }
 }
 
 SettingsInformationWidget::~SettingsInformationWidget()

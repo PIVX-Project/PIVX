@@ -256,6 +256,7 @@ bool WalletModel::updateAddressBookLabels(const CTxDestination& dest, const std:
     } else if (mi->second.name != strName) {
         return wallet->SetAddressBook(dest, strName, ""); // "" means don't change purpose
     }
+    return false;
 }
 
 WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction& transaction, const CCoinControl* coinControl)

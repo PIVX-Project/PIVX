@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QPushButton>
+#include <QAction>
 #include "walletmodel.h"
 #include "amount.h"
 
@@ -42,6 +43,7 @@ public slots:
 
 signals:
     void removeEntry(SendMultiRow* entry);
+    void onContactsClicked(SendMultiRow* entry);
     //void payAmountChanged();
 
 protected:
@@ -57,10 +59,11 @@ private slots:
 private:
     Ui::SendMultiRow *ui;
     QPushButton *iconNumber;
-    QPushButton *btnContact;
 
     WalletModel *model;
     int displayUnit;
+
+    QAction *btnContact;
 
     SendCoinsRecipient recipient;
 
