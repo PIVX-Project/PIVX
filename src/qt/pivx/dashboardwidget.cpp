@@ -256,7 +256,7 @@ void DashboardWidget::setWalletModel(WalletModel* model){
         ui->listTransactions->setModel(this->txModel);
         ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
 
-        if(txModel->columnCount(QModelIndex()) == 0){
+        if(txModel->size() == 0){
             ui->emptyContainer->setVisible(true);
             ui->listTransactions->setVisible(false);
             connect(txModel, SIGNAL(firstTxArrived()), this, SLOT(showList()));

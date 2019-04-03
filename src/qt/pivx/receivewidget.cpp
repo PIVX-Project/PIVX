@@ -19,6 +19,7 @@
 #include <QModelIndex>
 #include <QFile>
 #include <QClipboard>
+#include <QColor>
 
 #include <iostream>
 
@@ -180,7 +181,8 @@ void ReceiveWidget::updateQr(QString address){
     ui->labelQrImg->setText("");
 
     QString error;
-    QPixmap pixmap = encodeToQr(uri, error);
+    QColor qrColor("#382d4d");
+    QPixmap pixmap = encodeToQr(uri, error, qrColor);
     if(!pixmap.isNull()){
         qrImage = &pixmap;
         ui->labelQrImg->setPixmap(qrImage->scaled(ui->labelQrImg->width(), ui->labelQrImg->height()));

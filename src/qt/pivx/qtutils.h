@@ -27,7 +27,7 @@ void openSnackbar(QWidget *parent, PIVXGUI *gui, QString text){
 }
 
 //
-QPixmap encodeToQr(QString str, QString &errorStr);
+QPixmap encodeToQr(QString str, QString &errorStr, QColor qrColor = Qt::black);
 
 // Helpers
 void updateStyle(QWidget* widget);

@@ -41,6 +41,7 @@ private:
     Ui::AddressesWidget *ui;
 
     PIVXGUI* window;
+    WalletModel *walletModel;
 
     FurAbstractListItemDelegate* delegate;
     AddressTableModel* addressTablemodel;

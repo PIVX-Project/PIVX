@@ -267,6 +267,10 @@ int TransactionTableModel::columnCount(const QModelIndex& parent) const
     return columns.length();
 }
 
+int TransactionTableModel::size() const{
+    return priv->size();
+}
+
 QString TransactionTableModel::formatTxStatus(const TransactionRecord* wtx) const
 {
     QString status;
