@@ -5,6 +5,7 @@
 #include "qt/pivx/qtutils.h"
 #include "walletmodel.h"
 #include "optionsmodel.h"
+#include "qt/pivx/settings/settingsfaqwidget.h"
 #include <QFile>
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -138,8 +139,28 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
 
 
     ui->chartContainer->setProperty("cssClass", "container-chart");
+
+    ui->pushImgEmptyChart->setProperty("cssClass", "img-empty-staking-on");
+    ui->labelEmptyChart->setText("Staking off");
+
+    ui->btnHowTo->setText("How to get PIV or zPIV");
+    ui->btnHowTo->setProperty("cssClass", "btn-secundary");
+
+    // Staking off
+    //ui->pushImgEmptyChart->setProperty("cssClass", "img-empty-staking-off");
+    //ui->labelEmptyChart->setText("Staking off");
+
+    ui->labelEmptyChart->setText("Staking on");
+    ui->labelEmptyChart->setProperty("cssClass", "text-empty");
+
+    ui->labelMessageEmpty->setText("You can activate and deactivate the Staking mode in the status bar at the top right of the wallet");
+    ui->labelMessageEmpty->setProperty("cssClass", "text-subtitle");
     // load chart
     loadChart();
+
+    // Chart State
+    ui->layoutChart->setVisible(false);
+    ui->emptyContainerChart->setVisible(true);
 
     connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
 
@@ -260,11 +281,19 @@ void DashboardWidget::setWalletModel(WalletModel* model){
             ui->emptyContainer->setVisible(true);
             ui->listTransactions->setVisible(false);
             connect(txModel, SIGNAL(firstTxArrived()), this, SLOT(showList()));
+            connect(ui->pushImgEmpty, SIGNAL(clicked()), this, SLOT(openFAQ()));
+            connect(ui->btnHowTo, SIGNAL(clicked()), this, SLOT(openFAQ()));
         }
         // TODO: Update empty view when first txes appears..
     }
     // update the display unit, to not use the default ("PIV")
     updateDisplayUnit();
+}
+
+void DashboardWidget::openFAQ(){
+    window->showHide(true);
+    SettingsFaqWidget* dialog = new SettingsFaqWidget(window);
+    openDialogWithOpaqueBackgroundFullScreen(dialog, window);
 }
 
 void DashboardWidget::showList(){

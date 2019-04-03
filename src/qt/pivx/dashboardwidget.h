@@ -62,6 +62,7 @@ private slots:
     void onSortTxPressed();
     void updateDisplayUnit();
     void showList();
+    void openFAQ();
 private:
     Ui::DashboardWidget *ui;
     PIVXGUI* window;
