@@ -193,3 +193,9 @@ void setCssEditLine(QLineEdit *edit, bool isValid, bool forceUpdate){
     if(forceUpdate)
         updateStyle(edit);
 }
+
+void setCssEditLineDialog(QLineEdit *edit, bool isValid, bool forceUpdate){
+    edit->setProperty("cssClass", isValid ? "edit-primary-dialog" : "edit-primary-dialog-error");
+    if(forceUpdate)
+        updateStyle(edit);
+}

@@ -2,6 +2,7 @@
 #define SETTINGSWIDGET_H
 
 #include <QWidget>
+#include "qt/pivx/pwidget.h"
 #include "qt/pivx/settings/settingsbackupwallet.h"
 #include "qt/pivx/settings/settingsbittoolwidget.h"
 #include "qt/pivx/settings/settingssignmessagewidgets.h"
@@ -26,7 +27,7 @@ namespace Ui {
 class SettingsWidget;
 }
 
-class SettingsWidget : public QWidget
+class SettingsWidget : public PWidget
 {
     Q_OBJECT
 
@@ -34,6 +35,7 @@ public:
     explicit SettingsWidget(PIVXGUI* _window, QWidget *parent = nullptr);
     ~SettingsWidget();
 
+    void loadClientModel() override ;
 
 
 private slots:

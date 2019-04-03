@@ -297,7 +297,7 @@
            <string notr="true">#scrollArea {
             background:transparent;
             margin-top:10px;
-            }</string>
+}</string>
           </property>
           <property name="horizontalScrollBarPolicy">
            <enum>Qt::ScrollBarAlwaysOff</enum>

@@ -225,6 +225,7 @@ void PIVXGUI::setClientModel(ClientModel* clientModel) {
         // TODO: Complete me..
         topBar->setClientModel(clientModel);
         sendWidget->setClientModel(clientModel);
+        settingsWidget->setClientModel(clientModel);
 
         // Receive and report messages from client model
         connect(clientModel, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));

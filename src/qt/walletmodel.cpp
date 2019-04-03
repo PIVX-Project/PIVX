@@ -681,6 +681,24 @@ bool WalletModel::getPubKey(const CKeyID& address, CPubKey& vchPubKeyOut) const
     return wallet->GetPubKey(address, vchPubKeyOut);
 }
 
+CBitcoinAddress WalletModel::getNewAddress(std::string label) const{
+    if (!wallet->IsLocked())
+        wallet->TopUpKeyPool();
+
+    // Generate a new key that is added to wallet
+    CPubKey newKey;
+    if (!wallet->GetKeyFromPool(newKey)){
+        wallet->TopUpKeyPool(100);
+
+        if (wallet->GetKeyPoolSize() < 100)
+            throw std::runtime_error("Error refreshing keypool.");
+    }
+    CKeyID keyID = newKey.GetID();
+
+    pwalletMain->SetAddressBook(keyID, label, "receive");
+    return CBitcoinAddress(keyID);
+}
+
 // returns a list of COutputs from COutPoints
 void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vector<COutput>& vOutputs)
 {

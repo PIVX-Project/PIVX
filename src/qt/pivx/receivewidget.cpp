@@ -144,6 +144,7 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
     connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
     connect(ui->pushButtonLabel, SIGNAL(clicked()), this, SLOT(onLabelClicked()));
     connect(ui->pushButtonCopy, SIGNAL(clicked()), this, SLOT(onCopyClicked()));
+    connect(ui->pushButtonNewAddress, SIGNAL(clicked()), this, SLOT(onNewAddressClicked()));
 }
 
 void ReceiveWidget::setWalletModel(WalletModel* model){
@@ -157,6 +158,19 @@ void ReceiveWidget::setWalletModel(WalletModel* model){
         if(!info) info = new SendCoinsRecipient();
         ui->labelAddress->setText(!latestAddress.isEmpty() ? latestAddress : tr("No address"));
         updateQr(latestAddress);
+
+        updateLabel();
+    }
+}
+
+void ReceiveWidget::updateLabel(){
+    if(!info->address.isEmpty()) {
+        // Check if address label exists
+        QString label = this->addressTableModel->labelForAddress(info->address);
+        if (!label.isEmpty()) {
+            // TODO: Show label.. complete me..
+            ui->pushButtonLabel->setText(tr("Change Label"));
+        }
     }
 }
 
@@ -191,6 +205,7 @@ void ReceiveWidget::onLabelClicked(){
                     ) {
                 // Show snackbar
                 // update label status (icon color)
+                updateLabel();
                 window->messageInfo(tr("Address label saved"));
             } else {
                 // Show snackbar error
@@ -200,6 +215,14 @@ void ReceiveWidget::onLabelClicked(){
     }
 }
 
+void ReceiveWidget::onNewAddressClicked(){
+    CBitcoinAddress address = walletModel->getNewAddress("");
+    updateQr(QString::fromStdString(address.ToString()));
+    ui->labelAddress->setText(!info->address.isEmpty() ? info->address : tr("No address"));
+    updateLabel();
+    window->messageInfo(tr("New address created"));
+}
+
 void ReceiveWidget::onCopyClicked(){
     GUIUtil::setClipboard(info->address);
     window->messageInfo(tr("Address copied"));
@@ -207,9 +230,12 @@ void ReceiveWidget::onCopyClicked(){
 
 
 void ReceiveWidget::onRequestClicked(){
-    window->showHide(true);
-    RequestDialog* dialog = new RequestDialog(window);
-    openDialogWithOpaqueBackgroundY(dialog, window, 3.5, 12);
+    if(walletModel) {
+        window->showHide(true);
+        RequestDialog *dialog = new RequestDialog(window);
+        dialog->setWalletModel(walletModel);
+        openDialogWithOpaqueBackgroundY(dialog, window, 3.5, 12);
+    }
 }
 
 void ReceiveWidget::onMyAddressesClicked(){

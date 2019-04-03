@@ -682,6 +682,7 @@ src/qt/pivx/receivedialog.h
 src/qt/pivx/receivewidget.cpp
 src/qt/pivx/receivewidget.h
 src/qt/pivx/send.cpp
+src/qt/pivx/settings/forms/settingsconsolewidget.ui
 src/qt/pivx/topbar.cpp
 src/qt/pivx/topbar.cpp
 src/qt/pivx/topbar.h

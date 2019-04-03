@@ -1,6 +1,11 @@
 #include "qt/pivx/settings/settingsinformationwidget.h"
 #include "qt/pivx/settings/forms/ui_settingsinformationwidget.h"
 #include "clientmodel.h"
+#include "chainparams.h"
+#include "db.h"
+#include "util.h"
+
+#include <QDir>
 
 SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *parent) :
     PWidget(_window,parent),
@@ -108,12 +113,29 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
 
     ui->pushButtonBackups->setText("Wallet file");
     ui->pushButtonBackups->setProperty("cssClass", "btn-secundary");
+
+
+
+    // Data
+#ifdef ENABLE_WALLET
+    // Wallet data -- remove it with if it's needed
+    ui->labelInfoBerkeley->setText(DbEnv::version(0, 0, 0));
+    ui->labelInfoDataDir->setText(QString::fromStdString(GetDataDir().string() + QDir::separator().toLatin1() + GetArg("-wallet", "wallet.dat")));
+#else
+    ui->labelInfoBerkeley->setText(tr("No information"));
+#endif
 }
 
 
 void SettingsInformationWidget::loadClientModel(){
     if (clientModel && clientModel->getPeerTableModel() && clientModel->getBanTableModel()) {
         // Provide initial values
+        ui->labelInfoClient->setText(clientModel->formatFullVersion());
+        ui->labelInfoAgent->setText(clientModel->clientName());
+        ui->labelInfoTime->setText(clientModel->formatClientStartupTime());
+        ui->labelInfoName->setText(QString::fromStdString(Params().NetworkIDString()));
+
+
         /* TODO: Complete me..
         ui->clientVersion->setText(model->formatFullVersion());
         ui->clientName->setText(model->clientName());

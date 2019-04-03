@@ -28,16 +28,10 @@ SettingsConsoleWidget::SettingsConsoleWidget(PIVXGUI* _window, QWidget *parent) 
     shadowEffect->setYOffset(3);
     shadowEffect->setBlurRadius(6);
 
-    QGraphicsDropShadowEffect* shadowEffect2 = new QGraphicsDropShadowEffect();
-    shadowEffect2->setColor(QColor(0, 0, 0, 22));
-    shadowEffect2->setXOffset(0);
-    shadowEffect2->setYOffset(3);
-    shadowEffect2->setBlurRadius(6);
-
     // Console container
 
     ui->consoleWidget->setProperty("cssClass", "container-square");
-    ui->consoleWidget->setGraphicsEffect(shadowEffect2);
+    ui->consoleWidget->setGraphicsEffect(shadowEffect);
 
     // Edit
 

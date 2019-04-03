@@ -33,6 +33,7 @@ public:
 public slots:
     void onRequestClicked();
     void onMyAddressesClicked();
+    void onNewAddressClicked();
     
 private slots:
     void changeTheme(bool isLightTheme, QString &theme);
@@ -48,12 +49,13 @@ private:
 
     QSpacerItem *spacer = nullptr;
 
-    // Cached last address, todo: use a pointer here..
+    // Cached last address
     SendCoinsRecipient *info = nullptr;
     // Cached qr
     QPixmap *qrImage = nullptr;
 
     void updateQr(QString address);
+    void updateLabel();
 
 };
 

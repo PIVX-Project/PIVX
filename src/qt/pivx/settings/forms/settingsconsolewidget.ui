@@ -119,7 +119,11 @@
             <height>300</height>
            </size>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_4"/>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QTextEdit" name="messagesWidget"/>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>

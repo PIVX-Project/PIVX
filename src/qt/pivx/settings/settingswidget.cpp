@@ -23,7 +23,7 @@
 
 
 SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
-    QWidget(parent),
+    PWidget(_window, parent),
     ui(new Ui::SettingsWidget),
     window(_window)
 {
@@ -172,6 +172,10 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
 
     // Style
     connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
+}
+
+void SettingsWidget::loadClientModel(){
+    this->settingsInformationWidget->setClientModel(this->clientModel);
 }
 
 void SettingsWidget::onFileClicked() {
