@@ -34,7 +34,15 @@ public:
     }
 
     void init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const override{
-        static_cast<AddressLabelRow*>(holder)->updateState(isLightTheme, isHovered, isSelected);
+        AddressLabelRow* row = static_cast<AddressLabelRow*>(holder);
+
+        row->updateState(isLightTheme, isHovered, isSelected);
+
+        QString address = index.data(Qt::DisplayRole).toString();
+        QModelIndex sibling = index.siblingAtColumn(AddressTableModel::Label);
+        QString label = sibling.data(Qt::DisplayRole).toString();
+
+        row->updateView(address, label);
     }
 
     QColor rectColor(bool isHovered, bool isSelected) override{
@@ -125,7 +133,7 @@ AddressesWidget::AddressesWidget(PIVXGUI* _window, QWidget *parent) :
 
 
     ui->lineEditName->setPlaceholderText("e.g John doe ");
-    ui->lineEditName->setProperty("cssClass", "edit-primary");
+    setCssEditLine(ui->lineEditName, true);
     ui->lineEditName->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEditName->setGraphicsEffect(shadowEffect);
 
@@ -135,7 +143,7 @@ AddressesWidget::AddressesWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelAddress->setProperty("cssClass", "text-title");
 
     ui->lineEditAddress->setPlaceholderText("e.g D7VFR83SQbiezrW72hjc…");
-    ui->lineEditAddress->setProperty("cssClass", "edit-primary");
+    setCssEditLine(ui->lineEditAddress, true);
     ui->lineEditAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEditAddress->setGraphicsEffect(shadowEffect);
 
@@ -170,18 +178,59 @@ void AddressesWidget::setWalletModel(WalletModel *model){
     this->walletModel = model;
     if(model) {
         addressTablemodel = model->getAddressTableModel();
-        ui->listAddresses->setModel(this->addressTablemodel);
+        this->filter = new AddressFilterProxyModel(AddressTableModel::Send, this);
+        this->filter->setSourceModel(addressTablemodel);
+        ui->listAddresses->setModel(this->filter);
+        ui->listAddresses->setModelColumn(AddressTableModel::Address);
 
-        if(addressTablemodel->size() == 0){
+
+        if(addressTablemodel->sizeSend() == 0){
             ui->emptyContainer->setVisible(true);
-            ui->lineEditAddress->setVisible(false);
+            ui->listAddresses->setVisible(false);
+        }else{
+            ui->emptyContainer->setVisible(false);
+            ui->listAddresses->setVisible(true);
         }
     }
 }
 
 void AddressesWidget::onStoreContactClicked(){
-    // TODO: Complete me.. change this for events..
-    //window->openSnackbar("Contact Stored");
+
+    QString label = ui->lineEditName->text();
+    QString address = ui->lineEditAddress->text();
+
+    // TODO: Update address status on text change..
+    if(!walletModel->validateAddress(address)){
+        setCssEditLine(ui->lineEditAddress, false, true);
+        emit message("",tr("Invalid Contact Address"), CClientUIInterface::MSG_INFORMATION);
+        return;
+    }
+
+    CBitcoinAddress pivAdd = CBitcoinAddress(address.toUtf8().constData());
+    if(walletModel->isMine(pivAdd)){
+        setCssEditLine(ui->lineEditAddress, false, true);
+        emit message("",tr("Cannot store your own address as contact"), CClientUIInterface::MSG_INFORMATION);
+        return;
+    }
+
+    if(walletModel->updateAddressBookLabels(pivAdd.Get(), label.toUtf8().constData(), "send")){
+        // TODO: Complete me..
+        ui->lineEditAddress->setText("");
+        ui->lineEditName->setText("");
+        setCssEditLine(ui->lineEditAddress, true, true);
+        setCssEditLine(ui->lineEditName, true, true);
+
+        if(ui->emptyContainer->isVisible()){
+            ui->emptyContainer->setVisible(false);
+            ui->listAddresses->setVisible(true);
+        }
+
+        emit message("",tr("New Contact Stored"), CClientUIInterface::MSG_INFORMATION);
+    }else{
+        emit message("",tr("Error Storing Contact"), CClientUIInterface::MSG_INFORMATION);
+    }
+
+
 }
 
 void AddressesWidget::changeTheme(bool isLightTheme, QString& theme){

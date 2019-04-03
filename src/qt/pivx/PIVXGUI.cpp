@@ -466,9 +466,11 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     dashboard->setWalletModel(walletModel);
     receiveWidget->setWalletModel(walletModel);
     sendWidget->setModel(walletModel);
+    addressesWidget->setWalletModel(walletModel);
 
     // Connect actions..
     connect(sendWidget, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
+    connect(topBar, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
 
 
     return true;

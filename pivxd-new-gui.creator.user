@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.7.1, 2019-04-01T12:27:05. -->
+<!-- Written by QtCreator 4.7.1, 2019-04-03T17:43:18. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -170,8 +170,8 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Arguments"></value>
-    <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Executable"></value>
+    <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Arguments">-testnet -datadir=&quot;/Users/furszy/Desktop/pivx_testnet_remove_me&quot;</value>
+    <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Executable">/Users/furszy/Documents/pivx_wallet/PIVX_core_new_gui/src/qt/pivx-qt</value>
     <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.WorkingDirectory"></value>
     <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.WorkingDirectory.default"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Custom Executable</value>

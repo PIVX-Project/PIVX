@@ -36,6 +36,25 @@ LockUnlock::~LockUnlock()
     delete ui;
 }
 
+void LockUnlock::updateStatus(WalletModel::EncryptionStatus status){
+    switch (status){
+        case WalletModel::EncryptionStatus::Unlocked:
+            ui->pushButtonUnlocked->setChecked(true);
+            ui->pushButtonLocked->setChecked(false);
+            ui->pushButtonStaking->setChecked(false);
+            break;
+        case WalletModel::EncryptionStatus::UnlockedForAnonymizationOnly:
+            ui->pushButtonUnlocked->setChecked(false);
+            ui->pushButtonLocked->setChecked(false);
+            ui->pushButtonStaking->setChecked(true);
+            break;
+        case WalletModel::EncryptionStatus::Locked:
+            ui->pushButtonUnlocked->setChecked(false);
+            ui->pushButtonLocked->setChecked(true);
+            ui->pushButtonStaking->setChecked(false);
+            break;
+    }
+}
 
 void LockUnlock::onLockClicked(){
     lock = 0;

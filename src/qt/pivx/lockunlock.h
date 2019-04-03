@@ -2,6 +2,7 @@
 #define LOCKUNLOCK_H
 
 #include <QWidget>
+#include "walletmodel.h"
 
 namespace Ui {
 class LockUnlock;
@@ -19,6 +20,7 @@ class LockUnlock : public QWidget
 public:
     explicit LockUnlock(QWidget *parent = nullptr);
     ~LockUnlock();
+    void updateStatus(WalletModel::EncryptionStatus status);
     int lock = 0;
 signals:
     void Mouse_Entered();

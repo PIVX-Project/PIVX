@@ -16,6 +16,7 @@ public:
     ~AddressLabelRow();
 
     void updateState(bool isLightTheme, bool isHovered, bool isSelected);
+    void updateView(QString address, QString label);
 protected:
     virtual void enterEvent(QEvent *);
     virtual void leaveEvent(QEvent *);

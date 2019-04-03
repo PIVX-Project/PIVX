@@ -4,6 +4,7 @@
 #include "addresstablemodel.h"
 #include "tooltipmenu.h"
 #include "furabstractlistitemdelegate.h"
+#include "qt/pivx/AddressFilterProxyModel.h"
 
 #include <QWidget>
 
@@ -32,6 +33,10 @@ public:
 
     void onNewContactClicked();
 
+signals:
+    // Fired when a message should be reported to the user
+    void message(const QString& title, const QString& message, unsigned int style);
+
 private slots:
     void handleAddressClicked(const QModelIndex &index);
     void onStoreContactClicked();
@@ -45,6 +50,7 @@ private:
 
     FurAbstractListItemDelegate* delegate;
     AddressTableModel* addressTablemodel;
+    AddressFilterProxyModel *filter;
 
     bool isOnMyAddresses = true;
     TooltipMenu* menu = nullptr;

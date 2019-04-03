@@ -93,7 +93,7 @@
         </property>
         <property name="icon">
          <iconset resource="resource.qrc">
-          <normaloff>:/res/img/ic-menu-hover.svg</normaloff>:/res/img/ic-menu-hover.svg</iconset>
+          <normaloff>://ic-menu-hover</normaloff>://ic-menu-hover</iconset>
         </property>
         <property name="iconSize">
          <size>

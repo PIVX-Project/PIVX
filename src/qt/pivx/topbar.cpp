@@ -6,6 +6,7 @@
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/receivedialog.h"
 #include "qt/pivx/walletpassworddialog.h"
+#include "askpassphrasedialog.h"
 
 #include "bitcoinunits.h"
 #include "clientmodel.h"
@@ -16,6 +17,7 @@
 #include "wallet.h"
 #include "walletmodel.h"
 #include "addresstablemodel.h"
+#include "ui_interface.h"
 
 
 TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
@@ -143,42 +145,68 @@ void TopBar::onThemeClicked(){
 
 void TopBar::onBtnLockClicked(){
 
-    if(!lockUnlockWidget){
-        lockUnlockWidget = new LockUnlock(this->mainWindow);
-        connect(lockUnlockWidget, SIGNAL(Mouse_Leave()), this, SLOT(lockDropdownMouseLeave()));
-        connect(lockUnlockWidget, SIGNAL(lockClicked(const StateClicked&)), this, SLOT(lockDropdownClicked(const StateClicked&)));
-    }
+    if(walletModel->getEncryptionStatus() == WalletModel::Unencrypted){
+        // Encrypt dialog
+        encryptWallet();
+    } else {
+        if (!lockUnlockWidget) {
+            lockUnlockWidget = new LockUnlock(this->mainWindow);
+            connect(lockUnlockWidget, SIGNAL(Mouse_Leave()), this, SLOT(lockDropdownMouseLeave()));
+            connect(lockUnlockWidget,
+                    SIGNAL(lockClicked(const StateClicked&)),
+                    this,
+                    SLOT(lockDropdownClicked(const StateClicked&))
+            );
+        }
 
-    lockUnlockWidget->setFixedWidth(ui->pushButtonLock->width());
-    lockUnlockWidget->adjustSize();
+        lockUnlockWidget->updateStatus(walletModel->getEncryptionStatus());
+        lockUnlockWidget->setFixedWidth(ui->pushButtonLock->width());
+        lockUnlockWidget->adjustSize();
 
-    lockUnlockWidget->move(
+        lockUnlockWidget->move(
                 ui->pushButtonLock->pos().rx() + this->mainWindow->getNavWidth() + 10,
                 ui->pushButtonLock->y() + 36
-                );
+        );
 
-    lockUnlockWidget->setStyleSheet("margin:0px; padding:0px;");
+        lockUnlockWidget->setStyleSheet("margin:0px; padding:0px;");
 
-    lockUnlockWidget->raise();
-    lockUnlockWidget->activateWindow();
-    lockUnlockWidget->show();
+        lockUnlockWidget->raise();
+        lockUnlockWidget->activateWindow();
+        lockUnlockWidget->show();
 
-    // Keep open
-    ui->pushButtonLock->setKeepExpanded(true);
+        // Keep open
+        ui->pushButtonLock->setKeepExpanded(true);
+
+    }
+}
+
+
+void TopBar::encryptWallet() {
+    if (!walletModel)
+        return;
+
+    AskPassphraseDialog dlg(AskPassphraseDialog::Mode::Encrypt, this,
+                            walletModel, AskPassphraseDialog::Context::Encrypt);
+    dlg.exec();
+
+    refreshStatus();
 }
 
 void TopBar::lockDropdownClicked(const StateClicked& state){
-    switch (state) {
-        case LOCK:
-            lockUnlockWidget->close();
-            this->showPasswordDialog();
-        break;
-        case UNLOCK_FOR_STAKING:
-            // Do something
-        break;
-        case UNLOCK:
-            // Nothing
-        break;
+    lockUnlockWidget->close();
+    if(walletModel) {
+        switch (state) {
+            case LOCK:
+                this->showPasswordDialog();
+                break;
+            case UNLOCK_FOR_STAKING:
+                // Do something
+
+                break;
+            case UNLOCK:
+                // Unlock..
+                break;
+        }
     }
 }
 
@@ -188,32 +216,50 @@ void TopBar::showPasswordDialog() {
     openDialogWithOpaqueBackgroundY(dialog, mainWindow, 3, 5);
 }
 
+static bool isExecuting = false;
 void TopBar::lockDropdownMouseLeave(){
-    lockUnlockWidget->close();
+    if(!isExecuting) {
+        isExecuting = true;
+        lockUnlockWidget->hide();
 
-    switch(lockUnlockWidget->lock){
-        case 0:{
-            ui->pushButtonLock->setButtonText("Wallet Locked");
-            ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-lock", true);
-            break;
+        if (walletModel) {
+            switch (lockUnlockWidget->lock) {
+                case 0: {
+                    walletModel->setWalletLocked(true);
+                    ui->pushButtonLock->setButtonText("Wallet Locked");
+                    ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-lock", true);
+                    break;
+                }
+                case 1: {
+                    AskPassphraseDialog dlg(AskPassphraseDialog::Mode::Unlock, this, walletModel,
+                                            AskPassphraseDialog::Context::ToggleLock);
+                    dlg.exec();
+                    if(this->walletModel->getEncryptionStatus() == WalletModel::Unlocked) {
+                        ui->pushButtonLock->setButtonText("Wallet Unlocked");
+                        ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-unlock", true);
+                    }
+                    break;
+                }
+                case 2: {
+                    AskPassphraseDialog dlg(AskPassphraseDialog::Mode::UnlockAnonymize, this, walletModel,
+                                            AskPassphraseDialog::Context::ToggleLock);
+                    dlg.exec();
+                    if(this->walletModel->getEncryptionStatus() == WalletModel::UnlockedForAnonymizationOnly) {
+                        ui->pushButtonLock->setButtonText("Wallet Unlocked for staking");
+                        ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-staking", true);
+                    }
+                    break;
+                }
+            }
         }
-        case 1:{
-            ui->pushButtonLock->setButtonText("Wallet Unlocked");
-            ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-unlock", true);
 
-            break;
-        }
-        case 2:{
-            ui->pushButtonLock->setButtonText("Wallet Unlocked for staking");
-            ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-staking", true);
-            break;
-        }
+        ui->pushButtonLock->setKeepExpanded(false);
+        ui->pushButtonLock->setSmall();
+
+        ui->pushButtonLock->update();
+
+        isExecuting = false;
     }
-
-    ui->pushButtonLock->setKeepExpanded(false);
-    ui->pushButtonLock->setSmall();
-
-    ui->pushButtonLock->update();
 
 }
 
@@ -225,7 +271,7 @@ void TopBar::onBtnReceiveClicked(){
         receiveDialog->updateQr(walletModel->getAddressTableModel()->getLastUnusedAddress());
         if (openDialogWithOpaqueBackground(receiveDialog, mainWindow)) {
             // TODO: Complete me..
-            //mainWindow->openSnackbar("Address Copied");
+            emit message("",tr("Address Copied"), CClientUIInterface::MSG_INFORMATION);
         }
     }
 }
@@ -364,7 +410,35 @@ void TopBar::setWalletModel(WalletModel *model){
     updateDisplayUnit();
 
     // TODO: Complete me..
-    //refreshWalletStatus();
+    refreshStatus();
+}
+
+void TopBar::refreshStatus(){
+    // Check lock status
+    if (!this->walletModel)
+        return;
+
+    WalletModel::EncryptionStatus encStatus = walletModel->getEncryptionStatus();
+
+    switch (encStatus){
+        case WalletModel::EncryptionStatus::Unencrypted:
+            ui->pushButtonLock->setButtonText("Wallet Unencrypted");
+            ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-unlock", true);
+            break;
+        case WalletModel::EncryptionStatus::Locked:
+            ui->pushButtonLock->setButtonText("Wallet Locked");
+            ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-lock", true);
+            break;
+        case WalletModel::EncryptionStatus::UnlockedForAnonymizationOnly:
+            ui->pushButtonLock->setButtonText("Wallet Unlocked for staking");
+            ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-staking", true);
+            break;
+        case WalletModel::EncryptionStatus::Unlocked:
+            ui->pushButtonLock->setButtonText("Wallet Unlocked");
+            ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-unlock", true);
+            break;
+    }
+    updateStyle(ui->pushButtonLock);
 }
 
 void TopBar::updateDisplayUnit()

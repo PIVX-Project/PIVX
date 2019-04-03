@@ -73,6 +73,8 @@ class AddressTablePriv
 public:
     CWallet* wallet;
     QList<AddressTableEntry> cachedAddressTable;
+    int sendNum = 0;
+    int recvNum = 0;
     AddressTableModel* parent;
 
     AddressTablePriv(CWallet* wallet, AddressTableModel* parent) : wallet(wallet), parent(parent) {}
@@ -91,6 +93,12 @@ public:
                 cachedAddressTable.append(AddressTableEntry(addressType,
                     QString::fromStdString(strName),
                     QString::fromStdString(address.ToString())));
+
+                if(item.second.purpose == "receive"){
+                    recvNum++;
+                }else if(item.second.purpose == "send"){
+                    sendNum++;
+                }
             }
         }
         // qLowerBound() and qUpperBound() require our cachedAddressTable list to be sorted in asc order
@@ -184,6 +192,14 @@ public:
         return cachedAddressTable.size();
     }
 
+    int sizeSend(){
+        return sendNum;
+    }
+
+    int sizeRecv(){
+        return recvNum;
+    }
+
     AddressTableEntry* index(int idx)
     {
         if (idx >= 0 && idx < cachedAddressTable.size()) {
@@ -218,8 +234,11 @@ int AddressTableModel::columnCount(const QModelIndex& parent) const
     return columns.length();
 }
 
-int AddressTableModel::size() const{
-    return priv->size();
+int AddressTableModel::sizeSend() const{
+    return priv->sizeSend();
+}
+int AddressTableModel::sizeRecv() const{
+    return priv->sizeRecv();
 }
 
 QVariant AddressTableModel::data(const QModelIndex& index, int role) const

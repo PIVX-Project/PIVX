@@ -14,6 +14,11 @@ AddressLabelRow::AddressLabelRow(bool isLightTheme, bool isHover , QWidget *pare
     updateState(isLightTheme, isHover, false);
 }
 
+void AddressLabelRow::updateView(QString address, QString label){
+    ui->lblAddress->setText(address);
+    ui->lblLabel->setText(label);
+}
+
 void AddressLabelRow::updateState(bool isLightTheme, bool isHovered, bool isSelected){
     if(isLightTheme)
         ui->lblDivisory->setStyleSheet("background-color:#bababa");
