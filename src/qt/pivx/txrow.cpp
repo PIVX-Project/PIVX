@@ -40,7 +40,6 @@ void TxRow::setType(bool isLightTheme, TransactionRecord::Type type){
     QString path;
     QString css;
     switch (type) {
-        case TransactionRecord::StakeMint:
         case TransactionRecord::ZerocoinMint:
             path = "://ic-transaction-mint";
             css = "text-list-amount-send";
@@ -48,6 +47,7 @@ void TxRow::setType(bool isLightTheme, TransactionRecord::Type type){
         case TransactionRecord::Generated:
         case TransactionRecord::StakeZPIV:
         case TransactionRecord::MNReward:
+        case TransactionRecord::StakeMint:
             path = "://ic-transaction-staked";
             css = "text-list-amount-send";
             break;

@@ -7,6 +7,8 @@
 #include <QModelIndex>
 #include <iostream>
 
+#define ADDRESS_SIZE 12
+
 QWidget* TxViewHolder::createHolder(int pos){
     return new TxRow(isLightTheme);
 }
@@ -23,6 +25,9 @@ void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered
     bool isConfirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
     QString amountText = BitcoinUnits::formatWithUnit(nDisplayUnit, amount, true, BitcoinUnits::separatorAlways);
     QModelIndex indexType = index.siblingAtColumn(TransactionTableModel::Type);
+    if(address.length() > 20) {
+        address = address.left(ADDRESS_SIZE) + "..." + address.right(ADDRESS_SIZE);
+    }
     QString label = indexType.data(Qt::DisplayRole).toString() + " " + address;
 
 

@@ -113,7 +113,7 @@
          <widget class="QWidget" name="layoutQR" native="true">
           <property name="maximumSize">
            <size>
-            <width>500</width>
+            <width>510</width>
             <height>16777215</height>
            </size>
           </property>
@@ -184,8 +184,17 @@
            </item>
            <item alignment="Qt::AlignHCenter">
             <widget class="QLabel" name="labelAddress">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
-              <string>D7VFR83SQbiezrW72hjcWJtcfip5krte2Z </string>
+              <string>D7VFR83SQbiezrW72hjcWJtcfip5krte2Z</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
