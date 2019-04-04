@@ -144,39 +144,35 @@ void TopBar::onThemeClicked(){
 
 
 void TopBar::onBtnLockClicked(){
+    if(walletModel) {
+        if (walletModel->getEncryptionStatus() == WalletModel::Unencrypted) {
+            // Encrypt dialog
+            encryptWallet();
+        } else {
+            if (!lockUnlockWidget) {
+                lockUnlockWidget = new LockUnlock(this->mainWindow);
+                connect(lockUnlockWidget, SIGNAL(Mouse_Leave()), this, SLOT(lockDropdownMouseLeave()));
+                connect(lockUnlockWidget, SIGNAL(lockClicked(const StateClicked&)),this, SLOT(lockDropdownClicked(const StateClicked&)));
+            }
 
-    if(walletModel->getEncryptionStatus() == WalletModel::Unencrypted){
-        // Encrypt dialog
-        encryptWallet();
-    } else {
-        if (!lockUnlockWidget) {
-            lockUnlockWidget = new LockUnlock(this->mainWindow);
-            connect(lockUnlockWidget, SIGNAL(Mouse_Leave()), this, SLOT(lockDropdownMouseLeave()));
-            connect(lockUnlockWidget,
-                    SIGNAL(lockClicked(const StateClicked&)),
-                    this,
-                    SLOT(lockDropdownClicked(const StateClicked&))
+            lockUnlockWidget->updateStatus(walletModel->getEncryptionStatus());
+            lockUnlockWidget->setFixedWidth(ui->pushButtonLock->width());
+            lockUnlockWidget->adjustSize();
+
+            lockUnlockWidget->move(
+                    ui->pushButtonLock->pos().rx() + this->mainWindow->getNavWidth() + 10,
+                    ui->pushButtonLock->y() + 36
             );
+
+            lockUnlockWidget->setStyleSheet("margin:0px; padding:0px;");
+
+            lockUnlockWidget->raise();
+            lockUnlockWidget->activateWindow();
+            lockUnlockWidget->show();
+
+            // Keep open
+            ui->pushButtonLock->setKeepExpanded(true);
         }
-
-        lockUnlockWidget->updateStatus(walletModel->getEncryptionStatus());
-        lockUnlockWidget->setFixedWidth(ui->pushButtonLock->width());
-        lockUnlockWidget->adjustSize();
-
-        lockUnlockWidget->move(
-                ui->pushButtonLock->pos().rx() + this->mainWindow->getNavWidth() + 10,
-                ui->pushButtonLock->y() + 36
-        );
-
-        lockUnlockWidget->setStyleSheet("margin:0px; padding:0px;");
-
-        lockUnlockWidget->raise();
-        lockUnlockWidget->activateWindow();
-        lockUnlockWidget->show();
-
-        // Keep open
-        ui->pushButtonLock->setKeepExpanded(true);
-
     }
 }
 
@@ -192,64 +188,38 @@ void TopBar::encryptWallet() {
     refreshStatus();
 }
 
+static bool isExecuting = false;
 void TopBar::lockDropdownClicked(const StateClicked& state){
     lockUnlockWidget->close();
-    if(walletModel) {
-        switch (state) {
-            case LOCK:
-                this->showPasswordDialog();
-                break;
-            case UNLOCK_FOR_STAKING:
-                // Do something
-
-                break;
-            case UNLOCK:
-                // Unlock..
-                break;
-        }
-    }
-}
-
-void TopBar::showPasswordDialog() {
-    mainWindow->showHide(true);
-    WalletPasswordDialog* dialog = new WalletPasswordDialog(mainWindow);
-    openDialogWithOpaqueBackgroundY(dialog, mainWindow, 3, 5);
-}
-
-static bool isExecuting = false;
-void TopBar::lockDropdownMouseLeave(){
-    if(!isExecuting) {
+    if(walletModel && !isExecuting) {
         isExecuting = true;
-        lockUnlockWidget->hide();
 
-        if (walletModel) {
-            switch (lockUnlockWidget->lock) {
-                case 0: {
-                    walletModel->setWalletLocked(true);
-                    ui->pushButtonLock->setButtonText("Wallet Locked");
-                    ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-lock", true);
-                    break;
+        switch (lockUnlockWidget->lock) {
+            case 0: {
+                walletModel->setWalletLocked(true);
+                ui->pushButtonLock->setButtonText("Wallet Locked");
+                ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-lock", true);
+                break;
+            }
+            case 1: {
+                AskPassphraseDialog dlg(AskPassphraseDialog::Mode::Unlock, this, walletModel,
+                                        AskPassphraseDialog::Context::ToggleLock);
+                dlg.exec();
+                if (this->walletModel->getEncryptionStatus() == WalletModel::Unlocked) {
+                    ui->pushButtonLock->setButtonText("Wallet Unlocked");
+                    ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-unlock", true);
                 }
-                case 1: {
-                    AskPassphraseDialog dlg(AskPassphraseDialog::Mode::Unlock, this, walletModel,
-                                            AskPassphraseDialog::Context::ToggleLock);
-                    dlg.exec();
-                    if(this->walletModel->getEncryptionStatus() == WalletModel::Unlocked) {
-                        ui->pushButtonLock->setButtonText("Wallet Unlocked");
-                        ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-unlock", true);
-                    }
-                    break;
+                break;
+            }
+            case 2: {
+                AskPassphraseDialog dlg(AskPassphraseDialog::Mode::UnlockAnonymize, this, walletModel,
+                                        AskPassphraseDialog::Context::ToggleLock);
+                dlg.exec();
+                if (this->walletModel->getEncryptionStatus() == WalletModel::UnlockedForAnonymizationOnly) {
+                    ui->pushButtonLock->setButtonText("Wallet Unlocked for staking");
+                    ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-staking", true);
                 }
-                case 2: {
-                    AskPassphraseDialog dlg(AskPassphraseDialog::Mode::UnlockAnonymize, this, walletModel,
-                                            AskPassphraseDialog::Context::ToggleLock);
-                    dlg.exec();
-                    if(this->walletModel->getEncryptionStatus() == WalletModel::UnlockedForAnonymizationOnly) {
-                        ui->pushButtonLock->setButtonText("Wallet Unlocked for staking");
-                        ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-staking", true);
-                    }
-                    break;
-                }
+                break;
             }
         }
 
@@ -260,7 +230,19 @@ void TopBar::lockDropdownMouseLeave(){
 
         isExecuting = false;
     }
+}
 
+void TopBar::showPasswordDialog() {
+    mainWindow->showHide(true);
+    WalletPasswordDialog* dialog = new WalletPasswordDialog(mainWindow);
+    openDialogWithOpaqueBackgroundY(dialog, mainWindow, 3, 5);
+}
+
+void TopBar::lockDropdownMouseLeave(){
+    lockUnlockWidget->hide();
+    ui->pushButtonLock->setKeepExpanded(false);
+    ui->pushButtonLock->setSmall();
+    ui->pushButtonLock->update();
 }
 
 void TopBar::onBtnReceiveClicked(){
@@ -328,7 +310,7 @@ void TopBar::setNumBlocks(int count) {
 
     // Acquire current block source
     enum BlockSource blockSource = clientModel->getBlockSource();
-    std::string text;
+    std::string text = "";
     switch (blockSource) {
         case BLOCK_SOURCE_NETWORK:
             text = "Synchronizing..";
@@ -346,11 +328,13 @@ void TopBar::setNumBlocks(int count) {
             break;
     }
 
+    bool needState = true;
     if (masternodeSync.IsBlockchainSynced()) {
         if (masternodeSync.IsSynced()) {
             // Node synced
             text = "Synced";
             // TODO: Set synced icon to pushButtonSync here..
+            needState = false;
         }else{
 
             // TODO: Show out of sync warning
@@ -359,14 +343,17 @@ void TopBar::setNumBlocks(int count) {
                        masternodeSync.RequestedMasternodeAttempt + 1 :
                        MASTERNODE_SYNC_THRESHOLD;
             int progress = nAttempt + (masternodeSync.RequestedMasternodeAssets - 1) * MASTERNODE_SYNC_THRESHOLD;
-            text = std::string("Synchronizing additional data: %p%", progress);
+            if(progress >= 0){
+                text = std::string("Synchronizing additional data: %p%", progress);
+                needState = false;
+            }
         }
-
         //strSyncStatus = QString(masternodeSync.GetSyncStatus().c_str());
         //progressBarLabel->setText(strSyncStatus);
         //tooltip = strSyncStatus + QString("<br>") + tooltip;
+    }
 
-    }else{
+    if(needState) {
         // Represent time from last generated block in human readable text
         QDateTime lastBlockDate = clientModel->getLastBlockDate();
         QDateTime currentDate = QDateTime::currentDateTime();
@@ -386,12 +373,16 @@ void TopBar::setNumBlocks(int count) {
         } else {
             int years = secs / YEAR_IN_SECONDS;
             int remainder = secs % YEAR_IN_SECONDS;
-            timeBehindText = tr("%1 and %2").arg(tr("%n year(s)", "", years)).arg(tr("%n week(s)", "", remainder / WEEK_IN_SECONDS));
+            timeBehindText = tr("%1 and %2").arg(tr("%n year(s)", "", years)).arg(
+                    tr("%n week(s)", "", remainder / WEEK_IN_SECONDS));
         }
         QString timeBehind(" behind. Scanning block ");
         QString str = timeBehindText + timeBehind + QString::number(count);
         text = str.toUtf8().constData();
+    }
 
+    if(text.empty()){
+        text = "No block source available..";
     }
 
     ui->pushButtonSync->setButtonText(tr(text.data()));
@@ -405,6 +396,7 @@ void TopBar::setWalletModel(WalletModel *model){
     connect(model, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)), this,
             SLOT(updateBalances(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)));
     connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+    connect(model, SIGNAL(encryptionStatusChanged(int status)), this, SLOT(refreshStatus()));
 
     // update the display unit, to not use the default ("PIVX")
     updateDisplayUnit();

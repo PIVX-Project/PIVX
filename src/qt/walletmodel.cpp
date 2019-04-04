@@ -216,13 +216,21 @@ void WalletModel::updateTransaction()
 
 void WalletModel::updateAddressBook(const QString& address, const QString& label, bool isMine, const QString& purpose, int status)
 {
-    if (addressTableModel)
-        addressTableModel->updateEntry(address, label, isMine, purpose, status);
+    try {
+        if (addressTableModel)
+            addressTableModel->updateEntry(address, label, isMine, purpose, status);
+    }catch (...){
+        std::cout << "EXception updateAddressBook" << std::endl;
+    }
 }
 void WalletModel::updateAddressBook(const QString &pubCoin, const QString &isUsed, int status)
 {
-    if(addressTableModel)
-        addressTableModel->updateEntry(pubCoin, isUsed, status);
+    try{
+        if(addressTableModel)
+            addressTableModel->updateEntry(pubCoin, isUsed, status);
+    }catch (...){
+        std::cout << "EXception updateAddressBook" << std::endl;
+    }
 }
 
 

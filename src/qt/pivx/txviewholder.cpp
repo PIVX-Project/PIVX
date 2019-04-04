@@ -15,7 +15,8 @@ void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered
     TxRow *txRow = static_cast<TxRow*>(holder);
     txRow->updateStatus(isLightTheme, isHovered, isSelected);
 
-    TransactionRecord *rec = static_cast<TransactionRecord*>(index.internalPointer());
+    QModelIndex rIndex = (filter) ? filter->mapToSource(index) : index;
+    TransactionRecord *rec = static_cast<TransactionRecord*>(rIndex.internalPointer());
     QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
     QString address = index.data(Qt::DisplayRole).toString();
     qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();

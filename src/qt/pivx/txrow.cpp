@@ -2,7 +2,7 @@
 #include "qt/pivx/forms/ui_txrow.h"
 
 #include "guiutil.h"
-
+#include <iostream>
 
 TxRow::TxRow(bool isLightTheme, QWidget *parent) :
     QWidget(parent),
@@ -66,7 +66,12 @@ void TxRow::setType(bool isLightTheme, TransactionRecord::Type type){
             path = "://ic-transaction-sent";
             css = "text-list-amount-send";
             break;
+        case TransactionRecord::SendToSelf:
+            path = "://ic-transaction-mint";
+            css = "text-list-amount-send";
+            break;
         default:
+            std::cout << "type: " << type << std::endl;
             path = ":/icons/tx_inout";
             break;
     }

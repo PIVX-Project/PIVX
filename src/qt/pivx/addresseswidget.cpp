@@ -196,41 +196,42 @@ void AddressesWidget::setWalletModel(WalletModel *model){
 
 void AddressesWidget::onStoreContactClicked(){
 
-    QString label = ui->lineEditName->text();
-    QString address = ui->lineEditAddress->text();
+    if (walletModel) {
+        QString label = ui->lineEditName->text();
+        QString address = ui->lineEditAddress->text();
 
-    // TODO: Update address status on text change..
-    if(!walletModel->validateAddress(address)){
-        setCssEditLine(ui->lineEditAddress, false, true);
-        emit message("",tr("Invalid Contact Address"), CClientUIInterface::MSG_INFORMATION);
-        return;
-    }
-
-    CBitcoinAddress pivAdd = CBitcoinAddress(address.toUtf8().constData());
-    if(walletModel->isMine(pivAdd)){
-        setCssEditLine(ui->lineEditAddress, false, true);
-        emit message("",tr("Cannot store your own address as contact"), CClientUIInterface::MSG_INFORMATION);
-        return;
-    }
-
-    if(walletModel->updateAddressBookLabels(pivAdd.Get(), label.toUtf8().constData(), "send")){
-        // TODO: Complete me..
-        ui->lineEditAddress->setText("");
-        ui->lineEditName->setText("");
-        setCssEditLine(ui->lineEditAddress, true, true);
-        setCssEditLine(ui->lineEditName, true, true);
-
-        if(ui->emptyContainer->isVisible()){
-            ui->emptyContainer->setVisible(false);
-            ui->listAddresses->setVisible(true);
+        // TODO: Update address status on text change..
+        if (!walletModel->validateAddress(address)) {
+            setCssEditLine(ui->lineEditAddress, false, true);
+            emit message("", tr("Invalid Contact Address"), CClientUIInterface::MSG_INFORMATION);
+            return;
         }
 
-        emit message("",tr("New Contact Stored"), CClientUIInterface::MSG_INFORMATION);
-    }else{
-        emit message("",tr("Error Storing Contact"), CClientUIInterface::MSG_INFORMATION);
+        CBitcoinAddress pivAdd = CBitcoinAddress(address.toUtf8().constData());
+        if (walletModel->isMine(pivAdd)) {
+            setCssEditLine(ui->lineEditAddress, false, true);
+            emit message("", tr("Cannot store your own address as contact"), CClientUIInterface::MSG_INFORMATION);
+            return;
+        }
+
+        if (walletModel->updateAddressBookLabels(pivAdd.Get(), label.toUtf8().constData(), "send")) {
+            // TODO: Complete me..
+            ui->lineEditAddress->setText("");
+            ui->lineEditName->setText("");
+            setCssEditLine(ui->lineEditAddress, true, true);
+            setCssEditLine(ui->lineEditName, true, true);
+
+            if (ui->emptyContainer->isVisible()) {
+                ui->emptyContainer->setVisible(false);
+                ui->listAddresses->setVisible(true);
+            }
+
+            emit message("", tr("New Contact Stored"), CClientUIInterface::MSG_INFORMATION);
+        } else {
+            emit message("", tr("Error Storing Contact"), CClientUIInterface::MSG_INFORMATION);
+        }
+
     }
-
-
 }
 
 void AddressesWidget::changeTheme(bool isLightTheme, QString& theme){

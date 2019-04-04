@@ -3,6 +3,7 @@
 
 #include "qt/pivx/furlistrow.h"
 #include "bitcoinunits.h"
+#include <transactionfilterproxy.h>
 
 class TxViewHolder : public FurListRow<QWidget*>
 {
@@ -22,11 +23,16 @@ public:
     bool isLightTheme;
 
     void setDisplayUnit(int displayUnit){
-        nDisplayUnit = displayUnit;
+        this->nDisplayUnit = displayUnit;
+    }
+
+    void setFilter(TransactionFilterProxy *_filter){
+        this->filter = _filter;
     }
 
 private:
     int nDisplayUnit;
+    TransactionFilterProxy *filter = nullptr;
 };
 
 #endif // TXVIEWHOLDER_H

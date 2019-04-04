@@ -335,10 +335,12 @@ void PIVXGUI::message(const QString& title, const QString& message, unsigned int
                 *ret = r == QMessageBox::Ok;
         } else
             notificator->notify((Notificator::Class) nNotifyIcon, strTitle, message);
+
+    // TODO: Furszy remove this please..
     } catch (std::exception &e){
-        LogPrintf("ERROR PIVXGUI..\n");
-        LogPrintf(e.what());
-        LogPrintf("ERROR PIVXGUI..\n");
+        LogPrintf("ERROR in message PIVXGUI.. %s\n", e.what());
+    } catch (...){
+        LogPrintf("ERROR in message  PIVXGUI..\n");
     }
 }
 
@@ -362,6 +364,13 @@ void PIVXGUI::showNormalIfMinimized(bool fToggleHidden)
         hide();
 }
 
+void PIVXGUI::detectShutdown() {
+    if (ShutdownRequested()) {
+        if (rpcConsole)
+            rpcConsole->hide();
+        qApp->quit();
+    }
+}
 
 void PIVXGUI::goToDashboard(){
     if(stackedContainer->currentWidget() != dashboard){
@@ -507,11 +516,11 @@ static bool ThreadSafeMessageBox(PIVXGUI* gui, const std::string& message, const
     bool ret = false;
     // In case of modal message, use blocking connection to wait for user to click a button
     QMetaObject::invokeMethod(gui, "message",
-                              modal ? GUIUtil::blockingGUIThreadConnection() : Qt::QueuedConnection,
-                              Q_ARG(QString, QString::fromStdString(caption)),
-                              Q_ARG(QString, QString::fromStdString(message)),
-                              Q_ARG(unsigned int, style),
-                              Q_ARG(bool*, &ret));
+              modal ? GUIUtil::blockingGUIThreadConnection() : Qt::QueuedConnection,
+              Q_ARG(QString, QString::fromStdString(caption)),
+              Q_ARG(QString, QString::fromStdString(message)),
+              Q_ARG(unsigned int, style),
+              Q_ARG(bool*, &ret));
     return ret;
 }
 

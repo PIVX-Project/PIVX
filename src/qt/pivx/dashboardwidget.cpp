@@ -278,6 +278,7 @@ void DashboardWidget::setWalletModel(WalletModel* model){
         filter = new TransactionFilterProxy();
         filter->setSourceModel(txModel);
         filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
+        txHolder->setFilter(filter);
 
         ui->listTransactions->setModel(filter);
         ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);

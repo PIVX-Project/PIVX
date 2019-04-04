@@ -61,7 +61,7 @@
        <height>85</height>
       </size>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,0,2">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="4,2,0">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -93,7 +93,7 @@
         </property>
         <widget class="QWidget" name="page_4">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>

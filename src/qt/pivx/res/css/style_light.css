@@ -474,6 +474,10 @@ QPushButton[cssClass="btn-check-lock-sub-menu-unlocked"]:checked {
     background-color:#50b088ff;
 }
 
+QPushButton[cssClass="btn-check-lock-sub-menu-unlocked"]:hover {
+    color:#FFFFFF;
+}
+
 QPushButton[cssClass="btn-check-lock-sub-menu-locked"] {
     background-image: url("://ic-submenu-lock");
     background-position:left center;
@@ -488,6 +492,10 @@ QPushButton[cssClass="btn-check-lock-sub-menu-locked"] {
 
 QPushButton[cssClass="btn-check-lock-sub-menu-locked"]:checked {
     background-color:#50b088ff;
+}
+
+QPushButton[cssClass="btn-check-lock-sub-menu-locked"]:hover {
+    color:#FFFFFF;
 }
 
 
@@ -505,6 +513,10 @@ QPushButton[cssClass="btn-check-lock-sub-menu-staking"] {
 
 QPushButton[cssClass="btn-check-lock-sub-menu-staking"]:checked {
     background-color:#50b088ff;
+}
+
+QPushButton[cssClass="btn-check-lock-sub-menu-staking"]:hover {
+    color:#FFFFFF;
 }
 
 
