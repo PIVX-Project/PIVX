@@ -53,8 +53,13 @@ SendConfirmDialog::SendConfirmDialog(QWidget *parent) :
     ui->btnSave->setProperty("cssClass", "btn-primary");
 
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
-
+    connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(accept()));
     connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
+}
+
+void SendConfirmDialog::accept(){
+    this->confirm = true;
+    QDialog::accept();
 }
 
 SendConfirmDialog::~SendConfirmDialog()

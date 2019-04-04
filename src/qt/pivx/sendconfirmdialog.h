@@ -15,8 +15,14 @@ public:
     explicit SendConfirmDialog(QWidget *parent = nullptr);
     ~SendConfirmDialog();
 
+    bool isConfirm() { return confirm;}
+
+public slots:
+    void accept() override;
+
 private:
     Ui::SendConfirmDialog *ui;
+    bool confirm = false;
 };
 
 #endif // SENDCONFIRMDIALOG_H

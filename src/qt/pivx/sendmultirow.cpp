@@ -75,10 +75,12 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
 }
 
 void SendMultiRow::amountChanged(const QString& amount){
-    CAmount value = getAmountValue(amount);
-    if(value > 0){
-        // BitcoinUnits::format(displayUnit, value, false, BitcoinUnits::separatorAlways);
-        ui->lineEditAmount->setText(amount);
+    if(!amount.isEmpty()) {
+        CAmount value = getAmountValue(amount);
+        if (value > 0) {
+            // BitcoinUnits::format(displayUnit, value, false, BitcoinUnits::separatorAlways);
+            ui->lineEditAmount->setText(amount);
+        }
     }
 }
 
@@ -92,15 +94,18 @@ CAmount SendMultiRow::getAmountValue(QString amount){
 }
 
 bool SendMultiRow::addressChanged(const QString& str){
-    QString trimmedStr = str.trimmed();
-    bool valid = model->validateAddress(trimmedStr);
-    if (!valid){
-        ui->lineEditAddress->setProperty("cssClass","edit-primary-multi-book-error");
-    }else{
-        ui->lineEditAddress->setProperty("cssClass","edit-primary-multi-book");
+    if(!str.isEmpty()) {
+        QString trimmedStr = str.trimmed();
+        bool valid = model->validateAddress(trimmedStr);
+        if (!valid) {
+            ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book-error");
+        } else {
+            ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book");
+        }
+        updateStyle(ui->lineEditAddress);
+        return valid;
     }
-    updateStyle(ui->lineEditAddress);
-    return valid;
+    return false;
 }
 
 

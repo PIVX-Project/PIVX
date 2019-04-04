@@ -111,7 +111,7 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelTitleTotalSend->setText("Total to send");
     ui->labelTitleTotalSend->setProperty("cssClass", "text-title");
 
-    ui->labelAmountSend->setText("0.0 zPIV");
+    ui->labelAmountSend->setText("0.00 zPIV");
     ui->labelAmountSend->setProperty("cssClass", "text-body1");
 
     // Total Remaining
@@ -121,25 +121,6 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
 
     ui->labelAmountRemaining->setText("1000 zPIV");
     ui->labelAmountRemaining->setProperty("cssClass", "text-body1");
-
-    // Contact Button
-/*
-    btnContacts->setProperty("cssClass", "btn-dropdown");
-    btnContacts->setCheckable(true);
-
-    QSize BUTTON_CONTACT_SIZE = QSize(24, 24);
-    btnContacts->setMinimumSize(BUTTON_CONTACT_SIZE);
-    btnContacts->setMaximumSize(BUTTON_CONTACT_SIZE);
-
-    ui->stackedWidget_2->addWidget(btnContacts);
-
-    btnContacts->show();
-    btnContacts->raise();
-
-    int posXX = ui->lineEditAddress->width() - 30;
-    int posYY = 12;
-    btnContacts->move(450, posYY);
-*/
 
     // Icon Send
     ui->stackedWidget->addWidget(coinIcon);
@@ -230,6 +211,7 @@ void SendWidget::addEntry(){
             entry->setNumber(1);
         }else if(entries.length() == MAX_SEND_POPUP_ENTRIES){
             // TODO: Snackbar notifying that it surpassed the max amount of entries
+            emit message("", tr("Maximum amount of outputs reached"),CClientUIInterface::MSG_INFORMATION);
             return;
         }
 
@@ -249,11 +231,6 @@ void SendWidget::onAddEntryClicked(){
 
 void SendWidget::resizeEvent(QResizeEvent *event)
  {
-    /*
-    int posXX = ui->lineEditAddress->width() - 30;
-    int posYY = 12;
-    btnContacts->move(posXX, posYY);
-    */
     //resizeMenu();
     QWidget::resizeEvent(event);
  }
@@ -274,6 +251,7 @@ void SendWidget::onSendClicked(){
             recipients.append(entry->getValue());
         }else{
             // Invalid entry.. todo: notificate user about this.
+            emit message("", tr("Invalid entry"),CClientUIInterface::MSG_INFORMATION);
             return;
         }
 
@@ -281,6 +259,7 @@ void SendWidget::onSendClicked(){
 
     if (recipients.isEmpty()) {
         //todo: notificate user about this.
+        emit message("", tr("No set recipients"),CClientUIInterface::MSG_INFORMATION);
         return;
     }
 
@@ -295,6 +274,7 @@ void SendWidget::onSendClicked(){
             // Unlock wallet was cancelled
             //TODO: Check what is this --> fNewRecipientAllowed = true;
             // TODO: Notify the user..
+            emit message("", tr("Cannot send, wallet locked"),CClientUIInterface::MSG_INFORMATION);
             return;
         }
         send(recipients);
@@ -303,13 +283,6 @@ void SendWidget::onSendClicked(){
 
     // already unlocked or not encrypted at all
     send(recipients);
-
-
-    /*
-    window->showHide(true);
-    SendConfirmDialog* dialog = new SendConfirmDialog(window);
-    openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
-     */
 
 }
 
@@ -335,12 +308,34 @@ void SendWidget::send(QList<SendCoinsRecipient> recipients){
     if (prepareStatus.status != WalletModel::OK) {
         // TODO: Check why this??
         //fNewRecipientAllowed = true;
+        emit message("", tr("Prepare status failed.."),CClientUIInterface::MSG_INFORMATION);
         return;
     }
 
     CAmount txFee = currentTransaction.getTransactionFee();
+    CAmount totalAmount = currentTransaction.getTotalTransactionAmount() + txFee;
 
-    std::cout << "hey, final" << std::endl;
+    window->showHide(true);
+    SendConfirmDialog* dialog = new SendConfirmDialog(window);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    bool ret = openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
+
+    if(dialog->isConfirm()){
+        // now send the prepared transaction
+        WalletModel::SendCoinsReturn sendStatus = walletModel->sendCoins(currentTransaction);
+        // process sendStatus and on error generate message shown to user
+        processSendCoinsReturn(sendStatus);
+
+        // TODO: Update
+        if (sendStatus.status == WalletModel::OK) {
+            //CoinControlDialog::coinControl->UnSelectAll();
+            //coinControlUpdateLabels();
+            //
+            clearEntries();
+            emit message("", tr("Transaction sent"),CClientUIInterface::MSG_INFORMATION);
+        }
+
+    }
 
 }
 

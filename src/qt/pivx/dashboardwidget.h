@@ -5,6 +5,7 @@
 #include "qt/pivx/furlistrow.h"
 #include "transactiontablemodel.h"
 #include "qt/pivx/txviewholder.h"
+#include "transactionfilterproxy.h"
 
 #include <QWidget>
 #include <QLineEdit>
@@ -68,6 +69,7 @@ private:
     PIVXGUI* window;
     // Painter delegate
     FurAbstractListItemDelegate* txViewDelegate;
+    TransactionFilterProxy* filter;
     TxViewHolder* txHolder;
     // Model
     WalletModel* walletModel;
