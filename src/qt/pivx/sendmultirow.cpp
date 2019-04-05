@@ -144,12 +144,10 @@ bool SendMultiRow::validate()
         return retval;
 
     // Check address validity, returns false if it's invalid
-    retval = addressChanged(ui->lineEditAddress->text());
+    QString address = ui->lineEditAddress->text();
+    retval = addressChanged(address);
 
     CAmount value = getAmountValue(ui->lineEditAmount->text());
-    if(value == -1){
-        retval = false;
-    }
 
     // Sending a zero amount is invalid
     if (value <= 0) {
@@ -158,7 +156,7 @@ bool SendMultiRow::validate()
     }
 
     // Reject dust outputs:
-    if (retval && GUIUtil::isDust(ui->lineEditAddress->text(), value)) {
+    if (retval && GUIUtil::isDust(address, value)) {
         setCssEditLine(ui->lineEditAmount, false, true);
         retval = false;
     }

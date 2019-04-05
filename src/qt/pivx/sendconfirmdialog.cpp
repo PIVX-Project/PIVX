@@ -1,5 +1,8 @@
 #include "qt/pivx/sendconfirmdialog.h"
 #include "qt/pivx/forms/ui_sendconfirmdialog.h"
+#include "bitcoinunits.h"
+#include "walletmodel.h"
+#include <QList>
 
 SendConfirmDialog::SendConfirmDialog(QWidget *parent) :
     QDialog(parent),
@@ -49,17 +52,37 @@ SendConfirmDialog::SendConfirmDialog(QWidget *parent) :
     ui->btnEsc->setProperty("cssClass", "ic-close");
 
     ui->btnCancel->setProperty("cssClass", "btn-dialog-cancel");
-    ui->btnSave->setText("SAVE");
+    ui->btnSave->setText("SEND");
     ui->btnSave->setProperty("cssClass", "btn-primary");
 
+    // hide change address for now
+    //ui->labelChange->setVisible(false);
+    //ui->textChange->setVisible(false);
+    ui->contentConfirmations->setVisible(false);
+
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
-    connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(accept()));
     connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(acceptTx()));
 }
 
-void SendConfirmDialog::accept(){
+void SendConfirmDialog::setData(WalletModelTransaction tx){
+
+    CAmount txFee = tx.getTransactionFee();
+    CAmount totalAmount = tx.getTotalTransactionAmount() + txFee;
+
+    ui->textAmount->setText(BitcoinUnits::formatWithUnit(nDisplayUnit, totalAmount, false, BitcoinUnits::separatorAlways));
+    if(tx.getRecipients().size() == 1){
+        ui->textSend->setText(tx.getRecipients().at(0).address);
+    }else{
+        ui->textSend->setText(QString::number(tx.getRecipients().size()) + " recipients");
+    }
+    ui->textInputs->setText(QString::number(tx.getTransaction()->vin.size()));
+    ui->textFee->setText(BitcoinUnits::formatWithUnit(nDisplayUnit, txFee, false, BitcoinUnits::separatorAlways));
+}
+
+void SendConfirmDialog::acceptTx(){
     this->confirm = true;
-    QDialog::accept();
+    accept();
 }
 
 SendConfirmDialog::~SendConfirmDialog()

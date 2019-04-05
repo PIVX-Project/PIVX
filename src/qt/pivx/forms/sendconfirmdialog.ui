@@ -223,7 +223,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Amount:</string>
+            <string>Total amount</string>
            </property>
           </widget>
          </item>

@@ -2,6 +2,7 @@
 #define SENDCONFIRMDIALOG_H
 
 #include <QDialog>
+#include "walletmodeltransaction.h"
 
 namespace Ui {
 class SendConfirmDialog;
@@ -15,13 +16,17 @@ public:
     explicit SendConfirmDialog(QWidget *parent = nullptr);
     ~SendConfirmDialog();
 
-    bool isConfirm() { return confirm;}
+    bool isConfirm() { return this->confirm;}
+
+    void setData(WalletModelTransaction tx);
+    void setDisplayUnit(int unit){this->nDisplayUnit = unit;};
 
 public slots:
-    void accept() override;
+    void acceptTx();
 
 private:
     Ui::SendConfirmDialog *ui;
+    int nDisplayUnit = 0;
     bool confirm = false;
 };
 

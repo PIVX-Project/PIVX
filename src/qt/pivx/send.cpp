@@ -51,6 +51,7 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     /* Button Group */
     ui->pushLeft->setText("PIV");
     ui->pushLeft->setProperty("cssClass", "btn-check-left");
+    ui->pushLeft->setChecked(true);
     ui->pushRight->setText("zPIV");
     ui->pushRight->setProperty("cssClass", "btn-check-right");
 
@@ -201,9 +202,7 @@ void SendWidget::clearEntries(){
 
 void SendWidget::addEntry(){
     if(entries.isEmpty()){
-        SendMultiRow *sendMultiRow = new SendMultiRow(this);
-        entries.append(sendMultiRow);
-        ui->scrollAreaWidgetContents->layout()->addWidget(sendMultiRow);
+        createEntry();
     } else {
         if (entries.length() == 1) {
             SendMultiRow *entry = entries.at(0);
@@ -215,13 +214,18 @@ void SendWidget::addEntry(){
             return;
         }
 
-        SendMultiRow *sendMultiRow = new SendMultiRow(this);
-        sendMultiRow->setModel(this->walletModel);
-        entries.append(sendMultiRow);
+        SendMultiRow *sendMultiRow = createEntry();
         sendMultiRow->setNumber(entries.length());
         sendMultiRow->hideLabels();
-        ui->scrollAreaWidgetContents->layout()->addWidget(sendMultiRow);
     }
+}
+
+SendMultiRow* SendWidget::createEntry(){
+    SendMultiRow *sendMultiRow = new SendMultiRow(this);
+    if(this->walletModel)sendMultiRow->setModel(this->walletModel);
+    entries.append(sendMultiRow);
+    ui->scrollAreaWidgetContents->layout()->addWidget(sendMultiRow);
+    return sendMultiRow;
 }
 
 void SendWidget::onAddEntryClicked(){
@@ -317,7 +321,10 @@ void SendWidget::send(QList<SendCoinsRecipient> recipients){
 
     window->showHide(true);
     SendConfirmDialog* dialog = new SendConfirmDialog(window);
-    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setDisplayUnit(walletModel->getOptionsModel()->getDisplayUnit());
+
+    dialog->setData(currentTransaction);
+
     bool ret = openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
 
     if(dialog->isConfirm()){
@@ -336,6 +343,8 @@ void SendWidget::send(QList<SendCoinsRecipient> recipients){
         }
 
     }
+
+    dialog->deleteLater();
 
 }
 

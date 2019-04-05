@@ -58,8 +58,8 @@ private:
     QPushButton *coinIcon;
     QPushButton *btnContacts;
 
-    ClientModel* clientModel;
-    WalletModel* walletModel;
+    ClientModel* clientModel = nullptr;
+    WalletModel* walletModel = nullptr;
 
     QList<SendMultiRow*> entries;
 
@@ -68,6 +68,7 @@ private:
 
     bool isPIV = true;
     void resizeMenu();
+    SendMultiRow* createEntry();
     void send(QList<SendCoinsRecipient> recipients);
 
     // Process WalletModel::SendCoinsReturn and generate a pair consisting

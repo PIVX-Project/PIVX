@@ -1001,8 +1001,8 @@ QLineEdit[cssClass="edit-primary-book"]:hover {
     font-size:18px;
     border-radius: 2px;
     padding:8px;
-    padding-right: 60px;
-    padding-left: 14px;
+    padding-right: 12px;
+    padding-left: 12px;
     color: #707070;
     text-align:left;
 }
@@ -1028,8 +1028,8 @@ QLineEdit[cssClass="edit-primary-multi-book"]:hover {
     font-size:18px;
     border-radius: 2px;
     padding:8px;
-    padding-right: 60px;
-    padding-left: 14px;
+    padding-right: 12px;
+    padding-left: 12px;
     color: #707070;
     text-align:left;
 }
@@ -1043,7 +1043,8 @@ QLineEdit[cssClass="edit-primary-multi-book"]:hover {
     font-size:18px;
     border-radius: 2px;
     padding:8px;
-    padding-right: 60px;
+    padding-right: 12px;
+    padding-left: 12px;
     color: #707070;
     text-align:left;
 }
@@ -2332,3 +2333,13 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     font-size:20px;
 }
 
+
+/*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+HH        LOADING
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
+
+
+*[cssClass="text-loading"]{
+    color:#4d4d4d;
+    font-size:20px;
+}
