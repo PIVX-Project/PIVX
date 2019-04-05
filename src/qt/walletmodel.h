@@ -165,6 +165,8 @@ public:
 
     // Send coins to a list of recipients
     SendCoinsReturn sendCoins(WalletModelTransaction& transaction);
+    // Mint zPIV
+    bool mintCoins(CAmount value, CCoinControl* coinControl, std::string &strError);
 
     // Wallet encryption
     bool setWalletEncrypted(bool encrypted, const SecureString& passphrase);
