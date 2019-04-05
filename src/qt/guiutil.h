@@ -7,6 +7,7 @@
 #define BITCOIN_QT_GUIUTIL_H
 
 #include "amount.h"
+#include "askpassphrasedialog.h"
 
 #include <QEvent>
 #include <QHeaderView>
@@ -44,6 +45,9 @@ QFont bitcoinAddressFont();
 
 // Parse string into a CAmount value
 CAmount parseValue(const QString& text, int displayUnit, bool* valid_out = 0);
+
+// Request wallet unlock
+bool requestUnlock(WalletModel* walletModel, AskPassphraseDialog::Context context, bool relock);
 
 // Set up widgets for address and amounts
 void setupAddressWidget(QValidatedLineEdit* widget, QWidget* parent);
