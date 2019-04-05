@@ -279,7 +279,6 @@ void DashboardWidget::setWalletModel(WalletModel* model){
         filter->setSourceModel(txModel);
         filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
         txHolder->setFilter(filter);
-
         ui->listTransactions->setModel(filter);
         ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
 
@@ -290,7 +289,6 @@ void DashboardWidget::setWalletModel(WalletModel* model){
             connect(ui->pushImgEmpty, SIGNAL(clicked()), this, SLOT(openFAQ()));
             connect(ui->btnHowTo, SIGNAL(clicked()), this, SLOT(openFAQ()));
         }
-        // TODO: Update empty view when first txes appears..
     }
     // update the display unit, to not use the default ("PIV")
     updateDisplayUnit();

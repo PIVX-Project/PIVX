@@ -53,6 +53,8 @@ void LockUnlock::updateStatus(WalletModel::EncryptionStatus status){
             ui->pushButtonLocked->setChecked(true);
             ui->pushButtonStaking->setChecked(false);
             break;
+        default:
+            break;
     }
 }
 

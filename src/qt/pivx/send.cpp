@@ -271,23 +271,15 @@ void SendWidget::onSendClicked(){
     // this way we let users unlock by walletpassphrase or by menu
     // and make many transactions while unlocking through this dialog
     // will call relock
-    WalletModel::EncryptionStatus encStatus = walletModel->getEncryptionStatus();
-    if (encStatus == walletModel->Locked || encStatus == walletModel->UnlockedForAnonymizationOnly) {
-        WalletModel::UnlockContext ctx(walletModel->requestUnlock(AskPassphraseDialog::Context::Send_PIV, true));
-        if (!ctx.isValid()) {
-            // Unlock wallet was cancelled
-            //TODO: Check what is this --> fNewRecipientAllowed = true;
-            // TODO: Notify the user..
-            emit message("", tr("Cannot send, wallet locked"),CClientUIInterface::MSG_INFORMATION);
-            return;
-        }
-        send(recipients);
+    if(!GUIUtil::requestUnlock(walletModel, AskPassphraseDialog::Context::Send_PIV, true)){
+        // Unlock wallet was cancelled
+        //TODO: Check what is this --> fNewRecipientAllowed = true;
+        // TODO: Notify the user..
+        emit message("", tr("Cannot send, wallet locked"),CClientUIInterface::MSG_INFORMATION);
         return;
     }
-
-    // already unlocked or not encrypted at all
+    // send
     send(recipients);
-
 }
 
 void SendWidget::send(QList<SendCoinsRecipient> recipients){
@@ -325,7 +317,7 @@ void SendWidget::send(QList<SendCoinsRecipient> recipients){
 
     dialog->setData(currentTransaction);
 
-    bool ret = openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
+    openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
 
     if(dialog->isConfirm()){
         // now send the prepared transaction

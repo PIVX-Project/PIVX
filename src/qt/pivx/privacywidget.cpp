@@ -2,6 +2,7 @@
 #include "qt/pivx/forms/ui_privacywidget.h"
 #include <QFile>
 #include "qt/pivx/qtutils.h"
+#include "guiutil.h"
 #include "qt/pivx/coincontrolzpivdialog.h"
 #include "qt/pivx/denomgenerationdialog.h"
 #include <QGraphicsDropShadowEffect>
@@ -9,6 +10,8 @@
 #include "qt/pivx/furlistrow.h"
 #include "qt/pivx/txviewholder.h"
 #include "walletmodel.h"
+#include "optionsmodel.h"
+#include "coincontroldialog.h"
 
 #define DECORATION_SIZE 70
 #define NUM_ITEMS 3
@@ -110,18 +113,13 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelValueDenom5000->setText("0x5000 = 0 zPIV");
     ui->labelValueDenom5000->setProperty("cssClass", "text-body2");
 
-
     ui->layoutDenom->setVisible(false);
-
-
 
     // List
 
 
-    ui->labelListHistory->setText("Last Mints");
+    ui->labelListHistory->setText("Last Zerocoin Movements");
     ui->labelListHistory->setProperty("cssClass", "text-title");
-
-    ui->listView->setVisible(false);
 
     //ui->emptyContainer->setVisible(false);
     ui->pushImgEmpty->setProperty("cssClass", "img-empty-privacy");
@@ -163,11 +161,12 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
 
     // List
     ui->listView->setProperty("cssClass", "container");
+    txHolder = new TxViewHolder(isLightTheme());
     delegate = new FurAbstractListItemDelegate(
                 DECORATION_SIZE,
-                new TxViewHolder(isLightTheme()),
+                txHolder,
                 this
-                );
+    );
 
     ui->listView->setItemDelegate(delegate);
     ui->listView->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
@@ -178,10 +177,36 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
 }
 
 void PrivacyWidget::setWalletModel(WalletModel* _model){
-    model = _model->getTransactionTableModel();
-    ui->listView->setModel(this->model);
+    walletModel = _model;
+    if(walletModel) {
+        txModel = walletModel->getTransactionTableModel();
+        // Set up transaction list
+        filter = new TransactionFilterProxy();
+        filter->setSourceModel(txModel);
+        filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
+        filter->setShowZcTxes(true);
+        txHolder->setFilter(filter);
+        ui->listView->setModel(filter);
+
+        if (txModel->size() == 0) {
+            ui->emptyContainer->setVisible(true);
+            ui->listView->setVisible(false);
+            // TODO: Connect waiting for tx updates..
+        }else{
+            // TODO: Use show list method..
+            ui->emptyContainer->setVisible(false);
+            ui->listView->setVisible(true);
+        }
+
+        connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(onMintClicked()));
+    }
 }
 
+void PrivacyWidget::showList(){
+    // TODO: here if there is a zc mint/spend here
+    ui->emptyContainer->setVisible(false);
+    ui->listView->setVisible(true);
+}
 
 void PrivacyWidget::onTotalZpivClicked(){
 
@@ -193,6 +218,45 @@ void PrivacyWidget::onTotalZpivClicked(){
         ui->layoutDenom->setVisible(false);
     }
 
+}
+
+void PrivacyWidget::onMintClicked(){
+    if (!walletModel || !walletModel->getOptionsModel())
+        return;
+
+    if(GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
+        emit message(tr("Mint Zerocoin"), tr("Transaction sent"), CClientUIInterface::MSG_ERROR);
+        return;
+    }
+
+    if(!GUIUtil::requestUnlock(walletModel, AskPassphraseDialog::Context::Mint_zPIV, true)){
+        emit message("", tr("You need to unlock the wallet to be able to mint zPIV"), CClientUIInterface::MSG_INFORMATION);
+        return;
+    }
+
+    bool isValid = true;
+    CAmount value = GUIUtil::parseValue(
+            ui->lineEditAmount->text(),
+            walletModel->getOptionsModel()->getDisplayUnit(),
+            &isValid
+    );
+
+    if (value <= 0) {
+        setCssEditLine(ui->lineEditAmount, false, true);
+        emit message("", tr("Invalid value"), CClientUIInterface::MSG_INFORMATION);
+    }
+
+    // TODO: Launch confirmation dialog here..
+    std::string strError;
+    if(!walletModel->mintCoins(value, CoinControlDialog::coinControl, strError)){
+        emit message("", tr(strError.data()), CClientUIInterface::MSG_INFORMATION);
+    }else{
+        // Mint succeed
+        emit message("", tr("zPIV minted successfully"), CClientUIInterface::MSG_INFORMATION);
+
+        // clear
+        ui->lineEditAmount->clear();
+    }
 }
 
 
