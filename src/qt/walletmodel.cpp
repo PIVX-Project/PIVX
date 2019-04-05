@@ -436,6 +436,34 @@ bool WalletModel::mintCoins(CAmount value, CCoinControl* coinControl ,std::strin
     return strError.empty();
 }
 
+bool WalletModel::convertBackZpiv(
+        CAmount value,
+        vector<CZerocoinMint> &vMintsSelected,
+        bool fMintChange,
+        bool fMinimizeChange,
+        CZerocoinSpendReceipt &receipt,
+        CBitcoinAddress addressTo
+){
+
+    // address to must be from us.
+    if(!isMine(addressTo)){
+        receipt.SetStatus(_("To convert zPIV back to PIV the return address must be from your wallet"), ZPIV_SPEND_ERROR);
+        return false;
+    }
+
+    CWalletTx wtxNew;
+    return wallet->SpendZerocoin(
+            value,
+            100,
+            wtxNew,
+            receipt,
+            vMintsSelected,
+            fMintChange,
+            fMinimizeChange,
+            &addressTo
+    );
+}
+
 OptionsModel* WalletModel::getOptionsModel()
 {
     return optionsModel;

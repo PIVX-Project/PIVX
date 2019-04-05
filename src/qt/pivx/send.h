@@ -69,6 +69,7 @@ private:
     void resizeMenu();
     SendMultiRow* createEntry();
     void send(QList<SendCoinsRecipient> recipients);
+    void sendZpiv(QList<SendCoinsRecipient> recipients);
 
     // Process WalletModel::SendCoinsReturn and generate a pair consisting
     // of a message and message flags for use in emit message().

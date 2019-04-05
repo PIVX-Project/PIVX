@@ -305,8 +305,7 @@ void DashboardWidget::showList(){
     ui->listTransactions->setVisible(true);
 }
 
-void DashboardWidget::updateDisplayUnit()
-{
+void DashboardWidget::updateDisplayUnit() {
     if (walletModel && walletModel->getOptionsModel()) {
         nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
 

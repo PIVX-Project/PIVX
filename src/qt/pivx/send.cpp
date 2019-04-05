@@ -340,6 +340,22 @@ void SendWidget::send(QList<SendCoinsRecipient> recipients){
 
 }
 
+void SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
+    if (!walletModel || !walletModel->getOptionsModel())
+        return;
+
+    if(GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
+        emit message(tr("Spend Zerocoin"), tr("zPIV is currently undergoing maintenance."), CClientUIInterface::MSG_ERROR);
+        return;
+    }
+
+    // TODO: Complete me..
+    //walletModel->sendZpiv(
+    //
+    //        )
+
+}
+
 
 void SendWidget::processSendCoinsReturn(const WalletModel::SendCoinsReturn& sendCoinsReturn, const QString& msgArg, bool fPrepare)
 {

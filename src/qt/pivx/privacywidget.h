@@ -36,8 +36,9 @@ private slots:
     void onRescanMintsClicked();
     void onResetZeroClicked();
     void onTotalZpivClicked();
+    void updateDisplayUnit();
     void showList();
-    void onMintClicked();
+    void onSendClicked();
 
 signals:
     void message(const QString& title, const QString& message, unsigned int style);
@@ -49,6 +50,11 @@ private:
     TransactionTableModel* txModel = nullptr;
     TxViewHolder *txHolder = nullptr;
     TransactionFilterProxy* filter = nullptr;
+
+
+    int nDisplayUnit;
+    void mint(CAmount value);
+    void spend(CAmount value);
 };
 
 #endif // PRIVACYWIDGET_H

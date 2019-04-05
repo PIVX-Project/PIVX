@@ -199,7 +199,7 @@ void PrivacyWidget::setWalletModel(WalletModel* _model){
             ui->listView->setVisible(true);
         }
 
-        connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(onMintClicked()));
+        connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(onSendClicked()));
         // TODO: Connect update display unit..
     }
 
@@ -232,7 +232,7 @@ void PrivacyWidget::onTotalZpivClicked(){
 
 }
 
-void PrivacyWidget::onMintClicked(){
+void PrivacyWidget::onSendClicked(){
     if (!walletModel || !walletModel->getOptionsModel())
         return;
 
@@ -253,18 +253,53 @@ void PrivacyWidget::onMintClicked(){
             &isValid
     );
 
-    if (value <= 0) {
+    if (value <= 0 || !isValid) {
         setCssEditLine(ui->lineEditAmount, false, true);
         emit message("", tr("Invalid value"), CClientUIInterface::MSG_INFORMATION);
+        return;
     }
 
+    setCssEditLine(ui->lineEditAmount, true, true);
     // TODO: Launch confirmation dialog here..
+    if(ui->pushLeft->isChecked()){
+        spend(value);
+    }else{
+        mint(value);
+    }
+
+}
+
+void PrivacyWidget::mint(CAmount value){
     std::string strError;
     if(!walletModel->mintCoins(value, CoinControlDialog::coinControl, strError)){
         emit message("", tr(strError.data()), CClientUIInterface::MSG_INFORMATION);
     }else{
         // Mint succeed
         emit message("", tr("zPIV minted successfully"), CClientUIInterface::MSG_INFORMATION);
+
+        // clear
+        ui->lineEditAmount->clear();
+    }
+}
+
+void PrivacyWidget::spend(CAmount value){
+    CZerocoinSpendReceipt receipt;
+    std::vector<CZerocoinMint> selectedMints;
+    bool mintChange = false;
+    bool minimizeChange = false;
+    // todo: add custom address to
+    if(!walletModel->convertBackZpiv(
+            value,
+            selectedMints,
+            mintChange,
+            minimizeChange,
+            receipt,
+            walletModel->getNewAddress()
+    )){
+        emit message("", receipt.GetStatusMessage().data(), CClientUIInterface::MSG_INFORMATION);
+    }else{
+        // Spend succeed
+        emit message("", tr("zPIV converted back to PIV"), CClientUIInterface::MSG_INFORMATION);
 
         // clear
         ui->lineEditAmount->clear();

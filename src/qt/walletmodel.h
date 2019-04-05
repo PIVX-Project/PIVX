@@ -168,6 +168,15 @@ public:
     // Mint zPIV
     bool mintCoins(CAmount value, CCoinControl* coinControl, std::string &strError);
 
+    bool convertBackZpiv(
+            CAmount value,
+            vector<CZerocoinMint> &vMintsSelected,
+            bool fMintChange,
+            bool fMinimizeChange,
+            CZerocoinSpendReceipt &receipt,
+            CBitcoinAddress addressTo
+    );
+
     // Wallet encryption
     bool setWalletEncrypted(bool encrypted, const SecureString& passphrase);
     // Passphrase only needed when unlocking
