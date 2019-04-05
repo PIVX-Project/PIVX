@@ -185,6 +185,7 @@ void PrivacyWidget::setWalletModel(WalletModel* _model){
         filter->setSourceModel(txModel);
         filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
         filter->setShowZcTxes(true);
+        txHolder->setDisplayUnit(walletModel->getOptionsModel()->getDisplayUnit());
         txHolder->setFilter(filter);
         ui->listView->setModel(filter);
 
@@ -199,6 +200,17 @@ void PrivacyWidget::setWalletModel(WalletModel* _model){
         }
 
         connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(onMintClicked()));
+        // TODO: Connect update display unit..
+    }
+
+}
+
+void PrivacyWidget::updateDisplayUnit() {
+    if (walletModel && walletModel->getOptionsModel()) {
+        nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
+
+        txHolder->setDisplayUnit(nDisplayUnit);
+        ui->listView->update();
     }
 }
 
@@ -225,7 +237,7 @@ void PrivacyWidget::onMintClicked(){
         return;
 
     if(GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
-        emit message(tr("Mint Zerocoin"), tr("Transaction sent"), CClientUIInterface::MSG_ERROR);
+        emit message(tr("Mint Zerocoin"), tr("zPIV is currently undergoing maintenance"), CClientUIInterface::MSG_ERROR);
         return;
     }
 
