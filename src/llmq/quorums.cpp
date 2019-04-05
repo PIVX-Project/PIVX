@@ -6,6 +6,7 @@
 #include "quorums.h"
 
 #include "activemasternode.h"
+#include "chain.h"
 #include "chainparams.h"
 #include "cxxtimer.h"
 #include "evo/deterministicmns.h"
@@ -33,7 +34,7 @@ static uint256 MakeQuorumKey(const CQuorum& q)
 {
     CHashWriter hw(SER_NETWORK, 0);
     hw << (uint8_t)q.params.type;
-    hw << q.pindexQuorum->GetBlockHash();
+    hw << q.qc.quorumHash;
     for (const auto& dmn : q.members) {
         hw << dmn->proTxHash;
     }
@@ -51,13 +52,13 @@ CQuorum::~CQuorum()
     }
 }
 
-void CQuorum::Init(const uint256& _minedBlockHash, const CBlockIndex* _pindexQuorum, const std::vector<CDeterministicMNCPtr>& _members, const std::vector<bool>& _validMembers, const CBLSPublicKey& _quorumPublicKey)
+void CQuorum::Init(const CFinalCommitment& _qc, const CBlockIndex* _pindexQuorum, int _height, const uint256& _minedBlockHash, const std::vector<CDeterministicMNCPtr>& _members)
 {
-    minedBlockHash = _minedBlockHash;
+    qc = _qc;
+    height = _height;
     pindexQuorum = _pindexQuorum;
     members = _members;
-    validMembers = _validMembers;
-    quorumPublicKey = _quorumPublicKey;
+    minedBlockHash = _minedBlockHash;
 }
 
 bool CQuorum::IsMember(const uint256& proTxHash) const
@@ -74,7 +75,7 @@ bool CQuorum::IsValidMember(const uint256& proTxHash) const
 {
     for (size_t i = 0; i < members.size(); i++) {
         if (members[i]->proTxHash == proTxHash) {
-            return validMembers[i];
+            return qc.validMembers[i];
         }
     }
     return false;
@@ -82,7 +83,7 @@ bool CQuorum::IsValidMember(const uint256& proTxHash) const
 
 CBLSPublicKey CQuorum::GetPubKeyShare(size_t memberIdx) const
 {
-    if (quorumVvec == nullptr || memberIdx >= members.size() || !validMembers[memberIdx]) {
+    if (quorumVvec == nullptr || memberIdx >= members.size() || !qc.validMembers[memberIdx]) {
         return CBLSPublicKey();
     }
     auto& m = members[memberIdx];
@@ -147,7 +148,7 @@ void CQuorum::StartCachePopulatorThread(std::shared_ptr<CQuorum> _this)
     // when then later some other thread tries to get keys, it will be much faster
     _this->cachePopulatorThread = std::thread(&TraceThread<std::function<void()> >, "quorum-cachepop", [_this, t] {
         for (size_t i = 0; i < _this->members.size() && !_this->stopCachePopulatorThread && !ShutdownRequested(); i++) {
-            if (_this->validMembers[i]) {
+            if (_this->qc.validMembers[i]) {
                 _this->GetPubKeyShare(i);
             }
         }
@@ -178,14 +179,13 @@ void CQuorumManager::UpdatedBlockTip(const CBlockIndex* pindexNew, bool fInitial
     }
 }
 
-
 bool CQuorumManager::BuildQuorumFromCommitment(const CFinalCommitment& qc, const CBlockIndex* pindexQuorum, const uint256& minedBlockHash, std::shared_ptr<CQuorum>& quorum) const
 {
     assert(pindexQuorum);
     assert(qc.quorumHash == pindexQuorum->GetBlockHash());
 
     auto members = deterministicMNManager->GetAllQuorumMembers((Consensus::LLMQType)qc.llmqType, pindexQuorum);
-    quorum->Init(minedBlockHash, pindexQuorum, members, qc.validMembers, qc.quorumPublicKey);
+    quorum->Init(qc, pindexQuorum, pindexQuorum->nHeight, minedBlockHash, members);
 
     bool hasValidVvec = false;
     if (quorum->ReadContributions(evoDb)) {

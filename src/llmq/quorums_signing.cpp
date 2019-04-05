@@ -418,7 +418,7 @@ bool CSigningManager::ProcessPendingRecoveredSigs(CConnman& connman)
 
         for (auto& recSig : v) {
             const auto& quorum = quorums.at(std::make_pair((Consensus::LLMQType)recSig.llmqType, recSig.quorumHash));
-            batchVerifier.PushMessage(nodeId, recSig.GetHash(), llmq::utils::BuildSignHash(recSig), recSig.sig, quorum->quorumPublicKey);
+            batchVerifier.PushMessage(nodeId, recSig.GetHash(), llmq::utils::BuildSignHash(recSig), recSig.sig, quorum->qc.quorumPublicKey);
             verifyCount++;
         }
     }
@@ -678,7 +678,7 @@ bool CSigningManager::VerifyRecoveredSig(Consensus::LLMQType llmqType, int signe
     }
 
     uint256 signHash = llmq::utils::BuildSignHash(llmqParams.type, quorum->pindexQuorum->GetBlockHash(), id, msgHash);
-    return sig.VerifyInsecure(quorum->quorumPublicKey, signHash);
+    return sig.VerifyInsecure(quorum->qc.quorumPublicKey, signHash);
 }
 
 } // namespace llmq

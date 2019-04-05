@@ -485,7 +485,7 @@ bool CSigSharesManager::PreVerifyBatchedSigShares(NodeId nodeId, const CSigShare
             retBan = true;
             return false;
         }
-        if (!session.quorum->validMembers[quorumMember]) {
+        if (!session.quorum->qc.validMembers[quorumMember]) {
             LogPrintf("CSigSharesManager::%s -- quorumMember not valid\n", __func__);
             retBan = true;
             return false;
@@ -757,7 +757,7 @@ void CSigSharesManager::TryRecoverSig(const CQuorumCPtr& quorum, const uint256& 
     rs.UpdateHash();
 
     auto signHash = llmq::utils::BuildSignHash(rs);
-    bool valid = rs.sig.VerifyInsecure(quorum->quorumPublicKey, signHash);
+    bool valid = rs.sig.VerifyInsecure(quorum->qc.quorumPublicKey, signHash);
     if (!valid) {
         // this should really not happen as we have verified all signature shares before
         LogPrintf("CSigSharesManager::%s -- own recovered signature is invalid. id=%s, msgHash=%s\n", __func__,
