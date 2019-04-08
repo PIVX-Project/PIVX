@@ -24,7 +24,8 @@ void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered
     qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
     bool isConfirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
     QString amountText = BitcoinUnits::formatWithUnit(nDisplayUnit, amount, true, BitcoinUnits::separatorAlways);
-    QModelIndex indexType = index.siblingAtColumn(TransactionTableModel::Type);
+    // QT 5.9 only has sibling and not siblingAtColumn
+    QModelIndex indexType = index.sibling(rIndex.row(),TransactionTableModel::Type);
     if(address.length() > 20) {
         address = address.left(ADDRESS_SIZE) + "..." + address.right(ADDRESS_SIZE);
     }

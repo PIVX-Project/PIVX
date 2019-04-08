@@ -41,7 +41,7 @@ public:
         MyAddressRow *row = static_cast<MyAddressRow*>(holder);
 
         QString address = index.data(Qt::DisplayRole).toString();
-        QModelIndex sibling = index.siblingAtColumn(AddressTableModel::Label);
+        QModelIndex sibling = index.sibling(index.row(), AddressTableModel::Label);
         QString label = sibling.data(Qt::DisplayRole).toString();
 
         row->updateView(address, label);

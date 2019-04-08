@@ -5,6 +5,10 @@
 #include "bitcoinunits.h"
 #include <transactionfilterproxy.h>
 
+QT_BEGIN_NAMESPACE
+class QModelIndex;
+QT_END_NAMESPACE
+
 class TxViewHolder : public FurListRow<QWidget*>
 {
 public:
