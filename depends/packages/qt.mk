@@ -210,7 +210,7 @@ define $(package)_stage_cmds
   $(MAKE) -C src INSTALL_ROOT=$($(package)_staging_dir) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && cd .. && \
   $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   $(MAKE) -C qttools/src/linguist/lupdate INSTALL_ROOT=$($(package)_staging_dir) install_target && \
-  $(MAKE) -C qtsvg/ DESTDIR=$($(package)_staging_dir) install && \
+  $(MAKE) -C qtsvg INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $(MAKE) -C qtsvg/src/svg/ INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   echo "---FURSZY232 --> $($(package)_staging_dir)" && \
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
