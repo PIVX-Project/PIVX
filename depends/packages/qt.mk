@@ -182,9 +182,11 @@ define $(package)_config_cmds
   export PKG_CONFIG_SYSROOT_DIR=/ && \
   export PKG_CONFIG_LIBDIR=$(host_prefix)/lib/pkgconfig && \
   export PKG_CONFIG_PATH=$(host_prefix)/share/pkgconfig  && \
+  echo "furszyee --> $(PWD)" && \
   ./configure $($(package)_config_opts) && \
   echo "host_build: QT_CONFIG ~= s/system-zlib/zlib" >> mkspecs/qconfig.pri && \
   echo "CONFIG += force_bootstrap" >> mkspecs/qconfig.pri && \
+  echo "furszyee43 --> $(PWD)" && \
   $(MAKE) sub-src-clean && \
   cd ../qttranslations && ../qtbase/bin/qmake qttranslations.pro -o Makefile && \
   cd translations && ../../qtbase/bin/qmake translations.pro -o Makefile && cd ../.. && \
@@ -192,6 +194,8 @@ define $(package)_config_cmds
   cd qtsvg && ../qtbase/bin/qmake qtsvg.pro -o Makefile && \
   cd src/svg && ../../../qtbase/bin/qmake svg.pro -o Makefile && cd ../../.. && \
   cd qtsvg/src/plugins && ../../../qtbase/bin/qmake plugins.pro -o Makefile && cd ../../.. && \
+  cd qtsvg/src/plugins/imageformats && ../../../../qtbase/bin/qmake imageformats.pro -o Makefile && cd ../../../.. && \
+  cd qtsvg/src/plugins/imageformats/svg && ../../../../../qtbase/bin/qmake svg.pro -o Makefile && cd ../../../../.. && \
   cd qttools/src/linguist/lrelease/ && ../../../../qtbase/bin/qmake lrelease.pro -o Makefile && \
   cd ../lupdate/ && ../../../../qtbase/bin/qmake lupdate.pro -o Makefile && cd ../../../..
 endef
@@ -202,7 +206,8 @@ define $(package)_build_cmds
   $(MAKE) -C ../qttools/src/linguist/lupdate && \
   $(MAKE) -C ../qttranslations && \
   $(MAKE) -C ../qtsvg/ && \
-  $(MAKE) -C ../qtsvg/src/svg
+  $(MAKE) -C ../qtsvg/src/svg && \
+  $(MAKE) -C ../qtsvg/src/plugins/imageformats
 endef
 
 define $(package)_stage_cmds
@@ -212,6 +217,7 @@ define $(package)_stage_cmds
   $(MAKE) -C qttools/src/linguist/lupdate INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   $(MAKE) -C qtsvg INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $(MAKE) -C qtsvg/src/svg/ INSTALL_ROOT=$($(package)_staging_dir) install_target && \
+  $(MAKE) -C qtsvg/src/plugins/imageformats INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   echo "---FURSZY232 --> $($(package)_staging_dir)" && \
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
