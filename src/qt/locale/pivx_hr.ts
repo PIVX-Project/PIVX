@@ -270,6 +270,18 @@
         <translation>Kopirajte trenutačni potpis u međuspremnik sustava</translation>
     </message>
     <message>
+        <source>Reset all fields</source>
+        <translation>Resetiraj sva polja</translation>
+    </message>
+    <message>
+        <source>The encrypted private key</source>
+        <translation>Šifrirani privatni ključ</translation>
+    </message>
+    <message>
+        <source>Decrypt the entered key using the passphrase</source>
+        <translation>Dešifriraj uneseni ključ pomoću zaporke</translation>
+    </message>
+    <message>
         <source>Encrypt &amp;Key</source>
         <translation>Šifriranje &amp;Ključ</translation>
     </message>
@@ -581,6 +593,10 @@
         <translation>%1 iza. Skeniranje blokiranjem %2</translation>
     </message>
     <message>
+        <source>Tor is &lt;b&gt;enabled&lt;/b&gt;: %1</source>
+        <translation>Tor je &lt;b&gt; omogućen &lt;b&gt;: %1</translation>
+    </message>
+    <message>
         <source>&amp;File</source>
         <translation>&amp;Datoteka</translation>
     </message>
@@ -653,8 +669,32 @@
         <translation>Šifriranje i dešifriranje privatnih ključeva pomoću zaporke</translation>
     </message>
     <message>
+        <source>&amp;MultiSend</source>
+        <translation>&amp;MultiSend</translation>
+    </message>
+    <message>
+        <source>MultiSend Settings</source>
+        <translation>MultiSend postavke</translation>
+    </message>
+    <message>
+        <source>Open Wallet &amp;Configuration File</source>
+        <translation>Otvori novčanik i konfiguracijsku datoteku</translation>
+    </message>
+    <message>
+        <source>Open Masternode configuration file</source>
+        <translation>Otvori konfiguracijsku datoteku za Masternode</translation>
+    </message>
+    <message>
         <source>PIVX Core client</source>
         <translation>PIVX Core klijent</translation>
+    </message>
+    <message>
+        <source>Importing blocks from disk...</source>
+        <translation>Unos blokova s diska</translation>
+    </message>
+    <message>
+        <source>Up to date</source>
+        <translation>Ažurirano</translation>
     </message>
     <message>
         <source>Error</source>
@@ -668,12 +708,40 @@
         <source>Information</source>
         <translation>Informacija</translation>
     </message>
+    <message>
+        <source>Sent transaction</source>
+        <translation>Poslana transakcija</translation>
+    </message>
+    <message>
+        <source>Incoming transaction</source>
+        <translation>Nadolazeća tranksakcija</translation>
+    </message>
+    <message>
+        <source>Active</source>
+        <translation>Aktivan</translation>
+    </message>
+    <message>
+        <source>Not Active</source>
+        <translation>Neaktivan</translation>
+    </message>
     </context>
 <context>
     <name>BlockExplorer</name>
     <message>
+        <source>Back</source>
+        <translation>Povratak</translation>
+    </message>
+    <message>
+        <source>Forward</source>
+        <translation>Naprijed</translation>
+    </message>
+    <message>
         <source>Address / Block / Transaction</source>
         <translation>Adresa / Blok / Transakcija</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Traži</translation>
     </message>
     </context>
 <context>
@@ -694,8 +762,40 @@
         <translation>Prioritet:</translation>
     </message>
     <message>
+        <source>Fee:</source>
+        <translation>Naknada:</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Nakon naknade:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Ostatak:</translation>
+    </message>
+    <message>
+        <source>(un)select all</source>
+        <translation>(od)znači sve</translation>
+    </message>
+    <message>
+        <source>Tree mode</source>
+        <translation>Stablo prikaz</translation>
+    </message>
+    <message>
+        <source>List mode</source>
+        <translation>Popis prikaz</translation>
+    </message>
+    <message>
+        <source>(1 locked)</source>
+        <translation>(1 zaključan)</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Iznos</translation>
+    </message>
+    <message>
+        <source>Received with address</source>
+        <translation>Primljeno s adresom</translation>
     </message>
     <message>
         <source>Type</source>
@@ -714,6 +814,10 @@
         <translation>Potvrđeno</translation>
     </message>
     <message>
+        <source>Priority</source>
+        <translation>Prioritet</translation>
+    </message>
+    <message>
         <source>Copy address</source>
         <translation>Kopiraj adrese</translation>
     </message>
@@ -726,8 +830,64 @@
         <translation>Kopiraj iznos</translation>
     </message>
     <message>
+        <source>Copy transaction ID</source>
+        <translation>Kopiraj ID transakcije</translation>
+    </message>
+    <message>
+        <source>Lock unspent</source>
+        <translation>Zaključaj neiskorišteno</translation>
+    </message>
+    <message>
+        <source>Unlock unspent</source>
+        <translation>Otključaj neiskorišteno</translation>
+    </message>
+    <message>
         <source>Copy quantity</source>
         <translation>Kopiraj količinu</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Kopiraj naknadu</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Kopiraj nakon naknade</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Kopiraj naknadu</translation>
+    </message>
+    <message>
+        <source>highest</source>
+        <translation>Najviši</translation>
+    </message>
+    <message>
+        <source>higher</source>
+        <translation>viši</translation>
+    </message>
+    <message>
+        <source>high</source>
+        <translation>visok</translation>
+    </message>
+    <message>
+        <source>medium-high</source>
+        <translation>srednje-visoki</translation>
+    </message>
+    <message>
+        <source>medium</source>
+        <translation>Srednji</translation>
+    </message>
+    <message>
+        <source>low</source>
+        <translation>nizak</translation>
+    </message>
+    <message>
+        <source>lower</source>
+        <translation>niži</translation>
+    </message>
+    <message>
+        <source>lowest</source>
+        <translation>najniži</translation>
     </message>
     <message>
         <source>yes</source>
@@ -741,12 +901,23 @@
         <source>(no label)</source>
         <translation>(nema oznake)</translation>
     </message>
-    </context>
+    <message>
+        <source>(change)</source>
+        <translation>(ostatak)</translation>
+    </message>
+</context>
 <context>
     <name>EditAddressDialog</name>
     </context>
 <context>
     <name>FreespaceChecker</name>
+    </context>
+<context>
+    <name>GovernancePage</name>
+    <message>
+        <source>0</source>
+        <translation>0</translation>
+    </message>
     </context>
 <context>
     <name>HelpMessageDialog</name>
@@ -775,6 +946,10 @@
     <message>
         <source>Status</source>
         <translation>Status</translation>
+    </message>
+    <message>
+        <source>Active</source>
+        <translation>Aktivan</translation>
     </message>
     <message>
         <source>0</source>
@@ -860,8 +1035,20 @@
         <translation>Prioritet:</translation>
     </message>
     <message>
+        <source>Fee:</source>
+        <translation>Naknada:</translation>
+    </message>
+    <message>
         <source>no</source>
         <translation>ne</translation>
+    </message>
+    <message>
+        <source>medium</source>
+        <translation>Srednji</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Ostatak:</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -871,6 +1058,9 @@
         <source>Copy amount</source>
         <translation>Kopiraj iznos</translation>
     </message>
+    </context>
+<context>
+    <name>ProposalFrame</name>
     </context>
 <context>
     <name>QObject</name>
@@ -885,6 +1075,10 @@
     <message>
         <source>N/A</source>
         <translation>N/A</translation>
+    </message>
+    <message>
+        <source>PIVX Core</source>
+        <translation>PIVX Core</translation>
     </message>
     </context>
 <context>
@@ -963,6 +1157,10 @@
         <source>Copy amount</source>
         <translation>Kopiraj iznos</translation>
     </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopiraj adrese</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -1014,6 +1212,10 @@
         <translation>Poruka</translation>
     </message>
     <message>
+        <source>Address</source>
+        <translation>Adresa</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Iznos</translation>
     </message>
@@ -1041,8 +1243,24 @@
         <translation>Prioritet:</translation>
     </message>
     <message>
+        <source>medium</source>
+        <translation>Srednji</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Naknada:</translation>
+    </message>
+    <message>
         <source>no</source>
         <translation>ne</translation>
+    </message>
+    <message>
+        <source>After Fee:</source>
+        <translation>Nakon naknade:</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Ostatak:</translation>
     </message>
     <message>
         <source>0 PIV</source>
@@ -1067,6 +1285,18 @@
     <message>
         <source>Copy amount</source>
         <translation>Kopiraj iznos</translation>
+    </message>
+    <message>
+        <source>Copy fee</source>
+        <translation>Kopiraj naknadu</translation>
+    </message>
+    <message>
+        <source>Copy after fee</source>
+        <translation>Kopiraj nakon naknade</translation>
+    </message>
+    <message>
+        <source>Copy change</source>
+        <translation>Kopiraj naknadu</translation>
     </message>
     <message>
         <source>%1 to %2</source>
@@ -1292,6 +1522,10 @@
         <translation>Kopiraj iznos</translation>
     </message>
     <message>
+        <source>Copy transaction ID</source>
+        <translation>Kopiraj ID transakcije</translation>
+    </message>
+    <message>
         <source>Comma separated file (*.csv)</source>
         <translation>Comma separated file (*.csv)</translation>
     </message>
@@ -1362,12 +1596,76 @@
         <translation>Informacija</translation>
     </message>
     <message>
+        <source>Options:</source>
+        <translation>Mogućnosti:</translation>
+    </message>
+    <message>
+        <source>Synchronization failed</source>
+        <translation>Sinkronizacija neuspjela</translation>
+    </message>
+    <message>
+        <source>Synchronization finished</source>
+        <translation>Usklađivanje završeno</translation>
+    </message>
+    <message>
+        <source>Synchronization pending...</source>
+        <translation>Sinkronizacija je na čekanju...</translation>
+    </message>
+    <message>
+        <source>Synchronizing budgets...</source>
+        <translation>Usklađivanje proračuna...</translation>
+    </message>
+    <message>
+        <source>This is experimental software.</source>
+        <translation>Ovo je eksperimentalan softver.</translation>
+    </message>
+    <message>
+        <source>Transaction Created</source>
+        <translation>Transakcija stvorena</translation>
+    </message>
+    <message>
+        <source>Transaction not valid.</source>
+        <translation>Transakcija nije valjana.</translation>
+    </message>
+    <message>
+        <source>Transaction too large for fee policy</source>
+        <translation>Transakcija je prevelika za trenutnu naknadu</translation>
+    </message>
+    <message>
+        <source>Transaction too large</source>
+        <translation>Transakcija je prevelika</translation>
+    </message>
+    <message>
+        <source>Unable to find transaction containing mint</source>
+        <translation>Nije moguće pronaći transakciju koja sadrži novcic</translation>
+    </message>
+    <message>
         <source>Use the test network</source>
         <translation>Koristi testnu mrežu</translation>
     </message>
     <message>
+        <source>Verifying blocks...</source>
+        <translation>Provjera blokova...</translation>
+    </message>
+    <message>
+        <source>Verifying wallet...</source>
+        <translation>Provjera novčanika...</translation>
+    </message>
+    <message>
+        <source>Wallet is locked.</source>
+        <translation>Novčanik je zaključan.</translation>
+    </message>
+    <message>
+        <source>Wallet options:</source>
+        <translation>Opcije novčanika:</translation>
+    </message>
+    <message>
         <source>Warning</source>
         <translation>Upozorenje</translation>
+    </message>
+    <message>
+        <source>Zerocoin options:</source>
+        <translation>Zerocoin opcije:</translation>
     </message>
     </context>
 </TS>

@@ -5,10 +5,10 @@
 #include "zpivwallet.h"
 #include "main.h"
 #include "txdb.h"
-#include "walletdb.h"
+#include "wallet/walletdb.h"
 #include "init.h"
-#include "wallet.h"
-#include "primitives/deterministicmint.h"
+#include "wallet/wallet.h"
+#include "deterministicmint.h"
 #include "zpivchain.h"
 
 using namespace libzerocoin;
@@ -328,7 +328,7 @@ bool CzPIVWallet::SetMintSeen(const CBigNum& bnValue, const int& nHeight, const 
 
     // Add to zpivTracker which also adds to database
     pwalletMain->zpivTracker->Add(dMint, true);
-    
+
     //Update the count if it is less than the mint's count
     if (nCountLastUsed < pMint.second) {
         CWalletDB walletdb(strWalletFile);

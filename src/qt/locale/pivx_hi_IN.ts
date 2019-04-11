@@ -13,6 +13,10 @@
         <source>Choose the address to receive coins with</source>
         <translation>सिक्कों को प्राप्त करने के लिए पता चुनें</translation>
     </message>
+    <message>
+        <source>These are your PIVX addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>पहले इस्तेमाल किए गए पते को चुनें</translation>
+    </message>
     </context>
 <context>
     <name>AddressTableModel</name>
@@ -93,6 +97,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GovernancePage</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
@@ -157,6 +164,9 @@
     </message>
     </context>
 <context>
+    <name>ProposalFrame</name>
+    </context>
+<context>
     <name>QObject</name>
     </context>
 <context>
@@ -208,6 +218,10 @@
     <message>
         <source>Message</source>
         <translation>संदेश</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>पता</translation>
     </message>
     </context>
 <context>

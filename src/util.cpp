@@ -244,6 +244,8 @@ bool LogAcceptCategory(const char* category)
                 ptrCategory->insert(string("mnpayments"));
                 ptrCategory->insert(string("zero"));
                 ptrCategory->insert(string("mnbudget"));
+                ptrCategory->insert(string("precompute"));
+                ptrCategory->insert(string("staking"));
             }
         }
         const set<string>& setCategories = *ptrCategory.get();

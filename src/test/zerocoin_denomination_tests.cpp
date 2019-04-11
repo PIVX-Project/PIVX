@@ -8,8 +8,8 @@
 #include "denomination_functions.h"
 #include "main.h"
 #include "txdb.h"
-#include "wallet.h"
-#include "walletdb.h"
+#include "wallet/wallet.h"
+#include "wallet/walletdb.h"
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test241)
                                                                  listMints,
                                                                  mapDenom,
                                                                  nNeededSpends);
-        
+
         if (fDebug) {
             if (vSpends.size() > 0) {
                 std::cout << "SUCCESS : Coins = " << nValueTarget / COIN << " # spends used = " << vSpends.size()
@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test_from_245)
     //    const int DenomAmounts[] = {0, 1, 4, 0, 0, 0, 0, 0};
     // For 51
     //const int nSpendValue = 51;
-    
+
     // CoinsHeld = 245
     const int DenomAmounts[] = {0, 1, 4, 2, 1, 0, 0, 0};
     // We can spend up to this amount for above set for less 6 spends
@@ -287,7 +287,7 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test_from_245)
   //  bool fDebug = 0;
     int nCoinsReturned;
     int nNeededSpends = 0;  // Number of spends which would be needed if selection failed
-    
+
     // Go through all possible spend between 1 and 241 and see if it's possible or not
     for (int i = 0; i < CoinsHeld; i++) {
         std::vector<CMintMeta> vSpends = SelectMintsFromList(nValueTarget, nSelectedValue,
@@ -297,7 +297,7 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test_from_245)
                                                                  listMints,
                                                                  mapOfDenomsHeld,
                                                                  nNeededSpends);
-        
+
 //        if (fDebug) {
 //            if (vSpends.size() > 0) {
 //                std::cout << "SUCCESS : Coins = " << nValueTarget / COIN << " # spends = " << vSpends.size()
@@ -311,7 +311,7 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test_from_245)
         bool spends_not_ok = ((vSpends.size() > nMaxNumberOfSpends) || (vSpends.size() == 0));
         if (i < nMaxSpendAmount) BOOST_CHECK_MESSAGE(!spends_not_ok, "Too many spends");
         else BOOST_CHECK_MESSAGE(spends_not_ok, "Expected to fail but didn't");
-        
+
         std::vector<CMintMeta> vSpendsAlt = SelectMintsFromList(nValueTarget, nSelectedValue,
                                                                     nMaxNumberOfSpends,
                                                                     true,
@@ -319,8 +319,8 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test_from_245)
                                                                     listMints,
                                                                     mapOfDenomsHeld,
                                                                     nNeededSpends);
-        
-        
+
+
 //        if (fDebug) {
 //            if (vSpendsAlt.size() > 0) {
 //                std::cout << "# spends = " << vSpendsAlt.size()
@@ -330,11 +330,11 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test_from_245)
 //                std::cout << "UNABLE TO SPEND : Coins = " << nValueTarget / COIN << " Held = " << CoinsHeld << "\n";
 //            }
 //        }
-        
+
         spends_not_ok = ((vSpendsAlt.size() > nMaxNumberOfSpends) || (vSpendsAlt.size() == 0));
         if (i < nMaxSpendAmount) BOOST_CHECK_MESSAGE(!spends_not_ok, "Too many spends");
         else BOOST_CHECK_MESSAGE(spends_not_ok, "Expected to fail but didn't");
-        
+
         nValueTarget += OneCoinAmount;
     }
 }
@@ -392,7 +392,7 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test_from_145)
     //bool fDebug = 0;
     int nCoinsReturned;
     int nNeededSpends = 0;  // Number of spends which would be needed if selection failed
-    
+
     // Go through all possible spend between 1 and 241 and see if it's possible or not
     for (int i = 0; i < CoinsHeld; i++) {
         std::vector<CMintMeta> vSpends = SelectMintsFromList(nValueTarget, nSelectedValue,
@@ -402,7 +402,7 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test_from_145)
                                                                  listMints,
                                                                  mapOfDenomsHeld,
                                                                  nNeededSpends);
-        
+
 //        if (fDebug) {
 //            if (vSpends.size() > 0) {
 //                std::cout << "SUCCESS : Coins = " << nValueTarget / COIN << " # spends = " << vSpends.size()
@@ -412,11 +412,11 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test_from_145)
 //                std::cout << "UNABLE TO SPEND : Coins = " << nValueTarget / COIN << " Held = " << CoinsHeld << "\n";
 //            }
 //        }
-        
+
         bool spends_not_ok = ((vSpends.size() > nMaxNumberOfSpends) || (vSpends.size() == 0));
         if (i < nMaxSpendAmount) BOOST_CHECK_MESSAGE(!spends_not_ok, "Too many spends");
         else BOOST_CHECK_MESSAGE(spends_not_ok, "Expected to fail but didn't");
-        
+
         std::vector<CMintMeta> vSpendsAlt = SelectMintsFromList(nValueTarget, nSelectedValue,
                                                                     nMaxNumberOfSpends,
                                                                     true,
@@ -424,8 +424,8 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test_from_145)
                                                                     listMints,
                                                                     mapOfDenomsHeld,
                                                                     nNeededSpends);
-        
-        
+
+
 //        if (fDebug) {
 //            if (vSpendsAlt.size() > 0) {
 //                std::cout << "# spends = " << vSpendsAlt.size()
@@ -435,12 +435,12 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test_from_145)
 //                std::cout << "UNABLE TO SPEND : Coins = " << nValueTarget / COIN << " Held = " << CoinsHeld << "\n";
 //            }
 //        }
-        
+
         spends_not_ok = ((vSpendsAlt.size() > nMaxNumberOfSpends) || (vSpendsAlt.size() == 0));
         if (i < nMaxSpendAmount) BOOST_CHECK_MESSAGE(!spends_not_ok, "Too many spends");
         else BOOST_CHECK_MESSAGE(spends_not_ok, "Expected to fail but didn't");
 
-        
+
         nValueTarget += OneCoinAmount;
     }
 }

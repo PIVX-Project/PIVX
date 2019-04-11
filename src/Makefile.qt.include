@@ -8,37 +8,38 @@ EXTRA_LIBRARIES += qt/libbitcoinqt.a
 # pivx qt core #
 QT_TS = \
   qt/locale/pivx_bg.ts \
-  qt/locale/pivx_ca.ts \
-  qt/locale/pivx_cs.ts \
-  qt/locale/pivx_da.ts \
-  qt/locale/pivx_de.ts \
-  qt/locale/pivx_en.ts \
-  qt/locale/pivx_en_US.ts \
-  qt/locale/pivx_eo.ts \
-  qt/locale/pivx_es.ts \
-  qt/locale/pivx_es_ES.ts \
-  qt/locale/pivx_fi.ts \
-  qt/locale/pivx_fr_FR.ts \
-  qt/locale/pivx_hi_IN.ts \
-  qt/locale/pivx_hr.ts \
-  qt/locale/pivx_hr_HR.ts \
-  qt/locale/pivx_it.ts \
-  qt/locale/pivx_ja.ts \
-  qt/locale/pivx_ko_KR.ts \
-  qt/locale/pivx_lt_LT.ts \
-  qt/locale/pivx_nl.ts \
-  qt/locale/pivx_pl.ts \
-  qt/locale/pivx_pt.ts \
-  qt/locale/pivx_pt_BR.ts \
-  qt/locale/pivx_ro_RO.ts \
-  qt/locale/pivx_ru.ts \
-  qt/locale/pivx_sk.ts \
-  qt/locale/pivx_sv.ts \
-  qt/locale/pivx_tr.ts \
-  qt/locale/pivx_uk.ts \
-  qt/locale/pivx_vi.ts \
-  qt/locale/pivx_zh_CN.ts \
-  qt/locale/pivx_zh_TW.ts
+   qt/locale/pivx_ca.ts \
+   qt/locale/pivx_cs.ts \
+   qt/locale/pivx_da.ts \
+   qt/locale/pivx_de.ts \
+   qt/locale/pivx_en.ts \
+   qt/locale/pivx_en_GB.ts \
+   qt/locale/pivx_en_US.ts \
+   qt/locale/pivx_eo.ts \
+   qt/locale/pivx_es.ts \
+   qt/locale/pivx_es_ES.ts \
+   qt/locale/pivx_fi.ts \
+   qt/locale/pivx_fr_FR.ts \
+   qt/locale/pivx_hi_IN.ts \
+   qt/locale/pivx_hr.ts \
+   qt/locale/pivx_hr_HR.ts \
+   qt/locale/pivx_it.ts \
+   qt/locale/pivx_ja.ts \
+   qt/locale/pivx_ko_KR.ts \
+   qt/locale/pivx_lt_LT.ts \
+   qt/locale/pivx_nl.ts \
+   qt/locale/pivx_pl.ts \
+   qt/locale/pivx_pt.ts \
+   qt/locale/pivx_pt_BR.ts \
+   qt/locale/pivx_ro_RO.ts \
+   qt/locale/pivx_ru.ts \
+   qt/locale/pivx_sk.ts \
+   qt/locale/pivx_sv.ts \
+   qt/locale/pivx_tr.ts \
+   qt/locale/pivx_uk.ts \
+   qt/locale/pivx_vi.ts \
+   qt/locale/pivx_zh_CN.ts \
+   qt/locale/pivx_zh_TW.ts
 
 QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \

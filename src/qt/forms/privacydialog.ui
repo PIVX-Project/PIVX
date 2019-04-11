@@ -859,57 +859,6 @@ zPIV are mature when they have more than 20 confirmations AND more than 2 mints 
                           </property>
                          </spacer>
                         </item>
-                        <item>
-                         <widget class="QLabel" name="labelSecurityLevel">
-                          <property name="toolTip">
-                           <string>Security Level for Zerocoin Transactions. More is better, but needs more time and resources.</string>
-                          </property>
-                          <property name="frameShape">
-                           <enum>QFrame::Box</enum>
-                          </property>
-                          <property name="text">
-                           <string>Security Level:</string>
-                          </property>
-                          <property name="alignment">
-                           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <layout class="QHBoxLayout" name="securityLevelLayout">
-                          <item>
-                           <widget class="QSpinBox" name="securityLevel">
-                            <property name="sizePolicy">
-                             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                              <horstretch>0</horstretch>
-                              <verstretch>0</verstretch>
-                             </sizepolicy>
-                            </property>
-                            <property name="toolTip">
-                             <string>Security Level 1 - 100 (default: 42)</string>
-                            </property>
-                            <property name="buttonSymbols">
-                             <enum>QAbstractSpinBox::PlusMinus</enum>
-                            </property>
-                            <property name="accelerated">
-                             <bool>true</bool>
-                            </property>
-                            <property name="correctionMode">
-                             <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
-                            </property>
-                            <property name="minimum">
-                             <number>1</number>
-                            </property>
-                            <property name="maximum">
-                             <number>100</number>
-                            </property>
-                            <property name="value">
-                             <number>42</number>
-                            </property>
-                           </widget>
-                          </item>
-                         </layout>
-                        </item>
                        </layout>
                       </item>
                       <item>

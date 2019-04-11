@@ -801,6 +801,13 @@ Address: %4
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GovernancePage</name>
+    <message>
+        <source>Form</source>
+        <translation>来自</translation>
+    </message>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>PIVX Core</source>
@@ -1117,7 +1124,14 @@ Address: %4
     </message>
     </context>
 <context>
+    <name>ProposalFrame</name>
+    </context>
+<context>
     <name>QObject</name>
+    <message>
+        <source>PIVX Core</source>
+        <translation>PIVX Core</translation>
+    </message>
     </context>
 <context>
     <name>QRImageWidget</name>
@@ -1172,6 +1186,10 @@ Address: %4
         <translation>&amp;消息：</translation>
     </message>
     <message>
+        <source>A&amp;mount:</source>
+        <translation>A&amp;总计</translation>
+    </message>
+    <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the PIVX network.</source>
         <translation>附加到付款请求的可选消息，将在请求打开时显示。 注意：消息不会在付款时通过PIVX网络发送。</translation>
     </message>
@@ -1184,10 +1202,6 @@ Address: %4
         <translation>&amp;标签</translation>
     </message>
     <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;总计</translation>
-    </message>
-    <message>
         <source>&amp;Request payment</source>
         <translation>&amp;请求支付</translation>
     </message>
@@ -1195,7 +1209,11 @@ Address: %4
         <source>Copy message</source>
         <translation>复制消息</translation>
     </message>
-    </context>
+    <message>
+        <source>Copy address</source>
+        <translation>复制地址</translation>
+    </message>
+</context>
 <context>
     <name>ReceiveRequestDialog</name>
     <message>
@@ -1236,6 +1254,10 @@ Address: %4
     <message>
         <source>Message</source>
         <translation>消息 </translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>地址</translation>
     </message>
     <message>
         <source>(no label)</source>

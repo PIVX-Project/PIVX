@@ -809,7 +809,7 @@ MultiSend: %1</translation>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>A carteira está &lt;b&gt;criptografada&lt;/b&gt; e atualmente &lt;b&gt;travada&lt;/b&gt;</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>BlockExplorer</name>
     <message>
@@ -1158,6 +1158,17 @@ MultiSend: %1</translation>
     </message>
 </context>
 <context>
+    <name>GovernancePage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formulário</translation>
+    </message>
+    <message>
+        <source>0</source>
+        <translation>0</translation>
+    </message>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1437,43 +1448,8 @@ MultiSend: %1</translation>
         <translation>(sem rótulo)</translation>
     </message>
     <message>
-        <source>The entered address:
-</source>
-        <translation>O endereço informado:
-</translation>
-    </message>
-    <message>
-        <source> is invalid.
-Please check the address and try again.</source>
-        <translation>é inválido.
-
-Favor verificar o endereço e tente novamente.</translation>
-    </message>
-    <message>
-        <source>The total amount of your MultiSend vector is over 100% of your stake reward
-</source>
-        <translation>A quantia total de seu vetor MultiSend é superior a 100% da recompensa de seu stake
-</translation>
-    </message>
-    <message>
         <source>Please Enter 1 - 100 for percent.</source>
         <translation>Favor inserir 1 - 100 para porcentagem.</translation>
-    </message>
-    <message>
-        <source>MultiSend Vector
-</source>
-        <translation>Vetor MultiSend
-</translation>
-    </message>
-    <message>
-        <source>Removed </source>
-        <translation>Removido</translation>
-    </message>
-    <message>
-        <source>Could not locate address
-</source>
-        <translation>Não foi possível localizar o endereço
-</translation>
     </message>
 </context>
 <context>
@@ -1986,14 +1962,6 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <translation>Saldo disponível:</translation>
     </message>
     <message>
-        <source>Security Level:</source>
-        <translation>Nível de Segurança:</translation>
-    </message>
-    <message>
-        <source>Security Level 1 - 100 (default: 42)</source>
-        <translation>Nível de segurança 1 - 100 (padrão: 42)</translation>
-    </message>
-    <message>
         <source>Pay &amp;To:</source>
         <translation>Pagar &amp;Para:</translation>
     </message>
@@ -2167,6 +2135,9 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
     </message>
 </context>
 <context>
+    <name>ProposalFrame</name>
+    </context>
+<context>
     <name>QObject</name>
     <message>
         <source>Amount</source>
@@ -2212,7 +2183,11 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <source>%1 ms</source>
         <translation>%1 ms</translation>
     </message>
-</context>
+    <message>
+        <source>PIVX Core</source>
+        <translation>PIVX Core</translation>
+    </message>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -2439,10 +2414,6 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <translation>Você deseja continuar?.&lt;br /&gt;</translation>
     </message>
     <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Utilize as teclas para cima ou baixo para navegar no histórico e &lt;b&gt;Ctrl-L&lt;/b&gt; para limpar a tela.</translation>
-    </message>
-    <message>
         <source>%1 B</source>
         <translation>%1 B</translation>
     </message>
@@ -2486,12 +2457,12 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
         <translation>Um rótulo opcional para associar a novos endereços de recebimento.</translation>
     </message>
     <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Rótulo:</translation>
+        <source>A&amp;mount:</source>
+        <translation>Quantia:</translation>
     </message>
     <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Quantidade:</translation>
+        <source>&amp;Label:</source>
+        <translation>&amp;Rótulo:</translation>
     </message>
     <message>
         <source>&amp;Request payment</source>
@@ -2536,6 +2507,10 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
     <message>
         <source>Copy amount</source>
         <translation>Copiar quantia</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Copiar endereço</translation>
     </message>
 </context>
 <context>
@@ -2606,6 +2581,10 @@ https://www.transifex.com/pivx-project/pivx-project-translations</translation>
     <message>
         <source>Message</source>
         <translation>Mensagem</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Endereço</translation>
     </message>
     <message>
         <source>Amount</source>

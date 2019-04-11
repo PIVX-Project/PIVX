@@ -608,10 +608,6 @@
         <source>&amp;Command-line options</source>
         <translation>Опции за &amp;Командното-поле</translation>
     </message>
-    <message numerus="yes">
-        <source>Processed %n blocks of transaction history.</source>
-        <translation><numerusform>Обработени %n блока от преводната история.</numerusform><numerusform>Обработени %n блока от преводна история.</numerusform></translation>
-    </message>
     <message>
         <source>Synchronizing additional data: %p%</source>
         <translation>Синхронизиране на допълнитенни данни: %p%</translation>
@@ -736,10 +732,6 @@
         <source>PIVX Core client</source>
         <translation>Клиент PIVX Ядро</translation>
     </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to PIVX network</source>
-        <translation><numerusform> %n активни свръзки към PIVX мрежата </numerusform><numerusform>%n активни свръзка(и) към PIVX мрежата </numerusform></translation>
-    </message>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Синхронизиране с мрежата...</translation>
@@ -760,21 +752,9 @@
         <source>Up to date</source>
         <translation>Актуален</translation>
     </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation><numerusform>%n часа</numerusform><numerusform>%n часа</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation><numerusform>%n седмици</numerusform><numerusform>%n седмици</numerusform></translation>
-    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 и %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation><numerusform>%n години</numerusform><numerusform>%n години</numerusform></translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -846,7 +826,7 @@ Address: %4
     </message>
     <message>
         <source>AutoMint is currently enabled and set to </source>
-        <translation>АвтоЕмитирането е включено в момента и настроено на </translation>
+        <translation>АвтоЕмисията е включена и настроена на</translation>
     </message>
     <message>
         <source>AutoMint is disabled</source>
@@ -860,7 +840,7 @@ Address: %4
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Портфейла е &lt;b&gt;шифриран&lt;/b&gt; и в момента е &lt;b&gt;отключен&lt;/b&gt;</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>BlockExplorer</name>
     <message>
@@ -1221,6 +1201,17 @@ Address: %4
     </message>
 </context>
 <context>
+    <name>GovernancePage</name>
+    <message>
+        <source>Form</source>
+        <translation>От</translation>
+    </message>
+    <message>
+        <source>0</source>
+        <translation>0</translation>
+    </message>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1538,48 +1529,8 @@ MultiSend will not be activated unless you have clicked Activate</source>
         <translation>(без етикет)</translation>
     </message>
     <message>
-        <source>The entered address:
-</source>
-        <translation>Въведения адрес:
-</translation>
-    </message>
-    <message>
-        <source> is invalid.
-Please check the address and try again.</source>
-        <translation>е невалиден.
-Моля проверете адреса отново и опитайте пак.</translation>
-    </message>
-    <message>
-        <source>The total amount of your MultiSend vector is over 100% of your stake reward
-</source>
-        <translation>Сумата по Вашия вектор за МултиИзпращане надхвърля 100% от вашето стейк възнаграждение.
-</translation>
-    </message>
-    <message>
         <source>Please Enter 1 - 100 for percent.</source>
         <translation>Използвайте числата 1 - 100 за процент.</translation>
-    </message>
-    <message>
-        <source>Saved the MultiSend to memory, but failed saving properties to the database.
-</source>
-        <translation>МултиСенд е успешно запазен в паметта, но свойствата не бяха записани в базата данни.
-</translation>
-    </message>
-    <message>
-        <source>MultiSend Vector
-</source>
-        <translation>Вектор по МултиИзпращане
-</translation>
-    </message>
-    <message>
-        <source>Removed </source>
-        <translation>Премахнат</translation>
-    </message>
-    <message>
-        <source>Could not locate address
-</source>
-        <translation>Не намирам адреса
-</translation>
     </message>
 </context>
 <context>
@@ -2474,18 +2425,6 @@ zPIV са узрели, тогава когато имат повече от 20 
         <translation>0 zPIV</translation>
     </message>
     <message>
-        <source>Security Level for Zerocoin Transactions. More is better, but needs more time and resources.</source>
-        <translation>Сигурност на Zerocoin Преводите. Повече - означава по-добра сигурност, но изисква повече време и ресурси.</translation>
-    </message>
-    <message>
-        <source>Security Level:</source>
-        <translation>Сигурност:</translation>
-    </message>
-    <message>
-        <source>Security Level 1 - 100 (default: 42)</source>
-        <translation>Ниво на Сигурност 1 - 100 (42 по подразбиране)</translation>
-    </message>
-    <message>
         <source>Pay &amp;To:</source>
         <translation>Плати На:</translation>
     </message>
@@ -2763,14 +2702,6 @@ Please be patient...</source>
 Моля изчакате...</translation>
     </message>
     <message>
-        <source>Spending Zerocoin.
-Computationally expensive, might need several minutes depending on the selected Security Level and your hardware.
-Please be patient...</source>
-        <translation>Харчене на Zerocoin.
-Математически скъп превод, който може да има нужда от няколко минути за потвърждение, в зависимост от избраното Ниво на Сигурност и Вашият хардуер.
-Моля проявете търпение...</translation>
-    </message>
-    <message>
         <source>) needed.
 Maximum allowed: </source>
         <translation>) нужни.
@@ -2941,20 +2872,8 @@ Maximum allowed: </source>
         <translation>на ново-генериран (неизползван до сега и поради това - анонимен) локален адрес &lt;br /&gt;</translation>
     </message>
     <message>
-        <source>with Security Level </source>
-        <translation>с Ниво на Сигурност</translation>
-    </message>
-    <message>
         <source>Confirm send coins</source>
         <translation>Потвърждаване на изпращането</translation>
-    </message>
-    <message>
-        <source>Version 1 zPIV require a security level of 100 to successfully spend.</source>
-        <translation>Версия 1 zPIV изисква ниво на сигурност от 100 за успешно изразходване.</translation>
-    </message>
-    <message>
-        <source>Failed to spend zPIV</source>
-        <translation>Неуспешно изразходване на zPIV</translation>
     </message>
     <message>
         <source>Failed to fetch mint associated with serial hash</source>
@@ -2973,11 +2892,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Spend Zerocoin failed with status = </source>
         <translation>Харченето на Zerocoin се провали със статус =</translation>
-    </message>
-    <message numerus="yes">
-        <source>PrivacyDialog</source>
-        <comment>Enter an amount of PIV to convert to zPIV</comment>
-        <translation><numerusform>PrivacyDialog</numerusform><numerusform>PrivacyDialog</numerusform></translation>
     </message>
     <message>
         <source>denomination: </source>
@@ -3012,6 +2926,9 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>такса:</translation>
     </message>
 </context>
+<context>
+    <name>ProposalFrame</name>
+    </context>
 <context>
     <name>QObject</name>
     <message>
@@ -3062,7 +2979,11 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <source>%1 ms</source>
         <translation>%1 милисек.</translation>
     </message>
-</context>
+    <message>
+        <source>PIVX Core</source>
+        <translation>PIVX Ядро</translation>
+    </message>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
@@ -3425,10 +3346,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Потвърдете ресинх на Блокчейна</translation>
     </message>
     <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Използвайте стрелките за на доре и на долу, за да разгледате историята и &lt;b&gt;Ctrol-L&lt;/b&gt;за да изчистите екрана.</translation>
-    </message>
-    <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
         <translation>Напишете &lt;b&gt;help&lt;/b&gt; за списък с възможните команди.</translation>
     </message>
@@ -3500,6 +3417,10 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Незадължителен етикет, който да асоциираме с адреса за получаване.</translation>
     </message>
     <message>
+        <source>A&amp;mount:</source>
+        <translation>Сума:</translation>
+    </message>
+    <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the PIVX network.</source>
         <translation>Съобщение свободен текст, което да се прикачи към платежното нареждане, за да бъде показано когато нареждането се отвори от клиента на когото е изпратено. Обърнете внимание, че съобщението няма да бъде изпратено заедно с плащането по PIVX мрежата.</translation>
     </message>
@@ -3522,10 +3443,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
         <translation>Незадължителна сума за поискване. Оставете полето празно или напишете нула, за да не изисквате определена сума.</translation>
-    </message>
-    <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Сума:</translation>
     </message>
     <message>
         <source>&amp;Request payment</source>
@@ -3570,6 +3487,10 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Copy amount</source>
         <translation>Копирай сумата</translation>
+    </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Копирай адрес</translation>
     </message>
 </context>
 <context>
@@ -3640,6 +3561,10 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Message</source>
         <translation>Съобщение</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Адрес</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -3923,10 +3848,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>A fee %1 times higher than %2 per kB is considered an insanely high fee.</source>
         <translation>Такса %1 пъти по-голяма от %2 за кБ се счита неразумно голяма такса.</translation>
-    </message>
-    <message numerus="yes">
-        <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Очаквано начало на потвърждения след %n блока.</numerusform><numerusform>Очаквано начало на потвърждения след %n блока.</numerusform></translation>
     </message>
     <message>
         <source>The recipient address is not valid, please recheck.</source>
@@ -4250,10 +4171,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
 </context>
 <context>
     <name>TransactionDesc</name>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation><numerusform>Отворен за още %n блока</numerusform><numerusform>Отворен за още %n блока</numerusform></translation>
-    </message>
     <message>
         <source>Open until %1</source>
         <translation>Отворен до %1</translation>
@@ -4314,10 +4231,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <source>, has not been successfully broadcast yet</source>
         <translation>, все още неуспешно обявени</translation>
     </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>, обявени през %n възела</numerusform><numerusform>, обявени през %n нода</numerusform></translation>
-    </message>
     <message>
         <source>Date</source>
         <translation>Дата</translation>
@@ -4357,10 +4270,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Credit</source>
         <translation>Кредит</translation>
-    </message>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation><numerusform>узрява след още %n блока</numerusform><numerusform>узрява след още %n блока</numerusform></translation>
     </message>
     <message>
         <source>not accepted</source>
@@ -4459,10 +4368,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Address</source>
         <translation>Адрес</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation><numerusform>Отворен за още %n блока</numerusform><numerusform>Отворен за още %n блока</numerusform></translation>
     </message>
     <message>
         <source>Open until %1</source>
@@ -4866,11 +4771,7 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <source>Select/Deselect All</source>
         <translation>Избери/Премахни Всички</translation>
     </message>
-    <message>
-        <source>Is Spendable</source>
-        <translation>В Налични за харечене</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>pivx-core</name>
     <message>
@@ -5666,10 +5567,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Неуспешно емитиране</translation>
     </message>
     <message>
-        <source>Failed to deserialize</source>
-        <translation>Неуспешно изтриване на серийния номер</translation>
-    </message>
-    <message>
         <source>Failed to find Zerocoins in wallet.dat</source>
         <translation>Няма намерени Zerocoin монети в wallet.dat файла</translation>
     </message>
@@ -6110,14 +6007,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Монетното плащане е използвано</translation>
     </message>
     <message>
-        <source>The new spend coin transaction did not verify</source>
-        <translation>Новото преводно плащане не бе потвърдено</translation>
-    </message>
-    <message>
-        <source>The selected mint coin is an invalid coin</source>
-        <translation>Избраната емисия е невалидна монета</translation>
-    </message>
-    <message>
         <source>The transaction did not verify</source>
         <translation>Превода не бе потвърден</translation>
     </message>
@@ -6264,10 +6153,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Verifying wallet...</source>
         <translation>Проверява портфейла...</translation>
-    </message>
-    <message>
-        <source>Version 1 zPIV require a security level of 100 to successfully spend.</source>
-        <translation>Версия 1 zPIV изисква ниво на сигурност от 100 за успешно изразходване.</translation>
     </message>
     <message>
         <source>Wallet %s resides outside data directory %s</source>

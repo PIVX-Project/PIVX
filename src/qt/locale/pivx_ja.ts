@@ -145,6 +145,9 @@
     <name>FreespaceChecker</name>
     </context>
 <context>
+    <name>GovernancePage</name>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     </context>
 <context>
@@ -189,6 +192,9 @@
     <name>PrivacyDialog</name>
     </context>
 <context>
+    <name>ProposalFrame</name>
+    </context>
+<context>
     <name>QObject</name>
     </context>
 <context>
@@ -209,6 +215,10 @@
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
+    <message>
+        <source>Address</source>
+        <translation>アドレス</translation>
+    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>

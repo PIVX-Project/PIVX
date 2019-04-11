@@ -7,7 +7,7 @@
 
 #include <QDialog>
 #include <QTreeWidgetItem>
-#include "primitives/zerocoin.h"
+#include "zpiv/zerocoin.h"
 #include "privacydialog.h"
 
 class CZerocoinMint;
@@ -54,6 +54,7 @@ private:
         COLUMN_DENOMINATION,
         COLUMN_PUBCOIN,
         COLUMN_VERSION,
+        COLUMN_PRECOMPUTE,
         COLUMN_CONFIRMATIONS,
         COLUMN_ISSPENDABLE
     };

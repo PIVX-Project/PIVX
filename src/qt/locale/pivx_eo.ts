@@ -608,10 +608,6 @@
         <source>&amp;Command-line options</source>
         <translation>&amp;Komando-linio opcioj</translation>
     </message>
-    <message numerus="yes">
-        <source>Processed %n blocks of transaction history.</source>
-        <translation><numerusform>%n bloko de tansakcio historo procesita</numerusform><numerusform>%n blokoj de tansakcio historo procesita</numerusform></translation>
-    </message>
     <message>
         <source>Synchronizing additional data: %p%</source>
         <translation>Ĝisdatiĝante pliaj datumo: %p%</translation>
@@ -736,10 +732,6 @@
         <source>PIVX Core client</source>
         <translation>PIVX Kerno kliento</translation>
     </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to PIVX network</source>
-        <translation><numerusform>%n aktiva ligo(j) al la PIVX reto</numerusform><numerusform>%n aktiva ligo(j) al la PIVX reto</numerusform></translation>
-    </message>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Ĝisdatiĝante kun reto...</translation>
@@ -760,25 +752,9 @@
         <source>Up to date</source>
         <translation>Ĝisdata</translation>
     </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation><numerusform>%n horo</numerusform><numerusform>%n horoj</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation><numerusform>%n tago</numerusform><numerusform>%n tagoj</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation><numerusform>%n semajno</numerusform><numerusform>%n semajnoj</numerusform></translation>
-    </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 kaj %2</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation><numerusform>%n jaro</numerusform><numerusform>%n jaroj</numerusform></translation>
     </message>
     <message>
         <source>Catching up...</source>
@@ -864,7 +840,7 @@ Muktisendi: %1</translation>
         <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
         <translation>Monujo estas &lt;b&gt;ĉifrita&lt;/b&gt; kaj nuntempe &lt;b&gt;ŝlosita&lt;/b&gt;</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>BlockExplorer</name>
     <message>
@@ -1217,6 +1193,17 @@ Muktisendi: %1</translation>
     </message>
 </context>
 <context>
+    <name>GovernancePage</name>
+    <message>
+        <source>Form</source>
+        <translation>Formo</translation>
+    </message>
+    <message>
+        <source>0</source>
+        <translation>0</translation>
+    </message>
+    </context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -1460,42 +1447,8 @@ Muktisendi: %1</translation>
         <translation>(neniu etikedo)</translation>
     </message>
     <message>
-        <source>The entered address:
-</source>
-        <translation>La enirita adreson:
-</translation>
-    </message>
-    <message>
-        <source> is invalid.
-Please check the address and try again.</source>
-        <translation>estas nevalida
-Bonvolu kontroku la adreson kaj riprovu</translation>
-    </message>
-    <message>
-        <source>The total amount of your MultiSend vector is over 100% of your stake reward
-</source>
-        <translation>Totala sumo de via multisendo vektoro estas super 100% de via stako rekompenco
-</translation>
-    </message>
-    <message>
         <source>Please Enter 1 - 100 for percent.</source>
         <translation>Bonvolu eniru 1 - 100 por porcento.</translation>
-    </message>
-    <message>
-        <source>MultiSend Vector
-</source>
-        <translation>Multisendo vektoro
-</translation>
-    </message>
-    <message>
-        <source>Removed </source>
-        <translation>Forigita</translation>
-    </message>
-    <message>
-        <source>Could not locate address
-</source>
-        <translation>Ne eblis loki adreson
-</translation>
     </message>
 </context>
 <context>
@@ -1550,7 +1503,7 @@ Bonvolu kontroku la adreson kaj riprovu</translation>
     </message>
     <message>
         <source>Amount:</source>
-        <translation>Kvanto</translation>
+        <translation>Kvanto:</translation>
     </message>
     <message>
         <source>Add an input to fund the outputs</source>
@@ -1887,7 +1840,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     <message>
         <source>Amount:</source>
-        <translation>Kvanto</translation>
+        <translation>Kvanto:</translation>
     </message>
     <message>
         <source>zPIV Control</source>
@@ -1923,7 +1876,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     <message>
         <source>Choose previously used address</source>
-        <translation>Elektu antaŭan uzatan adreson</translation>
+        <translation>Elektu antaŭe uzatan adreson</translation>
     </message>
     <message>
         <source>Alt+A</source>
@@ -1949,7 +1902,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     <message>
         <source>Priority:</source>
-        <translation>Prioritato</translation>
+        <translation>Prioritato:</translation>
     </message>
     <message>
         <source>TextLabel</source>
@@ -1961,7 +1914,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     <message>
         <source>no</source>
-        <translation>no</translation>
+        <translation>ne</translation>
     </message>
     <message>
         <source>Bytes:</source>
@@ -1977,7 +1930,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     <message>
         <source>Change:</source>
-        <translation>Ŝanĝo:</translation>
+        <translation>Ŝanĝu:</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -2021,6 +1974,9 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     </context>
 <context>
+    <name>ProposalFrame</name>
+    </context>
+<context>
     <name>QObject</name>
     <message>
         <source>Amount</source>
@@ -2037,6 +1993,10 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     <message>
         <source>UNKNOWN</source>
         <translation>NEKONATA</translation>
+    </message>
+    <message>
+        <source>PIVX Core</source>
+        <translation>PIVX kerno</translation>
     </message>
     </context>
 <context>
@@ -2117,10 +2077,6 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
         <translation>1&amp;semajno</translation>
     </message>
     <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Uzi la sagojn supran kaj malsupran por esplori la historion, kaj &lt;b&gt;Ctr-L&lt;/b&gt; por malplenigi la ekraron.</translation>
-    </message>
-    <message>
         <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
         <translation>Tajpu &lt;b&gt;helpo&lt;/b&gt; por superrigardi la disponeblajn komandojn.</translation>
     </message>
@@ -2183,6 +2139,10 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
         <source>Copy amount</source>
         <translation>Kopii kvanto</translation>
     </message>
+    <message>
+        <source>Copy address</source>
+        <translation>Kopi adreson</translation>
+    </message>
 </context>
 <context>
     <name>ReceiveRequestDialog</name>
@@ -2234,6 +2194,10 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
         <translation>Mesaĝo</translation>
     </message>
     <message>
+        <source>Address</source>
+        <translation>Adreso</translation>
+    </message>
+    <message>
         <source>Amount</source>
         <translation>Sumo:</translation>
     </message>
@@ -2266,11 +2230,11 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     <message>
         <source>Amount:</source>
-        <translation>Kvanto</translation>
+        <translation>Kvanto:</translation>
     </message>
     <message>
         <source>Priority:</source>
-        <translation>Prioritato</translation>
+        <translation>Prioritato:</translation>
     </message>
     <message>
         <source>medium</source>
@@ -2282,7 +2246,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     <message>
         <source>no</source>
-        <translation>no</translation>
+        <translation>ne</translation>
     </message>
     <message>
         <source>After Fee:</source>
@@ -2290,7 +2254,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     <message>
         <source>Change:</source>
-        <translation>Ŝanĝo:</translation>
+        <translation>Ŝanĝu:</translation>
     </message>
     <message>
         <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
@@ -2354,7 +2318,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     <message>
         <source>Confirm send coins</source>
-        <translation>Konfirmu sendi monon</translation>
+        <translation>Konfirmu sendi monojn</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -2377,7 +2341,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     <message>
         <source>Choose previously used address</source>
-        <translation>Elektu antaŭan uzatan adreson</translation>
+        <translation>Elektu antaŭe uzatan adreson</translation>
     </message>
     <message>
         <source>Alt+A</source>
@@ -2415,7 +2379,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     <name>SignVerifyMessageDialog</name>
     <message>
         <source>Choose previously used address</source>
-        <translation>Elektu antaŭan uzatan adreson</translation>
+        <translation>Elektu antaŭe uzatan adreson</translation>
     </message>
     <message>
         <source>Alt+A</source>
@@ -2447,7 +2411,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
     </message>
     <message>
         <source>The entered address does not refer to a key.</source>
-        <translation>La enirita adreso ne rilatas al ŝlosilo</translation>
+        <translation>La enirita adreso ne rilatas al ŝlosilo.</translation>
     </message>
     <message>
         <source>Wallet unlock was cancelled.</source>
@@ -2658,11 +2622,7 @@ Nematura: konfirmita, sed malpli ol 1 minto el la samo nomado post ĝin estis mi
         <source>zPIV</source>
         <translation>zPIV</translation>
     </message>
-    <message>
-        <source>Is Spendable</source>
-        <translation>Estas elspezebla</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>pivx-core</name>
     <message>

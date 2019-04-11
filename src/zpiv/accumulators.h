@@ -8,11 +8,12 @@
 #include "libzerocoin/Accumulator.h"
 #include "libzerocoin/Coin.h"
 #include "libzerocoin/Denominations.h"
-#include "primitives/zerocoin.h"
+#include "zpiv/zerocoin.h"
 #include "accumulatormap.h"
 #include "chain.h"
 #include "uint256.h"
 #include "bloom.h"
+#include "witness.h"
 
 class CBlockIndex;
 
@@ -22,14 +23,6 @@ std::map<libzerocoin::CoinDenomination, int> GetMintMaturityHeight();
  * Calculate the acc witness for a single coin.
  * @return true if the witness was calculated well
  */
-bool GenerateAccumulatorWitness(const libzerocoin::PublicCoin &coin,
-                                libzerocoin::Accumulator& accumulator,
-                                libzerocoin::AccumulatorWitness& witness,
-                                int nSecurityLevel,
-                                int& nMintsAdded,
-                                std::string& strError,
-                                CBlockIndex* pindexCheckpoint = nullptr
-                                        );
 
 bool CalculateAccumulatorWitnessFor(
         const libzerocoin::ZerocoinParams* params,
@@ -39,14 +32,22 @@ bool CalculateAccumulatorWitnessFor(
         const CBloomFilter& filter,
         libzerocoin::Accumulator& accumulator,
         libzerocoin::AccumulatorWitness& witness,
-        int nSecurityLevel,
         int& nMintsAdded,
         string& strError,
         list<CBigNum>& ret,
         int &heightStop
 );
 
+bool GenerateAccumulatorWitness(
+        const libzerocoin::PublicCoin &coin,
+        libzerocoin::Accumulator& accumulator,
+        libzerocoin::AccumulatorWitness& witness,
+        int& nMintsAdded,
+        string& strError,
+        CBlockIndex* pindexCheckpoint = nullptr);
 
+
+bool GenerateAccumulatorWitness(CoinWitnessData* coinWitness, AccumulatorMap& mapAccumulators, CBlockIndex* pindexCheckpoint);
 list<libzerocoin::PublicCoin> GetPubcoinFromBlock(const CBlockIndex* pindex);
 bool GetAccumulatorValueFromDB(uint256 nCheckpoint, libzerocoin::CoinDenomination denom, CBigNum& bnAccValue);
 bool GetAccumulatorValue(int& nHeight, const libzerocoin::CoinDenomination denom, CBigNum& bnAccValue);
@@ -90,3 +91,4 @@ public:
 };
 
 #endif //PIVX_ACCUMULATORS_H
+

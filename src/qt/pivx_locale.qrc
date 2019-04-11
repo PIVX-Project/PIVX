@@ -6,6 +6,7 @@
         <file alias="da">locale/pivx_da.qm</file>
         <file alias="de">locale/pivx_de.qm</file>
         <file alias="en">locale/pivx_en.qm</file>
+        <file alias="en_GB">locale/pivx_en_GB.qm</file>
         <file alias="en_US">locale/pivx_en_US.qm</file>
         <file alias="eo">locale/pivx_eo.qm</file>
         <file alias="es">locale/pivx_es.qm</file>

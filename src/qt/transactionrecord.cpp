@@ -10,7 +10,7 @@
 #include "obfuscation.h"
 #include "swifttx.h"
 #include "timedata.h"
-#include "wallet.h"
+#include "wallet/wallet.h"
 #include "zpivchain.h"
 
 #include <stdint.h>

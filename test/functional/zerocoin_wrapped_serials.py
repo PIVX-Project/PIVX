@@ -91,7 +91,7 @@ class zPIVwrappedSerialsTest(PIVX_FakeStakeTest):
                 tx = self.node.spendrawzerocoin(serial, randomness, DENOM_TO_USE, privkey)
             except JSONRPCException as e:
                 exc_msg = str(e)
-                if exc_msg == "The new spend coin transaction did not verify (-4)":
+                if exc_msg == "CoinSpend: failed check (-4)":
                     self.log.info("GOOD: Transaction did not verify")
                 else:
                     raise e

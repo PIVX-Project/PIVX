@@ -5,7 +5,9 @@
 #ifndef PIVX_ZPIVTRACKER_H
 #define PIVX_ZPIVTRACKER_H
 
-#include "primitives/zerocoin.h"
+#include "zerocoin.h"
+#include "witness.h"
+#include "sync.h"
 #include <list>
 
 class CDeterministicMint;
@@ -18,6 +20,7 @@ private:
     std::string strWalletFile;
     std::map<uint256, CMintMeta> mapSerialHashes;
     std::map<uint256, uint256> mapPendingSpends; //serialhash, txid of spend
+    std::map<uint256, std::unique_ptr<CoinWitnessData> > mapStakeCache; //serialhash, witness value, height
     bool UpdateStatusInternal(const std::set<uint256>& setMempool, CMintMeta& mint);
 public:
     CzPIVTracker(std::string strWalletFile);
@@ -37,6 +40,9 @@ public:
     bool GetMetaFromStakeHash(const uint256& hashStake, CMintMeta& meta) const;
     CAmount GetBalance(bool fConfirmedOnly, bool fUnconfirmedOnly) const;
     std::vector<uint256> GetSerialHashes();
+    mutable CCriticalSection cs_spendcache;
+    CoinWitnessData* GetSpendCache(const uint256& hashStake) EXCLUSIVE_LOCKS_REQUIRED(cs_spendcache);
+    bool ClearSpendCache() EXCLUSIVE_LOCKS_REQUIRED(cs_spendcache);
     std::vector<CMintMeta> GetMints(bool fConfirmedOnly) const;
     CAmount GetUnconfirmedBalance() const;
     std::set<CMintMeta> ListMints(bool fUnusedOnly, bool fMatureOnly, bool fUpdateStatus, bool fWrongSeed = false);

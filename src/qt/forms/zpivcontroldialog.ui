@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>681</width>
+    <width>781</width>
     <height>450</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>681</width>
+    <width>781</width>
     <height>450</height>
    </size>
   </property>
@@ -157,12 +157,17 @@
        </column>
        <column>
         <property name="text">
-         <string notr="true">zPIV ID</string>
+         <string notr="true">ID</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string notr="true">zPIV Version</string>
+         <string notr="true">Version</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string notr="true">Precomputed</string>
         </property>
        </column>
        <column>
@@ -172,7 +177,7 @@
        </column>
        <column>
         <property name="text">
-         <string>Is Spendable</string>
+         <string>Spendable?</string>
         </property>
        </column>
       </widget>

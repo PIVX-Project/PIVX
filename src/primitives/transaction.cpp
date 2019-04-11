@@ -47,6 +47,19 @@ CTxIn::CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn, uint32_t nS
     nSequence = nSequenceIn;
 }
 
+CTxIn::CTxIn(const libzerocoin::CoinSpend& spend, libzerocoin::CoinDenomination denom)
+{
+    //Serialize the coinspend object and append it to a CScript
+    CDataStream serializedCoinSpend(SER_NETWORK, PROTOCOL_VERSION);
+    serializedCoinSpend << spend;
+    std::vector<unsigned char> data(serializedCoinSpend.begin(), serializedCoinSpend.end());
+
+    scriptSig = CScript() << OP_ZEROCOINSPEND << data.size();
+    scriptSig.insert(scriptSig.end(), data.begin(), data.end());
+    prevout.SetNull();
+    nSequence = denom;
+}
+
 std::string CTxIn::ToString() const
 {
     std::string str;
