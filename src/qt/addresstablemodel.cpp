@@ -443,9 +443,8 @@ bool AddressTableModel::removeRows(int row, int count, const QModelIndex& parent
     }
     {
         LOCK(wallet->cs_wallet);
-        wallet->DelAddressBook(CBitcoinAddress(rec->address.toStdString()).Get());
+        return wallet->DelAddressBook(CBitcoinAddress(rec->address.toStdString()).Get());
     }
-    return true;
 }
 
 /* Look up label for address in address book, if not found return empty string.

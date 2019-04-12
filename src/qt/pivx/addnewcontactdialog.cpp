@@ -19,7 +19,7 @@ AddNewContactDialog::AddNewContactDialog(QWidget *parent) :
 
     // Title
 
-    ui->labelTitle->setText(tr("Add Label for save it"));
+    ui->labelTitle->setText(tr("Edit Contact"));
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
     ui->labelMessage->setText(tr("Set a label for the selected address"));
@@ -53,6 +53,11 @@ AddNewContactDialog::AddNewContactDialog(QWidget *parent) :
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->btnOk, SIGNAL(clicked()), this, SLOT(accept()));
+}
+
+void AddNewContactDialog::setData(QString address, QString label){
+    ui->labelMessage->setText(tr("Edit label for the selected address:\n%1").arg(address.toUtf8().constData()));
+    ui->lineEditName->setText(label);
 }
 
 QString AddNewContactDialog::getLabel(){

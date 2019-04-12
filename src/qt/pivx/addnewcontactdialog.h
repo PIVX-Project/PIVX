@@ -15,6 +15,7 @@ public:
     explicit AddNewContactDialog(QWidget *parent = nullptr);
     ~AddNewContactDialog();
 
+    void setData(QString address, QString label);
     QString getLabel();
 
 private:

@@ -170,12 +170,14 @@ void AddressesWidget::handleAddressClicked(const QModelIndex &index){
 
     if(!this->menu){
         this->menu = new TooltipMenu(window, this);
+        this->menu->setWalletModel(walletModel);
         connect(this->menu, SIGNAL(message(QString, QString, unsigned int, bool* ret)), this, SIGNAL(message(QString, QString, unsigned int, bool* ret)));
     }
     else {
         this->menu->hide();
         // TODO: update view..
     }
+    this->menu->setIndex(rIndex);
     menu->move(pos);
     menu->show();
 }
