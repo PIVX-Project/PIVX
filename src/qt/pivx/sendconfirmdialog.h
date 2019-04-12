@@ -4,6 +4,9 @@
 #include <QDialog>
 #include "walletmodeltransaction.h"
 
+class WalletModelTransaction;
+class WalletModel;
+
 namespace Ui {
 class SendConfirmDialog;
 }
@@ -17,8 +20,9 @@ public:
     ~SendConfirmDialog();
 
     bool isConfirm() { return this->confirm;}
+    WalletModel::SendCoinsReturn getStatus() { return this->sendStatus;}
 
-    void setData(WalletModelTransaction tx);
+    void setData(WalletModel *model, WalletModelTransaction &tx);
     void setDisplayUnit(int unit){this->nDisplayUnit = unit;};
 
 public slots:
@@ -28,6 +32,9 @@ private:
     Ui::SendConfirmDialog *ui;
     int nDisplayUnit = 0;
     bool confirm = false;
+    WalletModel *model;
+    WalletModel::SendCoinsReturn sendStatus;
+    WalletModelTransaction *tx;
 };
 
 #endif // SENDCONFIRMDIALOG_H

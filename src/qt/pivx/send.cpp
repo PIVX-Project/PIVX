@@ -285,6 +285,7 @@ void SendWidget::onSendClicked(){
 void SendWidget::send(QList<SendCoinsRecipient> recipients){
     // prepare transaction for getting txFee earlier
     WalletModelTransaction currentTransaction(recipients);
+    this->currentTransaction = &currentTransaction;
     WalletModel::SendCoinsReturn prepareStatus;
 
     // TODO: Coin control
@@ -314,14 +315,12 @@ void SendWidget::send(QList<SendCoinsRecipient> recipients){
     window->showHide(true);
     SendConfirmDialog* dialog = new SendConfirmDialog(window);
     dialog->setDisplayUnit(walletModel->getOptionsModel()->getDisplayUnit());
-
-    dialog->setData(currentTransaction);
-
+    dialog->setData(walletModel, currentTransaction);
     openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
 
     if(dialog->isConfirm()){
         // now send the prepared transaction
-        WalletModel::SendCoinsReturn sendStatus = walletModel->sendCoins(currentTransaction);
+        WalletModel::SendCoinsReturn sendStatus = dialog->getStatus();
         // process sendStatus and on error generate message shown to user
         processSendCoinsReturn(sendStatus);
 
@@ -464,7 +463,6 @@ void SendWidget::onzPIVSelected(){
 
 
 void SendWidget::onContactsClicked(){
-
     /*
     int height = ui->stackedWidget_2->height() * 8;
     int width = ui->stackedWidget_2->width();

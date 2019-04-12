@@ -21,6 +21,7 @@
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h" // for BackupWallet
 #include <stdint.h>
+#include <iostream>
 #include "primitives/deterministicmint.h"
 
 #include <QDebug>
@@ -221,7 +222,7 @@ void WalletModel::updateAddressBook(const QString& address, const QString& label
         if (addressTableModel)
             addressTableModel->updateEntry(address, label, isMine, purpose, status);
     }catch (...){
-        std::cout << "EXception updateAddressBook" << std::endl;
+        std::cout << "Exception updateAddressBook" << std::endl;
     }
 }
 void WalletModel::updateAddressBook(const QString &pubCoin, const QString &isUsed, int status)
@@ -230,7 +231,7 @@ void WalletModel::updateAddressBook(const QString &pubCoin, const QString &isUse
         if(addressTableModel)
             addressTableModel->updateEntry(pubCoin, isUsed, status);
     }catch (...){
-        std::cout << "EXception updateAddressBook" << std::endl;
+        std::cout << "Exception updateAddressBook" << std::endl;
     }
 }
 
@@ -398,9 +399,6 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& tran
         }
 
         CReserveKey* keyChange = transaction.getPossibleKeyChange();
-
-        transaction.getRecipients();
-
         if (!wallet->CommitTransaction(*newTx, *keyChange, (recipients[0].useSwiftTX) ? "ix" : "tx"))
             return TransactionCommitFailed;
 

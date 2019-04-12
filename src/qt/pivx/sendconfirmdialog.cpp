@@ -65,12 +65,13 @@ SendConfirmDialog::SendConfirmDialog(QWidget *parent) :
     connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(acceptTx()));
 }
 
-void SendConfirmDialog::setData(WalletModelTransaction tx){
-
+void SendConfirmDialog::setData(WalletModel *model, WalletModelTransaction &tx){
+    this->model = model;
+    this->tx = &tx;
     CAmount txFee = tx.getTransactionFee();
     CAmount totalAmount = tx.getTotalTransactionAmount() + txFee;
 
-    ui->textAmount->setText(BitcoinUnits::formatWithUnit(nDisplayUnit, totalAmount, false, BitcoinUnits::separatorAlways));
+    ui->textAmount->setText(BitcoinUnits::formatWithUnit(nDisplayUnit, totalAmount, false, BitcoinUnits::separatorAlways) + " (Fee included)");
     if(tx.getRecipients().size() == 1){
         ui->textSend->setText(tx.getRecipients().at(0).address);
     }else{
@@ -82,6 +83,7 @@ void SendConfirmDialog::setData(WalletModelTransaction tx){
 
 void SendConfirmDialog::acceptTx(){
     this->confirm = true;
+    this->sendStatus = model->sendCoins(*this->tx);
     accept();
 }
 

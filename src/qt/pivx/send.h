@@ -13,6 +13,7 @@ static const int MAX_SEND_POPUP_ENTRIES = 8;
 class PIVXGUI;
 class ClientModel;
 class WalletModel;
+class WalletModelTransaction;
 
 namespace Ui {
 class send;
@@ -56,6 +57,8 @@ private:
     PIVXGUI* window;
     QPushButton *coinIcon;
     QPushButton *btnContacts;
+
+    WalletModelTransaction *currentTransaction = nullptr;
 
     ClientModel* clientModel = nullptr;
     WalletModel* walletModel = nullptr;
