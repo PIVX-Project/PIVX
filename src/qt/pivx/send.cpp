@@ -285,7 +285,6 @@ void SendWidget::onSendClicked(){
 void SendWidget::send(QList<SendCoinsRecipient> recipients){
     // prepare transaction for getting txFee earlier
     WalletModelTransaction currentTransaction(recipients);
-    this->currentTransaction = &currentTransaction;
     WalletModel::SendCoinsReturn prepareStatus;
 
     // TODO: Coin control

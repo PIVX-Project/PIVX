@@ -58,8 +58,6 @@ private:
     QPushButton *coinIcon;
     QPushButton *btnContacts;
 
-    WalletModelTransaction *currentTransaction = nullptr;
-
     ClientModel* clientModel = nullptr;
     WalletModel* walletModel = nullptr;
 
