@@ -129,6 +129,7 @@ private:
 
     void createTrayIcon(const NetworkStyle* networkStyle);
     void showTop(QWidget *view);
+    bool openStandardDialog(QString title = "", QString body = "", QString okBtn = "OK", QString cancelBtn = "CANCEL");
 
     /** Connect core signals to GUI client */
     void subscribeToCoreSignals();

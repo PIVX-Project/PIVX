@@ -15,6 +15,8 @@ public:
     explicit DefaultDialog(QWidget *parent = nullptr);
     ~DefaultDialog();
 
+    void setText(QString title = "", QString message = "", QString okBtnText = "", QString cancelBtnText = "");
+
 private:
     Ui::DefaultDialog *ui;
 };

@@ -16,6 +16,8 @@
 #include "ui_interface.h"
 #include "qt/pivx/qtutils.h"
 
+#include "qt/pivx/defaultdialog.h"
+
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -324,15 +326,24 @@ void PIVXGUI::message(const QString& title, const QString& message, unsigned int
         // Display message
         if (style & CClientUIInterface::MODAL) {
             // Check for buttons, use OK as default, if none was supplied
-            QMessageBox::StandardButton buttons;
-            if (!(buttons = (QMessageBox::StandardButton)(style & CClientUIInterface::BTN_MASK)))
-                buttons = QMessageBox::Ok;
-
+            int r = 0;
+            // TODO: check this method..
             showNormalIfMinimized();
-            QMessageBox mBox((QMessageBox::Icon) nMBoxIcon, strTitle, message, buttons, this);
-            int r = mBox.exec();
+            if(style & CClientUIInterface::BTN_MASK){
+                r = openStandardDialog(title, message, "OK", "CANCEL");
+            }else{
+                // TODO add: standard ok button only
+                r = openStandardDialog(title, message, "OK");
+            }
+            //QMessageBox::StandardButton buttons;
+            //if (!(buttons = (QMessageBox::StandardButton)(style & CClientUIInterface::BTN_MASK)))
+            //    buttons = QMessageBox::Ok;
+
+            //QMessageBox mBox((QMessageBox::Icon) nMBoxIcon, strTitle, message, buttons, this);
+            //int r = mBox.exec();
+
             if (ret != NULL)
-                *ret = r == QMessageBox::Ok;
+                *ret = r;
         } else
             notificator->notify((Notificator::Class) nNotifyIcon, strTitle, message);
 
@@ -342,6 +353,14 @@ void PIVXGUI::message(const QString& title, const QString& message, unsigned int
     } catch (...){
         LogPrintf("ERROR in message  PIVXGUI..\n");
     }
+}
+
+bool PIVXGUI::openStandardDialog(QString title, QString body, QString okBtn, QString cancelBtn){
+    showHide(true);
+    DefaultDialog *dialog = new DefaultDialog(this);
+    dialog->setText(title, body, okBtn, cancelBtn);
+    dialog->adjustSize();
+    return openDialogWithOpaqueBackground(dialog, this);
 }
 
 
@@ -487,7 +506,10 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     connect(sendWidget, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
     connect(topBar, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
     connect(privacyWidget, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
-
+    connect(addressesWidget,
+            SIGNAL(message(const QString&,const QString&, unsigned int, bool* ret)),
+            this, SLOT(message(QString&, QString&, unsigned int, bool* ret))
+            );
 
     return true;
 }

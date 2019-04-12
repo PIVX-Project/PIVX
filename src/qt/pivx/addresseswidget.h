@@ -34,8 +34,7 @@ public:
     void onNewContactClicked();
 
 signals:
-    // Fired when a message should be reported to the user
-    void message(const QString& title, const QString& message, unsigned int style);
+    void message(const QString& title, const QString& message, unsigned int style, bool* ret);
 
 private slots:
     void handleAddressClicked(const QModelIndex &index);

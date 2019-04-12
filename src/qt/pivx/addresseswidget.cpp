@@ -165,7 +165,13 @@ void AddressesWidget::handleAddressClicked(const QModelIndex &index){
     QPoint pos = rect.topRight();
     pos.setX(pos.x() - (DECORATION_SIZE * 2));
     pos.setY(pos.y() + (DECORATION_SIZE));
-    if(!this->menu) this->menu = new TooltipMenu(this);
+
+    QModelIndex rIndex = (filter) ? filter->mapToSource(index) : index;
+
+    if(!this->menu){
+        this->menu = new TooltipMenu(window, this);
+        connect(this->menu, SIGNAL(message(QString, QString, unsigned int, bool* ret)), this, SIGNAL(message(QString, QString, unsigned int, bool* ret)));
+    }
     else {
         this->menu->hide();
         // TODO: update view..
@@ -203,14 +209,14 @@ void AddressesWidget::onStoreContactClicked(){
         // TODO: Update address status on text change..
         if (!walletModel->validateAddress(address)) {
             setCssEditLine(ui->lineEditAddress, false, true);
-            emit message("", tr("Invalid Contact Address"), CClientUIInterface::MSG_INFORMATION);
+            emit message("", tr("Invalid Contact Address"), CClientUIInterface::MSG_INFORMATION, nullptr);
             return;
         }
 
         CBitcoinAddress pivAdd = CBitcoinAddress(address.toUtf8().constData());
         if (walletModel->isMine(pivAdd)) {
             setCssEditLine(ui->lineEditAddress, false, true);
-            emit message("", tr("Cannot store your own address as contact"), CClientUIInterface::MSG_INFORMATION);
+            emit message("", tr("Cannot store your own address as contact"), CClientUIInterface::MSG_INFORMATION, nullptr);
             return;
         }
 
@@ -226,9 +232,9 @@ void AddressesWidget::onStoreContactClicked(){
                 ui->listAddresses->setVisible(true);
             }
 
-            emit message("", tr("New Contact Stored"), CClientUIInterface::MSG_INFORMATION);
+            emit message("", tr("New Contact Stored"), CClientUIInterface::MSG_INFORMATION, nullptr);
         } else {
-            emit message("", tr("Error Storing Contact"), CClientUIInterface::MSG_INFORMATION);
+            emit message("", tr("Error Storing Contact"), CClientUIInterface::MSG_INFORMATION, nullptr);
         }
 
     }

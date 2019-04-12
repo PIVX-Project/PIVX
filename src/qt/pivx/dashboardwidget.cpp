@@ -173,6 +173,8 @@ void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
 
     ui->listTransactions->setCurrentIndex(index);
 
+    QModelIndex rIndex = (filter) ? filter->mapToSource(index) : index;
+
     window->showHide(true);
     TxDetailDialog *dialog = new TxDetailDialog(window);
     openDialogWithOpaqueBackgroundY(dialog, window, 3, 6);
