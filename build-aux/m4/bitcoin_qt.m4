@@ -137,6 +137,8 @@ AC_DEFUN([BITCOIN_QT_CONFIGURE],[
     fi
     _BITCOIN_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QMinimalIntegrationPlugin)],[-lqminimal])
     AC_DEFINE(QT_QPA_PLATFORM_MINIMAL, 1, [Define this symbol if the minimal qt platform exists])
+    _BITCOIN_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QSvgPlugin)],[-lqsvg])
+    _BITCOIN_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QSvgIconPlugin)],[-lqsvgicon])
     if test "x$TARGET_OS" = xwindows; then
       _BITCOIN_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)],[-lqwindows])
       AC_DEFINE(QT_QPA_PLATFORM_WINDOWS, 1, [Define this symbol if the qt platform is windows])
@@ -356,7 +358,7 @@ dnl Inputs: qt_plugin_path. optional.
 dnl Outputs: QT_LIBS is appended
 AC_DEFUN([_BITCOIN_QT_FIND_STATIC_PLUGINS],[
     if test "x$qt_plugin_path" != x; then
-      QT_LIBS="$QT_LIBS -L$qt_plugin_path/platforms"
+      QT_LIBS="$QT_LIBS -L$qt_plugin_path/platforms -L$qt_plugin_path/imageformats -L$qt_plugin_path/iconengines"
       if test -d "$qt_plugin_path/accessible"; then
         QT_LIBS="$QT_LIBS -L$qt_plugin_path/accessible"
       fi
@@ -383,6 +385,7 @@ AC_DEFUN([_BITCOIN_QT_FIND_STATIC_PLUGINS],[
          PKG_CHECK_MODULES([QTGRAPHICS], [Qt5GraphicsSupport], [QT_LIBS="-lQt5GraphicsSupport $QT_LIBS"])
          PKG_CHECK_MODULES([QTCGL], [Qt5CglSupport], [QT_LIBS="-lQt5CglSupport $QT_LIBS"])
        fi
+       @echo "QT_LIBS: $(QT_LIBS)"
      ])
      else
        if test "x$TARGET_OS" = xwindows; then
@@ -469,6 +472,7 @@ AC_DEFUN([_BITCOIN_QT_FIND_LIBS_WITHOUT_PKGCONFIG],[
   BITCOIN_QT_CHECK([AC_CHECK_HEADER([QtPlugin],,BITCOIN_QT_FAIL(QtCore headers missing))])
   BITCOIN_QT_CHECK([AC_CHECK_HEADER([QApplication],, BITCOIN_QT_FAIL(QtGui headers missing))])
   BITCOIN_QT_CHECK([AC_CHECK_HEADER([QLocalSocket],, BITCOIN_QT_FAIL(QtNetwork headers missing))])
+  BITCOIN_QT_CHECK([AC_CHECK_HEADER([QtSvg],, BITCOIN_QT_FAIL(QtSVG headers missing))])
 
   BITCOIN_QT_CHECK([
     if test "x$bitcoin_qt_want_version" = xauto; then
