@@ -1,6 +1,7 @@
 #include "qt/pivx/sendchangeaddressdialog.h"
 #include "qt/pivx/forms/ui_sendchangeaddressdialog.h"
 #include "QGraphicsDropShadowEffect"
+#include "walletmodel.h"
 
 SendChangeAddressDialog::SendChangeAddressDialog(QWidget *parent) :
     QDialog(parent),
@@ -50,11 +51,21 @@ SendChangeAddressDialog::SendChangeAddressDialog(QWidget *parent) :
 
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->btnSave, &QPushButton::clicked, [this](){
+        selected = true;
+        accept();
+    });
 }
 
+bool SendChangeAddressDialog::getAddress(WalletModel *model, QString *retAddress){
+    QString address = ui->lineEditAddress->text();
+    if(!address.isEmpty() && model->validateAddress(address)){
+        *retAddress = address;
+        return true;
+    }
+    return false;
+}
 
-
-SendChangeAddressDialog::~SendChangeAddressDialog()
-{
+SendChangeAddressDialog::~SendChangeAddressDialog(){
     delete ui;
 }

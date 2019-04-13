@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+class WalletModel;
+
 namespace Ui {
 class SendChangeAddressDialog;
 }
@@ -14,6 +16,9 @@ class SendChangeAddressDialog : public QDialog
 public:
     explicit SendChangeAddressDialog(QWidget *parent = nullptr);
     ~SendChangeAddressDialog();
+
+    bool getAddress(WalletModel *model, QString *retAddress);
+    bool selected = false;
 
 private:
     Ui::SendChangeAddressDialog *ui;
