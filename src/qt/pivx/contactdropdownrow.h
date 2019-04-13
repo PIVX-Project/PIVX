@@ -16,6 +16,7 @@ public:
     ~ContactDropdownRow();
 
     void update(bool isLightTheme, bool isHover, bool isSelected);
+    void setData(QString address, QString label);
 protected:
     virtual void enterEvent(QEvent *);
     virtual void leaveEvent(QEvent *);

@@ -36,7 +36,12 @@ public:
     CAmount getAmountValue(QString str);
 
     void setAddress(const QString& address);
+    void setLabel(const QString& label);
     void setFocus();
+
+    QRect getEditLineRect();
+    int getEditHeight();
+    int getEditWidth();
 
 public slots:
     void clear();

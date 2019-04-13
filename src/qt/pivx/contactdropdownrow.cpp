@@ -18,6 +18,11 @@ void ContactDropdownRow::update(bool isLightTheme, bool isHover, bool isSelected
         ui->lblDivisory->setStyleSheet("background-color:#bababa");
 }
 
+void ContactDropdownRow::setData(QString address, QString label){
+    ui->lblAddress->setText(address);
+    ui->lblLabel->setText(label);
+}
+
 void ContactDropdownRow::enterEvent(QEvent *) {
     //update();
 }

@@ -7,6 +7,7 @@
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/furlistrow.h"
 #include "walletmodel.h"
+#include "addresstablemodel.h"
 
 #define DECORATION_SIZE 70
 #define NUM_ITEMS 3
@@ -23,7 +24,12 @@ public:
     }
 
     void init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const override{
-        static_cast<ContactDropdownRow*>(holder)->update(isLightTheme, isHovered, isSelected);
+        ContactDropdownRow* row = static_cast<ContactDropdownRow*>(holder);
+        row->update(isLightTheme, isHovered, isSelected);
+        QString address = index.data(Qt::DisplayRole).toString();
+        QModelIndex sibling = index.sibling(index.row(), AddressTableModel::Label);
+        QString label = sibling.data(Qt::DisplayRole).toString();
+        row->setData(address, label);
     }
 
     QColor rectColor(bool isHovered, bool isSelected) override{
@@ -73,11 +79,13 @@ ContactsDropdown::ContactsDropdown(int minWidth, int minHeight, QWidget *parent)
 
 void ContactsDropdown::setWalletModel(WalletModel* _model){
     model = _model->getAddressTableModel();
-    list->setModel(this->model);
+    this->filter = new AddressFilterProxyModel(AddressTableModel::Send, this);
+    this->filter->setSourceModel(model);
+    list->setModel(this->filter);
+    list->setModelColumn(AddressTableModel::Address);
 }
 
-void ContactsDropdown::resizeList(int minWidth, int mintHeight)
-{
+void ContactsDropdown::resizeList(int minWidth, int mintHeight){
     list->setMinimumWidth(minWidth);
     setMinimumWidth(minWidth);
     frameList->setMinimumWidth(minWidth);
@@ -86,8 +94,11 @@ void ContactsDropdown::resizeList(int minWidth, int mintHeight)
     update();
 }
 
-void ContactsDropdown::handleClick(const QModelIndex &index)
-{
-    // TODO: Return selected..
+void ContactsDropdown::handleClick(const QModelIndex &index){
+    QModelIndex rIndex = (filter) ? filter->mapToSource(index) : index;
+    QString address = rIndex.data(Qt::DisplayRole).toString();
+    QModelIndex sibling = rIndex.sibling(rIndex.row(), AddressTableModel::Label);
+    QString label = sibling.data(Qt::DisplayRole).toString();
+    emit contactSelected(address, label);
     close();
 }

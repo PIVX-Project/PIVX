@@ -4,7 +4,7 @@
 #include "addresstablemodel.h"
 #include "qt/pivx/contactdropdownrow.h"
 #include "qt/pivx/furabstractlistitemdelegate.h"
-
+#include "qt/pivx/AddressFilterProxyModel.h"
 #include <QListView>
 #include <QObject>
 #include <QWidget>
@@ -27,9 +27,12 @@ public:
 
     void resizeList(int minWidth, int mintHeight);
     void setWalletModel(WalletModel* _model);
+signals:
+    void contactSelected(QString address, QString label);
 private:
     FurAbstractListItemDelegate* delegate;
     AddressTableModel* model;
+    AddressFilterProxyModel *filter = nullptr;
     QListView *list;
     QFrame *frameList;
 private slots:

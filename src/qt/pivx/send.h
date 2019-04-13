@@ -14,6 +14,7 @@ class PIVXGUI;
 class ClientModel;
 class WalletModel;
 class WalletModelTransaction;
+class CCoinControl;
 
 namespace Ui {
 class send;
@@ -48,9 +49,10 @@ private slots:
     void onPIVSelected(bool _isPIV);
     void onSendClicked();
     void changeTheme(bool isLightTheme, QString& theme);
-    void onContactsClicked();
+    void onContactsClicked(SendMultiRow* entry);
     void onAddEntryClicked();
     void clearEntries();
+    void clearAll();
     void refreshView();
 private:
     Ui::send *ui;
@@ -61,13 +63,17 @@ private:
     ClientModel* clientModel = nullptr;
     WalletModel* walletModel = nullptr;
 
+    CCoinControl* coinControl = nullptr;
     QList<SendMultiRow*> entries;
 
     ContactsDropdown *menuContacts = nullptr;
     SendMultiRow *sendMultiRow;
+    // Current focus entry
+    SendMultiRow* focusedEntry = nullptr;
 
     bool isPIV = true;
     void resizeMenu();
+    QString recipientsToString(QList<SendCoinsRecipient> recipients);
     SendMultiRow* createEntry();
     bool send(QList<SendCoinsRecipient> recipients);
     bool sendZpiv(QList<SendCoinsRecipient> recipients);

@@ -70,7 +70,7 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
     // TODO: add validator --> there is a class in the core QValidateLineEdit and some methods..
     connect(ui->lineEditAmount, SIGNAL(textChanged(const QString&)), this, SLOT(amountChanged(const QString&)));
     connect(ui->lineEditAddress, SIGNAL(textChanged(const QString&)), this, SLOT(addressChanged(const QString&)));
-    connect(btnContact, SIGNAL(triggered()), this, SIGNAL(onContactsClicked(this)));
+    connect(btnContact, &QAction::triggered, [this](){emit onContactsClicked(this);});
 
 }
 
@@ -187,18 +187,32 @@ SendCoinsRecipient SendMultiRow::getValue() {
     return recipient;
 }
 
+QRect SendMultiRow::getEditLineRect(){
+    return ui->lineEditAddress->rect();
+}
+
+int SendMultiRow::getEditHeight(){
+    return ui->stackedAddress->height();
+}
+
+int SendMultiRow::getEditWidth(){
+    return ui->lineEditAddress->width();
+}
+
 void SendMultiRow::setAddress(const QString& address) {
     ui->lineEditAddress->setText(address);
     ui->lineEditAmount->setFocus();
 }
 
-bool SendMultiRow::isClear()
-{
+void SendMultiRow::setLabel(const QString& label){
+    ui->lineEditDescription->setText(label);
+}
+
+bool SendMultiRow::isClear(){
     return ui->lineEditAddress->text().isEmpty();
 }
 
-void SendMultiRow::setFocus()
-{
+void SendMultiRow::setFocus(){
     ui->lineEditAddress->setFocus();
 }
 

@@ -10,6 +10,7 @@
 #include "qt/pivx/sendconfirmdialog.h"
 #include "qt/pivx/myaddressrow.h"
 #include "optionsmodel.h"
+#include "coincontrol.h"
 
 #include <QFile>
 #include <QGraphicsDropShadowEffect>
@@ -21,7 +22,8 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     ui(new Ui::send),
     window(_window),
     coinIcon(new QPushButton()),
-    btnContacts(new QPushButton())
+    btnContacts(new QPushButton()),
+    coinControl(new CCoinControl())
 {
     ui->setupUi(this);
 
@@ -142,17 +144,14 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     // Entry
     addEntry();
 
-   // connect(obj, &ObjType::signalName, [this]() { desiredCall(constantArgument); });
-
     // Connect
     connect(ui->pushLeft, &QPushButton::clicked, [this](){onPIVSelected(true);});
     connect(ui->pushRight,  &QPushButton::clicked, [this](){onPIVSelected(false);});
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(onSendClicked()));
-    connect(btnContacts, SIGNAL(clicked()), this, SLOT(onContactsClicked()));
 
     connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
     connect(ui->pushButtonAddRecipient, SIGNAL(clicked()), this, SLOT(onAddEntryClicked()));
-    connect(ui->pushButtonClear, SIGNAL(clicked()), this, SLOT(clearEntries()));
+    connect(ui->pushButtonClear, SIGNAL(clicked()), this, SLOT(clearAll()));
 }
 
 void SendWidget::refreshView(){
@@ -200,8 +199,11 @@ void SendWidget::setModel(WalletModel* model) {
         // TODO: fee section, check sendDialog, same method
 
     }
+}
 
-
+void SendWidget::clearAll(){
+    coinControl->SetNull();
+    clearEntries();
 }
 
 void SendWidget::clearEntries(){
@@ -239,6 +241,7 @@ SendMultiRow* SendWidget::createEntry(){
     if(this->walletModel)sendMultiRow->setModel(this->walletModel);
     entries.append(sendMultiRow);
     ui->scrollAreaWidgetContents->layout()->addWidget(sendMultiRow);
+    connect(sendMultiRow, &SendMultiRow::onContactsClicked, this, &SendWidget::onContactsClicked);
     return sendMultiRow;
 }
 
@@ -311,7 +314,7 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
     //if (model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
     //    prepareStatus = model->prepareTransaction(currentTransaction, CoinControlDialog::coinControl);
     //else
-    prepareStatus = walletModel->prepareTransaction(currentTransaction);
+    prepareStatus = walletModel->prepareTransaction(currentTransaction, coinControl);
 
 
     // process prepareStatus and on error generate message shown to user
@@ -348,7 +351,7 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
             //CoinControlDialog::coinControl->UnSelectAll();
             //coinControlUpdateLabels();
             //
-            clearEntries();
+            clearAll();
             emit message("", tr("Transaction sent"),CClientUIInterface::MSG_INFORMATION);
             return true;
         }
@@ -369,11 +372,32 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
     }
 
     std::list<std::pair<CBitcoinAddress*, CAmount>> outputs;
+    CAmount total = 0;
     for (SendCoinsRecipient rec : recipients){
+        total += rec.amount;
         outputs.push_back(std::pair<CBitcoinAddress*, CAmount>(new CBitcoinAddress(rec.address.toStdString()),rec.amount));
     }
 
     // TODO: add confirm dialog..
+    QString sendBody = outputs.size() == 1 ?
+            tr("Sending %1 to address %2\n")
+            .arg(BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), total, false, BitcoinUnits::separatorAlways))
+            .arg(recipients.first().address)
+            :
+           tr("Sending %1 to addresses\n%2")
+           .arg(BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), total, false, BitcoinUnits::separatorAlways))
+           .arg(recipientsToString(recipients));
+
+    bool ret = false;
+    //emit message( TODO: add this emit..
+    window->message(
+            tr("Spend Zerocoin"),
+            sendBody,
+            CClientUIInterface::MSG_INFORMATION | CClientUIInterface::BTN_MASK | CClientUIInterface::MODAL,
+            &ret);
+
+    if(!ret) return false;
+
     /**
      * TODO:
      * vector<CZerocoinMint> &vMintsSelected,
@@ -383,31 +407,34 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
             std::list<std::pair<CBitcoinAddress*, CAmount>> outputs,
             std::string changeAddress = ""
      */
-    vector<CZerocoinMint> vMintsSelected;
+    vector <CZerocoinMint> vMintsSelected;
     CZerocoinSpendReceipt receipt;
     // TODO: Complete me..
 
-    if(walletModel->sendZpiv(
+    if (walletModel->sendZpiv(
             vMintsSelected,
             true,
             true,
             receipt,
             outputs
-            )
-    ){
+    )
+            ) {
         emit message("", tr("zPIV transaction sent!"), CClientUIInterface::MSG_INFORMATION);
+        clearAll();
         return true;
-    }else{
+    } else {
         // TODO: Detail error on the receipt..
         QString body;
         if (receipt.GetStatus() == ZPIV_SPEND_V1_SEC_LEVEL) {
             body = tr("Version 1 zPIV require a security level of 100 to successfully spend.");
-        }else{
+        } else {
             int nNeededSpends = receipt.GetNeededSpends(); // Number of spends we would need for this transaction
             const int nMaxSpends = Params().Zerocoin_MaxSpendsPerTransaction(); // Maximum possible spends for one zPIV transaction
             if (nNeededSpends > nMaxSpends) {
-                body = tr("Too much inputs (") + QString::number(nNeededSpends, 10) + tr(") needed.\nMaximum allowed: ") + QString::number(nMaxSpends, 10);
-                body += tr("\nEither mint higher denominations (so fewer inputs are needed) or reduce the amount to spend.");
+                body = tr("Too much inputs (") + QString::number(nNeededSpends, 10) +
+                       tr(") needed.\nMaximum allowed: ") + QString::number(nMaxSpends, 10);
+                body += tr(
+                        "\nEither mint higher denominations (so fewer inputs are needed) or reduce the amount to spend.");
             } else {
                 body = QString::fromStdString(receipt.GetStatusMessage());
             }
@@ -415,6 +442,14 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
         emit message("zPIV transaction failed", body, CClientUIInterface::MSG_ERROR);
         return false;
     }
+}
+
+QString SendWidget::recipientsToString(QList<SendCoinsRecipient> recipients){
+    QString s = "";
+    for (SendCoinsRecipient rec : recipients){
+        s += rec.address + " -> " + BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), rec.amount, false, BitcoinUnits::separatorAlways) + "\n";
+    }
+    return s;
 }
 
 void SendWidget::updateEntryLabels(QList<SendCoinsRecipient> recipients){
@@ -508,8 +543,16 @@ void SendWidget::processSendCoinsReturn(const WalletModel::SendCoinsReturn& send
 void SendWidget::onChangeAddressClicked(){
     window->showHide(true);
     SendChangeAddressDialog* dialog = new SendChangeAddressDialog(window);
-    openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
-
+    if(openDialogWithOpaqueBackgroundY(dialog, window, 3, 5)) {
+        if(dialog->selected) {
+            QString ret;
+            if (dialog->getAddress(walletModel, &ret)) {
+                coinControl->destChange = CBitcoinAddress(ret.toStdString()).Get();
+            }else{
+                emit message("", tr("Invalid change address"), CClientUIInterface::MSG_INFORMATION);
+            }
+        }
+    }
 }
 
 void SendWidget::onChangeCustomFeeClicked(){
@@ -537,10 +580,10 @@ void SendWidget::onPIVSelected(bool _isPIV){
     updateStyle(coinIcon);
 }
 
-void SendWidget::onContactsClicked(){
-    /*
-    int height = ui->stackedWidget_2->height() * 8;
-    int width = ui->stackedWidget_2->width();
+void SendWidget::onContactsClicked(SendMultiRow* entry){
+    focusedEntry = entry;
+    int height = entry->getEditHeight() * 8;
+    int width = entry->getEditWidth();
 
     if(!menuContacts){
         menuContacts = new ContactsDropdown(
@@ -548,6 +591,13 @@ void SendWidget::onContactsClicked(){
                     height,
                     this
                     );
+        menuContacts->setWalletModel(walletModel);
+        connect(menuContacts, &ContactsDropdown::contactSelected, [this](QString address, QString label){
+            if(focusedEntry){
+                focusedEntry->setLabel(label);
+                focusedEntry->setAddress(address);
+            }
+        });
 
     }else{
         menuContacts->setMinimumHeight(height);
@@ -563,30 +613,25 @@ void SendWidget::onContactsClicked(){
 
     menuContacts->setStyleSheet(this->styleSheet());
 
-    QRect rect = ui->lineEditAddress->rect();
-    QPoint pos = rect.bottomLeft();
+    QPoint pos = entry->getEditLineRect().bottomLeft();
     // TODO: Change this position..
     pos.setX(pos.x() + 20);
-    pos.setY(pos.y() + ((ui->lineEditAddress->height() - 4)  * 3));
+    pos.setY(pos.y() + ((entry->getEditHeight() - 4)  * 3));
     menuContacts->move(pos);
     menuContacts->show();
-    */
 }
 
 void SendWidget::resizeMenu(){
-    /*
-    if(menuContacts && menuContacts->isVisible()){
-        int width = ui->stackedWidget_2->width();
+    if(menuContacts && menuContacts->isVisible() && focusedEntry){
+        int width = focusedEntry->getEditWidth();
         menuContacts->resizeList(width, menuContacts->height());
         menuContacts->resize(width, menuContacts->height());
-        QRect rect = ui->lineEditAddress->rect();
-        QPoint pos = rect.bottomLeft();
+        QPoint pos = focusedEntry->getEditLineRect().bottomLeft();
         // TODO: Change this position..
         pos.setX(pos.x() + 20);
-        pos.setY(pos.y() + ((ui->lineEditAddress->height() - 4)  * 3));
+        pos.setY(pos.y() + ((focusedEntry->getEditHeight() - 4)  * 3));
         menuContacts->move(pos);
     }
-    */
 }
 
 void SendWidget::changeTheme(bool isLightTheme, QString& theme){
