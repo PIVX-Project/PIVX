@@ -155,13 +155,19 @@ void ReceiveWidget::setWalletModel(WalletModel* model){
         ui->listViewAddress->setModel(this->addressTableModel);
         ui->listViewAddress->setModelColumn(AddressTableModel::Address);
 
-        QString latestAddress = this->addressTableModel->getLastUnusedAddress();
         if(!info) info = new SendCoinsRecipient();
-        ui->labelAddress->setText(!latestAddress.isEmpty() ? latestAddress : tr("No address"));
-        updateQr(latestAddress);
+        refreshView();
 
-        updateLabel();
+        // data change
+        connect(this->addressTableModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(refreshView()));
     }
+}
+
+void ReceiveWidget::refreshView(){
+    QString latestAddress = this->addressTableModel->getLastUnusedAddress();
+    ui->labelAddress->setText(!latestAddress.isEmpty() ? latestAddress : tr("No address"));
+    updateQr(latestAddress);
+    updateLabel();
 }
 
 void ReceiveWidget::updateLabel(){

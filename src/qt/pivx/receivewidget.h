@@ -39,6 +39,7 @@ private slots:
     void changeTheme(bool isLightTheme, QString &theme);
     void onLabelClicked();
     void onCopyClicked();
+    void refreshView();
 private:
     Ui::ReceiveWidget *ui;
     PIVXGUI* window;
