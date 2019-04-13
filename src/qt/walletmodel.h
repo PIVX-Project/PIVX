@@ -168,6 +168,15 @@ public:
     // Mint zPIV
     bool mintCoins(CAmount value, CCoinControl* coinControl, std::string &strError);
 
+    bool sendZpiv(
+            vector<CZerocoinMint> &vMintsSelected,
+            bool fMintChange,
+            bool fMinimizeChange,
+            CZerocoinSpendReceipt &receipt,
+            std::list<std::pair<CBitcoinAddress*, CAmount>> outputs,
+            std::string changeAddress = ""
+    );
+
     bool convertBackZpiv(
             CAmount value,
             vector<CZerocoinMint> &vMintsSelected,

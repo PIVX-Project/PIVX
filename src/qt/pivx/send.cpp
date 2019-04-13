@@ -267,19 +267,28 @@ void SendWidget::onSendClicked(){
         return;
     }
 
+    bool sendPiv = !ui->pushRight->isChecked();
+
     // request unlock only if was locked or unlocked for mixing:
     // this way we let users unlock by walletpassphrase or by menu
     // and make many transactions while unlocking through this dialog
     // will call relock
-    if(!GUIUtil::requestUnlock(walletModel, AskPassphraseDialog::Context::Send_PIV, true)){
+    if(!GUIUtil::requestUnlock(walletModel, sendPiv ? AskPassphraseDialog::Context::Send_PIV : AskPassphraseDialog::Context::Send_zPIV, true)){
         // Unlock wallet was cancelled
         //TODO: Check what is this --> fNewRecipientAllowed = true;
         // TODO: Notify the user..
         emit message("", tr("Cannot send, wallet locked"),CClientUIInterface::MSG_INFORMATION);
         return;
     }
-    // send
-    send(recipients);
+
+    // Send
+    if(sendPiv){
+        //
+        sendZpiv(recipients);
+    }else{
+        send(recipients);
+    }
+
 }
 
 void SendWidget::send(QList<SendCoinsRecipient> recipients){
@@ -347,11 +356,38 @@ void SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
         return;
     }
 
-    // TODO: Complete me..
-    //walletModel->sendZpiv(
-    //
-    //        )
+    std::list<std::pair<CBitcoinAddress*, CAmount>> outputs;
+    for (SendCoinsRecipient rec : recipients){
+        outputs.push_back(std::pair<CBitcoinAddress*, CAmount>(new CBitcoinAddress(rec.address.toStdString()),rec.amount));
+    }
 
+    // TODO: add confirm dialog..
+    /**
+     * TODO:
+     * vector<CZerocoinMint> &vMintsSelected,
+            bool fMintChange,
+            bool fMinimizeChange,
+            CZerocoinSpendReceipt &receipt,
+            std::list<std::pair<CBitcoinAddress*, CAmount>> outputs,
+            std::string changeAddress = ""
+     */
+    vector<CZerocoinMint> vMintsSelected;
+    CZerocoinSpendReceipt receipt;
+    // TODO: Complete me..
+
+    if(walletModel->sendZpiv(
+            vMintsSelected,
+            true,
+            true,
+            receipt,
+            outputs
+            )
+    ){
+        emit message("", tr("zPIV transaction sent!"), CClientUIInterface::MSG_INFORMATION);
+    }else{
+        // TODO: Detail errro with the receipt..
+        emit message("", tr("zPIV transaction failed!"), CClientUIInterface::MSG_ERROR);
+    }
 }
 
 

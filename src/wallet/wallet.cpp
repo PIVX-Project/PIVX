@@ -4105,7 +4105,8 @@ bool CWallet::CreateZerocoinSpendTransaction(
         std::vector<CDeterministicMint>& vNewMints,
         bool fMintChange,
         bool fMinimizeChange,
-        CBitcoinAddress* address,
+        std::list<std::pair<CBitcoinAddress*,CAmount>> addressesTo,
+        CBitcoinAddress* changeAddress,
         bool isPublicSpend)
 {
     // Check available funds
@@ -4241,8 +4242,6 @@ bool CWallet::CreateZerocoinSpendTransaction(
             txNew.vout.clear();
 
             //if there is an address to send to then use it, if not generate a new address to send to
-            CScript scriptZerocoinSpend;
-            CScript scriptChange;
             CAmount nChange = nValueSelected - nValue;
 
             if (nChange < 0) {
@@ -4250,28 +4249,32 @@ bool CWallet::CreateZerocoinSpendTransaction(
                 return false;
             }
 
-            if (nChange > 0 && !address) {
+            if (nChange > 0 && !changeAddress) {
                 receipt.SetStatus(_("Need address because change is not exact"), nStatus);
                 return false;
             }
 
-            if (address) {
-                scriptZerocoinSpend = GetScriptForDestination(address->Get());
-                if (nChange) {
+            // add an outputs for each address
+            for (std::pair<CBitcoinAddress*,CAmount> pair : addressesTo){
+                CScript scriptZerocoinSpend = GetScriptForDestination(pair.first->Get());
+                //add output to pivx address to the transaction (the actual primary spend taking place)
+                // TODO: check value?
+                CTxOut txOutZerocoinSpend(pair.second, scriptZerocoinSpend);
+                txNew.vout.push_back(txOutZerocoinSpend);
+            }
+
+            //add change output if we are spending too much (only applies to spending multiple at once)
+            if (nChange) {
+                CScript scriptChange;
+                // Change address
+                if(changeAddress){
+                    scriptChange = GetScriptForDestination(changeAddress->Get());
+                }else{
                     // Reserve a new key pair from key pool
                     CPubKey vchPubKey;
                     assert(reserveKey.GetReservedKey(vchPubKey)); // should never fail
                     scriptChange = GetScriptForDestination(vchPubKey.GetID());
                 }
-            } else {
-                // Reserve a new key pair from key pool
-                CPubKey vchPubKey;
-                assert(reserveKey.GetReservedKey(vchPubKey)); // should never fail
-                scriptZerocoinSpend = GetScriptForDestination(vchPubKey.GetID());
-            }
-
-            //add change output if we are spending too much (only applies to spending multiple at once)
-            if (nChange) {
                 //mint change as zerocoins
                 if (fMintChange) {
                     CAmount nFeeRet = 0;
@@ -4285,10 +4288,6 @@ bool CWallet::CreateZerocoinSpendTransaction(
                     txNew.vout.push_back(txOutChange);
                 }
             }
-
-            //add output to pivx address to the transaction (the actual primary spend taking place)
-            CTxOut txOutZerocoinSpend(nValue, scriptZerocoinSpend);
-            txNew.vout.push_back(txOutZerocoinSpend);
 
             //hash with only the output info in it to be used in Signature of Knowledge
             uint256 hashTxOut = txNew.GetHash();
@@ -4614,7 +4613,17 @@ std::string CWallet::MintZerocoin(CAmount nValue, CWalletTx& wtxNew, std::vector
     return "";
 }
 
-bool CWallet::SpendZerocoin(CAmount nAmount, CWalletTx& wtxNew, CZerocoinSpendReceipt& receipt, std::vector<CZerocoinMint>& vMintsSelected, bool fMintChange, bool fMinimizeChange, CBitcoinAddress* addressTo, bool isPublicSpend)
+bool CWallet::SpendZerocoin(
+        CAmount nAmount,
+        CWalletTx& wtxNew,
+        CZerocoinSpendReceipt& receipt,
+        std::vector<CZerocoinMint>& vMintsSelected,
+        bool fMintChange,
+        bool fMinimizeChange,
+        std::list<std::pair<CBitcoinAddress*,CAmount>> addressesTo,
+        CBitcoinAddress* changeAddress,
+        bool isPublicSpend
+)
 {
     // Default: assume something goes wrong. Depending on the problem this gets more specific below
     int nStatus = ZPIV_SPEND_ERROR;
@@ -4626,7 +4635,19 @@ bool CWallet::SpendZerocoin(CAmount nAmount, CWalletTx& wtxNew, CZerocoinSpendRe
 
     CReserveKey reserveKey(this);
     std::vector<CDeterministicMint> vNewMints;
-    if (!CreateZerocoinSpendTransaction(nAmount, wtxNew, reserveKey, receipt, vMintsSelected, vNewMints, fMintChange, fMinimizeChange, addressTo, isPublicSpend)) {
+    if (!CreateZerocoinSpendTransaction(
+            nAmount,
+            wtxNew,
+            reserveKey,
+            receipt,
+            vMintsSelected,
+            vNewMints,
+            fMintChange,
+            fMinimizeChange,
+            addressesTo,
+            changeAddress,
+            isPublicSpend
+    )) {
         return false;
     }
 

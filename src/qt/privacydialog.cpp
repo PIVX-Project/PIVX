@@ -432,13 +432,14 @@ void PrivacyDialog::sendzPIV()
     CWalletTx wtxNew;
     CZerocoinSpendReceipt receipt;
     bool fSuccess = false;
+    std::list<std::pair<CBitcoinAddress*, CAmount>> out;
     if(ui->payTo->text().isEmpty()){
         // Spend to newly generated local address
-        fSuccess = pwalletMain->SpendZerocoin(nAmount, wtxNew, receipt, vMintsSelected, fMintChange, fMinimizeChange);
+        fSuccess = pwalletMain->SpendZerocoin(nAmount, wtxNew, receipt, vMintsSelected, fMintChange, fMinimizeChange, out);
     }
     else {
         // Spend to supplied destination address
-        fSuccess = pwalletMain->SpendZerocoin(nAmount, wtxNew, receipt, vMintsSelected, fMintChange, fMinimizeChange, &address);
+        fSuccess = pwalletMain->SpendZerocoin(nAmount, wtxNew, receipt, vMintsSelected, fMintChange, fMinimizeChange, out, &address);
     }
 
     // Display errors during spend
