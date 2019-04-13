@@ -85,7 +85,6 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonAddRecipient->setText("Add recipient");
     ui->pushButtonAddRecipient->setProperty("cssClass", "btn-secundary-add");
 
-    ui->pushButtonSave->setText("Send zPIV");
     ui->pushButtonSave->setProperty("cssClass", "btn-primary");
 
     ui->pushButtonReset->setText("Reset to default");
@@ -120,8 +119,10 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelTitleTotalRemaining->setText("Total remaining");
     ui->labelTitleTotalRemaining->setProperty("cssClass", "text-title");
 
-    ui->labelAmountRemaining->setText("1000 zPIV");
     ui->labelAmountRemaining->setProperty("cssClass", "text-body1");
+
+    // Refresh view
+    refreshView();
 
     // Icon Send
     ui->stackedWidget->addWidget(coinIcon);
@@ -141,15 +142,28 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     // Entry
     addEntry();
 
+   // connect(obj, &ObjType::signalName, [this]() { desiredCall(constantArgument); });
+
     // Connect
-    connect(ui->pushLeft, SIGNAL(clicked()), this, SLOT(onPIVSelected()));
-    connect(ui->pushRight, SIGNAL(clicked()), this, SLOT(onzPIVSelected()));
+    connect(ui->pushLeft, &QPushButton::clicked, [this](){onPIVSelected(true);});
+    connect(ui->pushRight,  &QPushButton::clicked, [this](){onPIVSelected(false);});
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(onSendClicked()));
     connect(btnContacts, SIGNAL(clicked()), this, SLOT(onContactsClicked()));
 
     connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
     connect(ui->pushButtonAddRecipient, SIGNAL(clicked()), this, SLOT(onAddEntryClicked()));
     connect(ui->pushButtonClear, SIGNAL(clicked()), this, SLOT(clearEntries()));
+}
+
+void SendWidget::refreshView(){
+    QString btnText;
+    if(ui->pushLeft->isChecked()){
+        btnText = tr("Send PIV");
+    }else{
+        btnText = tr("Send zPIV");
+    }
+    ui->pushButtonSave->setText(btnText);
+    ui->labelAmountRemaining->setText("1000 zPIV");
 }
 
 void SendWidget::setClientModel(ClientModel* clientModel)
@@ -267,7 +281,7 @@ void SendWidget::onSendClicked(){
         return;
     }
 
-    bool sendPiv = !ui->pushRight->isChecked();
+    bool sendPiv = ui->pushLeft->isChecked();
 
     // request unlock only if was locked or unlocked for mixing:
     // this way we let users unlock by walletpassphrase or by menu
@@ -281,17 +295,14 @@ void SendWidget::onSendClicked(){
         return;
     }
 
-    // Send
-    if(sendPiv){
-        //
-        sendZpiv(recipients);
-    }else{
-        send(recipients);
+    if((sendPiv) ? send(recipients) : sendZpiv(recipients)) {
+        updateEntryLabels(recipients);
     }
+
 
 }
 
-void SendWidget::send(QList<SendCoinsRecipient> recipients){
+bool SendWidget::send(QList<SendCoinsRecipient> recipients){
     // prepare transaction for getting txFee earlier
     WalletModelTransaction currentTransaction(recipients);
     WalletModel::SendCoinsReturn prepareStatus;
@@ -314,7 +325,7 @@ void SendWidget::send(QList<SendCoinsRecipient> recipients){
         // TODO: Check why this??
         //fNewRecipientAllowed = true;
         emit message("", tr("Prepare status failed.."),CClientUIInterface::MSG_INFORMATION);
-        return;
+        return false;
     }
 
     CAmount txFee = currentTransaction.getTransactionFee();
@@ -339,21 +350,22 @@ void SendWidget::send(QList<SendCoinsRecipient> recipients){
             //
             clearEntries();
             emit message("", tr("Transaction sent"),CClientUIInterface::MSG_INFORMATION);
+            return true;
         }
 
     }
 
     dialog->deleteLater();
-
+    return false;
 }
 
-void SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
+bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
     if (!walletModel || !walletModel->getOptionsModel())
-        return;
+        return false;
 
     if(GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
         emit message(tr("Spend Zerocoin"), tr("zPIV is currently undergoing maintenance."), CClientUIInterface::MSG_ERROR);
-        return;
+        return false;
     }
 
     std::list<std::pair<CBitcoinAddress*, CAmount>> outputs;
@@ -384,9 +396,43 @@ void SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
             )
     ){
         emit message("", tr("zPIV transaction sent!"), CClientUIInterface::MSG_INFORMATION);
+        return true;
     }else{
-        // TODO: Detail errro with the receipt..
-        emit message("", tr("zPIV transaction failed!"), CClientUIInterface::MSG_ERROR);
+        // TODO: Detail error on the receipt..
+        QString body;
+        if (receipt.GetStatus() == ZPIV_SPEND_V1_SEC_LEVEL) {
+            body = tr("Version 1 zPIV require a security level of 100 to successfully spend.");
+        }else{
+            int nNeededSpends = receipt.GetNeededSpends(); // Number of spends we would need for this transaction
+            const int nMaxSpends = Params().Zerocoin_MaxSpendsPerTransaction(); // Maximum possible spends for one zPIV transaction
+            if (nNeededSpends > nMaxSpends) {
+                body = tr("Too much inputs (") + QString::number(nNeededSpends, 10) + tr(") needed.\nMaximum allowed: ") + QString::number(nMaxSpends, 10);
+                body += tr("\nEither mint higher denominations (so fewer inputs are needed) or reduce the amount to spend.");
+            } else {
+                body = QString::fromStdString(receipt.GetStatusMessage());
+            }
+        }
+        emit message("zPIV transaction failed", body, CClientUIInterface::MSG_ERROR);
+        return false;
+    }
+}
+
+void SendWidget::updateEntryLabels(QList<SendCoinsRecipient> recipients){
+    for (SendCoinsRecipient rec : recipients){
+        QString label = rec.label;
+        if(!label.isNull()) {
+            QString labelOld = walletModel->getAddressTableModel()->labelForAddress(rec.address);
+            if(label.compare(labelOld) != 0) {
+                CTxDestination dest = CBitcoinAddress(rec.address.toStdString()).Get();
+                if (!walletModel->updateAddressBookLabels(dest, label.toStdString(),
+                                                          this->walletModel->isMine(dest) ? "receive" : "send")) {
+                    // Label update failed
+                    emit message("", tr("Address label update failed for address: %1").arg(rec.address), CClientUIInterface::MSG_ERROR);
+                    return;
+                }
+            }
+        }
+
     }
 }
 
@@ -484,18 +530,12 @@ void SendWidget::onCoinControlClicked()
     }
 }
 
-void SendWidget::onPIVSelected(){
-    isPIV = true;
-    coinIcon->setProperty("cssClass", "coin-icon-piv");
+void SendWidget::onPIVSelected(bool _isPIV){
+    isPIV = _isPIV;
+    coinIcon->setProperty("cssClass", _isPIV ? "coin-icon-piv" : "coin-icon-zpiv");
+    refreshView();
     updateStyle(coinIcon);
 }
-
-void SendWidget::onzPIVSelected(){
-    isPIV = false;
-    coinIcon->setProperty("cssClass", "coin-icon-zpiv");
-    updateStyle(coinIcon);
-}
-
 
 void SendWidget::onContactsClicked(){
     /*

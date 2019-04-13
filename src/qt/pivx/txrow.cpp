@@ -71,7 +71,6 @@ void TxRow::setType(bool isLightTheme, TransactionRecord::Type type){
             css = "text-list-amount-send";
             break;
         default:
-            std::cout << "type: " << type << std::endl;
             path = ":/icons/tx_inout";
             break;
     }

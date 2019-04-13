@@ -380,6 +380,12 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& tran
         return AnonymizeOnlyUnlocked;
     }
 
+    // Double check tx before do anything
+    CValidationState state;
+    if(!CheckTransaction(*transaction.getTransaction(), true, true, state, true)){
+        return TransactionCommitFailed;
+    }
+
     {
         LOCK2(cs_main, wallet->cs_wallet);
         CWalletTx* newTx = transaction.getTransaction();
@@ -432,6 +438,54 @@ bool WalletModel::mintCoins(CAmount value, CCoinControl* coinControl ,std::strin
     vector<CDeterministicMint> vMints;
     strError = wallet->MintZerocoin(value, wtx, vMints, coinControl);
     return strError.empty();
+}
+
+
+bool WalletModel::createZpivSpend(
+        CWalletTx &wtxNew,
+        vector<CZerocoinMint> &vMintsSelected,
+        bool fMintChange,
+        bool fMinimizeChange,
+        CZerocoinSpendReceipt &receipt,
+        std::list<std::pair<CBitcoinAddress*, CAmount>> outputs,
+        std::string changeAddress
+        ){
+
+    CBitcoinAddress *changeAdd = (!changeAddress.empty()) ? new CBitcoinAddress(changeAddress) : nullptr;
+    CAmount value = 0;
+    for(std::pair<CBitcoinAddress*, CAmount> pair : outputs){
+        value += pair.second;
+    }
+
+    // Default: assume something goes wrong. Depending on the problem this gets more specific below
+    int nStatus = ZPIV_SPEND_ERROR;
+
+    if (wallet->IsLocked()) {
+        receipt.SetStatus("Error: Wallet locked, unable to create transaction!", ZPIV_WALLET_LOCKED);
+        return false;
+    }
+
+    CReserveKey reserveKey(wallet);
+    vector<CDeterministicMint> vNewMints;
+    if (!wallet->CreateZerocoinSpendTransaction(
+            value,
+            100,
+            wtxNew,
+            reserveKey,
+            receipt,
+            vMintsSelected,
+            vNewMints,
+            fMintChange,
+            fMinimizeChange,
+            outputs,
+            changeAdd
+    )) {
+        return false;
+    }
+
+    // Double check tx before do anything
+    CValidationState state;
+    return CheckTransaction(wtxNew, true, true, state, true);
 }
 
 bool WalletModel::sendZpiv(

@@ -45,13 +45,13 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 private slots:
-    void onPIVSelected();
-    void onzPIVSelected();
+    void onPIVSelected(bool _isPIV);
     void onSendClicked();
     void changeTheme(bool isLightTheme, QString& theme);
     void onContactsClicked();
     void onAddEntryClicked();
     void clearEntries();
+    void refreshView();
 private:
     Ui::send *ui;
     PIVXGUI* window;
@@ -69,8 +69,9 @@ private:
     bool isPIV = true;
     void resizeMenu();
     SendMultiRow* createEntry();
-    void send(QList<SendCoinsRecipient> recipients);
-    void sendZpiv(QList<SendCoinsRecipient> recipients);
+    bool send(QList<SendCoinsRecipient> recipients);
+    bool sendZpiv(QList<SendCoinsRecipient> recipients);
+    void updateEntryLabels(QList<SendCoinsRecipient> recipients);
 
     // Process WalletModel::SendCoinsReturn and generate a pair consisting
     // of a message and message flags for use in emit message().
