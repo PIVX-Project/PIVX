@@ -13,6 +13,12 @@
 #include <QStandardPaths>
 #include "qt/pivx/PIVXGUI.h"
 
+static Qt::Modifier SHORT_KEY
+#ifdef Q_OS_MAC
+        = Qt::CTRL;
+#else
+        = Qt::ALT;
+#endif
 
 bool openDialog(QDialog *widget, PIVXGUI *gui);
 void closeDialog(QDialog *widget, PIVXGUI *gui);

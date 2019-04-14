@@ -155,12 +155,6 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
 
 }
 
-static Qt::Modifier shortKey
-#ifdef Q_OS_MAC
-     = Qt::CTRL;
-#else
-     = Qt::ALT;
-#endif
 
 
 /**
@@ -168,26 +162,14 @@ static Qt::Modifier shortKey
  */
 void PIVXGUI::connectActions() {
 
-    QShortcut *homeShort = new QShortcut(this);
-    QShortcut *sendShort = new QShortcut(this);
-    QShortcut *receiveShort = new QShortcut(this);
-    QShortcut *addressesShort = new QShortcut(this);
-    QShortcut *privacyShort = new QShortcut(this);
-    QShortcut *settingsShort = new QShortcut(this);
+    QShortcut *consoleShort = new QShortcut(this);
 
-    homeShort->setKey(QKeySequence(shortKey + Qt::Key_1));
-    sendShort->setKey(QKeySequence(shortKey + Qt::Key_2));
-    receiveShort->setKey(QKeySequence(shortKey + Qt::Key_3));
-    addressesShort->setKey(QKeySequence(shortKey + Qt::Key_4));
-    privacyShort->setKey(QKeySequence(shortKey + Qt::Key_5));
-    settingsShort->setKey(QKeySequence(shortKey + Qt::Key_6));
-
-    connect(homeShort, SIGNAL(activated()), this, SLOT(goToDashboard()));
-    connect(sendShort, SIGNAL(activated()), this, SLOT(goToSend()));
-    connect(receiveShort, SIGNAL(activated()), this, SLOT(goToReceive()));
-    connect(addressesShort, SIGNAL(activated()), this, SLOT(goToAddresses()));
-    connect(privacyShort, SIGNAL(activated()), this, SLOT(goToPrivacy()));
-    connect(settingsShort, SIGNAL(activated()), this, SLOT(goToSettings()));
+    consoleShort->setKey(QKeySequence(SHORT_KEY + Qt::Key_C));
+    connect(consoleShort, &QShortcut::activated, [this](){
+        navMenu->selectSettings();
+        settingsWidget->showDebugConsole();
+        goToSettings();
+    });
 }
 
 

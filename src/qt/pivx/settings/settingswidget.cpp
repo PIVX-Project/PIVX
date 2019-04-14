@@ -20,7 +20,7 @@
 #include "qt/pivx/qtutils.h"
 #include <QFile>
 #include <QScrollBar>
-
+#include "qt/pivx/qtutils.h"
 
 SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window, parent),
@@ -161,6 +161,7 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     connect(ui->pushButtonTools, SIGNAL(clicked()), this, SLOT(onToolsClicked()));
     connect(ui->pushButtonTools1, SIGNAL(clicked()), this, SLOT(onInformationClicked()));
     connect(ui->pushButtonTools2, SIGNAL(clicked()), this, SLOT(onDebugConsoleClicked()));
+    ui->pushButtonTools2->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_C));
     connect(ui->pushButtonTools3, SIGNAL(clicked()), this, SLOT(onNetworkMonitorClicked()));
     connect(ui->pushButtonTools4, SIGNAL(clicked()), this, SLOT(onPeersListClicked()));
     connect(ui->pushButtonTools5, SIGNAL(clicked()), this, SLOT(onWalletRepairClicked()));
@@ -181,19 +182,19 @@ void SettingsWidget::loadClientModel(){
 
 void SettingsWidget::onFileClicked() {
     if (ui->pushButtonFile->isChecked()) {
-        ui->fileButtonsWidget->setVisible(true );
+        ui->fileButtonsWidget->setVisible(true);
 
-        ui->optionsButtonsWidget->setVisible(false );
-        ui->toolsButtonsWidget->setVisible(false );
-        ui->configurationButtonsWidget->setVisible(false );
-        ui->helpButtonsWidget->setVisible(false );
+        ui->optionsButtonsWidget->setVisible(false);
+        ui->toolsButtonsWidget->setVisible(false);
+        ui->configurationButtonsWidget->setVisible(false);
+        ui->helpButtonsWidget->setVisible(false);
         ui->pushButtonOptions->setChecked(false);
         ui->pushButtonTools->setChecked(false);
         ui->pushButtonConfiguration->setChecked(false);
         ui->pushButtonHelp->setChecked(false);
 
     } else {
-        ui->fileButtonsWidget->setVisible(false );
+        ui->fileButtonsWidget->setVisible(false);
     }
 }
 
@@ -215,19 +216,19 @@ void SettingsWidget::onVerifyMessageClicked() {
 
 void SettingsWidget::onConfigurationClicked() {
     if (ui->pushButtonConfiguration->isChecked()) {
-        ui->configurationButtonsWidget->setVisible(true );
+        ui->configurationButtonsWidget->setVisible(true);
 
-        ui->optionsButtonsWidget->setVisible(false );
-        ui->toolsButtonsWidget->setVisible(false );
-        ui->fileButtonsWidget->setVisible(false );
-        ui->helpButtonsWidget->setVisible(false );
+        ui->optionsButtonsWidget->setVisible(false);
+        ui->toolsButtonsWidget->setVisible(false);
+        ui->fileButtonsWidget->setVisible(false);
+        ui->helpButtonsWidget->setVisible(false);
         ui->pushButtonOptions->setChecked(false);
         ui->pushButtonTools->setChecked(false);
         ui->pushButtonFile->setChecked(false);
         ui->pushButtonHelp->setChecked(false);
 
     } else {
-        ui->configurationButtonsWidget->setVisible(false );
+        ui->configurationButtonsWidget->setVisible(false);
     }
 }
 
@@ -249,19 +250,19 @@ void SettingsWidget::onMultisendClicked() {
 
 void SettingsWidget::onOptionsClicked() {
     if (ui->pushButtonOptions->isChecked()) {
-        ui->optionsButtonsWidget->setVisible(true );
+        ui->optionsButtonsWidget->setVisible(true);
 
-        ui->fileButtonsWidget->setVisible(false );
-        ui->toolsButtonsWidget->setVisible(false );
-        ui->configurationButtonsWidget->setVisible(false );
-        ui->helpButtonsWidget->setVisible(false );
+        ui->fileButtonsWidget->setVisible(false);
+        ui->toolsButtonsWidget->setVisible(false);
+        ui->configurationButtonsWidget->setVisible(false);
+        ui->helpButtonsWidget->setVisible(false);
         ui->pushButtonFile->setChecked(false);
         ui->pushButtonTools->setChecked(false);
         ui->pushButtonConfiguration->setChecked(false);
         ui->pushButtonHelp->setChecked(false);
 
     } else {
-        ui->optionsButtonsWidget->setVisible(false );
+        ui->optionsButtonsWidget->setVisible(false);
     }
 }
 
@@ -288,24 +289,31 @@ void SettingsWidget::onDisplayOptionsClicked() {
 
 void SettingsWidget::onToolsClicked() {
     if (ui->pushButtonTools->isChecked()) {
-        ui->toolsButtonsWidget->setVisible(true );
+        ui->toolsButtonsWidget->setVisible(true);
 
-        ui->optionsButtonsWidget->setVisible(false );
-        ui->fileButtonsWidget->setVisible(false );
-        ui->configurationButtonsWidget->setVisible(false );
-        ui->helpButtonsWidget->setVisible(false );
+        ui->optionsButtonsWidget->setVisible(false);
+        ui->fileButtonsWidget->setVisible(false);
+        ui->configurationButtonsWidget->setVisible(false);
+        ui->helpButtonsWidget->setVisible(false);
         ui->pushButtonOptions->setChecked(false);
         ui->pushButtonFile->setChecked(false);
         ui->pushButtonConfiguration->setChecked(false);
         ui->pushButtonHelp->setChecked(false);
 
     } else {
-        ui->toolsButtonsWidget->setVisible(false );
+        ui->toolsButtonsWidget->setVisible(false);
     }
 }
 
 void SettingsWidget::onInformationClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsInformationWidget);
+}
+
+void SettingsWidget::showDebugConsole(){
+    ui->pushButtonTools->setChecked(true);
+    onToolsClicked();
+    ui->pushButtonTools2->setChecked(true);
+    onDebugConsoleClicked();
 }
 
 void SettingsWidget::onDebugConsoleClicked() {
@@ -327,18 +335,18 @@ void SettingsWidget::onWalletRepairClicked() {
 
 void SettingsWidget::onHelpClicked() {
     if (ui->pushButtonHelp->isChecked()) {
-        ui->helpButtonsWidget->setVisible(true );
+        ui->helpButtonsWidget->setVisible(true);
 
-        ui->toolsButtonsWidget->setVisible(false );
-        ui->optionsButtonsWidget->setVisible(false );
-        ui->fileButtonsWidget->setVisible(false );
-        ui->configurationButtonsWidget->setVisible(false );
+        ui->toolsButtonsWidget->setVisible(false);
+        ui->optionsButtonsWidget->setVisible(false);
+        ui->fileButtonsWidget->setVisible(false);
+        ui->configurationButtonsWidget->setVisible(false);
         ui->pushButtonOptions->setChecked(false);
         ui->pushButtonFile->setChecked(false);
         ui->pushButtonConfiguration->setChecked(false);
         ui->pushButtonTools->setChecked(false);
     } else {
-        ui->helpButtonsWidget->setVisible(false );
+        ui->helpButtonsWidget->setVisible(false);
     }
 }
 

@@ -35,7 +35,9 @@ public:
     explicit SettingsWidget(PIVXGUI* _window, QWidget *parent = nullptr);
     ~SettingsWidget();
 
-    void loadClientModel() override ;
+    void loadClientModel() override;
+
+    void showDebugConsole();
 
 
 private slots:

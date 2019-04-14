@@ -68,6 +68,8 @@ public slots:
     void goToMasterNodes();
     void goToSettings();
 
+    void connectActions();
+
     /** Notify the user of an event from the core network or transaction handling code.
        @param[in] title     the message box / notification title
        @param[in] message   the displayed text
@@ -149,7 +151,6 @@ signals:
     /** Restart handling */
     void requestedRestart(QStringList args);
 
-    void connectActions();
 };
 
 

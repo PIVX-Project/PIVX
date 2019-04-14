@@ -17,6 +17,9 @@ public:
     explicit NavMenuWidget(PIVXGUI* mainWindow, QWidget *parent = nullptr);
     ~NavMenuWidget();
 
+public slots:
+    void selectSettings();
+
 private slots:
     void onSendClicked();
     void onDashboardClicked();
@@ -29,6 +32,8 @@ private:
     Ui::NavMenuWidget *ui;
 
     PIVXGUI* window;
+
+    void connectActions();
 };
 
 #endif // NAVMENUWIDGET_H

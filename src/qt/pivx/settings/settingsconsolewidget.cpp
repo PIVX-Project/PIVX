@@ -36,8 +36,6 @@
 const int CONSOLE_HISTORY = 50;
 const QSize ICON_SIZE(24, 24);
 
-const int INITIAL_TRAFFIC_GRAPH_MINS = 30;
-
 // Repair parameters
 const QString SALVAGEWALLET("-salvagewallet");
 const QString RESCAN("-rescan");

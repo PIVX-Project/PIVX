@@ -1,7 +1,8 @@
 #include "qt/pivx/navmenuwidget.h"
 #include "qt/pivx/forms/ui_navmenuwidget.h"
 #include <QFile>
-#include "PIVXGUI.h"
+#include "qt/pivx/PIVXGUI.h"
+#include "qt/pivx/qtutils.h"
 
 NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
     QWidget(parent),
@@ -50,9 +51,13 @@ NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
     ui->btnReceive->setText("RECEIVE\n");
     ui->btnReceive->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
+    connectActions();
+}
 
-
-
+/**
+ * Actions
+ */
+void NavMenuWidget::connectActions() {
     connect(ui->btnDashboard,SIGNAL(clicked()),this, SLOT(onDashboardClicked()));
     connect(ui->btnSend,SIGNAL(clicked()),this, SLOT(onSendClicked()));
     connect(ui->btnAddress,SIGNAL(clicked()),this, SLOT(onAddressClicked()));
@@ -60,6 +65,13 @@ NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
     connect(ui->btnMaster,SIGNAL(clicked()),this, SLOT(onMasterNodesClicked()));
     connect(ui->btnSettings,SIGNAL(clicked()),this, SLOT(onSettingsClicked()));
     connect(ui->btnReceive,SIGNAL(clicked()),this, SLOT(onReceiveClicked()));
+
+    ui->btnDashboard->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_1));
+    ui->btnSend->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_2));
+    ui->btnReceive->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_3));
+    ui->btnAddress->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_4));
+    ui->btnPrivacy->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_5));
+    ui->btnSettings->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_6));
 }
 
 void NavMenuWidget::onSendClicked(){
@@ -91,7 +103,10 @@ void NavMenuWidget::onReceiveClicked(){
     window->goToReceive();
 }
 
-NavMenuWidget::~NavMenuWidget()
-{
+void NavMenuWidget::selectSettings(){
+    ui->btnSettings->setChecked(true);
+}
+
+NavMenuWidget::~NavMenuWidget(){
     delete ui;
 }
