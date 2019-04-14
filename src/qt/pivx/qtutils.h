@@ -53,4 +53,7 @@ void setTheme(bool isLight);
 void setCssEditLine(QLineEdit *edit, bool isValid, bool forceUpdate = false);
 void setCssEditLineDialog(QLineEdit *edit, bool isValid, bool forceUpdate = false);
 
+void setCssBtnPrimary(QPushButton *btn, bool forceUpdate = false);
+void forceUpdateStyle(QWidget *widget, bool forceUpdate);
+
 #endif // QTUTILS_H

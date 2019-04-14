@@ -190,12 +190,20 @@ QColor getRowColor(bool isLightTheme, bool isHovered, bool isSelected){
 
 void setCssEditLine(QLineEdit *edit, bool isValid, bool forceUpdate){
     edit->setProperty("cssClass", isValid ? "edit-primary" : "edit-primary-error");
-    if(forceUpdate)
-        updateStyle(edit);
+    forceUpdateStyle(edit, forceUpdate);
 }
 
 void setCssEditLineDialog(QLineEdit *edit, bool isValid, bool forceUpdate){
     edit->setProperty("cssClass", isValid ? "edit-primary-dialog" : "edit-primary-dialog-error");
+    forceUpdateStyle(edit, forceUpdate);
+}
+
+void setCssBtnPrimary(QPushButton *btn, bool forceUpdate){
+    btn->setProperty("cssClass", "btn-primary");
+    forceUpdateStyle(btn, forceUpdate);
+}
+
+void forceUpdateStyle(QWidget *widget, bool forceUpdate){
     if(forceUpdate)
-        updateStyle(edit);
+        updateStyle(widget);
 }
