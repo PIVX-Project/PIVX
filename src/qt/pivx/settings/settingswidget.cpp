@@ -176,6 +176,7 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
 
 void SettingsWidget::loadClientModel(){
     this->settingsInformationWidget->setClientModel(this->clientModel);
+    this->settingsConsoleWidget->setClientModel(this->clientModel);
 }
 
 void SettingsWidget::onFileClicked() {
