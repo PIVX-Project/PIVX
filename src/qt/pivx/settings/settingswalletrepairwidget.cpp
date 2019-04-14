@@ -1,5 +1,15 @@
 #include "qt/pivx/settings/settingswalletrepairwidget.h"
 #include "qt/pivx/settings/forms/ui_settingswalletrepairwidget.h"
+#include "qt/pivx/qtutils.h"
+
+// Repair parameters
+const QString SALVAGEWALLET("-salvagewallet");
+const QString RESCAN("-rescan");
+const QString ZAPTXES1("-zapwallettxes=1");
+const QString ZAPTXES2("-zapwallettxes=2");
+const QString UPGRADEWALLET("-upgradewallet");
+const QString REINDEX("-reindex");
+const QString RESYNC("-resync");
 
 SettingsWalletRepairWidget::SettingsWalletRepairWidget(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window, parent),
@@ -91,6 +101,94 @@ SettingsWalletRepairWidget::SettingsWalletRepairWidget(PIVXGUI* _window, QWidget
     ui->pushButtonDelete->setText("Delete local blockchain ");
     ui->pushButtonDelete->setProperty("cssClass", "btn-primary");
 
+
+    // Wallet Repair Buttons
+    connect(ui->pushButtonSalvage, SIGNAL(clicked()), this, SLOT(walletSalvage()));
+    connect(ui->pushButtonRescan, SIGNAL(clicked()), this, SLOT(walletRescan()));
+    connect(ui->pushButtonRecover1, SIGNAL(clicked()), this, SLOT(walletZaptxes1()));
+    connect(ui->pushButtonRecover2, SIGNAL(clicked()), this, SLOT(walletZaptxes2()));
+    connect(ui->pushButtonUpgrade, SIGNAL(clicked()), this, SLOT(walletUpgrade()));
+    connect(ui->pushButtonRebuild, SIGNAL(clicked()), this, SLOT(walletReindex()));
+    connect(ui->pushButtonDelete, SIGNAL(clicked()), this, SLOT(walletResync()));
+}
+
+/** Restart wallet with "-salvagewallet" */
+void SettingsWalletRepairWidget::walletSalvage()
+{
+    buildParameterlist(SALVAGEWALLET);
+}
+
+/** Restart wallet with "-rescan" */
+void SettingsWalletRepairWidget::walletRescan()
+{
+    buildParameterlist(RESCAN);
+}
+
+/** Restart wallet with "-zapwallettxes=1" */
+void SettingsWalletRepairWidget::walletZaptxes1()
+{
+    buildParameterlist(ZAPTXES1);
+}
+
+/** Restart wallet with "-zapwallettxes=2" */
+void SettingsWalletRepairWidget::walletZaptxes2()
+{
+    buildParameterlist(ZAPTXES2);
+}
+
+/** Restart wallet with "-upgradewallet" */
+void SettingsWalletRepairWidget::walletUpgrade()
+{
+    buildParameterlist(UPGRADEWALLET);
+}
+
+/** Restart wallet with "-reindex" */
+void SettingsWalletRepairWidget::walletReindex()
+{
+    buildParameterlist(REINDEX);
+}
+
+/** Restart wallet with "-resync" */
+void SettingsWalletRepairWidget::walletResync()
+{
+    QString resyncWarning = tr("This will delete your local blockchain folders and the wallet will synchronize the complete Blockchain from scratch.<br /><br />");
+    resyncWarning +=   tr("This needs quite some time and downloads a lot of data.<br /><br />");
+    resyncWarning +=   tr("Your transactions and funds will be visible again after the download has completed.<br /><br />");
+    resyncWarning +=   tr("Do you want to continue?.<br />");
+    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm resync Blockchain"),
+                                                               resyncWarning,
+                                                               QMessageBox::Yes | QMessageBox::Cancel,
+                                                               QMessageBox::Cancel);
+
+    if (retval != QMessageBox::Yes) {
+        // Resync canceled
+        return;
+    }
+
+    // Restart and resync
+    buildParameterlist(RESYNC);
+}
+
+/** Build command-line parameter list for restart */
+void SettingsWalletRepairWidget::buildParameterlist(QString arg)
+{
+    // Get command-line arguments and remove the application name
+    QStringList args = QApplication::arguments();
+    args.removeFirst();
+
+    // Remove existing repair-options
+    args.removeAll(SALVAGEWALLET);
+    args.removeAll(RESCAN);
+    args.removeAll(ZAPTXES1);
+    args.removeAll(ZAPTXES2);
+    args.removeAll(UPGRADEWALLET);
+    args.removeAll(REINDEX);
+
+    // Append repair parameter to command line.
+    args.append(arg);
+
+    // Send command-line arguments to BitcoinGUI::handleRestart()
+    emit handleRestart(args);
 }
 
 SettingsWalletRepairWidget::~SettingsWalletRepairWidget()

@@ -36,15 +36,6 @@
 const int CONSOLE_HISTORY = 50;
 const QSize ICON_SIZE(24, 24);
 
-// Repair parameters
-const QString SALVAGEWALLET("-salvagewallet");
-const QString RESCAN("-rescan");
-const QString ZAPTXES1("-zapwallettxes=1");
-const QString ZAPTXES2("-zapwallettxes=2");
-const QString UPGRADEWALLET("-upgradewallet");
-const QString REINDEX("-reindex");
-const QString RESYNC("-resync");
-
 const struct {
     const char* url;
     const char* source;

@@ -39,6 +39,10 @@ public:
 
     void showDebugConsole();
 
+signals:
+    /** Get restart command-line parameters and handle restart */
+    void handleRestart(QStringList args);
+
 
 private slots:
     // File

@@ -173,6 +173,9 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
 
     // Style
     connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
+
+    // Get restart command-line parameters and handle restart
+    connect(settingsWalletRepairWidget, &SettingsWalletRepairWidget::handleRestart, [this](QStringList arg){emit handleRestart(arg);});
 }
 
 void SettingsWidget::loadClientModel(){

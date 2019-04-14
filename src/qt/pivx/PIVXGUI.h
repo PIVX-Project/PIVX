@@ -70,6 +70,9 @@ public slots:
 
     void connectActions();
 
+    /** Get restart command-line parameters and request restart */
+    void handleRestart(QStringList args);
+
     /** Notify the user of an event from the core network or transaction handling code.
        @param[in] title     the message box / notification title
        @param[in] message   the displayed text

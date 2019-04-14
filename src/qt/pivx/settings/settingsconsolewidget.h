@@ -52,8 +52,6 @@ signals:
     // For RPC command executor
     void stopExecutor();
     void cmdRequest(const QString& command);
-    /** Get restart command-line parameters and handle restart */
-    void handleRestart(QStringList args);
 
 private:
     Ui::SettingsConsoleWidget *ui;
