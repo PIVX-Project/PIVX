@@ -4,7 +4,7 @@
 #include "chainparams.h"
 #include "db.h"
 #include "util.h"
-
+#include "guiutil.h"
 #include <QDir>
 
 SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *parent) :
@@ -67,24 +67,23 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
 
     ui->labelTitleMemory->setText("Memory Pool");
     ui->labelTitleMemory->setProperty("cssClass", "text-title");
+    ui->labelTitleMemory->setVisible(false);
 
     ui->labelTitleNumberTransactions->setText("Current Number of Transactions:");
     ui->labelTitleNumberTransactions->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleNumberTransactions->setVisible(false);
 
-
+    ui->labelInfoNumberTransactions->setText("0");
+    ui->labelInfoNumberTransactions->setProperty("cssClass", "text-main-grey");
+    ui->labelInfoNumberTransactions->setVisible(false);
 
 
     // Information General
 
-    ui->labelInfoClient->setText("v0.17.0.0-afd206ceb-dirty");
     ui->labelInfoClient->setProperty("cssClass", "text-main-grey");
-    ui->labelInfoAgent->setText("/Satoshi:0.17.0/");
     ui->labelInfoAgent->setProperty("cssClass", "text-main-grey");
-    ui->labelInfoBerkeley->setText("Berkeley DB 4.8.30: (April 9, 2010)");
     ui->labelInfoBerkeley->setProperty("cssClass", "text-main-grey");
-    ui->labelInfoDataDir->setText("/Users/furszy/Desktop/PIVX-test");
     ui->labelInfoDataDir->setProperty("cssClass", "text-main-grey");
-    ui->labelInfoTime->setText("Oct, 25, 2018. Thursday, 1:32  AM");
     ui->labelInfoTime->setProperty("cssClass", "text-main-grey");
 
     // Information Network
@@ -101,19 +100,13 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
     ui->labelInfoBlockTime->setText("Sept 6, 2018. Thursday, 8:21:49 PM");
     ui->labelInfoBlockTime->setProperty("cssClass", "text-main-grey");
 
-    // Information Memmory
-
-    ui->labelInfoNumberTransactions->setText("0");
-    ui->labelInfoNumberTransactions->setProperty("cssClass", "text-main-grey");
-
     // Buttons
 
-    ui->pushButtonFile->setText("Backups");
+    ui->pushButtonFile->setText("Wallet Conf");
     ui->pushButtonFile->setProperty("cssClass", "btn-secundary");
 
-    ui->pushButtonBackups->setText("Wallet file");
+    ui->pushButtonBackups->setText("Backups");
     ui->pushButtonBackups->setProperty("cssClass", "btn-secundary");
-
 
 
     // Data
@@ -124,6 +117,10 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
 #else
     ui->labelInfoBerkeley->setText(tr("No information"));
 #endif
+
+    connect(ui->pushButtonBackups, &QPushButton::clicked, [this](){GUIUtil::showBackups();});
+    connect(ui->pushButtonFile, &QPushButton::clicked, [this](){GUIUtil::openConfigfile();});
+
 }
 
 
@@ -135,18 +132,31 @@ void SettingsInformationWidget::loadClientModel(){
         ui->labelInfoTime->setText(clientModel->formatClientStartupTime());
         ui->labelInfoName->setText(QString::fromStdString(Params().NetworkIDString()));
 
+        setNumConnections(clientModel->getNumConnections());
+        connect(clientModel, SIGNAL(numConnectionsChanged(int)), this, SLOT(setNumConnections(int)));
 
-        /* TODO: Complete me..
-        ui->clientVersion->setText(model->formatFullVersion());
-        ui->clientName->setText(model->clientName());
-        ui->buildDate->setText(model->formatBuildDate());
-        ui->startupTime->setText(model->formatClientStartupTime());
-        ui->networkName->setText(QString::fromStdString(Params().NetworkIDString()));
-         */
+        setNumBlocks(clientModel->getNumBlocks());
+        connect(clientModel, SIGNAL(numBlocksChanged(int)), this, SLOT(setNumBlocks(int)));
     }
 }
 
-SettingsInformationWidget::~SettingsInformationWidget()
-{
+void SettingsInformationWidget::setNumConnections(int count){
+    if (!clientModel)
+        return;
+
+    QString connections = QString::number(count) + " (";
+    connections += tr("In:") + " " + QString::number(clientModel->getNumConnections(CONNECTIONS_IN)) + " / ";
+    connections += tr("Out:") + " " + QString::number(clientModel->getNumConnections(CONNECTIONS_OUT)) + ")";
+
+    ui->labelInfoConnections->setText(connections);
+}
+
+void SettingsInformationWidget::setNumBlocks(int count){
+    ui->labelInfoBlockNumber->setText(QString::number(count));
+    if (clientModel)
+        ui->labelInfoBlockTime->setText(clientModel->getLastBlockDate().toString());
+}
+
+SettingsInformationWidget::~SettingsInformationWidget(){
     delete ui;
 }

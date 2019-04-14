@@ -16,8 +16,11 @@ public:
     explicit SettingsInformationWidget(PIVXGUI* _window, QWidget *parent = nullptr);
     ~SettingsInformationWidget();
 
-
     void loadClientModel() override;
+
+private slots:
+    void setNumConnections(int count);
+    void setNumBlocks(int count);
 
 private:
     Ui::SettingsInformationWidget *ui;
