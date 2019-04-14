@@ -129,8 +129,8 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
 
     // Buttons
 
-    ui->pushButtonSave->setText("Mint to zPIV");
     ui->pushButtonSave->setProperty("cssClass", "btn-primary");
+    onMintSelected(true);
 
     ui->btnTotalzPIV->setTitleClassAndText("btn-title-grey", "Total zPIV 1000");
     ui->btnTotalzPIV->setSubTitleClassAndText("text-subtitle", "Show own coins denominations.");
@@ -155,6 +155,8 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     connect(ui->btnRescanMints, SIGNAL(clicked()), this, SLOT(onRescanMintsClicked()));
     connect(ui->btnResetZerocoin, SIGNAL(clicked()), this, SLOT(onResetZeroClicked()));
 
+    connect(ui->pushLeft, &QPushButton::clicked, [this](){onMintSelected(false);});
+    connect(ui->pushRight,  &QPushButton::clicked, [this](){onMintSelected(true);});
     // Style
     connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
 
@@ -203,6 +205,17 @@ void PrivacyWidget::setWalletModel(WalletModel* _model){
         // TODO: Connect update display unit..
     }
 
+}
+
+void PrivacyWidget::onMintSelected(bool isMint){
+    // TODO: Complete me..
+    QString btnText;
+    if(isMint){
+        btnText = tr("Mint zPIV");
+    }else{
+        btnText = tr("Convert back to PIV");
+    }
+    ui->pushButtonSave->setText(btnText);
 }
 
 void PrivacyWidget::updateDisplayUnit() {

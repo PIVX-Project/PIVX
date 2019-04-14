@@ -39,6 +39,7 @@ private slots:
     void updateDisplayUnit();
     void showList();
     void onSendClicked();
+    void onMintSelected(bool isMint);
 
 signals:
     void message(const QString& title, const QString& message, unsigned int style);
