@@ -2,7 +2,9 @@
 #include "qt/pivx/settings/forms/ui_settingsbackupwallet.h"
 #include <QFile>
 #include <QGraphicsDropShadowEffect>
-
+#include "guiutil.h"
+#include "qt/pivx/qtutils.h"
+#include "ui_interface.h"
 SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window, parent),
     ui(new Ui::SettingsBackupWallet)
@@ -39,7 +41,7 @@ SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
     shadowEffect->setBlurRadius(6);
 
     ui->lineEditName->setPlaceholderText("Set a name for your backup file");
-    ui->lineEditName->setProperty("cssClass", "edit-primary");
+    setCssEditLine(ui->lineEditName,true,false);
     ui->lineEditName->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEditName->setGraphicsEffect(shadowEffect);
 
@@ -48,25 +50,43 @@ SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
     ui->labelSubtitleLocation->setText("Where");
     ui->labelSubtitleLocation->setProperty("cssClass", "text-title");
 
-    QGraphicsDropShadowEffect* shadowEffect2 = new QGraphicsDropShadowEffect();
-    shadowEffect2->setColor(QColor(0, 0, 0, 22));
-    shadowEffect2->setXOffset(0);
-    shadowEffect2->setYOffset(3);
-    shadowEffect2->setBlurRadius(6);
 
-    ui->pushButtonDocuments->setText("Set a folder location");
+    ui->pushButtonDocuments->setText(tr("Set a folder location"));
     ui->pushButtonDocuments->setProperty("cssClass", "btn-edit-primary-folder");
-    ui->pushButtonDocuments->setGraphicsEffect(shadowEffect2);
+    ui->pushButtonDocuments->setGraphicsEffect(shadowEffect);
 
     // Buttons
 
     ui->pushButtonSave->setText("Backup");
     ui->pushButtonSave->setProperty("cssClass", "btn-primary");
 
+    ui->container_file_name->setVisible(false);
+    //ui->verticalSpacer_3->setVisible(false);
+
+    connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(backupWallet()));
+    connect(ui->pushButtonDocuments, SIGNAL(clicked()), this, SLOT(selectFileOutput()));
 
 }
 
-SettingsBackupWallet::~SettingsBackupWallet()
-{
+void SettingsBackupWallet::selectFileOutput(){
+    QString filenameRet = GUIUtil::getSaveFileName(this,
+                                        tr("Backup Wallet"), QString(),
+                                        tr("Wallet Data (*.dat)"), NULL);
+
+    if (!filenameRet.isEmpty()) {
+        filename = filenameRet;
+        ui->pushButtonDocuments->setText(filename);
+    }
+}
+
+void SettingsBackupWallet::backupWallet(){
+    if(walletModel && !filename.isEmpty()) {
+        inform(walletModel->backupWallet(filename) ? tr("Backup created") : tr("Backup creation failed"));
+        filename = QString();
+        ui->pushButtonDocuments->setText(tr("Set a folder location"));
+    }
+}
+
+SettingsBackupWallet::~SettingsBackupWallet(){
     delete ui;
 }

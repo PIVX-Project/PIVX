@@ -16,8 +16,13 @@ public:
     explicit SettingsBackupWallet(PIVXGUI* _window, QWidget *parent = nullptr);
     ~SettingsBackupWallet();
 
+private slots:
+    void backupWallet();
+    void selectFileOutput();
+
 private:
     Ui::SettingsBackupWallet *ui;
+    QString filename;
 };
 
 #endif // SETTINGSBACKUPWALLET_H
