@@ -118,8 +118,8 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
     ui->labelInfoBerkeley->setText(tr("No information"));
 #endif
 
-    connect(ui->pushButtonBackups, &QPushButton::clicked, [this](){GUIUtil::showBackups();});
-    connect(ui->pushButtonFile, &QPushButton::clicked, [this](){GUIUtil::openConfigfile();});
+    connect(ui->pushButtonBackups, &QPushButton::clicked, [](){GUIUtil::showBackups();});
+    connect(ui->pushButtonFile, &QPushButton::clicked, [](){GUIUtil::openConfigfile();});
 
 }
 

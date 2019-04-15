@@ -199,6 +199,10 @@ int SendMultiRow::getEditWidth(){
     return ui->lineEditAddress->width();
 }
 
+int SendMultiRow::getNumber(){
+    return number;
+}
+
 void SendMultiRow::setAddress(const QString& address) {
     ui->lineEditAddress->setText(address);
     ui->lineEditAmount->setFocus();
@@ -218,6 +222,7 @@ void SendMultiRow::setFocus(){
 
 
 void SendMultiRow::setNumber(int _number){
+    number = _number;
     iconNumber->setText(QString::number(_number));
 }
 

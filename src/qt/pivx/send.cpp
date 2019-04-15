@@ -613,10 +613,12 @@ void SendWidget::onContactsClicked(SendMultiRow* entry){
 
     menuContacts->setStyleSheet(this->styleSheet());
 
-    QPoint pos = entry->getEditLineRect().bottomLeft();
+    //QPoint pos = this->mapToGlobal(entry->getEditLineRect().bottomLeft());
+    QPoint pos = focusedEntry->getEditLineRect().bottomLeft();
+    int posYmov = focusedEntry->getNumber() == 0 ? 1 : focusedEntry->getNumber();
     // TODO: Change this position..
     pos.setX(pos.x() + 20);
-    pos.setY(pos.y() + ((entry->getEditHeight() - 4)  * 3));
+    pos.setY( (pos.y() + (focusedEntry->getEditHeight() - 4)  * 3));
     menuContacts->move(pos);
     menuContacts->show();
 }

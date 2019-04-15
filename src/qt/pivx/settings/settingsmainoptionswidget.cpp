@@ -58,24 +58,6 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
     shadowEffect->setYOffset(3);
     shadowEffect->setBlurRadius(6);
 
-    QGraphicsDropShadowEffect* shadowEffect2 = new QGraphicsDropShadowEffect();
-    shadowEffect2->setColor(QColor(0, 0, 0, 22));
-    shadowEffect2->setXOffset(0);
-    shadowEffect2->setYOffset(3);
-    shadowEffect2->setBlurRadius(6);
-
-    QGraphicsDropShadowEffect* shadowEffect3 = new QGraphicsDropShadowEffect();
-    shadowEffect3->setColor(QColor(0, 0, 0, 22));
-    shadowEffect3->setXOffset(0);
-    shadowEffect3->setYOffset(3);
-    shadowEffect3->setBlurRadius(6);
-
-    QGraphicsDropShadowEffect* shadowEffect4 = new QGraphicsDropShadowEffect();
-    shadowEffect4->setColor(QColor(0, 0, 0, 22));
-    shadowEffect4->setXOffset(0);
-    shadowEffect4->setYOffset(3);
-    shadowEffect4->setBlurRadius(6);
-
 
     ui->comboBoxDbCache->setProperty("cssClass", "btn-combo-options");
     ui->comboBoxDbCache->setGraphicsEffect(shadowEffect);
@@ -88,7 +70,7 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
     ui->comboBoxDbCache->addItem("100");
 
     ui->comboBoxThreads->setProperty("cssClass", "btn-combo-options");
-    ui->comboBoxThreads->setGraphicsEffect(shadowEffect2);
+    ui->comboBoxThreads->setGraphicsEffect(shadowEffect);
 
     QListView * listViewThreads = new QListView();
     ui->comboBoxThreads->setView(listViewThreads);
@@ -97,7 +79,7 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
     ui->comboBoxThreads->addItem("2");
 
     ui->comboBoxPercentagezPiv->setProperty("cssClass", "btn-combo-options");
-    ui->comboBoxPercentagezPiv->setGraphicsEffect(shadowEffect3);
+    ui->comboBoxPercentagezPiv->setGraphicsEffect(shadowEffect);
 
     QListView * listViewPercentagezPiv = new QListView();
     ui->comboBoxPercentagezPiv->setView(listViewPercentagezPiv);
@@ -106,7 +88,7 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
     ui->comboBoxPercentagezPiv->addItem("20%");
 
     ui->comboBoxDenomzPiv->setProperty("cssClass", "btn-combo-options");
-    ui->comboBoxDenomzPiv->setGraphicsEffect(shadowEffect4);
+    ui->comboBoxDenomzPiv->setGraphicsEffect(shadowEffect);
 
     QListView * listViewDenomzPiv = new QListView();
     ui->comboBoxDenomzPiv->setView(listViewDenomzPiv);
@@ -122,7 +104,6 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
 
     ui->pushButtonReset->setText("Reset to default");
     ui->pushButtonReset->setProperty("cssClass", "btn-secundary");
-
 
 }
 

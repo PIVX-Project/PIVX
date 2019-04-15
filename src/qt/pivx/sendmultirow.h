@@ -26,6 +26,7 @@ public:
     void hideLabels();
     void showLabels();
     void setNumber(int number);
+    int getNumber();
 
     void setModel(WalletModel* model);
     bool validate();
@@ -67,6 +68,7 @@ private:
 
     WalletModel *model;
     int displayUnit;
+    int number = 0;
 
     QAction *btnContact;
 
