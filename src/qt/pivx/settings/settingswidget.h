@@ -36,6 +36,7 @@ public:
     ~SettingsWidget();
 
     void loadClientModel() override;
+    void loadWalletModel() override;
 
     void showDebugConsole();
 

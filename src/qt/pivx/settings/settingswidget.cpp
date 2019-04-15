@@ -176,12 +176,22 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
 
     // Get restart command-line parameters and handle restart
     connect(settingsWalletRepairWidget, &SettingsWalletRepairWidget::handleRestart, [this](QStringList arg){emit handleRestart(arg);});
+
+    connect(settingsBackupWallet,
+            &SettingsBackupWallet::message,
+            [this](const QString& title, const QString& body, unsigned int style, bool* ret){ emit message(title, body, style, ret);}
+    );
 }
 
 void SettingsWidget::loadClientModel(){
     this->settingsInformationWidget->setClientModel(this->clientModel);
     this->settingsConsoleWidget->setClientModel(this->clientModel);
 }
+
+void SettingsWidget::loadWalletModel(){
+    this->settingsBackupWallet->setWalletModel(this->walletModel);
+}
+
 
 void SettingsWidget::onFileClicked() {
     if (ui->pushButtonFile->isChecked()) {

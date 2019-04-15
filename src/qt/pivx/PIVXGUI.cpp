@@ -490,6 +490,7 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     sendWidget->setModel(walletModel);
     addressesWidget->setWalletModel(walletModel);
     privacyWidget->setWalletModel(walletModel);
+    settingsWidget->setWalletModel(walletModel);
 
     // Connect actions..
     connect(sendWidget, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
@@ -498,6 +499,10 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     connect(addressesWidget,
             SIGNAL(message(const QString&,const QString&, unsigned int, bool* ret)),
             this, SLOT(message(QString&, QString&, unsigned int, bool* ret))
+            );
+    connect(settingsWidget,
+            &SettingsWidget::message,
+            [this](const QString& title, const QString& body, unsigned int style, bool* ret){message(title, body, style, ret);}
             );
 
     return true;
