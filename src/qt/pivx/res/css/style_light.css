@@ -2115,35 +2115,35 @@ QPushButton[cssClass="ic-step-confirm-welcome"] {
 }
 
 *[cssClass="container-welcome-step1"] {
-    background-image: url(://img-welcome-step1.png);
+    background-image: url("://img-welcome-step1");
     background-position:left bottom;
     background-repeat:no-repeat;
     background-color: transparent;
 }
 
 *[cssClass="container-welcome-step2"] {
-    background-image: url(://img-welcome-step2.png);
+    background-image: url("://img-welcome-step2");
     background-position:left bottom;
     background-repeat:no-repeat;
     background-color: transparent;
 }
 
 *[cssClass="container-welcome-step3"] {
-    background-image: url(://img-welcome-step3.png);
+    background-image: url("://img-welcome-step3");
     background-position:left bottom;
     background-repeat:no-repeat;
     background-color: transparent;
 }
 
 *[cssClass="container-welcome-step4"] {
-    background-image: url(://img-welcome-step4.png);
+    background-image: url("://img-welcome-step4");
     background-position:left bottom;
     background-repeat:no-repeat;
     background-color: transparent;
 }
 
 QComboBox[cssClass="btn-combo-welcome"] {
-    background-image: url(://ic-arrow-purple-down);
+    background-image: url("://ic-arrow-purple-down");
     background-position:right center;
     background-repeat:no-repeat;
     background-color:#171022;
@@ -2154,7 +2154,7 @@ QComboBox[cssClass="btn-combo-welcome"] {
 }
 
 QPushButton[cssClass="btn-welcome-back"] {
-    background: url(://ic-arrow-right);
+    background: url("://ic-arrow-right");
     background-repeat:no-repeat;
     background-position:center;
     border:  0;
@@ -2163,7 +2163,7 @@ QPushButton[cssClass="btn-welcome-back"] {
 }
 
 QPushButton[cssClass="btn-welcome-next"] {
-    background: url(://ic-arrow-right);
+    background: url("://ic-arrow-right");
     background-repeat:no-repeat;
     background-position:center;
     border:  0;

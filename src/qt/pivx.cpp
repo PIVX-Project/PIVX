@@ -17,7 +17,7 @@
 #include "net.h"
 #include "networkstyle.h"
 #include "optionsmodel.h"
-#include "splashscreen.h"
+#include "qt/pivx/splash.h"
 #include "utilitydialog.h"
 #include "winshutdownmonitor.h"
 
@@ -359,7 +359,7 @@ void BitcoinApplication::createWindow(const NetworkStyle* networkStyle)
 
 void BitcoinApplication::createSplashScreen(const NetworkStyle* networkStyle)
 {
-    SplashScreen* splash = new SplashScreen(0, networkStyle);
+    Splash* splash = new Splash(0);
     // We don't hold a direct pointer to the splash screen after creation, so use
     // Qt::WA_DeleteOnClose to make sure that the window will be deleted eventually.
     splash->setAttribute(Qt::WA_DeleteOnClose);
