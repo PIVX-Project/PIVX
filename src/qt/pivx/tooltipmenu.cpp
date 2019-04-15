@@ -51,9 +51,9 @@ void TooltipMenu::deleteClicked(){
         );
         if (ret) {
             if (this->walletModel->getAddressTableModel()->removeRows(index.row(), 1, index)) {
-                emit message("", tr("Contact Deleted"), CClientUIInterface::MSG_INFORMATION);
+                emit message("", tr("Contact Deleted"), CClientUIInterface::MSG_INFORMATION_SNACK);
             } else {
-                emit message("", tr("Error deleting a contact"), CClientUIInterface::MSG_INFORMATION);
+                emit message("", tr("Error deleting a contact"), CClientUIInterface::MSG_INFORMATION_SNACK);
             }
             hide();
         }

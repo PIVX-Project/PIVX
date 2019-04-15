@@ -26,7 +26,7 @@ void PWidget::changeTheme(bool isLightTheme, QString& theme){
 }
 
 void PWidget::inform(const QString& message){
-    emitMessage("", message, CClientUIInterface::MSG_INFORMATION);
+    emitMessage("", message, CClientUIInterface::MSG_INFORMATION_SNACK);
 }
 
 void PWidget::warn(const QString& title, const QString& message){

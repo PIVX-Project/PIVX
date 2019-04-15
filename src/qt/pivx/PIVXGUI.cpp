@@ -333,7 +333,9 @@ void PIVXGUI::message(const QString& title, const QString& message, unsigned int
 
             if (ret != NULL)
                 *ret = r;
-        } else
+        } else if(style & CClientUIInterface::MSG_INFORMATION_SNACK){
+            messageInfo(message);
+        }else
             notificator->notify((Notificator::Class) nNotifyIcon, strTitle, message);
 
     // TODO: Furszy remove this please..
@@ -496,14 +498,8 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     connect(sendWidget, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
     connect(topBar, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
     connect(privacyWidget, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
-    connect(addressesWidget,
-            SIGNAL(message(const QString&,const QString&, unsigned int, bool* ret)),
-            this, SLOT(message(QString&, QString&, unsigned int, bool* ret))
-            );
-    connect(settingsWidget,
-            &SettingsWidget::message,
-            [this](const QString& title, const QString& body, unsigned int style, bool* ret){message(title, body, style, ret);}
-            );
+    connect(addressesWidget, &AddressesWidget::message,this, &PIVXGUI::message);
+    connect(settingsWidget, &SettingsWidget::message, this, &PIVXGUI::message);
 
     return true;
 }

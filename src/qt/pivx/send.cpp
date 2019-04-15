@@ -226,7 +226,7 @@ void SendWidget::addEntry(){
             entry->setNumber(1);
         }else if(entries.length() == MAX_SEND_POPUP_ENTRIES){
             // TODO: Snackbar notifying that it surpassed the max amount of entries
-            emit message("", tr("Maximum amount of outputs reached"),CClientUIInterface::MSG_INFORMATION);
+            emit message("", tr("Maximum amount of outputs reached"), CClientUIInterface::MSG_INFORMATION_SNACK);
             return;
         }
 
@@ -272,7 +272,7 @@ void SendWidget::onSendClicked(){
             recipients.append(entry->getValue());
         }else{
             // Invalid entry.. todo: notificate user about this.
-            emit message("", tr("Invalid entry"),CClientUIInterface::MSG_INFORMATION);
+            emit message("", tr("Invalid entry"),CClientUIInterface::MSG_INFORMATION_SNACK);
             return;
         }
 
@@ -280,7 +280,7 @@ void SendWidget::onSendClicked(){
 
     if (recipients.isEmpty()) {
         //todo: notificate user about this.
-        emit message("", tr("No set recipients"),CClientUIInterface::MSG_INFORMATION);
+        emit message("", tr("No set recipients"),CClientUIInterface::MSG_INFORMATION_SNACK);
         return;
     }
 
@@ -294,7 +294,7 @@ void SendWidget::onSendClicked(){
         // Unlock wallet was cancelled
         //TODO: Check what is this --> fNewRecipientAllowed = true;
         // TODO: Notify the user..
-        emit message("", tr("Cannot send, wallet locked"),CClientUIInterface::MSG_INFORMATION);
+        emit message("", tr("Cannot send, wallet locked"),CClientUIInterface::MSG_INFORMATION_SNACK);
         return;
     }
 
@@ -327,7 +327,7 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
     if (prepareStatus.status != WalletModel::OK) {
         // TODO: Check why this??
         //fNewRecipientAllowed = true;
-        emit message("", tr("Prepare status failed.."),CClientUIInterface::MSG_INFORMATION);
+        emit message("", tr("Prepare status failed.."),CClientUIInterface::MSG_INFORMATION_SNACK);
         return false;
     }
 
@@ -352,7 +352,7 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
             //coinControlUpdateLabels();
             //
             clearAll();
-            emit message("", tr("Transaction sent"),CClientUIInterface::MSG_INFORMATION);
+            emit message("", tr("Transaction sent"),CClientUIInterface::MSG_INFORMATION_SNACK);
             return true;
         }
 
@@ -419,7 +419,7 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
             outputs
     )
             ) {
-        emit message("", tr("zPIV transaction sent!"), CClientUIInterface::MSG_INFORMATION);
+        emit message("", tr("zPIV transaction sent!"), CClientUIInterface::MSG_INFORMATION_SNACK);
         clearAll();
         return true;
     } else {
@@ -549,7 +549,7 @@ void SendWidget::onChangeAddressClicked(){
             if (dialog->getAddress(walletModel, &ret)) {
                 coinControl->destChange = CBitcoinAddress(ret.toStdString()).Get();
             }else{
-                emit message("", tr("Invalid change address"), CClientUIInterface::MSG_INFORMATION);
+                emit message("", tr("Invalid change address"), CClientUIInterface::MSG_INFORMATION_SNACK);
             }
         }
     }

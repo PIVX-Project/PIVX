@@ -255,7 +255,7 @@ void PrivacyWidget::onSendClicked(){
     }
 
     if(!GUIUtil::requestUnlock(walletModel, AskPassphraseDialog::Context::Mint_zPIV, true)){
-        emit message("", tr("You need to unlock the wallet to be able to mint zPIV"), CClientUIInterface::MSG_INFORMATION);
+        emit message("", tr("You need to unlock the wallet to be able to mint zPIV"), CClientUIInterface::MSG_INFORMATION_SNACK);
         return;
     }
 
@@ -268,7 +268,7 @@ void PrivacyWidget::onSendClicked(){
 
     if (value <= 0 || !isValid) {
         setCssEditLine(ui->lineEditAmount, false, true);
-        emit message("", tr("Invalid value"), CClientUIInterface::MSG_INFORMATION);
+        emit message("", tr("Invalid value"), CClientUIInterface::MSG_INFORMATION_SNACK);
         return;
     }
 
@@ -285,10 +285,10 @@ void PrivacyWidget::onSendClicked(){
 void PrivacyWidget::mint(CAmount value){
     std::string strError;
     if(!walletModel->mintCoins(value, CoinControlDialog::coinControl, strError)){
-        emit message("", tr(strError.data()), CClientUIInterface::MSG_INFORMATION);
+        emit message("", tr(strError.data()), CClientUIInterface::MSG_INFORMATION_SNACK);
     }else{
         // Mint succeed
-        emit message("", tr("zPIV minted successfully"), CClientUIInterface::MSG_INFORMATION);
+        emit message("", tr("zPIV minted successfully"), CClientUIInterface::MSG_INFORMATION_SNACK);
 
         // clear
         ui->lineEditAmount->clear();
@@ -312,7 +312,7 @@ void PrivacyWidget::spend(CAmount value){
         emit message("", receipt.GetStatusMessage().data(), CClientUIInterface::MSG_INFORMATION);
     }else{
         // Spend succeed
-        emit message("", tr("zPIV converted back to PIV"), CClientUIInterface::MSG_INFORMATION);
+        emit message("", tr("zPIV converted back to PIV"), CClientUIInterface::MSG_INFORMATION_SNACK);
 
         // clear
         ui->lineEditAmount->clear();

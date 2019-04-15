@@ -73,7 +73,8 @@ public:
         /** Predefined combinations for certain default usage cases */
         MSG_INFORMATION = ICON_INFORMATION,
         MSG_WARNING = (ICON_WARNING | BTN_OK | MODAL),
-        MSG_ERROR = (ICON_ERROR | BTN_OK | MODAL)
+        MSG_ERROR = (ICON_ERROR | BTN_OK | MODAL),
+        MSG_INFORMATION_SNACK = 1U << 2
     };
 
     /** Show message box. */
