@@ -14,7 +14,6 @@ class PIVXGUI;
 class ClientModel;
 class WalletModel;
 class WalletModelTransaction;
-class CCoinControl;
 
 namespace Ui {
 class send;
@@ -63,7 +62,6 @@ private:
     ClientModel* clientModel = nullptr;
     WalletModel* walletModel = nullptr;
 
-    CCoinControl* coinControl = nullptr;
     QList<SendMultiRow*> entries;
 
     ContactsDropdown *menuContacts = nullptr;

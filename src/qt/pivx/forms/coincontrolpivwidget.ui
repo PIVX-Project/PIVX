@@ -326,7 +326,13 @@
        </layout>
       </item>
       <item>
-       <widget class="QListView" name="listView"/>
+       <widget class="CoinControlTreeWidget" name="treeWidget">
+        <column>
+         <property name="text">
+          <string notr="true">1</string>
+         </property>
+        </column>
+       </widget>
       </item>
       <item>
        <spacer name="verticalSpacer_2">
@@ -512,6 +518,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CoinControlTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header>coincontroltreewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

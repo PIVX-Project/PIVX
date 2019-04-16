@@ -61,12 +61,12 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     // Title
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
 
-    ui->labelTitle2->setText("Staking Rewards");
+    ui->labelTitle2->setText(tr("Staking Rewards"));
     ui->labelTitle2->setProperty("cssClass", "text-title-screen");
 
     /* Subtitle */
 
-    ui->labelSubtitle->setText("You can view your account's history");
+    ui->labelSubtitle->setText(tr("You can view your account's history"));
     ui->labelSubtitle->setProperty("cssClass", "text-subtitle");
 
 

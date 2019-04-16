@@ -309,7 +309,7 @@ void PrivacyWidget::spend(CAmount value){
             receipt,
             walletModel->getNewAddress()
     )){
-        emit message("", receipt.GetStatusMessage().data(), CClientUIInterface::MSG_INFORMATION);
+        emit message("", receipt.GetStatusMessage().data(), CClientUIInterface::MSG_INFORMATION_SNACK);
     }else{
         // Spend succeed
         emit message("", tr("zPIV converted back to PIV"), CClientUIInterface::MSG_INFORMATION_SNACK);
