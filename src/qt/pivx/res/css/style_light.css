@@ -2154,16 +2154,16 @@ QComboBox[cssClass="btn-combo-welcome"] {
 }
 
 QPushButton[cssClass="btn-welcome-back"] {
-    background: url("://ic-arrow-right");
+    background: url("://ic-arrow-white-left");
     background-repeat:no-repeat;
     background-position:center;
-    border:  0;
-    background-color:#FFFFFF;
+    border:  0px;
+    background-color:#5c4b7d;
     color: #5c4b7d;
 }
 
 QPushButton[cssClass="btn-welcome-next"] {
-    background: url("://ic-arrow-right");
+    background: url("://ic-arrow-white-right");
     background-repeat:no-repeat;
     background-position:center;
     border:  0;

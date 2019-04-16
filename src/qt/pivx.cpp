@@ -18,6 +18,7 @@
 #include "networkstyle.h"
 #include "optionsmodel.h"
 #include "qt/pivx/splash.h"
+#include "qt/pivx/welcomecontentwidget.h"
 #include "utilitydialog.h"
 #include "winshutdownmonitor.h"
 
@@ -193,6 +194,9 @@ public:
     /// Create splash screen
     void createSplashScreen(const NetworkStyle* networkStyle);
 
+    /// Create tutorial screen
+    bool createTutorialScreen();
+
     /// Request core initialization
     void requestInitialize();
     /// Request core shutdown
@@ -209,6 +213,7 @@ public slots:
     void shutdownResult(int retval);
     /// Handle runaway exceptions. Shows a message box with the problem and quits the program.
     void handleRunawayException(const QString& message);
+    void updateTranslation();
 
 signals:
     void requestedInitialize();
@@ -228,6 +233,7 @@ private:
     WalletModel* walletModel;
 #endif
     int returnValue;
+    QTranslator qtTranslatorBase, qtTranslator, translatorBase, translator;
 
     void startThread();
 };
@@ -365,6 +371,27 @@ void BitcoinApplication::createSplashScreen(const NetworkStyle* networkStyle)
     splash->setAttribute(Qt::WA_DeleteOnClose);
     splash->show();
     connect(this, SIGNAL(splashFinished(QWidget*)), splash, SLOT(slotFinish(QWidget*)));
+}
+
+bool BitcoinApplication::createTutorialScreen()
+{
+    WelcomeContentWidget* widget = new WelcomeContentWidget();
+    //widget->setOptionsModel(optionsModel);
+
+    connect(widget, &WelcomeContentWidget::onLanguageSelected, [this](){
+        std::cout << "updating translations.." << std::endl;
+        updateTranslation();
+    });
+
+    widget->exec();
+    bool ret = widget->isOk;
+    widget->deleteLater();
+    return ret;
+}
+
+void BitcoinApplication::updateTranslation(){
+    // Re-initialize translations after change them
+    initTranslations(this->qtTranslatorBase, this->qtTranslator, this->translatorBase, this->translator);
 }
 
 void BitcoinApplication::startThread()
@@ -532,8 +559,8 @@ int main(int argc, char* argv[])
 
     /// 4. Initialization of translations, so that intro dialog is in user's language
     // Now that QSettings are accessible, initialize translations
-    QTranslator qtTranslatorBase, qtTranslator, translatorBase, translator;
-    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
+    //initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
+    app.updateTranslation();
     uiInterface.Translate.connect(Translate);
 
     // Show help message immediately after parsing command-line options (for "-lang") and setting locale,
@@ -585,7 +612,7 @@ int main(int argc, char* argv[])
     // Allow for separate UI settings for testnets
     QApplication::setApplicationName(networkStyle->getAppName());
     // Re-initialize translations after changing application name (language in network-specific settings can be different)
-    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
+    app.updateTranslation();
 
 #ifdef ENABLE_WALLET
     /// 7a. parse masternode.conf
@@ -624,6 +651,27 @@ int main(int argc, char* argv[])
 
     // Subscribe to global signals from core
     uiInterface.InitMessage.connect(InitMessage);
+
+    bool ret = true;
+#ifdef ENABLE_WALLET
+    // Check if the wallet exists or need to be created
+    std::string strWalletFile = GetArg("-wallet", "wallet.dat");
+    std::string strDataDir = GetDataDir().string();
+    // Wallet file must be a plain filename without a directory
+    if (strWalletFile != boost::filesystem::basename(strWalletFile) + boost::filesystem::extension(strWalletFile)){
+        throw std::runtime_error(strprintf(_("Wallet %s resides outside data directory %s"), strWalletFile, strDataDir));
+    }
+
+    filesystem::path pathBootstrap = GetDataDir() / strWalletFile;
+    if (!filesystem::exists(pathBootstrap)) {
+        // wallet doesn't exist, popup tutorial screen.
+        ret = app.createTutorialScreen();
+    }
+#endif
+    if(!ret){
+        // wallet not loaded.
+        return 0;
+    }
 
     if (GetBoolArg("-splash", true) && !GetBoolArg("-min", false))
         app.createSplashScreen(networkStyle.data());

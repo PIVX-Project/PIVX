@@ -115,7 +115,9 @@ QT_FORMS_UI = \
   qt/pivx/settings/forms/settingswalletoptionswidget.ui \
   qt/pivx/settings/forms/settingswalletrepairwidget.ui \
   qt/pivx/settings/forms/settingswindowoptionswidget.ui \
-  qt/pivx/settings/forms/settingswidget.ui
+  qt/pivx/settings/forms/settingswidget.ui \
+  qt/pivx/forms/welcomecontentwidget.ui \
+  qt/pivx/forms/splash.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
@@ -224,7 +226,9 @@ QT_MOC_CPP = \
   qt/pivx/settings/moc_settingswalletoptionswidget.cpp \
   qt/pivx/settings/moc_settingswalletrepairwidget.cpp \
   qt/pivx/settings/moc_settingswindowoptionswidget.cpp \
-  qt/pivx/settings/moc_settingswidget.cpp
+  qt/pivx/settings/moc_settingswidget.cpp \
+  qt/pivx/moc_welcomecontentwidget.cpp \
+  qt/pivx/moc_splash.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -364,7 +368,9 @@ BITCOIN_QT_H = \
   qt/pivx/settings/settingswalletoptionswidget.h \
   qt/pivx/settings/settingswalletrepairwidget.h \
   qt/pivx/settings/settingswindowoptionswidget.h \
-  qt/pivx/settings/settingswidget.h
+  qt/pivx/settings/settingswidget.h \
+  qt/pivx/welcomecontentwidget.h \
+  qt/pivx/splash.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -697,8 +703,9 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/settings/settingswalletoptionswidget.cpp \
   qt/pivx/settings/settingswalletrepairwidget.cpp \
   qt/pivx/settings/settingswindowoptionswidget.cpp \
-  qt/pivx/settings/settingswidget.cpp
-
+  qt/pivx/settings/settingswidget.cpp \
+  qt/pivx/welcomecontentwidget.cpp \
+  qt/pivx/splash.cpp
 
 
 BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP)
