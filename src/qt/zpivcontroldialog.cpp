@@ -140,6 +140,8 @@ void ZPivControlDialog::updateList()
             string strReason = "";
             if(nConfirmations < Params().Zerocoin_MintRequiredConfirmations())
                 strReason = strprintf("Needs %d more confirmations", Params().Zerocoin_MintRequiredConfirmations() - nConfirmations);
+            else if (model->getEncryptionStatus() == WalletModel::EncryptionStatus::Locked)
+                strReason = "Your wallet is locked. Impossible to precompute or spend zPIV.";
             else if (!mint.isSeedCorrect)
                 strReason = "The zPIV seed used to mint this zPIV is not the same as currently hold in the wallet";
             else

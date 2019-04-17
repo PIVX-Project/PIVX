@@ -90,6 +90,8 @@ public:
     const std::vector<CAddress>& FixedSeeds() const { return vFixedSeeds; }
     virtual const Checkpoints::CCheckpointData& Checkpoints() const = 0;
     int PoolMaxTransactions() const { return nPoolMaxTransactions; }
+    /** Return the number of blocks in a budget cycle */
+    int GetBudgetCycleBlocks() const { return nBudgetCycleBlocks; }
 
     /** Spork key and Masternode Handling **/
     std::string SporkKey() const { return strSporkKey; }
@@ -169,6 +171,7 @@ protected:
     bool fTestnetToBeDeprecatedFieldRPC;
     bool fHeadersFirstSyncingActive;
     int nPoolMaxTransactions;
+    int nBudgetCycleBlocks;
     std::string strSporkKey;
     std::string strSporkKeyOld;
     int64_t nEnforceNewSporkKey;

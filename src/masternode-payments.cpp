@@ -5,6 +5,7 @@
 
 #include "masternode-payments.h"
 #include "addrman.h"
+#include "chainparams.h"
 #include "masternode-budget.h"
 #include "masternode-sync.h"
 #include "masternodeman.h"
@@ -194,7 +195,7 @@ bool IsBlockValueValid(const CBlock& block, CAmount nExpectedValue, CAmount nMin
 
     if (!masternodeSync.IsSynced()) { //there is no budget data to use to check anything
         //super blocks will always be on these blocks, max 100 per budgeting
-        if (nHeight % GetBudgetPaymentCycleBlocks() < 100) {
+        if (nHeight % Params().GetBudgetCycleBlocks() < 100) {
             return true;
         } else {
             if (nMinted > nExpectedValue) {

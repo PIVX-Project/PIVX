@@ -49,9 +49,6 @@ extern std::vector<CFinalizedBudgetBroadcast> vecImmatureFinalizedBudgets;
 extern CBudgetManager budget;
 void DumpBudgets();
 
-// Define amount of blocks in budget payment cycle
-int GetBudgetPaymentCycleBlocks();
-
 //Check the collateral transaction for the budget proposal/finalized budget
 bool IsBudgetCollateralValid(uint256 nTxCollateralHash, uint256 nExpectedHash, std::string& strError, int64_t& nTime, int& nConf, bool fBudgetFinalization=false);
 
