@@ -407,3 +407,29 @@ int TransactionRecord::getOutputIndex() const
 {
     return idx;
 }
+
+
+std::string TransactionRecord::statusToString(){
+    switch (status.status){
+        case TransactionStatus::MaturesWarning:
+            return "Abandoned (not mature because no nodes have confirmed)";
+        case TransactionStatus::Confirmed:
+            return "Confirmed";
+        case TransactionStatus::OpenUntilDate:
+            return "OpenUntilDate";
+        case TransactionStatus::OpenUntilBlock:
+            return "OpenUntilBlock";
+        case TransactionStatus::Unconfirmed:
+            return "Unconfirmed";
+        case TransactionStatus::Confirming:
+            return "Confirming";
+        case TransactionStatus::Conflicted:
+            return "Conflicted";
+        case TransactionStatus::Immature:
+            return "Immature";
+        case TransactionStatus::NotAccepted:
+            return "Not Accepted";
+        default:
+            return "No status";
+    }
+}

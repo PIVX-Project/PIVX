@@ -151,6 +151,10 @@ public:
     /** Return whether a status update is needed.
      */
     bool statusUpdateNeeded();
+
+    /** Return transaction status
+     */
+    std::string statusToString();
 };
 
 #endif // BITCOIN_QT_TRANSACTIONRECORD_H
