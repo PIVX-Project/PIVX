@@ -17,6 +17,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QWidget>
+#include <QGraphicsDropShadowEffect>
 
 AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel* model, Context context) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
                                                                                                             ui(new Ui::AskPassphraseDialog),
@@ -27,6 +28,46 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
 {
     ui->setupUi(this);
     this->setStyleSheet(GUIUtil::loadStyleSheet());
+
+    ui->left->setProperty("cssClass", "container-dialog");
+
+    ui->labelTitle->setText("Change passphrase");
+    ui->labelTitle->setProperty("cssClass", "text-title-screen");
+
+    ui->warningLabel->setProperty("cssClass", "text-subtitle");
+
+    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
+    shadowEffect->setColor(QColor(0, 0, 0, 22));
+    shadowEffect->setXOffset(0);
+    shadowEffect->setYOffset(3);
+    shadowEffect->setBlurRadius(6);
+
+    ui->btnEsc->setText("");
+    ui->btnEsc->setProperty("cssClass", "ic-close");
+
+    ui->pushButtonOk->setText("SAVE");
+    ui->pushButtonOk->setProperty("cssClass", "btn-primary");
+
+    ui->passEdit1->setGraphicsEffect(shadowEffect);
+    ui->passEdit2->setGraphicsEffect(shadowEffect);
+    ui->passEdit3->setGraphicsEffect(shadowEffect);
+
+    ui->passEdit1->setProperty("cssClass", "edit-primary");
+    ui->passEdit2->setProperty("cssClass", "edit-primary");
+    ui->passEdit3->setProperty("cssClass", "edit-primary");
+
+    ui->passLabel1->setText("Current passphrase");
+    ui->passLabel1->setProperty("cssClass", "text-title");
+
+    ui->passLabel2->setText("New passphrase");
+    ui->passLabel2->setProperty("cssClass", "text-title");
+
+    ui->passLabel3->setText("Repeat passphrase");
+    ui->passLabel3->setProperty("cssClass", "text-title");
+
+    ui->passEdit1->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->passEdit2->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->passEdit3->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
     ui->passEdit1->setMinimumSize(ui->passEdit1->sizeHint());
     ui->passEdit2->setMinimumSize(ui->passEdit2->sizeHint());
@@ -91,6 +132,8 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
     connect(ui->passEdit1, SIGNAL(textChanged(QString)), this, SLOT(textChanged()));
     connect(ui->passEdit2, SIGNAL(textChanged(QString)), this, SLOT(textChanged()));
     connect(ui->passEdit3, SIGNAL(textChanged(QString)), this, SLOT(textChanged()));
+    connect(ui->pushButtonOk, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 AskPassphraseDialog::~AskPassphraseDialog()
@@ -206,7 +249,7 @@ void AskPassphraseDialog::textChanged()
         acceptable = !ui->passEdit1->text().isEmpty() && !ui->passEdit2->text().isEmpty() && !ui->passEdit3->text().isEmpty();
         break;
     }
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(acceptable);
+    ui->pushButtonOk->setEnabled(acceptable);
 }
 
 bool AskPassphraseDialog::event(QEvent* event)

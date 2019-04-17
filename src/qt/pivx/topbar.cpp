@@ -181,9 +181,11 @@ void TopBar::encryptWallet() {
     if (!walletModel)
         return;
 
-    AskPassphraseDialog dlg(AskPassphraseDialog::Mode::Encrypt, this,
+    mainWindow->showHide(true);
+    AskPassphraseDialog *dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::Encrypt, mainWindow,
                             walletModel, AskPassphraseDialog::Context::Encrypt);
-    dlg.exec();
+    dlg->adjustSize();
+    openDialogWithOpaqueBackgroundY(dlg, mainWindow);
 
     refreshStatus();
 }
@@ -202,9 +204,11 @@ void TopBar::lockDropdownClicked(const StateClicked& state){
                 break;
             }
             case 1: {
-                AskPassphraseDialog dlg(AskPassphraseDialog::Mode::Unlock, this, walletModel,
+                mainWindow->showHide(true);
+                AskPassphraseDialog *dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::Unlock, mainWindow, walletModel,
                                         AskPassphraseDialog::Context::ToggleLock);
-                dlg.exec();
+                dlg->adjustSize();
+                openDialogWithOpaqueBackgroundY(dlg, mainWindow);
                 if (this->walletModel->getEncryptionStatus() == WalletModel::Unlocked) {
                     ui->pushButtonLock->setButtonText("Wallet Unlocked");
                     ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-unlock", true);
@@ -212,9 +216,11 @@ void TopBar::lockDropdownClicked(const StateClicked& state){
                 break;
             }
             case 2: {
-                AskPassphraseDialog dlg(AskPassphraseDialog::Mode::UnlockAnonymize, this, walletModel,
+                mainWindow->showHide(true);
+                AskPassphraseDialog *dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::UnlockAnonymize, mainWindow, walletModel,
                                         AskPassphraseDialog::Context::ToggleLock);
-                dlg.exec();
+                dlg->adjustSize();
+                openDialogWithOpaqueBackgroundY(dlg, mainWindow);
                 if (this->walletModel->getEncryptionStatus() == WalletModel::UnlockedForAnonymizationOnly) {
                     ui->pushButtonLock->setButtonText("Wallet Unlocked for staking");
                     ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-staking", true);
