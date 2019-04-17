@@ -17,6 +17,9 @@
 #include <QFile>
 #include <QScrollBar>
 #include "qt/pivx/qtutils.h"
+#include <QDataWidgetMapper>
+#include "optionsmodel.h"
+#include "clientmodel.h"
 
 SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window, parent),
@@ -70,8 +73,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonHelp->setProperty("cssClass", "btn-settings-check");
     ui->pushButtonHelp1->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonHelp2->setProperty("cssClass", "btn-settings-options");
-
-
 
     ui->pushButtonFile->isChecked();
     ui->fileButtonsWidget->setVisible(true);
@@ -162,11 +163,28 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
             &SettingsBackupWallet::message,
             [this](const QString& title, const QString& body, unsigned int style, bool* ret){ emit message(title, body, style, ret);}
     );
+
+
+    /* Widget-to-option mapper */
+    mapper = new QDataWidgetMapper(this);
+    mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+    mapper->setOrientation(Qt::Vertical);
 }
 
 void SettingsWidget::loadClientModel(){
     this->settingsInformationWidget->setClientModel(this->clientModel);
     this->settingsConsoleWidget->setClientModel(this->clientModel);
+
+    OptionsModel *optionsModel = this->clientModel->getOptionsModel();
+    if(optionsModel) {
+        mapper->setModel(optionsModel);
+        setMapper();
+        mapper->toFirst();
+        /* keep consistency for action triggered elsewhere */
+        connect(optionsModel, SIGNAL(hideOrphansChanged(bool)), this, SLOT(updateHideOrphans(bool)));
+
+        // TODO: Connect show restart needed and apply changes.
+    }
 }
 
 void SettingsWidget::loadWalletModel(){
@@ -335,6 +353,11 @@ void SettingsWidget::onFaqClicked() {
 }
 
 void SettingsWidget::onAboutClicked() {
+
+}
+
+void SettingsWidget::setMapper(){
+    settingsMainOptionsWidget->setMapper(mapper);
 
 }
 

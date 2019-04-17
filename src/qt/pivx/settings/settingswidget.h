@@ -19,6 +19,10 @@
 
 class PIVXGUI;
 
+QT_BEGIN_NAMESPACE
+class QDataWidgetMapper;
+QT_END_NAMESPACE
+
 namespace Ui {
 class SettingsWidget;
 }
@@ -33,7 +37,7 @@ public:
 
     void loadClientModel() override;
     void loadWalletModel() override;
-
+    void setMapper();
     void showDebugConsole();
 
 signals:
@@ -99,6 +103,8 @@ private:
     SettingsInformationWidget *settingsInformationWidget;
     SettingsConsoleWidget *settingsConsoleWidget;
     SettingsWindowOptionsWidget *settingsWindowOptionsWidget;
+
+    QDataWidgetMapper* mapper;
 };
 
 #endif // SETTINGSWIDGET_H

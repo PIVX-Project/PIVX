@@ -164,7 +164,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBoxDbCache">
+           <widget class="QSpinBox" name="databaseCache">
             <property name="minimumSize">
              <size>
               <width>180</width>
@@ -214,7 +214,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBoxThreads">
+           <widget class="QSpinBox" name="threadsScriptVerif">
             <property name="minimumSize">
              <size>
               <width>180</width>
@@ -331,7 +331,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBoxPercentagezPiv">
+           <widget class="QSpinBox" name="zeromintPercentage">
             <property name="minimumSize">
              <size>
               <width>180</width>
