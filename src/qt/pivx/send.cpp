@@ -12,6 +12,7 @@
 #include "qt/pivx/myaddressrow.h"
 #include "optionsmodel.h"
 #include "coincontrol.h"
+#include "openuridialog.h"
 
 #include <QFile>
 #include <QGraphicsDropShadowEffect>
@@ -100,9 +101,14 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     ui->btnChangeAddress->setTitleClassAndText("btn-title-grey", "Change address");
     ui->btnChangeAddress->setSubTitleClassAndText("text-subtitle", "Customize the change address.");
 
+    // Uri
+    ui->btnUri->setTitleClassAndText("btn-title-grey", "Open URI");
+    ui->btnUri->setSubTitleClassAndText("text-subtitle", "Parse a payment request.");
+
     connect(ui->pushButtonFee, SIGNAL(clicked()), this, SLOT(onChangeCustomFeeClicked()));
     connect(ui->btnCoinControl, SIGNAL(clicked()), this, SLOT(onCoinControlClicked()));
     connect(ui->btnChangeAddress, SIGNAL(clicked()), this, SLOT(onChangeAddressClicked()));
+    connect(ui->btnUri, SIGNAL(clicked()), this, SLOT(onOpenUriClicked()));
 
     ui->coinWidget->setProperty("cssClass", "container-coin-type");
     ui->labelLine->setProperty("cssClass", "container-divider");
@@ -335,9 +341,10 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
     CAmount totalAmount = currentTransaction.getTotalTransactionAmount() + txFee;
 
     window->showHide(true);
-    SendConfirmDialog* dialog = new SendConfirmDialog(window);
+    TxDetailDialog* dialog = new TxDetailDialog(window);
     dialog->setDisplayUnit(walletModel->getOptionsModel()->getDisplayUnit());
     dialog->setData(walletModel, currentTransaction);
+    dialog->adjustSize();
     openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
 
     if(dialog->isConfirm()){
@@ -552,6 +559,13 @@ void SendWidget::onChangeAddressClicked(){
                 emit message("", tr("Invalid change address"), CClientUIInterface::MSG_INFORMATION_SNACK);
             }
         }
+    }
+}
+
+void SendWidget::onOpenUriClicked(){
+    OpenURIDialog dlg(this);
+    if (dlg.exec()) {
+        emit receivedURI(dlg.getURI());
     }
 }
 

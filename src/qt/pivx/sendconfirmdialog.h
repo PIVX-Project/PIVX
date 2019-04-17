@@ -8,28 +8,33 @@ class WalletModelTransaction;
 class WalletModel;
 
 namespace Ui {
-class SendConfirmDialog;
+class TxDetailDialog;
 }
 
-class SendConfirmDialog : public QDialog
+QT_BEGIN_NAMESPACE
+class QModelIndex;
+QT_END_NAMESPACE
+
+class TxDetailDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit SendConfirmDialog(QWidget *parent = nullptr);
-    ~SendConfirmDialog();
+    explicit TxDetailDialog(QWidget *parent = nullptr, bool isConfirmDialog = true);
+    ~TxDetailDialog();
 
     bool isConfirm() { return this->confirm;}
     WalletModel::SendCoinsReturn getStatus() { return this->sendStatus;}
 
     void setData(WalletModel *model, WalletModelTransaction &tx);
+    void setData(WalletModel *model, QModelIndex &index);
     void setDisplayUnit(int unit){this->nDisplayUnit = unit;};
 
 public slots:
     void acceptTx();
 
 private:
-    Ui::SendConfirmDialog *ui;
+    Ui::TxDetailDialog *ui;
     int nDisplayUnit = 0;
     bool confirm = false;
     WalletModel *model;

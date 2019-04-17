@@ -1,6 +1,6 @@
 #include "qt/pivx/dashboardwidget.h"
 #include "qt/pivx/forms/ui_dashboardwidget.h"
-#include "qt/pivx/txdetaildialog.h"
+#include "qt/pivx/sendconfirmdialog.h"
 #include "qt/pivx/txrow.h"
 #include "qt/pivx/qtutils.h"
 #include "walletmodel.h"
@@ -176,7 +176,8 @@ void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
     QModelIndex rIndex = (filter) ? filter->mapToSource(index) : index;
 
     window->showHide(true);
-    TxDetailDialog *dialog = new TxDetailDialog(window);
+    TxDetailDialog *dialog = new TxDetailDialog(window, false);
+    dialog->setData(walletModel, rIndex);
     openDialogWithOpaqueBackgroundY(dialog, window, 3, 6);
 
     // Back to regular status

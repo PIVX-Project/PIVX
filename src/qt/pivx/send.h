@@ -35,11 +35,14 @@ public:
 
 signals:
     void message(const QString& title, const QString& message, unsigned int style);
+    /** Signal raised when a URI was entered or dragged to the GUI */
+    void receivedURI(const QString& uri);
 
 public slots:
     void onChangeAddressClicked();
     void onChangeCustomFeeClicked();
     void onCoinControlClicked();
+    void onOpenUriClicked();
 
 protected:
     void resizeEvent(QResizeEvent *event);
