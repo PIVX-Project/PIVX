@@ -2350,6 +2350,7 @@ UniValue autocombinerewards(const UniValue& params, bool fHelp)
             obj.push_back(Pair("autocombine block frequency set to ",
                            int(pwalletMain->nAutoCombineBlockFrequency)));
         }
+    }
 
     return obj;
 }
