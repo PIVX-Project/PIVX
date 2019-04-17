@@ -4192,7 +4192,7 @@ void CWallet::AutoCombineDust()
 
     if (0 != nAutoCombineBlockFrequency) {
         // If the block height hasn't exceeded our frequency; or is not a multiple of our frequency.
-        if ((nAutoCombineBlockFrequency > chainActive.Tip()->nHeight) || 
+        if ((nAutoCombineBlockFrequency > chainActive.Tip()->nHeight) ||
             (chainActive.Tip()->nHeight % nAutoCombineBlockFrequency)) {
             return;
         }
