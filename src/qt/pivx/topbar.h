@@ -59,7 +59,7 @@ private:
 
     int nDisplayUnit = -1;
 
-    QString formatBalance(CAmount amount);
+    QString formatBalance(CAmount amount, bool isZpiv = false);
 };
 
 #endif // TOPBAR_H
