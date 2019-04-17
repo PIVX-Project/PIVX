@@ -24,11 +24,14 @@ public:
 
 signals:
     void message(const QString& title, const QString& body, unsigned int style, bool* ret = nullptr);
+    void showHide(bool show);
+    bool execDialog(QDialog *dialog, int xDiv = 3, int yDiv = 5);
 
 protected slots:
     void changeTheme(bool isLightTheme, QString &theme);
 
 protected:
+    PIVXGUI* window;
     ClientModel* clientModel;
     WalletModel* walletModel;
 
@@ -40,8 +43,6 @@ protected:
     void ask(const QString& title, const QString& message, bool* ret);
     void emitMessage(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
 
-private:
-    PIVXGUI* window;
 
 };
 
