@@ -2342,7 +2342,7 @@ UniValue autocombinerewards(const UniValue& params, bool fHelp)
     UniValue obj(UniValue::VOBJ);
     obj.push_back(Pair("autocombine set to <on/off>  ", int(pwalletMain->fCombineDust)));
     if (pwalletMain->fCombineDust) {
-        obj.push_back(Pair("autocombine threshold set to <Coin Amount>", 
+        obj.push_back(Pair("autocombine threshold set to <Coin Amount>",
                            int(pwalletMain->nAutoCombineThreshold)));
         if (0 == pwalletMain->nAutoCombineBlockFrequency) {
             obj.push_back(Pair("autocombine block frequency set to ", "one time"));
