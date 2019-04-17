@@ -85,17 +85,18 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
     shadowEffect->setBlurRadius(6);
 
 
-    ui->databaseCache->setProperty("cssClass", "btn-combo-options");
+    ui->databaseCache->setProperty("cssClass", "btn-spin-box");
+    ui->databaseCache->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->databaseCache->setGraphicsEffect(shadowEffect);
-
-    ui->threadsScriptVerif->setProperty("cssClass", "btn-combo-options");
+    ui->threadsScriptVerif->setProperty("cssClass", "btn-spin-box");
+    ui->threadsScriptVerif->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->threadsScriptVerif->setGraphicsEffect(shadowEffect);
-
     ui->zeromintPercentage->setProperty("cssClass", "btn-combo-options");
+    ui->zeromintPercentage->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->zeromintPercentage->setGraphicsEffect(shadowEffect);
-
     ui->comboBoxDenomzPiv->setProperty("cssClass", "btn-combo-options");
-    ui->comboBoxDenomzPiv->setGraphicsEffect(shadowEffect);
+    QListView * listView = new QListView();
+    ui->comboBoxDenomzPiv->setView(listView);
 
     // Buttons
 

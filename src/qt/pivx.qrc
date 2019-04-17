@@ -268,5 +268,9 @@
         <file alias="img-qr">pivx/res/img/img-qr.svg</file>
         <file alias="ic-contact-arrow-down">pivx/res/img/ic-contact-arrow-down.svg</file>
         <file alias="ic-contact-arrow-down-white">pivx/res/img/ic-contact-arrow-down-white.svg</file>
+        <file alias="ic-arrow-drop-down-purple">pivx/res/img/ic-arrow-drop-down-purple.svg</file>
+        <file alias="ic-arrow-drop-up-purple">pivx/res/img/ic-arrow-drop-up-purple.svg</file>
+        <file alias="bg-welcome-2x">pivx/res/img/bg-welcome@2x.jpg</file>
+        <file alias="bg-welcome-3x">pivx/res/img/bg-welcome@3x.jpg</file>
     </qresource>
 </RCC>

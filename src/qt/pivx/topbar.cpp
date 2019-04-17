@@ -282,6 +282,9 @@ void TopBar::showBottom()
 
 TopBar::~TopBar()
 {
+    if(timerStakingIcon){
+        timerStakingIcon->stop();
+    }
     delete ui;
 }
 
@@ -296,6 +299,12 @@ void TopBar::setClientModel(ClientModel *model){
         connect(clientModel, SIGNAL(numBlocksChanged(int)), this, SLOT(setNumBlocks(int)));
 
         connect(clientModel->getOptionsModel(), SIGNAL(zeromintEnableChanged(bool)), this, SLOT(updateAutoMintStatus()));
+        updateAutoMintStatus();
+
+        timerStakingIcon = new QTimer(ui->pushButtonStack);
+        connect(timerStakingIcon, SIGNAL(timeout()), this, SLOT(updateStakingStatus()));
+        timerStakingIcon->start(50000);
+        updateStakingStatus();
 
     }
 }
@@ -303,6 +312,16 @@ void TopBar::setClientModel(ClientModel *model){
 void TopBar::updateAutoMintStatus(){
     ui->pushButtonMint->setButtonText(fEnableZeromint ? tr("Automint enabled") : tr("Automint disabled"));
     ui->pushButtonMint->setChecked(fEnableZeromint);
+}
+
+void TopBar::updateStakingStatus(){
+    if (nLastCoinStakeSearchInterval) {
+        ui->pushButtonStack->setButtonText("Staking active");
+        ui->pushButtonStack->setChecked(true);
+    }else{
+        ui->pushButtonStack->setButtonText("Staking not active");
+        ui->pushButtonStack->setChecked(false);
+    }
 }
 
 void TopBar::setNumConnections(int count) {

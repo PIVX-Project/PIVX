@@ -29,6 +29,7 @@ Splash::Splash(QWidget *parent) :
     ui->progressBar->setTextVisible(false);
     ui->frame->setProperty("cssClass", "container-welcome");
     ui->layoutProgress->setProperty("cssClass", "bg-progress");
+    ui->imgLogo->setProperty("cssClass", "img-splash-logo");
 
     subscribeToCoreSignals();
 }

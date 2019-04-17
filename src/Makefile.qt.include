@@ -567,7 +567,11 @@ RES_ICONS = \
   qt/pivx/res/img/img-welcome-step4.png \
   qt/pivx/res/img/ic-check-locked-off.svg \
   qt/pivx/res/img/ic-nav-address-hover.svg \
-  qt/pivx/res/img/ic-update-liliac.svg
+  qt/pivx/res/img/ic-update-liliac.svg \
+  qt/pivx/res/img/ic-arrow-drop-down-purple.svg \
+  qt/pivx/res/img/ic-arrow-drop-up-purple.svg
+
+
 
 BITCOIN_QT_BASE_CPP = \
   qt/bantablemodel.cpp \

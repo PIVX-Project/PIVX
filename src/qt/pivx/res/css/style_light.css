@@ -90,6 +90,14 @@ QPushButton[cssClass="img-nav-logo"] {
     color: #FFFFFF;
 }
 
+*[cssClass="btn-nav-receive-active"] {
+    qproperty-icon:url("://ic-nav-receive-active")  ;
+    qproperty-iconSize: 24px 40px;
+    background-color: qlineargradient(x1:0, x2: 1, stop: 0 #3c2559, stop: 1 #1f162b);
+    font-size:14px;
+    color: #B088FF;
+}
+
 *[cssClass="btn-nav-settings"] {
     qproperty-icon: url("://ic-nav-settings") off,
                     url("://ic-nav-settings-active") on;
@@ -115,6 +123,14 @@ QPushButton[cssClass="img-nav-logo"] {
     qproperty-iconSize: 24px 40px;
     background-color: transparent;
     color: #FFFFFF;
+}
+
+*[cssClass="btn-nav-settings-active"] {
+    qproperty-icon:url("://ic-nav-settings-active")  ;
+    qproperty-iconSize: 24px 40px;
+    background-color: qlineargradient(x1:0, x2: 1, stop: 0 #3c2559, stop: 1 #1f162b);
+    font-size:14px;
+    color: #B088FF;
 }
 
 *[cssClass="btn-nav-dash"] {
@@ -145,6 +161,14 @@ QPushButton[cssClass="img-nav-logo"] {
     color: #FFFFFF;
 }
 
+*[cssClass="btn-nav-dash-active"] {
+    qproperty-icon:url("://ic-nav-dashboard-active");
+    qproperty-iconSize: 24px 40px;
+    background-color: qlineargradient(x1:0, x2: 1, stop: 0 #3c2559, stop: 1 #1f162b);
+    font-size:14px;
+    color: #B088FF;
+}
+
 *[cssClass="btn-nav-send"] {
     qproperty-icon: url("://ic-nav-send") off,
                     url("://ic-nav-send") on ;
@@ -170,6 +194,14 @@ QPushButton[cssClass="img-nav-logo"] {
     qproperty-iconSize: 24px 40px;
     background-color: transparent;
     color: #FFFFFF;
+}
+
+*[cssClass="btn-nav-send-active"] {
+    qproperty-icon:url("://ic-nav-send-active")  ;
+    qproperty-iconSize: 24px 40px;
+    background-color: qlineargradient(x1:0, x2: 1, stop: 0 #3c2559, stop: 1 #1f162b);
+    font-size:14px;
+    color: #B088FF;
 }
 
 *[cssClass="btn-nav-address"] {
@@ -199,6 +231,14 @@ QPushButton[cssClass="img-nav-logo"] {
     color: #FFFFFF;
 }
 
+*[cssClass="btn-nav-address-active"] {
+    qproperty-icon:url("://ic-nav-address-active")  ;
+    qproperty-iconSize: 24px 40px;
+    background-color: qlineargradient(x1:0, x2: 1, stop: 0 #3c2559, stop: 1 #1f162b);
+    font-size:14px;
+    color: #B088FF;
+}
+
 *[cssClass="btn-nav-privacy"] {
     qproperty-icon: url("://ic-nav-privacy") off,
                     url("//ic-nav-privacy-active") on ;
@@ -226,10 +266,18 @@ QPushButton[cssClass="img-nav-logo"] {
     color: #FFFFFF;
 }
 
+*[cssClass="btn-nav-privacy-active"] {
+    qproperty-icon:url("://ic-nav-privacy-active")  ;
+    qproperty-iconSize: 24px 40px;
+    background-color: qlineargradient(x1:0, x2: 1, stop: 0 #3c2559, stop: 1 #1f162b);
+    font-size:14px;
+    color: #B088FF;
+}
+
 *[cssClass="btn-nav-master"] {
     qproperty-icon: url("://ic-nav-master") off,
                     url("://ic-nav-master-active") on;
-    qproperty-iconSize: 24px 40px;
+    qproperty-iconSize: 24px 30px;
     background-color:transparent;
     font-size:14px;
     color: #938da5;
@@ -249,9 +297,17 @@ QPushButton[cssClass="img-nav-logo"] {
 
 *[cssClass="btn-nav-master"]:hover {
     qproperty-icon: url("://ic-nav-master-hover");
-    qproperty-iconSize: 24px 40px;
+    qproperty-iconSize: 24px 30px;
     background-color: transparent;
     color: #FFFFFF;
+}
+
+*[cssClass="btn-nav-master-active"] {
+    qproperty-icon:url("://ic-nav-master-active");
+    qproperty-iconSize: 24px 30px;
+    background-color: qlineargradient(x1:0, x2: 1, stop: 0 #3c2559, stop: 1 #1f162b);
+    font-size:14px;
+    color: #B088FF;
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
@@ -1280,6 +1336,13 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     background-color:#000000;
 }
 
+*[cssClass="img-splash-logo"] {
+    qproperty-icon: url("://img-logo-pivx");
+    qproperty-iconSize: 300px 100px;
+    border:0;
+    background-color:transparent;
+}
+
 *[cssClass="bg-progress"] {
     border-top:3px solid #b088ff ;
     background-color:transparent;
@@ -1312,11 +1375,25 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border-bottom: 5px solid #5c4b7d;
 }
 
+*[cssClass="text-stake-piv-disable"] {
+    color:#d7d5da;
+    font-size:16px;
+    padding:10px;
+    border-bottom: 5px solid #bbb8c0;
+}
+
 *[cssClass="text-stake-zpiv"] {
     color:#b088ff;
     font-size:16px;
     padding:10px;
     border-bottom: 5px solid #b088ff;
+}
+
+*[cssClass="text-stake-zpiv-disable"] {
+    color:#d7d5da;
+    font-size:16px;
+    padding:10px;
+    border-bottom: 5px solid #d7d5da;
 }
 
 *[cssClass="legend-chart"] {
@@ -1470,6 +1547,38 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 
+/*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+HH       SPIN BOX
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
+
+
+QSpinBox[cssClass="btn-spin-box"] {
+    background-color:#FFFFFF;
+    padding:10px 20px 10px 10px;
+    font-size:16px;
+    border:1px solid #bababa;
+    color: #5c4b7d;
+    selection-background-color: #5c4b7d;
+    selection-color: #FFFFFF;
+}
+
+
+QSpinBox[cssClass="btn-spin-box"]::up-button {
+    image: url("://ic-arrow-drop-up-purple");
+    subcontrol-position: top right; width: 20px; height: 20px;
+    border: 0px;
+    padding:0px;
+    margin:0px 5px 0px 0px;
+}
+
+QSpinBox[cssClass="btn-spin-box"]::down-button {
+    image: url("://ic-arrow-drop-down-purple");
+    subcontrol-position: bottom right; width: 20px; height: 20px;
+    border: 0px;
+    padding:0px;
+    margin:0px 5px 0px 0px;
+}
+
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 HH       COMBO BOX
@@ -1503,14 +1612,15 @@ QComboBox[cssClass="btn-combo-edit"] {
 
 
 QComboBox[cssClass="btn-combo-options"] {
-    background-image: url("://ic-combo-box");
+    background-image: url("://ic-arrow-drop-down");
     background-position:right center;
     background-repeat:no-repeat;
-    background-color:#FFFFFF;
-    padding:10px 20px 10px 10px;
+    background-color:#ffffff;
+    padding:10px 10px 10px 10px;
     font-size:16px;
-    border:1px solid #bababa;
+    border:1px solid #ffffff;
     color: #5c4b7d;
+    text-align: right;
 }
 
 

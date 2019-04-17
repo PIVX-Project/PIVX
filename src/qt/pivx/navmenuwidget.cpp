@@ -23,7 +23,7 @@ NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
 
     // Buttons
 
-    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
+    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash-active");
     ui->btnDashboard->setText("HOME\n");
     ui->btnDashboard->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
@@ -76,31 +76,129 @@ void NavMenuWidget::connectActions() {
 
 void NavMenuWidget::onSendClicked(){
     window->goToSend();
+    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
+    ui->btnSend->setProperty("cssClass", "btn-nav-send-active");
+    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
+    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
+    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
+    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
+    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
+    updateStyle(ui->btnDashboard);
+    updateStyle(ui->btnSend);
+    updateStyle(ui->btnAddress);
+    updateStyle(ui->btnPrivacy);
+    updateStyle(ui->btnMaster);
+    updateStyle(ui->btnSettings);
+    updateStyle(ui->btnReceive);
 }
 
 void NavMenuWidget::onDashboardClicked(){
     window->goToDashboard();
+    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash-active");
+    ui->btnSend->setProperty("cssClass", "btn-nav-send");
+    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
+    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
+    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
+    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
+    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
+    updateStyle(ui->btnDashboard);
+    updateStyle(ui->btnSend);
+    updateStyle(ui->btnAddress);
+    updateStyle(ui->btnPrivacy);
+    updateStyle(ui->btnMaster);
+    updateStyle(ui->btnSettings);
+    updateStyle(ui->btnReceive);
 }
 
 void NavMenuWidget::onAddressClicked(){
     window->goToAddresses();
+    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
+    ui->btnSend->setProperty("cssClass", "btn-nav-send");
+    ui->btnAddress->setProperty("cssClass", "btn-nav-address-active");
+    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
+    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
+    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
+    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
+    updateStyle(ui->btnDashboard);
+    updateStyle(ui->btnSend);
+    updateStyle(ui->btnAddress);
+    updateStyle(ui->btnPrivacy);
+    updateStyle(ui->btnMaster);
+    updateStyle(ui->btnSettings);
+    updateStyle(ui->btnReceive);
 }
 
 
 void NavMenuWidget::onPrivacyClicked(){
     window->goToPrivacy();
+    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
+    ui->btnSend->setProperty("cssClass", "btn-nav-send");
+    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
+    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy-active");
+    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
+    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
+    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
+    updateStyle(ui->btnDashboard);
+    updateStyle(ui->btnSend);
+    updateStyle(ui->btnAddress);
+    updateStyle(ui->btnPrivacy);
+    updateStyle(ui->btnMaster);
+    updateStyle(ui->btnSettings);
+    updateStyle(ui->btnReceive);
 }
 
 void NavMenuWidget::onMasterNodesClicked(){
     //window->goToMasterNodes();
+    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
+    ui->btnSend->setProperty("cssClass", "btn-nav-send");
+    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
+    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
+    ui->btnMaster->setProperty("cssClass", "btn-nav-master-active");
+    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
+    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
+    updateStyle(ui->btnDashboard);
+    updateStyle(ui->btnSend);
+    updateStyle(ui->btnAddress);
+    updateStyle(ui->btnPrivacy);
+    updateStyle(ui->btnMaster);
+    updateStyle(ui->btnSettings);
+    updateStyle(ui->btnReceive);
 }
 
 void NavMenuWidget::onSettingsClicked(){
     window->goToSettings();
+    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
+    ui->btnSend->setProperty("cssClass", "btn-nav-send");
+    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
+    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
+    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
+    ui->btnSettings->setProperty("cssClass", "btn-nav-settings-active");
+    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
+    updateStyle(ui->btnDashboard);
+    updateStyle(ui->btnSend);
+    updateStyle(ui->btnAddress);
+    updateStyle(ui->btnPrivacy);
+    updateStyle(ui->btnMaster);
+    updateStyle(ui->btnSettings);
+    updateStyle(ui->btnReceive);
 }
 
 void NavMenuWidget::onReceiveClicked(){
     window->goToReceive();
+    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
+    ui->btnSend->setProperty("cssClass", "btn-nav-send");
+    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
+    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
+    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
+    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
+    ui->btnReceive->setProperty("cssClass", "btn-nav-receive-active");
+    updateStyle(ui->btnDashboard);
+    updateStyle(ui->btnSend);
+    updateStyle(ui->btnAddress);
+    updateStyle(ui->btnPrivacy);
+    updateStyle(ui->btnMaster);
+    updateStyle(ui->btnSettings);
+    updateStyle(ui->btnReceive);
 }
 
 void NavMenuWidget::selectSettings(){

@@ -76,21 +76,21 @@
        </spacer>
       </item>
       <item alignment="Qt::AlignHCenter">
-       <widget class="QLabel" name="label">
+       <widget class="QPushButton" name="imgLogo">
         <property name="minimumSize">
          <size>
           <width>300</width>
           <height>100</height>
          </size>
         </property>
-        <property name="styleSheet">
-         <string notr="true">border:none;</string>
+        <property name="maximumSize">
+         <size>
+          <width>300</width>
+          <height>100</height>
+         </size>
         </property>
         <property name="text">
          <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap>://img-logo-pivx</pixmap>
         </property>
        </widget>
       </item>

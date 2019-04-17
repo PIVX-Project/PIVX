@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "lockunlock.h"
 #include "amount.h"
+#include <QTimer>
 
 class PIVXGUI;
 class WalletModel;
@@ -38,6 +39,7 @@ public slots:
     void setNumConnections(int count);
     void setNumBlocks(int count);
     void updateAutoMintStatus();
+    void updateStakingStatus();
 
 signals:
     // Fired when a message should be reported to the user
@@ -58,6 +60,7 @@ private:
     ClientModel *clientModel;
 
     int nDisplayUnit = -1;
+    QTimer* timerStakingIcon = nullptr;
 
     QString formatBalance(CAmount amount, bool isZpiv = false);
 };

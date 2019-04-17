@@ -141,6 +141,7 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
 
     ui->btnDenomGeneration->setTitleClassAndText("btn-title-grey", "Denom generation");
     ui->btnDenomGeneration->setSubTitleClassAndText("text-subtitle", "Select the denomination of the coins.");
+    ui->btnDenomGeneration->setVisible(false);
 
     ui->btnRescanMints->setTitleClassAndText("btn-title-grey", "Rescan mints");
     ui->btnRescanMints->setSubTitleClassAndText("text-subtitle", "Find mints in the blockchain.");

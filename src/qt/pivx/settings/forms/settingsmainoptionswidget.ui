@@ -167,7 +167,7 @@
            <widget class="QSpinBox" name="databaseCache">
             <property name="minimumSize">
              <size>
-              <width>180</width>
+              <width>100</width>
               <height>0</height>
              </size>
             </property>
@@ -217,7 +217,7 @@
            <widget class="QSpinBox" name="threadsScriptVerif">
             <property name="minimumSize">
              <size>
-              <width>180</width>
+              <width>100</width>
               <height>0</height>
              </size>
             </property>
@@ -334,7 +334,7 @@
            <widget class="QSpinBox" name="zeromintPercentage">
             <property name="minimumSize">
              <size>
-              <width>180</width>
+              <width>100</width>
               <height>0</height>
              </size>
             </property>
@@ -384,7 +384,7 @@
            <widget class="QComboBox" name="comboBoxDenomzPiv">
             <property name="minimumSize">
              <size>
-              <width>180</width>
+              <width>100</width>
               <height>0</height>
              </size>
             </property>

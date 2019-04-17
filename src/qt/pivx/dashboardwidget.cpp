@@ -90,6 +90,9 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv");
     ui->labelAmountZpiv->setText("9 zPIV");
 
+    ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv-disable");
+    ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv-disable");
+
 
     // Chart
     //ui->verticalWidgetChart->setProperty("cssClass", "container-chart");
