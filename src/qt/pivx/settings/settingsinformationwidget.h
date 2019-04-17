@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "qt/pivx/pwidget.h"
+#include "rpcconsole.h"
 
 namespace Ui {
 class SettingsInformationWidget;
@@ -21,9 +22,11 @@ public:
 private slots:
     void setNumConnections(int count);
     void setNumBlocks(int count);
+    void openNetworkMonitor();
 
 private:
     Ui::SettingsInformationWidget *ui;
+    RPCConsole *rpcConsole = nullptr;
 };
 
 #endif // SETTINGSINFORMATIONWIDGET_H

@@ -108,6 +108,9 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
     ui->pushButtonBackups->setText("Backups");
     ui->pushButtonBackups->setProperty("cssClass", "btn-secundary");
 
+    ui->pushButtonNetworkMonitor->setText(tr("Network Monitor"));
+    ui->pushButtonNetworkMonitor->setProperty("cssClass", "btn-secundary");
+
 
     // Data
 #ifdef ENABLE_WALLET
@@ -120,6 +123,7 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
 
     connect(ui->pushButtonBackups, &QPushButton::clicked, [](){GUIUtil::showBackups();});
     connect(ui->pushButtonFile, &QPushButton::clicked, [](){GUIUtil::openConfigfile();});
+    connect(ui->pushButtonNetworkMonitor, SIGNAL(clicked()), this, SLOT(openNetworkMonitor()));
 
 }
 
@@ -155,6 +159,14 @@ void SettingsInformationWidget::setNumBlocks(int count){
     ui->labelInfoBlockNumber->setText(QString::number(count));
     if (clientModel)
         ui->labelInfoBlockTime->setText(clientModel->getLastBlockDate().toString());
+}
+
+void SettingsInformationWidget::openNetworkMonitor(){
+    if(!rpcConsole){
+        rpcConsole = new RPCConsole(0);
+        rpcConsole->setClientModel(clientModel);
+    }
+    rpcConsole->showNetwork();
 }
 
 SettingsInformationWidget::~SettingsInformationWidget(){

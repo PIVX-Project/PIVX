@@ -16,6 +16,12 @@ public:
     explicit SettingsDisplayOptionsWidget(PIVXGUI* _window = nullptr, QWidget *parent = nullptr);
     ~SettingsDisplayOptionsWidget();
 
+    void initLanguages();
+
+public slots:
+    void showRestartWarning(bool fPersistent);
+    void languageChanged(const QString& newValue);
+
 private:
     Ui::SettingsDisplayOptionsWidget *ui;
 };

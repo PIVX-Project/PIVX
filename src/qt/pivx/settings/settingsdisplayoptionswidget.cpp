@@ -2,6 +2,9 @@
 #include "qt/pivx/settings/forms/ui_settingsdisplayoptionswidget.h"
 #include "QGraphicsDropShadowEffect"
 #include "QListView"
+#include <QDir>
+#include "guiutil.h"
+#include <QSettings>
 
 SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window,parent),
@@ -53,12 +56,7 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
 
 
     ui->comboBoxLanguage->setProperty("cssClass", "btn-combo");
-
     QListView * listViewLanguage = new QListView();
-
-    ui->comboBoxLanguage->addItem("English");
-    ui->comboBoxLanguage->addItem("Spanish");
-
     ui->comboBoxLanguage->setView(listViewLanguage);
 
     ui->comboBoxTheme->setProperty("cssClass", "btn-combo");
@@ -68,7 +66,6 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
     ui->comboBoxTheme->addItem("Light");
     ui->comboBoxTheme->addItem("Dark");
     ui->comboBoxTheme->setView(listViewTheme);
-
     ui->comboBoxUnit->setProperty("cssClass", "btn-combo");
 
     QListView * listViewUnit = new QListView();
@@ -95,16 +92,10 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
 
     // Urls
 
-    QGraphicsDropShadowEffect* shadowEffect3 = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect3->setBlurRadius(6);
-
     ui->lineEditUrl->setPlaceholderText("e.g. https://example.com/tx/%s");
     ui->lineEditUrl->setProperty("cssClass", "edit-primary");
     ui->lineEditUrl->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditUrl->setGraphicsEffect(shadowEffect3);
+    ui->lineEditUrl->setGraphicsEffect(shadowEffect);
 
 
 
@@ -116,6 +107,54 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
     ui->pushButtonReset->setText("Reset to default");
     ui->pushButtonReset->setProperty("cssClass", "btn-secundary");
 
+    initLanguages();
+    connect(ui->comboBoxLanguage, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
+    connect(ui->comboBoxLanguage ,SIGNAL(currentIndexChanged(const QString&)),this,SLOT(languageChanged(const QString&)));
+}
+
+void SettingsDisplayOptionsWidget::initLanguages(){
+    /* Language selector */
+    QDir translations(":translations");
+    ui->comboBoxLanguage->addItem(QString("(") + tr("default") + QString(")"), QVariant(""));
+    foreach (const QString& langStr, translations.entryList()) {
+        QLocale locale(langStr);
+
+        /** check if the locale name consists of 2 parts (language_country) */
+        if(langStr.contains("_")){
+            /** display language strings as "native language - native country (locale name)", e.g. "Deutsch - Deutschland (de)" */
+            ui->comboBoxLanguage->addItem(locale.nativeLanguageName() + QString(" - ") + locale.nativeCountryName() + QString(" (") + langStr + QString(")"), QVariant(langStr));
+        }
+        else{
+            /** display language strings as "native language (locale name)", e.g. "Deutsch (de)" */
+            ui->comboBoxLanguage->addItem(locale.nativeLanguageName() + QString(" (") + langStr + QString(")"), QVariant(langStr));
+        }
+    }
+}
+
+void SettingsDisplayOptionsWidget::languageChanged(const QString& newValue){
+    QString sel = ui->comboBoxLanguage->currentData().toString();
+    QSettings settings;
+    if (settings.value("language") != sel){
+        settings.setValue("language", sel);
+        //emit onLanguageSelected();
+    }
+}
+
+void SettingsDisplayOptionsWidget::showRestartWarning(bool fPersistent){
+
+    // TODO: Add warning..
+    /*
+    ui->statusLabel->setStyleSheet("QLabel { color: red; }");
+
+    if (fPersistent) {
+        ui->statusLabel->setText(tr("Client restart required to activate changes."));
+    } else {
+        ui->statusLabel->setText(tr("This change would require a client restart."));
+        // clear non-persistent status label after 10 seconds
+        // Todo: should perhaps be a class attribute, if we extend the use of statusLabel
+        QTimer::singleShot(10000, this, SLOT(clearStatusLabel()));
+    }
+     */
 }
 
 SettingsDisplayOptionsWidget::~SettingsDisplayOptionsWidget()

@@ -2,7 +2,6 @@
 #include "qt/pivx/settings/settingsbackupwallet.h"
 #include "qt/pivx/settings/settingsbittoolwidget.h"
 #include "qt/pivx/settings/settingschangepasswordwidget.h"
-#include "qt/pivx/settings/settingsopenurlwidget.h"
 #include "qt/pivx/settings/settingswalletrepairwidget.h"
 #include "qt/pivx/settings/settingsnetworkwidget.h"
 #include "qt/pivx/settings/settingswalletoptionswidget.h"
@@ -10,11 +9,8 @@
 #include "qt/pivx/settings/settingsdisplayoptionswidget.h"
 #include "qt/pivx/settings/settingsmultisendwidget.h"
 #include "qt/pivx/settings/settingsinformationwidget.h"
-#include "qt/pivx/settings/settingspeerslistwidget.h"
-#include "qt/pivx/settings/settingslockwalletwidget.h"
 #include "qt/pivx/settings/settingsconsolewidget.h"
 #include "qt/pivx/settings/settingswindowoptionswidget.h"
-#include "qt/pivx/settings/settingsnetworkmonitorwidget.h"
 #include "qt/pivx/settings/settingsfaqwidget.h"
 #include "qt/pivx/settings/forms/ui_settingswidget.h"
 #include "qt/pivx/qtutils.h"
@@ -50,14 +46,12 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelTitle->setFont(fontLight);
 
     ui->pushButtonFile->setProperty("cssClass", "btn-settings-check");
-    ui->pushButtonFile1->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonFile2->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonFile3->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonFile4->setProperty("cssClass", "btn-settings-options");
 
     ui->pushButtonConfiguration->setProperty("cssClass", "btn-settings-check");
     ui->pushButtonConfiguration1->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonConfiguration2->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonConfiguration3->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonConfiguration4->setProperty("cssClass", "btn-settings-options");
 
@@ -71,8 +65,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonTools->setProperty("cssClass", "btn-settings-check");
     ui->pushButtonTools1->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonTools2->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonTools3->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonTools4->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonTools5->setProperty("cssClass", "btn-settings-options");
 
     ui->pushButtonHelp->setProperty("cssClass", "btn-settings-check");
@@ -82,18 +74,18 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
 
 
     ui->pushButtonFile->isChecked();
-    ui->pushButtonFile1->isChecked();
     ui->fileButtonsWidget->setVisible(true);
     ui->optionsButtonsWidget->setVisible(false);
     ui->configurationButtonsWidget->setVisible(false);
     ui->toolsButtonsWidget->setVisible(false);
     ui->helpButtonsWidget->setVisible(false);
 
+    ui->pushButtonFile2->setChecked(true);
+
     settingsBackupWallet = new SettingsBackupWallet(window, this);
     settingsBitToolWidget = new SettingsBitToolWidget(window, this);
     settingsSingMessageWidgets = new SettingsSignMessageWidgets(window, this);
     settingsChangePasswordWidget = new SettingsChangePasswordWidget(window, this);
-    settingsOpenUrlWidget = new SettingsOpenUrlWidget(window, this);
     settingsWalletRepairWidget = new SettingsWalletRepairWidget(window, this);
     settingsNetworkWidget = new SettingsNetworkWidget(window, this);
     settingsWalletOptionsWidget = new SettingsWalletOptionsWidget(window, this);
@@ -101,18 +93,14 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     settingsDisplayOptionsWidget = new SettingsDisplayOptionsWidget(window, this);
     settingsMultisendWidget = new SettingsMultisendWidget(window, this);
     settingsInformationWidget = new SettingsInformationWidget(window, this);
-    settingsPeersListWidget = new SettingsPeersListWidget(window, this);
-    settingsLockWalletWidget = new SettingsLockWalletWidget(window, this);
     settingsConsoleWidget = new SettingsConsoleWidget(window, this);
     settingsWindowOptionsWidget = new SettingsWindowOptionsWidget(window, this);
-    settingsNetworkMonitorWidget = new SettingsNetworkMonitorWidget(window, this);
 
 
     ui->stackedWidgetContainer->addWidget(settingsBackupWallet);
     ui->stackedWidgetContainer->addWidget(settingsBitToolWidget);
     ui->stackedWidgetContainer->addWidget(settingsSingMessageWidgets);
     ui->stackedWidgetContainer->addWidget(settingsChangePasswordWidget);
-    ui->stackedWidgetContainer->addWidget(settingsOpenUrlWidget);
     ui->stackedWidgetContainer->addWidget(settingsWalletRepairWidget);
     ui->stackedWidgetContainer->addWidget(settingsNetworkWidget);
     ui->stackedWidgetContainer->addWidget(settingsWalletOptionsWidget);
@@ -120,12 +108,9 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     ui->stackedWidgetContainer->addWidget(settingsDisplayOptionsWidget);
     ui->stackedWidgetContainer->addWidget(settingsMultisendWidget);
     ui->stackedWidgetContainer->addWidget(settingsInformationWidget);
-    ui->stackedWidgetContainer->addWidget(settingsPeersListWidget);
-    ui->stackedWidgetContainer->addWidget(settingsLockWalletWidget);
     ui->stackedWidgetContainer->addWidget(settingsConsoleWidget);
     ui->stackedWidgetContainer->addWidget(settingsWindowOptionsWidget);
-    ui->stackedWidgetContainer->addWidget(settingsNetworkMonitorWidget);
-    ui->stackedWidgetContainer->setCurrentWidget(settingsOpenUrlWidget);
+    ui->stackedWidgetContainer->setCurrentWidget(settingsBackupWallet);
 
 
 
@@ -134,7 +119,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     // File Section
 
     connect(ui->pushButtonFile, SIGNAL(clicked()), this, SLOT(onFileClicked()));
-    connect(ui->pushButtonFile1, SIGNAL(clicked()), this, SLOT(onOpenUrlClicked()));
     connect(ui->pushButtonFile2, SIGNAL(clicked()), this, SLOT(onBackupWalletClicked()));
     connect(ui->pushButtonFile3, SIGNAL(clicked()), this, SLOT(onSignMessageClicked()));
     connect(ui->pushButtonFile4, SIGNAL(clicked()), this, SLOT(onVerifyMessageClicked()));
@@ -152,7 +136,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
 
     connect(ui->pushButtonConfiguration, SIGNAL(clicked()), this, SLOT(onConfigurationClicked()));
     connect(ui->pushButtonConfiguration1, SIGNAL(clicked()), this, SLOT(onChangePasswordClicked()));
-    connect(ui->pushButtonConfiguration2, SIGNAL(clicked()), this, SLOT(onLockWalletClicked()));
     connect(ui->pushButtonConfiguration3, SIGNAL(clicked()), this, SLOT(onBipToolClicked()));
     connect(ui->pushButtonConfiguration4, SIGNAL(clicked()), this, SLOT(onMultisendClicked()));
 
@@ -162,8 +145,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     connect(ui->pushButtonTools1, SIGNAL(clicked()), this, SLOT(onInformationClicked()));
     connect(ui->pushButtonTools2, SIGNAL(clicked()), this, SLOT(onDebugConsoleClicked()));
     ui->pushButtonTools2->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_C));
-    connect(ui->pushButtonTools3, SIGNAL(clicked()), this, SLOT(onNetworkMonitorClicked()));
-    connect(ui->pushButtonTools4, SIGNAL(clicked()), this, SLOT(onPeersListClicked()));
     connect(ui->pushButtonTools5, SIGNAL(clicked()), this, SLOT(onWalletRepairClicked()));
 
     // Help
@@ -211,10 +192,6 @@ void SettingsWidget::onFileClicked() {
     }
 }
 
-void SettingsWidget::onOpenUrlClicked() {
-    ui->stackedWidgetContainer->setCurrentWidget(settingsOpenUrlWidget);
-}
-
 void SettingsWidget::onBackupWalletClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsBackupWallet);
 }
@@ -247,10 +224,6 @@ void SettingsWidget::onConfigurationClicked() {
 
 void SettingsWidget::onChangePasswordClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsChangePasswordWidget);
-}
-
-void SettingsWidget::onLockWalletClicked() {
-    ui->stackedWidgetContainer->setCurrentWidget(settingsLockWalletWidget);
 }
 
 void SettingsWidget::onBipToolClicked() {
@@ -331,14 +304,6 @@ void SettingsWidget::showDebugConsole(){
 
 void SettingsWidget::onDebugConsoleClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsConsoleWidget);
-}
-
-void SettingsWidget::onNetworkMonitorClicked() {
-    ui->stackedWidgetContainer->setCurrentWidget(settingsNetworkMonitorWidget);
-}
-
-void SettingsWidget::onPeersListClicked() {
-    ui->stackedWidgetContainer->setCurrentWidget(settingsPeersListWidget);
 }
 
 void SettingsWidget::onWalletRepairClicked() {

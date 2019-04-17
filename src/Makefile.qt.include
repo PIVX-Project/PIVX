@@ -103,14 +103,10 @@ QT_FORMS_UI = \
   qt/pivx/settings/forms/settingsdisplayoptionswidget.ui \
   qt/pivx/settings/forms/settingsfaqwidget.ui \
   qt/pivx/settings/forms/settingsinformationwidget.ui \
-  qt/pivx/settings/forms/settingslockwalletwidget.ui \
   qt/pivx/settings/forms/settingsmainoptionswidget.ui \
   qt/pivx/settings/forms/settingsmultisenddialog.ui \
   qt/pivx/settings/forms/settingsmultisendwidget.ui \
-  qt/pivx/settings/forms/settingsnetworkmonitorwidget.ui \
   qt/pivx/settings/forms/settingsnetworkwidget.ui \
-  qt/pivx/settings/forms/settingsopenurlwidget.ui \
-  qt/pivx/settings/forms/settingspeerslistwidget.ui \
   qt/pivx/settings/forms/settingssignmessagewidgets.ui \
   qt/pivx/settings/forms/settingswalletoptionswidget.ui \
   qt/pivx/settings/forms/settingswalletrepairwidget.ui \
@@ -214,14 +210,10 @@ QT_MOC_CPP = \
   qt/pivx/settings/moc_settingsdisplayoptionswidget.cpp \
   qt/pivx/settings/moc_settingsfaqwidget.cpp \
   qt/pivx/settings/moc_settingsinformationwidget.cpp \
-  qt/pivx/settings/moc_settingslockwalletwidget.cpp \
   qt/pivx/settings/moc_settingsmainoptionswidget.cpp \
   qt/pivx/settings/moc_settingsmultisenddialog.cpp \
   qt/pivx/settings/moc_settingsmultisendwidget.cpp \
-  qt/pivx/settings/moc_settingsnetworkmonitorwidget.cpp \
   qt/pivx/settings/moc_settingsnetworkwidget.cpp \
-  qt/pivx/settings/moc_settingsopenurlwidget.cpp \
-  qt/pivx/settings/moc_settingspeerslistwidget.cpp \
   qt/pivx/settings/moc_settingssignmessagewidgets.cpp \
   qt/pivx/settings/moc_settingswalletoptionswidget.cpp \
   qt/pivx/settings/moc_settingswalletrepairwidget.cpp \
@@ -356,14 +348,10 @@ BITCOIN_QT_H = \
   qt/pivx/settings/settingsdisplayoptionswidget.h \
   qt/pivx/settings/settingsfaqwidget.h \
   qt/pivx/settings/settingsinformationwidget.h \
-  qt/pivx/settings/settingslockwalletwidget.h \
   qt/pivx/settings/settingsmainoptionswidget.h \
   qt/pivx/settings/settingsmultisenddialog.h \
   qt/pivx/settings/settingsmultisendwidget.h \
-  qt/pivx/settings/settingsnetworkmonitorwidget.h \
   qt/pivx/settings/settingsnetworkwidget.h \
-  qt/pivx/settings/settingsopenurlwidget.h \
-  qt/pivx/settings/settingspeerslistwidget.h \
   qt/pivx/settings/settingssignmessagewidgets.h \
   qt/pivx/settings/settingswalletoptionswidget.h \
   qt/pivx/settings/settingswalletrepairwidget.h \
@@ -691,14 +679,10 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/settings/settingsdisplayoptionswidget.cpp \
   qt/pivx/settings/settingsfaqwidget.cpp \
   qt/pivx/settings/settingsinformationwidget.cpp \
-  qt/pivx/settings/settingslockwalletwidget.cpp \
   qt/pivx/settings/settingsmainoptionswidget.cpp \
   qt/pivx/settings/settingsmultisenddialog.cpp \
   qt/pivx/settings/settingsmultisendwidget.cpp \
-  qt/pivx/settings/settingsnetworkmonitorwidget.cpp \
   qt/pivx/settings/settingsnetworkwidget.cpp \
-  qt/pivx/settings/settingsopenurlwidget.cpp \
-  qt/pivx/settings/settingspeerslistwidget.cpp \
   qt/pivx/settings/settingssignmessagewidgets.cpp \
   qt/pivx/settings/settingswalletoptionswidget.cpp \
   qt/pivx/settings/settingswalletrepairwidget.cpp \
