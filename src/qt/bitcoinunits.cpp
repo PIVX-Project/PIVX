@@ -53,27 +53,29 @@ QString BitcoinUnits::id(int unit)
     }
 }
 
-QString BitcoinUnits::name(int unit)
+QString BitcoinUnits::name(int unit, bool isZpiv)
 {
+    QString z = "";
+    if(isZpiv) z = "z";
     if (Params().NetworkID() == CBaseChainParams::MAIN) {
         switch (unit) {
         case PIV:
-            return QString("PIV");
+            return z + QString("PIV");
         case mPIV:
-            return QString("mPIV");
+            return z + QString("mPIV");
         case uPIV:
-            return QString::fromUtf8("μPIV");
+            return z + QString::fromUtf8("μPIV");
         default:
             return QString("???");
         }
     } else {
         switch (unit) {
         case PIV:
-            return QString("tPIV");
+            return z + QString("tPIV");
         case mPIV:
-            return QString("mtPIV");
+            return z + QString("mtPIV");
         case uPIV:
-            return QString::fromUtf8("μtPIV");
+            return z + QString::fromUtf8("μtPIV");
         default:
             return QString("???");
         }

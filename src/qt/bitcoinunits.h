@@ -79,7 +79,7 @@ public:
     //! Identifier, e.g. for image names
     static QString id(int unit);
     //! Short name
-    static QString name(int unit);
+    static QString name(int unit, bool isZpiv = false);
     //! Longer description
     static QString description(int unit);
     //! Number of Satoshis (1e-8) per unit
