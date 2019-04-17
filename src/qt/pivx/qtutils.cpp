@@ -189,18 +189,24 @@ QColor getRowColor(bool isLightTheme, bool isHovered, bool isSelected){
 }
 
 void setCssEditLine(QLineEdit *edit, bool isValid, bool forceUpdate){
-    edit->setProperty("cssClass", isValid ? "edit-primary" : "edit-primary-error");
-    forceUpdateStyle(edit, forceUpdate);
+    setCssProperty(edit, isValid ? "edit-primary" : "edit-primary-error", forceUpdate);
 }
 
 void setCssEditLineDialog(QLineEdit *edit, bool isValid, bool forceUpdate){
-    edit->setProperty("cssClass", isValid ? "edit-primary-dialog" : "edit-primary-dialog-error");
-    forceUpdateStyle(edit, forceUpdate);
+    setCssProperty(edit, isValid ? "edit-primary-dialog" : "edit-primary-dialog-error", forceUpdate);
 }
 
 void setCssBtnPrimary(QPushButton *btn, bool forceUpdate){
-    btn->setProperty("cssClass", "btn-primary");
-    forceUpdateStyle(btn, forceUpdate);
+    setCssProperty(btn, "btn-primary", forceUpdate);
+}
+
+void setCssBtnSecondary(QPushButton *btn, bool forceUpdate){
+    setCssProperty(btn, "btn-secundary", forceUpdate);
+}
+
+void setCssProperty(QWidget *wid, QString value, bool forceUpdate){
+    wid->setProperty("cssClass", value);
+    forceUpdateStyle(wid, forceUpdate);
 }
 
 void forceUpdateStyle(QWidget *widget, bool forceUpdate){
