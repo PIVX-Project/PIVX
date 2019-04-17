@@ -1,7 +1,6 @@
 #include "qt/pivx/settings/settingswidget.h"
 #include "qt/pivx/settings/settingsbackupwallet.h"
 #include "qt/pivx/settings/settingsbittoolwidget.h"
-#include "qt/pivx/settings/settingschangepasswordwidget.h"
 #include "qt/pivx/settings/settingswalletrepairwidget.h"
 #include "qt/pivx/settings/settingsnetworkwidget.h"
 #include "qt/pivx/settings/settingswalletoptionswidget.h"
@@ -54,7 +53,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonFile4->setProperty("cssClass", "btn-settings-options");
 
     ui->pushButtonConfiguration->setProperty("cssClass", "btn-settings-check");
-    ui->pushButtonConfiguration1->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonConfiguration3->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonConfiguration4->setProperty("cssClass", "btn-settings-options");
 
@@ -86,7 +84,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     settingsBackupWallet = new SettingsBackupWallet(window, this);
     settingsBitToolWidget = new SettingsBitToolWidget(window, this);
     settingsSingMessageWidgets = new SettingsSignMessageWidgets(window, this);
-    settingsChangePasswordWidget = new SettingsChangePasswordWidget(window, this);
     settingsWalletRepairWidget = new SettingsWalletRepairWidget(window, this);
     settingsNetworkWidget = new SettingsNetworkWidget(window, this);
     settingsWalletOptionsWidget = new SettingsWalletOptionsWidget(window, this);
@@ -101,7 +98,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     ui->stackedWidgetContainer->addWidget(settingsBackupWallet);
     ui->stackedWidgetContainer->addWidget(settingsBitToolWidget);
     ui->stackedWidgetContainer->addWidget(settingsSingMessageWidgets);
-    ui->stackedWidgetContainer->addWidget(settingsChangePasswordWidget);
     ui->stackedWidgetContainer->addWidget(settingsWalletRepairWidget);
     ui->stackedWidgetContainer->addWidget(settingsNetworkWidget);
     ui->stackedWidgetContainer->addWidget(settingsWalletOptionsWidget);
@@ -136,7 +132,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     // Configuration
 
     connect(ui->pushButtonConfiguration, SIGNAL(clicked()), this, SLOT(onConfigurationClicked()));
-    connect(ui->pushButtonConfiguration1, SIGNAL(clicked()), this, SLOT(onChangePasswordClicked()));
     connect(ui->pushButtonConfiguration3, SIGNAL(clicked()), this, SLOT(onBipToolClicked()));
     connect(ui->pushButtonConfiguration4, SIGNAL(clicked()), this, SLOT(onMultisendClicked()));
 
@@ -161,9 +156,11 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
 
     connect(settingsBackupWallet,
             &SettingsBackupWallet::message,
-            [this](const QString& title, const QString& body, unsigned int style, bool* ret){ emit message(title, body, style, ret);}
+            this, &SettingsWidget::message
     );
 
+    connect(settingsBackupWallet, &SettingsBackupWallet::showHide, this, &SettingsWidget::showHide);
+    connect(settingsBackupWallet, &SettingsBackupWallet::execDialog, this, &SettingsWidget::execDialog);
 
     /* Widget-to-option mapper */
     mapper = new QDataWidgetMapper(this);
@@ -238,10 +235,6 @@ void SettingsWidget::onConfigurationClicked() {
     } else {
         ui->configurationButtonsWidget->setVisible(false);
     }
-}
-
-void SettingsWidget::onChangePasswordClicked() {
-    ui->stackedWidgetContainer->setCurrentWidget(settingsChangePasswordWidget);
 }
 
 void SettingsWidget::onBipToolClicked() {

@@ -5,6 +5,7 @@
 #include "guiutil.h"
 #include "qt/pivx/qtutils.h"
 #include "ui_interface.h"
+#include "qt/pivx/qtutils.h"
 SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window, parent),
     ui(new Ui::SettingsBackupWallet)
@@ -15,12 +16,15 @@ SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
 
     /* Containers */
     ui->left->setProperty("cssClass", "container");
-    ui->left->setContentsMargins(10,10,10,10);
+    ui->left->setContentsMargins(10,0,10,10);
 
 
     // Title
     ui->labelTitle->setText("Backup Wallet ");
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
+
+    ui->labelTitle_2->setText("Change Wallet Passphrase");
+    ui->labelTitle_2->setProperty("cssClass", "text-title-screen");
 
 
     // Subtitle
@@ -28,22 +32,17 @@ SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
     ui->labelSubtitle1->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
+    ui->labelSubtitle_2->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
+    ui->labelSubtitle_2->setProperty("cssClass", "text-subtitle");
+
 
     // Backup Name
-
-    ui->labelSubtitleName->setText("Save as");
-    ui->labelSubtitleName->setProperty("cssClass", "text-title");
 
     QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
     shadowEffect->setColor(QColor(0, 0, 0, 22));
     shadowEffect->setXOffset(0);
     shadowEffect->setYOffset(3);
     shadowEffect->setBlurRadius(6);
-
-    ui->lineEditName->setPlaceholderText("Set a name for your backup file");
-    setCssEditLine(ui->lineEditName,true,false);
-    ui->lineEditName->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditName->setGraphicsEffect(shadowEffect);
 
     // Location
 
@@ -60,12 +59,12 @@ SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonSave->setText("Backup");
     ui->pushButtonSave->setProperty("cssClass", "btn-primary");
 
-    ui->container_file_name->setVisible(false);
-    //ui->verticalSpacer_3->setVisible(false);
+    ui->pushButtonSave_2->setText("Change Passphrase");
+    ui->pushButtonSave_2->setProperty("cssClass", "btn-primary");
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(backupWallet()));
     connect(ui->pushButtonDocuments, SIGNAL(clicked()), this, SLOT(selectFileOutput()));
-
+    connect(ui->pushButtonSave_2, SIGNAL(clicked()), this, SLOT(changePassphrase()));
 }
 
 void SettingsBackupWallet::selectFileOutput(){
@@ -85,6 +84,14 @@ void SettingsBackupWallet::backupWallet(){
         filename = QString();
         ui->pushButtonDocuments->setText(tr("Set a folder location"));
     }
+}
+
+void SettingsBackupWallet::changePassphrase(){
+    emit showHide(true);
+    AskPassphraseDialog *dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::ChangePass, window,
+            walletModel, AskPassphraseDialog::Context::ChangePass);
+    dlg->adjustSize();
+    emit execDialog(dlg);
 }
 
 SettingsBackupWallet::~SettingsBackupWallet(){

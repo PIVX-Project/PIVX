@@ -19,6 +19,7 @@ public:
 private slots:
     void backupWallet();
     void selectFileOutput();
+    void changePassphrase();
 
 private:
     Ui::SettingsBackupWallet *ui;

@@ -6,7 +6,6 @@
 #include "qt/pivx/settings/settingsbackupwallet.h"
 #include "qt/pivx/settings/settingsbittoolwidget.h"
 #include "qt/pivx/settings/settingssignmessagewidgets.h"
-#include "qt/pivx/settings/settingschangepasswordwidget.h"
 #include "qt/pivx/settings/settingswalletrepairwidget.h"
 #include "qt/pivx/settings/settingsnetworkwidget.h"
 #include "qt/pivx/settings/settingswalletoptionswidget.h"
@@ -56,7 +55,6 @@ private slots:
     // Wallet Configuration
 
     void onConfigurationClicked();
-    void onChangePasswordClicked();
     void onBipToolClicked();
     void onMultisendClicked();
 
@@ -93,7 +91,6 @@ private:
     SettingsBackupWallet *settingsBackupWallet;
     SettingsBitToolWidget *settingsBitToolWidget;
     SettingsSignMessageWidgets *settingsSingMessageWidgets;
-    SettingsChangePasswordWidget *settingsChangePasswordWidget;
     SettingsWalletRepairWidget *settingsWalletRepairWidget;
     SettingsNetworkWidget *settingsNetworkWidget;
     SettingsWalletOptionsWidget *settingsWalletOptionsWidget;
