@@ -14,6 +14,7 @@
 #endif
 
 #include <QCloseEvent>
+#include <QDesktopWidget>
 
 #include <iostream>
 
@@ -30,6 +31,12 @@ Splash::Splash(QWidget *parent) :
     ui->frame->setProperty("cssClass", "container-welcome");
     ui->layoutProgress->setProperty("cssClass", "bg-progress");
     ui->imgLogo->setProperty("cssClass", "img-splash-logo");
+
+    // Resize window and move to center of desktop, disallow resizing
+    QRect r(QPoint(), size());
+    resize(r.size());
+    setFixedSize(r.size());
+    move(QApplication::desktop()->screenGeometry().center() - r.center());
 
     subscribeToCoreSignals();
 }
