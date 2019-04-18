@@ -61,6 +61,7 @@ private slots:
     void changeTheme(bool isLightTheme, QString &theme);
     void changeChartColors();
     void onSortTxPressed();
+    void onSortChanged(const QString&);
     void updateDisplayUnit();
     void showList();
     void openFAQ();

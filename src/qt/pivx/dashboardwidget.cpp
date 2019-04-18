@@ -112,15 +112,14 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     lineEdit->setReadOnly(true);
     lineEdit->setAlignment(Qt::AlignRight);
     ui->comboBoxSort->setLineEdit(lineEdit);
+    ui->comboBoxSort->setStyleSheet("selection-background-color:transparent; selection-color:transparent;");
     connect(lineEdit, SIGNAL(Mouse_Pressed()), this, SLOT(onSortTxPressed()));
-
-    QListView * listView = new QListView();
-
-    ui->comboBoxSort->addItem("Amount");
+    ui->comboBoxSort->setView(new QListView());
     ui->comboBoxSort->addItem("Date");
-    ui->comboBoxSort->addItem("Sent");
-
-    ui->comboBoxSort->setView(listView);
+    ui->comboBoxSort->addItem("Amount");
+    //ui->comboBoxSort->addItem("Sent");
+    //ui->comboBoxSort->addItem("Received");
+    connect(ui->comboBoxSort, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onSortChanged(const QString&)));
 
     // transactions
     ui->listTransactions->setProperty("cssClass", "container");
@@ -322,6 +321,16 @@ void DashboardWidget::updateDisplayUnit() {
 
 void DashboardWidget::onSortTxPressed(){
     ui->comboBoxSort->showPopup();
+}
+
+void DashboardWidget::onSortChanged(const QString& value){
+    if(!value.isNull()) {
+        if (value == "Amount")
+            filter->sort(TransactionTableModel::Amount, Qt::DescendingOrder);
+        else if (value == "Date")
+            filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
+        ui->listTransactions->update();
+    }
 }
 
 void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){
