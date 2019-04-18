@@ -4,6 +4,8 @@
 #include "QListView"
 #include <QDir>
 #include "guiutil.h"
+#include "optionsmodel.h"
+#include "bitcoinunits.h"
 #include <QSettings>
 
 SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWidget *parent) :
@@ -33,9 +35,6 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
     ui->labelTitleLanguage->setText("Language");
     ui->labelTitleLanguage->setProperty("cssClass", "text-main-grey");
 
-    ui->labelTitleTheme->setText("Interface Theme");
-    ui->labelTitleTheme->setProperty("cssClass", "text-main-grey");
-
     ui->labelTitleUnit->setText("Unit to show amount");
     ui->labelTitleUnit->setProperty("cssClass", "text-main-grey");
 
@@ -53,34 +52,23 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
 
     // Combobox
 
-
-
     ui->comboBoxLanguage->setProperty("cssClass", "btn-combo");
-    QListView * listViewLanguage = new QListView();
-    ui->comboBoxLanguage->setView(listViewLanguage);
+    ui->comboBoxLanguage->setView(new QListView());
 
-    ui->comboBoxTheme->setProperty("cssClass", "btn-combo");
-
-    QListView * listViewTheme = new QListView();
-
-    ui->comboBoxTheme->addItem("Light");
-    ui->comboBoxTheme->addItem("Dark");
-    ui->comboBoxTheme->setView(listViewTheme);
     ui->comboBoxUnit->setProperty("cssClass", "btn-combo");
-
-    QListView * listViewUnit = new QListView();
-
-    ui->comboBoxUnit->addItem("10%");
-    ui->comboBoxUnit->addItem("20%");
-    ui->comboBoxUnit->setView(listViewUnit);
+    ui->comboBoxUnit->setModel(new BitcoinUnits(this));
 
     ui->comboBoxDigits->setProperty("cssClass", "btn-combo-options");
 
     QListView * listViewDigits = new QListView();
-
-    ui->comboBoxDigits->addItem("Any");
-    ui->comboBoxDigits->addItem("100");
     ui->comboBoxDigits->setView(listViewDigits);
+
+    /* Number of displayed decimal digits selector */
+    QString digits;
+    for (int index = 2; index <= 8; index++) {
+        digits.setNum(index);
+        ui->comboBoxDigits->addItem(digits, digits);
+    }
 
     QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
     shadowEffect->setColor(QColor(0, 0, 0, 22));
@@ -96,8 +84,6 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
     ui->lineEditUrl->setProperty("cssClass", "edit-primary");
     ui->lineEditUrl->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->lineEditUrl->setGraphicsEffect(shadowEffect);
-
-
 
     // Buttons
 
@@ -155,6 +141,16 @@ void SettingsDisplayOptionsWidget::showRestartWarning(bool fPersistent){
         QTimer::singleShot(10000, this, SLOT(clearStatusLabel()));
     }
      */
+}
+
+void SettingsDisplayOptionsWidget::setMapper(QDataWidgetMapper *mapper){
+    mapper->addMapping(ui->comboBoxDigits, OptionsModel::Digits);
+    mapper->addMapping(ui->comboBoxLanguage, OptionsModel::Language);
+    mapper->addMapping(ui->comboBoxUnit, OptionsModel::DisplayUnit);
+    //mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
+    mapper->addMapping(ui->pushButtonSwitchBalance, OptionsModel::HideZeroBalances);
+    //mapper->addMapping(ui->checkBoxHideOrphans, OptionsModel::HideOrphans);
+
 }
 
 SettingsDisplayOptionsWidget::~SettingsDisplayOptionsWidget()

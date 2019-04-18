@@ -2,6 +2,7 @@
 #define SETTINGSDISPLAYOPTIONSWIDGET_H
 
 #include <QWidget>
+#include <QDataWidgetMapper>
 #include "qt/pivx/pwidget.h"
 
 namespace Ui {
@@ -16,6 +17,7 @@ public:
     explicit SettingsDisplayOptionsWidget(PIVXGUI* _window = nullptr, QWidget *parent = nullptr);
     ~SettingsDisplayOptionsWidget();
 
+    void setMapper(QDataWidgetMapper *mapper);
     void initLanguages();
 
 public slots:

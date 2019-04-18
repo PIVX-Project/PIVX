@@ -91,7 +91,7 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
     ui->threadsScriptVerif->setProperty("cssClass", "btn-spin-box");
     ui->threadsScriptVerif->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->threadsScriptVerif->setGraphicsEffect(shadowEffect);
-    ui->zeromintPercentage->setProperty("cssClass", "btn-combo-options");
+    ui->zeromintPercentage->setProperty("cssClass", "btn-spin-box");
     ui->zeromintPercentage->setAttribute(Qt::WA_MacShowFocusRect, 0);
     ui->zeromintPercentage->setGraphicsEffect(shadowEffect);
     ui->comboBoxDenomzPiv->setProperty("cssClass", "btn-combo-options");

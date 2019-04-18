@@ -2,6 +2,7 @@
 #define SETTINGSWINDOWOPTIONSWIDGET_H
 
 #include <QWidget>
+#include <QDataWidgetMapper>
 #include "qt/pivx/pwidget.h"
 
 namespace Ui {
@@ -15,6 +16,8 @@ class SettingsWindowOptionsWidget : public PWidget
 public:
     explicit SettingsWindowOptionsWidget(PIVXGUI* _window, QWidget *parent = nullptr);
     ~SettingsWindowOptionsWidget();
+
+    void setMapper(QDataWidgetMapper *mapper);
 
 private:
     Ui::SettingsWindowOptionsWidget *ui;

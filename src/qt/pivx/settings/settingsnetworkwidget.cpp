@@ -1,6 +1,7 @@
 #include "qt/pivx/settings/settingsnetworkwidget.h"
 #include "qt/pivx/settings/forms/ui_settingsnetworkwidget.h"
 #include "QGraphicsDropShadowEffect"
+#include "optionsmodel.h"
 
 SettingsNetworkWidget::SettingsNetworkWidget(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window, parent),
@@ -46,22 +47,16 @@ SettingsNetworkWidget::SettingsNetworkWidget(PIVXGUI* _window, QWidget *parent) 
     ui->labelSubtitlePort->setText("Port:");
     ui->labelSubtitlePort->setProperty("cssClass", "text-main-grey");
 
-    QGraphicsDropShadowEffect* shadowEffect2 = new QGraphicsDropShadowEffect();
-    shadowEffect2->setColor(QColor(0, 0, 0, 22));
-    shadowEffect2->setXOffset(0);
-    shadowEffect2->setYOffset(3);
-    shadowEffect2->setBlurRadius(6);
-
     ui->lineEditPort->setPlaceholderText("Enter port");
     ui->lineEditPort->setProperty("cssClass", "edit-primary");
     ui->lineEditPort->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditPort->setGraphicsEffect(shadowEffect2);
+    ui->lineEditPort->setGraphicsEffect(shadowEffect);
 
     // Radio buttons
 
-    ui->radioButtonMap->setText("Map port using UPnP");
-    ui->radioButtonAllow->setText("Allow incoming connections");
-    ui->radioButtonConnect->setText("Connect through SOCKS5 proxy (default proxy):");
+    ui->checkBoxMap->setText("Map port using UPnP");
+    ui->checkBoxAllow->setText("Allow incoming connections");
+    ui->checkBoxConnect->setText("Connect through SOCKS5 proxy (default proxy):");
 
     // Buttons
 
@@ -70,6 +65,15 @@ SettingsNetworkWidget::SettingsNetworkWidget(PIVXGUI* _window, QWidget *parent) 
 
     ui->pushButtonReset->setText("Reset to default");
     ui->pushButtonReset->setProperty("cssClass", "btn-secundary");
+}
+
+void SettingsNetworkWidget::setMapper(QDataWidgetMapper *mapper){
+    mapper->addMapping(ui->checkBoxMap, OptionsModel::MapPortUPnP);
+    mapper->addMapping(ui->checkBoxAllow, OptionsModel::Listen);
+
+    mapper->addMapping(ui->checkBoxConnect, OptionsModel::ProxyUse);
+    mapper->addMapping(ui->lineEditProxy, OptionsModel::ProxyIP);
+    mapper->addMapping(ui->lineEditPort, OptionsModel::ProxyPort);
 }
 
 SettingsNetworkWidget::~SettingsNetworkWidget()

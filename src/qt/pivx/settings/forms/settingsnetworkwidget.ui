@@ -106,21 +106,21 @@
             <number>20</number>
            </property>
            <item>
-            <widget class="QRadioButton" name="radioButtonMap">
+            <widget class="QCheckBox" name="checkBoxMap">
              <property name="text">
               <string>RadioButton</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButtonAllow">
+            <widget class="QCheckBox" name="checkBoxAllow">
              <property name="text">
               <string>RadioButton</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButtonConnect">
+            <widget class="QCheckBox" name="checkBoxConnect">
              <property name="text">
               <string>RadioButton</string>
              </property>

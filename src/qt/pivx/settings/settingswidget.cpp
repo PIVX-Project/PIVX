@@ -351,7 +351,10 @@ void SettingsWidget::onAboutClicked() {
 
 void SettingsWidget::setMapper(){
     settingsMainOptionsWidget->setMapper(mapper);
-
+    settingsWalletOptionsWidget->setMapper(mapper);
+    settingsNetworkWidget->setMapper(mapper);
+    settingsWindowOptionsWidget->setMapper(mapper);
+    settingsDisplayOptionsWidget->setMapper(mapper);
 }
 
 void SettingsWidget::changeTheme(bool isLightTheme, QString& theme){

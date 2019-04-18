@@ -1,6 +1,8 @@
 #include "qt/pivx/settings/settingswalletoptionswidget.h"
 #include "qt/pivx/settings/forms/ui_settingswalletoptionswidget.h"
 #include "QListView"
+#include "QGraphicsDropShadowEffect"
+#include "optionsmodel.h"
 
 SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window, parent),
@@ -9,6 +11,12 @@ SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidg
     ui->setupUi(this);
 
     this->setStyleSheet(parent->styleSheet());
+
+    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
+    shadowEffect->setColor(QColor(0, 0, 0, 22));
+    shadowEffect->setXOffset(0);
+    shadowEffect->setYOffset(3);
+    shadowEffect->setBlurRadius(6);
 
     // Containers
 
@@ -31,22 +39,17 @@ SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidg
     ui->labelTitleStake->setText("Stake split threshold:");
     ui->labelTitleStake->setProperty("cssClass", "text-title");
 
-
-    ui->comboBoxStake->setProperty("cssClass", "btn-combo");
-
-    QListView * listViewStake = new QListView();
-    ui->comboBoxStake->setView(listViewStake);
-
-    ui->comboBoxStake->addItem("2000");
-    ui->comboBoxStake->addItem("3000");
+    ui->spinBoxStakeSplitThreshold->setProperty("cssClass", "btn-spin-box");
+    ui->spinBoxStakeSplitThreshold->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->spinBoxStakeSplitThreshold->setGraphicsEffect(shadowEffect);
 
     // Radio buttons
 
     ui->labelTitleExpert->setText("Expert");
     ui->labelTitleExpert->setProperty("cssClass", "text-title");
 
-    ui->radioButtonEnable->setText("Enable con control features");
     ui->radioButtonShow->setText("Show Masternodes tab");
+    ui->radioButtonShow->setVisible(false);
     ui->radioButtonSpend->setText("Spend unconfirmed change");
 
     // Buttons
@@ -56,6 +59,11 @@ SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidg
 
     ui->pushButtonReset->setText("Reset to default");
     ui->pushButtonReset->setProperty("cssClass", "btn-secundary");
+}
+
+void SettingsWalletOptionsWidget::setMapper(QDataWidgetMapper *mapper){
+    mapper->addMapping(ui->radioButtonSpend, OptionsModel::SpendZeroConfChange);
+    mapper->addMapping(ui->spinBoxStakeSplitThreshold, OptionsModel::StakeSplitThreshold);
 }
 
 SettingsWalletOptionsWidget::~SettingsWalletOptionsWidget()
