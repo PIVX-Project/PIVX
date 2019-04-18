@@ -98,6 +98,8 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
 
     ui->labelDate->setText("Dec. 19, 2018");
     ui->labelDate->setProperty("cssClass", "text-subtitle");
+    ui->labelLabel->setText("");
+    ui->labelLabel->setProperty("cssClass", "text-subtitle");
 
     // Options
 
@@ -120,7 +122,7 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonLabel->setText("Add Label");
     ui->pushButtonLabel->setProperty("cssClass", "btn-secundary-label");
 
-    ui->pushButtonNewAddress->setText("Generate New Address");
+    ui->pushButtonNewAddress->setText("Generate Address");
     ui->pushButtonNewAddress->setProperty("cssClass", "btn-secundary-new-address");
 
     ui->pushButtonCopy->setText("Copy");
@@ -176,7 +178,11 @@ void ReceiveWidget::updateLabel(){
         QString label = this->addressTableModel->labelForAddress(info->address);
         if (!label.isEmpty()) {
             // TODO: Show label.. complete me..
+            ui->labelLabel->setVisible(true);
+            ui->labelLabel->setText(label);
             ui->pushButtonLabel->setText(tr("Change Label"));
+        }else{
+            ui->labelLabel->setVisible(false);
         }
     }
 }
