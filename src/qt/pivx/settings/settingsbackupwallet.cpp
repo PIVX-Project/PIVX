@@ -27,6 +27,9 @@ SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
     ui->labelTitle_2->setProperty("cssClass", "text-title-screen");
 
 
+    ui->labelDivider->setProperty("cssClass", "container-divider");
+
+
     // Subtitle
 
     ui->labelSubtitle1->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
