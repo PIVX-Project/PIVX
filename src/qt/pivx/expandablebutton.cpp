@@ -61,42 +61,21 @@ void ExpandableButton::setSmall()
     update();
 }
 
+void ExpandableButton::setExpanded(){
+    this->setMaximumWidth(100);
+    ui->pushButton->setText(text);
+    this->isExpanded = true;
+}
+
 void ExpandableButton::enterEvent(QEvent *) {
     if(!this->isAnimating){
-        this->isAnimating = true;
-        this->setMaximumWidth(100);
-        this->isExpanded = true;
-
-//        animation = new QPropertyAnimation(this, "maximumWidth");
-//        animation->setDuration(3000);
-//        animation->setStartValue(36);
-//        animation->setEndValue(100);
-
-//        QPropertyAnimation *animation2 = new QPropertyAnimation(this, "text2");
-//        animation2->setDuration(2000);
-//        animation2->setStartValue("Wallet Unlocked");
-//        animation2->setEndValue("Wallet Unlocked");
-
-//        QParallelAnimationGroup *group = new QParallelAnimationGroup;
-//        group->addAnimation(animation);
-//        group->addAnimation(animation2);
-
-//        group->start(QAbstractAnimation::DeleteWhenStopped);
-
-        ui->pushButton->setText(text);
-        //animation->start(QAbstractAnimation::DeleteWhenStopped);
-        this->isAnimating = false;
+        setExpanded();
         emit Mouse_Hover();
     }
     update();
 }
 
 void ExpandableButton::leaveEvent(QEvent *) {
-//    if(animation){
-//        animation->stop();
-//        animation = nullptr;
-//    }
-
     if(!keepExpanded){
         this->setSmall();
     }

@@ -30,6 +30,7 @@ public:
         this->keepExpanded = _keepExpended;
     }
     void setSmall();
+    void setExpanded();
 signals:
     void Mouse_Pressed();
     void Mouse_Hover();
