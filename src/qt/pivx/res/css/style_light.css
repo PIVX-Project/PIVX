@@ -315,7 +315,7 @@ HH       TOP BAR
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="container-top"] {
-    border-image: url("://img-dashboard-banner") 0 0 0 0 stretch stretch;
+    border-image: url("://bg-dashboard-banner") 0 0 0 0 stretch stretch;
     background-color:#000000;
 }
 

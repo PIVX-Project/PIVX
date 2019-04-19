@@ -127,12 +127,9 @@
         <file alias="bg-splash">pivx/res/img/bg-splash.jpg</file>
         <file alias="bg-splash-2x">pivx/res/img/bg-splash@2x.jpg</file>
         <file alias="bg-splash-3x">pivx/res/img/bg-splash@3x.jpg</file>
-        <file alias="bg-welcome-container">pivx/res/img/bg-welcome-container.jpg</file>
-        <file alias="bg-welcome">pivx/res/img/bg-welcome.jpg</file>
-        <file alias="img-dashboard-banner">pivx/res/img/img-dashboard-banner.jpg</file>
         <file alias="ic-check-sync">pivx/res/img/ic-check-sync.png</file>
         <file alias="ic-coin-zpiv">pivx/res/img/ic-coin-zpiv.png</file>
-        <file alias="img-logo-pivx">pivx/res/img/img-logo-pivx.png</file>
+        <file alias="img-logo-pivx-png">pivx/res/img/img-logo-pivx.png</file>
         <file alias="img-logo-pivx-2x">pivx/res/img/img-logo-pivx@2x.png</file>
         <file alias="img-logo-pivx-3x">pivx/res/img/img-logo-pivx@3x.png</file>
         <file alias="img-nav-logo-pivx">pivx/res/img/img-nav-logo-pivx.png</file>
@@ -272,5 +269,13 @@
         <file alias="ic-arrow-drop-up-purple">pivx/res/img/ic-arrow-drop-up-purple.svg</file>
         <file alias="bg-welcome-2x">pivx/res/img/bg-welcome@2x.jpg</file>
         <file alias="bg-welcome-3x">pivx/res/img/bg-welcome@3x.jpg</file>
+        <file alias="img-logo-pivx">pivx/res/img/img-logo-pivx.svg</file>
+        <file alias="bg-welcome-svg">pivx/res/img/bg-welcome.svg</file>
+        <file alias="bg-welcome-container">pivx/res/img/bg-welcome-container.svg</file>
+        <file alias="bg-welcome">pivx/res/img/bg-welcome.png</file>
+        <file alias="bg-welcome-container-png">pivx/res/img/bg-welcome-container.png</file>
+        <file alias="bg-welcome-container-2x">pivx/res/img/bg-welcome-container@2x.png</file>
+        <file alias="bg-welcome-container-3x">pivx/res/img/bg-welcome-container@3x.png</file>
+        <file alias="bg-dashboard-banner">pivx/res/img/bg-dashboard-banner.png</file>
     </qresource>
 </RCC>

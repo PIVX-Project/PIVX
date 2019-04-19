@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="520" viewBox="0 0 750 520">
+    <defs>
+        <style>
+            .cls-1{stroke:#b088ff;fill:url(#linear-gradient)}.cls-2{stroke:none}.cls-3{fill:none}
+        </style>
+        <linearGradient id="linear-gradient" x1=".993" x2=".007" y1="1" y2=".014" gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#1c1429"/>
+            <stop offset="1" stop-color="#322448"/>
+        </linearGradient>
+    </defs>
+    <g id="bg" transform="translate(-225 -140)">
+        <g id="Rectangle_4754" class="cls-1" data-name="Rectangle 4754" transform="translate(225 140)">
+            <rect width="750" height="520" class="cls-2" rx="4"/>
+            <rect width="749" height="519" x=".5" y=".5" class="cls-3" rx="3.5"/>
+        </g>
+    </g>
+</svg>
