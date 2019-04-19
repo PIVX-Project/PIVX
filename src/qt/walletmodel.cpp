@@ -965,3 +965,11 @@ bool WalletModel::isUsed(CBitcoinAddress address)
 {
     return wallet->IsUsed(address);
 }
+
+std::string WalletModel::resetMintZerocoin(){
+    return wallet->ResetMintZerocoin();
+}
+
+std::string WalletModel::resetSpentZerocoin(){
+    return wallet->ResetSpentZerocoin();
+}

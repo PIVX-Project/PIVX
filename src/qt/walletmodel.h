@@ -255,6 +255,9 @@ public:
     void loadReceiveRequests(std::vector<std::string>& vReceiveRequests);
     bool saveReceiveRequest(const std::string& sAddress, const int64_t nId, const std::string& sRequest);
 
+    std::string resetMintZerocoin();
+    std::string resetSpentZerocoin();
+
 private:
     CWallet* wallet;
     bool fHaveWatchOnly;

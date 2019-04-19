@@ -354,7 +354,8 @@ bool PIVXGUI::openStandardDialog(QString title, QString body, QString okBtn, QSt
     DefaultDialog *dialog = new DefaultDialog(this);
     dialog->setText(title, body, okBtn, cancelBtn);
     dialog->adjustSize();
-    return openDialogWithOpaqueBackground(dialog, this);
+    openDialogWithOpaqueBackground(dialog, this);
+    return dialog->isOk;
 }
 
 

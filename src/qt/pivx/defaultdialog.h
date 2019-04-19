@@ -17,6 +17,7 @@ public:
 
     void setText(QString title = "", QString message = "", QString okBtnText = "", QString cancelBtnText = "");
 
+    bool isOk = false;
 private:
     Ui::DefaultDialog *ui;
 };

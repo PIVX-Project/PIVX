@@ -34,7 +34,7 @@ DefaultDialog::DefaultDialog(QWidget *parent) :
 
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
-    connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(ui->btnSave, &QPushButton::clicked, [this](){this->isOk = true; accept();});
 }
 
 void DefaultDialog::setText(QString title, QString message, QString okBtnText, QString cancelBtnText){

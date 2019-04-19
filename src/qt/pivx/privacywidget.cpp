@@ -255,8 +255,11 @@ void PrivacyWidget::onSendClicked(){
         return;
     }
 
+    bool isConvert = ui->pushLeft->isChecked();
+
     if(!GUIUtil::requestUnlock(walletModel, AskPassphraseDialog::Context::Mint_zPIV, true)){
-        emit message("", tr("You need to unlock the wallet to be able to mint zPIV"), CClientUIInterface::MSG_INFORMATION_SNACK);
+        emit message("",
+                tr("You need to unlock the wallet to be able to %1 zPIV").arg(isConvert ? tr("convert") : tr("mint")), CClientUIInterface::MSG_INFORMATION_SNACK);
         return;
     }
 
@@ -275,7 +278,7 @@ void PrivacyWidget::onSendClicked(){
 
     setCssEditLine(ui->lineEditAmount, true, true);
     // TODO: Launch confirmation dialog here..
-    if(ui->pushLeft->isChecked()){
+    if(isConvert){
         spend(value);
     }else{
         mint(value);
@@ -334,15 +337,29 @@ void PrivacyWidget::onDenomClicked(){
 }
 
 void PrivacyWidget::onRescanMintsClicked(){
-    window->showHide(true);
-    DefaultDialog* dialog = new DefaultDialog(window);
-    openDialogWithOpaqueBackgroundY(dialog, window, 4.5, 5);
+    bool ret = false;
+    window->message(
+            tr("Rescan Mints"),
+            tr("Your zerocoin mints are going to be scanned from the blockchain from scratch"),
+            CClientUIInterface::MSG_INFORMATION | CClientUIInterface::BTN_MASK | CClientUIInterface::MODAL,
+            &ret);
+    if (ret){
+        string strResetMintResult = walletModel->resetMintZerocoin();
+        emit message("", QString::fromStdString(strResetMintResult), CClientUIInterface::MSG_INFORMATION_SNACK);
+    }
 }
 
 void PrivacyWidget::onResetZeroClicked(){
-    window->showHide(true);
-    DefaultDialog* dialog = new DefaultDialog(window);
-    openDialogWithOpaqueBackgroundY(dialog, window, 4.5, 5);
+    bool ret = false;
+    window->message(
+            tr("Reset Spent Zerocoins"),
+            tr("Your zerocoin spends are going to be scanned from the blockchain from scratch"),
+            CClientUIInterface::MSG_INFORMATION | CClientUIInterface::BTN_MASK | CClientUIInterface::MODAL,
+            &ret);
+    if (ret){
+        string strResetMintResult = walletModel->resetSpentZerocoin();
+        emit message("", QString::fromStdString(strResetMintResult), CClientUIInterface::MSG_INFORMATION_SNACK);
+    }
 }
 
 void PrivacyWidget::changeTheme(bool isLightTheme, QString& theme){
