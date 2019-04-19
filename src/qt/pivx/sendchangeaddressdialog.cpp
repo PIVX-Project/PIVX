@@ -22,7 +22,7 @@ SendChangeAddressDialog::SendChangeAddressDialog(QWidget *parent) :
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
 
-    ui->labelMessage->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.");
+    ui->labelMessage->setText("The remainder of the value resultant from the inputs minus the outputs value goes to the \"change\" PIVX address");
     ui->labelMessage->setProperty("cssClass", "text-main-grey");
 
 

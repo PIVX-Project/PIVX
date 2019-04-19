@@ -22,7 +22,7 @@ RequestDialog::RequestDialog(QWidget *parent) :
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
 
-    ui->labelMessage->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.");
+    ui->labelMessage->setText("Instead of sending somebody a PIVX address and asking them to pay to that address, you give them a Payment Request message which bundles up more information than is contained in just a PIVX address.");
     ui->labelMessage->setProperty("cssClass", "text-main-grey");
 
     // Container

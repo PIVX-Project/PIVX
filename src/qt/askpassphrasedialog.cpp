@@ -45,7 +45,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");
 
-    ui->pushButtonOk->setText("SAVE");
+    ui->pushButtonOk->setText("OK");
     ui->pushButtonOk->setProperty("cssClass", "btn-primary");
 
     ui->passEdit1->setGraphicsEffect(shadowEffect);

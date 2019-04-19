@@ -5,7 +5,8 @@
 #include "qt/pivx/AddressFilterProxyModel.h"
 
 
-bool AddressFilterProxyModel::filterAcceptsRow(int row, const QModelIndex& parent) const {
+bool AddressFilterProxyModel::filterAcceptsRow(int row, const QModelIndex& parent) const
+{
     auto model = sourceModel();
     auto label = model->index(row, AddressTableModel::Label, parent);
 
@@ -21,4 +22,9 @@ bool AddressFilterProxyModel::filterAcceptsRow(int row, const QModelIndex& paren
     }
 
     return true;
+}
+
+int AddressFilterProxyModel::rowCount(const QModelIndex& parent) const
+{
+    return QSortFilterProxyModel::rowCount(parent);
 }

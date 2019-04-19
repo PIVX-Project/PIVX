@@ -166,7 +166,7 @@ void AddressesWidget::handleAddressClicked(const QModelIndex &index){
     pos.setX(pos.x() - (DECORATION_SIZE * 2));
     pos.setY(pos.y() + (DECORATION_SIZE));
 
-    QModelIndex rIndex = (filter) ? filter->mapToSource(index) : index;
+    QModelIndex rIndex = filter->mapToSource(index);
 
     if(!this->menu){
         this->menu = new TooltipMenu(window, this);

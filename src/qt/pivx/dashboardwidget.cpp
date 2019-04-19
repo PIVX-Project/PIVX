@@ -85,10 +85,10 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelChart->setProperty("cssClass", "legend-chart");
 
     ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv");
-    ui->labelAmountPiv->setText("9 PIV");
+    ui->labelAmountPiv->setText("0 PIV");
 
     ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv");
-    ui->labelAmountZpiv->setText("9 zPIV");
+    ui->labelAmountZpiv->setText("0 zPIV");
 
     ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv-disable");
     ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv-disable");
@@ -175,12 +175,12 @@ void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
 
     ui->listTransactions->setCurrentIndex(index);
 
-    QModelIndex rIndex = (filter) ? filter->mapToSource(index) : index;
+    QModelIndex rIndex = filter->mapToSource(index);
 
     window->showHide(true);
     TxDetailDialog *dialog = new TxDetailDialog(window, false);
     dialog->setData(walletModel, rIndex);
-    openDialogWithOpaqueBackgroundY(dialog, window, 3, 6);
+    openDialogWithOpaqueBackgroundY(dialog, window, 3, 17);
 
     // Back to regular status
     ui->listTransactions->scrollTo(index);

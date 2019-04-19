@@ -22,6 +22,8 @@ public:
         setSortCaseSensitivity(Qt::CaseInsensitive);
     }
 
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+
 protected:
     bool filterAcceptsRow(int row, const QModelIndex& parent) const override;
 };
