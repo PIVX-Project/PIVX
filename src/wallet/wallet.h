@@ -439,6 +439,7 @@ public:
     // Generate a new key
     CPubKey GenerateNewKey();
     CBitcoinAddress GenerateNewAutoMintKey();
+    int64_t GetKeyCreationTime(CPubKey pubkey);
 
     //! Adds a key to the store, and saves it to disk.
     bool AddKeyPubKey(const CKey& key, const CPubKey& pubkey);

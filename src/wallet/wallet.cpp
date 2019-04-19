@@ -115,6 +115,11 @@ CPubKey CWallet::GenerateNewKey()
     return pubkey;
 }
 
+int64_t CWallet::GetKeyCreationTime(CPubKey pubkey)
+{
+    return mapKeyMetadata[pubkey.GetID()].nCreateTime;
+}
+
 CBitcoinAddress CWallet::GenerateNewAutoMintKey()
 {
     CBitcoinAddress btcAddress;

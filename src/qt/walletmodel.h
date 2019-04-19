@@ -235,6 +235,8 @@ public:
     UnlockContext requestUnlock(AskPassphraseDialog::Context context, bool relock = false);
 
     bool getPubKey(const CKeyID& address, CPubKey& vchPubKeyOut) const;
+    int64_t getKeyCreationTime(const CPubKey& key);
+    int64_t getKeyCreationTime(const CBitcoinAddress& address);
     CBitcoinAddress getNewAddress(string label = "") const;
     bool isMine(CBitcoinAddress address);
     bool isUsed(CBitcoinAddress address);
