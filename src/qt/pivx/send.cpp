@@ -11,7 +11,9 @@
 #include "qt/pivx/sendconfirmdialog.h"
 #include "qt/pivx/myaddressrow.h"
 #include "optionsmodel.h"
+#include "addresstablemodel.h"
 #include "coincontrol.h"
+#include "script/standard.h"
 #include "openuridialog.h"
 
 #include <QFile>
@@ -391,7 +393,7 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
             .arg(BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), total, false, BitcoinUnits::separatorAlways))
             .arg(recipients.first().address)
             :
-           tr("Sending %1 to addresses\n%2")
+           tr("Sending %1 to addresses:\n%2")
            .arg(BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), total, false, BitcoinUnits::separatorAlways))
            .arg(recipientsToString(recipients));
 
@@ -416,14 +418,21 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
      */
     vector <CZerocoinMint> vMintsSelected;
     CZerocoinSpendReceipt receipt;
-    // TODO: Complete me..
+
+    std::string changeAddress = "";
+    if(!boost::get<CNoDestination>(&CoinControlDialog::coinControl->destChange)){
+        changeAddress = CBitcoinAddress(CoinControlDialog::coinControl->destChange).ToString();
+    }else{
+        changeAddress = walletModel->getAddressTableModel()->getLastUnusedAddress().toStdString();
+    }
 
     if (walletModel->sendZpiv(
             vMintsSelected,
             true,
             true,
             receipt,
-            outputs
+            outputs,
+            changeAddress
     )
             ) {
         emit message("", tr("zPIV transaction sent!"), CClientUIInterface::MSG_INFORMATION_SNACK);
