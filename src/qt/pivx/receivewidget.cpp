@@ -20,6 +20,7 @@
 #include <QFile>
 #include <QClipboard>
 #include <QColor>
+#include <QDateTime>
 
 #include <iostream>
 
@@ -148,13 +149,16 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
     connect(ui->pushButtonLabel, SIGNAL(clicked()), this, SLOT(onLabelClicked()));
     connect(ui->pushButtonCopy, SIGNAL(clicked()), this, SLOT(onCopyClicked()));
     connect(ui->pushButtonNewAddress, SIGNAL(clicked()), this, SLOT(onNewAddressClicked()));
+    connect(ui->listViewAddress, SIGNAL(clicked(QModelIndex)), this, SLOT(handleAddressClicked(QModelIndex)));
 }
 
 void ReceiveWidget::setWalletModel(WalletModel* model){
     this->walletModel = model;
     if(walletModel) {
         this->addressTableModel = model->getAddressTableModel();
-        ui->listViewAddress->setModel(this->addressTableModel);
+        this->filter = new AddressFilterProxyModel(AddressTableModel::Receive, this);
+        this->filter->setSourceModel(addressTableModel);
+        ui->listViewAddress->setModel(this->filter);
         ui->listViewAddress->setModelColumn(AddressTableModel::Address);
 
         if(!info) info = new SendCoinsRecipient();
@@ -165,9 +169,13 @@ void ReceiveWidget::setWalletModel(WalletModel* model){
     }
 }
 
-void ReceiveWidget::refreshView(){
-    QString latestAddress = this->addressTableModel->getLastUnusedAddress();
-    ui->labelAddress->setText(!latestAddress.isEmpty() ? latestAddress : tr("No address"));
+void ReceiveWidget::refreshView(QString refreshAddress){
+    QString latestAddress = (refreshAddress.isEmpty()) ? this->addressTableModel->getLastUnusedAddress() : refreshAddress;
+    if (latestAddress.isEmpty()) // new default address
+       latestAddress = QString::fromStdString(walletModel->getNewAddress("Default").ToString());
+    ui->labelAddress->setText(latestAddress);
+    int64_t time = walletModel->getKeyCreationTime(CBitcoinAddress(latestAddress.toStdString()));
+    ui->labelDate->setText(GUIUtil::dateTimeStr(QDateTime::fromTime_t(static_cast<uint>(time))));
     updateQr(latestAddress);
     updateLabel();
 }
@@ -201,6 +209,11 @@ void ReceiveWidget::updateQr(QString address){
     }else{
         ui->labelQrImg->setText(!error.isEmpty() ? error : "Error encoding address");
     }
+}
+
+void ReceiveWidget::handleAddressClicked(const QModelIndex &index){
+    QModelIndex rIndex = filter->mapToSource(index);
+    refreshView(rIndex.data(Qt::DisplayRole).toString());
 }
 
 void ReceiveWidget::onLabelClicked(){

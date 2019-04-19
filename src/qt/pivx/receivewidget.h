@@ -3,6 +3,7 @@
 
 #include "addresstablemodel.h"
 #include "qt/pivx/furabstractlistitemdelegate.h"
+#include "qt/pivx/AddressFilterProxyModel.h"
 
 #include <QSpacerItem>
 #include <QWidget>
@@ -39,7 +40,8 @@ private slots:
     void changeTheme(bool isLightTheme, QString &theme);
     void onLabelClicked();
     void onCopyClicked();
-    void refreshView();
+    void refreshView(QString refreshAddress = QString());
+    void handleAddressClicked(const QModelIndex &index);
 private:
     Ui::ReceiveWidget *ui;
     PIVXGUI* window;
@@ -47,6 +49,7 @@ private:
     FurAbstractListItemDelegate *delegate;
     WalletModel *walletModel = nullptr;
     AddressTableModel* addressTableModel = nullptr;
+    AddressFilterProxyModel *filter = nullptr;
 
     QSpacerItem *spacer = nullptr;
 
