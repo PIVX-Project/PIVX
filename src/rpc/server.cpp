@@ -418,6 +418,7 @@ static const CRPCCommand vRPCCommands[] =
         {"wallet", "getreceivedbyaddress", &getreceivedbyaddress, false, false, true},
         {"wallet", "getstakingstatus", &getstakingstatus, false, false, true},
         {"wallet", "getstakesplitthreshold", &getstakesplitthreshold, false, false, true},
+        {"wallet", "getautocombineinfo", &getautocombineinfo, false, false, true},
         {"wallet", "gettransaction", &gettransaction, false, false, true},
         {"wallet", "getunconfirmedbalance", &getunconfirmedbalance, false, false, true},
         {"wallet", "getwalletinfo", &getwalletinfo, false, false, true},

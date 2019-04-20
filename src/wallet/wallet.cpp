@@ -4190,6 +4190,18 @@ void CWallet::AutoCombineDust()
         return;
     }
 
+    if (0 != nAutoCombineBlockFrequency) {
+        // If the block height hasn't exceeded our frequency; or is not a multiple of our frequency.
+        if ((nAutoCombineBlockFrequency > chainActive.Tip()->nHeight) ||
+            (chainActive.Tip()->nHeight % nAutoCombineBlockFrequency)) {
+            return;
+        }
+    } else {
+        // If nAutoCombineBlockFrequency is 0, it's the special onetime case
+        // so let it rip but turn it off so it doesn't rip again.
+        fCombineDust = 0;
+    }
+
     map<CBitcoinAddress, vector<COutput> > mapCoinsByAddress = AvailableCoinsByAddress(true, nAutoCombineThreshold * COIN);
 
     //coins are sectioned by address. This combination code only wants to combine inputs that belong to the same address
@@ -4216,9 +4228,8 @@ void CWallet::AutoCombineDust()
             coinControl->Select(outpt);
             vRewardCoins.push_back(out);
             nTotalRewardsValue += out.Value();
-
-            // Combine to the threshold and not way above
-            if (nTotalRewardsValue > nAutoCombineThreshold * COIN)
+            // Combine until our total is enough above the threshold to remain above after adjustments
+            if ((nTotalRewardsValue - nTotalRewardsValue / 10) > nAutoCombineThreshold * COIN)
                 break;
 
             // Around 180 bytes per input. We use 190 to be certain
@@ -4264,7 +4275,7 @@ void CWallet::AutoCombineDust()
         }
 
         //we don't combine below the threshold unless the fees are 0 to avoid paying fees over fees over fees
-        if (!maxSize && nTotalRewardsValue < nAutoCombineThreshold * COIN && nFeeRet > 0)
+        if (!maxSize && vecSend[0].second < nAutoCombineThreshold * COIN && nFeeRet > 0)
             continue;
 
         if (!CommitTransaction(wtx, keyChange)) {
@@ -4272,7 +4283,8 @@ void CWallet::AutoCombineDust()
             continue;
         }
 
-        LogPrintf("AutoCombineDust sent transaction\n");
+        LogPrintf("AutoCombineDust sent transaction. Fee=%d, Total Value=%d Sending=%d\n",
+                  nFeeRet, nTotalRewardsValue, vecSend[0].second);
 
         delete coinControl;
     }

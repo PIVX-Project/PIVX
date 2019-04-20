@@ -2262,38 +2262,106 @@ UniValue getstakesplitthreshold(const UniValue& params, bool fHelp)
     return int(pwalletMain->nStakeSplitThreshold);
 }
 
+UniValue getautocombineinfo(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+        throw runtime_error(
+            "getautocombineinfo\n"
+            "Returns the autocombinerewards settings\n"
+            "\nResult:\n"
+            "1. enabled   (string) The feature turned \"on\" or \"off\".\n"
+            "2. threshold (numeric) If enabled on, returns autocombine threshold.\n"
+            "3. frequency (variable) If enabled, returns frequency in blocks, or \"nextblock\" if one time. "
+                                    "If one time already run, \"startup\" is returned\n");
+
+    UniValue obj(UniValue::VOBJ);
+    obj.push_back(Pair("enabled", pwalletMain->fCombineDust ? "on" : "off"));
+    if (pwalletMain->fCombineDust) {
+        obj.push_back(Pair("threshold",
+                           int(pwalletMain->nAutoCombineThreshold)));
+        if (0 == pwalletMain->nAutoCombineBlockFrequency) {
+            obj.push_back(Pair("frequency", "nextblock"));
+        } else {
+            obj.push_back(Pair("frequency",
+                           int(pwalletMain->nAutoCombineBlockFrequency)));
+        }
+    }
+    else {
+        if (0 == pwalletMain->nAutoCombineBlockFrequency) {
+            obj.push_back(Pair("threshold", int(pwalletMain->nAutoCombineThreshold)));
+            obj.push_back(Pair("frequency", "startup"));
+        }
+    }
+
+    return obj;
+}
+
 UniValue autocombinerewards(const UniValue& params, bool fHelp)
 {
-    bool fEnable;
-    if (params.size() >= 1)
-        fEnable = params[0].get_bool();
+    string strCommand;
+    bool fEnable = false;
 
-    if (fHelp || params.size() < 1 || (fEnable && params.size() != 2) || params.size() > 2)
+    if (params.size() >= 1) {
+        fEnable = params[0].get_bool();
+    }
+
+    if (fHelp || params.size() < 1 || (fEnable && params.size() < 2) || params.size() > 3)
         throw runtime_error(
-            "autocombinerewards enable ( threshold )\n"
-            "\nWallet will automatically monitor for any coins with value below the threshold amount, and combine them if they reside with the same PIVX address\n"
-            "When autocombinerewards runs it will create a transaction, and therefore will be subject to transaction fees.\n"
+            "autocombinerewards enable ( threshold ) ( frequency )\n"
+            "\nWallet will automatically monitor for UTXOs with values below the threshold amount, "
+            "and combine them into transactions sized to the threshold amount, if they reside with "
+            "the same UCC address.\n"
+            "\nA frequency value of \"0\" will run the combine once, on the next available block, "
+            "and once again on each wallet startup.\n"
+            "\nWhen autocombinerewards runs it will create a transaction, and therefore will be subject "
+            "to transaction fees.  Transactions will be limited to a full combine of the threshold "
+            "amount unless the transaction fees are zero.\n"
 
             "\nArguments:\n"
-            "1. enable          (boolean, required) Enable auto combine (true) or disable (false)\n"
-            "2. threshold       (numeric, optional) Threshold amount (default: 0)\n"
+            "1. enable    (boolean, required) Enable auto combine (true) or disable (false).\n"
+            "2. threshold (numeric, optional) (required for enable) target total PIV to combine into one UTXO.\n"
+            "3. frequency (numeric, optional) Frequency (in blocks) for autocombine to run (default: 15)\n"
+
+            "\nResult:\n"
+            "1. enabled   (string) The feature turned \"on\" or \"off\".\n"
+            "2. threshold (numeric) If enabled on, returns autocombine threshold.\n"
+            "3. frequency (variable) If enabled, returns frequency in blocks, or \"nextblock\" if one time.\n"
 
             "\nExamples:\n" +
-            HelpExampleCli("autocombinerewards", "true 500") + HelpExampleRpc("autocombinerewards", "true 500"));
+            HelpExampleCli("autocombinerewards", "true 500 15") + HelpExampleRpc("autocombinerewards", "true 500 15"));
 
     CWalletDB walletdb(pwalletMain->strWalletFile);
     CAmount nThreshold = 0;
+    int nBlockFrequency = 15;
 
-    if (fEnable)
+    if (fEnable) {
         nThreshold = params[1].get_int();
+        if (params.size() > 2) {
+            nBlockFrequency = params[2].get_int();
+            if (nBlockFrequency < 0)
+                nBlockFrequency = 1;
+        }
+    }
 
     pwalletMain->fCombineDust = fEnable;
     pwalletMain->nAutoCombineThreshold = nThreshold;
+    pwalletMain->nAutoCombineBlockFrequency = nBlockFrequency;
 
-    if (!walletdb.WriteAutoCombineSettings(fEnable, nThreshold))
+    if (!walletdb.WriteAutoCombineSettings(fEnable, nThreshold, nBlockFrequency))
         throw runtime_error("Changed settings in wallet but failed to save to database\n");
 
-    return NullUniValue;
+    UniValue obj(UniValue::VOBJ);
+    obj.push_back(Pair("enabled", pwalletMain->fCombineDust ? "on" : "off"));
+    if (pwalletMain->fCombineDust) {
+        obj.push_back(Pair("threshold", int(pwalletMain->nAutoCombineThreshold)));
+        if (0 == pwalletMain->nAutoCombineBlockFrequency) {
+            obj.push_back(Pair("frequency", "nextblock"));
+        } else {
+            obj.push_back(Pair("frequency", int(pwalletMain->nAutoCombineBlockFrequency)));
+        }
+    }
+
+    return obj;
 }
 
 UniValue printMultiSend()
