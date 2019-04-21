@@ -3,6 +3,7 @@
 #include <QDoubleValidator>
 
 #include "optionsmodel.h"
+#include "addresstablemodel.h"
 #include "guiutil.h"
 #include "bitcoinunits.h"
 #include "qt/pivx/qtutils.h"
@@ -92,6 +93,10 @@ bool SendMultiRow::addressChanged(const QString& str){
             ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book-error");
         } else {
             ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book");
+            QString label = model->getAddressTableModel()->labelForAddress(trimmedStr);
+            if (!label.isNull()){
+                ui->lineEditDescription->setText(label);
+            }
         }
         updateStyle(ui->lineEditAddress);
         return valid;
