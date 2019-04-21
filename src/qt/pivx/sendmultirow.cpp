@@ -33,9 +33,7 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
     ui->labelSubtitleDescription->setProperty("cssClass", "text-title");
 
     ui->lineEditDescription->setPlaceholderText("Add descripcion ");
-    ui->lineEditDescription->setProperty("cssClass", "edit-primary");
-    ui->lineEditDescription->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    setShadow(ui->lineEditDescription);
+    initCssEditLine(ui->lineEditDescription);
 
     // Button Contact
 

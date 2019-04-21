@@ -66,9 +66,7 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     shadowEffect->setBlurRadius(6);
 
     ui->lineEditAmount->setPlaceholderText("0.00 PIV ");
-    ui->lineEditAmount->setProperty("cssClass", "edit-primary");
-    ui->lineEditAmount->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditAmount->setGraphicsEffect(shadowEffect);
+    initCssEditLine(ui->lineEditAmount);
 
     /* Denom */
 

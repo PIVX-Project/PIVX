@@ -19,7 +19,7 @@ SettingsNetworkWidget::SettingsNetworkWidget(PIVXGUI* _window, QWidget *parent) 
 
     // Title
 
-    ui->labelTitle->setText("Network");
+    ui->labelTitle->setText(tr("Network"));
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
 
 
@@ -29,36 +29,31 @@ SettingsNetworkWidget::SettingsNetworkWidget(PIVXGUI* _window, QWidget *parent) 
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
     // Proxy
-
-    ui->labelSubtitleProxy->setText("Proxy IP:");
+    ui->labelSubtitleProxy->setText(tr("Proxy IP:"));
     ui->labelSubtitleProxy->setProperty("cssClass", "text-main-grey");
 
-    ui->lineEditProxy->setPlaceholderText("Enter proxy IP");
-    ui->lineEditProxy->setProperty("cssClass", "edit-primary");
-    ui->lineEditProxy->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    setShadow(ui->lineEditProxy);
-    // Port
+    ui->lineEditProxy->setPlaceholderText(tr("Enter proxy IP"));
+    initCssEditLine(ui->lineEditProxy);
 
-    ui->labelSubtitlePort->setText("Port:");
+    // Port
+    ui->labelSubtitlePort->setText(tr("Port:"));
     ui->labelSubtitlePort->setProperty("cssClass", "text-main-grey");
 
     ui->lineEditPort->setPlaceholderText("Enter port");
-    ui->lineEditPort->setProperty("cssClass", "edit-primary");
-    ui->lineEditPort->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    setShadow(ui->lineEditPort);
+    initCssEditLine(ui->lineEditPort);
 
     // Radio buttons
 
-    ui->checkBoxMap->setText("Map port using UPnP");
-    ui->checkBoxAllow->setText("Allow incoming connections");
-    ui->checkBoxConnect->setText("Connect through SOCKS5 proxy (default proxy):");
+    ui->checkBoxMap->setText(tr("Map port using UPnP"));
+    ui->checkBoxAllow->setText(tr("Allow incoming connections"));
+    ui->checkBoxConnect->setText(tr("Connect through SOCKS5 proxy (default proxy):"));
 
     // Buttons
 
-    ui->pushButtonSave->setText("SAVE");
+    ui->pushButtonSave->setText(tr("SAVE"));
     ui->pushButtonSave->setProperty("cssClass", "btn-primary");
 
-    ui->pushButtonReset->setText("Reset to default");
+    ui->pushButtonReset->setText(tr("Reset to default"));
     ui->pushButtonReset->setProperty("cssClass", "btn-secundary");
 }
 
