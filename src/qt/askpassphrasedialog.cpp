@@ -10,6 +10,7 @@
 #include "guiconstants.h"
 #include "guiutil.h"
 #include "walletmodel.h"
+#include "qt/pivx/qtutils.h"
 
 #include "allocators.h"
 
@@ -17,7 +18,6 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QWidget>
-#include <QGraphicsDropShadowEffect>
 
 AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel* model, Context context) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint),
                                                                                                             ui(new Ui::AskPassphraseDialog),
@@ -36,25 +36,15 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
 
     ui->warningLabel->setProperty("cssClass", "text-subtitle");
 
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");
 
     ui->pushButtonOk->setText("OK");
     ui->pushButtonOk->setProperty("cssClass", "btn-primary");
 
-    ui->passEdit1->setGraphicsEffect(shadowEffect);
-    ui->passEdit2->setGraphicsEffect(shadowEffect);
-    ui->passEdit3->setGraphicsEffect(shadowEffect);
-
-    ui->passEdit1->setProperty("cssClass", "edit-primary");
-    ui->passEdit2->setProperty("cssClass", "edit-primary");
-    ui->passEdit3->setProperty("cssClass", "edit-primary");
+    initCssEditLine(ui->passEdit1);
+    initCssEditLine(ui->passEdit2);
+    initCssEditLine(ui->passEdit3);
 
     ui->passLabel1->setText("Current passphrase");
     ui->passLabel1->setProperty("cssClass", "text-title");
@@ -64,10 +54,6 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
 
     ui->passLabel3->setText("Repeat passphrase");
     ui->passLabel3->setProperty("cssClass", "text-title");
-
-    ui->passEdit1->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->passEdit2->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->passEdit3->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
     ui->passEdit1->setMinimumSize(ui->passEdit1->sizeHint());
     ui->passEdit2->setMinimumSize(ui->passEdit2->sizeHint());

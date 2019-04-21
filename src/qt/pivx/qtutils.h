@@ -50,8 +50,10 @@ QString getDarkTheme();
 bool isLightTheme();
 void setTheme(bool isLight);
 
+void initCssEditLine(QLineEdit *edit);
 void setCssEditLine(QLineEdit *edit, bool isValid, bool forceUpdate = false);
 void setCssEditLineDialog(QLineEdit *edit, bool isValid, bool forceUpdate = false);
+void setShadow(QWidget *edit);
 
 void setCssBtnPrimary(QPushButton *btn, bool forceUpdate = false);
 void setCssBtnSecondary(QPushButton *btn, bool forceUpdate = false);

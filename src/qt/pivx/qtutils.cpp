@@ -6,6 +6,7 @@
 
 #include <QFile>
 #include <QStyle>
+#include <QGraphicsDropShadowEffect>
 
 // Open dialog at the bottom
 bool openDialog(QDialog *widget, PIVXGUI *gui){
@@ -188,12 +189,27 @@ QColor getRowColor(bool isLightTheme, bool isHovered, bool isSelected){
     }
 }
 
+void initCssEditLine(QLineEdit *edit){
+    setCssEditLine(edit, true, false);
+    setShadow(edit);
+    edit->setAttribute(Qt::WA_MacShowFocusRect, 0);
+}
+
 void setCssEditLine(QLineEdit *edit, bool isValid, bool forceUpdate){
     setCssProperty(edit, isValid ? "edit-primary" : "edit-primary-error", forceUpdate);
 }
 
 void setCssEditLineDialog(QLineEdit *edit, bool isValid, bool forceUpdate){
     setCssProperty(edit, isValid ? "edit-primary-dialog" : "edit-primary-dialog-error", forceUpdate);
+}
+
+void setShadow(QWidget *edit){
+    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
+    shadowEffect->setColor(QColor(0, 0, 0, 22));
+    shadowEffect->setXOffset(0);
+    shadowEffect->setYOffset(3);
+    shadowEffect->setBlurRadius(6);
+    edit->setGraphicsEffect(shadowEffect);
 }
 
 void setCssBtnPrimary(QPushButton *btn, bool forceUpdate){

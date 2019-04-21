@@ -10,6 +10,7 @@
 #include "bitcoinunits.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
+#include "qt/pivx/qtutils.h"
 
 #include "main.h" // for MAX_SCRIPTCHECK_THREADS
 #include "netbase.h"
@@ -77,23 +78,15 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
 
     // Combobox
 
-
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
-
     ui->databaseCache->setProperty("cssClass", "btn-spin-box");
     ui->databaseCache->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->databaseCache->setGraphicsEffect(shadowEffect);
+    setShadow(ui->databaseCache);
     ui->threadsScriptVerif->setProperty("cssClass", "btn-spin-box");
     ui->threadsScriptVerif->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->threadsScriptVerif->setGraphicsEffect(shadowEffect);
+    setShadow(ui->threadsScriptVerif);
     ui->zeromintPercentage->setProperty("cssClass", "btn-spin-box");
     ui->zeromintPercentage->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->zeromintPercentage->setGraphicsEffect(shadowEffect);
+    setShadow(ui->zeromintPercentage);
     ui->comboBoxDenomzPiv->setProperty("cssClass", "btn-combo-options");
     QListView * listView = new QListView();
     ui->comboBoxDenomzPiv->setView(listView);

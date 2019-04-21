@@ -1,6 +1,5 @@
 #include "qt/pivx/sendmultirow.h"
 #include "qt/pivx/forms/ui_sendmultirow.h"
-#include <QGraphicsDropShadowEffect>
 #include <QDoubleValidator>
 
 #include "optionsmodel.h"
@@ -17,22 +16,16 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
 
     this->setStyleSheet(parent->styleSheet());
 
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
     ui->lineEditAddress->setPlaceholderText("Add address");
     ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book");
     ui->lineEditAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->stackedAddress->setGraphicsEffect(shadowEffect);
+    setShadow(ui->stackedAddress);
 
     ui->lineEditAmount->setPlaceholderText("0.00 zPIV ");
     setCssEditLine(ui->lineEditAmount, true, false);
+    setShadow(ui->lineEditAmount);
     ui->lineEditAmount->setValidator(new QDoubleValidator(0, 100000000000, 7, this) );
     ui->lineEditAmount->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditAmount->setGraphicsEffect(shadowEffect);
 
     /* Description */
 
@@ -42,7 +35,7 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
     ui->lineEditDescription->setPlaceholderText("Add descripcion ");
     ui->lineEditDescription->setProperty("cssClass", "edit-primary");
     ui->lineEditDescription->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditDescription->setGraphicsEffect(shadowEffect);
+    setShadow(ui->lineEditDescription);
 
     // Button Contact
 

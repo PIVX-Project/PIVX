@@ -2,6 +2,7 @@
 #include "qt/pivx/settings/forms/ui_settingsnetworkwidget.h"
 #include "QGraphicsDropShadowEffect"
 #include "optionsmodel.h"
+#include "qt/pivx/qtutils.h"
 
 SettingsNetworkWidget::SettingsNetworkWidget(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window, parent),
@@ -32,16 +33,10 @@ SettingsNetworkWidget::SettingsNetworkWidget(PIVXGUI* _window, QWidget *parent) 
     ui->labelSubtitleProxy->setText("Proxy IP:");
     ui->labelSubtitleProxy->setProperty("cssClass", "text-main-grey");
 
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
     ui->lineEditProxy->setPlaceholderText("Enter proxy IP");
     ui->lineEditProxy->setProperty("cssClass", "edit-primary");
     ui->lineEditProxy->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditProxy->setGraphicsEffect(shadowEffect);
+    setShadow(ui->lineEditProxy);
     // Port
 
     ui->labelSubtitlePort->setText("Port:");
@@ -50,7 +45,7 @@ SettingsNetworkWidget::SettingsNetworkWidget(PIVXGUI* _window, QWidget *parent) 
     ui->lineEditPort->setPlaceholderText("Enter port");
     ui->lineEditPort->setProperty("cssClass", "edit-primary");
     ui->lineEditPort->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditPort->setGraphicsEffect(shadowEffect);
+    setShadow(ui->lineEditPort);
 
     // Radio buttons
 
