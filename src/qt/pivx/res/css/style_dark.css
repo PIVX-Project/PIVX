@@ -2307,6 +2307,17 @@ QPushButton[cssClass="ic-multi-number"] {
     color: #B088FF;
 }
 
+/*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+HH        OPTION BUTTON
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
+
+
+*[cssClass="btn-options-indicator"]{
+    border:0px ;
+    background:#9c70ff;
+    border-radius: 5px;
+}
+
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 HH        SNACK BAR
@@ -2320,6 +2331,16 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="text-snackbar"]{
     color:#FFFFFF;
+    font-size:20px;
+}
+
+/*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+HH        LOADING
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
+
+
+*[cssClass="text-loading"]{
+    color:#4d4d4d;
     font-size:20px;
 }
 

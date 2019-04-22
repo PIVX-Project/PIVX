@@ -2425,6 +2425,17 @@ QPushButton[cssClass="ic-multi-number"] {
     color: #5c4b7d;
 }
 
+/*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+HH        OPTION BUTTON
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
+
+
+*[cssClass="btn-options-indicator"]{
+    border:0px ;
+    background:#9c70ff;
+    border-radius: 5px;
+}
+
 
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
