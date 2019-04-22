@@ -116,13 +116,6 @@ AddressesWidget::AddressesWidget(PIVXGUI* _window, QWidget *parent) :
 
     // Add Contact
 
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
-
     ui->layoutNewContact->setProperty("cssClass", "container-options");
 
 
@@ -135,7 +128,8 @@ AddressesWidget::AddressesWidget(PIVXGUI* _window, QWidget *parent) :
     ui->lineEditName->setPlaceholderText("e.g John doe ");
     setCssEditLine(ui->lineEditName, true);
     ui->lineEditName->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditName->setGraphicsEffect(shadowEffect);
+    setShadow(ui->lineEditName);
+
 
     // Address
 
@@ -145,7 +139,7 @@ AddressesWidget::AddressesWidget(PIVXGUI* _window, QWidget *parent) :
     ui->lineEditAddress->setPlaceholderText("e.g D7VFR83SQbiezrW72hjc…");
     setCssEditLine(ui->lineEditAddress, true);
     ui->lineEditAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditAddress->setGraphicsEffect(shadowEffect);
+    setShadow(ui->lineEditAddress);
 
 
     // Buttons

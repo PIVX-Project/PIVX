@@ -677,7 +677,6 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border-radius:0;
 }
 
-
 QPushButton[cssClass="btn-watch-password"] {
     background: url(:/res/img/ic-watch-password-white.svg);
     background-repeat:no-repeat;

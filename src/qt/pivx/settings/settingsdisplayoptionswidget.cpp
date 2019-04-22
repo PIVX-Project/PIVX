@@ -54,14 +54,30 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
 
     ui->comboBoxLanguage->setProperty("cssClass", "btn-combo");
     ui->comboBoxLanguage->setView(new QListView());
+    ui->comboBoxLanguage->setEditable(true);
+    QLineEdit* LanguageEdit = new QLineEdit(ui->comboBoxLanguage);
+    LanguageEdit->setReadOnly(true);
+    LanguageEdit->setAlignment(Qt::AlignRight);
+    ui->comboBoxLanguage->setLineEdit(LanguageEdit);
 
     ui->comboBoxUnit->setProperty("cssClass", "btn-combo");
     ui->comboBoxUnit->setModel(new BitcoinUnits(this));
+    ui->comboBoxUnit->setEditable(true);
+    QLineEdit* UnitEdit = new QLineEdit(ui->comboBoxUnit);
+    UnitEdit->setReadOnly(true);
+    UnitEdit->setAlignment(Qt::AlignRight);
+    ui->comboBoxUnit->setLineEdit(UnitEdit);
 
     ui->comboBoxDigits->setProperty("cssClass", "btn-combo-options");
 
     QListView * listViewDigits = new QListView();
     ui->comboBoxDigits->setView(listViewDigits);
+
+    ui->comboBoxDigits->setEditable(true);
+    QLineEdit* DigitsEdit = new QLineEdit(ui->comboBoxDigits);
+    DigitsEdit->setReadOnly(true);
+    DigitsEdit->setAlignment(Qt::AlignRight);
+    ui->comboBoxDigits->setLineEdit(DigitsEdit);
 
     /* Number of displayed decimal digits selector */
     QString digits;

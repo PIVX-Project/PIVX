@@ -753,7 +753,6 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border-radius:0;
 }
 
-
 QPushButton[cssClass="btn-dropdown"] {
     qproperty-icon: url("://ic-arrow-drop-down") off,
                     url("://ic-arrow-drop-down") on ;
@@ -2405,7 +2404,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="img-empty-privacy"] {
-    qproperty-icon: url("://img-empty-privacy");
+    qproperty-icon: url("://img-empty-multisend");
     qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }

@@ -29,12 +29,6 @@ RequestDialog::RequestDialog(QWidget *parent) :
 
     ui->frame->setProperty("cssClass", "container-dialog");
 
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
     // Combo Coins
 
     ui->comboBoxCoin->setProperty("cssClass", "btn-combo-coins");
@@ -56,7 +50,7 @@ RequestDialog::RequestDialog(QWidget *parent) :
     setCssEditLineDialog(ui->lineEditLabel, true);
 
     ui->lineEditLabel->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditLabel->setGraphicsEffect(shadowEffect);
+    setShadow(ui->lineEditLabel);
 
     // Amount
 
@@ -66,7 +60,7 @@ RequestDialog::RequestDialog(QWidget *parent) :
     ui->lineEditAmount->setPlaceholderText("0.00");
     setCssEditLineDialog(ui->lineEditAmount, true);
     ui->lineEditAmount->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->layoutAmount->setGraphicsEffect(shadowEffect);
+    setShadow(ui->layoutAmount);
 
 
     // Description
@@ -77,7 +71,9 @@ RequestDialog::RequestDialog(QWidget *parent) :
     ui->lineEditDescription->setPlaceholderText("Add descripcion ");
     setCssEditLineDialog(ui->lineEditDescription, true);
     ui->lineEditDescription->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditDescription->setGraphicsEffect(shadowEffect);
+
+    setShadow(ui->lineEditDescription);
+
 
 
     // Stack

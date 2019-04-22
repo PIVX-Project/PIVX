@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>584</width>
+    <width>602</width>
     <height>646</height>
    </rect>
   </property>
@@ -230,7 +230,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout">
             <property name="spacing">
-             <number>5</number>
+             <number>1</number>
             </property>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -353,7 +353,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayoutLabel">
             <property name="spacing">
-             <number>5</number>
+             <number>1</number>
             </property>
             <item>
              <widget class="QLabel" name="labelSubtitleLabel">
