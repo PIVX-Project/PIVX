@@ -15,6 +15,9 @@ public:
     explicit SendCustomFeeDialog(QWidget *parent = nullptr);
     ~SendCustomFeeDialog();
 
+public slots:
+    void onRecommendedChecked();
+    void onCustomChecked();
 private:
     Ui::SendCustomFeeDialog *ui;
 };

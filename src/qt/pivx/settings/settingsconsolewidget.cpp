@@ -242,43 +242,30 @@ SettingsConsoleWidget::SettingsConsoleWidget(PIVXGUI* _window, QWidget *parent) 
     this->setStyleSheet(parent->styleSheet());
 
     // Containers
-
     ui->left->setProperty("cssClass", "container");
     ui->left->setContentsMargins(10,10,10,10);
 
     // Title
-
     ui->labelTitle->setText("Console");
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
 
-    // Effects
-
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
     // Console container
-
     ui->consoleWidget->setProperty("cssClass", "container-square");
-    ui->consoleWidget->setGraphicsEffect(shadowEffect);
+    setShadow(ui->consoleWidget);
 
     // Edit
-
     ui->lineEdit->setPlaceholderText("Console input");
-    setCssEditLine(ui->lineEdit, true, false);
-    ui->lineEdit->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEdit->setGraphicsEffect(shadowEffect);
-
+    initCssEditLine(ui->lineEdit);
 
     // Buttons
-
     ui->pushButton->setProperty("cssClass", "ic-arrow");
-
     ui->pushButtonCommandOptions->setText("Command Line Options ");
     ui->pushButtonCommandOptions->setProperty("cssClass", "btn-secundary");
 
+    ui->pushButtonOpenDebug->setText("Open Debug File");
+    ui->pushButtonOpenDebug->setProperty("cssClass", "btn-secundary");
+
+    connect(ui->pushButtonOpenDebug, &QPushButton::clicked, [](){GUIUtil::openDebugLogfile();});
 
     // Install event filter for up and down arrow
     ui->lineEdit->installEventFilter(this);

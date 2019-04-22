@@ -199,7 +199,7 @@
             <number>5</number>
            </property>
            <item alignment="Qt::AlignHCenter">
-            <widget class="QCheckBox" name="checkBox">
+            <widget class="QCheckBox" name="checkBoxRecommended">
              <property name="text">
               <string>Recomended</string>
              </property>
@@ -229,23 +229,7 @@
             </widget>
            </item>
            <item alignment="Qt::AlignHCenter">
-            <widget class="QComboBox" name="comboBoxRecommended">
-             <item>
-              <property name="text">
-               <string>Normal</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Slow</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Fast</string>
-              </property>
-             </item>
-            </widget>
+            <widget class="QComboBox" name="comboBoxRecommended"/>
            </item>
           </layout>
          </item>
@@ -271,7 +255,7 @@
             <number>5</number>
            </property>
            <item alignment="Qt::AlignHCenter">
-            <widget class="QCheckBox" name="checkBox_2">
+            <widget class="QCheckBox" name="checkBoxCustom">
              <property name="text">
               <string>Custom</string>
              </property>
@@ -297,13 +281,7 @@
             <widget class="QLineEdit" name="lineEditCustomFee"/>
            </item>
            <item alignment="Qt::AlignHCenter">
-            <widget class="QComboBox" name="comboBoxCustom">
-             <item>
-              <property name="text">
-               <string>Per kilobyte</string>
-              </property>
-             </item>
-            </widget>
+            <widget class="QComboBox" name="comboBoxCustom"/>
            </item>
           </layout>
          </item>

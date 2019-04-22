@@ -2,6 +2,7 @@
 #include "qt/pivx/forms/ui_sendcustomfeedialog.h"
 #include "QListView"
 #include "QGraphicsDropShadowEffect"
+#include "qt/pivx/qtutils.h"
 
 SendCustomFeeDialog::SendCustomFeeDialog(QWidget *parent) :
     QDialog(parent),
@@ -31,37 +32,22 @@ SendCustomFeeDialog::SendCustomFeeDialog(QWidget *parent) :
     ui->labelFee->setProperty("cssClass", "text-main-grey-big");
 
     ui->comboBoxRecommended->setProperty("cssClass", "btn-combo-dialog");
-
-    QListView * listViewRecommended = new QListView();
-    ui->comboBoxRecommended->setView(listViewRecommended);
+    ui->comboBoxRecommended->setView(new QListView());
 
     ui->comboBoxRecommended->addItem("Normal");
     ui->comboBoxRecommended->addItem("Slow");
     ui->comboBoxRecommended->addItem("Fast");
 
-
     // Custom
 
     ui->comboBoxCustom->setProperty("cssClass", "btn-combo-dialog");
-
-    QListView * listViewCustom = new QListView();
-    ui->comboBoxCustom->setView(listViewCustom);
-
+    ui->comboBoxCustom->setView(new QListView());
     ui->comboBoxCustom->addItem("Per kilobyte");
-
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
 
     ui->lineEditCustomFee->setPlaceholderText("0.000001 zPIV");
     ui->lineEditCustomFee->setProperty("cssClass", "edit-primary-dialog");
     ui->lineEditCustomFee->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditCustomFee->setGraphicsEffect(shadowEffect);
-
-
-
+    setShadow(ui->lineEditCustomFee);
 
     // Buttons
 
@@ -74,6 +60,26 @@ SendCustomFeeDialog::SendCustomFeeDialog(QWidget *parent) :
 
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->checkBoxCustom, SIGNAL(clicked()), this, SLOT(onCustomChecked()));
+    connect(ui->checkBoxRecommended, SIGNAL(clicked()), this, SLOT(onRecommendedChecked()));
+    ui->checkBoxRecommended->setChecked(true);
+}
+
+void SendCustomFeeDialog::onCustomChecked(){
+    bool isChecked = ui->checkBoxCustom->checkState() == Qt::Checked;
+    ui->lineEditCustomFee->setEnabled(isChecked);
+    ui->comboBoxCustom->setEnabled(isChecked);
+    ui->comboBoxRecommended->setEnabled(!isChecked);
+    ui->checkBoxRecommended->setChecked(!isChecked);
+
+}
+
+void SendCustomFeeDialog::onRecommendedChecked(){
+    bool isChecked = ui->checkBoxRecommended->checkState() == Qt::Checked;
+    ui->lineEditCustomFee->setEnabled(!isChecked);
+    ui->comboBoxCustom->setEnabled(!isChecked);
+    ui->comboBoxRecommended->setEnabled(isChecked);
+    ui->checkBoxCustom->setChecked(!isChecked);
 }
 
 SendCustomFeeDialog::~SendCustomFeeDialog()

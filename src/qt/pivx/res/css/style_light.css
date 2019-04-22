@@ -1355,7 +1355,6 @@ QProgressBar::chunk:horizontal {
                                 stop: 0 #B3b088ff,
                                 stop: 1 #B3211a2f);
     margin-right: 2px;
-    width: 30px;
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
