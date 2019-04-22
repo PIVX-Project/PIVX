@@ -122,13 +122,13 @@
            <widget class="QComboBox" name="comboBoxLanguage">
             <property name="minimumSize">
              <size>
-              <width>180</width>
+              <width>280</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>180</width>
+              <width>280</width>
               <height>16777215</height>
              </size>
             </property>
