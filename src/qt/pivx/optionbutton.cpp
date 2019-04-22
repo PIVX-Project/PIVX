@@ -15,6 +15,7 @@ OptionButton::OptionButton(QWidget *parent) :
     ui->layoutOptions2->setContentsMargins(0,10,10,10);
 
     ui->labelCircle->setProperty("cssClass", "btn-options-indicator");
+    setActive(false);
 }
 
 OptionButton::~OptionButton()
@@ -44,7 +45,7 @@ void OptionButton::setRightIcon(QPixmap icon){
     //ui->labelArrow3->setPixmap(icon);
 }
 
-void OptionButton::isActive(bool isActive){
+void OptionButton::setActive(bool isActive){
     if (isActive) {
         ui->layoutCircle->setVisible(true);
     } else {

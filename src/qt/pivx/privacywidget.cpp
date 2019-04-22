@@ -134,25 +134,19 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     ui->btnTotalzPIV->setTitleClassAndText("btn-title-grey", "Total 0 zPIV");
     ui->btnTotalzPIV->setSubTitleClassAndText("text-subtitle", "Show own coins denominations.");
     ui->btnTotalzPIV->setRightIconClass("btn-dropdown");
-    ui->btnTotalzPIV->isActive(false);
 
     ui->btnCoinControl->setTitleClassAndText("btn-title-grey", "Coin Control");
     ui->btnCoinControl->setSubTitleClassAndText("text-subtitle", "Select PIV outputs to mint into zPIV.");
-    ui->btnCoinControl->isActive(false);
 
     ui->btnDenomGeneration->setTitleClassAndText("btn-title-grey", "Denom generation");
     ui->btnDenomGeneration->setSubTitleClassAndText("text-subtitle", "Select the denomination of the coins.");
     ui->btnDenomGeneration->setVisible(false);
-    ui->btnDenomGeneration->isActive(false);
 
     ui->btnRescanMints->setTitleClassAndText("btn-title-grey", "Rescan mints");
     ui->btnRescanMints->setSubTitleClassAndText("text-subtitle", "Find mints in the blockchain.");
-    ui->btnRescanMints->isActive(false);
 
     ui->btnResetZerocoin->setTitleClassAndText("btn-title-grey", "Reset Zerocoin");
     ui->btnResetZerocoin->setSubTitleClassAndText("text-subtitle", "Reset zerocoin database.");
-    ui->btnResetZerocoin->isActive(false);
-
 
     connect(ui->btnTotalzPIV, SIGNAL(clicked()), this, SLOT(onTotalZpivClicked()));
     connect(ui->btnCoinControl, SIGNAL(clicked()), this, SLOT(onCoinControlClicked()));

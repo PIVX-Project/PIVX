@@ -7,6 +7,7 @@
 #include "qt/pivx/contactsdropdown.h"
 #include "qt/pivx/sendmultirow.h"
 #include "walletmodel.h"
+#include "coincontroldialog.h"
 
 static const int MAX_SEND_POPUP_ENTRIES = 8;
 
@@ -66,6 +67,7 @@ private:
     WalletModel* walletModel = nullptr;
 
     QList<SendMultiRow*> entries;
+    CoinControlDialog *coinControlDialog = nullptr;
 
     ContactsDropdown *menuContacts = nullptr;
     SendMultiRow *sendMultiRow;

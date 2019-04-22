@@ -20,7 +20,7 @@ public:
     void setTitleText(QString text);
     void setRightIconClass(QString className);
     void setRightIcon(QPixmap icon);
-    void isActive(bool);
+    void setActive(bool);
     void setChecked(bool checked);
 signals:
     void clicked();

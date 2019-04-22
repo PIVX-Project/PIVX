@@ -6,8 +6,6 @@
 #include "qt/pivx/optionbutton.h"
 #include "qt/pivx/sendcustomfeedialog.h"
 #include "qt/pivx/coincontrolzpivdialog.h"
-#include "qt/pivx/coincontrolpivwidget.h"
-#include "coincontroldialog.h"
 #include "qt/pivx/sendconfirmdialog.h"
 #include "qt/pivx/myaddressrow.h"
 #include "optionsmodel.h"
@@ -98,12 +96,11 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     // Coin control
     ui->btnCoinControl->setTitleClassAndText("btn-title-grey", "Control coin");
     ui->btnCoinControl->setSubTitleClassAndText("text-subtitle", "Select the source of the coins.");
-    ui->btnCoinControl->isActive(false);
 
-    // Change eddress option
+    // Change address option
     ui->btnChangeAddress->setTitleClassAndText("btn-title-grey", "Change address");
     ui->btnChangeAddress->setSubTitleClassAndText("text-subtitle", "Customize the change address.");
-    ui->btnChangeAddress->isActive(true);
+
     // Uri
     ui->btnUri->setTitleClassAndText("btn-title-grey", "Open URI");
     ui->btnUri->setSubTitleClassAndText("text-subtitle", "Parse a payment request.");
@@ -212,6 +209,8 @@ void SendWidget::setModel(WalletModel* model) {
 
 void SendWidget::clearAll(){
     CoinControlDialog::coinControl->SetNull();
+    ui->btnChangeAddress->setActive(false);
+    ui->btnCoinControl->setActive(false);
     clearEntries();
 }
 
@@ -319,12 +318,7 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
     WalletModelTransaction currentTransaction(recipients);
     WalletModel::SendCoinsReturn prepareStatus;
 
-    // TODO: Coin control
-    //if (model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
-    //    prepareStatus = model->prepareTransaction(currentTransaction, CoinControlDialog::coinControl);
-    //else
     prepareStatus = walletModel->prepareTransaction(currentTransaction, CoinControlDialog::coinControl);
-
 
     // process prepareStatus and on error generate message shown to user
     processSendCoinsReturn(prepareStatus,
@@ -560,16 +554,22 @@ void SendWidget::processSendCoinsReturn(const WalletModel::SendCoinsReturn& send
 void SendWidget::onChangeAddressClicked(){
     window->showHide(true);
     SendChangeAddressDialog* dialog = new SendChangeAddressDialog(window);
+    if(!boost::get<CNoDestination>(&CoinControlDialog::coinControl->destChange)){
+        dialog->setAddress(QString::fromStdString(CBitcoinAddress(CoinControlDialog::coinControl->destChange).ToString()));
+    }
     if(openDialogWithOpaqueBackgroundY(dialog, window, 3, 5)) {
         if(dialog->selected) {
             QString ret;
             if (dialog->getAddress(walletModel, &ret)) {
                 CoinControlDialog::coinControl->destChange = CBitcoinAddress(ret.toStdString()).Get();
+                ui->btnChangeAddress->setActive(true);
             }else{
                 emit message("", tr("Invalid change address"), CClientUIInterface::MSG_INFORMATION_SNACK);
+                ui->btnChangeAddress->setActive(false);
             }
         }
     }
+    dialog->deleteLater();
 }
 
 void SendWidget::onOpenUriClicked(){
@@ -577,22 +577,25 @@ void SendWidget::onOpenUriClicked(){
     if (dlg.exec()) {
         emit receivedURI(dlg.getURI());
     }
+    dlg.deleteLater();
 }
 
 void SendWidget::onChangeCustomFeeClicked(){
     window->showHide(true);
     SendCustomFeeDialog* dialog = new SendCustomFeeDialog(window);
     openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
+    dialog->deleteLater();
 }
 
 void SendWidget::onCoinControlClicked()
 {
     if(isPIV){
-        //CoinControlPivWidget* dialog = new CoinControlPivWidget(window);
-        CoinControlDialog *dialog = new CoinControlDialog();
-        dialog->setModel(walletModel);
-        dialog->exec();
-        //openDialogWithOpaqueBackgroundFullScreen(dialog, window);
+        if(!coinControlDialog) {
+            coinControlDialog = new CoinControlDialog();
+            coinControlDialog->setModel(walletModel);
+        }
+        coinControlDialog->exec();
+        ui->btnCoinControl->setActive(CoinControlDialog::coinControl->HasSelected());
     }else{
         window->showHide(true);
         CoinControlZpivDialog* dialog = new CoinControlZpivDialog(window);

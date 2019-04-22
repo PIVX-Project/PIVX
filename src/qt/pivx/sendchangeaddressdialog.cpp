@@ -57,6 +57,10 @@ SendChangeAddressDialog::SendChangeAddressDialog(QWidget *parent) :
     });
 }
 
+void SendChangeAddressDialog::setAddress(QString address){
+    ui->lineEditAddress->setText(address);
+}
+
 bool SendChangeAddressDialog::getAddress(WalletModel *model, QString *retAddress){
     QString address = ui->lineEditAddress->text();
     if(!address.isEmpty() && model->validateAddress(address)){

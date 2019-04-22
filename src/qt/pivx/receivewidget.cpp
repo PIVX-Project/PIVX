@@ -108,14 +108,10 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
     ui->btnMyAddresses->setSubTitleClassAndText("text-subtitle", "List your own addresses.");
     ui->btnMyAddresses->layout()->setMargin(0);
     ui->btnMyAddresses->setRightIconClass("btn-dropdown");
-    ui->btnMyAddresses->isActive(false);
-
 
     ui->btnRequest->setTitleClassAndText("btn-title-grey", "Create Request");
     ui->btnRequest->setSubTitleClassAndText("text-subtitle", "Request payment with a fixed amount.");
     ui->btnRequest->layout()->setMargin(0);
-    ui->btnRequest->isActive(false);
-
 
     // Buttons
     connect(ui->btnRequest, SIGNAL(clicked()), this, SLOT(onRequestClicked()));

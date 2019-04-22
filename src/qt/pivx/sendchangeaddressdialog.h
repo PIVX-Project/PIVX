@@ -17,6 +17,7 @@ public:
     explicit SendChangeAddressDialog(QWidget *parent = nullptr);
     ~SendChangeAddressDialog();
 
+    void setAddress(QString address);
     bool getAddress(WalletModel *model, QString *retAddress);
     bool selected = false;
 

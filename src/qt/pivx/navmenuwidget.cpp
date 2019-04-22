@@ -40,7 +40,7 @@ NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
     ui->btnPrivacy->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnMaster->setProperty("cssClass", "btn-nav-master");
-    ui->btnMaster->setText(QString("MASTER<br>NODES"));
+    ui->btnMaster->setText(QString("MASTER\nNODES"));
     ui->btnMaster->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
     ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
