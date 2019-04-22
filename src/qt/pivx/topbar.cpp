@@ -509,5 +509,5 @@ void TopBar::updateBalances(const CAmount& balance, const CAmount& unconfirmedBa
 }
 
 QString TopBar::formatBalance(CAmount amount, bool isZpiv){
-    return (amount == 0) ? ("0.00 " + BitcoinUnits::name(nDisplayUnit, isZpiv)) : BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, amount, false, BitcoinUnits::separatorAlways, true);
+    return (amount == 0) ? ("0.00 " + BitcoinUnits::name(nDisplayUnit, isZpiv)) : BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, amount, false, BitcoinUnits::separatorAlways, true, isZpiv);
 }
