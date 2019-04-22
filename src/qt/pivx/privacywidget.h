@@ -56,6 +56,7 @@ private:
     int nDisplayUnit;
     void mint(CAmount value);
     void spend(CAmount value);
+    void updateDenomsSupply();
 };
 
 #endif // PRIVACYWIDGET_H

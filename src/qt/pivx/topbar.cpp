@@ -491,8 +491,8 @@ void TopBar::updateBalances(const CAmount& balance, const CAmount& unconfirmedBa
     CAmount matureZerocoinBalance = zerocoinBalance - unconfirmedZerocoinBalance - immatureZerocoinBalance;
 
     // Set
-    QString totalPiv = formatBalance(pivAvailableBalance);
-    QString totalzPiv = formatBalance(matureZerocoinBalance, true);
+    QString totalPiv = GUIUtil::formatBalance(pivAvailableBalance, nDisplayUnit);
+    QString totalzPiv = GUIUtil::formatBalance(matureZerocoinBalance, nDisplayUnit, true);
     // Top
     ui->labelAmountTopPiv->setText(totalPiv);
     ui->labelAmountTopzPiv->setText(totalzPiv);
@@ -501,13 +501,9 @@ void TopBar::updateBalances(const CAmount& balance, const CAmount& unconfirmedBa
     ui->labelAmountPiv->setText(totalPiv);
     ui->labelAmountzPiv->setText(totalzPiv);
 
-    ui->labelPendingPiv->setText(formatBalance(unconfirmedBalance));
-    ui->labelPendingzPiv->setText(formatBalance(unconfirmedZerocoinBalance, true));
+    ui->labelPendingPiv->setText(GUIUtil::formatBalance(unconfirmedBalance, nDisplayUnit));
+    ui->labelPendingzPiv->setText(GUIUtil::formatBalance(unconfirmedZerocoinBalance, nDisplayUnit, true));
 
-    ui->labelImmaturePiv->setText(formatBalance(immatureBalance));
-    ui->labelImmaturezPiv->setText(formatBalance(immatureZerocoinBalance, true));
-}
-
-QString TopBar::formatBalance(CAmount amount, bool isZpiv){
-    return (amount == 0) ? ("0.00 " + BitcoinUnits::name(nDisplayUnit, isZpiv)) : BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, amount, false, BitcoinUnits::separatorAlways, true, isZpiv);
+    ui->labelImmaturePiv->setText(GUIUtil::formatBalance(immatureBalance, nDisplayUnit));
+    ui->labelImmaturezPiv->setText(GUIUtil::formatBalance(immatureZerocoinBalance, nDisplayUnit, true));
 }

@@ -17,6 +17,7 @@ public:
 
     void setSubTitleClassAndText(QString className, QString text);
     void setTitleClassAndText(QString className, QString text);
+    void setTitleText(QString text);
     void setRightIconClass(QString className);
     void setRightIcon(QPixmap icon);
     void setChecked(bool checked);

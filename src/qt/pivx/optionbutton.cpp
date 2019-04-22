@@ -25,6 +25,10 @@ void OptionButton::setTitleClassAndText(QString className, QString text){
     ui->labelTitleChange->setProperty("cssClass", className);
 }
 
+void OptionButton::setTitleText(QString text){
+    ui->labelTitleChange->setText(text);
+}
+
 void OptionButton::setSubTitleClassAndText(QString className, QString text){
     ui->labelSubtitleChange->setText(text);
     ui->labelSubtitleChange->setProperty("cssClass", className);

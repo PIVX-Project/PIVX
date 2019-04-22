@@ -12,6 +12,7 @@
 #include "walletmodel.h"
 #include "optionsmodel.h"
 #include "coincontroldialog.h"
+#include "accumulators.h"
 
 #define DECORATION_SIZE 70
 #define NUM_ITEMS 3
@@ -130,7 +131,7 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonSave->setProperty("cssClass", "btn-primary");
     onMintSelected(true);
 
-    ui->btnTotalzPIV->setTitleClassAndText("btn-title-grey", "Total zPIV 1000");
+    ui->btnTotalzPIV->setTitleClassAndText("btn-title-grey", "Total 0 zPIV");
     ui->btnTotalzPIV->setSubTitleClassAndText("text-subtitle", "Show own coins denominations.");
     ui->btnTotalzPIV->setRightIconClass("btn-dropdown");
 
@@ -189,6 +190,9 @@ void PrivacyWidget::setWalletModel(WalletModel* _model){
         txHolder->setDisplayUnit(walletModel->getOptionsModel()->getDisplayUnit());
         txHolder->setFilter(filter);
         ui->listView->setModel(filter);
+
+        updateDisplayUnit();
+        updateDenomsSupply();
 
         if (txModel->size() == 0) {
             ui->emptyContainer->setVisible(true);
@@ -358,6 +362,98 @@ void PrivacyWidget::onResetZeroClicked(){
         string strResetMintResult = walletModel->resetSpentZerocoin();
         emit message("", QString::fromStdString(strResetMintResult), CClientUIInterface::MSG_INFORMATION_SNACK);
     }
+}
+
+void PrivacyWidget::updateDenomsSupply(){
+    std::map<libzerocoin::CoinDenomination, CAmount> mapDenomBalances;
+    std::map<libzerocoin::CoinDenomination, int> mapUnconfirmed;
+    std::map<libzerocoin::CoinDenomination, int> mapImmature;
+    for (const auto& denom : libzerocoin::zerocoinDenomList){
+        mapDenomBalances.insert(make_pair(denom, 0));
+        mapUnconfirmed.insert(make_pair(denom, 0));
+        mapImmature.insert(make_pair(denom, 0));
+    }
+
+    std::set<CMintMeta> vMints;
+    walletModel->listZerocoinMints(vMints, true, false, true, true);
+
+    map<libzerocoin::CoinDenomination, int> mapMaturityHeights = GetMintMaturityHeight();
+    for (auto& meta : vMints){
+        // All denominations
+        mapDenomBalances.at(meta.denom)++;
+
+        if (!meta.nHeight || chainActive.Height() - meta.nHeight <= Params().Zerocoin_MintRequiredConfirmations()) {
+            // All unconfirmed denominations
+            mapUnconfirmed.at(meta.denom)++;
+        } else {
+            if (meta.denom == libzerocoin::CoinDenomination::ZQ_ERROR) {
+                mapImmature.at(meta.denom)++;
+            } else if (meta.nHeight >= mapMaturityHeights.at(meta.denom)) {
+                mapImmature.at(meta.denom)++;
+            }
+        }
+    }
+
+    int64_t nCoins = 0;
+    int64_t nSumPerCoin = 0;
+    int64_t nUnconfirmed = 0;
+    int64_t nImmature = 0;
+    QString strDenomStats, strUnconfirmed = "";
+
+    for (const auto& denom : libzerocoin::zerocoinDenomList) {
+        nCoins = libzerocoin::ZerocoinDenominationToInt(denom);
+        nSumPerCoin = nCoins * mapDenomBalances.at(denom);
+        nUnconfirmed = mapUnconfirmed.at(denom);
+        nImmature = mapImmature.at(denom);
+
+        strUnconfirmed = "";
+        if (nUnconfirmed) {
+            strUnconfirmed += QString::number(nUnconfirmed) + QString(" unconf. ");
+        }
+        if(nImmature) {
+            strUnconfirmed += QString::number(nImmature) + QString(" immature ");
+        }
+        if(nImmature || nUnconfirmed) {
+            strUnconfirmed = QString("( ") + strUnconfirmed + QString(") ");
+        }
+
+        strDenomStats = strUnconfirmed + QString::number(mapDenomBalances.at(denom)) + " x " +
+                        QString::number(nCoins) + " = <b>" +
+                        QString::number(nSumPerCoin) + " zPIV </b>";
+
+        switch (nCoins) {
+            case libzerocoin::CoinDenomination::ZQ_ONE:
+                ui->labelValueDenom1->setText(strDenomStats);
+                break;
+            case libzerocoin::CoinDenomination::ZQ_FIVE:
+                ui->labelValueDenom5->setText(strDenomStats);
+                break;
+            case libzerocoin::CoinDenomination::ZQ_TEN:
+                ui->labelValueDenom10->setText(strDenomStats);
+                break;
+            case libzerocoin::CoinDenomination::ZQ_FIFTY:
+                ui->labelValueDenom50->setText(strDenomStats);
+                break;
+            case libzerocoin::CoinDenomination::ZQ_ONE_HUNDRED:
+                ui->labelValueDenom100->setText(strDenomStats);
+                break;
+            case libzerocoin::CoinDenomination::ZQ_FIVE_HUNDRED:
+                ui->labelValueDenom500->setText(strDenomStats);
+                break;
+            case libzerocoin::CoinDenomination::ZQ_ONE_THOUSAND:
+                ui->labelValueDenom1000->setText(strDenomStats);
+                break;
+            case libzerocoin::CoinDenomination::ZQ_FIVE_THOUSAND:
+                ui->labelValueDenom5000->setText(strDenomStats);
+                break;
+            default:
+                // Error Case: don't update display
+                break;
+        }
+    }
+
+    CAmount matureZerocoinBalance = walletModel->getZerocoinBalance() - walletModel->getUnconfirmedZerocoinBalance() - walletModel->getImmatureZerocoinBalance();
+    ui->btnTotalzPIV->setTitleText(tr("Total %1").arg(GUIUtil::formatBalance(matureZerocoinBalance, nDisplayUnit, true)));
 }
 
 void PrivacyWidget::changeTheme(bool isLightTheme, QString& theme){

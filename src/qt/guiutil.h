@@ -46,6 +46,9 @@ QFont bitcoinAddressFont();
 // Parse string into a CAmount value
 CAmount parseValue(const QString& text, int displayUnit, bool* valid_out = 0);
 
+// Format an amount
+QString formatBalance(CAmount amount, int nDisplayUnit = 0, bool isZpiv = false);
+
 // Request wallet unlock
 bool requestUnlock(WalletModel* walletModel, AskPassphraseDialog::Context context, bool relock);
 

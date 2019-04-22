@@ -62,7 +62,6 @@ private:
     int nDisplayUnit = -1;
     QTimer* timerStakingIcon = nullptr;
 
-    QString formatBalance(CAmount amount, bool isZpiv = false);
 };
 
 #endif // TOPBAR_H
