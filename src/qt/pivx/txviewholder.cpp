@@ -19,17 +19,18 @@ void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered
 
     QModelIndex rIndex = (filter) ? filter->mapToSource(index) : index;
     TransactionRecord *rec = static_cast<TransactionRecord*>(rIndex.internalPointer());
-    QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
-    QString address = index.data(Qt::DisplayRole).toString();
-    qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
-    bool isConfirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
+    QDateTime date = rIndex.data(TransactionTableModel::DateRole).toDateTime();
+    QString address = rIndex.data(Qt::DisplayRole).toString();
+    qint64 amount = rIndex.data(TransactionTableModel::AmountRole).toLongLong();
+    bool isConfirmed = rIndex.data(TransactionTableModel::ConfirmedRole).toBool();
     QString amountText = BitcoinUnits::formatWithUnit(nDisplayUnit, amount, true, BitcoinUnits::separatorAlways);
-    QModelIndex indexType = index.sibling(rIndex.row(),TransactionTableModel::Type);
+    QModelIndex indexType = rIndex.sibling(rIndex.row(),TransactionTableModel::Type);
     if(address.length() > 20) {
         address = address.left(ADDRESS_SIZE) + "..." + address.right(ADDRESS_SIZE);
     }
     QString label = indexType.data(Qt::DisplayRole).toString() + " " + address;
 
+    //std::cout << "label: " << label.toStdString() << ", type: " << rec->type << std::endl;
 
     txRow->setDate(date);
     txRow->setLabel(label);

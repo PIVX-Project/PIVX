@@ -14,7 +14,7 @@
 #include "coincontroldialog.h"
 #include "accumulators.h"
 
-#define DECORATION_SIZE 70
+#define DECORATION_SIZE 65
 #define NUM_ITEMS 3
 
 PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :

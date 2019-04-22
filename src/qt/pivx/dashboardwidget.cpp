@@ -27,7 +27,7 @@
  */
 #include <QGraphicsLayout>
 
-#define DECORATION_SIZE 60
+#define DECORATION_SIZE 65
 #define NUM_ITEMS 3
 
 #include "moc_dashboardwidget.cpp"

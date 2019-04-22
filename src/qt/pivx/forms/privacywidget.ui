@@ -554,7 +554,7 @@
          <widget class="QWidget" name="layoutDenom" native="true">
           <layout class="QVBoxLayout" name="verticalLayoutDenom">
            <property name="spacing">
-            <number>5</number>
+            <number>12</number>
            </property>
            <property name="leftMargin">
             <number>0</number>
