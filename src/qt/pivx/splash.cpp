@@ -19,7 +19,7 @@
 #include <iostream>
 
 Splash::Splash(QWidget *parent) :
-    QWidget(parent),
+    QWidget(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint),
     ui(new Ui::Splash)
 {
     ui->setupUi(this);
