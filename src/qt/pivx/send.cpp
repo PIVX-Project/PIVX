@@ -98,11 +98,12 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     // Coin control
     ui->btnCoinControl->setTitleClassAndText("btn-title-grey", "Control coin");
     ui->btnCoinControl->setSubTitleClassAndText("text-subtitle", "Select the source of the coins.");
+    ui->btnCoinControl->isActive(false);
 
     // Change eddress option
     ui->btnChangeAddress->setTitleClassAndText("btn-title-grey", "Change address");
     ui->btnChangeAddress->setSubTitleClassAndText("text-subtitle", "Customize the change address.");
-
+    ui->btnChangeAddress->isActive(true);
     // Uri
     ui->btnUri->setTitleClassAndText("btn-title-grey", "Open URI");
     ui->btnUri->setSubTitleClassAndText("text-subtitle", "Parse a payment request.");

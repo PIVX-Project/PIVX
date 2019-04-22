@@ -14,7 +14,6 @@ OptionButton::OptionButton(QWidget *parent) :
     ui->layoutOptions2->setProperty("cssClass", "container-options");
     ui->layoutOptions2->setContentsMargins(0,10,10,10);
 
-    //ui->layoutCircle->setVisible(true);
     ui->labelCircle->setProperty("cssClass", "btn-options-indicator");
 }
 
@@ -43,6 +42,14 @@ void OptionButton::setRightIconClass(QString className){
 
 void OptionButton::setRightIcon(QPixmap icon){
     //ui->labelArrow3->setPixmap(icon);
+}
+
+void OptionButton::isActive(bool isActive){
+    if (isActive) {
+        ui->layoutCircle->setVisible(true);
+    } else {
+        ui->layoutCircle->setVisible(false);
+    }
 }
 
 void OptionButton::setChecked(bool checked){
