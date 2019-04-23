@@ -55,6 +55,8 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
     ui->passLabel3->setText("Repeat passphrase");
     ui->passLabel3->setProperty("cssClass", "text-title");
 
+    ui->capsLabel->setVisible(false);
+
     ui->passEdit1->setMinimumSize(ui->passEdit1->sizeHint());
     ui->passEdit2->setMinimumSize(ui->passEdit2->sizeHint());
     ui->passEdit3->setMinimumSize(ui->passEdit3->sizeHint());
@@ -78,7 +80,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         setWindowTitle(tr("Encrypt wallet"));
         break;
     case Mode::UnlockAnonymize:
-        ui->anonymizationCheckBox->show();
+        //ui->anonymizationCheckBox->show();
     case Mode::Unlock: // Ask passphrase
         ui->warningLabel->setText(tr("This operation needs your wallet passphrase to unlock the wallet."));
         ui->passLabel2->hide();
@@ -99,19 +101,6 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         setWindowTitle(tr("Change passphrase"));
         ui->warningLabel->setText(tr("Enter the old and new passphrase to the wallet."));
         break;
-    }
-
-    // Set checkbox "For anonymization, automint, and staking only" depending on from where we were called
-    if (context == Context::Unlock_Menu || context == Context::Mint_zPIV || context == Context::BIP_38 || context == Context::UI_Vote) {
-        ui->anonymizationCheckBox->setChecked(true);
-    }
-    else {
-        ui->anonymizationCheckBox->setChecked(false);
-    }
-
-    // It doesn't make sense to show the checkbox for sending PIV because you wouldn't check it anyway.
-    if (context == Context::Send_PIV || context == Context::Send_zPIV) {
-        ui->anonymizationCheckBox->hide();
     }
 
     textChanged();
@@ -184,8 +173,15 @@ void AskPassphraseDialog::accept()
         }
     } break;
     case Mode::UnlockAnonymize:
+        if (!model->setWalletLocked(false, oldpass, true)) {
+            QMessageBox::critical(this, tr("Wallet unlock failed"),
+                                  tr("The passphrase entered for the wallet decryption was incorrect."));
+        } else {
+            QDialog::accept(); // Success
+        }
+        break;
     case Mode::Unlock:
-        if (!model->setWalletLocked(false, oldpass, ui->anonymizationCheckBox->isChecked())) {
+        if (!model->setWalletLocked(false, oldpass, false)) {
             QMessageBox::critical(this, tr("Wallet unlock failed"),
                 tr("The passphrase entered for the wallet decryption was incorrect."));
         } else {
@@ -248,8 +244,10 @@ bool AskPassphraseDialog::event(QEvent* event)
         }
         if (fCapsLock) {
             ui->capsLabel->setText(tr("Warning: The Caps Lock key is on!"));
+            ui->capsLabel->setVisible(true);
         } else {
             ui->capsLabel->clear();
+            ui->capsLabel->setVisible(false);
         }
     }
     return QWidget::event(event);
@@ -272,9 +270,11 @@ bool AskPassphraseDialog::eventFilter(QObject* object, QEvent* event)
             if ((fShift && *psz >= 'a' && *psz <= 'z') || (!fShift && *psz >= 'A' && *psz <= 'Z')) {
                 fCapsLock = true;
                 ui->capsLabel->setText(tr("Warning: The Caps Lock key is on!"));
+                ui->capsLabel->setVisible(true);
             } else if (psz->isLetter()) {
                 fCapsLock = false;
                 ui->capsLabel->clear();
+                ui->capsLabel->setVisible(false);
             }
         }
     }

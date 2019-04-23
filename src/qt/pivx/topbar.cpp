@@ -357,9 +357,9 @@ void TopBar::setNumBlocks(int count) {
     if (masternodeSync.IsBlockchainSynced()) {
         if (masternodeSync.IsSynced()) {
             // Node synced
-            text = "Synchronized";
             // TODO: Set synced icon to pushButtonSync here..
-            needState = false;
+            ui->pushButtonSync->setButtonText(tr("Synchronized"));
+            return;
         }else{
 
             // TODO: Show out of sync warning

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>550</width>
-    <height>550</height>
+    <height>565</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -56,7 +56,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QWidget" name="" native="true">
+         <widget class="QWidget" name="widget" native="true">
           <property name="styleSheet">
            <string notr="true">padding-left:24px;</string>
           </property>
@@ -91,6 +91,12 @@
       </item>
       <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
        <widget class="QLabel" name="warningLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string notr="true">Placeholder text</string>
         </property>
@@ -101,7 +107,7 @@
          <set>Qt::AlignCenter</set>
         </property>
         <property name="wordWrap">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -148,6 +154,9 @@
               <height>50</height>
              </size>
             </property>
+            <property name="echoMode">
+             <enum>QLineEdit::Password</enum>
+            </property>
            </widget>
           </item>
          </layout>
@@ -179,6 +188,9 @@
             <width>16777215</width>
             <height>50</height>
            </size>
+          </property>
+          <property name="echoMode">
+           <enum>QLineEdit::Password</enum>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -213,28 +225,15 @@
             <height>50</height>
            </size>
           </property>
+          <property name="echoMode">
+           <enum>QLineEdit::Password</enum>
+          </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="anonymizationCheckBox">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="visible">
-         <bool>true</bool>
-        </property>
-        <property name="toolTip">
-         <string>Serves to disable the trivial sendmoney when OS account compromised. Provides no real security.</string>
-        </property>
-        <property name="text">
-         <string>For anonymization, automint, and staking only</string>
-        </property>
-       </widget>
       </item>
       <item alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="capsLabel">

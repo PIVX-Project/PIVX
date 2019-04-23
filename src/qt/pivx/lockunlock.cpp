@@ -21,7 +21,7 @@ LockUnlock::LockUnlock(QWidget *parent) :
 
     ui->pushButtonUnlocked->setText("Unlock Wallet");
     ui->pushButtonLocked->setText("Lock Wallet");
-    ui->pushButtonStaking->setText("Unlock for\nstaking");
+    ui->pushButtonStaking->setText("Staking Only");
 
     // Connect
 

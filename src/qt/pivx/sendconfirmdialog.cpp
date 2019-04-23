@@ -87,7 +87,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
         ui->labelDivider3->setVisible(false);
 
         connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
-        connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(acceptTx()));
+        connect(ui->btnSave, &QPushButton::clicked, [this](){acceptTx();});
     }else{
         ui->containerButtons->setVisible(false);
 
