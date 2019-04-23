@@ -97,11 +97,16 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool fMultisigEnabled) : Q
      */
 
 
+    ui->groupBox_2->setProperty("cssClass", "group-box");
+    ui->treeWidget->setProperty("cssClass", "table-view");
 
 
 
     // Buttons
 
+
+    ui->pushButtonSelectAll->setProperty("cssClass", "btn-check-left");
+    ui->pushButtonToggleLock->setProperty("cssClass", "btn-check-right");
 
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");

@@ -682,6 +682,13 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border-radius:0;
 }
 
+
+*[cssClass="group-box"] {
+    background-color:transparent;
+    border-radius:0;
+}
+
+
 QPushButton[cssClass="btn-watch-password"] {
     background: url(:/res/img/ic-watch-password-white.svg);
     background-repeat:no-repeat;
@@ -725,6 +732,7 @@ QPushButton[cssClass="btn-switch"]:checked {
 QPushButton[cssClass="btn-check"] {
     border:  1px solid #5c4b7d;
     background-color:#0f0b16;
+    padding:4px;
     font-size:18px;
     color: #707070;
 }
@@ -851,6 +859,7 @@ QPushButton[cssClass="btn-check-left"]:checked:pressed {
 QPushButton[cssClass="btn-check"]:checked {
     border:  1px solid #5c4b7d;
     background-color:#5c4b7d;
+    padding:4px;
     font-size:18px;
     color: #FFFFFF;
 }
@@ -858,6 +867,7 @@ QPushButton[cssClass="btn-check"]:checked {
 QPushButton[cssClass="btn-check"]:unchecked {
     border:  1px solid #5c4b7d;
     background-color:#0f0b16;
+    padding:4px;
     font-size:18px;
     color: #707070;
 }
@@ -1587,7 +1597,7 @@ QRadioButton:unchecked {
 QRadioButton {
     color: #bababa;
     font-size:20px;
-    spacing:20px;
+    spacing:10px;
 }
 
 QRadioButton::indicator {

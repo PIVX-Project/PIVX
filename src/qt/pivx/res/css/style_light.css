@@ -758,6 +758,11 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border-radius:0;
 }
 
+*[cssClass="group-box"] {
+    background-color:transparent;
+    border-radius:0;
+}
+
 QPushButton[cssClass="btn-dropdown"] {
     qproperty-icon: url("://ic-arrow-drop-down") off,
                     url("://ic-arrow-drop-down") on ;
@@ -793,6 +798,7 @@ QPushButton[cssClass="btn-switch"]:checked {
 QPushButton[cssClass="btn-check"] {
     border:  1px solid #5c4b7d;
     background-color:#FFFFFF;
+    padding:4px;
     font-size:18px;
     color: #707070;
 }
@@ -919,6 +925,7 @@ QPushButton[cssClass="btn-check-left"]:checked:pressed {
 QPushButton[cssClass="btn-check"]:checked {
     border:  1px solid #5c4b7d;
     background-color:#5c4b7d;
+    padding:4px;
     font-size:18px;
     color: #FFFFFF;
 }
@@ -926,6 +933,7 @@ QPushButton[cssClass="btn-check"]:checked {
 QPushButton[cssClass="btn-check"]:unchecked {
     border:  1px solid #5c4b7d;
     background-color:#ffffff;
+    padding:4px;
     font-size:18px;
     color: #707070;
 }
@@ -1718,7 +1726,7 @@ QRadioButton:unchecked {
 QRadioButton {
     color: #bababa;
     font-size:20px;
-    spacing:20px;
+    spacing:10px;
 }
 
 QRadioButton::indicator {
@@ -2417,6 +2425,27 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     qproperty-icon: url("://img-empty-multisend");
     qproperty-iconSize: 100px 100px;
     background-color: transparent;
+}
+
+/*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+HH        TABLES
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
+
+QTableView {
+    background-color: #2F2F2F;
+    border: 1px solid #4181C0;
+    color: #4181C0;
+    selection-background-color: #4181C0;
+    selection-color: #FFF;
+}
+
+QHeaderView::section {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #616161, stop: 0.5 #505050,
+                                      stop: 0.6 #434343, stop:1 #656565);
+    color: white;
+    padding-left: 4px;
+    border: 1px solid #6c6c6c;
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
