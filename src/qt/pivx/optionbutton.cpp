@@ -48,8 +48,10 @@ void OptionButton::setRightIcon(QPixmap icon){
 void OptionButton::setActive(bool isActive){
     if (isActive) {
         ui->layoutCircle->setVisible(true);
+        ui->labelTitleChange->setProperty("cssClass", "btn-title-purple");
     } else {
         ui->layoutCircle->setVisible(false);
+        ui->labelTitleChange->setProperty("cssClass", "btn-title-grey");
     }
 }
 

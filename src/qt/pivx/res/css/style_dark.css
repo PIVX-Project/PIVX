@@ -623,6 +623,11 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     font-size:22px;
 }
 
+*[cssClass="btn-title-purple"] {
+    color:#b088ff;
+    font-size:22px;
+}
+
 *[cssClass="btn-subtitle-grey"] {
     color:#FFFFFF;
     font-size:17px;
@@ -1259,25 +1264,31 @@ QPushButton[cssClass="btn-expand"] {
 HH      SPLASH
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
-*[cssClass="bg-splash"] {
-    border-image: url(:/res/img/bg-welcome.jpg) 0 0 0 0 stretch stretch;
-    background-color:#000000;
+*[cssClass="container-splash"] {
+    border-image: url(:/res/img/bg-splash.png) 0 0 0 0 stretch stretch;
+    background-color:transparent;
+    border-radius: 10px; 
 }
 
 *[cssClass="bg-progress"] {
     border-top:3px solid #b088ff ;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
     background-color:transparent;
 }
+
 
 QProgressBar::chunk:horizontal {
     background: qlineargradient(x1: 0,
                                 y1: 0.5,
                                 x2: 1,
                                 y2: 0.5,
-                                stop: 0 #B3b088ff,
-                                stop: 1 #B3211a2f);
+                                stop: 0 #80211a2f,
+                                stop: 1 #80b088ff,
+                                stop: 2 #80211a2f,);
     margin-right: 2px;
-    width: 
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
@@ -2314,7 +2325,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="btn-options-indicator"]{
     border:0px ;
-    background:#9c70ff;
+    background:#b088ff;
     border-radius: 5px;
 }
 

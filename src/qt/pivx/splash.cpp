@@ -26,11 +26,12 @@ Splash::Splash(QWidget *parent) :
     setWindowTitle("PIVX Wallet");
 
     this->setStyleSheet(GUIUtil::loadStyleSheet());
+    this->setAttribute( Qt::WA_TranslucentBackground, true );
 
     ui->progressBar->setTextVisible(false);
     ui->progressBar->setMaximum(0);
     ui->progressBar->setMinimum(0);
-    ui->frame->setProperty("cssClass", "container-welcome");
+    ui->frame->setProperty("cssClass", "container-splash");
     ui->layoutProgress->setProperty("cssClass", "bg-progress");
     ui->imgLogo->setProperty("cssClass", "img-splash-logo");
 

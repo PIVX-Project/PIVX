@@ -9,6 +9,7 @@
 
 #include "guiutil.h"
 #include "walletmodel.h"
+#include "qt/pivx/qtutils.h"
 
 #include <QUrl>
 
@@ -16,7 +17,26 @@ OpenURIDialog::OpenURIDialog(QWidget* parent) : QDialog(parent, Qt::WindowSystem
                                                 ui(new Ui::OpenURIDialog)
 {
     ui->setupUi(this);
+    this->setStyleSheet(parent->styleSheet());
     ui->uriEdit->setPlaceholderText("pivx:");
+
+
+
+    ui->labelSubtitle->setText("URI");
+    ui->labelSubtitle->setProperty("cssClass", "text-title2-dialog");
+
+    ui->frame->setProperty("cssClass", "container-dialog");
+    ui->labelTitle->setProperty("cssClass", "text-title-dialog");
+
+
+    ui->selectFileButton->setProperty("cssClass", "btn-primary");
+    
+
+    ui->uriEdit->setPlaceholderText("0.000001 zPIV");
+    ui->uriEdit->setProperty("cssClass", "edit-primary-dialog");
+    ui->uriEdit->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    setShadow(ui->uriEdit);
+
 }
 
 OpenURIDialog::~OpenURIDialog()
