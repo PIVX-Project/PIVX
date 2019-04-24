@@ -86,8 +86,8 @@ QPushButton[cssClass="img-nav-logo"] {
 }
 
 *[cssClass="btn-nav-receive"]:hover {
-    background-color: transparent;
-    color: #FFFFFF;
+    background-color: #1A000000;
+    color: #938da5;
 }
 
 *[cssClass="btn-nav-receive-active"] {
@@ -121,8 +121,8 @@ QPushButton[cssClass="img-nav-logo"] {
 *[cssClass="btn-nav-settings"]:hover {
     qproperty-icon: url("://ic-nav-settings-hover");
     qproperty-iconSize: 24px 40px;
-    background-color: transparent;
-    color: #FFFFFF;
+    background-color: #1A000000;
+    color: #938da5;
 }
 
 *[cssClass="btn-nav-settings-active"] {
@@ -157,8 +157,8 @@ QPushButton[cssClass="img-nav-logo"] {
 *[cssClass="btn-nav-dash"]:hover {
     qproperty-icon: url("://ic-nav-dashboard-hover");
     qproperty-iconSize: 24px 40px;
-    background-color: transparent;
-    color: #FFFFFF;
+    background-color: #1A000000;
+    color: #938da5;
 }
 
 *[cssClass="btn-nav-dash-active"] {
@@ -192,8 +192,8 @@ QPushButton[cssClass="img-nav-logo"] {
 *[cssClass="btn-nav-send"]:hover {
     qproperty-icon: url("://ic-nav-send-hover");
     qproperty-iconSize: 24px 40px;
-    background-color: transparent;
-    color: #FFFFFF;
+    background-color: #1A000000;
+    color: #938da5;
 }
 
 *[cssClass="btn-nav-send-active"] {
@@ -227,8 +227,8 @@ QPushButton[cssClass="img-nav-logo"] {
 *[cssClass="btn-nav-address"]:hover {
     qproperty-icon: url("://ic-nav-address-hover");
     qproperty-iconSize: 24px 40px;
-    background-color: transparent;
-    color: #FFFFFF;
+    background-color: #1A000000;
+    color: #938da5;
 }
 
 *[cssClass="btn-nav-address-active"] {
@@ -262,8 +262,8 @@ QPushButton[cssClass="img-nav-logo"] {
 *[cssClass="btn-nav-privacy"]:hover {
     qproperty-icon: url("://ic-nav-privacy-hover");
     qproperty-iconSize: 24px 40px;
-    background-color: transparent;
-    color: #FFFFFF;
+    background-color: #1A000000;
+    color: #938da5;
 }
 
 *[cssClass="btn-nav-privacy-active"] {
@@ -298,8 +298,8 @@ QPushButton[cssClass="img-nav-logo"] {
 *[cssClass="btn-nav-master"]:hover {
     qproperty-icon: url("://ic-nav-master-hover");
     qproperty-iconSize: 24px 30px;
-    background-color: transparent;
-    color: #FFFFFF;
+    background-color: #1A000000;
+    color: #938da5;
 }
 
 *[cssClass="btn-nav-master-active"] {
