@@ -35,7 +35,7 @@ public:
     void setModel(WalletModel* model);
 
 signals:
-    void message(const QString& title, const QString& message, unsigned int style);
+    void message(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
     /** Signal raised when a URI was entered or dragged to the GUI */
     void receivedURI(const QString& uri);
 
