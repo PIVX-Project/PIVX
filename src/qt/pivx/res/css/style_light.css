@@ -796,11 +796,31 @@ QPushButton[cssClass="btn-switch"]:checked {
 }
 
 QPushButton[cssClass="btn-check"] {
-    border:  1px solid #5c4b7d;
+    border:  1px solid #335c4b7d;
     background-color:#FFFFFF;
     padding:4px;
     font-size:18px;
     color: #707070;
+    border-radius: 2px;
+}
+
+
+QPushButton[cssClass="btn-check"]:hover {
+    border:  1px solid #5c4b7d;
+    background-color:#FFFFFF;
+    font-size:18px;
+    padding:4px;
+    color: #5c4b7d;
+    border-radius: 2px;
+}
+
+QPushButton[cssClass="btn-check"]:pressed {
+    border:  1px solid #5c4b7d;
+    background-color:#1A5c4b7d;
+    font-size:18px;
+    padding:4px;
+    color: #5c4b7d;
+    border-radius: 2px;
 }
 
 
@@ -923,19 +943,40 @@ QPushButton[cssClass="btn-check-left"]:checked:pressed {
 
 
 QPushButton[cssClass="btn-check"]:checked {
-    border:  1px solid #5c4b7d;
+    border:  1px solid #335c4b7d;
     background-color:#5c4b7d;
     padding:4px;
     font-size:18px;
     color: #FFFFFF;
+    border-radius: 2px;
+}
+
+
+QPushButton[cssClass="btn-check"]:checked:hover {
+    border:  1px solid #5c4b7d;
+    background-color:#44375f;
+    font-size:18px;
+    padding:4px;
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QPushButton[cssClass="btn-check"]:checked:pressed {
+    border:  1px solid #44375f;
+    background-color:#44375f;
+    font-size:18px;
+    padding:4px 10px;
+    color: #b088ff;
+    border-radius: 2px;
 }
 
 QPushButton[cssClass="btn-check"]:unchecked {
-    border:  1px solid #5c4b7d;
+    border:  1px solid #335c4b7d;
     background-color:#ffffff;
     padding:4px;
     font-size:18px;
     color: #707070;
+    border-radius: 2px;
 }
 
 
@@ -1344,7 +1385,8 @@ HH      SPLASH
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="container-splash"] {
-    border-image: url("://bg-splash-png") 0 0 0 0 stretch stretch;
+    border-image: url("://bg-splash") 0 0 0 0 stretch stretch;
+    background-color:transparent;
     border-radius: 3px;
 }
 
@@ -1359,8 +1401,8 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border-top:3px solid #b088ff ;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
     background-color:transparent;
 }
 

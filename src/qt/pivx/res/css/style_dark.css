@@ -735,6 +735,25 @@ QPushButton[cssClass="btn-check"] {
     padding:4px;
     font-size:18px;
     color: #707070;
+    border-radius: 2px;
+}
+
+QPushButton[cssClass="btn-check"]:hover {
+    border:  1px solid #b088ff;
+    background-color:#0f0b16;
+    font-size:18px;
+    padding:4px;
+    color: #b088ff;
+    border-radius: 2px;
+}
+
+QPushButton[cssClass="btn-check"]:pressed {
+    border:  1px solid #b088ff;
+    background-color:#4Db088ff;
+    font-size:18px;
+    padding:4px;
+    color: #b088ff;
+    border-radius: 2px;
 }
 
 
@@ -862,6 +881,26 @@ QPushButton[cssClass="btn-check"]:checked {
     padding:4px;
     font-size:18px;
     color: #FFFFFF;
+    border-radius: 2px;
+}
+
+
+QPushButton[cssClass="btn-check"]:checked:hover {
+    border:  1px solid #44375f;
+    background-color:#44375f;
+    font-size:18px;
+    padding:4px 10px;
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QPushButton[cssClass="btn-check"]:checked:pressed {
+    border:  1px solid #1c122e;
+    background-color:#1c122e;
+    font-size:18px;
+    padding:4px 10px;
+    color: #b088ff;
+    border-radius: 2px;
 }
 
 QPushButton[cssClass="btn-check"]:unchecked {
@@ -1275,7 +1314,8 @@ HH      SPLASH
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="container-splash"] {
-    border-image: url("://bg-splash") 0 0 0 0 stretch stretch;
+    border-image: url(:/res/img/bg-splash.png) 0 0 0 0 stretch stretch;
+    background-color:transparent;
     border-radius: 3px;
 }
 
