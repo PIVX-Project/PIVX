@@ -14,8 +14,6 @@
 #include "script/standard.h"
 #include "openuridialog.h"
 
-#include <QFile>
-#include <QGraphicsDropShadowEffect>
 
 #include <iostream>
 
@@ -39,12 +37,6 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     /* Light Font */
     QFont fontLight;
     fontLight.setWeight(QFont::Light);
-
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
 
     /* Title */
     ui->labelTitle->setText("Send");
@@ -259,10 +251,9 @@ void SendWidget::onAddEntryClicked(){
 }
 
 void SendWidget::resizeEvent(QResizeEvent *event)
- {
-    //resizeMenu();
+{
     QWidget::resizeEvent(event);
- }
+}
 
 
 void SendWidget::onSendClicked(){
@@ -279,7 +270,6 @@ void SendWidget::onSendClicked(){
         if(entry && entry->validate()) {
             recipients.append(entry->getValue());
         }else{
-            // Invalid entry.. todo: notificate user about this.
             emit message("", tr("Invalid entry"),CClientUIInterface::MSG_INFORMATION_SNACK);
             return;
         }
@@ -287,7 +277,6 @@ void SendWidget::onSendClicked(){
     }
 
     if (recipients.isEmpty()) {
-        //todo: notificate user about this.
         emit message("", tr("No set recipients"),CClientUIInterface::MSG_INFORMATION_SNACK);
         return;
     }
@@ -300,8 +289,6 @@ void SendWidget::onSendClicked(){
     // will call relock
     if(!GUIUtil::requestUnlock(walletModel, sendPiv ? AskPassphraseDialog::Context::Send_PIV : AskPassphraseDialog::Context::Send_zPIV, true)){
         // Unlock wallet was cancelled
-        //TODO: Check what is this --> fNewRecipientAllowed = true;
-        // TODO: Notify the user..
         emit message("", tr("Cannot send, wallet locked"),CClientUIInterface::MSG_INFORMATION_SNACK);
         return;
     }
@@ -328,8 +315,6 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
     );
 
     if (prepareStatus.status != WalletModel::OK) {
-        // TODO: Check why this??
-        //fNewRecipientAllowed = true;
         emit message("", tr("Prepare status failed.."),CClientUIInterface::MSG_INFORMATION_SNACK);
         return false;
     }
@@ -350,11 +335,8 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
         // process sendStatus and on error generate message shown to user
         processSendCoinsReturn(sendStatus);
 
-        // TODO: Update
         if (sendStatus.status == WalletModel::OK) {
             CoinControlDialog::coinControl->UnSelectAll();
-            //coinControlUpdateLabels();
-            //
             clearAll();
             emit message("", tr("Transaction sent"),CClientUIInterface::MSG_INFORMATION_SNACK);
             return true;
@@ -393,8 +375,7 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
            .arg(recipientsToString(recipients));
 
     bool ret = false;
-    //emit message( TODO: add this emit..
-    window->message(
+    emit message(
             tr("Spend Zerocoin"),
             sendBody,
             CClientUIInterface::MSG_INFORMATION | CClientUIInterface::BTN_MASK | CClientUIInterface::MODAL,
@@ -402,15 +383,6 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
 
     if(!ret) return false;
 
-    /**
-     * TODO:
-     * vector<CZerocoinMint> &vMintsSelected,
-            bool fMintChange,
-            bool fMinimizeChange,
-            CZerocoinSpendReceipt &receipt,
-            std::list<std::pair<CBitcoinAddress*, CAmount>> outputs,
-            std::string changeAddress = ""
-     */
     vector <CZerocoinMint> vMintsSelected;
     CZerocoinSpendReceipt receipt;
 
@@ -434,7 +406,6 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
         clearAll();
         return true;
     } else {
-        // TODO: Detail error on the receipt..
         QString body;
         if (receipt.GetStatus() == ZPIV_SPEND_V1_SEC_LEVEL) {
             body = tr("Version 1 zPIV require a security level of 100 to successfully spend.");

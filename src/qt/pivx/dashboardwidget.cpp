@@ -163,6 +163,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     // Chart State
     ui->layoutChart->setVisible(false);
     ui->emptyContainerChart->setVisible(true);
+    setShadow(ui->pushImgEmptyChart);
 
     connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
 

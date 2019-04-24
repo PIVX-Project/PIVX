@@ -23,26 +23,20 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
     setShadow(ui->stackedAddress);
 
     ui->lineEditAmount->setPlaceholderText("0.00 zPIV ");
-    setCssEditLine(ui->lineEditAmount, true, false);
-    setShadow(ui->lineEditAmount);
+    initCssEditLine(ui->lineEditAmount);
     ui->lineEditAmount->setValidator(new QDoubleValidator(0, 100000000000, 7, this) );
-    ui->lineEditAmount->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
     /* Description */
-
     ui->labelSubtitleDescription->setText("Label address (optional)");
     ui->labelSubtitleDescription->setProperty("cssClass", "text-title");
 
-    ui->lineEditDescription->setPlaceholderText("Add descripcion ");
+    ui->lineEditDescription->setPlaceholderText("Add description");
     initCssEditLine(ui->lineEditDescription);
 
     // Button Contact
-
     btnContact = ui->lineEditAddress->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
 
-
     // Icon Number
-
     ui->stackedAddress->addWidget(iconNumber);
     iconNumber->show();
     iconNumber->raise();
