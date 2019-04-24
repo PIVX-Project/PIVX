@@ -1344,9 +1344,8 @@ HH      SPLASH
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="container-splash"] {
-    border-image: url("://bg-splash") 0 0 0 0 stretch stretch;
-    background-color:transparent;
-    border-radius: 10px;
+    border-image: url("://bg-splash-png") 0 0 0 0 stretch stretch;
+    border-radius: 3px;
 }
 
 *[cssClass="img-splash-logo"] {

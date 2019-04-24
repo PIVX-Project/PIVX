@@ -124,9 +124,8 @@
         <file alias="spinner-034">res/movies/spinner-034.png</file>
     </qresource>
     <qresource prefix="/">
-        <file alias="bg-splash">pivx/res/img/bg-splash.jpg</file>
-        <file alias="bg-splash-2x">pivx/res/img/bg-splash@2x.jpg</file>
-        <file alias="bg-splash-3x">pivx/res/img/bg-splash@3x.jpg</file>
+        <file alias="bg-splash">pivx/res/img/bg-splash.svg</file>
+        <file alias="bg-splash-png">pivx/res/img/bg-splash.png</file>
         <file alias="ic-check-sync">pivx/res/img/ic-check-sync.png</file>
         <file alias="ic-coin-zpiv">pivx/res/img/ic-coin-zpiv.png</file>
         <file alias="img-logo-pivx-png">pivx/res/img/img-logo-pivx.png</file>

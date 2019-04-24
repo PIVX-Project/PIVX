@@ -27,6 +27,7 @@ Splash::Splash(QWidget *parent) :
 
     this->setStyleSheet(GUIUtil::loadStyleSheet());
     this->setAttribute( Qt::WA_TranslucentBackground, true );
+    ui->progressBar->setAttribute( Qt::WA_TranslucentBackground, true );
 
     ui->progressBar->setTextVisible(false);
     ui->progressBar->setMaximum(0);

@@ -434,15 +434,14 @@ RES_ICONS = \
   qt/pivx/res/img/ic-check-mint-off.svg \
   qt/pivx/res/img/ic-nav-dashboard-active.svg \
   qt/pivx/res/img/ic-wallet-status-locked.svg \
-  qt/pivx/res/img/bg-splash.jpg \
+  qt/pivx/res/img/bg-splash.svg \
+  qt/pivx/res/img/bg-splash.png \
   qt/pivx/res/img/ic-check-mint.svg \
   qt/pivx/res/img/ic-nav-dashboard-hover.svg \
   qt/pivx/res/img/ic-wallet-status-staking.svg \
-  qt/pivx/res/img/bg-splash@2x.jpg \
   qt/pivx/res/img/ic-check-peers-off.svg \
   qt/pivx/res/img/ic-nav-dashboard.svg \
   qt/pivx/res/img/ic-wallet-status-unlocked.svg \
-  qt/pivx/res/img/bg-splash@3x.jpg \
   qt/pivx/res/img/ic-check-peers.svg \
   qt/pivx/res/img/ic-nav-master-active.svg \
   qt/pivx/res/img/ic-watch-password-white.svg \
