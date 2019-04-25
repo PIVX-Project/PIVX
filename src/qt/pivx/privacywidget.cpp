@@ -12,15 +12,15 @@
 #include "walletmodel.h"
 #include "optionsmodel.h"
 #include "coincontroldialog.h"
+#include "coincontrol.h"
 #include "accumulators.h"
 
 #define DECORATION_SIZE 65
 #define NUM_ITEMS 3
 
 PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::PrivacyWidget),
-    window(_window)
+    PWidget(_window, parent),
+    ui(new Ui::PrivacyWidget)
 {
     ui->setupUi(this);
 
@@ -177,8 +177,7 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
 
 }
 
-void PrivacyWidget::setWalletModel(WalletModel* _model){
-    walletModel = _model;
+void PrivacyWidget::loadWalletModel(){
     if(walletModel) {
         txModel = walletModel->getTransactionTableModel();
         // Set up transaction list
@@ -214,8 +213,10 @@ void PrivacyWidget::onMintSelected(bool isMint){
     QString btnText;
     if(isMint){
         btnText = tr("Mint zPIV");
+        ui->btnCoinControl->setVisible(true);
     }else{
         btnText = tr("Convert back to PIV");
+        ui->btnCoinControl->setVisible(false);
     }
     ui->pushButtonSave->setText(btnText);
 }
@@ -326,13 +327,18 @@ void PrivacyWidget::spend(CAmount value){
 
 
 void PrivacyWidget::onCoinControlClicked(){
-    window->showHide(true);
-    CoinControlZpivDialog* dialog = new CoinControlZpivDialog(window);
-    openDialogWithOpaqueBackgroundY(dialog, window, 4.5, 5);
+    if(ui->pushRight->isChecked()) {
+        if (!coinControlDialog) {
+            coinControlDialog = new CoinControlDialog();
+            coinControlDialog->setModel(walletModel);
+        }
+        coinControlDialog->exec();
+        ui->btnCoinControl->setActive(CoinControlDialog::coinControl->HasSelected());
+    }
 }
 
 void PrivacyWidget::onDenomClicked(){
-    window->showHide(true);
+    showHideOp(true);
     DenomGenerationDialog* dialog = new DenomGenerationDialog(window);
     openDialogWithOpaqueBackgroundY(dialog, window, 4.5, 5);
 }

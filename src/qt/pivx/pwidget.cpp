@@ -25,6 +25,10 @@ void PWidget::changeTheme(bool isLightTheme, QString& theme){
     updateStyle(this);
 }
 
+void PWidget::showHideOp(bool show){
+    emit showHide(show);
+}
+
 void PWidget::inform(const QString& message){
     emitMessage("", message, CClientUIInterface::MSG_INFORMATION_SNACK);
 }

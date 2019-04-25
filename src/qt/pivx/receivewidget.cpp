@@ -61,9 +61,8 @@ public:
 #include "qt/pivx/moc_receivewidget.cpp"
 
 ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::ReceiveWidget),
-    window(_window)
+    PWidget(_window, parent),
+    ui(new Ui::ReceiveWidget)
 {
     ui->setupUi(this);
 
@@ -150,10 +149,9 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
     connect(ui->listViewAddress, SIGNAL(clicked(QModelIndex)), this, SLOT(handleAddressClicked(QModelIndex)));
 }
 
-void ReceiveWidget::setWalletModel(WalletModel* model){
-    this->walletModel = model;
+void ReceiveWidget::loadWalletModel(){
     if(walletModel) {
-        this->addressTableModel = model->getAddressTableModel();
+        this->addressTableModel = walletModel->getAddressTableModel();
         this->filter = new AddressFilterProxyModel(AddressTableModel::Receive, this);
         this->filter->setSourceModel(addressTableModel);
         ui->listViewAddress->setModel(this->filter);
@@ -216,7 +214,7 @@ void ReceiveWidget::handleAddressClicked(const QModelIndex &index){
 
 void ReceiveWidget::onLabelClicked(){
     if(walletModel) {
-        window->showHide(true);
+        showHideOp(true);
         // TODO: Open this to "update" the label if the address already has it.
         AddNewContactDialog *dialog = new AddNewContactDialog(window);
         if (openDialogWithOpaqueBackgroundY(dialog, window, 3.5, 6)) {
@@ -231,10 +229,10 @@ void ReceiveWidget::onLabelClicked(){
                 // Show snackbar
                 // update label status (icon color)
                 updateLabel();
-                window->messageInfo(tr("Address label saved"));
+                inform(tr("Address label saved"));
             } else {
                 // Show snackbar error
-                window->messageInfo(tr("Error storing address label"));
+                inform(tr("Error storing address label"));
             }
         }
     }
@@ -245,18 +243,18 @@ void ReceiveWidget::onNewAddressClicked(){
     updateQr(QString::fromStdString(address.ToString()));
     ui->labelAddress->setText(!info->address.isEmpty() ? info->address : tr("No address"));
     updateLabel();
-    window->messageInfo(tr("New address created"));
+    inform(tr("New address created"));
 }
 
 void ReceiveWidget::onCopyClicked(){
     GUIUtil::setClipboard(info->address);
-    window->messageInfo(tr("Address copied"));
+    inform(tr("Address copied"));
 }
 
 
 void ReceiveWidget::onRequestClicked(){
     if(walletModel) {
-        window->showHide(true);
+        showHideOp(true);
         RequestDialog *dialog = new RequestDialog(window);
         dialog->setWalletModel(walletModel);
         openDialogWithOpaqueBackgroundY(dialog, window, 3.5, 12);

@@ -88,24 +88,11 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool fMultisigEnabled) : Q
     ui->labelCoinControlQuantity->setProperty("cssClass", "text-main-purple");
     ui->labelCoinControlAfterFee->setProperty("cssClass", "text-main-purple");
 
-    /*ui->labelTitleType->setProperty("cssClass", "text-main-purple");
-    ui->labelTitleConfirmations->setProperty("cssClass", "text-main-purple");
-     ui->labelTitleDenom->setProperty("cssClass", "text-main-purple");
-     ui->labelTitleId->setProperty("cssClass", "text-main-purple");
-      ui->labelTitleSpen->setProperty("cssClass", "text-main-purple");
-       ui->labelTitleVersion->setProperty("cssClass", "text-main-purple");
-     */
-
-
     ui->groupBox_2->setProperty("cssClass", "group-box");
     ui->treeWidget->setProperty("cssClass", "table-view");
     ui->labelLocked->setProperty("cssClass", "text-main-purple");
 
-
-
     // Buttons
-
-
     ui->pushButtonSelectAll->setProperty("cssClass", "btn-check");
     ui->pushButtonToggleLock->setProperty("cssClass", "btn-check");
 
@@ -172,6 +159,12 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool fMultisigEnabled) : Q
     ui->labelCoinControlBytes->addAction(clipboardBytesAction);
     ui->labelCoinControlLowOutput->addAction(clipboardLowOutputAction);
     ui->labelCoinControlChange->addAction(clipboardChangeAction);
+
+    if (ui->pushButtonSelectAll->isChecked()){
+        ui->pushButtonSelectAll->setText(tr("Unselect all"));
+    }else{
+        ui->pushButtonSelectAll->setText(tr("Select all"));
+    }
 
     // toggle tree/list mode
     connect(ui->radioTreeMode, SIGNAL(toggled(bool)), this, SLOT(radioTreeMode(bool)));
@@ -262,8 +255,12 @@ void CoinControlDialog::buttonSelectAllClicked()
         if (ui->treeWidget->topLevelItem(i)->checkState(COLUMN_CHECKBOX) != state)
             ui->treeWidget->topLevelItem(i)->setCheckState(COLUMN_CHECKBOX, state);
     ui->treeWidget->setEnabled(true);
-    if (state == Qt::Unchecked)
+    if (state == Qt::Unchecked) {
         coinControl->UnSelectAll(); // just to be sure
+        ui->pushButtonSelectAll->setText(tr("Select all"));
+    }else{
+        ui->pushButtonSelectAll->setText(tr("Unselect all"));
+    }
     CoinControlDialog::updateLabels(model, this);
     updateDialogLabels();
 }

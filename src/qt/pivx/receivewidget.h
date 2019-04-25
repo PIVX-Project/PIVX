@@ -1,6 +1,7 @@
 #ifndef RECEIVEWIDGET_H
 #define RECEIVEWIDGET_H
 
+#include "qt/pivx/pwidget.h"
 #include "addresstablemodel.h"
 #include "qt/pivx/furabstractlistitemdelegate.h"
 #include "qt/pivx/AddressFilterProxyModel.h"
@@ -21,7 +22,7 @@ QT_BEGIN_NAMESPACE
 class QModelIndex;
 QT_END_NAMESPACE
 
-class ReceiveWidget : public QWidget
+class ReceiveWidget : public PWidget
 {
     Q_OBJECT
 
@@ -29,7 +30,7 @@ public:
     explicit ReceiveWidget(PIVXGUI* _window, QWidget *parent = nullptr);
     ~ReceiveWidget();
 
-    void setWalletModel(WalletModel* model);
+    void loadWalletModel() override;
 
 public slots:
     void onRequestClicked();
@@ -44,10 +45,8 @@ private slots:
     void handleAddressClicked(const QModelIndex &index);
 private:
     Ui::ReceiveWidget *ui;
-    PIVXGUI* window;
 
     FurAbstractListItemDelegate *delegate;
-    WalletModel *walletModel = nullptr;
     AddressTableModel* addressTableModel = nullptr;
     AddressFilterProxyModel *filter = nullptr;
 

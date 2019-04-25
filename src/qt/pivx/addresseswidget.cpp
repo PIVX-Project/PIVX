@@ -57,9 +57,8 @@ public:
 #include "qt/pivx/moc_addresseswidget.cpp"
 
 AddressesWidget::AddressesWidget(PIVXGUI* _window, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::AddressesWidget),
-    window(_window)
+    PWidget(_window, parent),
+    ui(new Ui::AddressesWidget)
 {
     ui->setupUi(this);
 
@@ -173,10 +172,9 @@ void AddressesWidget::handleAddressClicked(const QModelIndex &index){
     menu->show();
 }
 
-void AddressesWidget::setWalletModel(WalletModel *model){
-    this->walletModel = model;
-    if(model) {
-        addressTablemodel = model->getAddressTableModel();
+void AddressesWidget::loadWalletModel(){
+    if(walletModel) {
+        addressTablemodel = walletModel->getAddressTableModel();
         this->filter = new AddressFilterProxyModel(AddressTableModel::Send, this);
         this->filter->setSourceModel(addressTablemodel);
         ui->listAddresses->setModel(this->filter);
@@ -201,14 +199,14 @@ void AddressesWidget::onStoreContactClicked(){
         // TODO: Update address status on text change..
         if (!walletModel->validateAddress(address)) {
             setCssEditLine(ui->lineEditAddress, false, true);
-            emit message("", tr("Invalid Contact Address"), CClientUIInterface::MSG_INFORMATION_SNACK, nullptr);
+            inform(tr("Invalid Contact Address"));
             return;
         }
 
         CBitcoinAddress pivAdd = CBitcoinAddress(address.toUtf8().constData());
         if (walletModel->isMine(pivAdd)) {
             setCssEditLine(ui->lineEditAddress, false, true);
-            emit message("", tr("Cannot store your own address as contact"), CClientUIInterface::MSG_INFORMATION_SNACK, nullptr);
+            inform(tr("Cannot store your own address as contact"));
             return;
         }
 
@@ -224,9 +222,9 @@ void AddressesWidget::onStoreContactClicked(){
                 ui->listAddresses->setVisible(true);
             }
 
-            emit message("", tr("New Contact Stored"), CClientUIInterface::MSG_INFORMATION_SNACK, nullptr);
+            inform(tr("New Contact Stored"));
         } else {
-            emit message("", tr("Error Storing Contact"), CClientUIInterface::MSG_INFORMATION_SNACK, nullptr);
+            inform(tr("Error Storing Contact"));
         }
 
     }

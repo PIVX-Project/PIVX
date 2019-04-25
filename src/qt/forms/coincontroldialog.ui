@@ -284,13 +284,13 @@
               </size>
              </property>
              <property name="text">
-              <string>(un)select all</string>
+              <string>Select all</string>
              </property>
              <property name="checkable">
               <bool>true</bool>
              </property>
              <property name="checked">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="autoExclusive">
               <bool>false</bool>
@@ -337,7 +337,7 @@
               </size>
              </property>
              <property name="text">
-              <string>toggle lock state</string>
+              <string>Toggle lock state</string>
              </property>
              <property name="checkable">
               <bool>true</bool>

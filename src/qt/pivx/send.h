@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPushButton>
 
+#include "qt/pivx/pwidget.h"
 #include "qt/pivx/contactsdropdown.h"
 #include "qt/pivx/sendmultirow.h"
 #include "walletmodel.h"
@@ -21,7 +22,7 @@ class send;
 class QPushButton;
 }
 
-class SendWidget : public QWidget
+class SendWidget : public PWidget
 {
     Q_OBJECT
 
@@ -31,11 +32,10 @@ public:
 
     void addEntry();
 
-    void setClientModel(ClientModel* clientModel);
-    void setModel(WalletModel* model);
+    void loadClientModel() override;
+    void loadWalletModel() override;
 
 signals:
-    void message(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
     /** Signal raised when a URI was entered or dragged to the GUI */
     void receivedURI(const QString& uri);
 
@@ -46,7 +46,7 @@ public slots:
     void onOpenUriClicked();
 
 protected:
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
 
 private slots:
     void onPIVSelected(bool _isPIV);
@@ -59,12 +59,8 @@ private slots:
     void refreshView();
 private:
     Ui::send *ui;
-    PIVXGUI* window;
     QPushButton *coinIcon;
     QPushButton *btnContacts;
-
-    ClientModel* clientModel = nullptr;
-    WalletModel* walletModel = nullptr;
 
     QList<SendMultiRow*> entries;
     CoinControlDialog *coinControlDialog = nullptr;

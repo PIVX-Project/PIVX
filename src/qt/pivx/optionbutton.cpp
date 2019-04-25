@@ -15,6 +15,7 @@ OptionButton::OptionButton(QWidget *parent) :
     ui->layoutOptions2->setContentsMargins(0,10,10,10);
 
     ui->labelCircle->setProperty("cssClass", "btn-options-indicator");
+    connect(ui->labelArrow3, &QPushButton::clicked, [this](){setChecked(!ui->labelArrow3->isChecked());});
     setActive(false);
 }
 

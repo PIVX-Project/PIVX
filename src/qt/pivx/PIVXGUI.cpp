@@ -172,6 +172,10 @@ void PIVXGUI::connectActions() {
     });
 
     connect(settingsWidget, &SettingsWidget::showHide, this, &PIVXGUI::showHide);
+    connect(sendWidget, &SendWidget::showHide, this, &PIVXGUI::showHide);
+    connect(receiveWidget, &ReceiveWidget::showHide, this, &PIVXGUI::showHide);
+    connect(addressesWidget, &AddressesWidget::showHide, this, &PIVXGUI::showHide);
+    connect(privacyWidget, &PrivacyWidget::showHide, this, &PIVXGUI::showHide);
     connect(settingsWidget, &SettingsWidget::execDialog, this, &PIVXGUI::execDialog);
 }
 
@@ -497,7 +501,7 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     topBar->setWalletModel(walletModel);
     dashboard->setWalletModel(walletModel);
     receiveWidget->setWalletModel(walletModel);
-    sendWidget->setModel(walletModel);
+    sendWidget->setWalletModel(walletModel);
     addressesWidget->setWalletModel(walletModel);
     privacyWidget->setWalletModel(walletModel);
     settingsWidget->setWalletModel(walletModel);
@@ -506,6 +510,7 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     connect(topBar, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
     connect(privacyWidget, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
     connect(sendWidget, &SendWidget::message,this, &PIVXGUI::message);
+    connect(receiveWidget, &ReceiveWidget::message,this, &PIVXGUI::message);
     connect(addressesWidget, &AddressesWidget::message,this, &PIVXGUI::message);
     connect(settingsWidget, &SettingsWidget::message, this, &PIVXGUI::message);
 

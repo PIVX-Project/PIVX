@@ -18,9 +18,8 @@
 #include <iostream>
 
 SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
-    QWidget(parent),
+    PWidget(_window, parent),
     ui(new Ui::send),
-    window(_window),
     coinIcon(new QPushButton()),
     btnContacts(new QPushButton())
 {
@@ -163,23 +162,18 @@ void SendWidget::refreshView(){
     ui->labelAmountRemaining->setText("1000 zPIV");
 }
 
-void SendWidget::setClientModel(ClientModel* clientModel)
-{
-    this->clientModel = clientModel;
-
+void SendWidget::loadClientModel(){
     if (clientModel) {
         // TODO: Complete me..
         //connect(clientModel, SIGNAL(numBlocksChanged(int)), this, SLOT(updateSmartFeeLabel()));
     }
 }
 
-void SendWidget::setModel(WalletModel* model) {
-    this->walletModel = model;
-
-    if (model && model->getOptionsModel()) {
+void SendWidget::loadWalletModel() {
+    if (walletModel && walletModel->getOptionsModel()) {
         for(SendMultiRow *entry : entries){
             if(entry){
-                entry->setModel(model);
+                entry->setModel(walletModel);
             }
         }
 
@@ -226,7 +220,7 @@ void SendWidget::addEntry(){
             entry->setNumber(1);
         }else if(entries.length() == MAX_SEND_POPUP_ENTRIES){
             // TODO: Snackbar notifying that it surpassed the max amount of entries
-            emit message("", tr("Maximum amount of outputs reached"), CClientUIInterface::MSG_INFORMATION_SNACK);
+            inform(tr("Maximum amount of outputs reached"));
             return;
         }
 
@@ -270,14 +264,14 @@ void SendWidget::onSendClicked(){
         if(entry && entry->validate()) {
             recipients.append(entry->getValue());
         }else{
-            emit message("", tr("Invalid entry"),CClientUIInterface::MSG_INFORMATION_SNACK);
+            inform(tr("Invalid entry"));
             return;
         }
 
     }
 
     if (recipients.isEmpty()) {
-        emit message("", tr("No set recipients"),CClientUIInterface::MSG_INFORMATION_SNACK);
+        inform(tr("No set recipients"));
         return;
     }
 
@@ -289,7 +283,7 @@ void SendWidget::onSendClicked(){
     // will call relock
     if(!GUIUtil::requestUnlock(walletModel, sendPiv ? AskPassphraseDialog::Context::Send_PIV : AskPassphraseDialog::Context::Send_zPIV, true)){
         // Unlock wallet was cancelled
-        emit message("", tr("Cannot send, wallet locked"),CClientUIInterface::MSG_INFORMATION_SNACK);
+        inform(tr("Cannot send, wallet locked"));
         return;
     }
 
@@ -315,14 +309,14 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
     );
 
     if (prepareStatus.status != WalletModel::OK) {
-        emit message("", tr("Prepare status failed.."),CClientUIInterface::MSG_INFORMATION_SNACK);
+        inform(tr("Prepare status failed.."));
         return false;
     }
 
     CAmount txFee = currentTransaction.getTransactionFee();
     CAmount totalAmount = currentTransaction.getTotalTransactionAmount() + txFee;
 
-    window->showHide(true);
+    showHideOp(true);
     TxDetailDialog* dialog = new TxDetailDialog(window);
     dialog->setDisplayUnit(walletModel->getOptionsModel()->getDisplayUnit());
     dialog->setData(walletModel, currentTransaction);
@@ -338,7 +332,7 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
         if (sendStatus.status == WalletModel::OK) {
             CoinControlDialog::coinControl->UnSelectAll();
             clearAll();
-            emit message("", tr("Transaction sent"),CClientUIInterface::MSG_INFORMATION_SNACK);
+            inform(tr("Transaction sent"));
             return true;
         }
 
@@ -402,7 +396,7 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
             changeAddress
     )
             ) {
-        emit message("", tr("zPIV transaction sent!"), CClientUIInterface::MSG_INFORMATION_SNACK);
+        inform(tr("zPIV transaction sent!"));
         clearAll();
         return true;
     } else {
@@ -523,7 +517,7 @@ void SendWidget::processSendCoinsReturn(const WalletModel::SendCoinsReturn& send
 
 
 void SendWidget::onChangeAddressClicked(){
-    window->showHide(true);
+    showHideOp(true);
     SendChangeAddressDialog* dialog = new SendChangeAddressDialog(window);
     if(!boost::get<CNoDestination>(&CoinControlDialog::coinControl->destChange)){
         dialog->setAddress(QString::fromStdString(CBitcoinAddress(CoinControlDialog::coinControl->destChange).ToString()));
@@ -535,7 +529,7 @@ void SendWidget::onChangeAddressClicked(){
                 CoinControlDialog::coinControl->destChange = CBitcoinAddress(ret.toStdString()).Get();
                 ui->btnChangeAddress->setActive(true);
             }else{
-                emit message("", tr("Invalid change address"), CClientUIInterface::MSG_INFORMATION_SNACK);
+                inform(tr("Invalid change address"));
                 ui->btnChangeAddress->setActive(false);
             }
         }
@@ -544,15 +538,16 @@ void SendWidget::onChangeAddressClicked(){
 }
 
 void SendWidget::onOpenUriClicked(){
-    OpenURIDialog dlg(this);
-    if (dlg.exec()) {
-        emit receivedURI(dlg.getURI());
+    showHideOp(true);
+    OpenURIDialog *dlg = new OpenURIDialog(this);
+    if (openDialogWithOpaqueBackgroundY(dlg, window, 3, 5)) {
+        emit receivedURI(dlg->getURI());
     }
-    dlg.deleteLater();
+    dlg->deleteLater();
 }
 
 void SendWidget::onChangeCustomFeeClicked(){
-    window->showHide(true);
+    showHideOp(true);
     SendCustomFeeDialog* dialog = new SendCustomFeeDialog(window);
     openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
     dialog->deleteLater();
@@ -568,7 +563,7 @@ void SendWidget::onCoinControlClicked()
         coinControlDialog->exec();
         ui->btnCoinControl->setActive(CoinControlDialog::coinControl->HasSelected());
     }else{
-        window->showHide(true);
+        showHideOp(true);
         CoinControlZpivDialog* dialog = new CoinControlZpivDialog(window);
         openDialogWithOpaqueBackgroundFullScreen(dialog, window);
     }

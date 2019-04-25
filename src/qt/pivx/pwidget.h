@@ -31,13 +31,14 @@ protected slots:
     void changeTheme(bool isLightTheme, QString &theme);
 
 protected:
-    PIVXGUI* window;
-    ClientModel* clientModel;
-    WalletModel* walletModel;
+    PIVXGUI* window = nullptr;
+    ClientModel* clientModel = nullptr;
+    WalletModel* walletModel = nullptr;
 
     virtual void loadClientModel();
     virtual void loadWalletModel();
 
+    void showHideOp(bool show);
     void inform(const QString& message);
     void warn(const QString& title, const QString& message);
     void ask(const QString& title, const QString& message, bool* ret);

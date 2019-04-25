@@ -1,6 +1,7 @@
 #ifndef ADDRESSESWIDGET_H
 #define ADDRESSESWIDGET_H
 
+#include "qt/pivx/pwidget.h"
 #include "addresstablemodel.h"
 #include "tooltipmenu.h"
 #include "furabstractlistitemdelegate.h"
@@ -21,7 +22,7 @@ QT_BEGIN_NAMESPACE
 class QModelIndex;
 QT_END_NAMESPACE
 
-class AddressesWidget : public QWidget
+class AddressesWidget : public PWidget
 {
     Q_OBJECT
 
@@ -29,7 +30,7 @@ public:
     explicit AddressesWidget(PIVXGUI* _window, QWidget *parent = nullptr);
     ~AddressesWidget();
 
-    void setWalletModel(WalletModel *model);
+    void loadWalletModel() override;
 
     void onNewContactClicked();
 
@@ -43,9 +44,6 @@ private slots:
     void changeTheme(bool isLightTheme, QString &theme);
 private:
     Ui::AddressesWidget *ui;
-
-    PIVXGUI* window;
-    WalletModel *walletModel;
 
     FurAbstractListItemDelegate* delegate = nullptr;
     AddressTableModel* addressTablemodel = nullptr;
