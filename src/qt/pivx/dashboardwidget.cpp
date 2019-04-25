@@ -33,9 +33,8 @@
 #include "moc_dashboardwidget.cpp"
 
 DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::DashboardWidget),
-    window(_window)
+    PWidget(_window, parent),
+    ui(new Ui::DashboardWidget)
 {
     ui->setupUi(this);
 
@@ -276,12 +275,15 @@ void DashboardWidget::changeChartColors(){
      */
 }
 
-void DashboardWidget::setWalletModel(WalletModel* model){
-    walletModel = model;
-    if (model && model->getOptionsModel()) {
-        txModel = model->getTransactionTableModel();
+void DashboardWidget::loadWalletModel(){
+    if (walletModel && walletModel->getOptionsModel()) {
+        txModel = walletModel->getTransactionTableModel();
         // Set up transaction list
         filter = new TransactionFilterProxy();
+        filter->setDynamicSortFilter(true);
+        filter->setSortCaseSensitivity(Qt::CaseInsensitive);
+        filter->setFilterCaseSensitivity(Qt::CaseInsensitive);
+
         filter->setSourceModel(txModel);
         filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
         txHolder->setFilter(filter);
@@ -301,7 +303,7 @@ void DashboardWidget::setWalletModel(WalletModel* model){
 }
 
 void DashboardWidget::openFAQ(){
-    window->showHide(true);
+    showHideOp(true);
     SettingsFaqWidget* dialog = new SettingsFaqWidget(window);
     openDialogWithOpaqueBackgroundFullScreen(dialog, window);
 }

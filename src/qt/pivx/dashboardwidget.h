@@ -1,6 +1,7 @@
 #ifndef DASHBOARDWIDGET_H
 #define DASHBOARDWIDGET_H
 
+#include "qt/pivx/pwidget.h"
 #include "qt/pivx/furabstractlistitemdelegate.h"
 #include "qt/pivx/furlistrow.h"
 #include "transactiontablemodel.h"
@@ -45,7 +46,7 @@ QT_BEGIN_NAMESPACE
 class QModelIndex;
 QT_END_NAMESPACE
 
-class DashboardWidget : public QWidget
+class DashboardWidget : public PWidget
 {
     Q_OBJECT
 
@@ -53,7 +54,7 @@ public:
     explicit DashboardWidget(PIVXGUI* _window, QWidget *parent = nullptr);
     ~DashboardWidget();
 
-    void setWalletModel(WalletModel *model);
+    void loadWalletModel() override ;
     void loadChart();
 private slots:
     void handleTransactionClicked(const QModelIndex &index);
@@ -67,13 +68,10 @@ private slots:
     void openFAQ();
 private:
     Ui::DashboardWidget *ui;
-    PIVXGUI* window;
     // Painter delegate
     FurAbstractListItemDelegate* txViewDelegate;
     TransactionFilterProxy* filter;
     TxViewHolder* txHolder;
-    // Model
-    WalletModel* walletModel;
     TransactionTableModel* txModel;
     int nDisplayUnit = -1;
 

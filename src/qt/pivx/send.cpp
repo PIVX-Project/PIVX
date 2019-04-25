@@ -558,7 +558,7 @@ void SendWidget::onChangeAddressClicked(){
 
 void SendWidget::onOpenUriClicked(){
     showHideOp(true);
-    OpenURIDialog *dlg = new OpenURIDialog(this);
+    OpenURIDialog *dlg = new OpenURIDialog(window);
     if (openDialogWithOpaqueBackgroundY(dlg, window, 3, 5)) {
         emit receivedURI(dlg->getURI());
     }
