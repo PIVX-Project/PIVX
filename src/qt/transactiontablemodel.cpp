@@ -434,7 +434,10 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord* wtx, b
     case TransactionRecord::ZerocoinSpend_Change_zPiv:
     case TransactionRecord::StakeZPIV:
         return tr("Anonymous");
-    case TransactionRecord::SendToSelf:
+    case TransactionRecord::SendToSelf: {
+        QString label = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(wtx->address));
+        return label.isEmpty() ? "" : label;
+    }
     default:
         return tr("(n/a)") + watchAddress;
     }

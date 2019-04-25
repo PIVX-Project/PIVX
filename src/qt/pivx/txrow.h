@@ -28,10 +28,12 @@ public:
     void setDate(QDateTime);
     void setLabel(QString);
     void setAmount(QString);
-    void setType(bool isLightTheme, TransactionRecord::Type type);
+    void setType(bool isLightTheme, TransactionRecord::Type type, bool isConfirmed);
+    void setConfirmStatus(bool isConfirmed);
 
 private:
     Ui::TxRow *ui;
+    bool isConfirmed = false;
 };
 
 #endif // TXROW_H

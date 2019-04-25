@@ -616,6 +616,11 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     font-size:16px;
 }
 
+*[cssClass="text-list-body-unconfirmed"] {
+    color:#B6B6B6;
+    font-size:16px;
+}
+
 *[cssClass="text-list-body2"] {
     color:#707070;
     font-size:15.5px;
@@ -641,6 +646,10 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     color:#707070;
 }
 
+*[cssClass="text-list-caption-unconfirmed"] {
+    color:#B6B6B6;
+}
+
 *[cssClass="text-list-caption-grey"] {
     color:#707070;
     font-size:12px;
@@ -655,6 +664,11 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="text-list-amount-send"] {
     color:#f84444;
+    font-size:16px;
+}
+
+*[cssClass="text-list-amount-unconfirmed"] {
+    color:#B6B6B6;
     font-size:16px;
 }
 

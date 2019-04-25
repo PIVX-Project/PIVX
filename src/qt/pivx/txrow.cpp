@@ -9,11 +9,18 @@ TxRow::TxRow(bool isLightTheme, QWidget *parent) :
     ui(new Ui::TxRow)
 {
     ui->setupUi(this);
-
-    ui->lblAddress->setProperty("cssClass", "text-list-body1");
-    ui->lblDate->setProperty("cssClass", "text-list-caption");
-
+    setConfirmStatus(true);
     updateStatus(isLightTheme, false, false);
+}
+
+void TxRow::setConfirmStatus(bool isConfirm){
+    if(isConfirm){
+        ui->lblAddress->setProperty("cssClass", "text-list-body1");
+        ui->lblDate->setProperty("cssClass", "text-list-caption");
+    }else{
+        ui->lblAddress->setProperty("cssClass", "text-list-body-unconfirmed");
+        ui->lblDate->setProperty("cssClass","text-list-caption-unconfirmed");
+    }
 }
 
 void TxRow::updateStatus(bool isLightTheme, bool isHover, bool isSelected){
@@ -36,7 +43,7 @@ void TxRow::setAmount(QString str){
 }
 
 // TODO: Agregar send to zPIV and receive zPIV icons..
-void TxRow::setType(bool isLightTheme, TransactionRecord::Type type){
+void TxRow::setType(bool isLightTheme, TransactionRecord::Type type, bool isConfirmed){
     QString path;
     QString css;
     switch (type) {
@@ -74,6 +81,13 @@ void TxRow::setType(bool isLightTheme, TransactionRecord::Type type){
             path = ":/icons/tx_inout";
             break;
     }
+    if (!isConfirmed){
+        css = "text-list-amount-unconfirmed";
+        setConfirmStatus(false);
+    }else{
+        setConfirmStatus(true);
+    }
+
     if (!isLightTheme){
         path += "-dark";
     }
