@@ -89,7 +89,7 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool fMultisigEnabled) : Q
     ui->labelCoinControlAfterFee->setProperty("cssClass", "text-main-purple");
 
     ui->groupBox_2->setProperty("cssClass", "group-box");
-    ui->treeWidget->setProperty("cssClass", "table-view");
+    ui->treeWidget->setProperty("cssClass", "table-tree");
     ui->labelLocked->setProperty("cssClass", "text-main-purple");
 
     // Buttons

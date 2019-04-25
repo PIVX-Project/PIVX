@@ -237,6 +237,10 @@
         <file alias="ic-transaction-received">pivx/res/img/ic-transaction-received.svg</file>
         <file alias="ic-transaction-sent">pivx/res/img/ic-transaction-sent.svg</file>
         <file alias="ic-transaction-staked">pivx/res/img/ic-transaction-staked.svg</file>
+        <file alias="ic-transaction-mint-inactive">pivx/res/img/ic-transaction-mint-inactive.svg</file>
+        <file alias="ic-transaction-received-inactive">pivx/res/img/ic-transaction-received-inactive.svg</file>
+        <file alias="ic-transaction-sent-inactive">pivx/res/img/ic-transaction-sent-inactive.svg</file>
+        <file alias="ic-transaction-staked-inactive">pivx/res/img/ic-transaction-staked-inactive.svg</file>
         <file alias="ic-unlock-staking">pivx/res/img/ic-unlock-staking.svg</file>
         <file alias="ic-update-liliac">pivx/res/img/ic-update-liliac.svg</file>
         <file alias="ic-update">pivx/res/img/ic-update.svg</file>
