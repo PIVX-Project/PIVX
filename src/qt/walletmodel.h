@@ -151,6 +151,9 @@ public:
     void decryptKey(const std::vector<unsigned char>& crypted, const std::string& slt, const std::string& pwd, CKey& key);
     void emitBalanceChanged(); // Force update of UI-elements even when no values have changed
 
+    // return minted zPIV
+    bool getMint(const uint256& hashSerial, CZerocoinMint& mint);
+
     // Check address for validity
     bool validateAddress(const QString& address);
 

@@ -3,7 +3,6 @@
 
 #include "transactiontablemodel.h"
 #include "transactionrecord.h"
-#include "bitcoingui.h"
 #include <QModelIndex>
 #include <iostream>
 

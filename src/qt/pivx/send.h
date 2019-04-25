@@ -9,6 +9,7 @@
 #include "qt/pivx/sendmultirow.h"
 #include "walletmodel.h"
 #include "coincontroldialog.h"
+#include "zpivcontroldialog.h"
 
 static const int MAX_SEND_POPUP_ENTRIES = 8;
 

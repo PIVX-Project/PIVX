@@ -28,7 +28,6 @@ ZPivControlDialog::ZPivControlDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     setMints.clear();
-    privacyDialog = (PrivacyDialog*)parent;
 
     // click on checkbox
     connect(ui->treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this, SLOT(updateSelection(QTreeWidgetItem*, int)));
@@ -192,7 +191,7 @@ void ZPivControlDialog::updateLabels()
     ui->labelQuantity_int->setText(QString::number(setSelectedMints.size()));
 
     //update PrivacyDialog labels
-    privacyDialog->setZPivControlLabels(nAmount, setSelectedMints.size());
+    //privacyDialog->setZPivControlLabels(nAmount, setSelectedMints.size());
 }
 
 std::vector<CMintMeta> ZPivControlDialog::GetSelectedMints()

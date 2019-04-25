@@ -248,6 +248,10 @@ void WalletModel::updateMultiSigFlag(bool fHaveMultiSig)
     emit notifyMultiSigChanged(fHaveMultiSig);
 }
 
+bool WalletModel::getMint(const uint256& hashSerial, CZerocoinMint& mint){
+    return wallet->GetMint(hashSerial, mint);
+}
+
 bool WalletModel::validateAddress(const QString& address)
 {
     CBitcoinAddress addressParsed(address.toStdString());

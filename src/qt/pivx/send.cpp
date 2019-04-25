@@ -12,7 +12,9 @@
 #include "addresstablemodel.h"
 #include "coincontrol.h"
 #include "script/standard.h"
+#include <primitives/deterministicmint.h>
 #include "openuridialog.h"
+#include "zpivcontroldialog.h"
 
 
 #include <iostream>
@@ -358,6 +360,23 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
         outputs.push_back(std::pair<CBitcoinAddress*, CAmount>(new CBitcoinAddress(rec.address.toStdString()),rec.amount));
     }
 
+    // TODO: Complete me..
+    // use mints from zPIV selector if applicable
+    vector<CMintMeta> vMintsToFetch;
+    vector<CZerocoinMint> vMintsSelected;
+    if (!ZPivControlDialog::setSelectedMints.empty()) {
+        vMintsToFetch = ZPivControlDialog::GetSelectedMints();
+
+        for (auto& meta : vMintsToFetch) {
+            CZerocoinMint mint;
+            if (!walletModel->getMint(meta.hashSerial, mint)){
+                inform(tr("Coin control mint not found"));
+                return false;
+            }
+            vMintsSelected.emplace_back(mint);
+        }
+    }
+
     // TODO: add confirm dialog..
     QString sendBody = outputs.size() == 1 ?
             tr("Sending %1 to address %2\n")
@@ -377,7 +396,6 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
 
     if(!ret) return false;
 
-    vector <CZerocoinMint> vMintsSelected;
     CZerocoinSpendReceipt receipt;
 
     std::string changeAddress = "";
@@ -397,6 +415,7 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
     )
             ) {
         inform(tr("zPIV transaction sent!"));
+        ZPivControlDialog::setSelectedMints.clear();
         clearAll();
         return true;
     } else {
@@ -563,9 +582,10 @@ void SendWidget::onCoinControlClicked()
         coinControlDialog->exec();
         ui->btnCoinControl->setActive(CoinControlDialog::coinControl->HasSelected());
     }else{
-        showHideOp(true);
-        CoinControlZpivDialog* dialog = new CoinControlZpivDialog(window);
-        openDialogWithOpaqueBackgroundFullScreen(dialog, window);
+        ZPivControlDialog* zPivControl = new ZPivControlDialog(this);
+        zPivControl->setModel(walletModel);
+        zPivControl->exec();
+        ui->btnCoinControl->setActive(!ZPivControlDialog::setSelectedMints.empty());
     }
 }
 
