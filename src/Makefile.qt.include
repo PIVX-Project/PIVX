@@ -550,18 +550,22 @@ RES_ICONS = \
   qt/pivx/res/img/ic-check-box.svg \
   qt/pivx/res/img/ic-label-liliac.svg \
   qt/pivx/res/img/ic-transaction-mint.svg \
+  qt/pivx/res/img/ic-transaction-mint-inactive.svg \
   qt/pivx/res/img/img-qr.svg \
   qt/pivx/res/img/ic-check-connect-off.svg \
   qt/pivx/res/img/ic-label.svg \
   qt/pivx/res/img/ic-transaction-received.svg \
+  qt/pivx/res/img/ic-transaction-received-inactive.svg \
   qt/pivx/res/img/img-welcome-step1.png \
   qt/pivx/res/img/ic-check-connect.svg \
   qt/pivx/res/img/ic-menu-hover.svg \
   qt/pivx/res/img/ic-transaction-sent.svg \
+  qt/pivx/res/img/ic-transaction-sent-inactive.svg \
   qt/pivx/res/img/img-welcome-step2.png \
   qt/pivx/res/img/ic-check-dark.svg \
   qt/pivx/res/img/ic-mint.svg \
   qt/pivx/res/img/ic-transaction-staked.svg \
+  qt/pivx/res/img/ic-transaction-staked-inactive.svg \
   qt/pivx/res/img/img-welcome-step3.png \
   qt/pivx/res/img/ic-check-liliac-on.svg \
   qt/pivx/res/img/ic-nav-address-active.svg \

@@ -2556,9 +2556,99 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     background-color:#FFFFFF;
     background-position:center;
     background-repeat:no-repeat;
-    font-size:12px;
+    font-size:14px;
     border-radius:0px;
     color: #707070;
+}
+
+#treeWidget::indicator:first:checked{
+    image: url("://ic-check-active");
+}
+#treeWidget::indicator:middle:checked{
+    image: url("://ic-check-active");
+}
+
+#treeWidget::indicator {
+    width: 24px;
+    height: 24px;
+}
+
+#treeWidget::indicator:unchecked {
+    image: url("://ic-check-box");
+}
+
+#treeWidget::indicator:checked {
+    image: url("://ic-check-active");
+}
+
+#treeWidget::item {
+    border:none;
+    border-bottom: 1px solid #bababa;
+    border-radius:0px;
+    color: #707070;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    background-color:rgba(255,255,255,100);
+}
+
+#treeWidget::branch:closed:has-children:has-siblings {
+    border-image: none;
+    background-color:rgba(255,255,255,100);
+    image: url("://ic-arrow-drop-up");
+}
+
+#treeWidget::branch:open:has-children:!has-siblings,
+#treeWidget::branch:open:has-children:has-siblings {
+    border-image: none;
+    background-color:rgba(255,255,255,100);
+    image: url("://ic-arrow-drop-down");
+}
+
+#treeWidget::item:hover {
+    border:none;
+    border-bottom: 1px solid #bababa;
+    border-radius:0px;
+    color: #707070;
+    background-color:#26bababa;
+}
+
+#treeWidget::item:selected {
+    border:none;
+    border-bottom: 1px solid #bababa;
+    border-radius:0px;
+    color: #707070;
+    background-color:#33b088ff;
+}
+
+
+#treeWidget::item:hover:selected {
+    border:none;
+    border-bottom: 1px solid #bababa;
+    border-radius:0px;
+    color: #707070;
+    background-color:#33b088ff;
+}
+
+
+#treeWidget::branch {
+    background-color: #FFFFFF;
+}
+
+#treeWidget::branch:selected {
+    background-color:#33b088ff;
+}
+
+#treeWidget::branch:!selected {
+    background-color:#33b088ff;
+}
+
+#treeWidget::branch:hover {
+    background-color:#26bababa;
+}
+
+#treeWidget::branch:!has-children{
+
+    background-color: #FFFFFF;
 }
 
 QHeaderView::section {
@@ -2573,19 +2663,30 @@ QHeaderView::section {
     background-color:#FFFFFF;
     background-position:center;
     background-repeat:no-repeat;
-    font-size:12px;
+    font-size:14px;
     border-radius:0px;
-    color: #B088FF;
+    color: #707070;
 }
 
-QTreeWidget::item:hover,QTreeWidget::item:hover:selected {
+QTreeWidget::item:hover {
     border:none;
-    border-radius:5px;
+    border-radius:0px;
+    color: #707070;
     background-color:rgba(255,255,255,100);
 }
 
+
+QTreeWidget::item:hover:selected {
+    border:none;
+    border-radius:0px;
+    color: #707070;
+    background-color:rgba(255,255,255,100);
+}
+
+
 QTreeWidget::item:selected {
     border:none;
+    color: #707070;
     background-color:rgba(255,255,255,0);
 }
 
