@@ -2556,6 +2556,8 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     background-color:#FFFFFF;
     background-position:center;
     background-repeat:no-repeat;
+    selection-background-color:#33b088ff; 
+    selection-color: white; 
     font-size:14px;
     border-radius:0px;
     color: #707070;
@@ -2571,6 +2573,10 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 #treeWidget::indicator {
     width: 24px;
     height: 24px;
+}
+
+#treeWidget::indicator:indeterminate {
+    image: url("://ic-check-box-indeterminate");
 }
 
 #treeWidget::indicator:unchecked {
@@ -2591,17 +2597,26 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     background-color:rgba(255,255,255,100);
 }
 
+#treeWidget::branch:closed:has-children:!has-siblings {
+    border-image: none;
+    background-color:rgba(255,255,255,100);
+    image: url("://ic-arrow-drop-up");
+    border-bottom: 1px solid #bababa;
+}
+
 #treeWidget::branch:closed:has-children:has-siblings {
     border-image: none;
     background-color:rgba(255,255,255,100);
     image: url("://ic-arrow-drop-up");
+    border-bottom: 1px solid #bababa;
 }
+
 
 #treeWidget::branch:open:has-children:!has-siblings,
 #treeWidget::branch:open:has-children:has-siblings {
     border-image: none;
-    background-color:rgba(255,255,255,100);
     image: url("://ic-arrow-drop-down");
+    border-bottom: 1px solid #bababa;
 }
 
 #treeWidget::item:hover {
@@ -2632,6 +2647,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 #treeWidget::branch {
     background-color: #FFFFFF;
+    selection-background-color:#33b088ff;
 }
 
 #treeWidget::branch:selected {
@@ -2647,13 +2663,15 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 #treeWidget::branch:!has-children{
-
     background-color: #FFFFFF;
 }
 
 QHeaderView::section {
     background-color: #5c4b7d;
     color: #FFFFFF;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-size:14px;
     border:0px solid #5c4b7d;
 }
 
@@ -2666,28 +2684,6 @@ QHeaderView::section {
     font-size:14px;
     border-radius:0px;
     color: #707070;
-}
-
-QTreeWidget::item:hover {
-    border:none;
-    border-radius:0px;
-    color: #707070;
-    background-color:rgba(255,255,255,100);
-}
-
-
-QTreeWidget::item:hover:selected {
-    border:none;
-    border-radius:0px;
-    color: #707070;
-    background-color:rgba(255,255,255,100);
-}
-
-
-QTreeWidget::item:selected {
-    border:none;
-    color: #707070;
-    background-color:rgba(255,255,255,0);
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH

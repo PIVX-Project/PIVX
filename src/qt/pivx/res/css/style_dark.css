@@ -2512,6 +2512,8 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     background-color:#FFFFFF;
     background-position:center;
     background-repeat:no-repeat;
+    selection-background-color:#33b088ff; 
+    selection-color: white; 
     font-size:14px;
     border-radius:0px;
     color: #707070;
@@ -2527,6 +2529,10 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 #treeWidget::indicator {
     width: 24px;
     height: 24px;
+}
+
+#treeWidget::indicator:indeterminate {
+    image: url("://ic-check-box-indeterminate");
 }
 
 #treeWidget::indicator:unchecked {
@@ -2547,11 +2553,18 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     background-color:rgba(255,255,255,100);
 }
 
+#treeWidget::branch:closed:has-children:!has-siblings {
+    border-image: none;
+    background-color:rgba(255,255,255,100);
+    image: url("://ic-arrow-drop-up");
+}
+
 #treeWidget::branch:closed:has-children:has-siblings {
     border-image: none;
     background-color:rgba(255,255,255,100);
     image: url("://ic-arrow-drop-up");
 }
+
 
 #treeWidget::branch:open:has-children:!has-siblings,
 #treeWidget::branch:open:has-children:has-siblings {
@@ -2588,6 +2601,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 #treeWidget::branch {
     background-color: #FFFFFF;
+    selection-background-color:#33b088ff;
 }
 
 #treeWidget::branch:selected {
@@ -2622,28 +2636,6 @@ QHeaderView::section {
     font-size:14px;
     border-radius:0px;
     color: #707070;
-}
-
-QTreeWidget::item:hover {
-    border:none;
-    border-radius:0px;
-    color: #707070;
-    background-color:rgba(255,255,255,100);
-}
-
-
-QTreeWidget::item:hover:selected {
-    border:none;
-    border-radius:0px;
-    color: #707070;
-    background-color:rgba(255,255,255,100);
-}
-
-
-QTreeWidget::item:selected {
-    border:none;
-    color: #707070;
-    background-color:rgba(255,255,255,0);
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
