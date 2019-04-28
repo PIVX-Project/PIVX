@@ -205,8 +205,12 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool fMultisigEnabled) : Q
 
     // restore list mode and sortorder as a convenience feature
     QSettings settings;
-    if (settings.contains("nCoinControlMode") && !settings.value("nCoinControlMode").toBool())
+    if (settings.contains("nCoinControlMode") && !settings.value("nCoinControlMode").toBool()) {
+        ui->radioTreeMode->setChecked(true);
         ui->radioTreeMode->click();
+    }else{
+        ui->radioListMode->setChecked(true);
+    }
     if (settings.contains("nCoinControlSortColumn") && settings.contains("nCoinControlSortOrder"))
         sortView(settings.value("nCoinControlSortColumn").toInt(), ((Qt::SortOrder)settings.value("nCoinControlSortOrder").toInt()));
 }
@@ -773,7 +777,7 @@ void CoinControlDialog::updateView()
 
     ui->treeWidget->clear();
     ui->treeWidget->setEnabled(false); // performance, otherwise updateLabels would be called for every checked checkbox
-    ui->treeWidget->setAlternatingRowColors(!treeMode);
+    //ui->treeWidget->setAlternatingRowColors(!treeMode);
     QFlags<Qt::ItemFlag> flgCheckbox = Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable;
     QFlags<Qt::ItemFlag> flgTristate = Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsTristate;
 

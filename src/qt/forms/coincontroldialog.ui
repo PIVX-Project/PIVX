@@ -424,6 +424,9 @@
       </item>
       <item>
        <widget class="CoinControlTreeWidget" name="treeWidget">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="contextMenuPolicy">
          <enum>Qt::CustomContextMenu</enum>
         </property>
