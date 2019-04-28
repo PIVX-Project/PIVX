@@ -1,5 +1,6 @@
 #include "qt/pivx/optionbutton.h"
 #include "qt/pivx/forms/ui_optionbutton.h"
+#include "qt/pivx/qtutils.h"
 
 #include <QMouseEvent>
 
@@ -50,9 +51,11 @@ void OptionButton::setActive(bool isActive){
     if (isActive) {
         ui->layoutCircle->setVisible(true);
         ui->labelTitleChange->setProperty("cssClass", "btn-title-purple");
+        updateStyle(ui->labelTitleChange);
     } else {
         ui->layoutCircle->setVisible(false);
         ui->labelTitleChange->setProperty("cssClass", "btn-title-grey");
+        updateStyle(ui->labelTitleChange);
     }
 }
 
