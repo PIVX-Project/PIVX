@@ -27,6 +27,10 @@ void ExpandableButton::setButtonClassStyle(const char *name, const QVariant &val
     }
 }
 
+void ExpandableButton::setIcon(QString path){
+    ui->pushButton->setIcon(QIcon(path));
+}
+
 void ExpandableButton::setButtonText(const QString _text){
     this->text = _text;
     if(this->isExpanded){

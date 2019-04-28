@@ -23,6 +23,7 @@ public:
 
     void setButtonClassStyle(const char *name, const QVariant &value, bool forceUpdate = false);
     void setButtonText(const QString _text);
+    void setIcon(QString path);
 
     bool isChecked();
     void setChecked(bool check);

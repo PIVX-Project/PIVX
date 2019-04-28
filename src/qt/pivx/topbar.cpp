@@ -77,10 +77,10 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     ui->pushButtonPeers->setButtonClassStyle("cssClass", "btn-check-peers");
     ui->pushButtonPeers->setButtonText("No Online Peers");
 
-    ui->pushButtonConnection->setButtonClassStyle("cssClass", "btn-check-connect");
+    ui->pushButtonConnection->setButtonClassStyle("cssClass", "btn-check-connect-inactive");
     ui->pushButtonConnection->setButtonText("No Connection");
 
-    ui->pushButtonStack->setButtonClassStyle("cssClass", "btn-check-stack");
+    ui->pushButtonStack->setButtonClassStyle("cssClass", "btn-check-stack-inactive");
     ui->pushButtonStack->setButtonText("Staking Disabled");
 
     ui->pushButtonMint->setButtonClassStyle("cssClass", "btn-check-mint");
@@ -320,16 +320,33 @@ void TopBar::updateAutoMintStatus(){
 
 void TopBar::updateStakingStatus(){
     if (nLastCoinStakeSearchInterval) {
-        ui->pushButtonStack->setButtonText("Staking active");
-        ui->pushButtonStack->setChecked(true);
+        if (!ui->pushButtonStack->isChecked()) {
+            ui->pushButtonStack->setButtonText(tr("Staking active"));
+            ui->pushButtonStack->setChecked(true);
+            ui->pushButtonStack->setButtonClassStyle("cssClass", "btn-check-stack", true);
+        }
     }else{
-        ui->pushButtonStack->setButtonText("Staking not active");
-        ui->pushButtonStack->setChecked(false);
+        if (ui->pushButtonStack->isChecked()) {
+            ui->pushButtonStack->setButtonText(tr("Staking not active"));
+            ui->pushButtonStack->setChecked(false);
+            ui->pushButtonStack->setButtonClassStyle("cssClass", "btn-check-stack-inactive", true);
+        }
     }
 }
 
 void TopBar::setNumConnections(int count) {
-    ui->pushButtonConnection->setChecked(count > 0);
+    if(count > 0){
+        if(!ui->pushButtonConnection->isChecked()) {
+            ui->pushButtonConnection->setChecked(true);
+            ui->pushButtonConnection->setButtonClassStyle("cssClass", "btn-check-connect", true);
+        }
+    }else{
+        if(ui->pushButtonConnection->isChecked()) {
+            ui->pushButtonConnection->setChecked(false);
+            ui->pushButtonConnection->setButtonClassStyle("cssClass", "btn-check-connect-inactive", true);
+        }
+    }
+
     ui->pushButtonConnection->setButtonText(tr("%n active connection(s)", "", count));
 }
 
@@ -471,9 +488,6 @@ void TopBar::updateDisplayUnit()
             updateBalances(walletModel->getBalance(), walletModel->getUnconfirmedBalance(), walletModel->getImmatureBalance(),
                            walletModel->getZerocoinBalance(), walletModel->getUnconfirmedZerocoinBalance(), walletModel->getImmatureZerocoinBalance(),
                            walletModel->getWatchBalance(), walletModel->getWatchUnconfirmedBalance(), walletModel->getWatchImmatureBalance());
-
-        // TODO: Update txdelegate->unit with the current unit
-        //ui->listTransactions->update();
     }
 }
 
@@ -489,7 +503,6 @@ void TopBar::updateBalances(const CAmount& balance, const CAmount& unconfirmedBa
     // PIV Balance
     CAmount nTotalBalance = balance + unconfirmedBalance;
     CAmount pivAvailableBalance = balance - immatureBalance - nLockedBalance;
-    //CAmount nUnlockedBalance = nTotalBalance - nLockedBalance;
 
     // zPIV Balance
     CAmount matureZerocoinBalance = zerocoinBalance - unconfirmedZerocoinBalance - immatureZerocoinBalance;
