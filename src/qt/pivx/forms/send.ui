@@ -48,7 +48,7 @@
        <number>0</number>
       </property>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,6,0,1,0,0,0,0">
+       <layout class="QVBoxLayout" name="verticalLayout_22" stretch="0,0,6,0,1,0,0,0,0">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -226,7 +226,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,0,2">
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="4,0,2">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -243,7 +243,7 @@
            <number>0</number>
           </property>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout">
+           <layout class="QVBoxLayout" name="verticalLayout22">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -374,7 +374,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="horizontalLayout_20">
           <property name="spacing">
            <number>6</number>
           </property>
@@ -490,7 +490,7 @@
                </size>
               </property>
               <widget class="QWidget" name="page1">
-               <layout class="QVBoxLayout" name="verticalLayout_7" stretch="0">
+               <layout class="QVBoxLayout" name="verticalLayout_71" stretch="0">
                 <property name="spacing">
                  <number>6</number>
                 </property>

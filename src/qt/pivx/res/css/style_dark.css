@@ -838,6 +838,12 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border-radius:0;
 }
 
+QPushButton[cssClass="btn-menu"] {
+    qproperty-icon: url("://ic-menu-hover") off,
+                    url("://ic-menu-hover") on ;
+    qproperty-iconSize: 24px 24px;
+}
+
 
 QPushButton[cssClass="btn-watch-password"] {
     background: url(:/res/img/ic-watch-password-white.svg);
@@ -2601,7 +2607,6 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 #treeWidget::branch {
     background-color: #FFFFFF;
-    selection-background-color:#33b088ff;
 }
 
 #treeWidget::branch:selected {
@@ -2616,8 +2621,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     background-color:#26bababa;
 }
 
-#treeWidget::branch:!has-children{
-
+#treeWidget::branch:!has-children {
     background-color: #FFFFFF;
 }
 

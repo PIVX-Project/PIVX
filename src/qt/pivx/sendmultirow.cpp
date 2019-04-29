@@ -33,6 +33,9 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
     ui->lineEditDescription->setPlaceholderText("Add description");
     initCssEditLine(ui->lineEditDescription);
 
+    // Button menu
+    ui->btnMenu->setProperty("cssClass", "btn-menu");
+
     // Button Contact
     btnContact = ui->lineEditAddress->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
 

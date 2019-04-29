@@ -126,13 +126,10 @@
     <qresource prefix="/">
         <file alias="bg-splash">pivx/res/img/bg-splash.svg</file>
         <file alias="bg-splash-png">pivx/res/img/bg-splash.png</file>
-        <file alias="ic-check-sync">pivx/res/img/ic-check-sync.png</file>
-        <file alias="ic-coin-zpiv">pivx/res/img/ic-coin-zpiv.png</file>
         <file alias="img-logo-pivx-png">pivx/res/img/img-logo-pivx.png</file>
         <file alias="img-logo-pivx-2x">pivx/res/img/img-logo-pivx@2x.png</file>
         <file alias="img-logo-pivx-3x">pivx/res/img/img-logo-pivx@3x.png</file>
         <file alias="img-nav-logo-pivx">pivx/res/img/img-nav-logo-pivx.png</file>
-        <file alias="img-nav-logo">pivx/res/img/img-nav-logo.png</file>
         <file alias="img-qr-test-big">pivx/res/img/img-qr-test-big.png</file>
         <file alias="img-qr-test">pivx/res/img/img-qr-test.png</file>
         <file alias="img-welcome-step1">pivx/res/img/img-welcome-step1.png</file>

@@ -61,6 +61,7 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
     ui->comboBoxLanguage->setLineEdit(LanguageEdit);
 
     ui->comboBoxUnit->setProperty("cssClass", "btn-combo");
+    ui->comboBoxUnit->setView(new QListView());
     ui->comboBoxUnit->setModel(new BitcoinUnits(this));
     ui->comboBoxUnit->setEditable(true);
     QLineEdit* UnitEdit = new QLineEdit(ui->comboBoxUnit);
