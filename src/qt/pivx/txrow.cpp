@@ -93,9 +93,7 @@ void TxRow::setType(bool isLightTheme, TransactionRecord::Type type, bool isConf
         path += "-dark";
     }
     ui->lblAmount->setProperty("cssClass", css);
-    QPixmap pixmap(path);
-    QIcon buttonIcon(pixmap);
-    ui->icon->setIcon(buttonIcon);
+    ui->icon->setIcon(QIcon(path));
 }
 
 TxRow::~TxRow()

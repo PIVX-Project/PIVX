@@ -163,6 +163,9 @@
         <property name="text">
          <string>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
         <property name="wordWrap">
          <bool>true</bool>
         </property>
@@ -220,7 +223,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,2">
         <property name="spacing">
-         <number>-1</number>
+         <number>6</number>
         </property>
         <property name="leftMargin">
          <number>30</number>
