@@ -83,6 +83,7 @@ void TxRow::setType(bool isLightTheme, TransactionRecord::Type type, bool isConf
     }
     if (!isConfirmed){
         css = "text-list-amount-unconfirmed";
+        path += "-inactive";
         setConfirmStatus(false);
     }else{
         setConfirmStatus(true);
