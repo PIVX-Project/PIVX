@@ -1,6 +1,7 @@
 #ifndef TOOLTIPMENU_H
 #define TOOLTIPMENU_H
 
+#include "qt/pivx/pwidget.h"
 #include <QWidget>
 #include <QModelIndex>
 
@@ -15,7 +16,7 @@ QT_BEGIN_NAMESPACE
 class QModelIndex;
 QT_END_NAMESPACE
 
-class TooltipMenu : public QWidget
+class TooltipMenu : public PWidget
 {
     Q_OBJECT
 
@@ -23,13 +24,13 @@ public:
     explicit TooltipMenu(PIVXGUI* _window, QWidget *parent = nullptr);
     ~TooltipMenu() override;
 
-    void setWalletModel(WalletModel *model);
     void setIndex(const QModelIndex &index);
-
     virtual void showEvent(QShowEvent *event) override;
 
 signals:
-    void message(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
+    void onDeleteClicked();
+    void onCopyClicked();
+    void onEditClicked();
 
 private slots:
     void deleteClicked();
@@ -38,8 +39,6 @@ private slots:
 
 private:
     Ui::TooltipMenu *ui;
-    PIVXGUI *window;
-    WalletModel *walletModel = nullptr;
     QModelIndex index;
 };
 

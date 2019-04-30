@@ -31,15 +31,14 @@ public:
     ~AddressesWidget();
 
     void loadWalletModel() override;
-
     void onNewContactClicked();
-
-signals:
-    void message(const QString& title, const QString& message, unsigned int style, bool* ret);
 
 private slots:
     void handleAddressClicked(const QModelIndex &index);
     void onStoreContactClicked();
+    void onEditClicked();
+    void onDeleteClicked();
+    void onCopyClicked();
 
     void changeTheme(bool isLightTheme, QString &theme);
 private:
@@ -51,6 +50,9 @@ private:
 
     bool isOnMyAddresses = true;
     TooltipMenu* menu = nullptr;
+
+    // Cached index
+    QModelIndex index;
 };
 
 #endif // ADDRESSESWIDGET_H

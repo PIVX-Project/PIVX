@@ -4,8 +4,9 @@
 #include "qt/pivx/addnewaddressdialog.h"
 #include "qt/pivx/tooltipmenu.h"
 
-
+#include "qt/pivx/addnewcontactdialog.h"
 #include "qt/pivx/PIVXGUI.h"
+#include "guiutil.h"
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/snackbar.h"
 #include "walletmodel.h"
@@ -161,13 +162,14 @@ void AddressesWidget::handleAddressClicked(const QModelIndex &index){
 
     if(!this->menu){
         this->menu = new TooltipMenu(window, this);
-        this->menu->setWalletModel(walletModel);
-        connect(this->menu, SIGNAL(message(QString, QString, unsigned int, bool* ret)), this, SIGNAL(message(QString, QString, unsigned int, bool* ret)));
+        connect(this->menu, &TooltipMenu::message, this, &AddressesWidget::message);
+        connect(this->menu, SIGNAL(onEditClicked()), this, SLOT(onEditClicked()));
+        connect(this->menu, SIGNAL(onDeleteClicked()), this, SLOT(onDeleteClicked()));
+        connect(this->menu, SIGNAL(onCopyClicked()), this, SLOT(onCopyClicked()));
     }else {
         this->menu->hide();
-        // TODO: update view..
     }
-    this->menu->setIndex(rIndex);
+    this->index = rIndex;
     menu->move(pos);
     menu->show();
 }
@@ -228,6 +230,43 @@ void AddressesWidget::onStoreContactClicked(){
         }
 
     }
+}
+
+void AddressesWidget::onEditClicked(){
+    QString address = index.data(Qt::DisplayRole).toString();
+    QString currentLabel = index.sibling(index.row(), AddressTableModel::Label).data(Qt::DisplayRole).toString();
+    showHideOp(true);
+    AddNewContactDialog *dialog = new AddNewContactDialog(window);
+    dialog->setData(address, currentLabel);
+    if(openDialogWithOpaqueBackground(dialog, window)){
+        if(walletModel->updateAddressBookLabels(
+                CBitcoinAddress(address.toStdString()).Get(), dialog->getLabel().toStdString(), "send")){
+            inform(tr("Contact edited"));
+        }else{
+            inform(tr("Contact edit failed"));
+        }
+    }
+}
+
+void AddressesWidget::onDeleteClicked(){
+    if(walletModel) {
+        bool ret = false;
+        ask(tr("Delete Contact"),
+            tr("You are just about to remove the contact:\n\n%1\n\nAre you sure?").arg(index.data(Qt::DisplayRole).toString().toUtf8().constData()),
+            &ret);
+        if (ret) {
+            if (this->walletModel->getAddressTableModel()->removeRows(index.row(), 1, index)) {
+                inform(tr("Contact Deleted"));
+            } else {
+                inform(tr("Error deleting a contact"));
+            }
+        }
+    }
+}
+
+void AddressesWidget::onCopyClicked(){
+    GUIUtil::setClipboard(index.data(Qt::DisplayRole).toString());
+    inform(tr("Address copied"));
 }
 
 void AddressesWidget::changeTheme(bool isLightTheme, QString& theme){
