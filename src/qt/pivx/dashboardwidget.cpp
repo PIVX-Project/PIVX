@@ -130,6 +130,13 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
 
     //ui->listTransactions->setVisible(false);
 
+    // Sync Warning 
+
+    ui->layoutWarning->setVisible(true);
+    ui->lblWarning->setText("Wait until the wallet is fully synced to see your whole balance");
+    ui->lblWarning->setProperty("cssClass", "text-warning");
+    ui->imgWarning->setProperty("cssClass", "ic-warning");
+
     //Empty List
 
     ui->emptyContainer->setVisible(false);

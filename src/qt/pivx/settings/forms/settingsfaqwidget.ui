@@ -516,7 +516,7 @@ background:transparent;
                      </widget>
                     </item>
                     <item>
-                     <layout class="QVBoxLayout" name="verticalLayout_6">
+                     <layout class="QVBoxLayout" name="verticalLayout_61">
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
@@ -625,7 +625,7 @@ background:transparent;
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_Page2">
+                       <spacer name="verticalSpacer_Page23">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -657,7 +657,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_7">
+                       <spacer name="verticalSpacer_71">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -744,7 +744,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_7">
+                       <spacer name="verticalSpacer_72">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -802,7 +802,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_Page2">
+                       <spacer name="verticalSpacer_Page22">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -923,7 +923,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_7">
+                       <spacer name="verticalSpacer_73">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -1104,7 +1104,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_page_7">
+                       <spacer name="verticalSpacer_page_71">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -1162,7 +1162,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_Page2">
+                       <spacer name="verticalSpacer_Page24">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -1192,7 +1192,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_7">
+                       <spacer name="verticalSpacer_71">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>

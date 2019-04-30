@@ -1500,6 +1500,18 @@ QProgressBar::chunk:horizontal {
 HH      DASHBOARD
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
+*[cssClass="text-warning"] {
+    color:#f84444;
+    font-size:16px;
+}
+
+*[cssClass="ic-warning"] {
+    qproperty-icon: url("://ic-transaction-warning") off,
+                    url("://ic-transaction-warning") on ;
+    qproperty-iconSize: 24px 24px;
+}
+
+
 *[cssClass="text-amount-grey"] {
     color:#FFFFFF;
     font-size:20px;
@@ -2108,7 +2120,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="ic-arrow"] {
-        qproperty-icon: url(":/res/img/ic-arrow-right-white.svg") off,
+    qproperty-icon: url(":/res/img/ic-arrow-right-white.svg") off,
                     url(":/res/img/ic-arrow-right-white.svg)") on ;
     qproperty-iconSize: 24px 24px;
 }

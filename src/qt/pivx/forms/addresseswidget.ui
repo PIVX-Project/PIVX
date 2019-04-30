@@ -45,7 +45,7 @@
        <number>0</number>
       </property>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QVBoxLayout" name="verticalLayout_21">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -82,7 +82,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="horizontalSpacer">
+           <spacer name="horizontalSpacer11">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -260,7 +260,7 @@
         </item>
         <item>
          <widget class="QWidget" name="layoutNewContact" native="true">
-          <layout class="QVBoxLayout" name="verticalLayout_7">
+          <layout class="QVBoxLayout" name="verticalLayout_71">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -277,7 +277,7 @@
             <number>20</number>
            </property>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout">
+            <layout class="QVBoxLayout" name="verticalLayout11">
              <property name="spacing">
               <number>10</number>
              </property>

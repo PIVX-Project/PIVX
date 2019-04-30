@@ -114,7 +114,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_31">
            <item>
             <widget class="QPushButton" name="pushButtonLocked">
              <property name="minimumSize">

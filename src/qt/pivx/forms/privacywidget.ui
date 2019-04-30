@@ -66,7 +66,7 @@
              <number>0</number>
             </property>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout">
+             <layout class="QVBoxLayout" name="verticalLayout11">
               <property name="spacing">
                <number>5</number>
               </property>
@@ -373,7 +373,7 @@
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_7" stretch="1,8">
+            <layout class="QVBoxLayout" name="verticalLayout_71" stretch="1,8">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -572,7 +572,7 @@
             <number>0</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="horizontalLayout_84">
              <item>
               <widget class="QLabel" name="labelTitleDenom1">
                <property name="text">
@@ -614,7 +614,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="horizontalLayout_81">
              <item>
               <widget class="QLabel" name="labelTitleDenom10">
                <property name="text">
@@ -635,7 +635,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="horizontalLayout_82">
              <item>
               <widget class="QLabel" name="labelTitleDenom50">
                <property name="text">
@@ -698,7 +698,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="horizontalLayout_83">
              <item>
               <widget class="QLabel" name="labelTitleDenom1000">
                <property name="text">

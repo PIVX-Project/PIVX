@@ -125,7 +125,7 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayoutQr">
            <item>
-            <spacer name="verticalSpacer">
+            <spacer name="verticalSpacer11">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -163,7 +163,7 @@
             </widget>
            </item>
            <item>
-            <spacer name="verticalSpacer_2">
+            <spacer name="verticalSpacer_21">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>

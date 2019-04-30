@@ -627,7 +627,7 @@
       </item>
       <item>
        <widget class="QWidget" name="containerButtons" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2,2">
+        <layout class="QHBoxLayout" name="horizontalLayout1" stretch="1,2,2">
          <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">

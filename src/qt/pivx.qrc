@@ -232,6 +232,7 @@
         <file alias="ic-switch-liliac-on">pivx/res/img/ic-switch-liliac-on.svg</file>
         <file alias="ic-switch-off">pivx/res/img/ic-switch-off.svg</file>
         <file alias="ic-switch-on">pivx/res/img/ic-switch-on.svg</file>
+        <file alias="ic-transaction-warning">pivx/res/img/ic-transaction-mint.svg</file>
         <file alias="ic-transaction-mint">pivx/res/img/ic-transaction-mint.svg</file>
         <file alias="ic-transaction-received">pivx/res/img/ic-transaction-received.svg</file>
         <file alias="ic-transaction-sent">pivx/res/img/ic-transaction-sent.svg</file>

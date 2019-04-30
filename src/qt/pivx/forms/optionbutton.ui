@@ -71,7 +71,7 @@
               <height>16777215</height>
              </size>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout">
+            <layout class="QHBoxLayout" name="horizontalLayout1">
              <property name="spacing">
               <number>0</number>
              </property>

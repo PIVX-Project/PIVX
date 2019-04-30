@@ -62,7 +62,7 @@
          <number>0</number>
         </property>
         <item>
-         <spacer name="horizontalSpacer_2">
+         <spacer name="horizontalSpacer_21">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -304,7 +304,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2,2,1">
         <item>
-         <spacer name="horizontalSpacer">
+         <spacer name="horizontalSpacer1">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>

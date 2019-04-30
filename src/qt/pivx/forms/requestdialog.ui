@@ -62,7 +62,7 @@
          <number>0</number>
         </property>
         <item>
-         <spacer name="horizontalSpacer_2">
+         <spacer name="horizontalSpacer_21">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -183,7 +183,7 @@
            <number>0</number>
           </property>
           <item>
-           <spacer name="verticalSpacer_2">
+           <spacer name="verticalSpacer_21">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -306,7 +306,7 @@
                    <height>50</height>
                   </size>
                  </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <layout class="QHBoxLayout" name="horizontalLayout_31">
                   <property name="spacing">
                    <number>0</number>
                   </property>
@@ -347,7 +347,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="verticalSpacer_3">
+           <spacer name="verticalSpacer_31">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -405,7 +405,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="verticalSpacer_3">
+           <spacer name="verticalSpacer_34">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -532,7 +532,7 @@
            </widget>
           </item>
           <item>
-           <spacer name="verticalSpacer_3">
+           <spacer name="verticalSpacer_32">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -636,7 +636,7 @@
           <number>0</number>
          </property>
          <item>
-          <spacer name="horizontalSpacer_4">
+          <spacer name="horizontalSpacer_41">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>

@@ -54,12 +54,12 @@
        <number>20</number>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <layout class="QHBoxLayout" name="horizontalLayout_31">
         <property name="spacing">
          <number>0</number>
         </property>
         <item>
-         <spacer name="horizontalSpacer_2">
+         <spacer name="horizontalSpacer_21">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -100,7 +100,7 @@
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer">
+         <spacer name="horizontalSpacer2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -134,7 +134,7 @@
        </layout>
       </item>
       <item>
-       <spacer name="verticalSpacer">
+       <spacer name="verticalSpacer1">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
@@ -189,7 +189,7 @@
         </item>
         <item>
          <widget class="QWidget" name="layoutQuantity" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_51" stretch="0,1">
            <item>
             <widget class="QLabel" name="labelTitleQuantity">
              <property name="text">
@@ -362,13 +362,13 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <layout class="QHBoxLayout" name="horizontalLayout_31">
         <property name="spacing">
          <number>20</number>
         </property>
         <item>
          <widget class="QWidget" name="layoutBytes" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_41" stretch="0,1">
            <item>
             <widget class="QLabel" name="labelTitleBytes">
              <property name="text">
@@ -388,7 +388,7 @@
         </item>
         <item>
          <widget class="QWidget" name="layoutDust" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_52" stretch="0,1">
            <item>
             <widget class="QLabel" name="labelTitleDust">
              <property name="text">
@@ -408,7 +408,7 @@
         </item>
         <item>
          <widget class="QWidget" name="layoutChange" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_53" stretch="0,1">
            <item>
             <widget class="QLabel" name="labelTitleChange">
              <property name="text">
@@ -428,7 +428,7 @@
         </item>
         <item>
          <widget class="QWidget" name="layoutAfter" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalLayout_54" stretch="0,1">
            <item>
             <widget class="QLabel" name="labelTitleAfter">
              <property name="text">
