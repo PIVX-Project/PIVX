@@ -234,13 +234,13 @@
                  <property name="leftMargin">
                   <number>12</number>
                  </property>
-                 <item>
+                 <item alignment="Qt::AlignVCenter">
                   <widget class="QLabel" name="lblWarning">
                    <property name="styleSheet">
                     <string notr="true"/>
                    </property>
                    <property name="text">
-                    <string>Received from Bob</string>
+                    <string>Warning</string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>

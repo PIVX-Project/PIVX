@@ -88,9 +88,15 @@ void ContactsDropdown::setWalletModel(WalletModel* _model){
 void ContactsDropdown::resizeList(int minWidth, int mintHeight){
     list->setMinimumWidth(minWidth);
     setMinimumWidth(minWidth);
+    setMinimumHeight(mintHeight);
+    frameList->setMinimumHeight(mintHeight);
     frameList->setMinimumWidth(minWidth);
     list->setMinimumHeight(mintHeight);
     list->resize(mintHeight,mintHeight);
+    list->adjustSize();
+    frameList->resize(minWidth, mintHeight);
+    resize(minWidth, mintHeight);
+    adjustSize();
     update();
 }
 

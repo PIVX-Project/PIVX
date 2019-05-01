@@ -602,7 +602,14 @@ void SendWidget::onContactsClicked(SendMultiRow* entry){
     if(menu && menu->isVisible()){
         menu->hide();
     }
-    int height = entry->getEditHeight() * 8;
+
+    int contactsSize = walletModel->getAddressTableModel()->sizeSend();
+    if(contactsSize == 0) {
+        inform(tr("No contacts available, you can go to the contacts screen and add some there!"));
+        return;
+    }
+
+    int height = entry->getEditHeight() * ( 2 * (contactsSize + 1 ));
     int width = entry->getEditWidth();
 
     if(!menuContacts){
@@ -619,11 +626,6 @@ void SendWidget::onContactsClicked(SendMultiRow* entry){
             }
         });
 
-    }else{
-        menuContacts->setMinimumHeight(height);
-        menuContacts->setMinimumWidth(width);
-        menuContacts->resizeList(width, height);
-        menuContacts->resize(width, height);
     }
 
     if(menuContacts->isVisible()){
@@ -631,14 +633,19 @@ void SendWidget::onContactsClicked(SendMultiRow* entry){
         return;
     }
 
+    menuContacts->resizeList(width, height);
     menuContacts->setStyleSheet(this->styleSheet());
 
-    //QPoint pos = this->mapToGlobal(entry->getEditLineRect().bottomLeft());
-    QPoint pos = focusedEntry->getEditLineRect().bottomLeft();
-    int posYmov = focusedEntry->getNumber() == 0 ? 1 : focusedEntry->getNumber();
-    // TODO: Change this position..
+    QPoint pos;
+    if (entries.size() > 1){
+        pos = entry->pos();
+        pos.setY((pos.y() + (focusedEntry->getEditHeight() - 4) * 4));
+    } else {
+        pos = focusedEntry->getEditLineRect().bottomLeft();
+        int posYmov = focusedEntry->getNumber() == 0 ? 1 : focusedEntry->getNumber();
+        pos.setY((pos.y() + (focusedEntry->getEditHeight() - 4) * 3));
+    }
     pos.setX(pos.x() + 20);
-    pos.setY( (pos.y() + (focusedEntry->getEditHeight() - 4)  * 3));
     menuContacts->move(pos);
     menuContacts->show();
 }
