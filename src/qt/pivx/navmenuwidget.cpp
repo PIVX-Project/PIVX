@@ -84,13 +84,7 @@ void NavMenuWidget::onSendClicked(){
     ui->btnMaster->setProperty("cssClass", "btn-nav-master");
     ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
     ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateStyle(ui->btnDashboard);
-    updateStyle(ui->btnSend);
-    updateStyle(ui->btnAddress);
-    updateStyle(ui->btnPrivacy);
-    updateStyle(ui->btnMaster);
-    updateStyle(ui->btnSettings);
-    updateStyle(ui->btnReceive);
+    updateButtonStyles();
 }
 
 void NavMenuWidget::onDashboardClicked(){
@@ -102,13 +96,7 @@ void NavMenuWidget::onDashboardClicked(){
     ui->btnMaster->setProperty("cssClass", "btn-nav-master");
     ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
     ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateStyle(ui->btnDashboard);
-    updateStyle(ui->btnSend);
-    updateStyle(ui->btnAddress);
-    updateStyle(ui->btnPrivacy);
-    updateStyle(ui->btnMaster);
-    updateStyle(ui->btnSettings);
-    updateStyle(ui->btnReceive);
+    updateButtonStyles();
 }
 
 void NavMenuWidget::onAddressClicked(){
@@ -120,13 +108,7 @@ void NavMenuWidget::onAddressClicked(){
     ui->btnMaster->setProperty("cssClass", "btn-nav-master");
     ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
     ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateStyle(ui->btnDashboard);
-    updateStyle(ui->btnSend);
-    updateStyle(ui->btnAddress);
-    updateStyle(ui->btnPrivacy);
-    updateStyle(ui->btnMaster);
-    updateStyle(ui->btnSettings);
-    updateStyle(ui->btnReceive);
+    updateButtonStyles();
 }
 
 
@@ -139,13 +121,7 @@ void NavMenuWidget::onPrivacyClicked(){
     ui->btnMaster->setProperty("cssClass", "btn-nav-master");
     ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
     ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateStyle(ui->btnDashboard);
-    updateStyle(ui->btnSend);
-    updateStyle(ui->btnAddress);
-    updateStyle(ui->btnPrivacy);
-    updateStyle(ui->btnMaster);
-    updateStyle(ui->btnSettings);
-    updateStyle(ui->btnReceive);
+    updateButtonStyles();
 }
 
 void NavMenuWidget::onMasterNodesClicked(){
@@ -157,13 +133,7 @@ void NavMenuWidget::onMasterNodesClicked(){
     ui->btnMaster->setProperty("cssClass", "btn-nav-master-active");
     ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
     ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateStyle(ui->btnDashboard);
-    updateStyle(ui->btnSend);
-    updateStyle(ui->btnAddress);
-    updateStyle(ui->btnPrivacy);
-    updateStyle(ui->btnMaster);
-    updateStyle(ui->btnSettings);
-    updateStyle(ui->btnReceive);
+    updateButtonStyles();
 }
 
 void NavMenuWidget::onSettingsClicked(){
@@ -175,13 +145,7 @@ void NavMenuWidget::onSettingsClicked(){
     ui->btnMaster->setProperty("cssClass", "btn-nav-master");
     ui->btnSettings->setProperty("cssClass", "btn-nav-settings-active");
     ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateStyle(ui->btnDashboard);
-    updateStyle(ui->btnSend);
-    updateStyle(ui->btnAddress);
-    updateStyle(ui->btnPrivacy);
-    updateStyle(ui->btnMaster);
-    updateStyle(ui->btnSettings);
-    updateStyle(ui->btnReceive);
+    updateButtonStyles();
 }
 
 void NavMenuWidget::onReceiveClicked(){
@@ -193,6 +157,14 @@ void NavMenuWidget::onReceiveClicked(){
     ui->btnMaster->setProperty("cssClass", "btn-nav-master");
     ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
     ui->btnReceive->setProperty("cssClass", "btn-nav-receive-active");
+    updateButtonStyles();
+}
+
+void NavMenuWidget::selectSettings(){
+    ui->btnSettings->setChecked(true);
+}
+
+void NavMenuWidget::updateButtonStyles(){
     updateStyle(ui->btnDashboard);
     updateStyle(ui->btnSend);
     updateStyle(ui->btnAddress);
@@ -200,10 +172,6 @@ void NavMenuWidget::onReceiveClicked(){
     updateStyle(ui->btnMaster);
     updateStyle(ui->btnSettings);
     updateStyle(ui->btnReceive);
-}
-
-void NavMenuWidget::selectSettings(){
-    ui->btnSettings->setChecked(true);
 }
 
 NavMenuWidget::~NavMenuWidget(){

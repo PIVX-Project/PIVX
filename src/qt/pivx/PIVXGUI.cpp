@@ -99,6 +99,8 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         // Then topbar + the stackedWidget
         QVBoxLayout *baseScreensContainer = new QVBoxLayout(this);
         baseScreensContainer->setMargin(0);
+        baseScreensContainer->setSpacing(0);
+        baseScreensContainer->setContentsMargins(0,0,0,0);
         container->setLayout(baseScreensContainer);
 
         // Insert the topbar

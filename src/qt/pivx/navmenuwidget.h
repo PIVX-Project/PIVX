@@ -28,6 +28,7 @@ private slots:
     void onMasterNodesClicked();
     void onSettingsClicked();
     void onReceiveClicked();
+    void updateButtonStyles();
 private:
     Ui::NavMenuWidget *ui;
 
