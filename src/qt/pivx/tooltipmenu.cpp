@@ -25,6 +25,14 @@ TooltipMenu::TooltipMenu(PIVXGUI *_window, QWidget *parent) :
     connect(ui->btnEdit, SIGNAL(clicked()), this, SLOT(editClicked()));
 }
 
+void TooltipMenu::setEditBtnText(QString btnText){
+    ui->btnEdit->setText(btnText);
+}
+
+void TooltipMenu::setCopyBtnVisible(bool visible){
+    ui->btnCopy->setVisible(visible);
+}
+
 void TooltipMenu::deleteClicked(){
     hide();
     emit onDeleteClicked();

@@ -10,6 +10,7 @@
 #include "walletmodel.h"
 #include "coincontroldialog.h"
 #include "zpivcontroldialog.h"
+#include "qt/pivx/tooltipmenu.h"
 
 static const int MAX_SEND_POPUP_ENTRIES = 8;
 
@@ -54,10 +55,13 @@ private slots:
     void onSendClicked();
     void changeTheme(bool isLightTheme, QString& theme);
     void onContactsClicked(SendMultiRow* entry);
+    void onMenuClicked(SendMultiRow* entry);
     void onAddEntryClicked();
     void clearEntries();
     void clearAll();
     void refreshView();
+    void onContactMultiClicked();
+    void onDeleteClicked();
 private:
     Ui::send *ui;
     QPushButton *coinIcon;
@@ -67,7 +71,8 @@ private:
     CoinControlDialog *coinControlDialog = nullptr;
 
     ContactsDropdown *menuContacts = nullptr;
-    SendMultiRow *sendMultiRow;
+    TooltipMenu *menu = nullptr;
+    SendMultiRow *sendMultiRow = nullptr;
     // Current focus entry
     SendMultiRow* focusedEntry = nullptr;
 

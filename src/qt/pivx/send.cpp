@@ -238,6 +238,7 @@ SendMultiRow* SendWidget::createEntry(){
     entries.append(sendMultiRow);
     ui->scrollAreaWidgetContents->layout()->addWidget(sendMultiRow);
     connect(sendMultiRow, &SendMultiRow::onContactsClicked, this, &SendWidget::onContactsClicked);
+    connect(sendMultiRow, &SendMultiRow::onMenuClicked, this, &SendWidget::onMenuClicked);
     return sendMultiRow;
 }
 
@@ -598,6 +599,9 @@ void SendWidget::onPIVSelected(bool _isPIV){
 
 void SendWidget::onContactsClicked(SendMultiRow* entry){
     focusedEntry = entry;
+    if(menu && menu->isVisible()){
+        menu->hide();
+    }
     int height = entry->getEditHeight() * 8;
     int width = entry->getEditWidth();
 
@@ -637,6 +641,55 @@ void SendWidget::onContactsClicked(SendMultiRow* entry){
     pos.setY( (pos.y() + (focusedEntry->getEditHeight() - 4)  * 3));
     menuContacts->move(pos);
     menuContacts->show();
+}
+
+void SendWidget::onMenuClicked(SendMultiRow* entry){
+    focusedEntry = entry;
+    if(menuContacts && menuContacts->isVisible()){
+        menuContacts->hide();
+    }
+    QPoint pos = entry->pos();
+    pos.setX(pos.x() + (entry->width() - entry->getMenuBtnWidth()));
+    pos.setY(pos.y() + entry->height() + (entry->getMenuBtnWidth()));
+
+    if(!this->menu){
+        this->menu = new TooltipMenu(window, this);
+        this->menu->setCopyBtnVisible(false);
+        this->menu->setEditBtnText(tr("Contacts"));
+        this->menu->adjustSize();
+        connect(this->menu, &TooltipMenu::message, this, &AddressesWidget::message);
+        connect(this->menu, SIGNAL(onEditClicked()), this, SLOT(onContactMultiClicked()));
+        connect(this->menu, SIGNAL(onDeleteClicked()), this, SLOT(onDeleteClicked()));
+    }else {
+        this->menu->hide();
+    }
+    menu->move(pos);
+    menu->show();
+}
+
+void SendWidget::onContactMultiClicked(){
+    // show the contacts dialog.
+}
+
+void SendWidget::onDeleteClicked(){
+    if (focusedEntry) {
+        focusedEntry->hide();
+        focusedEntry->deleteLater();
+        int entryNumber = focusedEntry->getNumber();
+
+        // Refresh amount total + rest of rows numbers.
+        QMutableListIterator<SendMultiRow*> it(entries);
+        while (it.hasNext()) {
+            SendMultiRow* entry = it.next();
+            if (focusedEntry == entry){
+                it.remove();
+            } else if (focusedEntry && entry->getNumber() > entryNumber){
+                entry->setNumber(entry->getNumber() - 1);
+            }
+        }
+
+        focusedEntry = nullptr;
+    }
 }
 
 void SendWidget::resizeMenu(){

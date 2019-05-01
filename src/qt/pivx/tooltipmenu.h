@@ -27,6 +27,9 @@ public:
     void setIndex(const QModelIndex &index);
     virtual void showEvent(QShowEvent *event) override;
 
+    void setEditBtnText(QString btnText);
+    void setCopyBtnVisible(bool visible);
+
 signals:
     void onDeleteClicked();
     void onCopyClicked();

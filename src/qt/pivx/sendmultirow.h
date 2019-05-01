@@ -43,6 +43,7 @@ public:
     QRect getEditLineRect();
     int getEditHeight();
     int getEditWidth();
+    int getMenuBtnWidth();
 
 public slots:
     void clear();
@@ -50,10 +51,13 @@ public slots:
 signals:
     void removeEntry(SendMultiRow* entry);
     void onContactsClicked(SendMultiRow* entry);
+    void onMenuClicked(SendMultiRow* entry);
     //void payAmountChanged();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    virtual void enterEvent(QEvent *);
+    virtual void leaveEvent(QEvent *);
 
 private slots:
     void amountChanged(const QString&);
@@ -65,12 +69,12 @@ private slots:
 private:
     Ui::SendMultiRow *ui;
     QPushButton *iconNumber;
+    QAction *btnContact;
 
     WalletModel *model;
     int displayUnit;
     int number = 0;
-
-    QAction *btnContact;
+    bool isExpanded = false;
 
     SendCoinsRecipient recipient;
 

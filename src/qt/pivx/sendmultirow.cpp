@@ -22,7 +22,7 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
     ui->lineEditAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
     setShadow(ui->stackedAddress);
 
-    ui->lineEditAmount->setPlaceholderText("0.00 zPIV ");
+    ui->lineEditAmount->setPlaceholderText("0.00 PIV ");
     initCssEditLine(ui->lineEditAmount);
     ui->lineEditAmount->setValidator(new QDoubleValidator(0, 100000000000, 7, this) );
 
@@ -35,6 +35,7 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
 
     // Button menu
     ui->btnMenu->setProperty("cssClass", "btn-menu");
+    ui->btnMenu->setVisible(false);
 
     // Button Contact
     btnContact = ui->lineEditAddress->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
@@ -60,14 +61,13 @@ SendMultiRow::SendMultiRow(QWidget *parent) :
     connect(ui->lineEditAmount, SIGNAL(textChanged(const QString&)), this, SLOT(amountChanged(const QString&)));
     connect(ui->lineEditAddress, SIGNAL(textChanged(const QString&)), this, SLOT(addressChanged(const QString&)));
     connect(btnContact, &QAction::triggered, [this](){emit onContactsClicked(this);});
-
+    connect(ui->btnMenu, &QPushButton::clicked, [this](){emit onMenuClicked(this);});
 }
 
 void SendMultiRow::amountChanged(const QString& amount){
     if(!amount.isEmpty()) {
         CAmount value = getAmountValue(amount);
         if (value > 0) {
-            // BitcoinUnits::format(displayUnit, value, false, BitcoinUnits::separatorAlways);
             ui->lineEditAmount->setText(amount);
         }
     }
@@ -175,8 +175,6 @@ SendCoinsRecipient SendMultiRow::getValue() {
         // todo: Notificate user..
     }
     recipient.amount = value;
-    //recipient.message = ui->messageTextLabel->text();
-
     return recipient;
 }
 
@@ -231,6 +229,24 @@ void SendMultiRow::showLabels(){
 
 void SendMultiRow::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
+}
+
+void SendMultiRow::enterEvent(QEvent *) {
+    if(!this->isExpanded && iconNumber->isVisible()){
+        isExpanded = true;
+        ui->btnMenu->setVisible(isExpanded);
+    }
+}
+
+void SendMultiRow::leaveEvent(QEvent *) {
+    if(isExpanded){
+        isExpanded = false;
+        ui->btnMenu->setVisible(isExpanded);
+    }
+}
+
+int SendMultiRow::getMenuBtnWidth(){
+    return ui->btnMenu->width();
 }
 
 SendMultiRow::~SendMultiRow()
