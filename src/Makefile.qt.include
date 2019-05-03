@@ -551,6 +551,7 @@ RES_ICONS = \
   qt/pivx/res/img/ic-check-box-indeterminate.svg \
   qt/pivx/res/img/ic-check-box-liliac-indeterminate.svg \
   qt/pivx/res/img/ic-label-liliac.svg \
+  qt/pivx/res/img/ic-transaction-warning.svg \
   qt/pivx/res/img/ic-transaction-mint.svg \
   qt/pivx/res/img/ic-transaction-mint-inactive.svg \
   qt/pivx/res/img/img-qr.svg \
