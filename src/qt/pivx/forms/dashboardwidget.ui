@@ -197,7 +197,7 @@
               <property name="frameShadow">
                <enum>QFrame::Raised</enum>
               </property>
-              <layout class="QHBoxLayout" name="horizontalLayout11" stretch="0,2">
+              <layout class="QHBoxLayout" name="horizontalLayout11" stretch="0,0,2">
                <property name="leftMargin">
                 <number>0</number>
                </property>
@@ -210,7 +210,7 @@
                <property name="bottomMargin">
                 <number>0</number>
                </property>
-               <item>
+               <item alignment="Qt::AlignVCenter">
                 <widget class="QPushButton" name="imgWarning">
                  <property name="styleSheet">
                   <string notr="true">border:none;</string>
@@ -227,30 +227,33 @@
                 </widget>
                </item>
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout23">
-                 <property name="spacing">
-                  <number>0</number>
+                <spacer name="horizontalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
                  </property>
-                 <property name="leftMargin">
-                  <number>12</number>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Fixed</enum>
                  </property>
-                 <property name="bottomMargin">
-                  <number>4</number>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>12</width>
+                   <height>20</height>
+                  </size>
                  </property>
-                 <item alignment="Qt::AlignVCenter">
-                  <widget class="QLabel" name="lblWarning">
-                   <property name="styleSheet">
-                    <string notr="true"/>
-                   </property>
-                   <property name="text">
-                    <string>Warning</string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                </spacer>
+               </item>
+               <item alignment="Qt::AlignVCenter">
+                <widget class="QLabel" name="lblWarning">
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                 <property name="text">
+                  <string>Warning</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>

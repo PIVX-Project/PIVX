@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_warnig_3" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style type="text/css">
+            .cls-1,.cls-2{fill:none}.cls-2{stroke:#f84444;stroke-width:1.8px}.cls-3{fill:#f84444}.cls-4{stroke:none}
+        </style>
+    </defs>
+    <path id="Rectangle_4412" d="M0 0h24v24H0z" class="cls-1" data-name="Rectangle 4412"/>
+    <g id="Ellipse_650" class="cls-2" data-name="Ellipse 650" transform="translate(2 2)">
+        <circle cx="10" cy="10" r="10" class="cls-4"/>
+        <circle cx="10" cy="10" r="9.1" class="cls-1"/>
+    </g>
+    <path id="Rectangle_4758" d="M0 0h1.8v8H0z" class="cls-3" data-name="Rectangle 4758" transform="translate(11 6)"/>
+    <path id="Rectangle_4759" d="M0 0h1.8v2H0z" class="cls-3" data-name="Rectangle 4759" transform="translate(11 16)"/>
+</svg>
