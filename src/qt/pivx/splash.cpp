@@ -32,6 +32,7 @@ Splash::Splash(QWidget *parent) :
     ui->progressBar->setTextVisible(false);
     ui->progressBar->setMaximum(0);
     ui->progressBar->setMinimum(0);
+    ui->progressBar->setProperty("cssClass", "progress-splash");
     ui->frame->setProperty("cssClass", "container-splash");
     ui->layoutProgress->setProperty("cssClass", "bg-progress");
     ui->imgLogo->setProperty("cssClass", "img-splash-logo");

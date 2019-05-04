@@ -66,10 +66,18 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     ui->labelImmaturePiv->setProperty("cssClass", "amount-small-topbar");
     ui->labelImmaturezPiv->setProperty("cssClass", "amount-small-topbar");
 
+    // Progress Sync
 
-    //ui->pushButtonSync->setProperty("cssClass", "sync-status");
-
-    // Buttons
+    QProgressBar * progressBar = new QProgressBar(ui->layoutSync);
+    progressBar->setRange(1, 10);
+    progressBar->setValue(4);
+    progressBar->setTextVisible(false);
+    progressBar->setMaximumHeight(2);
+    progressBar->setMaximumWidth(36);
+    progressBar->setProperty("cssClass", "progress-sync");
+    progressBar->show();
+    progressBar->raise();
+    progressBar->move(0, 34);
 
 
     // New button

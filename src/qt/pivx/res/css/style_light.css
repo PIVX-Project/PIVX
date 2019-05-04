@@ -362,7 +362,7 @@ QPushButton[cssClass="btn-check-sync"] {
     color:#FFFFFF;
     padding-right:6px;
     padding-left:6px;
-    border-bottom:2px solid #b088ff;
+    border-bottom:2px solid #505c4b7d;
     border-radius:2px;
 }
 
@@ -373,13 +373,13 @@ QPushButton[cssClass="btn-check-sync-inactive"] {
     color:#FFFFFF;
     padding-right:6px;
     padding-left:6px;
-    border-bottom:2px solid #5C4B7D;
+    border-bottom:2px solid #505c4b7d;
     border-radius:2px;
 }
 
 QPushButton[cssClass="btn-check-sync"]:checked {
     background-color:#505c4b7d;
-    border-bottom:2px solid #b088ff;
+    border-bottom:2px solid #505c4b7d;
     border-radius:2px;
 }
 
@@ -649,6 +649,21 @@ QPushButton[cssClass="btn-check-lock-sub-menu-staking"]:hover {
 
 *[cssClass="top-sub-menu-text"] {
     color:#B3FFFFFF;
+}
+
+QProgressBar[cssClass="progress-sync"] {
+    border: 0;
+    background-color: transparent;
+}
+
+QProgressBar[cssClass="progress-sync"]::chunk:horizontal {
+    background: qlineargradient(x1: 0,
+                                y1: 0.5,
+                                x2: 1,
+                                y2: 0.5,
+                                stop: 0 #b088ff,
+                                stop: 1 #b088ff,
+                                stop: 2 #b088ff,);
 }
 
 
@@ -1492,7 +1507,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     background-color:transparent;
 }
 
-QProgressBar::chunk:horizontal {
+QProgressBar[cssClass="progress-splash"]::chunk:horizontal {
     background: qlineargradient(x1: 0,
                                 y1: 0.5,
                                 x2: 1,
