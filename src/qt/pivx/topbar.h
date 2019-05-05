@@ -2,9 +2,11 @@
 #define TOPBAR_H
 
 #include <QWidget>
-#include "lockunlock.h"
+#include "qt/pivx/pwidget.h"
+#include "qt/pivx/lockunlock.h"
 #include "amount.h"
 #include <QTimer>
+#include <QProgressBar>
 
 class PIVXGUI;
 class WalletModel;
@@ -14,7 +16,7 @@ namespace Ui {
 class TopBar;
 }
 
-class TopBar : public QWidget
+class TopBar : public PWidget
 {
     Q_OBJECT
 
@@ -26,8 +28,8 @@ public:
     void showBottom();
     void showPasswordDialog();
 
-    void setWalletModel(WalletModel *model);
-    void setClientModel(ClientModel *model);
+    void loadWalletModel() override;
+    void loadClientModel() override;
 
     void encryptWallet();
 public slots:
@@ -40,6 +42,8 @@ public slots:
     void setNumBlocks(int count);
     void updateAutoMintStatus();
     void updateStakingStatus();
+    /** Show progress dialog e.g. for verifychain */
+    void showProgress(const QString& title, int nProgress);
 
 signals:
     // Fired when a message should be reported to the user
@@ -54,10 +58,8 @@ private slots:
     void refreshStatus();
 private:
     Ui::TopBar *ui;
-    PIVXGUI* mainWindow;
     LockUnlock *lockUnlockWidget = nullptr;
-    WalletModel *walletModel;
-    ClientModel *clientModel;
+    QProgressBar* progressBar = nullptr;
 
     int nDisplayUnit = -1;
     QTimer* timerStakingIcon = nullptr;

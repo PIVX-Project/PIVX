@@ -21,9 +21,8 @@
 
 
 TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::TopBar),
-    mainWindow(_mainWindow)
+    PWidget(_mainWindow, parent),
+    ui(new Ui::TopBar)
 {
     ui->setupUi(this);
 
@@ -68,7 +67,7 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
 
     // Progress Sync
 
-    QProgressBar * progressBar = new QProgressBar(ui->layoutSync);
+    progressBar = new QProgressBar(ui->layoutSync);
     progressBar->setRange(1, 10);
     progressBar->setValue(4);
     progressBar->setTextVisible(false);
@@ -91,7 +90,7 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     ui->pushButtonStack->setButtonClassStyle("cssClass", "btn-check-stack-inactive");
     ui->pushButtonStack->setButtonText("Staking Disabled");
 
-    ui->pushButtonMint->setButtonClassStyle("cssClass", "btn-check-mint");
+    ui->pushButtonMint->setButtonClassStyle("cssClass", "btn-check-mint-inactive");
     ui->pushButtonMint->setButtonText("Automint Enabled");
 
     ui->pushButtonSync->setButtonClassStyle("cssClass", "btn-check-sync");
@@ -162,7 +161,7 @@ void TopBar::onBtnLockClicked(){
             encryptWallet();
         } else {
             if (!lockUnlockWidget) {
-                lockUnlockWidget = new LockUnlock(this->mainWindow);
+                lockUnlockWidget = new LockUnlock(window);
                 connect(lockUnlockWidget, SIGNAL(Mouse_Leave()), this, SLOT(lockDropdownMouseLeave()));
                 connect(lockUnlockWidget, SIGNAL(lockClicked(const StateClicked&)),this, SLOT(lockDropdownClicked(const StateClicked&)));
             }
@@ -172,7 +171,7 @@ void TopBar::onBtnLockClicked(){
             lockUnlockWidget->adjustSize();
 
             lockUnlockWidget->move(
-                    ui->pushButtonLock->pos().rx() + this->mainWindow->getNavWidth() + 10,
+                    ui->pushButtonLock->pos().rx() + window->getNavWidth() + 10,
                     ui->pushButtonLock->y() + 36
             );
 
@@ -193,11 +192,11 @@ void TopBar::encryptWallet() {
     if (!walletModel)
         return;
 
-    mainWindow->showHide(true);
-    AskPassphraseDialog *dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::Encrypt, mainWindow,
+    showHideOp(true);
+    AskPassphraseDialog *dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::Encrypt, window,
                             walletModel, AskPassphraseDialog::Context::Encrypt);
     dlg->adjustSize();
-    openDialogWithOpaqueBackgroundY(dlg, mainWindow);
+    openDialogWithOpaqueBackgroundY(dlg, window);
 
     refreshStatus();
 }
@@ -216,11 +215,11 @@ void TopBar::lockDropdownClicked(const StateClicked& state){
                 break;
             }
             case 1: {
-                mainWindow->showHide(true);
-                AskPassphraseDialog *dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::Unlock, mainWindow, walletModel,
+                showHideOp(true);
+                AskPassphraseDialog *dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::Unlock, window, walletModel,
                                         AskPassphraseDialog::Context::ToggleLock);
                 dlg->adjustSize();
-                openDialogWithOpaqueBackgroundY(dlg, mainWindow);
+                openDialogWithOpaqueBackgroundY(dlg, window);
                 if (this->walletModel->getEncryptionStatus() == WalletModel::Unlocked) {
                     ui->pushButtonLock->setButtonText("Wallet Unlocked");
                     ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-unlock", true);
@@ -228,11 +227,11 @@ void TopBar::lockDropdownClicked(const StateClicked& state){
                 break;
             }
             case 2: {
-                mainWindow->showHide(true);
-                AskPassphraseDialog *dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::UnlockAnonymize, mainWindow, walletModel,
+                showHideOp(true);
+                AskPassphraseDialog *dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::UnlockAnonymize, window, walletModel,
                                         AskPassphraseDialog::Context::ToggleLock);
                 dlg->adjustSize();
-                openDialogWithOpaqueBackgroundY(dlg, mainWindow);
+                openDialogWithOpaqueBackgroundY(dlg, window);
                 if (this->walletModel->getEncryptionStatus() == WalletModel::UnlockedForAnonymizationOnly) {
                     ui->pushButtonLock->setButtonText("Wallet Unlocked for staking");
                     ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-staking", true);
@@ -251,9 +250,9 @@ void TopBar::lockDropdownClicked(const StateClicked& state){
 }
 
 void TopBar::showPasswordDialog() {
-    mainWindow->showHide(true);
-    WalletPasswordDialog* dialog = new WalletPasswordDialog(mainWindow);
-    openDialogWithOpaqueBackgroundY(dialog, mainWindow, 3, 5);
+    showHideOp(true);
+    WalletPasswordDialog* dialog = new WalletPasswordDialog(window);
+    openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
 }
 
 void TopBar::lockDropdownMouseLeave(){
@@ -265,11 +264,11 @@ void TopBar::lockDropdownMouseLeave(){
 
 void TopBar::onBtnReceiveClicked(){
     if(walletModel) {
-        mainWindow->showHide(true);
-        ReceiveDialog *receiveDialog = new ReceiveDialog(mainWindow);
+        showHideOp(true);
+        ReceiveDialog *receiveDialog = new ReceiveDialog(window);
 
         receiveDialog->updateQr(walletModel->getAddressTableModel()->getLastUnusedAddress());
-        if (openDialogWithOpaqueBackground(receiveDialog, mainWindow)) {
+        if (openDialogWithOpaqueBackground(receiveDialog, window)) {
             // TODO: Complete me..
             emit message("",tr("Address Copied"), CClientUIInterface::MSG_INFORMATION);
         }
@@ -300,8 +299,7 @@ TopBar::~TopBar()
     delete ui;
 }
 
-void TopBar::setClientModel(ClientModel *model){
-    this->clientModel = model;
+void TopBar::loadClientModel(){
     if(clientModel){
         // Keep up to date with client
         setNumConnections(clientModel->getNumConnections());
@@ -318,6 +316,15 @@ void TopBar::setClientModel(ClientModel *model){
         timerStakingIcon->start(50000);
         updateStakingStatus();
 
+        // Show progress dialog
+        connect(clientModel, SIGNAL(showProgress(QString, int)), this, SLOT(showProgress(QString, int)));
+
+    }
+}
+
+void TopBar::showProgress(const QString& title, int nProgress){
+    if (nProgress > 0 && nProgress <= 100) {
+        progressBar->setValue(nProgress);
     }
 }
 
@@ -444,13 +451,11 @@ void TopBar::setNumBlocks(int count) {
 
 }
 
-void TopBar::setWalletModel(WalletModel *model){
-    this->walletModel = model;
-
-    connect(model, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)), this,
+void TopBar::loadWalletModel(){
+    connect(walletModel, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)), this,
             SLOT(updateBalances(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)));
-    connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
-    connect(model, SIGNAL(encryptionStatusChanged(int status)), this, SLOT(refreshStatus()));
+    connect(walletModel->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+    connect(walletModel, SIGNAL(encryptionStatusChanged(int status)), this, SLOT(refreshStatus()));
 
     // update the display unit, to not use the default ("PIVX")
     updateDisplayUnit();
