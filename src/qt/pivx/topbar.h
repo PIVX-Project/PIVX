@@ -45,10 +45,6 @@ public slots:
     /** Show progress dialog e.g. for verifychain */
     void showProgress(const QString& title, int nProgress);
 
-signals:
-    // Fired when a message should be reported to the user
-    void message(const QString& title, const QString& message, unsigned int style);
-
 private slots:
     void onBtnReceiveClicked();
     void onThemeClicked();

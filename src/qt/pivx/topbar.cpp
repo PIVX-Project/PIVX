@@ -269,8 +269,7 @@ void TopBar::onBtnReceiveClicked(){
 
         receiveDialog->updateQr(walletModel->getAddressTableModel()->getLastUnusedAddress());
         if (openDialogWithOpaqueBackground(receiveDialog, window)) {
-            // TODO: Complete me..
-            emit message("",tr("Address Copied"), CClientUIInterface::MSG_INFORMATION);
+            inform(tr("Address Copied"));
         }
     }
 }
@@ -409,9 +408,6 @@ void TopBar::setNumBlocks(int count) {
                 needState = false;
             }
         }
-        //strSyncStatus = QString(masternodeSync.GetSyncStatus().c_str());
-        //progressBarLabel->setText(strSyncStatus);
-        //tooltip = strSyncStatus + QString("<br>") + tooltip;
     }
 
     if(needState) {
