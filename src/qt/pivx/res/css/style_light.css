@@ -2767,12 +2767,16 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 
-/*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-HH        LOADING
-HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
+/*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+HH      LOADING
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+ */
 
+*[cssClass="container-loading"]{
+    background-color:transparent;
+}
 
 *[cssClass="text-loading"]{
-    color:#4d4d4d;
+    color:#ffffff;
     font-size:20px;
 }

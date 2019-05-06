@@ -280,5 +280,11 @@
         <file alias="bg-welcome-container-2x">pivx/res/img/bg-welcome-container@2x.png</file>
         <file alias="bg-welcome-container-3x">pivx/res/img/bg-welcome-container@3x.png</file>
         <file alias="bg-dashboard-banner">pivx/res/img/bg-dashboard-banner.png</file>
+        <file alias="ic-check-liliac-indeterminate">pivx/res/img/ic-check-liliac-indeterminate.svg</file>
+        <file alias="ic-check-box-liliac-indeterminate">pivx/res/img/ic-check-box-liliac-indeterminate.svg</file>
+        <file alias="ic-check-box-indeterminate">pivx/res/img/ic-check-box-indeterminate.svg</file>
+        <file alias="ic-check-liliac-indeterminate">pivx/res/img/ic-check-liliac-indeterminate.svg</file>
+        <file alias="ani-loading">pivx/res/img/ani-loading.gif</file>
+
     </qresource>
 </RCC>

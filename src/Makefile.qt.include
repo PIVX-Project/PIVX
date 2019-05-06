@@ -66,6 +66,7 @@ QT_FORMS_UI = \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/transactiondescdialog.ui \
   qt/pivx/forms/coincontrolzpivdialog.ui \
+  qt/pivx/forms/loadingdialog.ui \
   qt/forms/zpivcontroldialog.ui \
   qt/pivx/forms/snackbar.ui \
   qt/pivx/forms/navmenuwidget.ui \
@@ -169,6 +170,7 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp \
+  qt/pivx/moc_loadingdialog.cpp \
   qt/moc_zpivcontroldialog.cpp \
   qt/pivx/moc_pwidget.cpp \
   qt/pivx/moc_coincontrolzpivdialog.cpp \
@@ -301,6 +303,7 @@ BITCOIN_QT_H = \
   qt/walletframe.h \
   qt/walletmodel.h \
   qt/walletmodeltransaction.h \
+  qt/pivx/loadingdialog.h \
   qt/walletview.h \
   qt/winshutdownmonitor.h \
   qt/zpivcontroldialog.h \
@@ -578,7 +581,12 @@ RES_ICONS = \
   qt/pivx/res/img/ic-nav-address-hover.svg \
   qt/pivx/res/img/ic-update-liliac.svg \
   qt/pivx/res/img/ic-arrow-drop-down-purple.svg \
-  qt/pivx/res/img/ic-arrow-drop-up-purple.svg
+  qt/pivx/res/img/ic-arrow-drop-up-purple.svg \
+  qt/pivx/res/img/ic-check-liliac-indeterminate.svg \
+  qt/pivx/res/img/ic-check-box-liliac-indeterminate.svg \
+  qt/pivx/res/img/ic-check-box-indeterminate.svg \
+  qt/pivx/res/img/ic-check-liliac-indeterminate.svg \
+  qt/pivx/res/img/ani-loading.gif
 
 
 
@@ -645,6 +653,7 @@ BITCOIN_QT_WALLET_CPP = \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
   qt/walletview.cpp \
+  qt/pivx/loadingdialog.cpp \
   qt/zpivcontroldialog.cpp \
   qt/pivx/pwidget.cpp \
   qt/pivx/coincontrolzpivdialog.cpp \
