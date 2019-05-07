@@ -9,6 +9,7 @@
 #include <QDialog>
 #include "qt/pivx/prunnable.h"
 #include "allocators.h"
+#include <QCheckBox>
 
 class WalletModel;
 class PIVXGUI;
@@ -16,6 +17,7 @@ class PIVXGUI;
 namespace Ui
 {
 class AskPassphraseDialog;
+class QCheckBox;
 }
 
 /** Multifunctional dialog to ask for passphrases. Used for encryption, unlocking, and changing the passphrase.
@@ -65,8 +67,12 @@ private:
 
     void run(int type) override;
     void onError(int type, QString error) override;
+    QCheckBox *btnWatch;
+    QCheckBox *btnWatch2;
 
 private slots:
+    void onWatchClicked();
+    void onWatch2Clicked();
     void textChanged();
 
 protected:

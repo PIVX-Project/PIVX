@@ -2805,6 +2805,9 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
     background-color:transparent;
 }
 
+*[cssClass="container-loading"]{
+    background-color:#4D000000;
+}
 
 *[cssClass="text-loading"]{
     color:#ffffff;

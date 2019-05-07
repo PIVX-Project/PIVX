@@ -2773,7 +2773,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
  */
 
 *[cssClass="container-loading"]{
-    background-color:transparent;
+    background-color:#4D000000;
 }
 
 *[cssClass="text-loading"]{
