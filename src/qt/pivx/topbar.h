@@ -45,6 +45,8 @@ public slots:
     /** Show progress dialog e.g. for verifychain */
     void showProgress(const QString& title, int nProgress);
 
+signals:
+    void changeTheme(bool isLight);
 private slots:
     void onBtnReceiveClicked();
     void onThemeClicked();

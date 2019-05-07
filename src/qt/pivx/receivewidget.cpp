@@ -142,7 +142,6 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
     ui->listViewAddress->setVisible(false);
 
     // Connect
-    connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
     connect(ui->pushButtonLabel, SIGNAL(clicked()), this, SLOT(onLabelClicked()));
     connect(ui->pushButtonCopy, SIGNAL(clicked()), this, SLOT(onCopyClicked()));
     connect(ui->pushButtonNewAddress, SIGNAL(clicked()), this, SLOT(onNewAddressClicked()));
@@ -166,14 +165,20 @@ void ReceiveWidget::loadWalletModel(){
 }
 
 void ReceiveWidget::refreshView(QString refreshAddress){
-    QString latestAddress = (refreshAddress.isEmpty()) ? this->addressTableModel->getLastUnusedAddress() : refreshAddress;
-    if (latestAddress.isEmpty()) // new default address
-       latestAddress = QString::fromStdString(walletModel->getNewAddress("Default").ToString());
-    ui->labelAddress->setText(latestAddress);
-    int64_t time = walletModel->getKeyCreationTime(CBitcoinAddress(latestAddress.toStdString()));
-    ui->labelDate->setText(GUIUtil::dateTimeStr(QDateTime::fromTime_t(static_cast<uint>(time))));
-    updateQr(latestAddress);
-    updateLabel();
+    try {
+        QString latestAddress = (refreshAddress.isEmpty()) ? this->addressTableModel->getLastUnusedAddress() : refreshAddress;
+        if (latestAddress.isEmpty()) // new default address
+           latestAddress = QString::fromStdString(walletModel->getNewAddress("Default").ToString());
+        ui->labelAddress->setText(latestAddress);
+        int64_t time = walletModel->getKeyCreationTime(CBitcoinAddress(latestAddress.toStdString()));
+        ui->labelDate->setText(GUIUtil::dateTimeStr(QDateTime::fromTime_t(static_cast<uint>(time))));
+        updateQr(latestAddress);
+        updateLabel();
+    } catch (const runtime_error& error){
+        // Error generating address
+        std::cout << "Error generating address, correct me" << std::endl;
+        inform("Error generating address");
+    }
 }
 
 void ReceiveWidget::updateLabel(){
@@ -239,11 +244,17 @@ void ReceiveWidget::onLabelClicked(){
 }
 
 void ReceiveWidget::onNewAddressClicked(){
-    CBitcoinAddress address = walletModel->getNewAddress("");
-    updateQr(QString::fromStdString(address.ToString()));
-    ui->labelAddress->setText(!info->address.isEmpty() ? info->address : tr("No address"));
-    updateLabel();
-    inform(tr("New address created"));
+    try {
+        CBitcoinAddress address = walletModel->getNewAddress("");
+        updateQr(QString::fromStdString(address.ToString()));
+        ui->labelAddress->setText(!info->address.isEmpty() ? info->address : tr("No address"));
+        updateLabel();
+        inform(tr("New address created"));
+    } catch (const runtime_error& error){
+        // Error generating address
+        std::cout << "Error generating address, correct me" << std::endl;
+        inform("Error generating address");
+    }
 }
 
 void ReceiveWidget::onCopyClicked(){
@@ -276,9 +287,7 @@ void ReceiveWidget::onMyAddressesClicked(){
 
 void ReceiveWidget::changeTheme(bool isLightTheme, QString& theme){
     // Change theme in all of the childs here..
-    this->setStyleSheet(theme);
     static_cast<AddressHolder*>(this->delegate->getRowFactory())->isLightTheme = isLightTheme;
-    updateStyle(this);
 }
 
 ReceiveWidget::~ReceiveWidget()

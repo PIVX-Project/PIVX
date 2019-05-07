@@ -6,7 +6,7 @@
 PWidget::PWidget(PIVXGUI* _window, QWidget *parent) : QWidget(parent), window(_window)
 {
     if(window)
-        connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
+        connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(onChangeTheme(bool, QString&)));
 }
 
 void PWidget::setClientModel(ClientModel* model){
@@ -19,9 +19,10 @@ void PWidget::setWalletModel(WalletModel* model){
     loadWalletModel();
 }
 
-void PWidget::changeTheme(bool isLightTheme, QString& theme){
+void PWidget::onChangeTheme(bool isLightTheme, QString& theme){
     // Change theme in all of the childs here..
     this->setStyleSheet(theme);
+    changeTheme(isLightTheme, theme);
     updateStyle(this);
 }
 
@@ -50,5 +51,9 @@ void PWidget::loadClientModel(){
 }
 
 void PWidget::loadWalletModel(){
+    // override
+}
+
+void PWidget::changeTheme(bool isLightTheme, QString& theme){
     // override
 }

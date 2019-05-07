@@ -147,8 +147,6 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     connect(ui->pushLeft, &QPushButton::clicked, [this](){onPIVSelected(true);});
     connect(ui->pushRight,  &QPushButton::clicked, [this](){onPIVSelected(false);});
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(onSendClicked()));
-
-    connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
     connect(ui->pushButtonAddRecipient, SIGNAL(clicked()), this, SLOT(onAddEntryClicked()));
     connect(ui->pushButtonClear, SIGNAL(clicked()), this, SLOT(clearAll()));
 }
@@ -714,14 +712,12 @@ void SendWidget::resizeMenu(){
 
 void SendWidget::changeTheme(bool isLightTheme, QString& theme){
     // Change theme in all of the childs here..
-    this->setStyleSheet(theme);
     if(this->menuContacts){
         this->menuContacts->setStyleSheet(theme);
         if(this->menuContacts->isVisible()){
             updateStyle(menuContacts);
         }
     }
-    updateStyle(this);
 }
 
 SendWidget::~SendWidget()

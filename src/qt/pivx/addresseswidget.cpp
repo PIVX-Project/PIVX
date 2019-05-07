@@ -147,8 +147,6 @@ AddressesWidget::AddressesWidget(PIVXGUI* _window, QWidget *parent) :
 
     connect(ui->listAddresses, SIGNAL(clicked(QModelIndex)), this, SLOT(handleAddressClicked(QModelIndex)));
     connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(onStoreContactClicked()));
-    // style
-    connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
 }
 
 void AddressesWidget::handleAddressClicked(const QModelIndex &index){
@@ -270,10 +268,7 @@ void AddressesWidget::onCopyClicked(){
 }
 
 void AddressesWidget::changeTheme(bool isLightTheme, QString& theme){
-    // Change theme in all of the childs here..
-    this->setStyleSheet(theme);
     static_cast<ContactsHolder*>(this->delegate->getRowFactory())->isLightTheme = isLightTheme;
-    updateStyle(this);
 }
 
 AddressesWidget::~AddressesWidget(){

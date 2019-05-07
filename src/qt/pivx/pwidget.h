@@ -28,7 +28,8 @@ signals:
     bool execDialog(QDialog *dialog, int xDiv = 3, int yDiv = 5);
 
 protected slots:
-    void changeTheme(bool isLightTheme, QString &theme);
+    virtual void changeTheme(bool isLightTheme, QString &theme);
+    void onChangeTheme(bool isLightTheme, QString &theme);
 
 protected:
     PIVXGUI* window = nullptr;

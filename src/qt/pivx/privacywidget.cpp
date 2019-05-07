@@ -156,9 +156,6 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
 
     connect(ui->pushLeft, &QPushButton::clicked, [this](){onMintSelected(false);});
     connect(ui->pushRight,  &QPushButton::clicked, [this](){onMintSelected(true);});
-    // Style
-    connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
-
 
     // List
     ui->listView->setProperty("cssClass", "container");
@@ -463,10 +460,8 @@ void PrivacyWidget::updateDenomsSupply(){
 
 void PrivacyWidget::changeTheme(bool isLightTheme, QString& theme){
     // Change theme in all of the childs here..
-    this->setStyleSheet(theme);
     static_cast<TxViewHolder*>(this->delegate->getRowFactory())->isLightTheme = isLightTheme;
     ui->listView->update();
-    updateStyle(this);
 }
 
 PrivacyWidget::~PrivacyWidget()

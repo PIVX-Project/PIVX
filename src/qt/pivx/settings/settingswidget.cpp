@@ -148,9 +148,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     connect(ui->pushButtonHelp, SIGNAL(clicked()), this, SLOT(onHelpClicked()));
     connect(ui->pushButtonHelp1, SIGNAL(clicked()), this, SLOT(onFaqClicked()));
 
-    // Style
-    connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
-
     // Get restart command-line parameters and handle restart
     connect(settingsWalletRepairWidget, &SettingsWalletRepairWidget::handleRestart, [this](QStringList arg){emit handleRestart(arg);});
 
@@ -358,9 +355,7 @@ void SettingsWidget::setMapper(){
 }
 
 void SettingsWidget::changeTheme(bool isLightTheme, QString& theme){
-    // Change theme in all of the childs here..
-    this->setStyleSheet(theme);
-    updateStyle(this);
+
 }
 
 

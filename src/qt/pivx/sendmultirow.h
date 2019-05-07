@@ -56,8 +56,8 @@ signals:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
-    virtual void enterEvent(QEvent *);
-    virtual void leaveEvent(QEvent *);
+    virtual void enterEvent(QEvent *) override ;
+    virtual void leaveEvent(QEvent *) override ;
 
 private slots:
     void amountChanged(const QString&);

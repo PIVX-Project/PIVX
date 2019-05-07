@@ -172,10 +172,6 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     setShadow(ui->layoutShadow);
 
     connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
-
-    // Style
-    connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(changeTheme(bool, QString&)));
-
 }
 
 void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
@@ -344,11 +340,8 @@ void DashboardWidget::onSortChanged(const QString& value){
 }
 
 void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){
-    // Change theme in all of the childs here..
-    this->setStyleSheet(theme);
     static_cast<TxViewHolder*>(this->txViewDelegate->getRowFactory())->isLightTheme = isLightTheme;
     this->changeChartColors();
-    updateStyle(this);
 }
 
 DashboardWidget::~DashboardWidget()

@@ -59,7 +59,7 @@ public:
 private slots:
     void handleTransactionClicked(const QModelIndex &index);
 
-    void changeTheme(bool isLightTheme, QString &theme);
+    void changeTheme(bool isLightTheme, QString &theme) override;
     void changeChartColors();
     void onSortTxPressed();
     void onSortChanged(const QString&);

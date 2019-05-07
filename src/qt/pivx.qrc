@@ -68,7 +68,7 @@
     </qresource>
     <qresource prefix="/css">
         <file>res/css/default.css</file>
-        <file>pivx/res/css/style_dark.css</file>
+        <file alias="default-dark">pivx/res/css/style_dark.css</file>
         <file alias="default">pivx/res/css/style_light.css</file>
     </qresource>
     <qresource prefix="/images">
@@ -285,6 +285,5 @@
         <file alias="ic-check-box-indeterminate">pivx/res/img/ic-check-box-indeterminate.svg</file>
         <file alias="ic-check-liliac-indeterminate">pivx/res/img/ic-check-liliac-indeterminate.svg</file>
         <file alias="ani-loading">pivx/res/img/ani-loading.gif</file>
-
     </qresource>
 </RCC>

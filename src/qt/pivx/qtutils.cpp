@@ -140,10 +140,7 @@ QSettings *settings = nullptr;
 
 QSettings* getSettings(){
     if(!settings){
-        QString m_path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
-        QString m_filename = "pivx_new_gui_config.ini" ;
-        settings = new QSettings(m_path + "/"+ m_filename,QSettings::IniFormat);
-
+        settings = new QSettings();
         // Setup initial values if them are not there
         setupSettings(settings);
     }
@@ -156,7 +153,9 @@ bool isLightTheme(){
 }
 
 void setTheme(bool isLight){
-    getSettings()->setValue("lightTheme", isLight);
+    QSettings* settings =  getSettings();
+    settings->setValue("theme", isLight ? "default" : "default-dark");
+    settings->setValue("lightTheme", isLight);
 }
 
 
