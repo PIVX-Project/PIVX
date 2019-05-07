@@ -2389,7 +2389,7 @@ QPushButton[cssClass="ic-step-confirm-welcome"] {
 }
 
 *[cssClass="container-welcome-stack"] {
-    background-image: url("://bg-welcome-container");
+    background-image: url("://bg-welcome-container-png");
     background-position:center;
     background-repeat:no-repeat;
     background-color: transparent;

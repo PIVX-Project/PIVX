@@ -257,10 +257,12 @@
         <file alias="img-empty-dark-peers">pivx/res/img/img-empty-dark-peers.svg</file>
         <file alias="img-empty-dark-staking-off">pivx/res/img/img-empty-dark-staking-off.svg</file>
         <file alias="img-empty-dark-transactions">pivx/res/img/img-empty-dark-transactions.svg</file>
+        <file alias="img-empty-dark-privacy">pivx/res/img/img-empty-privacy-dark.svg</file>
         <file alias="img-empty-error">pivx/res/img/img-empty-error.svg</file>
         <file alias="img-empty-masternode">pivx/res/img/img-empty-masternode.svg</file>
         <file alias="img-empty-multisend">pivx/res/img/img-empty-multisend.svg</file>
         <file alias="img-empty-peers">pivx/res/img/img-empty-peers.svg</file>
+        <file alias="img-empty-privacy">pivx/res/img/img-empty-privacy.svg</file>
         <file alias="img-empty-staking-off">pivx/res/img/img-empty-staking-off.svg</file>
         <file alias="img-empty-staking-on">pivx/res/img/img-empty-staking-on.svg</file>
         <file alias="img-empty-transactions">pivx/res/img/img-empty-transactions.svg</file>
