@@ -710,16 +710,6 @@ void SendWidget::resizeMenu(){
     }
 }
 
-void SendWidget::changeTheme(bool isLightTheme, QString& theme){
-    // Change theme in all of the childs here..
-    if(this->menuContacts){
-        this->menuContacts->setStyleSheet(theme);
-        if(this->menuContacts->isVisible()){
-            updateStyle(menuContacts);
-        }
-    }
-}
-
 SendWidget::~SendWidget()
 {
     delete ui;

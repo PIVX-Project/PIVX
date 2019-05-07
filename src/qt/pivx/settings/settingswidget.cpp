@@ -354,12 +354,6 @@ void SettingsWidget::setMapper(){
     settingsDisplayOptionsWidget->setMapper(mapper);
 }
 
-void SettingsWidget::changeTheme(bool isLightTheme, QString& theme){
-
-}
-
-
-
 SettingsWidget::~SettingsWidget()
 {
     delete ui;

@@ -18,9 +18,12 @@ class PWidget : public QWidget
     Q_OBJECT
 public:
     explicit PWidget(PIVXGUI* _window = nullptr, QWidget *parent = nullptr);
+    explicit PWidget(PWidget *parent = nullptr);
 
     void setClientModel(ClientModel* model);
     void setWalletModel(WalletModel* model);
+
+    PIVXGUI* getWindow() { return this->window; }
 
 signals:
     void message(const QString& title, const QString& body, unsigned int style, bool* ret = nullptr);
@@ -45,6 +48,8 @@ protected:
     void ask(const QString& title, const QString& message, bool* ret);
     void emitMessage(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
 
+private:
+    void init();
 
 };
 

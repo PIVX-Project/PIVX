@@ -43,10 +43,6 @@ QColor getRowColor(bool isLightTheme, bool isHovered, bool isSelected);
 QSettings* getSettings();
 void setupSettings(QSettings *settings);
 
-// Theme
-QString getLightTheme();
-QString getDarkTheme();
-
 bool isLightTheme();
 void setTheme(bool isLight);
 

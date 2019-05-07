@@ -38,7 +38,7 @@ public slots:
     void onNewAddressClicked();
     
 private slots:
-    void changeTheme(bool isLightTheme, QString &theme);
+    void changeTheme(bool isLightTheme, QString &theme) override ;
     void onLabelClicked();
     void onCopyClicked();
     void refreshView(QString refreshAddress = QString());

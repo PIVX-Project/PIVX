@@ -53,7 +53,6 @@ protected:
 private slots:
     void onPIVSelected(bool _isPIV);
     void onSendClicked();
-    void changeTheme(bool isLightTheme, QString& theme);
     void onContactsClicked(SendMultiRow* entry);
     void onMenuClicked(SendMultiRow* entry);
     void onAddEntryClicked();

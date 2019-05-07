@@ -459,7 +459,6 @@ void PrivacyWidget::updateDenomsSupply(){
 }
 
 void PrivacyWidget::changeTheme(bool isLightTheme, QString& theme){
-    // Change theme in all of the childs here..
     static_cast<TxViewHolder*>(this->delegate->getRowFactory())->isLightTheme = isLightTheme;
     ui->listView->update();
 }

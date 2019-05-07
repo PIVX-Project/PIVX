@@ -6,6 +6,7 @@
 #include <QAction>
 #include "walletmodel.h"
 #include "amount.h"
+#include "qt/pivx/pwidget.h"
 
 class WalletModel;
 class SendCoinsRecipient;
@@ -15,12 +16,12 @@ class SendMultiRow;
 class QPushButton;
 }
 
-class SendMultiRow : public QWidget
+class SendMultiRow : public PWidget
 {
     Q_OBJECT
 
 public:
-    explicit SendMultiRow(QWidget *parent = nullptr);
+    explicit SendMultiRow(PWidget *parent = nullptr);
     ~SendMultiRow();
 
     void hideLabels();

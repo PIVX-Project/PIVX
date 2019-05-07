@@ -32,7 +32,7 @@ public:
 
     void loadWalletModel() override;
 private slots:
-    void changeTheme(bool isLightTheme, QString &theme);
+    void changeTheme(bool isLightTheme, QString &theme) override;
     void onCoinControlClicked();
     void onDenomClicked();
     void onRescanMintsClicked();

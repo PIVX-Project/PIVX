@@ -8,8 +8,8 @@
 #include "bitcoinunits.h"
 #include "qt/pivx/qtutils.h"
 
-SendMultiRow::SendMultiRow(QWidget *parent) :
-    QWidget(parent),
+SendMultiRow::SendMultiRow(PWidget *parent) :
+    PWidget(parent),
     ui(new Ui::SendMultiRow),
     iconNumber(new QPushButton())
 {

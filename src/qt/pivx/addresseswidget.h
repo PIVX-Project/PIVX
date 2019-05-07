@@ -40,7 +40,7 @@ private slots:
     void onDeleteClicked();
     void onCopyClicked();
 
-    void changeTheme(bool isLightTheme, QString &theme);
+    void changeTheme(bool isLightTheme, QString &theme) override;
 private:
     Ui::AddressesWidget *ui;
 

@@ -81,9 +81,6 @@ private slots:
     void onFaqClicked();
     void onAboutClicked();
 
-
-
-    void changeTheme(bool isLightTheme, QString &theme);
 private:
     Ui::SettingsWidget *ui;
     PIVXGUI* window;

@@ -3,8 +3,10 @@
 
 #include "qt/pivx/moc_pwidget.cpp"
 
-PWidget::PWidget(PIVXGUI* _window, QWidget *parent) : QWidget(parent), window(_window)
-{
+PWidget::PWidget(PIVXGUI* _window, QWidget *parent) : QWidget(parent), window(_window){init();}
+PWidget::PWidget(PWidget* parent) : QWidget(parent), window(parent->getWindow()){init();}
+
+void PWidget::init() {
     if(window)
         connect(window, SIGNAL(themeChanged(bool, QString&)), this, SLOT(onChangeTheme(bool, QString&)));
 }

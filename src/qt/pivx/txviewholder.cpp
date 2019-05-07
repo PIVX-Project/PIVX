@@ -1,6 +1,7 @@
 #include "qt/pivx/txviewholder.h"
 #include "qt/pivx/txrow.h"
 
+#include "qt/pivx/qtutils.h"
 #include "transactiontablemodel.h"
 #include "transactionrecord.h"
 #include <QModelIndex>
@@ -41,23 +42,6 @@ void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered
     txRow->setType(isLightTheme, rec->type, !isUnconfirmed);
 }
 
-QColor TxViewHolder::rectColor(bool isHovered, bool isSelected){
-    // TODO: Move this to other class
-    if(isLightTheme){
-        if (isSelected) {
-            return QColor("#25b088ff");
-        }else if(isHovered){
-            return QColor("#25bababa");
-        } else{
-            return QColor("#ffffff");
-        }
-    }else{
-        if (isSelected) {
-            return QColor("#25b088ff");
-        }else if(isHovered){
-            return QColor("#25bababa");
-        } else{
-            return QColor("#0f0b16");
-        }
-    }
+QColor TxViewHolder::rectColor(bool isHovered, bool isSelected) {
+    return getRowColor(isLightTheme, isHovered, isSelected);
 }
