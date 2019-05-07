@@ -486,7 +486,7 @@ QPushButton[cssClass="btn-check-status-staking"] {
     qproperty-icon: url("://ic-wallet-status-staking") off,
                     url("://ic-wallet-status-staking") on ;
     qproperty-iconSize: 24px 24px;
-    color:#B3FFFFFF;
+    color:#ffffff;
     border-radius:2px;
 }
 
@@ -2578,7 +2578,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="img-empty-privacy"] {
-    qproperty-icon: url("://img-empty-multisend");
+    qproperty-icon: url("://img-empty-privacy");
     qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }

@@ -35,10 +35,7 @@
    <item>
     <widget class="QWidget" name="left" native="true">
      <property name="styleSheet">
-      <string notr="true">#left{
-	background-color:white;
-	border-radius: 2px;
-}</string>
+      <string notr="true"/>
      </property>
      <layout class="QVBoxLayout" name="left_3">
       <property name="spacing">
