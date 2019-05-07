@@ -2607,14 +2607,14 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 #treeWidget {
     border:1px solid #5c4b7d;
-    background-color:#FFFFFF;
+    background-color:#0f0b16;;
     background-position:center;
     background-repeat:no-repeat;
     selection-background-color:#33b088ff;
     selection-color: white;
     font-size:14px;
     border-radius:0px;
-    color: #707070;
+    color: #FFFFFF;
 }
 
 #treeWidget::indicator:first:checked{
@@ -2643,26 +2643,26 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 #treeWidget::item {
     border:none;
-    border-bottom: 1px solid #bababa;
+    border-bottom: 1px solid #40ffffff;
     border-radius:0px;
-    color: #707070;
+    color: #ffffff;
     padding-top: 6px;
     padding-bottom: 6px;
-    background-color:rgba(255,255,255,100);
+    background-color:#0f0b16;
 }
 
 #treeWidget::branch:closed:has-children:!has-siblings {
     border-image: none;
     background-color:rgba(255,255,255,100);
     image: url("://ic-arrow-drop-up");
-    border-bottom: 1px solid #bababa;
+    border-bottom: 1px solid #40ffffff;
 }
 
 #treeWidget::branch:closed:has-children:has-siblings {
     border-image: none;
     background-color:rgba(255,255,255,100);
     image: url("://ic-arrow-drop-up");
-    border-bottom: 1px solid #bababa;
+    border-bottom: 1px solid #40ffffff;
 }
 
 
@@ -2670,37 +2670,37 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 #treeWidget::branch:open:has-children:has-siblings {
     border-image: none;
     image: url("://ic-arrow-drop-down");
-    border-bottom: 1px solid #bababa;
+    border-bottom: 1px solid #40ffffff;
 }
 
 #treeWidget::item:hover {
     border:none;
-    border-bottom: 1px solid #bababa;
+    border-bottom: 1px solid #40ffffff;
     border-radius:0px;
-    color: #707070;
+    color: #ffffff;
     background-color:#26bababa;
 }
 
 #treeWidget::item:selected {
     border:none;
-    border-bottom: 1px solid #bababa;
+    border-bottom: 1px solid #40ffffff;
     border-radius:0px;
-    color: #707070;
+    color: #ffffff;
     background-color:#33b088ff;
 }
 
 
 #treeWidget::item:hover:selected {
     border:none;
-    border-bottom: 1px solid #bababa;
+    border-bottom: 1px solid #40ffffff;
     border-radius:0px;
-    color: #707070;
+    color: #ffffff;
     background-color:#33b088ff;
 }
 
 
 #treeWidget::branch {
-    background-color: #FFFFFF;
+    background-color: #0f0b16;
     selection-background-color:#33b088ff;
 }
 
@@ -2713,11 +2713,11 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 #treeWidget::branch:hover {
-    background-color:#26bababa;
+    background-color:#260f0b16;
 }
 
 #treeWidget::branch:!has-children {
-    background-color: #FFFFFF;
+    background-color: #0f0b16;
 }
 
 QHeaderView::section {
@@ -2732,12 +2732,12 @@ QHeaderView::section {
 
 *[cssClass="table-tree"] {
     border:0;
-    background-color:#FFFFFF;
+    background-color:#0f0b16;
     background-position:center;
     background-repeat:no-repeat;
     font-size:14px;
     border-radius:0px;
-    color: #707070;
+    color: #ffffff;
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
