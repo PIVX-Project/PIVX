@@ -11,8 +11,8 @@
 #include "guiutil.h"
 #include "walletmodel.h"
 #include "qt/pivx/qtutils.h"
-
-#include "allocators.h"
+#include "qt/pivx/loadingdialog.h"
+#include "qt/pivx/PIVXGUI.h"
 
 #include <QKeyEvent>
 #include <QMessageBox>
@@ -146,24 +146,11 @@ void AskPassphraseDialog::accept()
             QMessageBox::Cancel);
         if (retval == QMessageBox::Yes) {
             if (newpass1 == newpass2) {
-                if (model->setWalletEncrypted(true, newpass1)) {
-                    QMessageBox::warning(this, tr("Wallet encrypted"),
-                        "<qt>" +
-                            tr("PIVX will close now to finish the encryption process. "
-                               "Remember that encrypting your wallet cannot fully protect "
-                               "your PIVs from being stolen by malware infecting your computer.") +
-                            "<br><br><b>" +
-                            tr("IMPORTANT: Any previous backups you have made of your wallet file "
-                               "should be replaced with the newly generated, encrypted wallet file. "
-                               "For security reasons, previous backups of the unencrypted wallet file "
-                               "will become useless as soon as you start using the new, encrypted wallet.") +
-                            "</b></qt>");
-                    QApplication::quit();
-                } else {
-                    QMessageBox::critical(this, tr("Wallet encryption failed"),
-                        tr("Wallet encryption failed due to an internal error. Your wallet was not encrypted."));
-                }
-                QDialog::accept(); // Success
+                newpassCache = newpass1;
+                PIVXGUI* window = static_cast<PIVXGUI*>(parentWidget());
+                LoadingDialog *dialog = new LoadingDialog(window);
+                dialog->execute(this, 1);
+                openDialogWithOpaqueBackgroundFullScreen(dialog, window);
             } else {
                 QMessageBox::critical(this, tr("Wallet encryption failed"),
                     tr("The supplied passphrases do not match."));
@@ -279,4 +266,36 @@ bool AskPassphraseDialog::eventFilter(QObject* object, QEvent* event)
         }
     }
     return QDialog::eventFilter(object, event);
+}
+
+
+void AskPassphraseDialog::run(int type){
+    if (type == 1) {
+        if (!newpassCache.empty()) {
+            if (model->setWalletEncrypted(true, newpassCache)) {
+                QMessageBox::warning(this, tr("Wallet encrypted"),
+                                     "<qt>" +
+                                     tr("PIVX will close now to finish the encryption process. "
+                                        "Remember that encrypting your wallet cannot fully protect "
+                                        "your PIVs from being stolen by malware infecting your computer.") +
+                                     "<br><br><b>" +
+                                     tr("IMPORTANT: Any previous backups you have made of your wallet file "
+                                        "should be replaced with the newly generated, encrypted wallet file. "
+                                        "For security reasons, previous backups of the unencrypted wallet file "
+                                        "will become useless as soon as you start using the new, encrypted wallet.") +
+                                     "</b></qt>");
+                QApplication::quit();
+            } else {
+                QMessageBox::critical(this, tr("Wallet encryption failed"),
+                                      tr("Wallet encryption failed due to an internal error. Your wallet was not encrypted."));
+            }
+            newpassCache = "";
+            QDialog::accept(); // Success
+        } else {
+            // no pass..
+        }
+    }
+}
+void AskPassphraseDialog::onError(int type, QString error){
+    newpassCache = "";
 }

@@ -7,8 +7,11 @@
 #define BITCOIN_QT_ASKPASSPHRASEDIALOG_H
 
 #include <QDialog>
+#include "qt/pivx/prunnable.h"
+#include "allocators.h"
 
 class WalletModel;
+class PIVXGUI;
 
 namespace Ui
 {
@@ -17,7 +20,7 @@ class AskPassphraseDialog;
 
 /** Multifunctional dialog to ask for passphrases. Used for encryption, unlocking, and changing the passphrase.
  */
-class AskPassphraseDialog : public QDialog
+class AskPassphraseDialog : public QDialog, public Runnable
 {
     Q_OBJECT
 
@@ -50,7 +53,7 @@ public:
     explicit AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel* model, Context context);
     ~AskPassphraseDialog();
 
-    void accept();
+    void accept() override;
 
 private:
     Ui::AskPassphraseDialog* ui;
@@ -58,13 +61,17 @@ private:
     WalletModel* model;
     Context context;
     bool fCapsLock;
+    SecureString newpassCache = "";
+
+    void run(int type) override;
+    void onError(int type, QString error) override;
 
 private slots:
     void textChanged();
 
 protected:
-    bool event(QEvent* event);
-    bool eventFilter(QObject* object, QEvent* event);
+    bool event(QEvent* event) override ;
+    bool eventFilter(QObject* object, QEvent* event) override;
 };
 
 #endif // BITCOIN_QT_ASKPASSPHRASEDIALOG_H
