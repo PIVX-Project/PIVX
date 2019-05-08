@@ -2620,10 +2620,10 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 #treeWidget::indicator:first:checked{
-    image: url("://ic-check-active");
+    image: url("://ic-check-box-dark-active");
 }
 #treeWidget::indicator:middle:checked{
-    image: url("://ic-check-active");
+    image: url("://ic-check-box-dark-active");
 }
 
 #treeWidget::indicator {
