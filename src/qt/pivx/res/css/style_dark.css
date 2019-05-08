@@ -701,12 +701,12 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="text-list-body2"] {
-    color:#707070;
+    color:#ffffff;
     font-size:15.5px;
 }
 
 *[cssClass="text-list-contact-body1"] {
-    color:#707070;
+    color:#ffffff;
     font-size:16px;
 }
 
@@ -722,7 +722,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="text-list-caption"] {
-    color:#FFFFFF;
+    color:#B3FFFFFF;
     font-size:12px;
 }
 
@@ -1519,10 +1519,12 @@ QProgressBar[cssClass="progress-splash"]::chunk:horizontal {
                                 y1: 0.5,
                                 x2: 1,
                                 y2: 0.5,
-                                stop: 0 #B3b088ff,
-                                stop: 1 #B3211a2f);
+                                stop: 0 #80211a2f,
+                                stop: 1 #80b088ff,
+                                stop: 2 #80211a2f,);
     margin-right: 2px;
 }
+
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 HH      DASHBOARD
@@ -2630,7 +2632,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 #treeWidget::indicator:indeterminate {
-    image: url("://ic-check-box-indeterminate");
+    image: url("://ic-check-box-liliac-indeterminate");
 }
 
 #treeWidget::indicator:unchecked {
@@ -2638,7 +2640,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 #treeWidget::indicator:checked {
-    image: url("://ic-check-active");
+    image: url("://ic-check-box-dark-active");
 }
 
 #treeWidget::item {
@@ -2653,14 +2655,14 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 #treeWidget::branch:closed:has-children:!has-siblings {
     border-image: none;
-    background-color:rgba(255,255,255,100);
+    background-color:#0f0b16;
     image: url("://ic-arrow-drop-up");
     border-bottom: 1px solid #40ffffff;
 }
 
 #treeWidget::branch:closed:has-children:has-siblings {
     border-image: none;
-    background-color:rgba(255,255,255,100);
+    background-color:#0f0b16;
     image: url("://ic-arrow-drop-up");
     border-bottom: 1px solid #40ffffff;
 }

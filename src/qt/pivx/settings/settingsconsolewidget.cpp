@@ -1,6 +1,7 @@
 #include "qt/pivx/settings/settingsconsolewidget.h"
 #include "qt/pivx/settings/forms/ui_settingsconsolewidget.h"
 #include "QGraphicsDropShadowEffect"
+#include "qt/pivx/qtutils.h"
 
 #include "clientmodel.h"
 #include "guiutil.h"
@@ -40,10 +41,10 @@ const struct {
     const char* url;
     const char* source;
 } ICON_MAPPING[] = {
-        {"cmd-request", ":/icons/tx_input"},
-        {"cmd-reply", ":/icons/tx_output"},
-        {"cmd-error", ":/icons/tx_output"},
-        {"misc", ":/icons/tx_inout"},
+        {"cmd-request", ":/icons/ic-transaction-received"},
+        {"cmd-reply", ":/icons/ic-transaction-sent"},
+        {"cmd-error", ":/icons/ic-transaction-sent"},
+        {"misc", ":/icons/ic-transaction-staked"},
         {NULL, NULL}};
 
 /* Object for executing console RPC commands in a separate thread.
@@ -281,6 +282,8 @@ SettingsConsoleWidget::SettingsConsoleWidget(PIVXGUI* _window, QWidget *parent) 
 
     clear();
 
+    ui->messagesWidget->setProperty("cssClass", "container");
+
 }
 
 SettingsConsoleWidget::~SettingsConsoleWidget()
@@ -397,14 +400,26 @@ void SettingsConsoleWidget::clear(){
     }
 
     // Set default style sheet
-    ui->messagesWidget->document()->setDefaultStyleSheet(
-            "table { }"
-            "td.time { color: #808080; padding-top: 3px; } "
-            "td.message { font-family: Courier, Courier New, Lucida Console, monospace; font-size: 12px; } " // Todo: Remove fixed font-size
-            "td.cmd-request { color: #006060; } "
-            "td.cmd-error { color: red; } "
-            ".secwarning { color: red; }"
-            "b { color: #006060; } ");
+    if (isLightTheme()) {
+        ui->messagesWidget->document()->setDefaultStyleSheet(
+                "table { color: #707070;  }"
+                "td.time { color: #808080; padding-top: 3px; } "
+                "td.message { color: #707070;font-family: Courier, Courier New, Lucida Console, monospace; font-size: 12px; } " // Todo: Remove fixed font-size
+                "td.cmd-request { color: #006060; } "
+                "td.cmd-error { color: red; } "
+                ".secwarning { color: red; }"
+                "b { color: #707070; } ");
+    } else {
+        ui->messagesWidget->document()->setDefaultStyleSheet(
+                "table { color: #FFFFFF; }"
+                "td.time { color: #808080; padding-top: 3px; } "
+                "td.message { color: #FFFFFF;font-family: Courier, Courier New, Lucida Console, monospace; font-size: 12px; } " // Todo: Remove fixed font-size
+                "td.cmd-request { color: #006060; } "
+                "td.cmd-error { color: red; } "
+                ".secwarning { color: red; }"
+                "b { color: #FFFFFF; } ");
+    }
+
 
 #ifdef Q_OS_MAC
     QString clsKey = "(⌘)-L";

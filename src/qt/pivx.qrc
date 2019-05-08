@@ -255,6 +255,7 @@
         <file alias="img-empty-dark-masternode">pivx/res/img/img-empty-dark-masternode.svg</file>
         <file alias="img-empty-dark-multisend">pivx/res/img/img-empty-dark-multisend.svg</file>
         <file alias="img-empty-dark-peers">pivx/res/img/img-empty-dark-peers.svg</file>
+        <file alias="img-empty-dark-staking-on">pivx/res/img/img-empty-dark-staking-on.svg</file>
         <file alias="img-empty-dark-staking-off">pivx/res/img/img-empty-dark-staking-off.svg</file>
         <file alias="img-empty-dark-transactions">pivx/res/img/img-empty-dark-transactions.svg</file>
         <file alias="img-empty-dark-privacy">pivx/res/img/img-empty-privacy-dark.svg</file>
@@ -282,8 +283,7 @@
         <file alias="bg-welcome-container-2x">pivx/res/img/bg-welcome-container@2x.png</file>
         <file alias="bg-welcome-container-3x">pivx/res/img/bg-welcome-container@3x.png</file>
         <file alias="bg-dashboard-banner">pivx/res/img/bg-dashboard-banner.png</file>
-        <file alias="ic-check-liliac-indeterminate">pivx/res/img/ic-check-liliac-indeterminate.svg</file>
-        <file alias="ic-check-box-liliac-indeterminate">pivx/res/img/ic-check-box-liliac-indeterminate.svg</file>
+        <file alias="ic-check-box-dark-active">pivx/res/img/ic-check-box-dark-active.svg</file>
         <file alias="ic-check-box-indeterminate">pivx/res/img/ic-check-box-indeterminate.svg</file>
         <file alias="ic-check-liliac-indeterminate">pivx/res/img/ic-check-liliac-indeterminate.svg</file>
         <file alias="ani-loading">pivx/res/img/ani-loading.gif</file>

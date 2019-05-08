@@ -424,6 +424,10 @@ RES_ICONS = \
   qt/res/icons/tx_input.png \
   qt/res/icons/tx_output.png \
   qt/res/icons/tx_mined.png \
+  qt/res/icons/ic-transaction-received.svg \
+  qt/res/icons/ic-transaction-mint.svg \
+  qt/res/icons/ic-transaction-sent.svg \
+  qt/res/icons/ic-transaction-staked.svg \
   qt/res/icons/unit_pivx.png \
   qt/res/icons/unit_mpivx.png \
   qt/res/icons/unit_upivx.png \
@@ -487,6 +491,7 @@ RES_ICONS = \
   qt/pivx/res/img/ic-check.svg \
   qt/pivx/res/img/ic-nav-send-active.svg \
   qt/pivx/res/img/img-empty-dark-staking-off.svg \
+  qt/pivx/res/img/img-empty-dark-staking-on.svg \
   qt/pivx/res/img/ic-address-book-grey.svg \
   qt/pivx/res/img/ic-chevron-left.svg \
   qt/pivx/res/img/ic-nav-send-hover.svg \
@@ -554,6 +559,7 @@ RES_ICONS = \
   qt/pivx/res/img/ic-switch-on.svg \
   qt/pivx/res/img/img-qr-test.png \
   qt/pivx/res/img/ic-check-box.svg \
+  qt/pivx/res/img/ic-check-box-dark-active.svg \
   qt/pivx/res/img/ic-check-box-indeterminate.svg \
   qt/pivx/res/img/ic-check-box-liliac-indeterminate.svg \
   qt/pivx/res/img/ic-label-liliac.svg \

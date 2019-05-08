@@ -151,7 +151,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="page_1">
          <property name="minimumSize">
@@ -230,7 +230,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout">
             <property name="spacing">
-             <number>1</number>
+             <number>5</number>
             </property>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -365,7 +365,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayoutLabel">
             <property name="spacing">
-             <number>1</number>
+             <number>5</number>
             </property>
             <item>
              <widget class="QLabel" name="labelSubtitleLabel">
@@ -410,7 +410,7 @@
              <enum>Qt::Vertical</enum>
             </property>
             <property name="sizeType">
-             <enum>QSizePolicy::Minimum</enum>
+             <enum>QSizePolicy::Fixed</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>

@@ -188,6 +188,7 @@ void AskPassphraseDialog::onWatchClicked(){
 void AskPassphraseDialog::onWatch2Clicked(){
     ui->passEdit3->setEchoMode(btnWatch->checkState() == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
     ui->passEdit2->setEchoMode(btnWatch->checkState() == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
+    ui->passEdit1->setEchoMode(btnWatch->checkState() == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
 }
 
 AskPassphraseDialog::~AskPassphraseDialog()
