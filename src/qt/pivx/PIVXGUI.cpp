@@ -174,7 +174,7 @@ void PIVXGUI::connectActions() {
     });
 
     connect(topBar, &TopBar::showHide, this, &PIVXGUI::showHide);
-    connect(topBar, &TopBar::changeTheme, this, &PIVXGUI::changeTheme);
+    connect(topBar, &TopBar::themeChanged, this, &PIVXGUI::changeTheme);
     connect(settingsWidget, &SettingsWidget::showHide, this, &PIVXGUI::showHide);
     connect(sendWidget, &SendWidget::showHide, this, &PIVXGUI::showHide);
     connect(receiveWidget, &ReceiveWidget::showHide, this, &PIVXGUI::showHide);

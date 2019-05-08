@@ -144,7 +144,7 @@ void TopBar::onThemeClicked(){
         updateStyle(ui->pushButtonTheme);
     }
 
-    emit changeTheme(lightTheme);
+    emit themeChanged(lightTheme);
 }
 
 

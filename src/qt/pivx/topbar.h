@@ -44,7 +44,7 @@ public slots:
     void updateStakingStatus();
 
 signals:
-    void changeTheme(bool isLight);
+    void themeChanged(bool isLight);
     void walletSynced(bool isSync);
 private slots:
     void onBtnReceiveClicked();
