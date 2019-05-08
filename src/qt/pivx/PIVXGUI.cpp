@@ -221,13 +221,13 @@ void PIVXGUI::handleRestart(QStringList args){
 void PIVXGUI::setClientModel(ClientModel* clientModel) {
     this->clientModel = clientModel;
     if(this->clientModel) {
-        // TODO: Complete me..
         topBar->setClientModel(clientModel);
         sendWidget->setClientModel(clientModel);
         settingsWidget->setClientModel(clientModel);
 
         // Receive and report messages from client model
         connect(clientModel, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
+        connect(topBar, SIGNAL(walletSynced()), dashboard, SLOT(walletSynced()));
 
         // Get restart command-line parameters and handle restart
         connect(settingsWidget, &SettingsWidget::handleRestart, [this](QStringList arg){handleRestart(arg);});

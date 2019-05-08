@@ -339,6 +339,10 @@ void DashboardWidget::onSortChanged(const QString& value){
     }
 }
 
+void DashboardWidget::walletSynced(bool isSync){
+    ui->layoutWarning->setVisible(!isSync);
+}
+
 void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){
     static_cast<TxViewHolder*>(this->txViewDelegate->getRowFactory())->isLightTheme = isLightTheme;
     this->changeChartColors();

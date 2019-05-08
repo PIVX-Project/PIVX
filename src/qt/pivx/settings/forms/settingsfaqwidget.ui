@@ -36,13 +36,13 @@
        <number>36</number>
       </property>
       <property name="topMargin">
-       <number>50</number>
+       <number>44</number>
       </property>
       <property name="rightMargin">
        <number>36</number>
       </property>
       <property name="bottomMargin">
-       <number>50</number>
+       <number>44</number>
       </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -429,6 +429,9 @@
            </property>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_6">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <item>
               <widget class="QScrollArea" name="scrollAreaFaq">
                <property name="styleSheet">
@@ -452,9 +455,9 @@ background:transparent;
                 <property name="geometry">
                  <rect>
                   <x>0</x>
-                  <y>-367</y>
-                  <width>622</width>
-                  <height>1948</height>
+                  <y>0</y>
+                  <width>628</width>
+                  <height>1820</height>
                  </rect>
                 </property>
                 <property name="autoFillBackground">
@@ -1214,9 +1217,6 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
               </widget>
              </item>
             </layout>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout_7"/>
            </item>
           </layout>
          </widget>

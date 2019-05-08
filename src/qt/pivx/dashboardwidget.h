@@ -56,6 +56,9 @@ public:
 
     void loadWalletModel() override ;
     void loadChart();
+
+public slots:
+    void walletSynced(bool isSync);
 private slots:
     void handleTransactionClicked(const QModelIndex &index);
 

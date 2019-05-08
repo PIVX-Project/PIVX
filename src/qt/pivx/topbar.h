@@ -42,11 +42,10 @@ public slots:
     void setNumBlocks(int count);
     void updateAutoMintStatus();
     void updateStakingStatus();
-    /** Show progress dialog e.g. for verifychain */
-    void showProgress(const QString& title, int nProgress);
 
 signals:
     void changeTheme(bool isLight);
+    void walletSynced(bool isSync);
 private slots:
     void onBtnReceiveClicked();
     void onThemeClicked();

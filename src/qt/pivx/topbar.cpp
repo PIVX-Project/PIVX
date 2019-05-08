@@ -78,9 +78,7 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     progressBar->raise();
     progressBar->move(0, 34);
 
-
     // New button
-
     ui->pushButtonPeers->setButtonClassStyle("cssClass", "btn-check-peers");
     ui->pushButtonPeers->setButtonText("No Online Peers");
 
@@ -126,12 +124,7 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
 
     connect(ui->pushButtonQR, SIGNAL(clicked()), this, SLOT(onBtnReceiveClicked()));
     connect(ui->btnQr, SIGNAL(clicked()), this, SLOT(onBtnReceiveClicked()));
-
-
     connect(ui->pushButtonLock, SIGNAL(Mouse_Pressed()), this, SLOT(onBtnLockClicked()));
-    //connect(ui->pushButtonLock, SIGNAL(Mouse_Hover()), this, SLOT(onBtnLockHover()));
-    //connect(ui->pushButtonLock, SIGNAL(Mouse_HoverLeave()), this, SLOT(onBtnLockHoverLeave()));
-
     connect(ui->pushButtonTheme, SIGNAL(Mouse_Pressed()), this, SLOT(onThemeClicked()));
 }
 
@@ -234,7 +227,7 @@ void TopBar::lockDropdownClicked(const StateClicked& state){
                 dlg->adjustSize();
                 openDialogWithOpaqueBackgroundY(dlg, window);
                 if (this->walletModel->getEncryptionStatus() == WalletModel::UnlockedForAnonymizationOnly) {
-                    ui->pushButtonLock->setButtonText("Wallet Unlocked for staking");
+                    ui->pushButtonLock->setButtonText(tr("Wallet Unlocked for staking"));
                     ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-staking", true);
                 }
                 break;
@@ -315,16 +308,6 @@ void TopBar::loadClientModel(){
         connect(timerStakingIcon, SIGNAL(timeout()), this, SLOT(updateStakingStatus()));
         timerStakingIcon->start(50000);
         updateStakingStatus();
-
-        // Show progress dialog
-        connect(clientModel, SIGNAL(showProgress(QString, int)), this, SLOT(showProgress(QString, int)));
-
-    }
-}
-
-void TopBar::showProgress(const QString& title, int nProgress){
-    if (nProgress > 0 && nProgress <= 100) {
-        progressBar->setValue(nProgress);
     }
 }
 
@@ -395,17 +378,19 @@ void TopBar::setNumBlocks(int count) {
             // Node synced
             // TODO: Set synced icon to pushButtonSync here..
             ui->pushButtonSync->setButtonText(tr("Synchronized"));
+            emit walletSynced(true);
             return;
         }else{
 
             // TODO: Show out of sync warning
-
             int nAttempt = masternodeSync.RequestedMasternodeAttempt < MASTERNODE_SYNC_THRESHOLD ?
                        masternodeSync.RequestedMasternodeAttempt + 1 :
                        MASTERNODE_SYNC_THRESHOLD;
             int progress = nAttempt + (masternodeSync.RequestedMasternodeAssets - 1) * MASTERNODE_SYNC_THRESHOLD;
             if(progress >= 0){
                 text = std::string("Synchronizing additional data: %p%", progress);
+                progressBar->setMaximum(4 * MASTERNODE_SYNC_THRESHOLD);
+                progressBar->setValue(progress);
                 needState = false;
             }
         }
@@ -437,6 +422,9 @@ void TopBar::setNumBlocks(int count) {
         QString timeBehind(" behind. Scanning block ");
         QString str = timeBehindText + timeBehind + QString::number(count);
         text = str.toUtf8().constData();
+
+        progressBar->setMaximum(1000000000);
+        progressBar->setValue(clientModel->getVerificationProgress() * 1000000000.0 + 0.5);
     }
 
     if(text.empty()){
@@ -444,8 +432,7 @@ void TopBar::setNumBlocks(int count) {
     }
 
     ui->pushButtonSync->setButtonText(tr(text.data()));
-
-
+    emit walletSynced(false);
 }
 
 void TopBar::loadWalletModel(){

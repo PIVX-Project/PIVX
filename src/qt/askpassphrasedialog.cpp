@@ -14,6 +14,7 @@
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/loadingdialog.h"
 #include "qt/pivx/PIVXGUI.h"
+#include <QDebug>
 
 #include <QKeyEvent>
 #include <QMessageBox>
@@ -123,16 +124,24 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
 
     this->model = model;
 
+    QString title;
     switch (mode) {
     case Mode::Encrypt: // Ask passphrase x2
         ui->warningLabel->setText(tr("Enter the new passphrase to the wallet.<br/>Please use a passphrase of <b>ten or more random characters</b>, or <b>eight or more words</b>."));
         ui->passLabel1->hide();
         ui->passEdit1->hide();
         ui->layoutEdit->hide();
-        setWindowTitle(tr("Encrypt wallet"));
+        title = tr("Encrypt wallet");
         break;
     case Mode::UnlockAnonymize:
-        //ui->anonymizationCheckBox->show();
+        ui->warningLabel->setText(tr("This operation needs your wallet passphrase to unlock the wallet."));
+        ui->passLabel2->hide();
+        ui->passEdit2->hide();
+        ui->layoutEdit2->hide();
+        ui->passLabel3->hide();
+        ui->passEdit3->hide();
+        title = tr("Unlock wallet\nfor staking");
+        break;
     case Mode::Unlock: // Ask passphrase
         ui->warningLabel->setText(tr("This operation needs your wallet passphrase to unlock the wallet."));
         ui->passLabel2->hide();
@@ -140,7 +149,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         ui->layoutEdit2->hide();
         ui->passLabel3->hide();
         ui->passEdit3->hide();
-        setWindowTitle(tr("Unlock wallet"));
+        title = tr("Unlock wallet");
         break;
     case Mode::Decrypt: // Ask passphrase
         ui->warningLabel->setText(tr("This operation needs your wallet passphrase to decrypt the wallet."));
@@ -149,14 +158,16 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         ui->layoutEdit2->hide();
         ui->passLabel3->hide();
         ui->passEdit3->hide();
-        setWindowTitle(tr("Decrypt wallet"));
+        title = tr("Decrypt wallet");
         break;
     case Mode::ChangePass: // Ask old passphrase + new passphrase x2
-        setWindowTitle(tr("Change passphrase"));
+        title = tr("Change passphrase");
         btnWatch2->hide();
         ui->warningLabel->setText(tr("Enter the old and new passphrase to the wallet."));
         break;
     }
+
+    ui->labelTitle->setText(title);
 
     textChanged();
     connect(btnWatch2, SIGNAL(clicked()), this, SLOT(onWatch2Clicked()));
@@ -340,6 +351,7 @@ bool AskPassphraseDialog::eventFilter(QObject* object, QEvent* event)
 void AskPassphraseDialog::run(int type){
     if (type == 1) {
         if (!newpassCache.empty()) {
+            qDebug() << __func__ << ": starting wallet encryption";
             if (model->setWalletEncrypted(true, newpassCache)) {
                 QMessageBox::warning(this, tr("Wallet encrypted"),
                                      "<qt>" +
@@ -359,8 +371,10 @@ void AskPassphraseDialog::run(int type){
             }
             newpassCache = "";
             QDialog::accept(); // Success
+            qDebug() << __func__ << ":  encryption finished";
         } else {
             // no pass..
+            qDebug() << __func__ << ": no pass for encryption";
         }
     }
 }
