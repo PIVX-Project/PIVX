@@ -348,34 +348,36 @@ bool AskPassphraseDialog::eventFilter(QObject* object, QEvent* event)
     return QDialog::eventFilter(object, event);
 }
 
+void AskPassphraseDialog::warningMessage() {
+    QMessageBox::warning(this, tr("Wallet encrypted"),
+                         "<qt>" +
+                         tr("PIVX will close now to finish the encryption process. "
+                            "Remember that encrypting your wallet cannot fully protect "
+                            "your PIVs from being stolen by malware infecting your computer.") +
+                         "<br><br><b>" +
+                         tr("IMPORTANT: Any previous backups you have made of your wallet file "
+                            "should be replaced with the newly generated, encrypted wallet file. "
+                            "For security reasons, previous backups of the unencrypted wallet file "
+                            "will become useless as soon as you start using the new, encrypted wallet.") +
+                         "</b></qt>");
+    QApplication::quit();
+}
+
+void AskPassphraseDialog::errorEncryptingWallet() {
+    QMessageBox::critical(this, tr("Wallet encryption failed"),
+                          tr("Wallet encryption failed due to an internal error. Your wallet was not encrypted."));
+}
 
 void AskPassphraseDialog::run(int type){
     if (type == 1) {
         if (!newpassCache.empty()) {
-            qDebug() << __func__ << ": starting wallet encryption";
             if (model->setWalletEncrypted(true, newpassCache)) {
-                QMessageBox::warning(this, tr("Wallet encrypted"),
-                                     "<qt>" +
-                                     tr("PIVX will close now to finish the encryption process. "
-                                        "Remember that encrypting your wallet cannot fully protect "
-                                        "your PIVs from being stolen by malware infecting your computer.") +
-                                     "<br><br><b>" +
-                                     tr("IMPORTANT: Any previous backups you have made of your wallet file "
-                                        "should be replaced with the newly generated, encrypted wallet file. "
-                                        "For security reasons, previous backups of the unencrypted wallet file "
-                                        "will become useless as soon as you start using the new, encrypted wallet.") +
-                                     "</b></qt>");
-                QApplication::quit();
+                QMetaObject::invokeMethod(this, "warningMessage", Qt::QueuedConnection);
             } else {
-                QMessageBox::critical(this, tr("Wallet encryption failed"),
-                                      tr("Wallet encryption failed due to an internal error. Your wallet was not encrypted."));
+                QMetaObject::invokeMethod(this, "errorEncryptingWallet", Qt::QueuedConnection);
             }
-            newpassCache = "";
+            newpassCache.clear();
             QDialog::accept(); // Success
-            qDebug() << __func__ << ":  encryption finished";
-        } else {
-            // no pass..
-            qDebug() << __func__ << ": no pass for encryption";
         }
     }
 }
