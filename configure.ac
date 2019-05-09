@@ -1028,6 +1028,7 @@ if test x$use_pkgconfig = xyes; then
         BITCOIN_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
       fi
       BITCOIN_QT_CHECK([PKG_CHECK_MODULES([SVG], [Qt5Svg],,[BITCOIN_QT_FAIL(qtsvg not found)])])
+      BITCOIN_QT_CHECK([PKG_CHECK_MODULES([CHARTS], [Qt5Charts],,[BITCOIN_QT_FAIL(qtcharts not found)])])
       if test x$build_bitcoin_utils$build_bitcoind$bitcoin_enable_qt$use_tests != xnononono; then
         PKG_CHECK_MODULES([EVENT], [libevent],, [AC_MSG_ERROR(libevent not found.)])
         if test x$TARGET_OS != xwindows; then
@@ -1086,6 +1087,7 @@ else
 
   BITCOIN_QT_CHECK(AC_CHECK_LIB([protobuf] ,[main],[PROTOBUF_LIBS=-lprotobuf], BITCOIN_QT_FAIL(libprotobuf not found)))
   BITCOIN_QT_CHECK([AC_CHECK_LIB([Qt5Svg], [main],[SVG_LIBS=-lQt5Svg], BITCOIN_QT_FAIL(svg not found))])
+  BITCOIN_QT_CHECK([AC_CHECK_LIB([Qt5Charts], [main],[SVG_LIBS=-lQt5Charts], BITCOIN_QT_FAIL(charts not found))])
   BITCOIN_QT_CHECK([AC_CHECK_HEADER([qsvgwidget.h],, BITCOIN_QT_FAIL(svg not found))])
   if test x$use_qr != xno; then
     BITCOIN_QT_CHECK([AC_CHECK_LIB([qrencode], [main],[QR_LIBS=-lqrencode], [have_qrencode=no])])
@@ -1499,4 +1501,6 @@ echo "  PIC_FLAGS     = $PIC_FLAGS"
 echo "  QT_PIE_FLAGS  = $QT_PIE_FLAGS"
 echo "  SVG_LIBS      = $SVG_LIBS "
 echo "  SVG_CFLAGS      = $SVG_CFLAGS "
+echo "  CHARTS_LIBS      = $CHARTS_LIBS "
+echo "  CHARTS_CFLAGS      = $CHARTS_CFLAGS "
 echo
