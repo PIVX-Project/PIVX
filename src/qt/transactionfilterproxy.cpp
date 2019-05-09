@@ -61,6 +61,8 @@ bool TransactionFilterProxy::filterAcceptsRow(int sourceRow, const QModelIndex& 
     if (fOnlyZc && !isZcTx(type)){
         return false;
     }
+    if (fOnlyStakes && !isStakeTx(type))
+        return false;
 
     return true;
 }
@@ -118,6 +120,11 @@ void TransactionFilterProxy::setShowZcTxes(bool fOnlyZc){
     invalidateFilter();
 }
 
+void TransactionFilterProxy::setOnlyStakes(bool fOnlyStakes){
+    this->fOnlyStakes = fOnlyStakes;
+    invalidateFilter();
+}
+
 int TransactionFilterProxy::rowCount(const QModelIndex& parent) const
 {
     if (limitRows != -1) {
@@ -138,3 +145,13 @@ bool TransactionFilterProxy::isZcTx(int type) const {
     return (type == TransactionRecord::ZerocoinMint || type == TransactionRecord::ZerocoinSpend || type == TransactionRecord::ZerocoinSpend_Change_zPiv
             || type == TransactionRecord::ZerocoinSpend_FromMe || type == TransactionRecord::RecvFromZerocoinSpend);
 }
+
+bool TransactionFilterProxy::isStakeTx(int type) const {
+    return (type == TransactionRecord::StakeMint || type == TransactionRecord::Generated || type == TransactionRecord::StakeZPIV);
+}
+
+/*QVariant TransactionFilterProxy::dataFromSourcePos(int sourceRow, int role) const {
+    QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
+    return index.data(index, role);
+}
+ */

@@ -238,6 +238,12 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet* 
                     if (wallet->IsDenominatedAmount(txout.nValue)) sub.type = TransactionRecord::ObfuscationCreateDenominations;
                     if (nDebit - wtx.GetValueOut() == OBFUSCATION_COLLATERAL) sub.type = TransactionRecord::ObfuscationCollateralPayment;
                 }
+
+                // Label for payment to self
+                CTxDestination address;
+                if (ExtractDestination(wtx.vout[0].scriptPubKey, address)) {
+                    sub.address = CBitcoinAddress(address).ToString();
+                }
             }
 
             CAmount nChange = wtx.GetChange();

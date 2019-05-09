@@ -3,6 +3,7 @@
 #include "qt/pivx/sendconfirmdialog.h"
 #include "qt/pivx/txrow.h"
 #include "qt/pivx/qtutils.h"
+#include "guiutil.h"
 #include "walletmodel.h"
 #include "optionsmodel.h"
 #include "qt/pivx/settings/settingsfaqwidget.h"
@@ -15,8 +16,10 @@
 #include <QPaintEngine>
 #include <QGraphicsDropShadowEffect>
 #include <iostream>
+#include <cstdlib>
 
-/*
+#include <QMap>
+
 // Chart
 #include <QtCharts/QChartView>
 #include <QtCharts/QBarSeries>
@@ -24,7 +27,6 @@
 #include <QtCharts/QLegend>
 #include <QtCharts/QBarCategoryAxis>
 #include <QtCharts/QValueAxis>
- */
 #include <QGraphicsLayout>
 
 #define DECORATION_SIZE 65
@@ -158,13 +160,11 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     //ui->pushImgEmptyChart->setProperty("cssClass", "img-empty-staking-off");
     //ui->labelEmptyChart->setText("Staking off");
 
-    ui->labelEmptyChart->setText("Staking on");
+    ui->labelEmptyChart->setText("Staking off");
     ui->labelEmptyChart->setProperty("cssClass", "text-empty");
 
     ui->labelMessageEmpty->setText("You can activate and deactivate the Staking mode in the status bar at the top right of the wallet");
     ui->labelMessageEmpty->setProperty("cssClass", "text-subtitle");
-    // load chart
-    loadChart();
 
     // Chart State
     ui->layoutChart->setVisible(false);
@@ -192,68 +192,117 @@ void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
 
 }
 
-void DashboardWidget::loadChart(){
-    /*
+void DashboardWidget::initChart() {
     set0 = new QBarSet("PIV");
     set0->setColor(QColor(176,136,255));
 
     set1 = new QBarSet("zPIV");
     set1->setColor(QColor(92,75,125));
 
-    *set0 << 4 << 2 << 4 << 6;
-    *set1 << 6 << 9 << 3 << 6;
-
-    QBarSeries *series = new QBarSeries();
-    series->append(set0);
-    series->append(set1);
-
-    // bar width
-    series->setBarWidth(0.8);
-
     chart = new QChart();
-    chart->addSeries(series);
-    // title
-    //chart->setTitle("Simple barchart example");
-    chart->setAnimationOptions(QChart::SeriesAnimations);
+}
 
-    QStringList categories;
-    categories << "Jan" << "Feb" << "Mar" << "Apr";
-    axisX = new QBarCategoryAxis();
-    axisX->append(categories);
-    chart->addAxis(axisX, Qt::AlignBottom);
-    series->attachAxis(axisX);
+const char * monthsNames[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-    axisY = new QValueAxis();
-    axisY->setRange(0,12);
-    chart->addAxis(axisY, Qt::AlignRight);
-    series->attachAxis(axisY);
+void DashboardWidget::loadChart(){
 
-    // Legend
-    chart->legend()->setVisible(false);
-    chart->legend()->setAlignment(Qt::AlignTop);
+    int size = stakesFilter->rowCount();
+    if (size > 0) {
+        ui->layoutChart->setVisible(true);
+        ui->emptyContainerChart->setVisible(false);
+        initChart();
 
-    QChartView *chartView = new QChartView(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
+        // pair PIV, zPIV
+        QMap<int, std::pair<qint64, qint64>> amountByMonths;
+        // get all of the stakes
+        for (int i = 0; i < size; ++i) {
+            QModelIndex modelIndex = stakesFilter->index(i, TransactionTableModel::ToAddress);
+            qint64 amount = llabs(modelIndex.data(TransactionTableModel::AmountRole).toLongLong());
+            QDateTime datetime = modelIndex.data(TransactionTableModel::DateRole).toDateTime();
+            bool isPiv = modelIndex.data(TransactionTableModel::TypeRole).toInt() != TransactionRecord::StakeZPIV;
+            int month = datetime.date().month();
+            if (amountByMonths.contains(month)) {
+                if (isPiv) {
+                    amountByMonths[month].first += amount;
+                } else
+                    amountByMonths[month].second += amount;
+            } else {
+                if (isPiv) {
+                    amountByMonths[month] = std::make_pair(amount, 0);
+                } else {
+                    amountByMonths[month] = std::make_pair(0, amount);
+                }
+            }
 
-    QVBoxLayout *baseScreensContainer = new QVBoxLayout(this);
-    baseScreensContainer->setMargin(0);
-    ui->chartContainer->setLayout(baseScreensContainer);
+        }
 
-    ui->chartContainer->layout()->addWidget(chartView);
-    ui->chartContainer->setProperty("cssClass", "container-chart");
+        QStringList months;
+        qreal maxValue = 0;
+        for (int j = 12; j > 6; j--) {
+            qreal piv = 0;
+            qreal zpiv = 0;
+            if (amountByMonths.contains(j)) {
+                std::pair<qint64, qint64> pair = amountByMonths[j];
+                piv = (pair.first != 0) ? pair.first / 100000000 : 0;
+                zpiv = (pair.second != 0) ? pair.second / 100000000 : 0;
+            }
+            months << monthsNames[j - 1];
+            set0->append(piv);
+            set1->append(zpiv);
 
-    // Set colors
-    changeChartColors();
+            int max = std::max(piv, zpiv);
+            if (max > maxValue) {
+                maxValue = max;
+            }
+        }
 
-    // Chart margin removed.
-    chart->layout()->setContentsMargins(0, 0, 0, 0);
-    chart->setBackgroundRoundness(0);
-     */
+        QBarSeries *series = new QtCharts::QBarSeries();
+        series->append(set0);
+        series->append(set1);
+
+        // bar width
+        series->setBarWidth(0.8);
+
+        chart->addSeries(series);
+        chart->setAnimationOptions(QChart::SeriesAnimations);
+
+        axisX = new QBarCategoryAxis();
+        axisX->append(months);
+        chart->addAxis(axisX, Qt::AlignBottom);
+        series->attachAxis(axisX);
+
+        axisY = new QValueAxis();
+        axisY->setRange(0,maxValue);
+        chart->addAxis(axisY, Qt::AlignRight);
+        series->attachAxis(axisY);
+
+        // Legend
+        chart->legend()->setVisible(false);
+        chart->legend()->setAlignment(Qt::AlignTop);
+
+        QChartView *chartView = new QChartView(chart);
+        chartView->setRenderHint(QPainter::Antialiasing);
+
+        QVBoxLayout *baseScreensContainer = new QVBoxLayout(this);
+        baseScreensContainer->setMargin(0);
+        ui->chartContainer->setLayout(baseScreensContainer);
+
+        ui->chartContainer->layout()->addWidget(chartView);
+        ui->chartContainer->setProperty("cssClass", "container-chart");
+
+        // Set colors
+        changeChartColors();
+
+        // Chart margin removed.
+        chart->layout()->setContentsMargins(0, 0, 0, 0);
+        chart->setBackgroundRoundness(0);
+    } else {
+        ui->layoutChart->setVisible(false);
+        ui->emptyContainerChart->setVisible(true);
+    }
 }
 
 void DashboardWidget::changeChartColors(){
-    /*
-    // Colors
     QColor gridLineColorX;
     QColor linePenColorY;
     QColor backgroundColor;
@@ -275,7 +324,6 @@ void DashboardWidget::changeChartColors(){
     chart->setBackgroundBrush(QBrush(backgroundColor));
     set0->setBorderColor(gridLineColorX);
     set1->setBorderColor(gridLineColorX);
-     */
 }
 
 void DashboardWidget::loadWalletModel(){
@@ -300,6 +348,13 @@ void DashboardWidget::loadWalletModel(){
             connect(ui->pushImgEmpty, SIGNAL(clicked()), this, SLOT(openFAQ()));
             connect(ui->btnHowTo, SIGNAL(clicked()), this, SLOT(openFAQ()));
         }
+
+        // chart filter
+        stakesFilter = new TransactionFilterProxy();
+        stakesFilter->setSourceModel(txModel);
+        stakesFilter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
+        stakesFilter->setOnlyStakes(true);
+        loadChart();
     }
     // update the display unit, to not use the default ("PIV")
     updateDisplayUnit();

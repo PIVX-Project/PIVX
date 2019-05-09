@@ -57,8 +57,13 @@ public:
     /** Only zc txes **/
     void setShowZcTxes(bool fOnlyZc);
 
+    /** Only stakes txes **/
+    void setOnlyStakes(bool fOnlyStakes);
+
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     static bool isOrphan(const int status, const int type);
+
+    //QVariant dataFromSourcePos(int sourceRow, int role) const;
 
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
@@ -74,8 +79,10 @@ private:
     bool showInactive;
     bool fHideOrphans = true;
     bool fOnlyZc = false;
+    bool fOnlyStakes = false;
 
     bool isZcTx(int type) const;
+    bool isStakeTx(int type) const;
 };
 
 #endif // BITCOIN_QT_TRANSACTIONFILTERPROXY_H

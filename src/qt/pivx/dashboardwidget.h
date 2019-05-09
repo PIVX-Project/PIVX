@@ -10,14 +10,15 @@
 
 #include <QWidget>
 #include <QLineEdit>
-/*
-#include <QBarCategoryAxis>
-#include <QBarSet>
-#include <QChart>
-#include <QValueAxis>
 
- QT_CHARTS_USE_NAMESPACE
- */
+#include <QtCharts/QBarCategoryAxis>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QChart>
+#include <QtCharts/QValueAxis>
+
+QT_CHARTS_USE_NAMESPACE
+
+using namespace QtCharts;
 
 class PIVXGUI;
 class WalletModel;
@@ -74,11 +75,12 @@ private:
     // Painter delegate
     FurAbstractListItemDelegate* txViewDelegate;
     TransactionFilterProxy* filter;
+    TransactionFilterProxy* stakesFilter;
     TxViewHolder* txHolder;
     TransactionTableModel* txModel;
     int nDisplayUnit = -1;
 
-    /*
+
     // Chart
     QBarSet *set0;
     QBarSet *set1;
@@ -87,7 +89,8 @@ private:
     QValueAxis *axisY;
 
     QChart *chart;
-     */
+
+    void initChart();
 };
 
 #endif // DASHBOARDWIDGET_H
