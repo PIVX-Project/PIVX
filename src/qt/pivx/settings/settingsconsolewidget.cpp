@@ -346,9 +346,8 @@ bool SettingsConsoleWidget::eventFilter(QObject* obj, QEvent* event)
     return QWidget::eventFilter(obj, event);
 }
 
-void SettingsConsoleWidget::setClientModel(ClientModel* model) {
-    clientModel = model;
-    if (model){
+void SettingsConsoleWidget::loadClientModel() {
+    if (clientModel){
 
         //Setup autocomplete and attach it
         QStringList wordList;
@@ -371,13 +370,10 @@ static QString categoryClass(int category)
     switch (category) {
         case SettingsConsoleWidget::CMD_REQUEST:
             return "cmd-request";
-            break;
         case SettingsConsoleWidget::CMD_REPLY:
             return "cmd-reply";
-            break;
         case SettingsConsoleWidget::CMD_ERROR:
             return "cmd-error";
-            break;
         default:
             return "misc";
     }
@@ -399,27 +395,8 @@ void SettingsConsoleWidget::clear(){
                 QImage(ICON_MAPPING[i].source).scaled(ICON_SIZE, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     }
 
-    // Set default style sheet
-    if (isLightTheme()) {
-        ui->messagesWidget->document()->setDefaultStyleSheet(
-                "table { color: #707070;  }"
-                "td.time { color: #808080; padding-top: 3px; } "
-                "td.message { color: #707070;font-family: Courier, Courier New, Lucida Console, monospace; font-size: 12px; } " // Todo: Remove fixed font-size
-                "td.cmd-request { color: #006060; } "
-                "td.cmd-error { color: red; } "
-                ".secwarning { color: red; }"
-                "b { color: #707070; } ");
-    } else {
-        ui->messagesWidget->document()->setDefaultStyleSheet(
-                "table { color: #FFFFFF; }"
-                "td.time { color: #808080; padding-top: 3px; } "
-                "td.message { color: #FFFFFF;font-family: Courier, Courier New, Lucida Console, monospace; font-size: 12px; } " // Todo: Remove fixed font-size
-                "td.cmd-request { color: #006060; } "
-                "td.cmd-error { color: red; } "
-                ".secwarning { color: red; }"
-                "b { color: #FFFFFF; } ");
-    }
-
+    QString theme;
+    changeTheme(isLightTheme(), theme);
 
 #ifdef Q_OS_MAC
     QString clsKey = "(⌘)-L";
@@ -516,4 +493,29 @@ void SettingsConsoleWidget::scrollToEnd()
 {
     QScrollBar* scrollbar = ui->messagesWidget->verticalScrollBar();
     scrollbar->setValue(scrollbar->maximum());
+}
+
+
+void SettingsConsoleWidget::changeTheme(bool isLightTheme, QString &theme)
+{
+    // Set default style sheet
+    if (isLightTheme) {
+        ui->messagesWidget->document()->setDefaultStyleSheet(
+                "table { color: #707070;  }"
+                "td.time { color: #808080; padding-top: 3px; } "
+                "td.message { color: #707070;font-family: Courier, Courier New, Lucida Console, monospace; font-size: 12px; } " // Todo: Remove fixed font-size
+                "td.cmd-request { color: #006060; } "
+                "td.cmd-error { color: red; } "
+                ".secwarning { color: red; }"
+                "b { color: #707070; } ");
+    } else {
+        ui->messagesWidget->document()->setDefaultStyleSheet(
+                "table { color: #FFFFFF; }"
+                "td.time { color: #808080; padding-top: 3px; } "
+                "td.message { color: #FFFFFF;font-family: Courier, Courier New, Lucida Console, monospace; font-size: 12px; } " // Todo: Remove fixed font-size
+                "td.cmd-request { color: #006060; } "
+                "td.cmd-error { color: red; } "
+                ".secwarning { color: red; }"
+                "b { color: #FFFFFF; } ");
+    }
 }

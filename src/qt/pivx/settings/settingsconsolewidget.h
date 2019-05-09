@@ -27,7 +27,7 @@ public:
     explicit SettingsConsoleWidget(PIVXGUI* _window, QWidget *parent = nullptr);
     ~SettingsConsoleWidget();
 
-    void setClientModel(ClientModel* model);
+    void loadClientModel() override;
 
     enum MessageClass {
         MC_ERROR,
@@ -46,7 +46,10 @@ public slots:
     void scrollToEnd();
 
 protected:
-    virtual bool eventFilter(QObject* obj, QEvent* event);
+    virtual bool eventFilter(QObject* obj, QEvent* event) override;
+
+protected slots:
+    void changeTheme(bool isLightTheme, QString &theme) override;
 
 signals:
     // For RPC command executor
@@ -56,7 +59,6 @@ signals:
 private:
     Ui::SettingsConsoleWidget *ui;
 
-    ClientModel* clientModel;
     QStringList history;
     int historyPtr;
     RPCTimerInterface *rpcTimerInterface;
