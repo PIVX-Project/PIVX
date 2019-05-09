@@ -28,7 +28,7 @@ public:
     void setDate(QDateTime);
     void setLabel(QString);
     void setAmount(QString);
-    void setType(bool isLightTheme, TransactionRecord::Type type, bool isConfirmed);
+    void setType(bool isLightTheme, int type, bool isConfirmed);
     void setConfirmStatus(bool isConfirmed);
 
 private:

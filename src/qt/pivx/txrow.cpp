@@ -43,7 +43,7 @@ void TxRow::setAmount(QString str){
 }
 
 // TODO: Agregar send to zPIV and receive zPIV icons..
-void TxRow::setType(bool isLightTheme, TransactionRecord::Type type, bool isConfirmed){
+void TxRow::setType(bool isLightTheme, int type, bool isConfirmed){
     QString path;
     QString css;
     switch (type) {
