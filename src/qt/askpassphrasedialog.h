@@ -68,11 +68,11 @@ private:
     void run(int type) override;
     void onError(int type, QString error) override;
     QCheckBox *btnWatch;
-    QCheckBox *btnWatch2;
+
+    void initWatch(QWidget *parent);
 
 private slots:
     void onWatchClicked();
-    void onWatch2Clicked();
     void textChanged();
     void warningMessage();
     void errorEncryptingWallet();

@@ -72,7 +72,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
 
 
     // Staking Information
-    ui->labelMessage->setText("Amount of PIV and zPIV staked.");
+    ui->labelMessage->setText(tr("Amount of PIV and zPIV staked."));
     ui->labelMessage->setProperty("cssClass", "text-subtitle");
     ui->labelSquarePiv->setProperty("cssClass", "square-chart-piv");
     ui->labelSquarezPiv->setProperty("cssClass", "square-chart-zpiv");
@@ -103,6 +103,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonWeek->setProperty("cssClass", "btn-check-time");
     ui->pushButtonMonth->setProperty("cssClass", "btn-check-time");
     ui->pushButtonYear->setProperty("cssClass", "btn-check-time");
+    ui->pushButtonYear->setChecked(true);
 
 
     // Sort Transactions
@@ -130,40 +131,35 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     ui->listTransactions->setAttribute(Qt::WA_MacShowFocusRect, false);
     ui->listTransactions->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    //ui->listTransactions->setVisible(false);
-
-    // Sync Warning 
-
+    // Sync Warning
     ui->layoutWarning->setVisible(true);
-    ui->lblWarning->setText("Wait until the wallet is fully synced to see your whole balance");
+    ui->lblWarning->setText(tr("Please wait until the wallet is fully synced to see your correct balance"));
     ui->lblWarning->setProperty("cssClass", "text-warning");
     ui->imgWarning->setProperty("cssClass", "ic-warning");
 
     //Empty List
-
     ui->emptyContainer->setVisible(false);
     ui->pushImgEmpty->setProperty("cssClass", "img-empty-transactions");
 
-    ui->labelEmpty->setText("No transactions yet");
+    ui->labelEmpty->setText(tr("No transactions yet"));
     ui->labelEmpty->setProperty("cssClass", "text-empty");
 
 
     ui->chartContainer->setProperty("cssClass", "container-chart");
 
     ui->pushImgEmptyChart->setProperty("cssClass", "img-empty-staking-on");
-    ui->labelEmptyChart->setText("Staking off");
 
-    ui->btnHowTo->setText("How to get PIV or zPIV");
+    ui->btnHowTo->setText(tr("How to get PIV or zPIV"));
     ui->btnHowTo->setProperty("cssClass", "btn-secundary");
 
     // Staking off
     //ui->pushImgEmptyChart->setProperty("cssClass", "img-empty-staking-off");
     //ui->labelEmptyChart->setText("Staking off");
 
-    ui->labelEmptyChart->setText("Staking off");
+    ui->labelEmptyChart->setText(tr("Staking off"));
     ui->labelEmptyChart->setProperty("cssClass", "text-empty");
 
-    ui->labelMessageEmpty->setText("You can activate and deactivate the Staking mode in the status bar at the top right of the wallet");
+    ui->labelMessageEmpty->setText(tr("You can activate and deactivate the Staking mode in the status bar at the top right of the wallet"));
     ui->labelMessageEmpty->setProperty("cssClass", "text-subtitle");
 
     // Chart State

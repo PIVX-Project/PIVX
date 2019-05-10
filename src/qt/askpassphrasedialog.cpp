@@ -27,7 +27,6 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
                                                                                                             model(model),
                                                                                                             context(context),
                                                                                                             btnWatch(new QCheckBox()),
-                                                                                                            btnWatch2(new QCheckBox()),
                                                                                                             fCapsLock(false)
 {
     ui->setupUi(this);
@@ -69,53 +68,8 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
     ui->passEdit2->setMaxLength(MAX_PASSPHRASE_SIZE);
     ui->passEdit3->setMaxLength(MAX_PASSPHRASE_SIZE);
 
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
-    QGraphicsDropShadowEffect* shadowEffect2 = new QGraphicsDropShadowEffect();
-    shadowEffect2->setColor(QColor(0, 0, 0, 22));
-    shadowEffect2->setXOffset(0);
-    shadowEffect2->setYOffset(3);
-    shadowEffect2->setBlurRadius(6);
-
-
-    ui->layoutEdit->setGraphicsEffect(shadowEffect);
-
-    ui->layoutEdit2->setGraphicsEffect(shadowEffect2);
-
-    // Button Watch
-
-    btnWatch = new QCheckBox(ui->layoutEdit);
-
-    btnWatch->setProperty("cssClass", "btn-watch-password");
-    btnWatch->setChecked(false);
-    QSize BUTTON_CONTACT_SIZE = QSize(24, 24);
-    btnWatch->setMinimumSize(BUTTON_CONTACT_SIZE);
-    btnWatch->setMaximumSize(BUTTON_CONTACT_SIZE);
-
-    btnWatch->show();
-    btnWatch->raise();
-
-    int posXX = ui->layoutEdit->width() - 30;
-    int posYY = 8;
-    btnWatch->move(450, posYY);
-
-    btnWatch2 = new QCheckBox(ui->layoutEdit2);
-
-    btnWatch2->setProperty("cssClass", "btn-watch-password");
-    btnWatch2->setChecked(false);
-
-    btnWatch2->setMinimumSize(BUTTON_CONTACT_SIZE);
-    btnWatch2->setMaximumSize(BUTTON_CONTACT_SIZE);
-
-    btnWatch2->show();
-    btnWatch2->raise();
-
-    btnWatch2->move(450, posYY);
-
+    setShadow(ui->layoutEdit);
+    setShadow(ui->layoutEdit2);
 
     // Setup Caps Lock detection.
     ui->passEdit1->installEventFilter(this);
@@ -132,6 +86,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         ui->passEdit1->hide();
         ui->layoutEdit->hide();
         title = tr("Encrypt wallet");
+        initWatch(ui->layoutEdit2);
         break;
     case Mode::UnlockAnonymize:
         ui->warningLabel->setText(tr("This operation needs your wallet passphrase to unlock the wallet."));
@@ -141,6 +96,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         ui->passLabel3->hide();
         ui->passEdit3->hide();
         title = tr("Unlock wallet\nfor staking");
+        initWatch(ui->layoutEdit);
         break;
     case Mode::Unlock: // Ask passphrase
         ui->warningLabel->setText(tr("This operation needs your wallet passphrase to unlock the wallet."));
@@ -150,6 +106,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         ui->passLabel3->hide();
         ui->passEdit3->hide();
         title = tr("Unlock wallet");
+        initWatch(ui->layoutEdit);
         break;
     case Mode::Decrypt: // Ask passphrase
         ui->warningLabel->setText(tr("This operation needs your wallet passphrase to decrypt the wallet."));
@@ -159,18 +116,18 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         ui->passLabel3->hide();
         ui->passEdit3->hide();
         title = tr("Decrypt wallet");
+        initWatch(ui->layoutEdit);
         break;
     case Mode::ChangePass: // Ask old passphrase + new passphrase x2
         title = tr("Change passphrase");
-        btnWatch2->hide();
         ui->warningLabel->setText(tr("Enter the old and new passphrase to the wallet."));
+        initWatch(ui->layoutEdit);
         break;
     }
 
     ui->labelTitle->setText(title);
 
     textChanged();
-    connect(btnWatch2, SIGNAL(clicked()), this, SLOT(onWatch2Clicked()));
     connect(btnWatch, SIGNAL(clicked()), this, SLOT(onWatchClicked()));
     connect(ui->passEdit1, SIGNAL(textChanged(QString)), this, SLOT(textChanged()));
     connect(ui->passEdit2, SIGNAL(textChanged(QString)), this, SLOT(textChanged()));
@@ -180,15 +137,10 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
 }
 
 void AskPassphraseDialog::onWatchClicked(){
-    ui->passEdit3->setEchoMode(btnWatch->checkState() == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
-    ui->passEdit2->setEchoMode(btnWatch->checkState() == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
-    ui->passEdit1->setEchoMode(btnWatch->checkState() == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
-}
-
-void AskPassphraseDialog::onWatch2Clicked(){
-    ui->passEdit3->setEchoMode(btnWatch->checkState() == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
-    ui->passEdit2->setEchoMode(btnWatch->checkState() == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
-    ui->passEdit1->setEchoMode(btnWatch->checkState() == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
+    int state = btnWatch->checkState();
+    ui->passEdit3->setEchoMode(state == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
+    ui->passEdit2->setEchoMode(state== Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
+    ui->passEdit1->setEchoMode(state == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password );
 }
 
 AskPassphraseDialog::~AskPassphraseDialog()
@@ -383,4 +335,19 @@ void AskPassphraseDialog::run(int type){
 }
 void AskPassphraseDialog::onError(int type, QString error){
     newpassCache = "";
+}
+
+void AskPassphraseDialog::initWatch(QWidget *parent) {
+    btnWatch = new QCheckBox(parent);
+    btnWatch->setProperty("cssClass", "btn-watch-password");
+    btnWatch->setChecked(false);
+    QSize BUTTON_CONTACT_SIZE = QSize(24, 24);
+    btnWatch->setMinimumSize(BUTTON_CONTACT_SIZE);
+    btnWatch->setMaximumSize(BUTTON_CONTACT_SIZE);
+    btnWatch->show();
+    btnWatch->raise();
+
+    int posXX = ui->layoutEdit->width() - 30;
+    int posYY = 8;
+    btnWatch->move(450, posYY);
 }
