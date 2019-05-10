@@ -214,6 +214,7 @@ void DashboardWidget::loadChart(){
 
         // pair PIV, zPIV
         QMap<int, std::pair<qint64, qint64>> amountByMonths;
+
         // get all of the stakes
         for (int i = 0; i < size; ++i) {
             QModelIndex modelIndex = stakesFilter->index(i, TransactionTableModel::ToAddress);
@@ -352,7 +353,7 @@ void DashboardWidget::loadWalletModel(){
         // chart filter
         stakesFilter = new TransactionFilterProxy();
         stakesFilter->setSourceModel(txModel);
-        stakesFilter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
+        stakesFilter->sort(TransactionTableModel::Date, Qt::AscendingOrder);
         stakesFilter->setOnlyStakes(true);
         loadChart();
     }
@@ -394,8 +395,11 @@ void DashboardWidget::onSortChanged(const QString& value){
     }
 }
 
-void DashboardWidget::walletSynced(bool isSync){
-    ui->layoutWarning->setVisible(!isSync);
+void DashboardWidget::walletSynced(bool sync){
+    if (this->isSync != sync) {
+        this->isSync = sync;
+        ui->layoutWarning->setVisible(!this->isSync);
+    }
 }
 
 void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){

@@ -392,7 +392,7 @@ void SettingsConsoleWidget::clear(){
         ui->messagesWidget->document()->addResource(
                 QTextDocument::ImageResource,
                 QUrl(ICON_MAPPING[i].url),
-                QImage(ICON_MAPPING[i].source).scaled(ICON_SIZE, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+                QImage(ICON_MAPPING[i].source));
     }
 
     QString theme;

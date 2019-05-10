@@ -127,6 +127,11 @@
           <height>30</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
         <property name="styleSheet">
          <string notr="true">color:white;</string>
         </property>

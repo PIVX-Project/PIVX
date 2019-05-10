@@ -374,11 +374,12 @@ void TopBar::setNumBlocks(int count) {
 
     bool needState = true;
     if (masternodeSync.IsBlockchainSynced()) {
+        // chain synced
+        emit walletSynced(true);
         if (masternodeSync.IsSynced()) {
             // Node synced
             // TODO: Set synced icon to pushButtonSync here..
             ui->pushButtonSync->setButtonText(tr("Synchronized"));
-            emit walletSynced(true);
             return;
         }else{
 
@@ -388,12 +389,15 @@ void TopBar::setNumBlocks(int count) {
                        MASTERNODE_SYNC_THRESHOLD;
             int progress = nAttempt + (masternodeSync.RequestedMasternodeAssets - 1) * MASTERNODE_SYNC_THRESHOLD;
             if(progress >= 0){
-                text = std::string("Synchronizing additional data: %p%", progress);
-                progressBar->setMaximum(4 * MASTERNODE_SYNC_THRESHOLD);
-                progressBar->setValue(progress);
+                // todo: MN progress..
+                text = std::string("Synchronizing additional data..");//: %p%", progress);
+                //progressBar->setMaximum(4 * MASTERNODE_SYNC_THRESHOLD);
+                //progressBar->setValue(progress);
                 needState = false;
             }
         }
+    } else {
+        emit walletSynced(false);
     }
 
     if(needState) {
@@ -421,7 +425,7 @@ void TopBar::setNumBlocks(int count) {
         }
         QString timeBehind(" behind. Scanning block ");
         QString str = timeBehindText + timeBehind + QString::number(count);
-        text = str.toUtf8().constData();
+        text = str.toStdString();
 
         progressBar->setMaximum(1000000000);
         progressBar->setValue(clientModel->getVerificationProgress() * 1000000000.0 + 0.5);
@@ -432,7 +436,6 @@ void TopBar::setNumBlocks(int count) {
     }
 
     ui->pushButtonSync->setButtonText(tr(text.data()));
-    emit walletSynced(false);
 }
 
 void TopBar::loadWalletModel(){

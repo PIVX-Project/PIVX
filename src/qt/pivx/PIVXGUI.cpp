@@ -227,7 +227,7 @@ void PIVXGUI::setClientModel(ClientModel* clientModel) {
 
         // Receive and report messages from client model
         connect(clientModel, SIGNAL(message(QString, QString, unsigned int)), this, SLOT(message(QString, QString, unsigned int)));
-        connect(topBar, SIGNAL(walletSynced()), dashboard, SLOT(walletSynced()));
+        connect(topBar, SIGNAL(walletSynced(bool)), dashboard, SLOT(walletSynced(bool)));
 
         // Get restart command-line parameters and handle restart
         connect(settingsWidget, &SettingsWidget::handleRestart, [this](QStringList arg){handleRestart(arg);});
@@ -501,8 +501,8 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     //connect(walletView, SIGNAL(showNormalIfMinimized()), gui, SLOT(showNormalIfMinimized()));
 
     // set the model for every view
-    topBar->setWalletModel(walletModel);
     dashboard->setWalletModel(walletModel);
+    topBar->setWalletModel(walletModel);
     receiveWidget->setWalletModel(walletModel);
     sendWidget->setWalletModel(walletModel);
     addressesWidget->setWalletModel(walletModel);

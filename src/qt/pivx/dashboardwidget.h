@@ -89,6 +89,7 @@ private:
     QValueAxis *axisY;
 
     QChart *chart;
+    bool isSync = false;
 
     void initChart();
 };
