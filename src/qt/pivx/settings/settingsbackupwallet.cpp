@@ -26,43 +26,30 @@ SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
     ui->labelTitle_2->setText("Change Wallet Passphrase");
     ui->labelTitle_2->setProperty("cssClass", "text-title-screen");
 
-
     ui->labelDivider->setProperty("cssClass", "container-divider");
 
 
     // Subtitle
-
-    ui->labelSubtitle1->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
+    ui->labelSubtitle1->setText(tr("Keep your wallet safe doing regular backups, store your backup file externally.\nThis option creates a wallet.dat file that can be used to recover your whole balance (transactions and addresses) from another device."));
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
-    ui->labelSubtitle_2->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
+    ui->labelSubtitle_2->setText(tr("Change your wallet encryption passphrase for another one that you like. This will decrypt and encrypt your whole data under the new passphrase.\nRemember to write it down to not lose access to your funds."));
     ui->labelSubtitle_2->setProperty("cssClass", "text-subtitle");
 
 
-    // Backup Name
-
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
     // Location
-
-    ui->labelSubtitleLocation->setText("Where");
+    ui->labelSubtitleLocation->setText(tr("Where"));
     ui->labelSubtitleLocation->setProperty("cssClass", "text-title");
-
 
     ui->pushButtonDocuments->setText(tr("Set a folder location"));
     ui->pushButtonDocuments->setProperty("cssClass", "btn-edit-primary-folder");
-    ui->pushButtonDocuments->setGraphicsEffect(shadowEffect);
+    setShadow(ui->pushButtonDocuments);
 
     // Buttons
-
-    ui->pushButtonSave->setText("Backup");
+    ui->pushButtonSave->setText(tr("Backup"));
     ui->pushButtonSave->setProperty("cssClass", "btn-primary");
 
-    ui->pushButtonSave_2->setText("Change Passphrase");
+    ui->pushButtonSave_2->setText(tr("Change Passphrase"));
     ui->pushButtonSave_2->setProperty("cssClass", "btn-primary");
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(backupWallet()));
