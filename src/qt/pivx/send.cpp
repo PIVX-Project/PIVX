@@ -608,7 +608,7 @@ void SendWidget::onContactsClicked(SendMultiRow* entry){
         return;
     }
 
-    int height = entry->getEditHeight() * ( 2 * (contactsSize + 1 ));
+    int height = (contactsSize <= 2) ? entry->getEditHeight() * ( 2 * (contactsSize + 1 )) : entry->getEditHeight() * 4;
     int width = entry->getEditWidth();
 
     if(!menuContacts){
@@ -634,6 +634,7 @@ void SendWidget::onContactsClicked(SendMultiRow* entry){
 
     menuContacts->resizeList(width, height);
     menuContacts->setStyleSheet(this->styleSheet());
+    menuContacts->adjustSize();
 
     QPoint pos;
     if (entries.size() > 1){
@@ -641,7 +642,6 @@ void SendWidget::onContactsClicked(SendMultiRow* entry){
         pos.setY((pos.y() + (focusedEntry->getEditHeight() - 4) * 4));
     } else {
         pos = focusedEntry->getEditLineRect().bottomLeft();
-        int posYmov = focusedEntry->getNumber() == 0 ? 1 : focusedEntry->getNumber();
         pos.setY((pos.y() + (focusedEntry->getEditHeight() - 4) * 3));
     }
     pos.setX(pos.x() + 20);
@@ -662,7 +662,7 @@ void SendWidget::onMenuClicked(SendMultiRow* entry){
         this->menu = new TooltipMenu(window, this);
         this->menu->setCopyBtnVisible(false);
         this->menu->setEditBtnText(tr("Save contact"));
-        this->menu->adjustSize();
+        this->menu->setMinimumSize(this->menu->width() + 30,this->menu->height());
         connect(this->menu, &TooltipMenu::message, this, &AddressesWidget::message);
         connect(this->menu, SIGNAL(onEditClicked()), this, SLOT(onContactMultiClicked()));
         connect(this->menu, SIGNAL(onDeleteClicked()), this, SLOT(onDeleteClicked()));
@@ -730,6 +730,12 @@ void SendWidget::onDeleteClicked(){
             } else if (focusedEntry && entry->getNumber() > entryNumber){
                 entry->setNumber(entry->getNumber() - 1);
             }
+        }
+
+        if (entries.size() == 1) {
+            SendMultiRow* sendMultiRow = QMutableListIterator<SendMultiRow*>(entries).next();
+            sendMultiRow->setNumber(entries.length());
+            sendMultiRow->showLabels();
         }
 
         focusedEntry = nullptr;
