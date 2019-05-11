@@ -105,7 +105,6 @@ void TxDetailDialog::setData(WalletModel *model, QModelIndex &index){
     qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
     bool isConfirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
     QString amountText = BitcoinUnits::formatWithUnit(nDisplayUnit, amount, true, BitcoinUnits::separatorAlways);
-
     ui->textAmount->setText(amountText);
 
     const CWalletTx* tx = model->getTx(rec->hash);
@@ -121,9 +120,7 @@ void TxDetailDialog::setData(WalletModel *model, QModelIndex &index){
         ui->textConfirmations->setText(QString::number(tx->GetDepthInMainChain()));
         ui->textDate->setText(GUIUtil::dateTimeStr(date));
         ui->textStatus->setText(QString::fromStdString(rec->statusToString()));
-        // TODO: Complete me..
-        //unsigned int nBytes = ::GetSerializeSize(*(CTransaction*)&tx, SER_NETWORK, PROTOCOL_VERSION);
-        //ui->textSize->setText(QString::number(nBytes) + " bytes");
+        ui->textSize->setText(QString::number(rec->size) + " bytes");
     }
 
 }
