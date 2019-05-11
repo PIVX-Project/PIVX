@@ -32,6 +32,7 @@ public:
     void setModel(WalletModel* model);
     bool validate();
     SendCoinsRecipient getValue();
+    QString getAddress();
 
     /** Return whether the entry is still empty and unedited */
     bool isClear();
@@ -72,7 +73,7 @@ private:
     QPushButton *iconNumber;
     QAction *btnContact;
 
-    WalletModel *model;
+    WalletModel *model = nullptr;
     int displayUnit;
     int number = 0;
     bool isExpanded = false;

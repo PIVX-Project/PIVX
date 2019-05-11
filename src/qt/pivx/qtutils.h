@@ -46,7 +46,7 @@ void setupSettings(QSettings *settings);
 bool isLightTheme();
 void setTheme(bool isLight);
 
-void initCssEditLine(QLineEdit *edit);
+void initCssEditLine(QLineEdit *edit, bool isDialog = false);
 void setCssEditLine(QLineEdit *edit, bool isValid, bool forceUpdate = false);
 void setCssEditLineDialog(QLineEdit *edit, bool isValid, bool forceUpdate = false);
 void setShadow(QWidget *edit);

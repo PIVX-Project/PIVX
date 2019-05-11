@@ -15,11 +15,17 @@ public:
     explicit AddNewContactDialog(QWidget *parent = nullptr);
     ~AddNewContactDialog();
 
+    void setTexts(QString title, const char* message);
     void setData(QString address, QString label);
     QString getLabel();
 
+    bool res = false;
+
+public slots:
+    void ok();
 private:
     Ui::AddNewContactDialog *ui;
+    const char* message = nullptr;
 };
 
 #endif // ADDNEWCONTACTDIALOG_H

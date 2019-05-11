@@ -1,6 +1,7 @@
 #include "qt/pivx/send.h"
 #include "qt/pivx/forms/ui_send.h"
 
+#include "qt/pivx/addnewcontactdialog.h"
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/sendchangeaddressdialog.h"
 #include "qt/pivx/optionbutton.h"
@@ -660,7 +661,7 @@ void SendWidget::onMenuClicked(SendMultiRow* entry){
     if(!this->menu){
         this->menu = new TooltipMenu(window, this);
         this->menu->setCopyBtnVisible(false);
-        this->menu->setEditBtnText(tr("Contacts"));
+        this->menu->setEditBtnText(tr("Save contact"));
         this->menu->adjustSize();
         connect(this->menu, &TooltipMenu::message, this, &AddressesWidget::message);
         connect(this->menu, SIGNAL(onEditClicked()), this, SLOT(onContactMultiClicked()));
@@ -673,7 +674,45 @@ void SendWidget::onMenuClicked(SendMultiRow* entry){
 }
 
 void SendWidget::onContactMultiClicked(){
-    // show the contacts dialog.
+    if(focusedEntry) {
+        QString address = focusedEntry->getAddress();
+        if (address.isEmpty()) {
+            inform(tr("Address field is empty"));
+            return;
+        }
+        if (!walletModel->validateAddress(address)) {
+            inform(tr("Invalid address"));
+            return;
+        }
+        CBitcoinAddress pivAdd = CBitcoinAddress(address.toStdString());
+        if (walletModel->isMine(pivAdd)) {
+            inform(tr("Cannot store your own address as contact"));
+            return;
+        }
+
+        showHideOp(true);
+        AddNewContactDialog *dialog = new AddNewContactDialog(window);
+        QString label = walletModel->getAddressTableModel()->labelForAddress(address);
+        if (!label.isNull()){
+            dialog->setTexts(tr("Update Contact"), "Edit label for the selected address:\n%1");
+            dialog->setData(address, label);
+        } else {
+            dialog->setTexts(tr("Create New Contact"), "Save label for the selected address:\n%1");
+            dialog->setData(address, "");
+        }
+        openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
+        if (dialog->res) {
+            if (label == dialog->getLabel()) {
+                return;
+            }
+            if (walletModel->updateAddressBookLabels(pivAdd.Get(), dialog->getLabel().toStdString(), "send")) {
+                inform(tr("New Contact Stored"));
+            } else {
+                inform(tr("Error Storing Contact"));
+            }
+        }
+    }
+
 }
 
 void SendWidget::onDeleteClicked(){

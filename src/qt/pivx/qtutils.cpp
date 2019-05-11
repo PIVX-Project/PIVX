@@ -168,8 +168,9 @@ QColor getRowColor(bool isLightTheme, bool isHovered, bool isSelected){
     }
 }
 
-void initCssEditLine(QLineEdit *edit){
-    setCssEditLine(edit, true, false);
+void initCssEditLine(QLineEdit *edit, bool isDialog){
+    if (isDialog) setCssEditLineDialog(edit, true, false);
+    else setCssEditLine(edit, true, false);
     setShadow(edit);
     edit->setAttribute(Qt::WA_MacShowFocusRect, 0);
 }

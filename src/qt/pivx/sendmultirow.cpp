@@ -163,9 +163,7 @@ SendCoinsRecipient SendMultiRow::getValue() {
         return recipient;
 
     // Normal payment
-    QString addressStr = ui->lineEditAddress->text();
-    QString trimmedStr = addressStr.trimmed();
-    recipient.address = trimmedStr;
+    recipient.address = getAddress();
     recipient.label = ui->lineEditDescription->text();
 
     // TODO: Convert this into a value..
@@ -176,6 +174,10 @@ SendCoinsRecipient SendMultiRow::getValue() {
     }
     recipient.amount = value;
     return recipient;
+}
+
+QString SendMultiRow::getAddress() {
+    return ui->lineEditAddress->text().trimmed();
 }
 
 QRect SendMultiRow::getEditLineRect(){
