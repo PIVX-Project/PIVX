@@ -71,6 +71,7 @@ void SendMultiRow::amountChanged(const QString& amount){
             ui->lineEditAmount->setText(amount);
         }
     }
+    emit onValueChanged();
 }
 
 /**
@@ -167,7 +168,7 @@ SendCoinsRecipient SendMultiRow::getValue() {
     recipient.label = ui->lineEditDescription->text();
 
     // TODO: Convert this into a value..
-    CAmount value = getAmountValue(ui->lineEditAmount->text());
+    CAmount value = getAmountValue();
     if(value == -1){
         // Invalid value..
         // todo: Notificate user..
@@ -178,6 +179,10 @@ SendCoinsRecipient SendMultiRow::getValue() {
 
 QString SendMultiRow::getAddress() {
     return ui->lineEditAddress->text().trimmed();
+}
+
+CAmount SendMultiRow::getAmountValue() {
+    return getAmountValue(ui->lineEditAmount->text());
 }
 
 QRect SendMultiRow::getEditLineRect(){

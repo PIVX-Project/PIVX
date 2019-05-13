@@ -41,7 +41,7 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
     fontLight.setWeight(QFont::Light);
 
     /* Title */
-    ui->labelTitle->setText("Send");
+    ui->labelTitle->setText(tr("Send"));
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
     ui->labelTitle->setFont(fontLight);
 
@@ -54,37 +54,37 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
 
     /* Subtitle */
 
-    ui->labelSubtitle1->setText("You can transfer public coins: PIV or private ones: zPIV");
+    ui->labelSubtitle1->setText(tr("You can transfer public coins: PIV or private ones: zPIV"));
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
-    ui->labelSubtitle2->setText("Select coin type to spend");
+    ui->labelSubtitle2->setText(tr("Select coin type to spend"));
     ui->labelSubtitle2->setProperty("cssClass", "text-subtitle");
 
     /* Address */
 
-    ui->labelSubtitleAddress->setText("Enter a PIVX address or contact label");
+    ui->labelSubtitleAddress->setText(tr("Enter a PIVX address or contact label"));
     ui->labelSubtitleAddress->setProperty("cssClass", "text-title");
 
 
     /* Amount */
 
-    ui->labelSubtitleAmount->setText("Amount");
+    ui->labelSubtitleAmount->setText(tr("Amount"));
     ui->labelSubtitleAmount->setProperty("cssClass", "text-title");
 
     // Buttons
 
-    ui->pushButtonFee->setText("Standard Fee 0.000005 PIV");
+    ui->pushButtonFee->setText(tr("Standard Fee %1").arg("0.000005 PIV"));
     ui->pushButtonFee->setProperty("cssClass", "btn-secundary");
 
-    ui->pushButtonClear->setText("Clear all");
+    ui->pushButtonClear->setText(tr("Clear all"));
     ui->pushButtonClear->setProperty("cssClass", "btn-secundary-clear");
 
-    ui->pushButtonAddRecipient->setText("Add recipient");
+    ui->pushButtonAddRecipient->setText(tr("Add recipient"));
     ui->pushButtonAddRecipient->setProperty("cssClass", "btn-secundary-add");
 
     ui->pushButtonSave->setProperty("cssClass", "btn-primary");
 
-    ui->pushButtonReset->setText("Reset to default");
+    ui->pushButtonReset->setText(tr("Reset to default"));
     ui->pushButtonReset->setProperty("cssClass", "btn-secundary");
 
     // Coin control
@@ -110,7 +110,7 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
 
     // Total Send
 
-    ui->labelTitleTotalSend->setText("Total to send");
+    ui->labelTitleTotalSend->setText(tr("Total to send"));
     ui->labelTitleTotalSend->setProperty("cssClass", "text-title");
 
     ui->labelAmountSend->setText("0.00 zPIV");
@@ -118,13 +118,10 @@ SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
 
     // Total Remaining
 
-    ui->labelTitleTotalRemaining->setText("Total remaining");
+    ui->labelTitleTotalRemaining->setText(tr("Total remaining"));
     ui->labelTitleTotalRemaining->setProperty("cssClass", "text-title");
 
     ui->labelAmountRemaining->setProperty("cssClass", "text-body1");
-
-    // Refresh view
-    refreshView();
 
     // Icon Send
     ui->stackedWidget->addWidget(coinIcon);
@@ -160,7 +157,32 @@ void SendWidget::refreshView(){
         btnText = tr("Send zPIV");
     }
     ui->pushButtonSave->setText(btnText);
-    ui->labelAmountRemaining->setText("1000 zPIV");
+
+    refreshAmounts();
+}
+
+void SendWidget::refreshAmounts() {
+
+    CAmount total = 0;
+    QMutableListIterator<SendMultiRow*> it(entries);
+    while (it.hasNext()) {
+        SendMultiRow* entry = it.next();
+        CAmount amount = entry->getAmountValue();
+        if (amount > 0)
+            total += amount;
+    }
+
+    bool isZpiv = ui->pushRight->isChecked();
+    int nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
+
+    ui->labelAmountSend->setText(GUIUtil::formatBalance(total, nDisplayUnit, isZpiv));
+    ui->labelAmountRemaining->setText(
+            GUIUtil::formatBalance(
+                    (isZpiv ? walletModel->getZerocoinBalance() : walletModel->getBalance()) - total,
+                    nDisplayUnit,
+                    isZpiv
+                    )
+    );
 }
 
 void SendWidget::loadClientModel(){
@@ -181,6 +203,9 @@ void SendWidget::loadWalletModel() {
         // TODO: Unit display complete me
         //connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
         //updateDisplayUnit();
+
+        // Refresh view
+        refreshView();
 
         // TODO: Coin control complet eme
         // Coin Control
@@ -238,6 +263,7 @@ SendMultiRow* SendWidget::createEntry(){
     ui->scrollAreaWidgetContents->layout()->addWidget(sendMultiRow);
     connect(sendMultiRow, &SendMultiRow::onContactsClicked, this, &SendWidget::onContactsClicked);
     connect(sendMultiRow, &SendMultiRow::onMenuClicked, this, &SendWidget::onMenuClicked);
+    connect(sendMultiRow, &SendMultiRow::onValueChanged, this, &SendWidget::onValueChanged);
     return sendMultiRow;
 }
 
@@ -587,6 +613,10 @@ void SendWidget::onCoinControlClicked()
         zPivControl->exec();
         ui->btnCoinControl->setActive(!ZPivControlDialog::setSelectedMints.empty());
     }
+}
+
+void SendWidget::onValueChanged() {
+    refreshAmounts();
 }
 
 void SendWidget::onPIVSelected(bool _isPIV){

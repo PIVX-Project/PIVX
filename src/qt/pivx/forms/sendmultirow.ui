@@ -61,7 +61,7 @@
        <height>85</height>
       </size>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="4,0,2">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="6,0,2">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -166,7 +166,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <property name="spacing">
-         <number>-1</number>
+         <number>6</number>
         </property>
         <item alignment="Qt::AlignTop">
          <widget class="QLineEdit" name="lineEditAmount">
@@ -187,6 +187,9 @@
             <width>16777215</width>
             <height>50</height>
            </size>
+          </property>
+          <property name="maxLength">
+           <number>12</number>
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -227,7 +230,6 @@
      </layout>
     </widget>
    </item>
-  
    <item>
     <widget class="QWidget" name="layoutLabel" native="true">
      <property name="minimumSize">
@@ -259,21 +261,21 @@
        <number>10</number>
       </property>
       <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item>
        <widget class="QLabel" name="labelSubtitleDescription">
         <property name="text">

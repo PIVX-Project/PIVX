@@ -33,6 +33,7 @@ public:
     bool validate();
     SendCoinsRecipient getValue();
     QString getAddress();
+    CAmount getAmountValue();
 
     /** Return whether the entry is still empty and unedited */
     bool isClear();
@@ -54,7 +55,7 @@ signals:
     void removeEntry(SendMultiRow* entry);
     void onContactsClicked(SendMultiRow* entry);
     void onMenuClicked(SendMultiRow* entry);
-    //void payAmountChanged();
+    void onValueChanged();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;

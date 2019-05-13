@@ -46,6 +46,8 @@ public slots:
     void onChangeCustomFeeClicked();
     void onCoinControlClicked();
     void onOpenUriClicked();
+    void onValueChanged();
+    void refreshAmounts();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
