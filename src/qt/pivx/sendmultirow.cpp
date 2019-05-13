@@ -24,7 +24,9 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
 
     ui->lineEditAmount->setPlaceholderText("0.00 PIV ");
     initCssEditLine(ui->lineEditAmount);
-    ui->lineEditAmount->setValidator(new QDoubleValidator(0, 100000000000, 7, this) );
+    QDoubleValidator *doubleValidator = new QDoubleValidator(0, 9999999, 7, this);
+    doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+    ui->lineEditAmount->setValidator(doubleValidator);
 
     /* Description */
     ui->labelSubtitleDescription->setText("Label address (optional)");
