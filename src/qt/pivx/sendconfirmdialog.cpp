@@ -36,8 +36,6 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
     ui->labelConfirmations->setProperty("cssClass", "text-body1-dialog");
     ui->labelDate->setProperty("cssClass", "text-body1-dialog");
 
-    ui->contentInputs->setProperty("cssClass", "layout-arrow");
-
     ui->labelDivider1->setProperty("cssClass", "container-divider");
     ui->labelDivider2->setProperty("cssClass", "container-divider");
     ui->labelDivider3->setProperty("cssClass", "container-divider");
@@ -65,6 +63,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");
     ui->inputsScrollArea->setVisible(false);
+    ui->outputsScrollArea->setVisible(false);
     ui->contentChangeAddress->setVisible(false);
     ui->labelDivider4->setVisible(false);
     if(isConfirmDialog){
@@ -93,7 +92,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
 
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->pushInputs, SIGNAL(clicked()), this, SLOT(onInputsClicked()));
-
+    connect(ui->pushOutputs, SIGNAL(clicked()), this, SLOT(onOutputsClicked()));
 }
 
 void TxDetailDialog::setData(WalletModel *model, QModelIndex &index){
@@ -188,7 +187,50 @@ void TxDetailDialog::onInputsClicked() {
 }
 
 void TxDetailDialog::onOutputsClicked() {
+    if (ui->outputsScrollArea->isVisible()) {
+        ui->outputsScrollArea->setVisible(false);
+    } else {
+        ui->outputsScrollArea->setVisible(true);
+        if (!outputsLoaded) {
+            outputsLoaded = true;
+            QVBoxLayout* layoutVertical = new QVBoxLayout();
+            layoutVertical->setContentsMargins(0,0,0,0);
+            layoutVertical->setSpacing(6);
+            ui->container_outputs_base->setLayout(layoutVertical);
 
+            const CWalletTx* tx = model->getTx(this->txHash);
+            if(tx) {
+                for (const CTxOut &out : tx->vout) {
+                    QFrame *frame = new QFrame(ui->container_outputs_base);
+
+                    QHBoxLayout *layout = new QHBoxLayout();
+                    layout->setContentsMargins(0, 0, 0, 0);
+                    layout->setSpacing(12);
+                    frame->setLayout(layout);
+
+                    QLabel *label = nullptr;
+                    QString labelRes;
+                    CTxDestination dest;
+                    if (ExtractDestination(out.scriptPubKey, dest)) {
+                        std::string address = CBitcoinAddress(dest).ToString();
+                        labelRes = QString::fromStdString(address);
+                        labelRes = labelRes.left(16) + "..." + labelRes.right(16);
+                    } else {
+                        labelRes = tr("Unknown");
+                    }
+                    label = new QLabel(labelRes);
+                    label->setProperty("cssClass", "text-body2-dialog");
+                    QLabel *label1 = new QLabel(BitcoinUnits::formatWithUnit(nDisplayUnit, out.nValue, false, BitcoinUnits::separatorAlways));
+                    label1->setProperty("cssClass", "text-body2-dialog");
+
+                    layout->addWidget(label);
+                    layout->addWidget(label1);
+                    layoutVertical->addWidget(frame);
+                }
+            }
+            adjustSize();
+        }
+    }
 }
 
 TxDetailDialog::~TxDetailDialog()

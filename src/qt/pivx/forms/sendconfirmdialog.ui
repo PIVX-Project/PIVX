@@ -195,7 +195,10 @@
       </item>
       <item>
        <widget class="QWidget" name="contentOutputs" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,1">
+        <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,3,0">
+         <property name="spacing">
+          <number>0</number>
+         </property>
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -219,7 +222,58 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QPushButton" name="pushOutputs">
+           <property name="minimumSize">
+            <size>
+             <width>34</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>38</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QPushButton{
+background-color:transparent;
+border:none;
+qproperty-icon: url(&quot;://ic-arrow-right&quot;) off,
+                    url(&quot;://ic-arrow-right&quot;) on ;
+qproperty-iconSize: 24px 24px;
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
         </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QScrollArea" name="outputsScrollArea">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="container_outputs_base">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>524</width>
+           <height>48</height>
+          </rect>
+         </property>
+        </widget>
        </widget>
       </item>
       <item>
@@ -324,12 +378,13 @@
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color:transparent;
-                                                            border:0;
-                                                            background-image: url(&quot;:/res/ic-arrow-down.png&quot;) ;
-                                                            background-repeat:no-repeat;
-                                                            background-position:center;
-                                                        </string>
+            <string notr="true">QPushButton{
+background-color:transparent;
+border:none;
+qproperty-icon: url(&quot;://ic-arrow-right&quot;) off,
+                    url(&quot;://ic-arrow-right&quot;) on ;
+qproperty-iconSize: 24px 24px;
+}</string>
            </property>
            <property name="text">
             <string/>
