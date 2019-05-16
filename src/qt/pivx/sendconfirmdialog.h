@@ -32,14 +32,20 @@ public:
 
 public slots:
     void acceptTx();
+    void onInputsClicked();
+    void onOutputsClicked();
 
 private:
     Ui::TxDetailDialog *ui;
     int nDisplayUnit = 0;
     bool confirm = false;
-    WalletModel *model;
+    WalletModel *model = nullptr;
     WalletModel::SendCoinsReturn sendStatus;
-    WalletModelTransaction *tx;
+    WalletModelTransaction *tx = nullptr;
+    uint256 txHash;
+
+    bool inputsLoaded = false;
+    bool outputsLoaded = false;
 };
 
 #endif // SENDCONFIRMDIALOG_H

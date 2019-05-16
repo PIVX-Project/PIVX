@@ -12,7 +12,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
+    <width>564</width>
     <height>455</height>
    </size>
   </property>
@@ -316,7 +316,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="pushInputs">
            <property name="maximumSize">
             <size>
              <width>34</width>
@@ -337,6 +337,29 @@
           </widget>
          </item>
         </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QScrollArea" name="inputsScrollArea">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="container_inputs_base">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>524</width>
+           <height>48</height>
+          </rect>
+         </property>
+        </widget>
        </widget>
       </item>
       <item>

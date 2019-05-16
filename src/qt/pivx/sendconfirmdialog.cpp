@@ -18,16 +18,13 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
     this->setStyleSheet(parent->styleSheet());
 
     // Container
-
     ui->frame->setProperty("cssClass", "container-dialog");
 
     // Title
-
     ui->labelTitle->setText("Confirm your transaction");
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
     // Labels
-
     ui->labelAmount->setProperty("cssClass", "text-body1-dialog");
     ui->labelSend->setProperty("cssClass", "text-body1-dialog");
     ui->labelInputs->setProperty("cssClass", "text-body1-dialog");
@@ -67,6 +64,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
 
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");
+    ui->inputsScrollArea->setVisible(false);
     ui->contentChangeAddress->setVisible(false);
     ui->labelDivider4->setVisible(false);
     if(isConfirmDialog){
@@ -93,23 +91,25 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
 
     }
 
-
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->pushInputs, SIGNAL(clicked()), this, SLOT(onInputsClicked()));
 
 }
 
 void TxDetailDialog::setData(WalletModel *model, QModelIndex &index){
+    this->model = model;
     TransactionRecord *rec = static_cast<TransactionRecord*>(index.internalPointer());
     QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
     QString address = index.data(Qt::DisplayRole).toString();
     qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
-    bool isConfirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
     QString amountText = BitcoinUnits::formatWithUnit(nDisplayUnit, amount, true, BitcoinUnits::separatorAlways);
     ui->textAmount->setText(amountText);
 
     const CWalletTx* tx = model->getTx(rec->hash);
     if(tx) {
-        ui->textId->setText(QString::fromStdString(tx->GetHash().GetHex()));
+        this->txHash = rec->hash;
+        QString hash = QString::fromStdString(tx->GetHash().GetHex());
+        ui->textId->setText(hash.left(20) + "..." + hash.right(20));
         ui->textId->setTextInteractionFlags(Qt::TextSelectableByMouse);
         if (tx->vout.size() == 1) {
             ui->textSend->setText(address);
@@ -145,6 +145,50 @@ void TxDetailDialog::acceptTx(){
     this->confirm = true;
     this->sendStatus = model->sendCoins(*this->tx);
     accept();
+}
+
+void TxDetailDialog::onInputsClicked() {
+    if (ui->inputsScrollArea->isVisible()) {
+        ui->inputsScrollArea->setVisible(false);
+    } else {
+        ui->inputsScrollArea->setVisible(true);
+        if (!inputsLoaded) {
+            inputsLoaded = true;
+            QVBoxLayout* layoutVertical = new QVBoxLayout();
+            layoutVertical->setContentsMargins(0,0,0,0);
+            layoutVertical->setSpacing(6);
+            ui->container_inputs_base->setLayout(layoutVertical);
+
+            const CWalletTx* tx = model->getTx(this->txHash);
+            if(tx) {
+                for (const CTxIn &in : tx->vin) {
+                    QFrame *frame = new QFrame(ui->container_inputs_base);
+
+                    QHBoxLayout *layout = new QHBoxLayout();
+                    layout->setContentsMargins(0, 0, 0, 0);
+                    layout->setSpacing(12);
+                    frame->setLayout(layout);
+
+                    QString hash = QString::fromStdString(in.prevout.hash.GetHex());
+                    hash = "Prev hash: " + hash.left(16) + "..." + hash.right(16);
+                    QLabel *label = new QLabel(hash);
+                    label->setProperty("cssClass", "text-body2-dialog");
+                    QLabel *label1 = new QLabel("Index: " + QString::number(in.prevout.n));
+                    label1->setProperty("cssClass", "text-body2-dialog");
+
+                    layout->addWidget(label);
+                    layout->addWidget(label1);
+
+                    layoutVertical->addWidget(frame);
+                }
+            }
+            adjustSize();
+        }
+    }
+}
+
+void TxDetailDialog::onOutputsClicked() {
+
 }
 
 TxDetailDialog::~TxDetailDialog()

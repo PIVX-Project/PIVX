@@ -2077,6 +2077,11 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     font-size:18px;
 }
 
+*[cssClass="text-body2-dialog"] {
+    color:#B3FFFFFF;
+    font-size:15px;
+}
+
 QDialogButtonBox QPushButton {
     border:  1px solid #5c4b7d;
     background-color:#5c4b7d;
