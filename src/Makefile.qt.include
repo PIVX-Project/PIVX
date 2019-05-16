@@ -75,7 +75,6 @@ QT_FORMS_UI = \
   qt/pivx/forms/receivedialog.ui \
   qt/pivx/forms/walletpassworddialog.ui \
   qt/pivx/forms/topbar.ui \
-  qt/pivx/forms/txdetaildialog.ui \
   qt/pivx/forms/txrow.ui \
   qt/pivx/forms/dashboardwidget.ui \
   qt/pivx/forms/coincontrolpivwidget.ui \
@@ -182,7 +181,6 @@ QT_MOC_CPP = \
   qt/pivx/moc_receivedialog.cpp \
   qt/pivx/moc_walletpassworddialog.cpp \
   qt/pivx/moc_topbar.cpp \
-  qt/pivx/moc_txdetaildialog.cpp \
   qt/pivx/moc_txrow.cpp \
   qt/pivx/moc_dashboardwidget.cpp \
   qt/pivx/moc_coincontrolpivwidget.cpp \
@@ -321,7 +319,6 @@ BITCOIN_QT_H = \
   qt/pivx/expandablebutton.h \
   qt/pivx/walletpassworddialog.h \
   qt/pivx/topbar.h \
-  qt/pivx/txdetaildialog.h \
   qt/pivx/txrow.h \
   qt/pivx/AddressFilterProxyModel.h \
   qt/pivx/dashboardwidget.h \
@@ -685,7 +682,6 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/expandablebutton.cpp \
   qt/pivx/walletpassworddialog.cpp \
   qt/pivx/topbar.cpp \
-  qt/pivx/txdetaildialog.cpp \
   qt/pivx/txrow.cpp \
   qt/pivx/AddressFilterProxyModel.cpp \
   qt/pivx/dashboardwidget.cpp \

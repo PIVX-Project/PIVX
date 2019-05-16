@@ -400,7 +400,8 @@ void DashboardWidget::walletSynced(bool sync){
 
 void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){
     static_cast<TxViewHolder*>(this->txViewDelegate->getRowFactory())->isLightTheme = isLightTheme;
-    this->changeChartColors();
+    if (stakesFilter->rowCount() > 0)
+        this->changeChartColors();
 }
 
 DashboardWidget::~DashboardWidget()
