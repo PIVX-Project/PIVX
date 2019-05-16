@@ -601,6 +601,7 @@ RES_ICONS = \
   qt/pivx/res/img/ic-check-box-liliac-indeterminate.svg \
   qt/pivx/res/img/ic-check-box-indeterminate.svg \
   qt/pivx/res/img/ic-check-liliac-indeterminate.svg \
+  qt/pivx/res/img/ani-loading-dark.gif \
   qt/pivx/res/img/ani-loading.gif
 
 

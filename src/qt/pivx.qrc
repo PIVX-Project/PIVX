@@ -297,6 +297,7 @@
         <file alias="ic-check-box-dark-active">pivx/res/img/ic-check-box-dark-active.svg</file>
         <file alias="ic-check-box-indeterminate">pivx/res/img/ic-check-box-indeterminate.svg</file>
         <file alias="ic-check-liliac-indeterminate">pivx/res/img/ic-check-liliac-indeterminate.svg</file>
+        <file alias="ani-loading-dark">pivx/res/img/ani-loading-dark.gif</file>
         <file alias="ani-loading">pivx/res/img/ani-loading.gif</file>
     </qresource>
 </RCC>

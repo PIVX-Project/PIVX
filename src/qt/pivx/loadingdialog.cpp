@@ -23,7 +23,7 @@ LoadingDialog::LoadingDialog(QWidget *parent) :
 
     ui->frame->setProperty("cssClass", "container-loading");
 
-    QMovie *movie = new QMovie("://ani-loading");
+    QMovie *movie = new QMovie("://ani-loading-dark");
     ui->labelMovie->setText("");
     ui->labelMovie->setMovie(movie);
     movie->start();
