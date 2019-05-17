@@ -2205,9 +2205,11 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="ic-arrow-down"] {
-    background: url("://ic-arrow-drop-down");
-    background-repeat:no-repeat;
-    background-position:center;
+    qproperty-icon: url("://ic-arrow-drop-down") off,
+                    url("://ic-arrow-drop-down") on ;
+    qproperty-iconSize: 24px 24px;
+    background-color: transparent;
+    border:none;
 }
 
 *[cssClass="ic-close"] {

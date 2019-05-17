@@ -60,6 +60,10 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
     ui->textConfirmations->setProperty("cssClass", "text-body1-dialog");
     ui->textDate->setProperty("cssClass", "text-body1-dialog");
 
+
+    ui->pushInputs->setProperty("cssClass", "ic-arrow-down");
+    ui->pushOutputs->setProperty("cssClass", "ic-arrow-down");
+
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");
     ui->inputsScrollArea->setVisible(false);
