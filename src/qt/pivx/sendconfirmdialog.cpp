@@ -61,6 +61,9 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
     ui->textDate->setProperty("cssClass", "text-body1-dialog");
 
 
+
+    ui->pushCopy->setProperty("cssClass", "ic-copy");
+
     ui->pushInputs->setProperty("cssClass", "ic-arrow-down");
     ui->pushOutputs->setProperty("cssClass", "ic-arrow-down");
 
@@ -185,7 +188,6 @@ void TxDetailDialog::onInputsClicked() {
                     layoutVertical->addWidget(frame);
                 }
             }
-            adjustSize();
         }
     }
 }
@@ -232,7 +234,6 @@ void TxDetailDialog::onOutputsClicked() {
                     layoutVertical->addWidget(frame);
                 }
             }
-            adjustSize();
         }
     }
 }

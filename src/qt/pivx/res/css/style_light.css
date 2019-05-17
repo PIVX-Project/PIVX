@@ -2212,6 +2212,14 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border:none;
 }
 
+*[cssClass="ic-copy"] {
+    qproperty-icon: url("://ic-copy") off,
+                    url("://ic-copy") on ;
+    qproperty-iconSize: 24px 24px;
+    background-color: transparent;
+    border:none;
+}
+
 *[cssClass="ic-close"] {
     qproperty-icon: url("://ic-close") off,
                     url("://ic-close") on ;
