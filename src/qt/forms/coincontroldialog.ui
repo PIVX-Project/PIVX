@@ -583,24 +583,15 @@
          </spacer>
         </item>
         <item>
-         <widget class="QDialogButtonBox" name="buttonBox">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
+         <widget class="QPushButton" name="pushButtonOk">
           <property name="minimumSize">
            <size>
-            <width>0</width>
-            <height>0</height>
+            <width>150</width>
+            <height>35</height>
            </size>
           </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="standardButtons">
-           <set>QDialogButtonBox::Ok</set>
+          <property name="text">
+           <string>OK</string>
           </property>
          </widget>
         </item>

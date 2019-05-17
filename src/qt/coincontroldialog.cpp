@@ -98,9 +98,7 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool fMultisigEnabled) : Q
 
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");
-
-    //ui->buttonBox->setText("OK");
-    ui->buttonBox->setProperty("cssClass", "btn-primary");
+    ui->pushButtonOk->setProperty("cssClass", "btn-primary");
 
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
 
@@ -178,7 +176,7 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool fMultisigEnabled) : Q
     connect(ui->treeWidget->header(), SIGNAL(sectionClicked(int)), this, SLOT(headerSectionClicked(int)));
 
     // ok button
-    connect(ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(buttonBoxClicked(QAbstractButton*)));
+    connect(ui->pushButtonOk, SIGNAL(clicked()), this, SLOT(accept()));
 
     // (un)select all
     connect(ui->pushButtonSelectAll, SIGNAL(clicked()), this, SLOT(buttonSelectAllClicked()));
@@ -237,13 +235,6 @@ void CoinControlDialog::setModel(WalletModel* model)
         CoinControlDialog::updateLabels(model, this);
         updateDialogLabels();
     }
-}
-
-// ok button
-void CoinControlDialog::buttonBoxClicked(QAbstractButton* button)
-{
-    if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole)
-        done(QDialog::Accepted); // closes the dialog
 }
 
 // (un)select all
