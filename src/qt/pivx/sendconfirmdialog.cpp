@@ -60,19 +60,21 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
     ui->textConfirmations->setProperty("cssClass", "text-body1-dialog");
     ui->textDate->setProperty("cssClass", "text-body1-dialog");
 
-
-
     ui->pushCopy->setProperty("cssClass", "ic-copy-big");
-
     ui->pushInputs->setProperty("cssClass", "ic-arrow-down");
     ui->pushOutputs->setProperty("cssClass", "ic-arrow-down");
 
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");
-    ui->inputsScrollArea->setVisible(false);
+
+    ui->gridInputs->setVisible(false);
     ui->outputsScrollArea->setVisible(false);
     ui->contentChangeAddress->setVisible(false);
     ui->labelDivider4->setVisible(false);
+
+    ui->labelOutputIndex->setProperty("cssClass", "text-body2-dialog");
+    ui->labelTitlePrevTx->setProperty("cssClass", "text-body2-dialog");
+
     if(isConfirmDialog){
 
         ui->btnCancel->setProperty("cssClass", "btn-dialog-cancel");
@@ -94,7 +96,6 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
         connect(ui->btnSave, &QPushButton::clicked, [this](){acceptTx();});
     }else{
         ui->containerButtons->setVisible(false);
-
     }
 
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
@@ -154,38 +155,29 @@ void TxDetailDialog::acceptTx(){
 }
 
 void TxDetailDialog::onInputsClicked() {
-    if (ui->inputsScrollArea->isVisible()) {
-        ui->inputsScrollArea->setVisible(false);
+    if (ui->gridInputs->isVisible()) {
+        ui->gridInputs->setVisible(false);
+        ui->contentInputs->layout()->setContentsMargins(0,9,12,9);
     } else {
-        ui->inputsScrollArea->setVisible(true);
+        ui->gridInputs->setVisible(true);
+        ui->contentInputs->layout()->setContentsMargins(0,9,12,0);
         if (!inputsLoaded) {
             inputsLoaded = true;
-            QVBoxLayout* layoutVertical = new QVBoxLayout();
-            layoutVertical->setContentsMargins(0,0,0,0);
-            layoutVertical->setSpacing(6);
-            ui->container_inputs_base->setLayout(layoutVertical);
-
             const CWalletTx* tx = model->getTx(this->txHash);
             if(tx) {
+                ui->gridInputs->setMinimumHeight(50 + (50 * tx->vin.size()));
+                int i = 1;
                 for (const CTxIn &in : tx->vin) {
-                    QFrame *frame = new QFrame(ui->container_inputs_base);
-
-                    QHBoxLayout *layout = new QHBoxLayout();
-                    layout->setContentsMargins(0, 0, 0, 0);
-                    layout->setSpacing(12);
-                    frame->setLayout(layout);
-
                     QString hash = QString::fromStdString(in.prevout.hash.GetHex());
-                    hash = "Prev hash: " + hash.left(16) + "..." + hash.right(16);
-                    QLabel *label = new QLabel(hash);
+                    QLabel *label = new QLabel(hash.left(18) + "..." + hash.right(18));
                     label->setProperty("cssClass", "text-body2-dialog");
-                    QLabel *label1 = new QLabel("Index: " + QString::number(in.prevout.n));
+                    QLabel *label1 = new QLabel(QString::number(in.prevout.n));
                     label1->setProperty("cssClass", "text-body2-dialog");
+                    label1->setAlignment(Qt::AlignCenter);
 
-                    layout->addWidget(label);
-                    layout->addWidget(label1);
-
-                    layoutVertical->addWidget(frame);
+                    ui->gridLayoutInput->addWidget(label,i,0);
+                    ui->gridLayoutInput->addWidget(label1,i,1, Qt::AlignCenter);
+                    i++;
                 }
             }
         }
@@ -200,7 +192,7 @@ void TxDetailDialog::onOutputsClicked() {
         if (!outputsLoaded) {
             outputsLoaded = true;
             QVBoxLayout* layoutVertical = new QVBoxLayout();
-            layoutVertical->setContentsMargins(0,0,0,0);
+            layoutVertical->setContentsMargins(0,0,12,0);
             layoutVertical->setSpacing(6);
             ui->container_outputs_base->setLayout(layoutVertical);
 
@@ -228,6 +220,7 @@ void TxDetailDialog::onOutputsClicked() {
                     label->setProperty("cssClass", "text-body2-dialog");
                     QLabel *label1 = new QLabel(BitcoinUnits::formatWithUnit(nDisplayUnit, out.nValue, false, BitcoinUnits::separatorAlways));
                     label1->setProperty("cssClass", "text-body2-dialog");
+                    label1->setAlignment(Qt::AlignCenter | Qt::AlignRight);
 
                     layout->addWidget(label);
                     layout->addWidget(label1);
