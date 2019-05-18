@@ -62,7 +62,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
 
 
 
-    ui->pushCopy->setProperty("cssClass", "ic-copy");
+    ui->pushCopy->setProperty("cssClass", "ic-copy-big");
 
     ui->pushInputs->setProperty("cssClass", "ic-arrow-down");
     ui->pushOutputs->setProperty("cssClass", "ic-arrow-down");

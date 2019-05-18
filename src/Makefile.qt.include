@@ -541,6 +541,8 @@ RES_ICONS = \
   qt/pivx/res/img/img-nav-logo-pivx.png \
   qt/pivx/res/img/ic-arrow-right.svg \
   qt/pivx/res/img/ic-copy.svg \
+  qt/pivx/res/img/ic-copy-big.svg \
+  qt/pivx/res/img/ic-copy-big-white.svg \
   qt/pivx/res/img/ic-submenu-unlock.svg \
   qt/pivx/res/img/img-nav-logo.png \
   qt/pivx/res/img/ic-arrow-white-left.svg \

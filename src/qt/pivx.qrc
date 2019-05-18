@@ -196,6 +196,8 @@
         <file alias="ic-connect">pivx/res/img/ic-connect.svg</file>
         <file alias="ic-copy-liliac">pivx/res/img/ic-copy-liliac.svg</file>
         <file alias="ic-copy">pivx/res/img/ic-copy.svg</file>
+        <file alias="ic-copy-big">pivx/res/img/ic-copy-big.svg</file>
+        <file alias="ic-copy-big-white">pivx/res/img/ic-copy-big-white.svg</file>
         <file alias="ic-exit">pivx/res/img/ic-exit.svg</file>
         <file alias="ic-expand">pivx/res/img/ic-expand.svg</file>
         <file alias="ic-folder">pivx/res/img/ic-folder.svg</file>
