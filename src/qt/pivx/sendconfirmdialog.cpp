@@ -6,6 +6,8 @@
 #include "transactionrecord.h"
 #include "wallet.h"
 #include "guiutil.h"
+#include "qt/pivx/snackbar.h"
+#include "qt/pivx/qtutils.h"
 #include <QList>
 #include <QDateTime>
 
@@ -21,20 +23,11 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
     ui->frame->setProperty("cssClass", "container-dialog");
 
     // Title
-    ui->labelTitle->setText("Confirm your transaction");
+    ui->labelTitle->setText(tr("Confirm your transaction"));
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
     // Labels
-    ui->labelAmount->setProperty("cssClass", "text-body1-dialog");
-    ui->labelSend->setProperty("cssClass", "text-body1-dialog");
-    ui->labelInputs->setProperty("cssClass", "text-body1-dialog");
-    ui->labelFee->setProperty("cssClass", "text-body1-dialog");
-    ui->labelChange->setProperty("cssClass", "text-body1-dialog");
-    ui->labelId->setProperty("cssClass", "text-body1-dialog");
-    ui->labelSize->setProperty("cssClass", "text-body1-dialog");
-    ui->labelStatus->setProperty("cssClass", "text-body1-dialog");
-    ui->labelConfirmations->setProperty("cssClass", "text-body1-dialog");
-    ui->labelDate->setProperty("cssClass", "text-body1-dialog");
+    setCssTextBodyDialog({ui->labelAmount, ui->labelSend, ui->labelInputs, ui->labelFee, ui->labelChange, ui->labelId, ui->labelSize, ui->labelStatus, ui->labelConfirmations, ui->labelDate});
 
     ui->labelDivider1->setProperty("cssClass", "container-divider");
     ui->labelDivider2->setProperty("cssClass", "container-divider");
@@ -46,19 +39,8 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
     ui->labelDivider8->setProperty("cssClass", "container-divider");
     ui->labelDivider9->setProperty("cssClass", "container-divider");
 
-
     // Content
-
-    ui->textAmount->setProperty("cssClass", "text-body1-dialog");
-    ui->textSend->setProperty("cssClass", "text-body1-dialog");
-    ui->textInputs->setProperty("cssClass", "text-body1-dialog");
-    ui->textFee->setProperty("cssClass", "text-body1-dialog");
-    ui->textChange->setProperty("cssClass", "text-body1-dialog");
-    ui->textId->setProperty("cssClass", "text-body1-dialog");
-    ui->textSize->setProperty("cssClass", "text-body1-dialog");
-    ui->textStatus->setProperty("cssClass", "text-body1-dialog");
-    ui->textConfirmations->setProperty("cssClass", "text-body1-dialog");
-    ui->textDate->setProperty("cssClass", "text-body1-dialog");
+    setCssTextBodyDialog({ui->textAmount, ui->textSend, ui->textInputs, ui->textFee, ui->textChange, ui->textId, ui->textSize, ui->textStatus, ui->textConfirmations, ui->textDate});
 
     ui->pushCopy->setProperty("cssClass", "ic-copy-big");
     ui->pushInputs->setProperty("cssClass", "ic-arrow-down");
@@ -78,7 +60,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
     if(isConfirmDialog){
 
         ui->btnCancel->setProperty("cssClass", "btn-dialog-cancel");
-        ui->btnSave->setText("SEND");
+        ui->btnSave->setText(tr("SEND"));
         ui->btnSave->setProperty("cssClass", "btn-primary");
 
         // hide change address for now
@@ -128,6 +110,14 @@ void TxDetailDialog::setData(WalletModel *model, QModelIndex &index){
         ui->textDate->setText(GUIUtil::dateTimeStr(date));
         ui->textStatus->setText(QString::fromStdString(rec->statusToString()));
         ui->textSize->setText(QString::number(rec->size) + " bytes");
+
+        connect(ui->pushCopy, &QPushButton::clicked, [this](){
+            GUIUtil::setClipboard(QString::fromStdString(this->txHash.GetHex()));
+            SnackBar *snackBar = new SnackBar(nullptr, this);
+            snackBar->setText(tr("ID copied"));
+            snackBar->resize(this->width(), snackBar->height());
+            openDialog(snackBar, this);
+        });
     }
 
 }

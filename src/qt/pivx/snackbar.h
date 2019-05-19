@@ -14,7 +14,7 @@ class SnackBar : public QDialog
     Q_OBJECT
 
 public:
-    explicit SnackBar(PIVXGUI* _window, QWidget *parent = nullptr);
+    explicit SnackBar(PIVXGUI* _window = nullptr, QWidget *parent = nullptr);
     ~SnackBar();
 
     virtual void showEvent(QShowEvent *event) override;
@@ -25,7 +25,7 @@ private slots:
     void windowResizeEvent(QResizeEvent *event);
 private:
     Ui::SnackBar *ui;
-    PIVXGUI* window;
+    PIVXGUI* window = nullptr;
 };
 
 #endif // SNACKBAR_H

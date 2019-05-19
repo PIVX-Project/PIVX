@@ -8,7 +8,6 @@
 #include "qt/pivx/PIVXGUI.h"
 #include "guiutil.h"
 #include "qt/pivx/qtutils.h"
-#include "qt/pivx/snackbar.h"
 #include "walletmodel.h"
 
 #include <QAbstractItemDelegate>

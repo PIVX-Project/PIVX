@@ -17,7 +17,12 @@ SnackBar::SnackBar(PIVXGUI* _window, QWidget *parent) :
     ui->pushButton->setProperty("cssClass", "ic-close");
 
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(close()));
-    connect(window, SIGNAL(windowResizeEvent(QResizeEvent*)), this, SLOT(windowResizeEvent(QResizeEvent*)));
+    if (window)
+        connect(window, SIGNAL(windowResizeEvent(QResizeEvent*)), this, SLOT(windowResizeEvent(QResizeEvent*)));
+    else {
+        ui->horizontalLayout->setContentsMargins(0,0,0,0);
+        ui->label->setStyleSheet("font-size: 15px; color:white;");
+    }
 }
 
 void SnackBar::windowResizeEvent(QResizeEvent* event){
@@ -30,7 +35,7 @@ void SnackBar::showEvent(QShowEvent *event){
 }
 
 void SnackBar::hideAnim(){
-    closeDialog(this, window);
+    if (window) closeDialog(this, window);
     QTimer::singleShot(310, this, SLOT(hide()));
 }
 
@@ -40,12 +45,10 @@ void SnackBar::sizeTo(QWidget* widget){
 
 }
 
-void SnackBar::setText(QString text)
-{
+void SnackBar::setText(QString text){
     ui->label->setText(text);
 }
 
-SnackBar::~SnackBar()
-{
+SnackBar::~SnackBar(){
     delete ui;
 }

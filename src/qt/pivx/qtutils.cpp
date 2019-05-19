@@ -9,7 +9,7 @@
 #include <QGraphicsDropShadowEffect>
 
 // Open dialog at the bottom
-bool openDialog(QDialog *widget, PIVXGUI *gui){
+bool openDialog(QDialog *widget, QWidget *gui){
     widget->setWindowFlags(Qt::CustomizeWindowHint);
     widget->setAttribute(Qt::WA_TranslucentBackground, true);
     QPropertyAnimation* animation = new QPropertyAnimation(widget, "pos");
@@ -198,6 +198,14 @@ void setCssBtnPrimary(QPushButton *btn, bool forceUpdate){
 
 void setCssBtnSecondary(QPushButton *btn, bool forceUpdate){
     setCssProperty(btn, "btn-secundary", forceUpdate);
+}
+
+void setCssTextBodyDialog(std::initializer_list<QWidget*> args){
+    foreach (QWidget* w, args) { setCssTextBodyDialog(w); }
+}
+
+void setCssTextBodyDialog(QWidget* widget) {
+    setCssProperty(widget, "text-body1-dialog", false);
 }
 
 void setCssProperty(QWidget *wid, QString value, bool forceUpdate){
