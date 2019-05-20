@@ -226,7 +226,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout" stretch="4,0,2">
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="6,0,2">
           <property name="spacing">
            <number>0</number>
           </property>
