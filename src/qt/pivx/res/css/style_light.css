@@ -1175,6 +1175,10 @@ QPushButton[cssClass="btn-edit-primary-folder"] {
     text-align:left;
 }
 
+QLineEdit {
+    selection-background-color: #5c4b7d;
+    selection-color: white;
+}
 
 QLineEdit[cssClass="edit-primary-book"]:focus {
     border: 1px solid #b088ff;
