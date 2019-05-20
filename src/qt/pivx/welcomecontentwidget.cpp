@@ -9,7 +9,7 @@
 #include <iostream>
 
 WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
-    QDialog(parent),
+    QDialog(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint),
     ui(new Ui::WelcomeContentWidget),
     backButton(new QPushButton()),
     nextButton(new QPushButton()),
@@ -258,11 +258,11 @@ void WelcomeContentWidget::onBackClicked(){
     pos--;
     switch(pos){
         case 0:{
-            ui->stackedWidget->setCurrentIndex(1);
+            ui->stackedWidget->setCurrentIndex(0);
             break;
         }
         case 1:{
-            ui->stackedWidget->setCurrentIndex(2);
+            ui->stackedWidget->setCurrentIndex(1);
             ui->pushNumber1->setChecked(true);
             ui->pushNumber4->setChecked(false);
             ui->pushNumber3->setChecked(false);
@@ -277,7 +277,7 @@ void WelcomeContentWidget::onBackClicked(){
             break;
         }
         case 2:{
-            ui->stackedWidget->setCurrentIndex(3);
+            ui->stackedWidget->setCurrentIndex(2);
             ui->pushNumber2->setChecked(true);
             ui->pushNumber4->setChecked(false);
             ui->pushNumber3->setChecked(false);
@@ -289,7 +289,7 @@ void WelcomeContentWidget::onBackClicked(){
             break;
         }
         case 3:{
-            ui->stackedWidget->setCurrentIndex(4);
+            ui->stackedWidget->setCurrentIndex(3);
             ui->pushNumber3->setChecked(true);
             ui->pushNumber4->setChecked(false);
             ui->pushName4->setChecked(false);

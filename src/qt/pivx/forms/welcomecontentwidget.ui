@@ -773,7 +773,6 @@
                   </property>
                  </spacer>
                 </item>
-                
                </layout>
               </widget>
               <widget class="QWidget" name="page_1">
@@ -906,8 +905,11 @@
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
-                       <height>50</height>
+                       <height>60</height>
                       </size>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">padding:1px;</string>
                      </property>
                      <property name="text">
                       <string>Welcome to
@@ -937,7 +939,7 @@ PIVX Core Wallet</string>
                    <item alignment="Qt::AlignHCenter">
                     <widget class="QLabel" name="labelMessage2">
                      <property name="text">
-                      <string>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
+                      <string>PIVX is the world’s most advanced privacy-enabled Proof of Stake blockchain technology, all developed by a team of highly experienced developers and cryptographers.</string>
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignHCenter|Qt::AlignTop</set>
