@@ -1449,7 +1449,7 @@ QPushButton[cssClass="btn-text-primary"]:pressed {
 HH       LINE EDIT
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
-QLineEdit[cssClass="edit-primary"] {
+*[cssClass="edit-primary"] {
     border:  1px solid #bababa;
     background-color:#0f0b16;
     font-size:18px;
@@ -1458,20 +1458,20 @@ QLineEdit[cssClass="edit-primary"] {
     color: #FFFFFF;
 }
 
-QLineEdit[cssClass="edit-primary"]:focus {
+*[cssClass="edit-primary"]:focus {
     border: 1px solid #b088ff;
 }
 
-QLineEdit[cssClass="edit-primary"]:focus:hover {
+*[cssClass="edit-primary"]:focus:hover {
     border: 1px solid #b088ff;
 }
 
-QLineEdit[cssClass="edit-primary"]:hover {
+*[cssClass="edit-primary"]:hover {
     border: 1px solid #FFFFFF;
 }
 
 
-QLineEdit[cssClass="edit-primary-error"] {
+*[cssClass="edit-primary-error"] {
     border:  1px solid #f84444;
     background-color:#0f0b16;
     font-size:18px;

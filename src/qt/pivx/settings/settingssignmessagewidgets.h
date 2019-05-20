@@ -22,6 +22,7 @@ public slots:
     void on_addressBookButton_SM_clicked();
 private:
     Ui::SettingsSignMessageWidgets *ui;
+    QAction *btnContact;
 };
 
 #endif // SETTINGSSIGNMESSAGEWIDGETS_H
