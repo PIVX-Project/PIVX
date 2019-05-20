@@ -272,8 +272,8 @@ void SendWidget::onAddEntryClicked(){
     addEntry();
 }
 
-void SendWidget::resizeEvent(QResizeEvent *event)
-{
+void SendWidget::resizeEvent(QResizeEvent *event){
+    resizeMenu();
     QWidget::resizeEvent(event);
 }
 
@@ -403,7 +403,6 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
         }
     }
 
-    // TODO: add confirm dialog..
     QString sendBody = outputs.size() == 1 ?
             tr("Sending %1 to address %2\n")
             .arg(BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), total, false, BitcoinUnits::separatorAlways))
@@ -647,7 +646,7 @@ void SendWidget::onContactsClicked(SendMultiRow* entry){
                     height,
                     this
                     );
-        menuContacts->setWalletModel(walletModel);
+        menuContacts->setWalletModel(walletModel, AddressTableModel::Send);
         connect(menuContacts, &ContactsDropdown::contactSelected, [this](QString address, QString label){
             if(focusedEntry){
                 focusedEntry->setLabel(label);

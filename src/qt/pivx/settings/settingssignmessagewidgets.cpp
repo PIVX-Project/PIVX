@@ -32,7 +32,7 @@ SettingsSignMessageWidgets::SettingsSignMessageWidgets(PIVXGUI* _window, QWidget
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
 
     // Subtitle
-    ui->labelSubtitle1->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
+    ui->labelSubtitle1->setText(tr("You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to."));
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
     // Address
@@ -60,20 +60,25 @@ SettingsSignMessageWidgets::SettingsSignMessageWidgets(PIVXGUI* _window, QWidget
     ui->labelSubtitleSignature->setProperty("cssClass", "text-title");
     ui->signatureOut_SM->setPlaceholderText(tr("Signature"));
     ui->signatureOut_SM->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    ui->signatureOut_SM->setReadOnly(true);
+
     initCssEditLine(ui->signatureOut_SM);
     setShadow(ui->signatureOut_SM);
 
     // Buttons
-
-        // Button Contact
     btnContact = ui->addressIn_SM->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
     
     ui->pushButtonSave->setText(tr("SIGN"));
     ui->pushButtonSave->setProperty("cssClass", "btn-primary");
 
-    ui->statusLabel_SM->setVisible(false);
+    ui->pushButtonClear->setText(tr("CLEAR ALL"));
+    ui->pushButtonClear->setProperty("cssClass", "btn-secundary-clear");
+
+    ui->statusLabel_SM->setStyleSheet("QLabel { color: transparent; }");
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(on_signMessageButton_SM_clicked()));
+    connect(btnContact, SIGNAL(triggered()), this, SLOT(onAddressesClicked()));
+    connect(ui->pushButtonClear, SIGNAL(clicked()), this, SLOT(on_clear_all()));
 }
 
 SettingsSignMessageWidgets::~SettingsSignMessageWidgets(){
@@ -98,6 +103,13 @@ void SettingsSignMessageWidgets::on_addressBookButton_SM_clicked(){
 
 void SettingsSignMessageWidgets::on_pasteButton_SM_clicked(){
     setAddress_SM(QApplication::clipboard()->text());
+}
+
+void SettingsSignMessageWidgets::on_clear_all() {
+    ui->addressIn_SM->clear();
+    ui->signatureOut_SM->clear();
+    ui->messageIn_SM->clear();
+    ui->statusLabel_SM->setStyleSheet("QLabel { color: transparent; }");
 }
 
 void SettingsSignMessageWidgets::on_signMessageButton_SM_clicked(){
@@ -152,4 +164,60 @@ void SettingsSignMessageWidgets::on_signMessageButton_SM_clicked(){
     ui->statusLabel_SM->setText(QString("<nobr>") + tr("Message signed.") + QString("</nobr>"));
 
     ui->signatureOut_SM->setText(QString::fromStdString(EncodeBase64(&vchSig[0], vchSig.size())));
+}
+
+void SettingsSignMessageWidgets::onAddressesClicked(){
+    int addressSize = walletModel->getAddressTableModel()->sizeRecv();
+    if(addressSize == 0) {
+        inform(tr("No contacts available, you can go to the contacts screen and add some there!"));
+        return;
+    }
+
+    int height = (addressSize <= 2) ? ui->addressIn_SM->height() * ( 2 * (addressSize + 1 )) : ui->addressIn_SM->height() * 4;
+    int width = ui->containerAddress->width();
+
+    if(!menuContacts){
+        menuContacts = new ContactsDropdown(
+                width,
+                height,
+                this
+        );
+        menuContacts->setWalletModel(walletModel, AddressTableModel::Receive);
+        connect(menuContacts, &ContactsDropdown::contactSelected, [this](QString address, QString label){
+            setAddress_SM(address);
+        });
+
+    }
+
+    if(menuContacts->isVisible()){
+        menuContacts->hide();
+        return;
+    }
+
+    menuContacts->resizeList(width, height);
+    menuContacts->setStyleSheet(this->styleSheet());
+    menuContacts->adjustSize();
+
+    // TODO: fix this position.
+    QPoint pos = ui->containerAddress->rect().bottomLeft();
+    pos.setX(pos.x() + 10);
+    menuContacts->move(pos);
+    menuContacts->show();
+}
+
+void SettingsSignMessageWidgets::resizeMenu(){
+    if(menuContacts && menuContacts->isVisible()){
+        int width = ui->containerAddress->width();
+        menuContacts->resizeList(width, menuContacts->height());
+        menuContacts->resize(width, menuContacts->height());
+        QPoint pos = ui->containerAddress->rect().bottomLeft();
+        pos.setY(pos.y() + ui->containerAddress->height());
+        pos.setX(pos.x() + 10);
+        menuContacts->move(pos);
+    }
+}
+
+void SettingsSignMessageWidgets::resizeEvent(QResizeEvent *event){
+    resizeMenu();
+    QWidget::resizeEvent(event);
 }

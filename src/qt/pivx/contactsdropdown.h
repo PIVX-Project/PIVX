@@ -27,7 +27,7 @@ public:
     explicit ContactsDropdown(int minWidth, int minHeight, PWidget *parent = nullptr);
 
     void resizeList(int minWidth, int mintHeight);
-    void setWalletModel(WalletModel* _model);
+    void setWalletModel(WalletModel* _model, QString type);
 signals:
     void contactSelected(QString address, QString label);
 private:
