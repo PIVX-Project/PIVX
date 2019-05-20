@@ -183,6 +183,7 @@ void SettingsWidget::loadClientModel(){
 
 void SettingsWidget::loadWalletModel(){
     this->settingsBackupWallet->setWalletModel(this->walletModel);
+    this->settingsSingMessageWidgets->setWalletModel(this->walletModel);
 }
 
 
