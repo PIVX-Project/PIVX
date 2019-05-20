@@ -217,3 +217,7 @@ void forceUpdateStyle(QWidget *widget, bool forceUpdate){
     if(forceUpdate)
         updateStyle(widget);
 }
+
+void forceUpdateStyle(std::initializer_list<QWidget*> args){
+    foreach (QWidget* w, args) { forceUpdateStyle(w, true); }
+}

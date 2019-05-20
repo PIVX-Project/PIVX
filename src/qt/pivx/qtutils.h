@@ -53,5 +53,6 @@ void setCssTextBodyDialog(std::initializer_list<QWidget*> args);
 void setCssTextBodyDialog(QWidget* widget);
 void setCssProperty(QWidget *wid, QString value, bool forceUpdate = false);
 void forceUpdateStyle(QWidget *widget, bool forceUpdate);
+void forceUpdateStyle(std::initializer_list<QWidget*> args);
 
 #endif // QTUTILS_H

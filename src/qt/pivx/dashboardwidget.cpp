@@ -85,12 +85,8 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
 
     ui->labelChart->setProperty("cssClass", "legend-chart");
 
-    ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv");
-    ui->labelAmountPiv->setText("0 PIV");
-
-    ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv");
     ui->labelAmountZpiv->setText("0 zPIV");
-
+    ui->labelAmountPiv->setText("0 PIV");
     ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv-disable");
     ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv-disable");
 
@@ -190,10 +186,9 @@ void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
 
 void DashboardWidget::initChart() {
     set0 = new QBarSet("PIV");
-    set0->setColor(QColor(176,136,255));
-
     set1 = new QBarSet("zPIV");
-    set1->setColor(QColor(92,75,125));
+    set0->setColor(QColor(92,75,125));
+    set1->setColor(QColor(176,136,255));
 
     chart = new QChart();
 }
@@ -235,6 +230,8 @@ void DashboardWidget::loadChart(){
 
         QStringList months;
         qreal maxValue = 0;
+        qint64 totalPiv = 0;
+        qint64 totalZpiv = 0;
         for (int j = 12; j > 6; j--) {
             qreal piv = 0;
             qreal zpiv = 0;
@@ -242,6 +239,8 @@ void DashboardWidget::loadChart(){
                 std::pair<qint64, qint64> pair = amountByMonths[j];
                 piv = (pair.first != 0) ? pair.first / 100000000 : 0;
                 zpiv = (pair.second != 0) ? pair.second / 100000000 : 0;
+                totalPiv += pair.first;
+                totalZpiv += pair.second;
             }
             months << monthsNames[j - 1];
             set0->append(piv);
@@ -252,6 +251,19 @@ void DashboardWidget::loadChart(){
                 maxValue = max;
             }
         }
+
+        nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
+
+        if (totalPiv > 0 || totalZpiv > 0) {
+            ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv");
+            ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv");
+        } else {
+            ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv-disable");
+            ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv-disable");
+        }
+        forceUpdateStyle({ui->labelAmountPiv, ui->labelAmountZpiv});
+        ui->labelAmountPiv->setText(GUIUtil::formatBalance(totalPiv, nDisplayUnit));
+        ui->labelAmountZpiv->setText(GUIUtil::formatBalance(totalZpiv, nDisplayUnit, true));
 
         QBarSeries *series = new QtCharts::QBarSeries();
         series->append(set0);
