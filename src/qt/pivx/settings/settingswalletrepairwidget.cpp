@@ -29,7 +29,7 @@ SettingsWalletRepairWidget::SettingsWalletRepairWidget(PIVXGUI* _window, QWidget
 
     // Title
 
-    ui->labelTitle->setText("Wallet Repair");
+    ui->labelTitle->setText(tr("Wallet Repair"));
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
 
 
@@ -48,12 +48,12 @@ SettingsWalletRepairWidget::SettingsWalletRepairWidget(PIVXGUI* _window, QWidget
     ui->labelMessageSalvage->setText("Attempt to recover private keys from a corrupt wallet.dat.");
     ui->labelMessageSalvage->setProperty("cssClass", "text-main-grey");
 
-    ui->labelRescan->setText("-salvagewallet:");
+    ui->labelRescan->setText("-rescanwallet:");
     ui->labelRescan->setProperty("cssClass", "text-subtitle");
     ui->labelMessageRescan->setText("Rescan the blockchain for missing wallet transactions.");
     ui->labelMessageRescan->setProperty("cssClass", "text-main-grey");
 
-    ui->labelRecover1->setText("-salvagewallet:");
+    ui->labelRecover1->setText("-recoverwallet:");
     ui->labelRecover1->setProperty("cssClass", "text-subtitle");
     ui->labelMessageRecover1->setText("Recover transactions from blockchain (keep-meta-data, e.g. account owner).");
     ui->labelMessageRecover1->setProperty("cssClass", "text-main-grey");
@@ -63,7 +63,7 @@ SettingsWalletRepairWidget::SettingsWalletRepairWidget(PIVXGUI* _window, QWidget
     ui->labelMessageRecover2->setText("Recover transactions from blockchain (drop meta-data).");
     ui->labelMessageRecover2->setProperty("cssClass", "text-main-grey");
 
-    ui->labelUpgrade->setText("-salvagewallet:");
+    ui->labelUpgrade->setText("-upgradewallet:");
     ui->labelUpgrade->setProperty("cssClass", "text-subtitle");
     ui->labelMessageUpgrade->setText("Upgrade wallet to latest format on startup. (Note: this is NOT an update of the wallet itself)");
     ui->labelMessageUpgrade->setProperty("cssClass", "text-main-grey");

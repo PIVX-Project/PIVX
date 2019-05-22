@@ -23,9 +23,7 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
     this->setStyleSheet(GUIUtil::loadStyleSheet());
 
     ui->frame->setProperty("cssClass", "container-welcome-stack");
-
     ui->frame_2->setProperty("cssClass", "container-welcome");
-
 
     backButton = new QPushButton(ui->container);
     nextButton = new QPushButton(ui->container);
@@ -36,7 +34,6 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
     nextButton->raise();
 
     backButton->setProperty("cssClass", "btn-welcome-back");
-
     nextButton->setProperty("cssClass", "btn-welcome-next");
 
     QSize BUTTON_SIZE = QSize(60, 60);
@@ -52,7 +49,6 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
     int nextY = 240;
 
     // position
-
     backButton->move(backX, backY);
     backButton->setStyleSheet("background: url(://ic-arrow-white-left); background-repeat:no-repeat;background-position:center;border:  0;background-color:#5c4b7d;color: #5c4b7d;");
     nextButton->move(nextX, nextY);
@@ -94,11 +90,7 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
     ui->page_1->setProperty("cssClass", "container-welcome-step1");
     ui->labelTitle1->setProperty("cssClass", "text-title-welcome");
     ui->comboBoxLanguage->setProperty("cssClass", "btn-combo-welcome");
-    QListView * listView = new QListView();
-
-    ui->comboBoxLanguage->setView(listView);
-    ui->comboBoxLanguage->addItem("English");
-    ui->comboBoxLanguage->addItem("Spanish");
+    ui->comboBoxLanguage->setView(new QListView());
 
     // Frame 2
     ui->page_2->setProperty("cssClass", "container-welcome-step2");
@@ -110,17 +102,12 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
     ui->labelTitle3->setProperty("cssClass", "text-title-welcome");
     ui->labelMessage3->setProperty("cssClass", "text-main-white");
 
-
     // Frame 4
     ui->page_4->setProperty("cssClass", "container-welcome-step4");
     ui->labelTitle4->setProperty("cssClass", "text-title-welcome");
     ui->labelMessage4->setProperty("cssClass", "text-main-white");
 
-
-
     // Confirm icons
-
-
     icConfirm1 = new QPushButton(ui->layoutIcon1_2);
     icConfirm2 = new QPushButton(ui->layoutIcon2_2);
     icConfirm3 = new QPushButton(ui->layoutIcon3_2);
@@ -159,7 +146,6 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
     icConfirm4->raise();
     icConfirm4->setVisible(false);
 
-
     ui->pushButtonSkip->setProperty("cssClass", "btn-close-white");
     onNextClicked();
 
@@ -168,7 +154,6 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
     connect(backButton, SIGNAL(clicked()), this, SLOT(onBackClicked()));
 
     initLanguages();
-
 }
 
 void WelcomeContentWidget::initLanguages(){
@@ -241,13 +226,11 @@ void WelcomeContentWidget::onNextClicked(){
             icConfirm3->setVisible(true);
             break;
         }
-
         case 4:{
             isOk = true;
             accept();
             break;
         }
-
     }
     pos++;
 
