@@ -13,6 +13,7 @@
 #include "walletmodel.h"
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/loadingdialog.h"
+#include "qt/pivx/defaultdialog.h"
 #include "qt/pivx/PIVXGUI.h"
 #include <QDebug>
 
@@ -172,11 +173,13 @@ void AskPassphraseDialog::accept()
             // Cannot encrypt with empty passphrase
             break;
         }
-        QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm wallet encryption"),
-            tr("Warning: If you encrypt your wallet and lose your passphrase, you will <b>LOSE ALL OF YOUR PIV</b>!") + "<br><br>" + tr("Are you sure you wish to encrypt your wallet?"),
-            QMessageBox::Yes | QMessageBox::Cancel,
-            QMessageBox::Cancel);
-        if (retval == QMessageBox::Yes) {
+        hide();
+        bool ret = openStandardDialog(
+                tr("Confirm wallet encryption"),
+                tr("Warning: If you encrypt your wallet and lose your passphrase, you will <b>LOSE ALL OF YOUR PIV</b>!") + "<br><br>" + tr("Are you sure you wish to encrypt your wallet?"),
+                tr("ENCRYPT"), tr("CANCEL")
+        );
+        if (ret) {
             if (newpass1 == newpass2) {
                 newpassCache = newpass1;
                 PIVXGUI* window = static_cast<PIVXGUI*>(parentWidget());
@@ -218,8 +221,8 @@ void AskPassphraseDialog::accept()
     case Mode::ChangePass:
         if (newpass1 == newpass2) {
             if (model->changePassphrase(oldpass, newpass1)) {
-                QMessageBox::information(this, tr("Wallet encrypted"),
-                    tr("Wallet passphrase was successfully changed."));
+                hide();
+                openStandardDialog(tr("Wallet encrypted"),tr("Wallet passphrase was successfully changed."));
                 QDialog::accept(); // Success
             } else {
                 QMessageBox::critical(this, tr("Wallet encryption failed"),
@@ -300,18 +303,33 @@ bool AskPassphraseDialog::eventFilter(QObject* object, QEvent* event)
     return QDialog::eventFilter(object, event);
 }
 
+bool AskPassphraseDialog::openStandardDialog(QString title, QString body, QString okBtn, QString cancelBtn){
+    PIVXGUI* gui = static_cast<PIVXGUI*>(parentWidget());
+    DefaultDialog *confirmDialog = new DefaultDialog(gui);
+    confirmDialog->setText(title, body, okBtn, cancelBtn);
+    confirmDialog->adjustSize();
+    openDialogWithOpaqueBackground(confirmDialog, gui);
+    bool ret = confirmDialog->isOk;
+    confirmDialog->deleteLater();
+    return ret;
+}
+
 void AskPassphraseDialog::warningMessage() {
-    QMessageBox::warning(this, tr("Wallet encrypted"),
-                         "<qt>" +
-                         tr("PIVX will close now to finish the encryption process. "
-                            "Remember that encrypting your wallet cannot fully protect "
-                            "your PIVs from being stolen by malware infecting your computer.") +
-                         "<br><br><b>" +
-                         tr("IMPORTANT: Any previous backups you have made of your wallet file "
-                            "should be replaced with the newly generated, encrypted wallet file. "
-                            "For security reasons, previous backups of the unencrypted wallet file "
-                            "will become useless as soon as you start using the new, encrypted wallet.") +
-                         "</b></qt>");
+    hide();
+    openStandardDialog(
+            tr("Wallet encrypted"),
+            "<qt>" +
+            tr("PIVX will close now to finish the encryption process. "
+               "Remember that encrypting your wallet cannot fully protect "
+               "your PIVs from being stolen by malware infecting your computer.") +
+            "<br><br><b>" +
+            tr("IMPORTANT: Any previous backups you have made of your wallet file "
+               "should be replaced with the newly generated, encrypted wallet file. "
+               "For security reasons, previous backups of the unencrypted wallet file "
+               "will become useless as soon as you start using the new, encrypted wallet.") +
+            "</b></qt>",
+            tr("OK")
+            );
     QApplication::quit();
 }
 

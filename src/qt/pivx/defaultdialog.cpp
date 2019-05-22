@@ -1,6 +1,6 @@
 #include "qt/pivx/defaultdialog.h"
 #include "qt/pivx/forms/ui_defaultdialog.h"
-
+#include "guiutil.h"
 DefaultDialog::DefaultDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DefaultDialog)
@@ -8,14 +8,12 @@ DefaultDialog::DefaultDialog(QWidget *parent) :
     ui->setupUi(this);
 
     // Stylesheet
-    this->setStyleSheet(parent->styleSheet());
+    this->setStyleSheet(parent ? parent->styleSheet() : GUIUtil::loadStyleSheet());
 
     // Container
-
     ui->frame->setProperty("cssClass", "container-dialog");
 
     // Text
-
     ui->labelTitle->setText("Dialog Title");
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
@@ -24,7 +22,6 @@ DefaultDialog::DefaultDialog(QWidget *parent) :
     ui->labelMessage->setProperty("cssClass", "text-main-grey");
 
     // Buttons
-
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");
 

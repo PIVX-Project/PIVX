@@ -76,6 +76,7 @@ private slots:
     void textChanged();
     void warningMessage();
     void errorEncryptingWallet();
+    bool openStandardDialog(QString title = "", QString body = "", QString okBtn = "OK", QString cancelBtn = "");
 
 protected:
     bool event(QEvent* event) override ;

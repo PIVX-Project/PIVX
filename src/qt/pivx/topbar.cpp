@@ -193,6 +193,7 @@ void TopBar::encryptWallet() {
     openDialogWithOpaqueBackgroundY(dlg, window);
 
     refreshStatus();
+    dlg->deleteLater();
 }
 
 static bool isExecuting = false;

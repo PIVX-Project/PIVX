@@ -332,16 +332,8 @@ void PIVXGUI::message(const QString& title, const QString& message, unsigned int
             if(style & CClientUIInterface::BTN_MASK){
                 r = openStandardDialog(title, message, "OK", "CANCEL");
             }else{
-                // TODO add: standard ok button only
                 r = openStandardDialog(title, message, "OK");
             }
-            //QMessageBox::StandardButton buttons;
-            //if (!(buttons = (QMessageBox::StandardButton)(style & CClientUIInterface::BTN_MASK)))
-            //    buttons = QMessageBox::Ok;
-
-            //QMessageBox mBox((QMessageBox::Icon) nMBoxIcon, strTitle, message, buttons, this);
-            //int r = mBox.exec();
-
             if (ret != NULL)
                 *ret = r;
         } else if(style & CClientUIInterface::MSG_INFORMATION_SNACK){
@@ -363,7 +355,9 @@ bool PIVXGUI::openStandardDialog(QString title, QString body, QString okBtn, QSt
     dialog->setText(title, body, okBtn, cancelBtn);
     dialog->adjustSize();
     openDialogWithOpaqueBackground(dialog, this);
-    return dialog->isOk;
+    bool ret = dialog->isOk;
+    dialog->deleteLater();
+    return ret;
 }
 
 
