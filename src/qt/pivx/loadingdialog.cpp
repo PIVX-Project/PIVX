@@ -28,11 +28,16 @@ LoadingDialog::LoadingDialog(QWidget *parent) :
     ui->labelMovie->setMovie(movie);
     movie->start();
 
-    ui->labelMessage->setText("Loading");
+    ui->labelMessage->setText(tr("Loading"));
     ui->labelMessage->setProperty("cssClass", "text-loading");
+    ui->labelDots->setProperty("cssClass", "text-loading");
 }
 
 void LoadingDialog::execute(Runnable *runnable, int type){
+    loadingTimer = new QTimer(this);
+    connect(loadingTimer, SIGNAL(timeout()), this, SLOT(loadingTextChange()));
+    loadingTimer->start(250);
+
     QThread* thread = new QThread;
     Worker* worker = new Worker(runnable, type);
     worker->moveToThread(thread);
@@ -45,7 +50,30 @@ void LoadingDialog::execute(Runnable *runnable, int type){
     thread->start();
 }
 
+void LoadingDialog::loadingTextChange(){
+    if (loading == 4) {
+        loading = 0;
+    } else {
+        loading++;
+    }
+    switch (loading) {
+        case 1:
+            ui->labelDots->setText("");
+            break;
+        case 2:
+            ui->labelDots->setText(".");
+            break;
+        case 3:
+            ui->labelDots->setText("..");
+            break;
+        case 4:
+            ui->labelDots->setText("...");
+            break;
+    }
+}
+
 void LoadingDialog::finished(){
+    loadingTimer->stop();
     accept();
     deleteLater();
 }

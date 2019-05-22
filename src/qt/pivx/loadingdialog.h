@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QThread>
 #include <iostream>
+#include <QTimer>
 #include "qt/pivx/prunnable.h"
 
 namespace Ui {
@@ -39,8 +40,12 @@ public:
 
 public slots:
     void finished();
+    void loadingTextChange();
+
 private:
     Ui::LoadingDialog *ui;
+    QTimer *loadingTimer = nullptr;
+    int loading = 0;
 };
 
 #endif // LOADINGDIALOG_H
