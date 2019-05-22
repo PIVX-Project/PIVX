@@ -323,6 +323,7 @@ void AskPassphraseDialog::errorEncryptingWallet() {
 void AskPassphraseDialog::run(int type){
     if (type == 1) {
         if (!newpassCache.empty()) {
+            QMetaObject::invokeMethod(this, "hide", Qt::QueuedConnection);
             if (model->setWalletEncrypted(true, newpassCache)) {
                 QMetaObject::invokeMethod(this, "warningMessage", Qt::QueuedConnection);
             } else {
