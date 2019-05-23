@@ -677,7 +677,7 @@
                      </size>
                     </property>
                     <property name="text">
-                     <string>Zerocoin</string>
+                     <string>Privacy</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -715,7 +715,7 @@
                      </size>
                     </property>
                     <property name="text">
-                     <string>Masternode</string>
+                     <string>Masternodes</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -1012,7 +1012,7 @@ PIVX Core Wallet</string>
                    </size>
                   </property>
                   <property name="text">
-                   <string>What is Zerocoin?</string>
+                   <string>How PIVX respect your privacy?</string>
                   </property>
                  </widget>
                 </item>
@@ -1032,7 +1032,7 @@ PIVX Core Wallet</string>
                 <item>
                  <widget class="QLabel" name="labelMessage3">
                   <property name="text">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;As our manifesto says: privacy is non-negotiable, it's a basic human right. Privacy allows the freedom to share what you wish when you want and whoever you want, we believe in each person's choice.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -1115,7 +1115,7 @@ PIVX Core Wallet</string>
                 <item>
                  <widget class="QLabel" name="labelMessage4">
                   <property name="text">
-                   <string>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
+                   <string>The Master Nodes network is a second layer network on top of the PIVX blockchain that enable our decentralized governance and treasury system and swiftX transactions.</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
