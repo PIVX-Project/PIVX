@@ -102,6 +102,9 @@
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_6">
+            <property name="spacing">
+             <number>0</number>
+            </property>
             <item>
              <widget class="QGroupBox" name="groupBox">
               <property name="title">
@@ -230,21 +233,14 @@
            <number>0</number>
           </property>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout22">
-            <property name="spacing">
-             <number>0</number>
+           <widget class="QLabel" name="labelSubtitleAddress">
+            <property name="styleSheet">
+             <string notr="true">margin-left:8px;</string>
             </property>
-            <item>
-             <widget class="QLabel" name="labelSubtitleAddress">
-              <property name="styleSheet">
-               <string notr="true">margin-left:8px;</string>
-              </property>
-              <property name="text">
-               <string>TextLabel</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
           </item>
           <item>
            <spacer name="horizontalSpacer_3">
@@ -263,23 +259,22 @@
            </spacer>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <property name="spacing">
-             <number>0</number>
+           <widget class="QLabel" name="labelSubtitleAmount">
+            <property name="text">
+             <string>TextLabel</string>
             </property>
-            <item>
-             <widget class="QLabel" name="labelSubtitleAmount">
-              <property name="text">
-               <string>TextLabel</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           </widget>
           </item>
          </layout>
         </item>
         <item>
          <widget class="QScrollArea" name="scrollArea">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>450</height>
+           </size>
+          </property>
           <property name="styleSheet">
            <string notr="true">#scrollArea {
             background:transparent;
