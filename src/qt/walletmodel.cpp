@@ -133,6 +133,11 @@ void WalletModel::updateStatus()
         emit encryptionStatusChanged(newEncryptionStatus);
 }
 
+bool WalletModel::isWalletUnlocked() const {
+    EncryptionStatus status = getEncryptionStatus();
+    return status == Unencrypted || status == Unlocked;
+}
+
 void WalletModel::pollBalanceChanged()
 {
     // Get required locks upfront. This avoids the GUI from getting stuck on
