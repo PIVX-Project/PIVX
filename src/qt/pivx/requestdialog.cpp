@@ -17,102 +17,69 @@ RequestDialog::RequestDialog(QWidget *parent) :
     this->setStyleSheet(parent->styleSheet());
 
     // Text
-
-    ui->labelTitle->setText("New Request Payment");
+    ui->labelTitle->setText(tr("New Request Payment"));
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
-
-    ui->labelMessage->setText("Instead of sending somebody a PIVX address and asking them to pay to that address, you give them a Payment Request message which bundles up more information than is contained in just a PIVX address.");
+    ui->labelMessage->setText(tr("Instead of sending somebody a PIVX address and asking them to pay to that address, you give them a Payment Request message which bundles up more information than is contained in just a PIVX address."));
     ui->labelMessage->setProperty("cssClass", "text-main-grey");
 
     // Container
-
     ui->frame->setProperty("cssClass", "container-dialog");
 
     // Combo Coins
-
     ui->comboBoxCoin->setProperty("cssClass", "btn-combo-coins");
     ui->comboContainer->setProperty("cssClass", "container-purple");
 
     QListView * listView = new QListView();
-
     ui->comboBoxCoin->addItem("PIV");
     ui->comboBoxCoin->addItem("zPIV");
     ui->comboBoxCoin->setView(listView);
 
-
     // Label
-
-    ui->labelSubtitleLabel->setText("Label");
+    ui->labelSubtitleLabel->setText(tr("Label"));
     ui->labelSubtitleLabel->setProperty("cssClass", "text-title2-dialog");
-
-    ui->lineEditLabel->setPlaceholderText("Enter a label to be saved withing the address");
+    ui->lineEditLabel->setPlaceholderText(tr("Enter a label to be saved withing the address"));
     setCssEditLineDialog(ui->lineEditLabel, true);
-
     ui->lineEditLabel->setAttribute(Qt::WA_MacShowFocusRect, 0);
     setShadow(ui->lineEditLabel);
 
     // Amount
-
-    ui->labelSubtitleAmount->setText("Amount");
+    ui->labelSubtitleAmount->setText(tr("Amount"));
     ui->labelSubtitleAmount->setProperty("cssClass", "text-title2-dialog");
-
-    ui->lineEditAmount->setPlaceholderText("0.00");
+    ui->lineEditAmount->setPlaceholderText("0.00 PIV");
     setCssEditLineDialog(ui->lineEditAmount, true);
     ui->lineEditAmount->setAttribute(Qt::WA_MacShowFocusRect, 0);
     setShadow(ui->layoutAmount);
 
-
     // Description
-
-    ui->labelSubtitleDescription->setText("Description (optional)");
+    ui->labelSubtitleDescription->setText(tr("Description (optional)"));
     ui->labelSubtitleDescription->setProperty("cssClass", "text-title2-dialog");
 
-    ui->lineEditDescription->setPlaceholderText("Add descripcion ");
+    ui->lineEditDescription->setPlaceholderText(tr("Add description "));
     setCssEditLineDialog(ui->lineEditDescription, true);
     ui->lineEditDescription->setAttribute(Qt::WA_MacShowFocusRect, 0);
-
     setShadow(ui->lineEditDescription);
 
-
-
     // Stack
-
     ui->stack->setCurrentIndex(pos);
-
     // Request QR Page
-
     // Address
-
-    ui->labelAddress->setText("D7VFR83SQbiezrW72hjcWJtcfip5krte2Z ");
+    ui->labelAddress->setText(tr("Eg.. D7VFR83SQbiezrW72hjcWJtcfip5krte2Z "));
     ui->labelAddress->setProperty("cssClass", "text-main-grey-big");
 
-    // QR image
-
-    QPixmap pixmap(":/res/img/img-qr-test-big.png");
-    ui->labelQrImg->setPixmap(pixmap.scaled(
-                                  ui->labelQrImg->width(),
-                                  ui->labelQrImg->height(),
-                                  Qt::KeepAspectRatio)
-                              );
-
-
     // Buttons
-
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");
 
     ui->btnCancel->setProperty("cssClass", "btn-dialog-cancel");
-    ui->btnSave->setText("GENERATE");
-    ui->btnSave->setProperty("cssClass", "btn-primary");
-
-    ui->btnCopyAddress->setProperty("cssClass", "btn-primary");
-    ui->btnCopyUrl->setProperty("cssClass", "btn-primary");
+    ui->btnSave->setText(tr("GENERATE"));
+    setCssBtnPrimary(ui->btnSave);
+    setCssBtnPrimary(ui->btnCopyAddress);
+    setCssBtnPrimary(ui->btnCopyUrl);
 
     connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(onNextClicked()));
-
     // TODO: Change copy address for save image (the method is already implemented in other class called exportQr or something like that)
     connect(ui->btnCopyAddress, SIGNAL(clicked()), this, SLOT(onCopyClicked()));
 }
@@ -127,7 +94,6 @@ void RequestDialog::onNextClicked(){
     if(walletModel) {
         // info
         info = new SendCoinsRecipient();
-
 
         info->label = ui->lineEditLabel->text();
         info->message = ui->lineEditDescription->text();
@@ -148,7 +114,6 @@ void RequestDialog::onNextClicked(){
         // TODO: validate address etc etc.
 
         // TODO: Complete amount and QR.
-
         ui->labelTitle->setText("Request for " + BitcoinUnits::format(displayUnit, value, false, BitcoinUnits::separatorAlways));
         updateQr(info->address);
         ui->buttonsStack->setVisible(false);

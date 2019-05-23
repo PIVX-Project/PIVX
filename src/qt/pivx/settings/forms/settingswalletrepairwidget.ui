@@ -66,8 +66,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>383</width>
-           <height>640</height>
+           <width>398</width>
+           <height>620</height>
           </rect>
          </property>
          <property name="autoFillBackground">
@@ -191,16 +191,6 @@
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QLabel" name="labelSalvage">
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
              </layout>
             </item>
             <item>
@@ -260,16 +250,6 @@
                 </property>
                 <property name="text">
                  <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="labelRescan">
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
                 </property>
                </widget>
               </item>
@@ -335,16 +315,6 @@
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QLabel" name="labelRecover1">
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
              </layout>
             </item>
             <item>
@@ -384,7 +354,7 @@
              <number>20</number>
             </property>
             <item>
-             <layout class="QVBoxLayout" name="verticalRecover2" stretch="0,0">
+             <layout class="QVBoxLayout" name="verticalRecover2" stretch="0">
               <property name="spacing">
                <number>5</number>
               </property>
@@ -404,16 +374,6 @@
                 </property>
                 <property name="text">
                  <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="labelRecover2">
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
                 </property>
                </widget>
               </item>
@@ -479,16 +439,6 @@
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QLabel" name="labelUpgrade">
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
              </layout>
             </item>
             <item>
@@ -551,16 +501,6 @@
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QLabel" name="labelRebuild">
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
              </layout>
             </item>
             <item>
@@ -620,16 +560,6 @@
                 </property>
                 <property name="text">
                  <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="labelDelete">
-                <property name="text">
-                 <string>TextLabel</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
                 </property>
                </widget>
               </item>

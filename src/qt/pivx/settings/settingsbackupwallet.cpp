@@ -18,16 +18,13 @@ SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
     ui->left->setProperty("cssClass", "container");
     ui->left->setContentsMargins(10,0,10,10);
 
-
     // Title
-    ui->labelTitle->setText("Backup Wallet ");
+    ui->labelTitle->setText(tr("Backup Wallet "));
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
 
-    ui->labelTitle_2->setText("Change Wallet Passphrase");
+    ui->labelTitle_2->setText(tr("Change Wallet Passphrase"));
     ui->labelTitle_2->setProperty("cssClass", "text-title-screen");
-
     ui->labelDivider->setProperty("cssClass", "container-divider");
-
 
     // Subtitle
     ui->labelSubtitle1->setText(tr("Keep your wallet safe doing regular backups, store your backup file externally.\nThis option creates a wallet.dat file that can be used to recover your whole balance (transactions and addresses) from another device."));
@@ -47,10 +44,10 @@ SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
 
     // Buttons
     ui->pushButtonSave->setText(tr("Backup"));
-    ui->pushButtonSave->setProperty("cssClass", "btn-primary");
+    setCssBtnPrimary(ui->pushButtonSave);
 
     ui->pushButtonSave_2->setText(tr("Change Passphrase"));
-    ui->pushButtonSave_2->setProperty("cssClass", "btn-primary");
+    setCssBtnPrimary(ui->pushButtonSave_2);
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(backupWallet()));
     connect(ui->pushButtonDocuments, SIGNAL(clicked()), this, SLOT(selectFileOutput()));
@@ -78,10 +75,17 @@ void SettingsBackupWallet::backupWallet(){
 
 void SettingsBackupWallet::changePassphrase(){
     emit showHide(true);
-    AskPassphraseDialog *dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::ChangePass, window,
-            walletModel, AskPassphraseDialog::Context::ChangePass);
+    AskPassphraseDialog *dlg = nullptr;
+    if (walletModel->getEncryptionStatus() == WalletModel::Unencrypted) {
+        dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::ChangePass, window,
+                                  walletModel, AskPassphraseDialog::Context::ChangePass);
+    } else {
+        dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::Encrypt, window,
+                                      walletModel, AskPassphraseDialog::Context::Encrypt);
+    }
     dlg->adjustSize();
     emit execDialog(dlg);
+    dlg->deleteLater();
 }
 
 SettingsBackupWallet::~SettingsBackupWallet(){

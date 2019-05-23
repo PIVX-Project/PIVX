@@ -73,7 +73,6 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
                 );
 
     // Stylesheet
-
     this->setStyleSheet(_window->styleSheet());
 
     // Containers
@@ -84,16 +83,15 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
 
 
     // Title
-    ui->labelTitle->setText("Receive");
+    ui->labelTitle->setText(tr("Receive"));
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
 
-    ui->labelSubtitle1->setText("Scan the QR code or copy the address to receive PIV.");
+    ui->labelSubtitle1->setText(tr("Scan the QR code or copy the address to receive PIV."));
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
 
     // Address
-
-    ui->labelAddress->setText("No address ");
+    ui->labelAddress->setText(tr("No address "));
     ui->labelAddress->setProperty("cssClass", "label-address-box");
 
     ui->labelDate->setText("Dec. 19, 2018");
@@ -117,13 +115,13 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
     connect(ui->btnMyAddresses, SIGNAL(clicked()), this, SLOT(onMyAddressesClicked()));
 
 
-    ui->pushButtonLabel->setText("Add Label");
+    ui->pushButtonLabel->setText(tr("Add Label"));
     ui->pushButtonLabel->setProperty("cssClass", "btn-secundary-label");
 
-    ui->pushButtonNewAddress->setText("Generate Address");
+    ui->pushButtonNewAddress->setText(tr("Generate Address"));
     ui->pushButtonNewAddress->setProperty("cssClass", "btn-secundary-new-address");
 
-    ui->pushButtonCopy->setText("Copy");
+    ui->pushButtonCopy->setText(tr("Copy"));
     ui->pushButtonCopy->setProperty("cssClass", "btn-secundary-copy");
 
 
@@ -245,6 +243,11 @@ void ReceiveWidget::onLabelClicked(){
 
 void ReceiveWidget::onNewAddressClicked(){
     try {
+        if (!walletModel->isWalletUnlocked()) {
+            inform(tr("Wallet locked, you need to unlock it to perform this action"));
+            return;
+        }
+
         CBitcoinAddress address = walletModel->getNewAddress("");
         updateQr(QString::fromStdString(address.ToString()));
         ui->labelAddress->setText(!info->address.isEmpty() ? info->address : tr("No address"));
@@ -265,6 +268,10 @@ void ReceiveWidget::onCopyClicked(){
 
 void ReceiveWidget::onRequestClicked(){
     if(walletModel) {
+        if (!walletModel->isWalletUnlocked()) {
+            inform(tr("Wallet locked, you need to unlock it to perform this action"));
+            return;
+        }
         showHideOp(true);
         RequestDialog *dialog = new RequestDialog(window);
         dialog->setWalletModel(walletModel);
@@ -286,7 +293,6 @@ void ReceiveWidget::onMyAddressesClicked(){
 }
 
 void ReceiveWidget::changeTheme(bool isLightTheme, QString& theme){
-    // Change theme in all of the childs here..
     static_cast<AddressHolder*>(this->delegate->getRowFactory())->isLightTheme = isLightTheme;
 }
 
