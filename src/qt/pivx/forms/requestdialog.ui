@@ -40,7 +40,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,0,1,0">
+     <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,0,0">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -54,7 +54,7 @@
        <number>30</number>
       </property>
       <property name="bottomMargin">
-       <number>20</number>
+       <number>0</number>
       </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -151,7 +151,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="page_1">
          <property name="minimumSize">
@@ -188,18 +188,24 @@
              <enum>Qt::Vertical</enum>
             </property>
             <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
+             <enum>QSizePolicy::Expanding</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>10</height>
+              <height>30</height>
              </size>
             </property>
            </spacer>
           </item>
           <item alignment="Qt::AlignHCenter">
            <widget class="QLabel" name="labelMessage">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>100</height>
+             </size>
+            </property>
             <property name="text">
              <string>Lorem ipsum dolor sit amet, consectur cling elit, sed do </string>
             </property>
@@ -217,7 +223,7 @@
              <enum>Qt::Vertical</enum>
             </property>
             <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
+             <enum>QSizePolicy::Expanding</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -233,30 +239,23 @@
              <number>5</number>
             </property>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <property name="spacing">
-               <number>0</number>
+             <widget class="QLabel" name="labelSubtitleAmount">
+              <property name="minimumSize">
+               <size>
+                <width>350</width>
+                <height>16</height>
+               </size>
               </property>
-              <item>
-               <widget class="QLabel" name="labelSubtitleAmount">
-                <property name="minimumSize">
-                 <size>
-                  <width>350</width>
-                  <height>16</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>16</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Amount</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Amount</string>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QWidget" name="layoutAmount" native="true">
@@ -537,7 +536,7 @@
              <enum>Qt::Vertical</enum>
             </property>
             <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
+             <enum>QSizePolicy::Expanding</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -612,19 +611,6 @@
          </layout>
         </widget>
        </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item>
        <widget class="QWidget" name="buttonsStack" native="true">
