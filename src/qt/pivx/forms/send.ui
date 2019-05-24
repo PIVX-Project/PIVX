@@ -48,7 +48,7 @@
        <number>0</number>
       </property>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_22" stretch="0,0,6,0,1,0,0,0">
+       <layout class="QVBoxLayout" name="verticalLayout_22" stretch="0,0,0,1,0,0,1,0">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -272,7 +272,7 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>450</height>
+            <height>350</height>
            </size>
           </property>
           <property name="styleSheet">
