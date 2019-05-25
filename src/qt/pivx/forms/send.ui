@@ -48,7 +48,7 @@
        <number>0</number>
       </property>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_22" stretch="0,0,0,1,0,0,1,0">
+       <layout class="QVBoxLayout" name="verticalLayout_22" stretch="0,0,0,1,0,0,0,0">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -436,10 +436,13 @@
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>40</height>
+            <height>16</height>
            </size>
           </property>
          </spacer>

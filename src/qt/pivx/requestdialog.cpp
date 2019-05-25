@@ -94,7 +94,6 @@ void RequestDialog::onNextClicked(){
     if(walletModel) {
         // info
         info = new SendCoinsRecipient();
-
         info->label = ui->lineEditLabel->text();
         info->message = ui->lineEditDescription->text();
         info->address = QString::fromStdString(walletModel->getNewAddress().ToString());
@@ -114,7 +113,7 @@ void RequestDialog::onNextClicked(){
         // TODO: validate address etc etc.
 
         // TODO: Complete amount and QR.
-        ui->labelTitle->setText("Request for " + BitcoinUnits::format(displayUnit, value, false, BitcoinUnits::separatorAlways));
+        ui->labelTitle->setText("Request for " + BitcoinUnits::format(displayUnit, value, false, BitcoinUnits::separatorAlways) + " PIV");
         updateQr(info->address);
         ui->buttonsStack->setVisible(false);
         pos = 1;
@@ -125,8 +124,7 @@ void RequestDialog::onNextClicked(){
 void RequestDialog::onCopyClicked(){
     if(info) {
         GUIUtil::setClipboard(GUIUtil::formatBitcoinURI(*info));
-        // TODO: Notify
-        //window->messageInfo(tr("Address copied"));
+        static_cast<PIVXGUI*>(parentWidget())->messageInfo(tr("URI copied to clipboard"));
         close();
     }
 }
