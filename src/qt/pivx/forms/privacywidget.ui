@@ -110,7 +110,7 @@
               <property name="spacing">
                <number>0</number>
               </property>
-              <item>
+              <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
                <widget class="QGroupBox" name="groupBox">
                 <property name="title">
                  <string/>
@@ -258,6 +258,9 @@
                     <width>0</width>
                     <height>50</height>
                    </size>
+                  </property>
+                  <property name="maxLength">
+                   <number>8</number>
                   </property>
                  </widget>
                 </item>

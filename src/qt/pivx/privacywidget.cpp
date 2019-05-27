@@ -5,7 +5,6 @@
 #include "guiutil.h"
 #include "qt/pivx/coincontrolzpivdialog.h"
 #include "qt/pivx/denomgenerationdialog.h"
-#include <QGraphicsDropShadowEffect>
 #include "qt/pivx/defaultdialog.h"
 #include "qt/pivx/furlistrow.h"
 #include "qt/pivx/txviewholder.h"
@@ -48,7 +47,6 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushRight->setProperty("cssClass", "btn-check-right");
 
     /* Subtitle */
-
     ui->labelSubtitle1->setText("Minting zPIV anonymizes your PIV by removing\ntransaction history, making transactions untraceable ");
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
@@ -56,21 +54,14 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelSubtitle2->setProperty("cssClass", "text-subtitle");
     ui->labelSubtitle2->setContentsMargins(0,2,0,0);
     /* Amount */
-
     ui->labelSubtitleAmount->setText("Enter amount of PIV to mint into zPIV ");
     ui->labelSubtitleAmount->setProperty("cssClass", "text-title");
 
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
     ui->lineEditAmount->setPlaceholderText("0.00 PIV ");
+    ui->lineEditAmount->setValidator(new QRegExpValidator(QRegExp("[1-9]+")));
     initCssEditLine(ui->lineEditAmount);
 
     /* Denom */
-
     ui->labelTitleDenom1->setText("Denom. with value 1:");
     ui->labelTitleDenom1->setProperty("cssClass", "text-subtitle");
     ui->labelValueDenom1->setText("0x1 = 0 zPIV");
@@ -115,8 +106,6 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     ui->layoutDenom->setVisible(false);
 
     // List
-
-
     ui->labelListHistory->setText("Last Zerocoin Movements");
     ui->labelListHistory->setProperty("cssClass", "text-title");
 
@@ -127,7 +116,6 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelEmpty->setProperty("cssClass", "text-empty");
 
     // Buttons
-
     ui->pushButtonSave->setProperty("cssClass", "btn-primary");
     onMintSelected(true);
 
@@ -171,7 +159,6 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     ui->listView->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
     ui->listView->setAttribute(Qt::WA_MacShowFocusRect, false);
     ui->listView->setSelectionBehavior(QAbstractItemView::SelectRows);
-
 }
 
 void PrivacyWidget::loadWalletModel(){
@@ -189,10 +176,9 @@ void PrivacyWidget::loadWalletModel(){
         updateDisplayUnit();
         updateDenomsSupply();
 
-        if (txModel->size() == 0) {
+        if (!txModel->hasZcTxes()) {
             ui->emptyContainer->setVisible(true);
             ui->listView->setVisible(false);
-            // TODO: Connect waiting for tx updates..
         }else{
             // TODO: Use show list method..
             ui->emptyContainer->setVisible(false);
@@ -206,7 +192,6 @@ void PrivacyWidget::loadWalletModel(){
 }
 
 void PrivacyWidget::onMintSelected(bool isMint){
-    // TODO: Complete me..
     QString btnText;
     if(isMint){
         btnText = tr("Mint zPIV");
@@ -269,7 +254,7 @@ void PrivacyWidget::onSendClicked(){
             &isValid
     );
 
-    if (value <= 0 || !isValid) {
+    if (!isValid || value <= 0) {
         setCssEditLine(ui->lineEditAmount, false, true);
         emit message("", tr("Invalid value"), CClientUIInterface::MSG_INFORMATION_SNACK);
         return;
@@ -282,7 +267,6 @@ void PrivacyWidget::onSendClicked(){
     }else{
         mint(value);
     }
-
 }
 
 void PrivacyWidget::mint(CAmount value){
