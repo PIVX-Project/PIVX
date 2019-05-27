@@ -131,6 +131,7 @@ void TxDetailDialog::setData(WalletModel *model, WalletModelTransaction &tx){
     ui->textAmount->setText(BitcoinUnits::formatWithUnit(nDisplayUnit, totalAmount, false, BitcoinUnits::separatorAlways) + " (Fee included)");
     if(tx.getRecipients().size() == 1){
         ui->textSend->setText(tx.getRecipients().at(0).address);
+        ui->pushOutputs->setVisible(false);
     }else{
         ui->textSend->setText(QString::number(tx.getRecipients().size()) + " recipients");
     }
@@ -153,7 +154,7 @@ void TxDetailDialog::onInputsClicked() {
         ui->contentInputs->layout()->setContentsMargins(0,9,12,0);
         if (!inputsLoaded) {
             inputsLoaded = true;
-            const CWalletTx* tx = model->getTx(this->txHash);
+            const CWalletTx* tx = (this->tx) ? this->tx->getTransaction() : model->getTx(this->txHash);
             if(tx) {
                 ui->gridInputs->setMinimumHeight(50 + (50 * tx->vin.size()));
                 int i = 1;
