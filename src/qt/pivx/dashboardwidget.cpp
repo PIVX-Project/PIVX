@@ -103,7 +103,6 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
 
 
     // Sort Transactions
-
     ui->comboBoxSort->setProperty("cssClass", "btn-combo");
     ui->comboBoxSort->setEditable(true);
     SortEdit* lineEdit = new SortEdit(ui->comboBoxSort);
@@ -343,7 +342,7 @@ void DashboardWidget::loadWalletModel(){
         filter->setDynamicSortFilter(true);
         filter->setSortCaseSensitivity(Qt::CaseInsensitive);
         filter->setFilterCaseSensitivity(Qt::CaseInsensitive);
-
+        filter->setSortRole(Qt::EditRole);
         filter->setSourceModel(txModel);
         filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
         txHolder->setFilter(filter);
