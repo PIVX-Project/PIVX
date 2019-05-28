@@ -64,7 +64,7 @@ RequestDialog::RequestDialog(QWidget *parent) :
     ui->stack->setCurrentIndex(pos);
     // Request QR Page
     // Address
-    ui->labelAddress->setText(tr("Eg.. D7VFR83SQbiezrW72hjcWJtcfip5krte2Z "));
+    ui->labelAddress->setText(tr("Error"));
     ui->labelAddress->setProperty("cssClass", "text-main-grey-big");
 
     // Buttons
@@ -90,7 +90,6 @@ void RequestDialog::setWalletModel(WalletModel *model){
 
 
 void RequestDialog::onNextClicked(){
-
     if(walletModel) {
         // info
         info = new SendCoinsRecipient();
@@ -115,6 +114,7 @@ void RequestDialog::onNextClicked(){
         // TODO: Complete amount and QR.
         ui->labelTitle->setText("Request for " + BitcoinUnits::format(displayUnit, value, false, BitcoinUnits::separatorAlways) + " PIV");
         updateQr(info->address);
+        ui->labelAddress->setText(info->address);
         ui->buttonsStack->setVisible(false);
         pos = 1;
         ui->stack->setCurrentIndex(pos);

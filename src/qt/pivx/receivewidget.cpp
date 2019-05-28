@@ -173,8 +173,8 @@ void ReceiveWidget::refreshView(QString refreshAddress){
         updateQr(latestAddress);
         updateLabel();
     } catch (const runtime_error& error){
-        // Error generating address
-        std::cout << "Error generating address, correct me" << std::endl;
+        ui->labelQrImg->setText(tr("No available address, try unlocking the wallet"));
+        std::cout << "Error generating address, correct me: " << error.what() << std::endl;
         inform("Error generating address");
     }
 }
