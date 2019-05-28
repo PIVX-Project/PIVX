@@ -208,7 +208,7 @@ QString BitcoinUnits::formatWithUnit(int unit, const CAmount& amount, bool pluss
 QString BitcoinUnits::formatHtmlWithUnit(int unit, const CAmount& amount, bool plussign, SeparatorStyle separators)
 {
     QString str(formatWithUnit(unit, amount, plussign, separators));
-    str.replace(QChar(THIN_SP_CP), QString(THIN_SP_HTML));
+    str.replace(QChar(THIN_SP_CP), QString(COMMA_HTML));
     return QString("<span style='white-space: nowrap;'>%1</span>").arg(str);
 }
 
@@ -235,7 +235,7 @@ QString BitcoinUnits::floorWithUnit(int unit, const CAmount& amount, bool plussi
 QString BitcoinUnits::floorHtmlWithUnit(int unit, const CAmount& amount, bool plussign, SeparatorStyle separators, bool cleanRemainderZeros, bool isZPIV)
 {
     QString str(floorWithUnit(unit, amount, plussign, separators, cleanRemainderZeros, isZPIV));
-    str.replace(QChar(THIN_SP_CP), QString(THIN_SP_HTML));
+    str.replace(QChar(THIN_SP_CP), QString(COMMA_HTML));
     return QString("<span style='white-space: nowrap;'>%1</span>").arg(str);
 }
 

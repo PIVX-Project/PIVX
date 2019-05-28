@@ -17,6 +17,10 @@
 #define REAL_THIN_SP_UTF8 "\xE2\x80\x89"
 #define REAL_THIN_SP_HTML "&thinsp;"
 
+#define COMMA_CP 0x2C
+#define COMMA_UTF8 "\x2C"
+#define COMMA_HTML "&#44;"
+
 // U+200A HAIR SPACE = UTF-8 E2 80 8A
 #define HAIR_SP_CP 0x200A
 #define HAIR_SP_UTF8 "\xE2\x80\x8A"
