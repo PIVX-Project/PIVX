@@ -204,6 +204,7 @@ void DashboardWidget::loadChart(){
 
         // pair PIV, zPIV
         QMap<int, std::pair<qint64, qint64>> amountByMonths;
+        bool hasZpivStakes = false;
 
         // get all of the stakes
         for (int i = 0; i < size; ++i) {
@@ -222,6 +223,7 @@ void DashboardWidget::loadChart(){
                     amountByMonths[month] = std::make_pair(amount, 0);
                 } else {
                     amountByMonths[month] = std::make_pair(0, amount);
+                    hasZpivStakes = true;
                 }
             }
 
@@ -231,7 +233,7 @@ void DashboardWidget::loadChart(){
         qreal maxValue = 0;
         qint64 totalPiv = 0;
         qint64 totalZpiv = 0;
-        for (int j = 12; j > 6; j--) {
+        for (int j = 12; j > 0; j--) {
             qreal piv = 0;
             qreal zpiv = 0;
             if (amountByMonths.contains(j)) {
@@ -266,7 +268,8 @@ void DashboardWidget::loadChart(){
 
         QBarSeries *series = new QtCharts::QBarSeries();
         series->append(set0);
-        series->append(set1);
+        if(hasZpivStakes)
+            series->append(set1);
 
         // bar width
         series->setBarWidth(0.8);
