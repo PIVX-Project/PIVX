@@ -1,0 +1,15 @@
+# http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.0.html
+
+[Desktop Entry]
+Encoding=UTF-8
+Name=PIVX Core
+Comment=PIVX Core QT main network
+GenericName=PIVX Digital Currency QT client main network
+Exec=pivx.qt %u
+Terminal=false
+Type=Application
+Icon=${SNAP}/pivx-qt.ico
+MimeType=x-scheme-handler/piv;
+Categories=X-Office;X-Finance;
+Keywords=internet;pivx;zpiv;piv;core;wallet;qt;main;snap;launchpad;crypto;digital;currency;coin;token;zerocoin;
+Version=3.2.99

@@ -1,0 +1,13 @@
+diff --git a/src/util.cpp b/src/util.cpp
+index bd44c328c..455e990d7 100644
+--- a/src/util.cpp
++++ b/src/util.cpp
+@@ -433,7 +433,7 @@ boost::filesystem::path GetDefaultDataDir()
+     return GetSpecialFolderPath(CSIDL_APPDATA) / "PIVX";
+ #else
+     fs::path pathRet;
+-    char* pszHome = getenv("HOME");
++    char* pszHome = getenv("SNAP_USER_COMMON");
+     if (pszHome == NULL || strlen(pszHome) == 0)
+         pathRet = fs::path("/");
+     else

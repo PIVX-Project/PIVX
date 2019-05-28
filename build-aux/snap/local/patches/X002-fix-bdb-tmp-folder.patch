@@ -1,0 +1,36 @@
+From dcfe31b190ab8a28f2617914afdf15c6be2a74d2 Mon Sep 17 00:00:00 2001
+From: cevap <dev@i2pmail.org>
+Date: Mon, 4 Feb 2019 07:41:47 +0100
+Subject: [PATCH] fix-bdb-tmp-folder
+
+---
+ depends/packages/bdb.mk | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/depends/packages/bdb.mk b/depends/packages/bdb.mk
+index 6c9876c..291111c 100644
+--- a/depends/packages/bdb.mk
++++ b/depends/packages/bdb.mk
+@@ -13,6 +13,19 @@ $(package)_cxxflags=-std=c++11
+ endef
+ 
+ define $(package)_preprocess_cmds
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' csharp/DatabaseEnvironment.cs && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' csharp/DatabaseEnvironmentConfig.cs && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' csharp/doc/libdb_dotnet48.XML && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' docs/api_reference/C/envset_tmp_dir.html && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' docs/api_reference/CXX/envset_tmp_dir.html && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' docs/csharp/html/F_BerkeleyDB_DatabaseEnvironmentConfig_TempDir.htm && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' docs/csharp/html/P_BerkeleyDB_DatabaseEnvironment_TempDir.htm && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' docs/java/com/sleepycat/db/EnvironmentConfig.html && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' docs/programmer_reference/test.html && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' java/src/com/sleepycat/db/EnvironmentConfig.java && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' os/os_tmpdir.c && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' php_db4/samples/simple_counter.php && \
++  sed -i.old 's/\/var\/tmp/$HOME\/snap\/pivx\/common\/var\/tmp/g' php_db4/samples/transactional_counter.php && \
+   sed -i.old 's/__atomic_compare_exchange/__atomic_compare_exchange_db/' dbinc/atomic.h && \
+   sed -i.old 's/atomic_init/atomic_init_db/' dbinc/atomic.h mp/mp_region.c mp/mp_mvcc.c mp/mp_fget.c mutex/mut_method.c mutex/mut_tas.c && \
+   cp -f $(BASEDIR)/config.guess $(BASEDIR)/config.sub dist
+-- 
+2.17.1
+
