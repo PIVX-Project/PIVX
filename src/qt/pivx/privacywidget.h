@@ -43,8 +43,6 @@ private slots:
     void onSendClicked();
     void onMintSelected(bool isMint);
 
-signals:
-    void message(const QString& title, const QString& message, unsigned int style);
 private:
     Ui::PrivacyWidget *ui;
     FurAbstractListItemDelegate *delegate = nullptr;
@@ -52,7 +50,6 @@ private:
     TxViewHolder *txHolder = nullptr;
     TransactionFilterProxy* filter = nullptr;
     CoinControlDialog *coinControlDialog = nullptr;
-
 
     int nDisplayUnit;
     void mint(CAmount value);

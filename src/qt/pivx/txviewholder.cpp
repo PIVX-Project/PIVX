@@ -23,10 +23,8 @@ void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered
     qint64 amount = rIndex.data(TransactionTableModel::AmountRole).toLongLong();
     QString amountText = BitcoinUnits::formatWithUnit(nDisplayUnit, amount, true, BitcoinUnits::separatorAlways);
     QModelIndex indexType = rIndex.sibling(rIndex.row(),TransactionTableModel::Type);
-    bool isUnconfirmed = (rec->status.status == TransactionStatus::Unconfirmed) || (rec->status.status == TransactionStatus::Immature);
     QString label = indexType.data(Qt::DisplayRole).toString();
     int type = rIndex.data(TransactionTableModel::TypeRole).toInt();
-
     if(type != TransactionRecord::ZerocoinMint &&
             type !=  TransactionRecord::ZerocoinSpend_Change_zPiv &&
             type !=  TransactionRecord::StakeZPIV){
@@ -36,6 +34,8 @@ void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered
         }
         label += " " + address;
     }
+    bool isUnconfirmed = (rec->status.status == TransactionStatus::Unconfirmed) || (rec->status.status == TransactionStatus::Immature)
+                         || (rec->status.status == TransactionStatus::Conflicted) || (rec->status.status == TransactionStatus::NotAccepted);
 
     txRow->setDate(date);
     txRow->setLabel(label);

@@ -600,17 +600,25 @@ void SendWidget::onChangeCustomFeeClicked(){
 void SendWidget::onCoinControlClicked()
 {
     if(isPIV){
-        if(!coinControlDialog) {
-            coinControlDialog = new CoinControlDialog();
-            coinControlDialog->setModel(walletModel);
+        if (walletModel->getBalance() > 0) {
+            if (!coinControlDialog) {
+                coinControlDialog = new CoinControlDialog();
+                coinControlDialog->setModel(walletModel);
+            }
+            coinControlDialog->exec();
+            ui->btnCoinControl->setActive(CoinControlDialog::coinControl->HasSelected());
+        } else {
+            inform(tr("You don't have any PIV to select."));
         }
-        coinControlDialog->exec();
-        ui->btnCoinControl->setActive(CoinControlDialog::coinControl->HasSelected());
     }else{
-        ZPivControlDialog* zPivControl = new ZPivControlDialog(this);
-        zPivControl->setModel(walletModel);
-        zPivControl->exec();
-        ui->btnCoinControl->setActive(!ZPivControlDialog::setSelectedMints.empty());
+        if (walletModel->getZerocoinBalance() > 0) {
+            ZPivControlDialog *zPivControl = new ZPivControlDialog(this);
+            zPivControl->setModel(walletModel);
+            zPivControl->exec();
+            ui->btnCoinControl->setActive(!ZPivControlDialog::setSelectedMints.empty());
+        } else {
+            inform(tr("You don't have any zPIV in your balance to select."));
+        }
     }
 }
 

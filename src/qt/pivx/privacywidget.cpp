@@ -36,29 +36,29 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     fontLight.setWeight(QFont::Light);
 
     /* Title */
-    ui->labelTitle->setText("Privacy");
+    ui->labelTitle->setText(tr("Privacy"));
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
     ui->labelTitle->setFont(fontLight);
 
     /* Button Group */
-    ui->pushLeft->setText("Convert");
+    ui->pushLeft->setText(tr("Convert"));
     ui->pushLeft->setProperty("cssClass", "btn-check-left");
-    ui->pushRight->setText("Mint");
+    ui->pushRight->setText(tr("Mint"));
     ui->pushRight->setProperty("cssClass", "btn-check-right");
 
     /* Subtitle */
-    ui->labelSubtitle1->setText("Minting zPIV anonymizes your PIV by removing\ntransaction history, making transactions untraceable ");
+    ui->labelSubtitle1->setText(tr("Minting zPIV anonymizes your PIV by removing\ntransaction history, making transactions untraceable "));
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
-    ui->labelSubtitle2->setText("Mint new zPIV or convert back to PIV");
+    ui->labelSubtitle2->setText(tr("Mint new zPIV or convert back to PIV"));
     ui->labelSubtitle2->setProperty("cssClass", "text-subtitle");
     ui->labelSubtitle2->setContentsMargins(0,2,0,0);
     /* Amount */
-    ui->labelSubtitleAmount->setText("Enter amount of PIV to mint into zPIV ");
+    ui->labelSubtitleAmount->setText(tr("Enter amount of PIV to mint into zPIV "));
     ui->labelSubtitleAmount->setProperty("cssClass", "text-title");
 
     ui->lineEditAmount->setPlaceholderText("0.00 PIV ");
-    ui->lineEditAmount->setValidator(new QRegExpValidator(QRegExp("[1-9]+")));
+    ui->lineEditAmount->setValidator(new QRegExpValidator(QRegExp("[0-9]+")));
     initCssEditLine(ui->lineEditAmount);
 
     /* Denom */
@@ -106,13 +106,13 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* _window, QWidget *parent) :
     ui->layoutDenom->setVisible(false);
 
     // List
-    ui->labelListHistory->setText("Last Zerocoin Movements");
+    ui->labelListHistory->setText(tr("Last Zerocoin Movements"));
     ui->labelListHistory->setProperty("cssClass", "text-title");
 
     //ui->emptyContainer->setVisible(false);
     ui->pushImgEmpty->setProperty("cssClass", "img-empty-privacy");
 
-    ui->labelEmpty->setText("No transactions yet");
+    ui->labelEmpty->setText(tr("No transactions yet"));
     ui->labelEmpty->setProperty("cssClass", "text-empty");
 
     // Buttons
@@ -235,15 +235,14 @@ void PrivacyWidget::onSendClicked(){
         return;
 
     if(GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
-        emit message(tr("Mint Zerocoin"), tr("zPIV is currently undergoing maintenance"), CClientUIInterface::MSG_ERROR);
+        warn(tr("Mint Zerocoin"), tr("zPIV is currently undergoing maintenance"));
         return;
     }
 
     bool isConvert = ui->pushLeft->isChecked();
 
     if(!GUIUtil::requestUnlock(walletModel, AskPassphraseDialog::Context::Mint_zPIV, true)){
-        emit message("",
-                tr("You need to unlock the wallet to be able to %1 zPIV").arg(isConvert ? tr("convert") : tr("mint")), CClientUIInterface::MSG_INFORMATION_SNACK);
+        inform(tr("You need to unlock the wallet to be able to %1 zPIV").arg(isConvert ? tr("convert") : tr("mint")));
         return;
     }
 
@@ -256,7 +255,7 @@ void PrivacyWidget::onSendClicked(){
 
     if (!isValid || value <= 0) {
         setCssEditLine(ui->lineEditAmount, false, true);
-        emit message("", tr("Invalid value"), CClientUIInterface::MSG_INFORMATION_SNACK);
+        inform(tr("Invalid value"));
         return;
     }
 
@@ -272,11 +271,10 @@ void PrivacyWidget::onSendClicked(){
 void PrivacyWidget::mint(CAmount value){
     std::string strError;
     if(!walletModel->mintCoins(value, CoinControlDialog::coinControl, strError)){
-        emit message("", tr(strError.data()), CClientUIInterface::MSG_INFORMATION_SNACK);
+        inform(tr(strError.data()));
     }else{
         // Mint succeed
-        emit message("", tr("zPIV minted successfully"), CClientUIInterface::MSG_INFORMATION_SNACK);
-
+        inform(tr("zPIV minted successfully"));
         // clear
         ui->lineEditAmount->clear();
     }
@@ -296,11 +294,10 @@ void PrivacyWidget::spend(CAmount value){
             receipt,
             walletModel->getNewAddress()
     )){
-        emit message("", receipt.GetStatusMessage().data(), CClientUIInterface::MSG_INFORMATION_SNACK);
+        inform(receipt.GetStatusMessage().data());
     }else{
         // Spend succeed
-        emit message("", tr("zPIV converted back to PIV"), CClientUIInterface::MSG_INFORMATION_SNACK);
-
+        inform(tr("zPIV converted back to PIV"));
         // clear
         ui->lineEditAmount->clear();
     }
@@ -309,12 +306,16 @@ void PrivacyWidget::spend(CAmount value){
 
 void PrivacyWidget::onCoinControlClicked(){
     if(ui->pushRight->isChecked()) {
-        if (!coinControlDialog) {
-            coinControlDialog = new CoinControlDialog();
-            coinControlDialog->setModel(walletModel);
+        if (walletModel->getBalance() > 0) {
+            if (!coinControlDialog) {
+                coinControlDialog = new CoinControlDialog();
+                coinControlDialog->setModel(walletModel);
+            }
+            coinControlDialog->exec();
+            ui->btnCoinControl->setActive(CoinControlDialog::coinControl->HasSelected());
+        } else {
+            inform(tr("You don't have any PIV to select."));
         }
-        coinControlDialog->exec();
-        ui->btnCoinControl->setActive(CoinControlDialog::coinControl->HasSelected());
     }
 }
 
@@ -326,27 +327,23 @@ void PrivacyWidget::onDenomClicked(){
 
 void PrivacyWidget::onRescanMintsClicked(){
     bool ret = false;
-    window->message(
-            tr("Rescan Mints"),
-            tr("Your zerocoin mints are going to be scanned from the blockchain from scratch"),
-            CClientUIInterface::MSG_INFORMATION | CClientUIInterface::BTN_MASK | CClientUIInterface::MODAL,
-            &ret);
+    ask(tr("Rescan Mints"),
+        tr("Your zerocoin mints are going to be scanned from the blockchain from scratch"),
+        &ret);
     if (ret){
         string strResetMintResult = walletModel->resetMintZerocoin();
-        emit message("", QString::fromStdString(strResetMintResult), CClientUIInterface::MSG_INFORMATION_SNACK);
+        inform(QString::fromStdString(strResetMintResult));
     }
 }
 
 void PrivacyWidget::onResetZeroClicked(){
     bool ret = false;
-    window->message(
-            tr("Reset Spent Zerocoins"),
-            tr("Your zerocoin spends are going to be scanned from the blockchain from scratch"),
-            CClientUIInterface::MSG_INFORMATION | CClientUIInterface::BTN_MASK | CClientUIInterface::MODAL,
-            &ret);
+    ask(tr("Reset Spent Zerocoins"),
+        tr("Your zerocoin spends are going to be scanned from the blockchain from scratch"),
+        &ret);
     if (ret){
         string strResetMintResult = walletModel->resetSpentZerocoin();
-        emit message("", QString::fromStdString(strResetMintResult), CClientUIInterface::MSG_INFORMATION_SNACK);
+        inform(QString::fromStdString(strResetMintResult));
     }
 }
 
