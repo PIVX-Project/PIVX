@@ -35,7 +35,6 @@
 #include "qt/pivx/qtutils.h"
 
 const int CONSOLE_HISTORY = 50;
-const QSize ICON_SIZE(24, 24);
 
 const struct {
     const char* url;

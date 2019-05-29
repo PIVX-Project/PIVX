@@ -11,6 +11,8 @@
 #include <QWidget>
 #include <QLineEdit>
 
+#include <QtCharts/QChartView>
+#include <QtCharts/QBarSeries>
 #include <QtCharts/QBarCategoryAxis>
 #include <QtCharts/QBarSet>
 #include <QtCharts/QChart>
@@ -38,8 +40,8 @@ public:
 
     ~SortEdit() override{}
 
-    signals:
-            void Mouse_Pressed();
+signals:
+    void Mouse_Pressed();
 
 };
 
@@ -55,20 +57,21 @@ public:
     explicit DashboardWidget(PIVXGUI* _window, QWidget *parent = nullptr);
     ~DashboardWidget();
 
-    void loadWalletModel() override ;
+    void loadWalletModel() override;
     void loadChart();
 
 public slots:
     void walletSynced(bool isSync);
 private slots:
+    void windowResizeEvent(QResizeEvent *event);
     void handleTransactionClicked(const QModelIndex &index);
-
     void changeTheme(bool isLightTheme, QString &theme) override;
     void changeChartColors();
     void onSortTxPressed();
     void onSortChanged(const QString&);
     void updateDisplayUnit();
     void showList();
+    void onTxArrived();
     void openFAQ();
 private:
     Ui::DashboardWidget *ui;
@@ -80,18 +83,21 @@ private:
     TransactionTableModel* txModel;
     int nDisplayUnit = -1;
 
-
     // Chart
-    QBarSet *set0;
-    QBarSet *set1;
+    QChartView *chartView = nullptr;
+    QBarSeries *series = nullptr;
+    QBarSet *set0 = nullptr;
+    QBarSet *set1 = nullptr;
 
-    QBarCategoryAxis *axisX;
-    QValueAxis *axisY;
+    QBarCategoryAxis *axisX = nullptr;
+    QValueAxis *axisY = nullptr;
 
-    QChart *chart;
+    QChart *chart = nullptr;
+    bool isChartMin = false;
     bool isSync = false;
 
     void initChart();
+    void refreshChart();
 };
 
 #endif // DASHBOARDWIDGET_H
