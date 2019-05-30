@@ -341,9 +341,8 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 QPushButton[cssClass="btn-qr"] {
-    background-image: url("://ic-arrow-drop-white-down");
-    background-position:center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://ic-arrow-drop-white-down");
+    qproperty-iconSize: 24px 24px;
     background-color:transparent;
 }
 
@@ -1771,7 +1770,7 @@ QComboBox[cssClass="btn-combo"] {
     padding:10px 20px 10px 10px;
     font-size:16px;
     border:1px solid #ffffff;
-    color: #5c4b7d;
+    color: #707070;
     text-align: right;
 }
 
