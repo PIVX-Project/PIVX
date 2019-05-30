@@ -7,17 +7,12 @@
 #include "walletmodel.h"
 #include "optionsmodel.h"
 #include "qt/pivx/settings/settingsfaqwidget.h"
-#include <QFile>
 #include <QPainter>
 #include <QModelIndex>
-#include <QObject>
-#include <QPaintEngine>
-#include <iostream>
-#include <cstdlib>
 #include <QMap>
+#include <QList>
 
 // Chart
-#include <QtCharts/QLegend>
 #include <QGraphicsLayout>
 
 #define DECORATION_SIZE 65
@@ -147,6 +142,16 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
     if (window)
         connect(window, SIGNAL(windowResizeEvent(QResizeEvent*)), this, SLOT(windowResizeEvent(QResizeEvent*)));
+
+    connect(ui->pushButtonYear, &QPushButton::clicked, [this](){
+        this->chartShow=0;
+        refreshChart();
+    });
+
+    connect(ui->pushButtonMonth, &QPushButton::clicked, [this](){
+        this->chartShow=2;
+        refreshChart();
+    });
 }
 
 void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
@@ -272,7 +277,6 @@ void DashboardWidget::loadChart(){
 
 void DashboardWidget::initChart() {
     chart = new QChart();
-    series = new QBarSeries();
     axisX = new QBarCategoryAxis();
     axisY = new QValueAxis();
 
@@ -281,13 +285,9 @@ void DashboardWidget::initChart() {
     chart->legend()->setAlignment(Qt::AlignTop);
     chart->layout()->setContentsMargins(0, 0, 0, 0);
     chart->setBackgroundRoundness(0);
-
     // Axis
     chart->addAxis(axisX, Qt::AlignBottom);
-    series->attachAxis(axisX);
     chart->addAxis(axisY, Qt::AlignRight);
-    series->attachAxis(axisY);
-
     chart->setAnimationOptions(QChart::SeriesAnimations);
 
     chartView = new QChartView(chart);
@@ -324,31 +324,35 @@ void DashboardWidget::changeChartColors(){
     set1->setBorderColor(gridLineColorX);
 }
 
-const char * monthsNames[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-
-void DashboardWidget::refreshChart(){
+// pair PIV, zPIV
+QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy() {
     int size = stakesFilter->rowCount();
-    if (chart) {
-        delete set0;
-        delete set1;
-    }
-    // init sets
-    set0 = new QBarSet("PIV");
-    set1 = new QBarSet("zPIV");
-    set0->setColor(QColor(92,75,125));
-    set1->setColor(QColor(176,136,255));
-
-    // pair PIV, zPIV
     QMap<int, std::pair<qint64, qint64>> amountByMonths;
-    bool hasZpivStakes = false;
-
-    // get all of the stakes
+    // Get all of the stakes
     for (int i = 0; i < size; ++i) {
         QModelIndex modelIndex = stakesFilter->index(i, TransactionTableModel::ToAddress);
         qint64 amount = llabs(modelIndex.data(TransactionTableModel::AmountRole).toLongLong());
         QDateTime datetime = modelIndex.data(TransactionTableModel::DateRole).toDateTime();
         bool isPiv = modelIndex.data(TransactionTableModel::TypeRole).toInt() != TransactionRecord::StakeZPIV;
-        int month = datetime.date().month();
+
+        int month = 0;
+        switch (chartShow) {
+            case 0: {
+                month = datetime.date().month();
+                break;
+            }
+            case 1: {
+                month = datetime.date().year();
+                break;
+            }
+            case 2: {
+                month = datetime.date().day();
+                break;
+            }
+            default:
+                inform(tr("Error loading chart, invalid show option"));
+                return amountByMonths;
+        }
         if (amountByMonths.contains(month)) {
             if (isPiv) {
                 amountByMonths[month].first += amount;
@@ -362,17 +366,43 @@ void DashboardWidget::refreshChart(){
                 hasZpivStakes = true;
             }
         }
-
     }
+    return amountByMonths;
+}
+
+const char* monthsNames[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+void DashboardWidget::refreshChart(){
+    if (chart) {
+        chart->removeAllSeries();
+        axisX->clear();
+    }
+    // init sets
+    set0 = new QBarSet("PIV");
+    set1 = new QBarSet("zPIV");
+    set0->setColor(QColor(92,75,125));
+    set1->setColor(QColor(176,136,255));
+
+    series = new QBarSeries();
+    series->attachAxis(axisX);
+    series->attachAxis(axisY);
+
+    // pair PIV, zPIV
+    QMap<int, std::pair<qint64, qint64>> amountByMonths = getAmountBy();
 
     QStringList months;
-    bool withMonthNames = width() > 1350;
-    isChartMin = !withMonthNames;
+    isChartMin = width() < 1350;
+    bool withMonthNames = !isChartMin && (chartShow == 0);
 
     qreal maxValue = 0;
     qint64 totalPiv = 0;
     qint64 totalZpiv = 0;
-    for (int j = 1; j < 13; j++) {
+
+    QList<qreal> valuesPiv;
+    QList<qreal> valueszPiv;
+
+    std::pair<int,int> range = getChartRange();
+    for (int j = range.first; j < range.second; j++) {
         qreal piv = 0;
         qreal zpiv = 0;
         if (amountByMonths.contains(j)) {
@@ -384,14 +414,17 @@ void DashboardWidget::refreshChart(){
         }
 
         months << ((withMonthNames) ? monthsNames[j-1] : QString::number(j));
-        set0->append(piv);
-        set1->append(zpiv);
+        valuesPiv.append(piv);
+        valueszPiv.append(zpiv);
 
         int max = std::max(piv, zpiv);
         if (max > maxValue) {
             maxValue = max;
         }
     }
+
+    set0->append(valuesPiv);
+    set1->append(valueszPiv);
 
     // Total
     nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
@@ -406,39 +439,70 @@ void DashboardWidget::refreshChart(){
     ui->labelAmountPiv->setText(GUIUtil::formatBalance(totalPiv, nDisplayUnit));
     ui->labelAmountZpiv->setText(GUIUtil::formatBalance(totalZpiv, nDisplayUnit, true));
 
-
-    // Series
-    series->clear();
     series->append(set0);
     if(hasZpivStakes)
         series->append(set1);
     chart->addSeries(series);
 
     // bar width
-    series->setBarWidth(0.8);
-    axisX->clear();
+    if (chartShow == 0)
+        series->setBarWidth(0.8);
+    else {
+        series->setBarWidth(0.3);
+    }
     axisX->append(months);
     axisY->setRange(0,maxValue);
 }
 
+std::pair<int, int> DashboardWidget::getChartRange() {
+    switch (chartShow) {
+        case 0:
+            return std::make_pair(1, 13);
+        case 1:
+            return std::make_pair(1, 4);
+        case 2:
+            return std::make_pair(1, 32);
+        default:
+            inform(tr("Error loading chart, invalid show option"));
+            return std::make_pair(0, 0);
+    }
+}
+
+void DashboardWidget::updateAxisX(const char *arg[]) {
+    axisX->clear();
+    QStringList months;
+    std::pair<int,int> range = getChartRange();
+    for (int i = range.first; i < getChartRange().second; i++) months << ((arg) ? arg[i-1] : QString::number(i));
+    axisX->append(months);
+}
+
 void DashboardWidget::windowResizeEvent(QResizeEvent *event){
-    if (stakesFilter->rowCount() > 0) {
-        if (width() > 1350 && axisX) {
+    if (stakesFilter->rowCount() > 0 && axisX) {
+        if (width() > 1350) {
             if (isChartMin) {
                 isChartMin = false;
-                axisX->clear();
-                QStringList months;
-                for (const char *month : monthsNames) months << month;
-                axisX->append(months);
+                switch (chartShow) {
+                    case 0: {
+                        updateAxisX(monthsNames);
+                        break;
+                    }
+                    case 1: {
+                        // TODO: Complete me..
+                        break;
+                    }
+                    case 2: {
+                        updateAxisX();
+                        break;
+                    }
+                    default:
+                        inform(tr("Error loading chart, invalid show option"));
+                        return;
+                }
                 chartView->repaint();
             }
         } else {
             if (!isChartMin) {
-                isChartMin = true;
-                axisX->clear();
-                QStringList months;
-                for (int i = 1; i < 13; i++) months << QString::number(i);
-                axisX->append(months);
+                updateAxisX();
             }
         }
     }

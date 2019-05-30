@@ -8,6 +8,9 @@
 #include "qt/pivx/txviewholder.h"
 #include "transactionfilterproxy.h"
 
+#include <iostream>
+#include <cstdlib>
+
 #include <QWidget>
 #include <QLineEdit>
 
@@ -75,13 +78,14 @@ private slots:
     void openFAQ();
 private:
     Ui::DashboardWidget *ui;
-    // Painter delegate
     FurAbstractListItemDelegate* txViewDelegate;
     TransactionFilterProxy* filter;
     TransactionFilterProxy* stakesFilter;
     TxViewHolder* txHolder;
     TransactionTableModel* txModel;
     int nDisplayUnit = -1;
+
+    bool isSync = false;
 
     // Chart
     QChartView *chartView = nullptr;
@@ -94,10 +98,14 @@ private:
 
     QChart *chart = nullptr;
     bool isChartMin = false;
-    bool isSync = false;
+    int chartShow = 0;
+    bool hasZpivStakes = false;
 
     void initChart();
     void refreshChart();
+    QMap<int, std::pair<qint64, qint64>> getAmountBy();
+    void updateAxisX(const char *arg[] = nullptr);
+    std::pair<int, int> getChartRange();
 };
 
 #endif // DASHBOARDWIDGET_H
