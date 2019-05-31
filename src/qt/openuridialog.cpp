@@ -20,23 +20,20 @@ OpenURIDialog::OpenURIDialog(QWidget* parent) : QDialog(parent, Qt::WindowSystem
     this->setStyleSheet(parent->styleSheet());
     ui->uriEdit->setPlaceholderText("pivx:");
 
-
-
     ui->labelSubtitle->setText("URI");
     ui->labelSubtitle->setProperty("cssClass", "text-title2-dialog");
 
     ui->frame->setProperty("cssClass", "container-dialog");
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
-
-    ui->selectFileButton->setProperty("cssClass", "btn-primary");
-    
+    setCssBtnPrimary(ui->pushButtonOK);
+    setCssBtnPrimary(ui->pushButtonCancel);
+    setCssBtnPrimary(ui->selectFileButton);
 
     ui->uriEdit->setPlaceholderText("0.000001 zPIV");
-    ui->uriEdit->setProperty("cssClass", "edit-primary-dialog");
-    ui->uriEdit->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    setShadow(ui->uriEdit);
-
+    initCssEditLine(ui->uriEdit, true);
+    connect(ui->pushButtonOK, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(ui->pushButtonCancel, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 OpenURIDialog::~OpenURIDialog()
@@ -56,7 +53,7 @@ void OpenURIDialog::accept()
         /* Only accept value URIs */
         QDialog::accept();
     } else {
-        ui->uriEdit->setValid(false);
+        setCssEditLineDialog(ui->uriEdit, false, true);
     }
 }
 

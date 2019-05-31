@@ -98,7 +98,7 @@ public:
     }
 };
 
-/** Interface to Bitcoin wallet from Qt view code. */
+/** Interface to PIVX wallet from Qt view code. */
 class WalletModel : public QObject
 {
     Q_OBJECT

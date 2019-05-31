@@ -5,7 +5,6 @@
 #include "qt/pivx/lockunlock.h"
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/receivedialog.h"
-#include "qt/pivx/walletpassworddialog.h"
 #include "askpassphrasedialog.h"
 
 #include "bitcoinunits.h"
@@ -244,12 +243,6 @@ void TopBar::lockDropdownClicked(const StateClicked& state){
     }
 }
 
-void TopBar::showPasswordDialog() {
-    showHideOp(true);
-    WalletPasswordDialog* dialog = new WalletPasswordDialog(window);
-    openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
-}
-
 void TopBar::lockDropdownMouseLeave(){
     lockUnlockWidget->hide();
     ui->pushButtonLock->setKeepExpanded(false);
@@ -443,7 +436,7 @@ void TopBar::loadWalletModel(){
     connect(walletModel, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)), this,
             SLOT(updateBalances(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)));
     connect(walletModel->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
-    connect(walletModel, SIGNAL(encryptionStatusChanged(int status)), this, SLOT(refreshStatus()));
+    connect(walletModel, &WalletModel::encryptionStatusChanged, this, &TopBar::refreshStatus);
 
     // update the display unit, to not use the default ("PIVX")
     updateDisplayUnit();

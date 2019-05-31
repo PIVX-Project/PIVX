@@ -26,7 +26,6 @@ public:
 
     void showTop();
     void showBottom();
-    void showPasswordDialog();
 
     void loadWalletModel() override;
     void loadClientModel() override;

@@ -12,25 +12,13 @@ ContactDropdownRow::ContactDropdownRow(bool isLightTheme, bool isHover, QWidget 
 }
 
 void ContactDropdownRow::update(bool isLightTheme, bool isHover, bool isSelected){
-    if(isLightTheme)
-        ui->lblDivisory->setStyleSheet("background-color:#bababa");
-    else
-        ui->lblDivisory->setStyleSheet("background-color:#bababa");
+    ui->lblDivisory->setStyleSheet("background-color:#bababa");
 }
 
 void ContactDropdownRow::setData(QString address, QString label){
     ui->lblAddress->setText(address);
     ui->lblLabel->setText(label);
 }
-
-void ContactDropdownRow::enterEvent(QEvent *) {
-    //update();
-}
-
-void ContactDropdownRow::leaveEvent(QEvent *) {
-    //update();
-}
-
 
 ContactDropdownRow::~ContactDropdownRow()
 {

@@ -653,7 +653,7 @@ void SendWidget::onContactsClicked(SendMultiRow* entry){
                     width,
                     height,
                     this
-                    );
+        );
         menuContacts->setWalletModel(walletModel, AddressTableModel::Send);
         connect(menuContacts, &ContactsDropdown::contactSelected, [this](QString address, QString label){
             if(focusedEntry){
@@ -676,10 +676,10 @@ void SendWidget::onContactsClicked(SendMultiRow* entry){
     QPoint pos;
     if (entries.size() > 1){
         pos = entry->pos();
-        pos.setY((pos.y() + (focusedEntry->getEditHeight() - 4) * 4));
+        pos.setY((pos.y() + (focusedEntry->getEditHeight() - 12) * 4));
     } else {
         pos = focusedEntry->getEditLineRect().bottomLeft();
-        pos.setY((pos.y() + (focusedEntry->getEditHeight() - 4) * 3));
+        pos.setY((pos.y() + (focusedEntry->getEditHeight() - 12) * 3));
     }
     pos.setX(pos.x() + 20);
     menuContacts->move(pos);
@@ -748,6 +748,7 @@ void SendWidget::onContactMultiClicked(){
                 inform(tr("Error Storing Contact"));
             }
         }
+        dialog->deleteLater();
     }
 
 }
@@ -787,7 +788,7 @@ void SendWidget::resizeMenu(){
         QPoint pos = focusedEntry->getEditLineRect().bottomLeft();
         // TODO: Change this position..
         pos.setX(pos.x() + 20);
-        pos.setY(pos.y() + ((focusedEntry->getEditHeight() - 4)  * 3));
+        pos.setY(pos.y() + ((focusedEntry->getEditHeight() - 12)  * 3));
         menuContacts->move(pos);
     }
 }
