@@ -1,13 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-    <defs>
-        <style type="text/css">
-            .cls-1{opacity:.7}.cls-2{fill:#fff}.cls-3{fill:none}
-        </style>
-    </defs>
-    <g id="ic__arrow_drop_down" class="cls-1" data-name="ic_ arrow_drop_down">
-        <g id="Group_8822" data-name="Group 8822">
-            <path id="Path_18879" d="M12 16.365L4.319 9.233l1.362-1.466L12 13.635l6.319-5.868 1.361 1.466z" class="cls-2" data-name="Path 18879"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>ic-arrow-down</title>
+    <desc>Created with Sketch.</desc>
+    <g id="ic-arrow-down" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic-arrow-drop-down">
+            <g id="Group_8822" transform="translate(4.000000, 7.000000)" fill="#ffffff">
+                <polygon id="Path_18879" points="8 9.365 0.319 2.233 1.681 0.767 8 6.635 14.319 0.767 15.68 2.233"></polygon>
+            </g>
+            <polygon id="Rectangle_4407" points="0 0 24 0 24 24 0 24"></polygon>
         </g>
-        <path id="Rectangle_4407" d="M0 0h24v24H0z" class="cls-3" data-name="Rectangle 4407"/>
     </g>
 </svg>

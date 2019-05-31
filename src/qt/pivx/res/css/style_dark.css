@@ -334,7 +334,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 QPushButton[cssClass="btn-qr"] {
-    qproperty-icon: url("://ic-arrow-drop-white-down");
+    qproperty-icon: url("://ic-arrow-drop-down-white");
     qproperty-iconSize: 24px 24px;
     background-color:transparent;
 }
@@ -1768,15 +1768,18 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 QComboBox[cssClass="btn-combo"] {
-    background-image: url("://ic-arrow-drop-down");
-    background-position:right center;
-    background-repeat:no-repeat;
     background-color:#0f0b16;
     padding:10px 20px 10px 10px;
     font-size:16px;
     border:1px solid #0f0b16;
     color: #707070;
     text-align: right;
+}
+
+QComboBox[cssClass="btn-combo"]::down-arrow {
+    image: url("://ic-arrow-drop-down");
+    width: 24px;
+    height: 24px;
 }
 
 QComboBox[cssClass="btn-combo-edit"] {
@@ -1806,9 +1809,6 @@ QComboBox[cssClass="btn-combo-options"] {
 
 
 QComboBox {
-    background-image: url("://ic-arrow-drop-down-white");
-    background-position:right center;
-    background-repeat:no-repeat;
     background-color:transparent;
     padding-right:20px;
     font-size:16px;
@@ -1837,7 +1837,9 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    height: 10px;
+    image: url("://ic-arrow-drop-down");
+    width: 24px;
+    height: 24px;
 }
 
 QComboBox::down-arrow:on { /* shift the arrow when popup is open */
