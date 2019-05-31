@@ -1778,28 +1778,34 @@ QComboBox[cssClass="btn-combo"]::down-arrow {
 }
 
 QComboBox[cssClass="btn-combo-edit"] {
-    background-image: url("://ic-arrow-drop-down");
-    background-position:right center;
-    background-repeat:no-repeat;
     background-color:#ffffff;
     padding:10px 20px 10px 10px;
-    font-size:16px;
-    border:1px solid #bababa;
-    color: #5c4b7d;
-    text-align: right;
-}
-
-
-QComboBox[cssClass="btn-combo-options"] {
-    background-image: url("://ic-arrow-drop-down");
-    background-position:right center;
-    background-repeat:no-repeat;
-    background-color:#ffffff;
-    padding:10px 10px 10px 10px;
     font-size:16px;
     border:1px solid #ffffff;
     color: #5c4b7d;
     text-align: right;
+}
+
+QComboBox[cssClass="btn-combo-edit"]::down-arrow {
+    image: url("://ic-arrow-drop-down-purple");
+    width: 24px;
+    height: 24px;
+}
+
+
+QComboBox[cssClass="btn-combo-options"] {
+    background-color:#ffffff;
+    padding:10px 20px 10px 10px;
+    font-size:16px;
+    border:1px solid #ffffff;
+    color: #5c4b7d;
+    text-align: right;
+}
+
+QComboBox[cssClass="btn-combo-options"]::down-arrow {
+    image: url("://ic-arrow-drop-down");
+    width: 24px;
+    height: 24px;
 }
 
 

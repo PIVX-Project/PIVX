@@ -87,9 +87,14 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
     ui->zeromintPercentage->setProperty("cssClass", "btn-spin-box");
     ui->zeromintPercentage->setAttribute(Qt::WA_MacShowFocusRect, 0);
     setShadow(ui->zeromintPercentage);
-    ui->comboBoxDenomzPiv->setProperty("cssClass", "btn-combo-options");
+    ui->comboBoxDenomzPiv->setProperty("cssClass", "btn-combo-edit");
     QListView * listView = new QListView();
     ui->comboBoxDenomzPiv->setView(listView);
+
+    QLineEdit* DenomEdit = new QLineEdit(ui->comboBoxDenomzPiv);
+    DenomEdit->setReadOnly(true);
+    DenomEdit->setAlignment(Qt::AlignRight);
+    ui->comboBoxDenomzPiv->setLineEdit(DenomEdit);
 
     // Buttons
 
