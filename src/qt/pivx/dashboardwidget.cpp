@@ -188,10 +188,10 @@ void DashboardWidget::loadWalletModel(){
         if(txModel->size() == 0){
             ui->emptyContainer->setVisible(true);
             ui->listTransactions->setVisible(false);
-            connect(txModel, SIGNAL(txArrived()), this, SLOT(onTxArrived()));
             connect(ui->pushImgEmpty, SIGNAL(clicked()), this, SLOT(openFAQ()));
             connect(ui->btnHowTo, SIGNAL(clicked()), this, SLOT(openFAQ()));
         }
+        connect(txModel, SIGNAL(txArrived()), this, SLOT(onTxArrived()));
 
         // chart filter
         stakesFilter = new TransactionFilterProxy();
@@ -374,7 +374,8 @@ const char* monthsNames[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
 
 void DashboardWidget::refreshChart(){
     if (chart) {
-        chart->removeAllSeries();
+        if (chart->series().size() > 0)
+            chart->removeAllSeries();
         axisX->clear();
     }
     // init sets

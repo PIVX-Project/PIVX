@@ -153,8 +153,10 @@ void SendWidget::refreshView(){
     QString btnText;
     if(ui->pushLeft->isChecked()){
         btnText = tr("Send PIV");
+        ui->pushButtonAddRecipient->setVisible(true);
     }else{
         btnText = tr("Send zPIV");
+        ui->pushButtonAddRecipient->setVisible(false);
     }
     ui->pushButtonSave->setText(btnText);
 
@@ -386,7 +388,6 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
         outputs.push_back(std::pair<CBitcoinAddress*, CAmount>(new CBitcoinAddress(rec.address.toStdString()),rec.amount));
     }
 
-    // TODO: Complete me..
     // use mints from zPIV selector if applicable
     vector<CMintMeta> vMintsToFetch;
     vector<CZerocoinMint> vMintsSelected;
