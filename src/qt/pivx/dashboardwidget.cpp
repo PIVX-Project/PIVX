@@ -75,8 +75,8 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonAll->setProperty("cssClass", "btn-check-time");
     ui->pushButtonMonth->setProperty("cssClass", "btn-check-time");
     ui->pushButtonYear->setProperty("cssClass", "btn-check-time");
-    ui->comboBoxMonths->setProperty("cssClass", "btn-combo");
-    ui->comboBoxYears->setProperty("cssClass", "btn-combo");
+    ui->comboBoxMonths->setProperty("cssClass", "btn-combo-chart");
+    ui->comboBoxYears->setProperty("cssClass", "btn-combo-chart-selected");
     ui->comboBoxMonths->setView(new QListView());
     ui->comboBoxMonths->setStyleSheet("selection-background-color:transparent; selection-color:transparent;");
     ui->comboBoxYears->setView(new QListView());
