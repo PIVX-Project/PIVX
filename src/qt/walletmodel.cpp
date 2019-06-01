@@ -821,6 +821,10 @@ bool WalletModel::getPubKey(const CKeyID& address, CPubKey& vchPubKeyOut) const
     return wallet->GetPubKey(address, vchPubKeyOut);
 }
 
+int64_t WalletModel::getCreationTime() const {
+    return wallet->nTimeFirstKey;
+}
+
 int64_t WalletModel::getKeyCreationTime(const CPubKey& key){
     return pwalletMain->GetKeyCreationTime(key);
 }
