@@ -13,6 +13,7 @@
 
 #include <QWidget>
 #include <QLineEdit>
+#include <QMap>
 
 #include <QtCharts/QChartView>
 #include <QtCharts/QBarSeries>
@@ -48,6 +49,13 @@ signals:
 
 };
 
+enum ChartShowType {
+    ALL,
+    YEAR,
+    MONTH,
+    DAY
+};
+
 QT_BEGIN_NAMESPACE
 class QModelIndex;
 QT_END_NAMESPACE
@@ -76,6 +84,9 @@ private slots:
     void showList();
     void onTxArrived();
     void openFAQ();
+    void onChartYearChanged(const QString&);
+    void onChartMonthChanged(const QString&);
+
 private:
     Ui::DashboardWidget *ui;
     FurAbstractListItemDelegate* txViewDelegate;
@@ -86,6 +97,8 @@ private:
     int nDisplayUnit = -1;
 
     bool isSync = false;
+
+    bool isChartInitialized = false;
 
     // Chart
     QChartView *chartView = nullptr;
@@ -98,14 +111,19 @@ private:
 
     QChart *chart = nullptr;
     bool isChartMin = false;
-    int chartShow = 0;
+    ChartShowType chartShow = YEAR;
+    int yearFilter = 0;
+    int monthFilter = 0;
     bool hasZpivStakes = false;
+
+    QMap<int, std::pair<qint64, qint64>> amountsByCache;
 
     void initChart();
     void refreshChart();
     QMap<int, std::pair<qint64, qint64>> getAmountBy();
     void updateAxisX(const char *arg[] = nullptr);
-    std::pair<int, int> getChartRange();
+    void setChartShow(ChartShowType type);
+    std::pair<int, int> getChartRange(QMap<int, std::pair<qint64, qint64>> amountsBy);
 };
 
 #endif // DASHBOARDWIDGET_H

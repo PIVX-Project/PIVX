@@ -37,6 +37,11 @@ public:
     };
 
     void setDateRange(const QDateTime& from, const QDateTime& to);
+    void clearDateRange() {
+        if (dateFrom != MIN_DATE || dateTo == MAX_DATE)
+            setDateRange(MIN_DATE, MAX_DATE);
+    }
+
     void setAddressPrefix(const QString& addrPrefix);
     /**
       @note Type filter takes a bit field created with TYPE() or ALL_TYPES

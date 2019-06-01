@@ -9,7 +9,6 @@
 #include "qt/pivx/settings/settingsfaqwidget.h"
 #include <QPainter>
 #include <QModelIndex>
-#include <QMap>
 #include <QList>
 
 // Chart
@@ -73,12 +72,18 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv-disable");
     ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv-disable");
 
-    ui->pushButtonHour->setProperty("cssClass", "btn-check-time");
-    ui->pushButtonDay->setProperty("cssClass", "btn-check-time");
-    ui->pushButtonWeek->setProperty("cssClass", "btn-check-time");
+    ui->pushButtonAll->setProperty("cssClass", "btn-check-time");
     ui->pushButtonMonth->setProperty("cssClass", "btn-check-time");
     ui->pushButtonYear->setProperty("cssClass", "btn-check-time");
+    ui->comboBoxMonths->setProperty("cssClass", "btn-combo");
+    ui->comboBoxYears->setProperty("cssClass", "btn-combo");
+    ui->comboBoxMonths->setView(new QListView());
+    ui->comboBoxMonths->setStyleSheet("selection-background-color:transparent; selection-color:transparent;");
+    ui->comboBoxYears->setView(new QListView());
+    ui->comboBoxYears->setStyleSheet("selection-background-color:transparent; selection-color:transparent;");
     ui->pushButtonYear->setChecked(true);
+
+    connect(ui->comboBoxYears, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onChartYearChanged(const QString&)));
 
     // Sort Transactions
     ui->comboBoxSort->setProperty("cssClass", "btn-combo");
@@ -143,15 +148,18 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     if (window)
         connect(window, SIGNAL(windowResizeEvent(QResizeEvent*)), this, SLOT(windowResizeEvent(QResizeEvent*)));
 
-    connect(ui->pushButtonYear, &QPushButton::clicked, [this](){
-        this->chartShow=0;
-        refreshChart();
+    connect(ui->pushButtonYear, &QPushButton::clicked, [this](){setChartShow(YEAR);});
+    connect(ui->pushButtonMonth, &QPushButton::clicked, [this](){setChartShow(MONTH);});
+    connect(ui->pushButtonAll, &QPushButton::clicked, [this](){
+        yearFilter = 0;
+        monthFilter = 0;
+        setChartShow(ALL);
     });
+}
 
-    connect(ui->pushButtonMonth, &QPushButton::clicked, [this](){
-        this->chartShow=2;
-        refreshChart();
-    });
+void DashboardWidget::setChartShow(ChartShowType type) {
+    this->chartShow = type;
+    refreshChart();
 }
 
 void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
@@ -208,6 +216,7 @@ void DashboardWidget::openFAQ(){
     showHideOp(true);
     SettingsFaqWidget* dialog = new SettingsFaqWidget(window);
     openDialogWithOpaqueBackgroundFullScreen(dialog, window);
+    dialog->deleteLater();
 }
 
 void DashboardWidget::onTxArrived() {
@@ -259,6 +268,8 @@ void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){
         this->changeChartColors();
 }
 
+const char* monthsNames[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
 void DashboardWidget::loadChart(){
     int size = stakesFilter->rowCount();
     if (size > 0) {
@@ -266,9 +277,14 @@ void DashboardWidget::loadChart(){
             ui->layoutChart->setVisible(true);
             ui->emptyContainerChart->setVisible(false);
             initChart();
+            for (int i = 0; i < 12; ++i) {
+                ui->comboBoxMonths->addItem(QString(monthsNames[i]), QVariant(i + 1));
+            }
+            connect(ui->comboBoxMonths, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onChartMonthChanged(const QString&)));
         }
         refreshChart();
         changeChartColors();
+        isChartInitialized = true;
     } else {
         ui->layoutChart->setVisible(false);
         ui->emptyContainerChart->setVisible(true);
@@ -326,8 +342,36 @@ void DashboardWidget::changeChartColors(){
 
 // pair PIV, zPIV
 QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy() {
+    bool filterByMonth = false;
+    if (monthFilter != 0 && chartShow == MONTH) {
+        filterByMonth = true;
+    }
+    if (yearFilter != 0) {
+        if (filterByMonth) {
+            QDate monthFirst = QDate(yearFilter, monthFilter, 1);
+            stakesFilter->setDateRange(
+                    QDateTime(monthFirst),
+                    QDateTime(QDate(yearFilter, monthFilter, monthFirst.daysInMonth()))
+            );
+        } else {
+            stakesFilter->setDateRange(
+                    QDateTime(QDate(yearFilter, 1, 1)),
+                    QDateTime(QDate(yearFilter, 12, 31))
+            );
+        }
+    } else if (filterByMonth){
+        QDate currentDate = QDate::currentDate();
+        QDate monthFirst = QDate(currentDate.year(), monthFilter, 1);
+        stakesFilter->setDateRange(
+                QDateTime(monthFirst),
+                QDateTime(QDate(currentDate.year(), monthFilter, monthFirst.daysInMonth()))
+        );
+        ui->comboBoxYears->setCurrentText(QString::number(currentDate.year()));
+    } else{
+        stakesFilter->clearDateRange();
+    }
     int size = stakesFilter->rowCount();
-    QMap<int, std::pair<qint64, qint64>> amountByMonths;
+    QMap<int, std::pair<qint64, qint64>> amountBy;
     // Get all of the stakes
     for (int i = 0; i < size; ++i) {
         QModelIndex modelIndex = stakesFilter->index(i, TransactionTableModel::ToAddress);
@@ -335,42 +379,82 @@ QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy() {
         QDateTime datetime = modelIndex.data(TransactionTableModel::DateRole).toDateTime();
         bool isPiv = modelIndex.data(TransactionTableModel::TypeRole).toInt() != TransactionRecord::StakeZPIV;
 
-        int month = 0;
+        /**
+         * If this is ALL, order this by years.
+         * To do that, the amountBy map is a map of:
+         * year --> pair<PIV,zPIV>
+         * ---
+         * If this is YEAR, show the 12 months of the year (need a filter by year).
+         * To do that, the amountBy map is a map of:
+         *  month --> pair<PIV,zPIV>
+         * ---
+         * If this is MONTH, order this by days (need a filter by month and year).
+         * To do that, then amountBy map is a map of:
+         * day --> pair<PIV,zPIV>
+         * ---
+         * If this is WEEK, order this by weeks (need a filter by year, month and week number).
+         * To do that, the amountBy map is a map of:
+         * week num --> pair<PIV,zPIV>
+         * ---
+         * If this is DAY, order this by hours (need a filter by year, month and day).
+         * To do that, the amountBy map is a map of:
+         * day --> pair<PIV,zPIV>
+         */
+
+        int time = 0;
         switch (chartShow) {
-            case 0: {
-                month = datetime.date().month();
+            case YEAR: {
+                time = datetime.date().month();
                 break;
             }
-            case 1: {
-                month = datetime.date().year();
+            case ALL: {
+                time = datetime.date().year();
                 break;
             }
-            case 2: {
-                month = datetime.date().day();
+            case MONTH: {
+                time = datetime.date().day();
                 break;
             }
             default:
                 inform(tr("Error loading chart, invalid show option"));
-                return amountByMonths;
+                return amountBy;
         }
-        if (amountByMonths.contains(month)) {
+        if (amountBy.contains(time)) {
             if (isPiv) {
-                amountByMonths[month].first += amount;
+                amountBy[time].first += amount;
             } else
-                amountByMonths[month].second += amount;
+                amountBy[time].second += amount;
         } else {
             if (isPiv) {
-                amountByMonths[month] = std::make_pair(amount, 0);
+                amountBy[time] = std::make_pair(amount, 0);
             } else {
-                amountByMonths[month] = std::make_pair(0, amount);
+                amountBy[time] = std::make_pair(0, amount);
                 hasZpivStakes = true;
             }
         }
     }
-    return amountByMonths;
+    return amountBy;
 }
 
-const char* monthsNames[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+void DashboardWidget::onChartYearChanged(const QString& yearStr) {
+    if (isChartInitialized) {
+        int newYear = (yearStr == "All") ? 0 : yearStr.toInt();
+        if (newYear != yearFilter) {
+            yearFilter = newYear;
+            refreshChart();
+        }
+    }
+}
+
+void DashboardWidget::onChartMonthChanged(const QString& monthStr) {
+    if (isChartInitialized) {
+        int newMonth = (monthStr == "All") ? 0 : ui->comboBoxMonths->currentData().toInt();
+        if (newMonth != monthFilter) {
+            monthFilter = newMonth;
+            refreshChart();
+        }
+    }
+}
 
 void DashboardWidget::refreshChart(){
     if (chart) {
@@ -389,11 +473,11 @@ void DashboardWidget::refreshChart(){
     series->attachAxis(axisY);
 
     // pair PIV, zPIV
-    QMap<int, std::pair<qint64, qint64>> amountByMonths = getAmountBy();
+    amountsByCache = getAmountBy();
 
     QStringList months;
     isChartMin = width() < 1350;
-    bool withMonthNames = !isChartMin && (chartShow == 0);
+    bool withMonthNames = !isChartMin && (chartShow == YEAR);
 
     qreal maxValue = 0;
     qint64 totalPiv = 0;
@@ -402,12 +486,12 @@ void DashboardWidget::refreshChart(){
     QList<qreal> valuesPiv;
     QList<qreal> valueszPiv;
 
-    std::pair<int,int> range = getChartRange();
+    std::pair<int,int> range = getChartRange(amountsByCache);
     for (int j = range.first; j < range.second; j++) {
         qreal piv = 0;
         qreal zpiv = 0;
-        if (amountByMonths.contains(j)) {
-            std::pair<qint64, qint64> pair = amountByMonths[j];
+        if (amountsByCache.contains(j)) {
+            std::pair<qint64, qint64> pair = amountsByCache[j];
             piv = (pair.first != 0) ? pair.first / 100000000 : 0;
             zpiv = (pair.second != 0) ? pair.second / 100000000 : 0;
             totalPiv += pair.first;
@@ -446,22 +530,70 @@ void DashboardWidget::refreshChart(){
     chart->addSeries(series);
 
     // bar width
-    if (chartShow == 0)
+    if (chartShow == YEAR)
         series->setBarWidth(0.8);
     else {
         series->setBarWidth(0.3);
     }
     axisX->append(months);
     axisY->setRange(0,maxValue);
+
+    // Controllers
+    switch (chartShow) {
+        case ALL: {
+            ui->container_chart_dropboxes->setVisible(false);
+            break;
+        }
+        case YEAR: {
+            ui->container_chart_dropboxes->setVisible(true);
+            ui->containerBoxMonths->setVisible(false);
+            break;
+        }
+        case MONTH: {
+            ui->container_chart_dropboxes->setVisible(true);
+            ui->containerBoxMonths->setVisible(true);
+            break;
+        }
+        default:
+            // add day.
+            break;
+    }
+
+    // Refresh years filter, first address created is the start
+    int yearStart = QDateTime::fromTime_t(static_cast<uint>(walletModel->getCreationTime())).date().year();
+    int currentYear = QDateTime::currentDateTime().date().year();
+
+    QString selection;
+    if (ui->comboBoxYears->count() > 0) {
+        selection = ui->comboBoxYears->currentText();
+        isChartInitialized = false;
+    }
+    ui->comboBoxYears->clear();
+    ui->comboBoxYears->addItem("All");
+    if (yearStart == currentYear) {
+        ui->comboBoxYears->addItem(QString::number(currentYear));
+    } else {
+        for (int i = yearStart; i < (currentYear + 1); ++i)ui->comboBoxYears->addItem(QString::number(i));
+    }
+
+    if (!selection.isEmpty()) {
+        ui->comboBoxYears->setCurrentText(selection);
+        isChartInitialized = true;
+    } else {
+        ui->comboBoxYears->setCurrentText("All");
+    }
 }
 
-std::pair<int, int> DashboardWidget::getChartRange() {
+std::pair<int, int> DashboardWidget::getChartRange(QMap<int, std::pair<qint64, qint64>> amountsBy) {
     switch (chartShow) {
-        case 0:
+        case YEAR:
             return std::make_pair(1, 13);
-        case 1:
-            return std::make_pair(1, 4);
-        case 2:
+        case ALL: {
+            QList<int> keys = amountsBy.uniqueKeys();
+            qSort(keys);
+            return std::make_pair(keys.first(), keys.last() + 1);
+        }
+        case MONTH:
             return std::make_pair(1, 32);
         default:
             inform(tr("Error loading chart, invalid show option"));
@@ -472,8 +604,8 @@ std::pair<int, int> DashboardWidget::getChartRange() {
 void DashboardWidget::updateAxisX(const char *arg[]) {
     axisX->clear();
     QStringList months;
-    std::pair<int,int> range = getChartRange();
-    for (int i = range.first; i < getChartRange().second; i++) months << ((arg) ? arg[i-1] : QString::number(i));
+    std::pair<int,int> range = getChartRange(amountsByCache);
+    for (int i = range.first; i < range.second; i++) months << ((arg) ? arg[i-1] : QString::number(i));
     axisX->append(months);
 }
 
@@ -483,15 +615,15 @@ void DashboardWidget::windowResizeEvent(QResizeEvent *event){
             if (isChartMin) {
                 isChartMin = false;
                 switch (chartShow) {
-                    case 0: {
+                    case YEAR: {
                         updateAxisX(monthsNames);
                         break;
                     }
-                    case 1: {
+                    case ALL: {
                         // TODO: Complete me..
                         break;
                     }
-                    case 2: {
+                    case MONTH: {
                         updateAxisX();
                         break;
                     }
