@@ -196,14 +196,14 @@ define $(package)_config_cmds
   $(MAKE) sub-src-clean && \
   cd ../qttranslations && ../qtbase/bin/qmake qttranslations.pro -o Makefile && \
   cd translations && ../../qtbase/bin/qmake translations.pro -o Makefile && cd ../.. && \
+  cd qttools/src/linguist/lrelease/ && ../../../../qtbase/bin/qmake lrelease.pro -o Makefile && \
+  cd ../lupdate/ && ../../../../qtbase/bin/qmake lupdate.pro -o Makefile && cd ../../../.. && \
   cd qtsvg && ../qtbase/bin/qmake qtsvg.pro -o Makefile && \
   cd src/svg && ../../../qtbase/bin/qmake svg.pro -o Makefile && cd ../../.. && \
   cd qtsvg/src/plugins && ../../../qtbase/bin/qmake plugins.pro -o Makefile && cd ../../.. && \
   cd qtsvg/src/plugins/imageformats && ../../../../qtbase/bin/qmake imageformats.pro -o Makefile && cd ../../../.. && \
   cd qtsvg/src/plugins/imageformats/svg && ../../../../../qtbase/bin/qmake svg.pro -o Makefile && cd ../../../../.. && \
-  cd qtcharts && ../qtbase/bin/qmake qtcharts.pro -o Makefile && \
-  cd qttools/src/linguist/lrelease/ && ../../../../qtbase/bin/qmake lrelease.pro -o Makefile && \
-  cd ../lupdate/ && ../../../../qtbase/bin/qmake lupdate.pro -o Makefile && cd ../../../..
+  cd qtcharts && ../qtbase/bin/qmake qtcharts.pro -o Makefile
 endef
 
 define $(package)_build_cmds
