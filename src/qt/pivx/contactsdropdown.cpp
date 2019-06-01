@@ -108,3 +108,7 @@ void ContactsDropdown::handleClick(const QModelIndex &index){
     emit contactSelected(address, label);
     close();
 }
+
+void ContactsDropdown::changeTheme(bool isLightTheme, QString& theme){
+    static_cast<ContViewHolder*>(this->delegate->getRowFactory())->isLightTheme = isLightTheme;
+}
