@@ -1613,6 +1613,38 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     background-color:#0f0b16;
 }
 
+QComboBox[cssClass="btn-combo-chart"] {
+    background-color:#ffffff;
+    padding:10px 20px 10px 10px;
+    font-size:16px;
+    border:1px solid #ffffff;
+    color: #bababa;
+    text-align: right;
+}
+
+QComboBox[cssClass="btn-combo-chart"]::down-arrow {
+    image: url("://ic-arrow-drop-down");
+    width: 24px;
+    height: 24px;
+}
+
+
+QComboBox[cssClass="btn-combo-chart-selected"] {
+    background-color:#5c4b7d;
+    padding:10px 20px 10px 10px;
+    font-size:16px;
+    border:1px solid #5c4b7d;
+    color: #FFFFFF;
+    text-align: right;
+}
+
+QComboBox[cssClass="btn-combo-chart-selected"]::down-arrow {
+    image: url("://ic-arrow-drop-down-white");
+    width: 34px;
+    padding-right: :10px;
+    height: 24px;
+}
+
 QComboBox::drop-down {
     border-width: 0px;
 }
