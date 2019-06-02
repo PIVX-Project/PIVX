@@ -41,7 +41,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     ui->left->setProperty("cssClass", "container");
     ui->left->setContentsMargins(0,0,0,0);
     ui->right->setProperty("cssClass", "container-right");
-    ui->right->setContentsMargins(20,20,20,20);
+    ui->right->setContentsMargins(20,20,20,0);
 
     // Title
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
@@ -269,7 +269,7 @@ void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){
         this->changeChartColors();
 }
 
-const char* monthsNames[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+const QStringList monthsNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 void DashboardWidget::loadChart(){
     int size = stakesFilter->rowCount();
@@ -279,9 +279,7 @@ void DashboardWidget::loadChart(){
             ui->emptyContainerChart->setVisible(false);
             initChart();
             monthFilter = QDate::currentDate().month();
-            for (int i = 1; i < 13; ++i) {
-                ui->comboBoxMonths->addItem(QString(monthsNames[i-1]), QVariant(i));
-            }
+            for (int i = 1; i < 13; ++i) ui->comboBoxMonths->addItem(QString(monthsNames[i-1]), QVariant(i));
             ui->comboBoxMonths->setCurrentIndex(monthFilter - 1);
             connect(ui->comboBoxMonths, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onChartMonthChanged(const QString&)));
         }
@@ -603,11 +601,15 @@ std::pair<int, int> DashboardWidget::getChartRange(QMap<int, std::pair<qint64, q
     }
 }
 
-void DashboardWidget::updateAxisX(const char *arg[]) {
+void DashboardWidget::updateAxisX(const QStringList* args) {
     axisX->clear();
     QStringList months;
     std::pair<int,int> range = getChartRange(amountsByCache);
-    for (int i = range.first; i < range.second; i++) months << ((arg) ? arg[i-1] : QString::number(i));
+    if (args) {
+        months = *args;
+    } else {
+        for (int i = range.first; i < range.second; i++) months << QString::number(i);
+    }
     axisX->append(months);
 }
 
@@ -618,7 +620,7 @@ void DashboardWidget::windowResizeEvent(QResizeEvent *event){
                 isChartMin = false;
                 switch (chartShow) {
                     case YEAR: {
-                        updateAxisX(monthsNames);
+                        updateAxisX(&monthsNames);
                         break;
                     }
                     case ALL: {

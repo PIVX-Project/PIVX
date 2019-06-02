@@ -121,7 +121,7 @@ private:
     void initChart();
     void refreshChart();
     QMap<int, std::pair<qint64, qint64>> getAmountBy();
-    void updateAxisX(const char *arg[] = nullptr);
+    void updateAxisX(const QStringList *arg = nullptr);
     void setChartShow(ChartShowType type);
     std::pair<int, int> getChartRange(QMap<int, std::pair<qint64, qint64>> amountsBy);
 };
