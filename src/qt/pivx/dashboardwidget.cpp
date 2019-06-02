@@ -75,8 +75,9 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonAll->setProperty("cssClass", "btn-check-time");
     ui->pushButtonMonth->setProperty("cssClass", "btn-check-time");
     ui->pushButtonYear->setProperty("cssClass", "btn-check-time");
-    ui->comboBoxMonths->setProperty("cssClass", "btn-combo-chart");
+    ui->comboBoxMonths->setProperty("cssClass", "btn-combo-chart-selected");
     ui->comboBoxYears->setProperty("cssClass", "btn-combo-chart-selected");
+
     ui->comboBoxMonths->setView(new QListView());
     ui->comboBoxMonths->setStyleSheet("selection-background-color:transparent; selection-color:transparent;");
     ui->comboBoxYears->setView(new QListView());
@@ -277,9 +278,11 @@ void DashboardWidget::loadChart(){
             ui->layoutChart->setVisible(true);
             ui->emptyContainerChart->setVisible(false);
             initChart();
-            for (int i = 0; i < 12; ++i) {
-                ui->comboBoxMonths->addItem(QString(monthsNames[i]), QVariant(i + 1));
+            monthFilter = QDate::currentDate().month();
+            for (int i = 1; i < 13; ++i) {
+                ui->comboBoxMonths->addItem(QString(monthsNames[i-1]), QVariant(i));
             }
+            ui->comboBoxMonths->setCurrentIndex(monthFilter - 1);
             connect(ui->comboBoxMonths, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onChartMonthChanged(const QString&)));
         }
         refreshChart();
@@ -438,7 +441,7 @@ QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy() {
 
 void DashboardWidget::onChartYearChanged(const QString& yearStr) {
     if (isChartInitialized) {
-        int newYear = (yearStr == "All") ? 0 : yearStr.toInt();
+        int newYear = yearStr.toInt();
         if (newYear != yearFilter) {
             yearFilter = newYear;
             refreshChart();
@@ -448,7 +451,7 @@ void DashboardWidget::onChartYearChanged(const QString& yearStr) {
 
 void DashboardWidget::onChartMonthChanged(const QString& monthStr) {
     if (isChartInitialized) {
-        int newMonth = (monthStr == "All") ? 0 : ui->comboBoxMonths->currentData().toInt();
+        int newMonth = ui->comboBoxMonths->currentData().toInt();
         if (newMonth != monthFilter) {
             monthFilter = newMonth;
             refreshChart();
@@ -569,7 +572,6 @@ void DashboardWidget::refreshChart(){
         isChartInitialized = false;
     }
     ui->comboBoxYears->clear();
-    ui->comboBoxYears->addItem("All");
     if (yearStart == currentYear) {
         ui->comboBoxYears->addItem(QString::number(currentYear));
     } else {
@@ -580,7 +582,7 @@ void DashboardWidget::refreshChart(){
         ui->comboBoxYears->setCurrentText(selection);
         isChartInitialized = true;
     } else {
-        ui->comboBoxYears->setCurrentText("All");
+        ui->comboBoxYears->setCurrentText(QString::number(currentYear));
     }
 }
 
