@@ -1617,6 +1617,7 @@ QComboBox[cssClass="btn-combo-chart"] {
     border:1px solid #ffffff;
     color: #bababa;
     text-align: right;
+    border-radius: 4px;
 }
 
 QComboBox[cssClass="btn-combo-chart"]::down-arrow {
@@ -1633,6 +1634,7 @@ QComboBox[cssClass="btn-combo-chart-selected"] {
     border:1px solid #5c4b7d;
     color: #FFFFFF;
     text-align: right;
+    border-radius: 4px;
 }
 
 QComboBox[cssClass="btn-combo-chart-selected"]::down-arrow {
