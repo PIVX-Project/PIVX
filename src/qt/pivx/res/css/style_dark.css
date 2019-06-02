@@ -856,6 +856,11 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border-radius:0;
 }
 
+QGroupBox::title {
+    color:#b088ff;
+    font-size:16px;
+}
+
 QPushButton[cssClass="btn-watch-password"] {
     background: url("://ic-watch-password-white");
     background-repeat:no-repeat;
@@ -1613,12 +1618,27 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     background-color:#0f0b16;
 }
 
-QComboBox[cssClass="btn-combo-chart"] {
-    background-color:#ffffff;
+QComboBox[cssClass="btn-combo-secundary"] {
+    background-color:#0f0b16;
     padding:6px 12px 6px 6px;
     font-size:16px;
-    border:1px solid #ffffff;
-    color: #bababa;
+    border:1px solid #bababa;
+    color: #707070;
+    text-align: right;
+}
+
+QComboBox[cssClass="btn-combo-secundary"]::down-arrow {
+    image: url("://ic-arrow-drop-down-purple");
+    width: 24px;
+    height: 24px;
+}
+
+QComboBox[cssClass="btn-combo-chart"] {
+    background-color:#0f0b16;
+    padding:6px 12px 6px 6px;
+    font-size:16px;
+    border:1px solid #bababa;
+    color: #707070;
     text-align: right;
 }
 

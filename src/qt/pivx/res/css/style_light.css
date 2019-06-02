@@ -857,6 +857,12 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 
+QGroupBox::title {
+    color:#5c4b7d;
+    font-size:16px;
+}
+
+
 QPushButton[cssClass="btn-menu"] {
     qproperty-icon: url("://ic-menu-hover") off,
     url("://ic-menu-hover") on ;
@@ -1607,6 +1613,21 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="container-chart"] {
     background-color:#e8e7ee;
+}
+
+QComboBox[cssClass="btn-combo-secundary"] {
+    background-color:#ffffff;
+    padding:6px 12px 6px 6px;
+    font-size:16px;
+    border:1px solid #5c4b7d;
+    color: #5c4b7d;
+    text-align: right;
+}
+
+QComboBox[cssClass="btn-combo-secundary"]::down-arrow {
+    image: url("://ic-arrow-drop-down-purple");
+    width: 24px;
+    height: 24px;
 }
 
 
