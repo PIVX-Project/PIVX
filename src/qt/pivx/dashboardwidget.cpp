@@ -83,6 +83,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     ui->comboBoxYears->setView(new QListView());
     ui->comboBoxYears->setStyleSheet("selection-background-color:transparent; selection-color:transparent;");
     ui->pushButtonYear->setChecked(true);
+    setChartShow(YEAR);
 
     connect(ui->comboBoxYears, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onChartYearChanged(const QString&)));
 
@@ -151,16 +152,17 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
 
     connect(ui->pushButtonYear, &QPushButton::clicked, [this](){setChartShow(YEAR);});
     connect(ui->pushButtonMonth, &QPushButton::clicked, [this](){setChartShow(MONTH);});
-    connect(ui->pushButtonAll, &QPushButton::clicked, [this](){
-        yearFilter = 0;
-        monthFilter = 0;
-        setChartShow(ALL);
-    });
+    connect(ui->pushButtonAll, &QPushButton::clicked, [this](){setChartShow(ALL);});
 }
 
 void DashboardWidget::setChartShow(ChartShowType type) {
     this->chartShow = type;
-    refreshChart();
+    if (chartShow == MONTH) {
+        ui->containerChartArrow->setVisible(true);
+    } else {
+        ui->containerChartArrow->setVisible(false);
+    }
+    if (isChartInitialized) refreshChart();
 }
 
 void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
@@ -177,6 +179,7 @@ void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
     ui->listTransactions->scrollTo(index);
     ui->listTransactions->clearSelection();
     ui->listTransactions->setFocus();
+    dialog->deleteLater();
 }
 
 void DashboardWidget::loadWalletModel(){
@@ -278,10 +281,13 @@ void DashboardWidget::loadChart(){
             ui->layoutChart->setVisible(true);
             ui->emptyContainerChart->setVisible(false);
             initChart();
-            monthFilter = QDate::currentDate().month();
+            QDate currentDate = QDate::currentDate();
+            monthFilter = currentDate.month();
+            yearFilter = currentDate.year();
             for (int i = 1; i < 13; ++i) ui->comboBoxMonths->addItem(QString(monthsNames[i-1]), QVariant(i));
             ui->comboBoxMonths->setCurrentIndex(monthFilter - 1);
-            connect(ui->comboBoxMonths, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onChartMonthChanged(const QString&)));
+            connect(ui->comboBoxMonths, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onChartMonthChanged(const QString&)));
+            connect(ui->pushButtonChartArrow, SIGNAL(clicked()), this, SLOT(onChartArrowClicked()));
         }
         refreshChart();
         changeChartColors();
@@ -301,6 +307,7 @@ void DashboardWidget::initChart() {
     chart->legend()->setVisible(false);
     chart->legend()->setAlignment(Qt::AlignTop);
     chart->layout()->setContentsMargins(0, 0, 0, 0);
+    chart->setMargins({0, 0, 0, 0});
     chart->setBackgroundRoundness(0);
     // Axis
     chart->addAxis(axisX, Qt::AlignBottom);
@@ -309,11 +316,14 @@ void DashboardWidget::initChart() {
 
     chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
+    chartView->setRubberBand( QChartView::HorizontalRubberBand );
+    chartView->setContentsMargins(0,0,0,0);
 
-    QVBoxLayout *baseScreensContainer = new QVBoxLayout(this);
+    QHBoxLayout *baseScreensContainer = new QHBoxLayout(this);
     baseScreensContainer->setMargin(0);
+    baseScreensContainer->addWidget(chartView);
     ui->chartContainer->setLayout(baseScreensContainer);
-    ui->chartContainer->layout()->addWidget(chartView);
+    ui->chartContainer->setContentsMargins(0,0,0,0);
     ui->chartContainer->setProperty("cssClass", "container-chart");
 }
 
@@ -343,32 +353,36 @@ void DashboardWidget::changeChartColors(){
 
 // pair PIV, zPIV
 QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy() {
-    bool filterByMonth = false;
-    if (monthFilter != 0 && chartShow == MONTH) {
-        filterByMonth = true;
-    }
-    if (yearFilter != 0) {
-        if (filterByMonth) {
-            QDate monthFirst = QDate(yearFilter, monthFilter, 1);
+    if (chartShow != ALL) {
+        bool filterByMonth = false;
+        if (monthFilter != 0 && chartShow == MONTH) {
+            filterByMonth = true;
+        }
+        if (yearFilter != 0) {
+            if (filterByMonth) {
+                QDate monthFirst = QDate(yearFilter, monthFilter, 1);
+                stakesFilter->setDateRange(
+                        QDateTime(monthFirst),
+                        QDateTime(QDate(yearFilter, monthFilter, monthFirst.daysInMonth()))
+                );
+            } else {
+                stakesFilter->setDateRange(
+                        QDateTime(QDate(yearFilter, 1, 1)),
+                        QDateTime(QDate(yearFilter, 12, 31))
+                );
+            }
+        } else if (filterByMonth) {
+            QDate currentDate = QDate::currentDate();
+            QDate monthFirst = QDate(currentDate.year(), monthFilter, 1);
             stakesFilter->setDateRange(
                     QDateTime(monthFirst),
-                    QDateTime(QDate(yearFilter, monthFilter, monthFirst.daysInMonth()))
+                    QDateTime(QDate(currentDate.year(), monthFilter, monthFirst.daysInMonth()))
             );
+            ui->comboBoxYears->setCurrentText(QString::number(currentDate.year()));
         } else {
-            stakesFilter->setDateRange(
-                    QDateTime(QDate(yearFilter, 1, 1)),
-                    QDateTime(QDate(yearFilter, 12, 31))
-            );
+            stakesFilter->clearDateRange();
         }
-    } else if (filterByMonth){
-        QDate currentDate = QDate::currentDate();
-        QDate monthFirst = QDate(currentDate.year(), monthFilter, 1);
-        stakesFilter->setDateRange(
-                QDateTime(monthFirst),
-                QDateTime(QDate(currentDate.year(), monthFilter, monthFirst.daysInMonth()))
-        );
-        ui->comboBoxYears->setCurrentText(QString::number(currentDate.year()));
-    } else{
+    } else {
         stakesFilter->clearDateRange();
     }
     int size = stakesFilter->rowCount();
@@ -379,28 +393,6 @@ QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy() {
         qint64 amount = llabs(modelIndex.data(TransactionTableModel::AmountRole).toLongLong());
         QDateTime datetime = modelIndex.data(TransactionTableModel::DateRole).toDateTime();
         bool isPiv = modelIndex.data(TransactionTableModel::TypeRole).toInt() != TransactionRecord::StakeZPIV;
-
-        /**
-         * If this is ALL, order this by years.
-         * To do that, the amountBy map is a map of:
-         * year --> pair<PIV,zPIV>
-         * ---
-         * If this is YEAR, show the 12 months of the year (need a filter by year).
-         * To do that, the amountBy map is a map of:
-         *  month --> pair<PIV,zPIV>
-         * ---
-         * If this is MONTH, order this by days (need a filter by month and year).
-         * To do that, then amountBy map is a map of:
-         * day --> pair<PIV,zPIV>
-         * ---
-         * If this is WEEK, order this by weeks (need a filter by year, month and week number).
-         * To do that, the amountBy map is a map of:
-         * week num --> pair<PIV,zPIV>
-         * ---
-         * If this is DAY, order this by hours (need a filter by year, month and day).
-         * To do that, the amountBy map is a map of:
-         * day --> pair<PIV,zPIV>
-         */
 
         int time = 0;
         switch (chartShow) {
@@ -477,7 +469,7 @@ void DashboardWidget::refreshChart(){
     amountsByCache = getAmountBy();
 
     QStringList months;
-    isChartMin = width() < 1350;
+    isChartMin = width() < 1300;
     bool withMonthNames = !isChartMin && (chartShow == YEAR);
 
     qreal maxValue = 0;
@@ -488,18 +480,22 @@ void DashboardWidget::refreshChart(){
     QList<qreal> valueszPiv;
 
     std::pair<int,int> range = getChartRange(amountsByCache);
+    bool isOrderedByMonth = chartShow == MONTH;
+    int daysInMonth = QDate(yearFilter, monthFilter, 1).daysInMonth();
+
     for (int j = range.first; j < range.second; j++) {
+        int num = (isOrderedByMonth && j > daysInMonth) ? (j % daysInMonth) : j;
         qreal piv = 0;
         qreal zpiv = 0;
-        if (amountsByCache.contains(j)) {
-            std::pair<qint64, qint64> pair = amountsByCache[j];
+        if (amountsByCache.contains(num)) {
+            std::pair <qint64, qint64> pair = amountsByCache[num];
             piv = (pair.first != 0) ? pair.first / 100000000 : 0;
             zpiv = (pair.second != 0) ? pair.second / 100000000 : 0;
             totalPiv += pair.first;
             totalZpiv += pair.second;
         }
 
-        months << ((withMonthNames) ? monthsNames[j-1] : QString::number(j));
+        months << ((withMonthNames) ? monthsNames[num - 1] : QString::number(num));
         valuesPiv.append(piv);
         valueszPiv.append(zpiv);
 
@@ -594,7 +590,7 @@ std::pair<int, int> DashboardWidget::getChartRange(QMap<int, std::pair<qint64, q
             return std::make_pair(keys.first(), keys.last() + 1);
         }
         case MONTH:
-            return std::make_pair(1, 32);
+            return std::make_pair(dayStart, dayStart + 9);
         default:
             inform(tr("Error loading chart, invalid show option"));
             return std::make_pair(0, 0);
@@ -613,9 +609,17 @@ void DashboardWidget::updateAxisX(const QStringList* args) {
     axisX->append(months);
 }
 
+void DashboardWidget::onChartArrowClicked() {
+    dayStart--;
+    if (dayStart == 0) {
+        dayStart = QDate(yearFilter, monthFilter, 1).daysInMonth();
+    }
+    refreshChart();
+}
+
 void DashboardWidget::windowResizeEvent(QResizeEvent *event){
     if (stakesFilter->rowCount() > 0 && axisX) {
-        if (width() > 1350) {
+        if (width() > 1300) {
             if (isChartMin) {
                 isChartMin = false;
                 switch (chartShow) {
@@ -640,6 +644,7 @@ void DashboardWidget::windowResizeEvent(QResizeEvent *event){
         } else {
             if (!isChartMin) {
                 updateAxisX();
+                isChartMin = true;
             }
         }
     }

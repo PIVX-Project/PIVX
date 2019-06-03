@@ -859,6 +859,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 QGroupBox::title {
     color:#b088ff;
     font-size:16px;
+    padding-bottom:9px;
 }
 
 QPushButton[cssClass="btn-watch-password"] {

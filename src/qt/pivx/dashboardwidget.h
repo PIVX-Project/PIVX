@@ -86,6 +86,7 @@ private slots:
     void openFAQ();
     void onChartYearChanged(const QString&);
     void onChartMonthChanged(const QString&);
+    void onChartArrowClicked();
 
 private:
     Ui::DashboardWidget *ui;
@@ -95,12 +96,10 @@ private:
     TxViewHolder* txHolder;
     TransactionTableModel* txModel;
     int nDisplayUnit = -1;
-
     bool isSync = false;
 
-    bool isChartInitialized = false;
-
     // Chart
+    bool isChartInitialized = false;
     QChartView *chartView = nullptr;
     QBarSeries *series = nullptr;
     QBarSet *set0 = nullptr;
@@ -114,6 +113,7 @@ private:
     ChartShowType chartShow = YEAR;
     int yearFilter = 0;
     int monthFilter = 0;
+    int dayStart = 1;
     bool hasZpivStakes = false;
 
     QMap<int, std::pair<qint64, qint64>> amountsByCache;
