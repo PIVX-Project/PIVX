@@ -902,6 +902,12 @@ margin:0px;</string>
                      <height>35</height>
                     </size>
                    </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>80</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="text">
                     <string>Days</string>
                    </property>
@@ -921,6 +927,12 @@ margin:0px;</string>
                      <height>35</height>
                     </size>
                    </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>80</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="text">
                     <string>Months</string>
                    </property>
@@ -938,6 +950,12 @@ margin:0px;</string>
                     <size>
                      <width>50</width>
                      <height>35</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>80</width>
+                     <height>16777215</height>
                     </size>
                    </property>
                    <property name="text">
