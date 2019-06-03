@@ -1104,7 +1104,7 @@ margin:0px;</string>
             <number>0</number>
            </property>
            <property name="bottomMargin">
-            <number>10</number>
+            <number>25</number>
            </property>
            <item>
             <spacer name="verticalSpacer11">

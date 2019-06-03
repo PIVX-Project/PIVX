@@ -203,7 +203,7 @@ void DashboardWidget::loadWalletModel(){
             connect(ui->pushImgEmpty, SIGNAL(clicked()), this, SLOT(openFAQ()));
             connect(ui->btnHowTo, SIGNAL(clicked()), this, SLOT(openFAQ()));
         }
-        connect(txModel, SIGNAL(txArrived()), this, SLOT(onTxArrived()));
+        connect(txModel, &TransactionTableModel::txArrived, this, &DashboardWidget::onTxArrived);
 
         // chart filter
         stakesFilter = new TransactionFilterProxy();
@@ -223,9 +223,9 @@ void DashboardWidget::openFAQ(){
     dialog->deleteLater();
 }
 
-void DashboardWidget::onTxArrived() {
+void DashboardWidget::onTxArrived(const QString& hash) {
     showList();
-    if (stakesFilter->rowCount() > 0) {
+    if (stakesFilter->rowCount() > 0 && walletModel->isCoinStake(hash)) {
         refreshChart();
     }
 }

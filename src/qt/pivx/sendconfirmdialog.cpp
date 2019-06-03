@@ -61,7 +61,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
 
         ui->btnCancel->setProperty("cssClass", "btn-dialog-cancel");
         ui->btnSave->setText(tr("SEND"));
-        ui->btnSave->setProperty("cssClass", "btn-primary");
+        setCssBtnPrimary(ui->btnSave);
 
         // hide change address for now
         ui->contentConfirmations->setVisible(false);
