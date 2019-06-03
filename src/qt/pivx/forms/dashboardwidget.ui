@@ -886,7 +886,7 @@ margin:0px;</string>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_7">
                  <property name="spacing">
-                  <number>0</number>
+                  <number>5</number>
                  </property>
                  <property name="leftMargin">
                   <number>0</number>
@@ -975,6 +975,9 @@ margin:0px;</string>
                  <string>Filter by</string>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_8">
+                 <property name="spacing">
+                  <number>5</number>
+                 </property>
                  <property name="leftMargin">
                   <number>0</number>
                  </property>
