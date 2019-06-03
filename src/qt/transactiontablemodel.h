@@ -79,7 +79,7 @@ public:
     bool processingQueuedTransactions() { return fProcessingQueuedTransactions; }
 
 signals:
-    void txArrived();
+    void txArrived(const QString& hash);
 
 private:
     CWallet* wallet;
