@@ -790,7 +790,7 @@
                      <number>0</number>
                     </property>
                     <property name="bottomMargin">
-                     <number>3</number>
+                     <number>4</number>
                     </property>
                     <item>
                      <spacer name="verticalSpacer_3">
@@ -904,7 +904,7 @@ margin:0px;</string>
                    </property>
                    <property name="maximumSize">
                     <size>
-                     <width>80</width>
+                     <width>16777215</width>
                      <height>16777215</height>
                     </size>
                    </property>
@@ -929,7 +929,7 @@ margin:0px;</string>
                    </property>
                    <property name="maximumSize">
                     <size>
-                     <width>80</width>
+                     <width>16777215</width>
                      <height>16777215</height>
                     </size>
                    </property>
@@ -946,6 +946,12 @@ margin:0px;</string>
                  </item>
                  <item>
                   <widget class="QPushButton" name="pushButtonAll">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="minimumSize">
                     <size>
                      <width>50</width>
@@ -954,7 +960,7 @@ margin:0px;</string>
                    </property>
                    <property name="maximumSize">
                     <size>
-                     <width>80</width>
+                     <width>16777215</width>
                      <height>16777215</height>
                     </size>
                    </property>
