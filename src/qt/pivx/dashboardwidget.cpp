@@ -225,7 +225,7 @@ void DashboardWidget::openFAQ(){
 
 void DashboardWidget::onTxArrived(const QString& hash) {
     showList();
-    if (stakesFilter->rowCount() > 0 && walletModel->isCoinStake(hash)) {
+    if (hasStakes() && walletModel->isCoinStake(hash)) {
         refreshChart();
     }
 }
@@ -268,15 +268,14 @@ void DashboardWidget::walletSynced(bool sync){
 
 void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){
     static_cast<TxViewHolder*>(this->txViewDelegate->getRowFactory())->isLightTheme = isLightTheme;
-    if (stakesFilter->rowCount() > 0)
+    if (hasStakes())
         this->changeChartColors();
 }
 
 const QStringList monthsNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 void DashboardWidget::loadChart(){
-    int size = stakesFilter->rowCount();
-    if (size > 0) {
+    if (hasStakes()) {
         if (!chart) {
             ui->layoutChart->setVisible(true);
             ui->emptyContainerChart->setVisible(false);
@@ -618,7 +617,7 @@ void DashboardWidget::onChartArrowClicked() {
 }
 
 void DashboardWidget::windowResizeEvent(QResizeEvent *event){
-    if (stakesFilter->rowCount() > 0 && axisX) {
+    if (hasStakes() > 0 && axisX) {
         if (width() > 1300) {
             if (isChartMin) {
                 isChartMin = false;
@@ -648,6 +647,10 @@ void DashboardWidget::windowResizeEvent(QResizeEvent *event){
             }
         }
     }
+}
+
+bool DashboardWidget::hasStakes() {
+    return stakesFilter->rowCount() > 0;
 }
 
 DashboardWidget::~DashboardWidget(){

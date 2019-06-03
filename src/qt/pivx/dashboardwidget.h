@@ -124,6 +124,7 @@ private:
     void updateAxisX(const QStringList *arg = nullptr);
     void setChartShow(ChartShowType type);
     std::pair<int, int> getChartRange(QMap<int, std::pair<qint64, qint64>> amountsBy);
+    bool hasStakes();
 };
 
 #endif // DASHBOARDWIDGET_H
