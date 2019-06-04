@@ -81,16 +81,17 @@ void TxRow::setType(bool isLightTheme, int type, bool isConfirmed){
             path = ":/icons/tx_inout";
             break;
     }
+
+    if (!isLightTheme){
+        path += "-dark";
+    }
+
     if (!isConfirmed){
         css = "text-list-amount-unconfirmed";
         path += "-inactive";
         setConfirmStatus(false);
     }else{
         setConfirmStatus(true);
-    }
-
-    if (!isLightTheme){
-        path += "-dark";
     }
     ui->lblAmount->setProperty("cssClass", css);
     ui->icon->setIcon(QIcon(path));
