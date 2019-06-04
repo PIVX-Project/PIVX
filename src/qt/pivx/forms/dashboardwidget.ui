@@ -790,7 +790,7 @@
                      <number>0</number>
                     </property>
                     <property name="bottomMargin">
-                     <number>4</number>
+                     <number>0</number>
                     </property>
                     <item>
                      <spacer name="verticalSpacer_3">
@@ -807,13 +807,20 @@
                     </item>
                     <item>
                      <widget class="QPushButton" name="pushButtonChartArrow">
+                      <property name="minimumSize">
+                       <size>
+                        <width>20</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>20</width>
+                        <height>20</height>
+                       </size>
+                      </property>
                       <property name="styleSheet">
-                       <string notr="true">QPushButton{
-	border:none;
-	background:none;
-	padding:0px;
-	margin:0px;
-}</string>
+                       <string notr="true"/>
                       </property>
                       <property name="text">
                        <string>&lt;</string>

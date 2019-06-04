@@ -161,6 +161,8 @@
         <file alias="ic-arrow-purple-down">pivx/res/img/ic-arrow-purple-down.svg</file>
         <file alias="ic-arrow-right-white">pivx/res/img/ic-arrow-right-white.svg</file>
         <file alias="ic-arrow-right">pivx/res/img/ic-arrow-right.svg</file>
+        <file alias="ic-arrow-left-white">pivx/res/img/ic-arrow-left-white.svg</file>
+        <file alias="ic-arrow-left">pivx/res/img/ic-arrow-left.svg</file>
         <file alias="ic-arrow-white-left">pivx/res/img/ic-arrow-white-left.svg</file>
         <file alias="ic-arrow-white-right">pivx/res/img/ic-arrow-white-right.svg</file>
         <file alias="ic-check-active">pivx/res/img/ic-check-active.svg</file>

@@ -1619,6 +1619,21 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     background-color:#0f0b16;
 }
 
+QPushButton[cssClass="btn-chart-arrow"] {
+    qproperty-icon: url("://ic-arrow-left-white") ;
+    qproperty-iconSize: 12px 12px;
+    background-color: transparent;
+    border:0px;
+}
+
+QPushButton[cssClass="btn-chart-arrow"]:hover {
+    background-color: #5c4b7d;
+}
+
+QPushButton[cssClass="btn-chart-arrow"]:pressed {
+    background-color:#20192e;
+}
+
 QComboBox[cssClass="btn-combo-secundary"] {
     background-color:#0f0b16;
     padding:6px 12px 6px 6px;

@@ -536,6 +536,8 @@ RES_ICONS = \
   qt/pivx/res/img/ic-submenu-lock.svg \
   qt/pivx/res/img/img-logo-pivx@3x.png \
   qt/pivx/res/img/ic-arrow-right-white.svg \
+  qt/pivx/res/img/ic-arrow-left-white.svg \
+  qt/pivx/res/img/ic-arrow-left.svg \
   qt/pivx/res/img/ic-copy-liliac.svg \
   qt/pivx/res/img/ic-submenu-staking.svg \
   qt/pivx/res/img/img-nav-logo-pivx.png \
