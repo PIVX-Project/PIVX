@@ -7,6 +7,7 @@
 #include "guiutil.h"
 #include <QSettings>
 #include <iostream>
+#include <QDesktopWidget>
 
 WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
     QDialog(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint),
@@ -154,6 +155,13 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
     connect(backButton, SIGNAL(clicked()), this, SLOT(onBackClicked()));
 
     initLanguages();
+
+
+    // Resize window and move to center of desktop, disallow resizing
+    QRect r(QPoint(), size());
+    resize(r.size());
+    setFixedSize(r.size());
+    move(QApplication::desktop()->screenGeometry().center() - r.center());
 }
 
 void WelcomeContentWidget::initLanguages(){

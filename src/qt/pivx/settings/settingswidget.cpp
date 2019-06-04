@@ -72,7 +72,7 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonHelp1->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonHelp2->setProperty("cssClass", "btn-settings-options");
 
-    ui->pushButtonFile->isChecked();
+    ui->pushButtonFile->setChecked(true);
     ui->fileButtonsWidget->setVisible(true);
     ui->optionsButtonsWidget->setVisible(false);
     ui->configurationButtonsWidget->setVisible(false);
@@ -109,19 +109,13 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     ui->stackedWidgetContainer->addWidget(settingsWindowOptionsWidget);
     ui->stackedWidgetContainer->setCurrentWidget(settingsBackupWallet);
 
-
-
-    // Connect btns
-
     // File Section
-
     connect(ui->pushButtonFile, SIGNAL(clicked()), this, SLOT(onFileClicked()));
     connect(ui->pushButtonFile2, SIGNAL(clicked()), this, SLOT(onBackupWalletClicked()));
     connect(ui->pushButtonFile3, SIGNAL(clicked()), this, SLOT(onSignMessageClicked()));
     connect(ui->pushButtonFile4, SIGNAL(clicked()), this, SLOT(onVerifyMessageClicked()));
 
     // Options
-
     connect(ui->pushButtonOptions, SIGNAL(clicked()), this, SLOT(onOptionsClicked()));
     connect(ui->pushButtonOptions1, SIGNAL(clicked()), this, SLOT(onMainOptionsClicked()));
     connect(ui->pushButtonOptions2, SIGNAL(clicked()), this, SLOT(onWalletOptionsClicked()));
@@ -130,13 +124,11 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     connect(ui->pushButtonOptions5, SIGNAL(clicked()), this, SLOT(onDisplayOptionsClicked()));
 
     // Configuration
-
     connect(ui->pushButtonConfiguration, SIGNAL(clicked()), this, SLOT(onConfigurationClicked()));
     connect(ui->pushButtonConfiguration3, SIGNAL(clicked()), this, SLOT(onBipToolClicked()));
     connect(ui->pushButtonConfiguration4, SIGNAL(clicked()), this, SLOT(onMultisendClicked()));
 
     // Tools
-
     connect(ui->pushButtonTools, SIGNAL(clicked()), this, SLOT(onToolsClicked()));
     connect(ui->pushButtonTools1, SIGNAL(clicked()), this, SLOT(onInformationClicked()));
     connect(ui->pushButtonTools2, SIGNAL(clicked()), this, SLOT(onDebugConsoleClicked()));
@@ -144,7 +136,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
     connect(ui->pushButtonTools5, SIGNAL(clicked()), this, SLOT(onWalletRepairClicked()));
 
     // Help
-
     connect(ui->pushButtonHelp, SIGNAL(clicked()), this, SLOT(onHelpClicked()));
     connect(ui->pushButtonHelp1, SIGNAL(clicked()), this, SLOT(onFaqClicked()));
 
@@ -342,6 +333,7 @@ void SettingsWidget::onFaqClicked() {
     window->showHide(true);
     SettingsFaqWidget* dialog = new SettingsFaqWidget(window);
     openDialogWithOpaqueBackgroundFullScreen(dialog, window);
+    dialog->deleteLater();
 }
 
 void SettingsWidget::onAboutClicked() {

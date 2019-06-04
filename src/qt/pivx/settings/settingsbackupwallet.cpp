@@ -16,7 +16,7 @@ SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
 
     /* Containers */
     ui->left->setProperty("cssClass", "container");
-    ui->left->setContentsMargins(10,0,10,10);
+    ui->left->setContentsMargins(10,10,10,10);
 
     // Title
     ui->labelTitle->setText(tr("Backup Wallet "));

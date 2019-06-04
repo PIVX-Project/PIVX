@@ -1621,6 +1621,7 @@ QPushButton[cssClass="btn-chart-arrow"] {
     qproperty-iconSize: 12px 12px;
     background-color: transparent;
     border:0px;
+    border-radius:2px;
 }
 
 QPushButton[cssClass="btn-chart-arrow"]:hover {
@@ -1666,10 +1667,10 @@ QComboBox[cssClass="btn-combo-chart"]::down-arrow {
 
 
 QComboBox[cssClass="btn-combo-chart-selected"] {
-    background-color:#B35c4b7d;
+    background-color:#5c4b7d;
     padding:6px 12px 6px 6px;
     font-size:16px;
-    border:1px solid #B35c4b7d;
+    border:1px solid #5c4b7d;
     color: #FFFFFF;
     text-align: right;
     border-radius: 2px;
@@ -1685,7 +1686,7 @@ QComboBox[cssClass="btn-combo-chart-selected"]::down-arrow {
 QComboBox[cssClass="btn-combo-chart-selected"]:on { 
     padding-top: 10px;
     padding-left: 10px;
-    background-color: #B35c4b7d;
+    background-color: #5c4b7d;
 }
 
 QComboBox::drop-down {
@@ -2540,14 +2541,17 @@ QPushButton[cssClass="ic-step-confirm-welcome"] {
 }
 
 QComboBox[cssClass="btn-combo-welcome"] {
-    background-image: url("://ic-arrow-purple-down");
-    background-position:right center;
-    background-repeat:no-repeat;
     background-color:#171022;
     padding:10px 20px 10px 10px;
     font-size:16px;
     border:1px solid #b088ff;
     color: #FFFFFF;
+}
+
+QComboBox[cssClass="btn-combo-welcome"]::down-arrow {
+    image: url("://ic-arrow-purple-down");
+    width: 42px;
+    height: 42px;
 }
 
 QPushButton[cssClass="btn-welcome-back"] {

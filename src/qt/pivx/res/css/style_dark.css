@@ -1624,6 +1624,7 @@ QPushButton[cssClass="btn-chart-arrow"] {
     qproperty-iconSize: 12px 12px;
     background-color: transparent;
     border:0px;
+    border-radius:2px;
 }
 
 QPushButton[cssClass="btn-chart-arrow"]:hover {
@@ -2553,14 +2554,18 @@ QPushButton[cssClass="ic-step-confirm-welcome"] {
 }
 
 QComboBox[cssClass="btn-combo-welcome"] {
-    background-image: url("://ic-arrow-purple-down");
-    background-position:right center;
-    background-repeat:no-repeat;
     background-color:#171022;
     padding:10px 20px 10px 10px;
     font-size:16px;
     border:1px solid #b088ff;
     color: #FFFFFF;
+}
+
+
+QComboBox[cssClass="btn-combo-welcome"]::down-arrow {
+    image: url("://ic-arrow-purple-down");
+    width: 42px;
+    height: 42px;
 }
 
 QPushButton[cssClass="btn-welcome-back"] {
