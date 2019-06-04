@@ -2260,7 +2260,7 @@ QPushButton[cssClass="btn-settings-check"] {
 }
 
 QPushButton[cssClass="btn-settings-check"]:checked {
-    background-image: url("://ic-arrow-drop-up");
+    background-image: url("://ic-arrow-drop-up-white");
     background-position:right center;
     background-repeat:no-repeat;
     background-color:#0f0b16;
