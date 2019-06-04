@@ -823,7 +823,7 @@
                        <string notr="true"/>
                       </property>
                       <property name="text">
-                       <string>&lt;</string>
+                       <string/>
                       </property>
                      </widget>
                     </item>

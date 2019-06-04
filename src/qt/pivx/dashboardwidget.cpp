@@ -85,6 +85,8 @@ DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
     ui->pushButtonYear->setChecked(true);
     setChartShow(YEAR);
 
+    setCssProperty(ui->pushButtonChartArrow, "btn-chart-arrow");
+
     connect(ui->comboBoxYears, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onChartYearChanged(const QString&)));
 
     // Sort Transactions
@@ -173,6 +175,7 @@ void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
     window->showHide(true);
     TxDetailDialog *dialog = new TxDetailDialog(window, false);
     dialog->setData(walletModel, rIndex);
+    dialog->adjustSize();
     openDialogWithOpaqueBackgroundY(dialog, window, 3, 17);
 
     // Back to regular status
@@ -467,7 +470,7 @@ void DashboardWidget::refreshChart(){
     // pair PIV, zPIV
     amountsByCache = getAmountBy();
 
-    QStringList months;
+    QStringList xLabels;
     isChartMin = width() < 1300;
     bool withMonthNames = !isChartMin && (chartShow == YEAR);
 
@@ -494,7 +497,7 @@ void DashboardWidget::refreshChart(){
             totalZpiv += pair.second;
         }
 
-        months << ((withMonthNames) ? monthsNames[num - 1] : QString::number(num));
+        xLabels << ((withMonthNames) ? monthsNames[num - 1] : QString::number(num));
         valuesPiv.append(piv);
         valueszPiv.append(zpiv);
 
@@ -531,7 +534,7 @@ void DashboardWidget::refreshChart(){
     else {
         series->setBarWidth(0.3);
     }
-    axisX->append(months);
+    axisX->append(xLabels);
     axisY->setRange(0,maxValue);
 
     // Controllers
@@ -551,7 +554,7 @@ void DashboardWidget::refreshChart(){
             break;
         }
         default:
-            // add day.
+            // No more filters for now.
             break;
     }
 

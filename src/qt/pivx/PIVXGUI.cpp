@@ -41,8 +41,8 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
 
     /* Open CSS when configured */
     this->setStyleSheet(GUIUtil::loadStyleSheet());
-    this->setMinimumSize(1200, 700);
-    GUIUtil::restoreWindowGeometry("nWindow", QSize(1200, 700), this);
+    this->setMinimumSize(1200, 720);
+    GUIUtil::restoreWindowGeometry("nWindow", QSize(1200, 720), this);
 
     QString windowTitle = tr("PIVX Core") + " - ";
 #ifdef ENABLE_WALLET
@@ -76,7 +76,7 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
 
         QFrame* centralWidget = new QFrame(this);
         this->setMinimumWidth(1200);
-        this->setMinimumHeight(700);
+        this->setMinimumHeight(720);
         QHBoxLayout* centralWidgetLayouot = new QHBoxLayout();
         centralWidget->setLayout(centralWidgetLayouot);
         centralWidgetLayouot->setContentsMargins(0,0,0,0);
@@ -279,13 +279,10 @@ void PIVXGUI::messageInfo(const QString& text){
     openDialog(this->snackBar, this);
 }
 
-/**
- * TODO remove QMessageBox for the snackbar..
- */
+
 void PIVXGUI::message(const QString& title, const QString& message, unsigned int style, bool* ret)
 {
     try {
-        std::cout << "message" << std::endl;
         QString strTitle = tr("PIVX Core"); // default title
         // Default to information icon
         int nMBoxIcon = QMessageBox::Information;
