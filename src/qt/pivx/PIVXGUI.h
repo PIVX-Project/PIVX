@@ -21,6 +21,7 @@
 #include "qt/pivx/receivewidget.h"
 #include "qt/pivx/addresseswidget.h"
 #include "qt/pivx/privacywidget.h"
+#include "qt/pivx/masternodeswidget.h"
 #include "qt/pivx/snackbar.h"
 #include "qt/pivx/settings/settingswidget.h"
 #include "qt/rpcconsole.h"
@@ -120,6 +121,7 @@ private:
     ReceiveWidget *receiveWidget = nullptr;
     AddressesWidget *addressesWidget = nullptr;
     PrivacyWidget *privacyWidget = nullptr;
+    MasterNodesWidget *masterNodesWidget = nullptr;
     SettingsWidget* settingsWidget = nullptr;
 
     SnackBar *snackBar = nullptr;

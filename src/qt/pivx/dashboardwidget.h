@@ -65,7 +65,7 @@ class DashboardWidget : public PWidget
     Q_OBJECT
 
 public:
-    explicit DashboardWidget(PIVXGUI* _window, QWidget *parent = nullptr);
+    explicit DashboardWidget(PIVXGUI* _window);
     ~DashboardWidget();
 
     void loadWalletModel() override;

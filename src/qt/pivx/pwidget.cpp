@@ -1,9 +1,8 @@
 #include "qt/pivx/pwidget.h"
 #include "qt/pivx/qtutils.h"
-
 #include "qt/pivx/moc_pwidget.cpp"
 
-PWidget::PWidget(PIVXGUI* _window, QWidget *parent) : QWidget(parent), window(_window){init();}
+PWidget::PWidget(PIVXGUI* _window, QWidget *parent) : QWidget((parent) ? parent : _window), window(_window){init();}
 PWidget::PWidget(PWidget* parent) : QWidget(parent), window(parent->getWindow()){init();}
 
 void PWidget::init() {

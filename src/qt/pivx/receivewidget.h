@@ -11,7 +11,6 @@
 #include <QPixmap>
 
 class PIVXGUI;
-class WalletModel;
 class SendCoinsRecipient;
 
 namespace Ui {
@@ -27,7 +26,7 @@ class ReceiveWidget : public PWidget
     Q_OBJECT
 
 public:
-    explicit ReceiveWidget(PIVXGUI* _window, QWidget *parent = nullptr);
+    explicit ReceiveWidget(PIVXGUI* parent);
     ~ReceiveWidget();
 
     void loadWalletModel() override;
@@ -59,6 +58,8 @@ private:
 
     void updateQr(QString address);
     void updateLabel();
+
+    bool isShowingDialog = false;
 
 };
 

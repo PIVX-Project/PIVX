@@ -17,11 +17,10 @@
 #include "openuridialog.h"
 #include "zpivcontroldialog.h"
 
-
 #include <iostream>
 
-SendWidget::SendWidget(PIVXGUI* _window, QWidget *parent) :
-    PWidget(_window, parent),
+SendWidget::SendWidget(PIVXGUI* parent) :
+    PWidget(parent),
     ui(new Ui::send),
     coinIcon(new QPushButton()),
     btnContacts(new QPushButton())
@@ -617,6 +616,7 @@ void SendWidget::onCoinControlClicked()
             zPivControl->setModel(walletModel);
             zPivControl->exec();
             ui->btnCoinControl->setActive(!ZPivControlDialog::setSelectedMints.empty());
+            zPivControl->deleteLater();
         } else {
             inform(tr("You don't have any zPIV in your balance to select."));
         }

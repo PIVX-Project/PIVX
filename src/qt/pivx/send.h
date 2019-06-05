@@ -29,7 +29,7 @@ class SendWidget : public PWidget
     Q_OBJECT
 
 public:
-    explicit SendWidget(PIVXGUI* _window, QWidget *parent = nullptr);
+    explicit SendWidget(PIVXGUI* parent);
     ~SendWidget();
 
     void addEntry();

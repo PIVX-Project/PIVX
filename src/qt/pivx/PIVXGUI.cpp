@@ -116,12 +116,13 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         baseScreensContainer->addWidget(stackedContainer);
 
         // Init
-        dashboard = new DashboardWidget(this, this);
-        sendWidget = new SendWidget(this, this);
-        receiveWidget = new ReceiveWidget(this,this);
-        addressesWidget = new AddressesWidget(this,this);
-        privacyWidget = new PrivacyWidget(this,this);
-        settingsWidget = new SettingsWidget(this,this);
+        dashboard = new DashboardWidget(this);
+        sendWidget = new SendWidget(this);
+        receiveWidget = new ReceiveWidget(this);
+        addressesWidget = new AddressesWidget(this);
+        privacyWidget = new PrivacyWidget(this);
+        masterNodesWidget = new MasterNodesWidget(this);
+        settingsWidget = new SettingsWidget(this);
 
         // Add to parent
         stackedContainer->addWidget(dashboard);
@@ -129,6 +130,7 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         stackedContainer->addWidget(receiveWidget);
         stackedContainer->addWidget(addressesWidget);
         stackedContainer->addWidget(privacyWidget);
+        stackedContainer->addWidget(masterNodesWidget);
         stackedContainer->addWidget(settingsWidget);
         stackedContainer->setCurrentWidget(dashboard);
 
@@ -180,6 +182,7 @@ void PIVXGUI::connectActions() {
     connect(receiveWidget, &ReceiveWidget::showHide, this, &PIVXGUI::showHide);
     connect(addressesWidget, &AddressesWidget::showHide, this, &PIVXGUI::showHide);
     connect(privacyWidget, &PrivacyWidget::showHide, this, &PIVXGUI::showHide);
+    connect(masterNodesWidget, &MasterNodesWidget::showHide, this, &PIVXGUI::showHide);
     connect(settingsWidget, &SettingsWidget::execDialog, this, &PIVXGUI::execDialog);
 }
 
@@ -406,7 +409,7 @@ void PIVXGUI::goToPrivacy(){
 }
 
 void PIVXGUI::goToMasterNodes(){
-    //showTop(masterNodesWidget);
+    showTop(masterNodesWidget);
 }
 
 void PIVXGUI::goToSettings(){
@@ -499,10 +502,12 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     sendWidget->setWalletModel(walletModel);
     addressesWidget->setWalletModel(walletModel);
     privacyWidget->setWalletModel(walletModel);
+    masterNodesWidget->setWalletModel(walletModel);
     settingsWidget->setWalletModel(walletModel);
 
     // Connect actions..
     connect(privacyWidget, &PrivacyWidget::message, this, &PIVXGUI::message);
+    connect(masterNodesWidget, &MasterNodesWidget::message, this, &PIVXGUI::message);
     connect(topBar, &TopBar::message, this, &PIVXGUI::message);
     connect(sendWidget, &SendWidget::message,this, &PIVXGUI::message);
     connect(receiveWidget, &ReceiveWidget::message,this, &PIVXGUI::message);

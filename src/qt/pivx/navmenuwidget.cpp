@@ -23,7 +23,6 @@ NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
     ui->labelVersion->setProperty("cssClass", "text-title-white");
 
     // Buttons
-
     ui->btnDashboard->setProperty("cssClass", "btn-nav-dash-active");
     ui->btnDashboard->setText("HOME\n");
     ui->btnDashboard->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
@@ -125,7 +124,7 @@ void NavMenuWidget::onPrivacyClicked(){
 }
 
 void NavMenuWidget::onMasterNodesClicked(){
-    //window->goToMasterNodes();
+    window->goToMasterNodes();
     ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
     ui->btnSend->setProperty("cssClass", "btn-nav-send");
     ui->btnAddress->setProperty("cssClass", "btn-nav-address");

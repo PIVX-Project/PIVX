@@ -20,14 +20,13 @@
 #include "optionsmodel.h"
 #include "clientmodel.h"
 
-SettingsWidget::SettingsWidget(PIVXGUI* _window, QWidget *parent) :
-    PWidget(_window, parent),
-    ui(new Ui::SettingsWidget),
-    window(_window)
+SettingsWidget::SettingsWidget(PIVXGUI* parent) :
+    PWidget(parent),
+    ui(new Ui::SettingsWidget)
 {
     ui->setupUi(this);
 
-    this->setStyleSheet(_window->styleSheet());
+    this->setStyleSheet(parent->styleSheet());
 
     /* Containers */
     ui->scrollArea->setProperty("cssClass", "container");

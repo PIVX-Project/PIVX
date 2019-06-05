@@ -19,8 +19,8 @@
 
 #include "moc_dashboardwidget.cpp"
 
-DashboardWidget::DashboardWidget(PIVXGUI* _window, QWidget *parent) :
-    PWidget(_window, parent),
+DashboardWidget::DashboardWidget(PIVXGUI* parent) :
+    PWidget(parent),
     ui(new Ui::DashboardWidget)
 {
     ui->setupUi(this);

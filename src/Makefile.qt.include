@@ -81,6 +81,8 @@ QT_FORMS_UI = \
   qt/pivx/forms/addresslabelrow.ui \
   qt/pivx/forms/contactdropdownrow.ui \
   qt/pivx/forms/optionbutton.ui \
+  qt/pivx/forms/mnrow.ui \
+  qt/pivx/forms/masternodeswidget.ui \
   qt/pivx/forms/myaddressrow.ui \
   qt/pivx/forms/sendchangeaddressdialog.ui \
   qt/pivx/forms/sendconfirmdialog.ui \
@@ -187,6 +189,8 @@ QT_MOC_CPP = \
   qt/pivx/moc_addresslabelrow.cpp \
   qt/pivx/moc_contactdropdownrow.cpp \
   qt/pivx/moc_optionbutton.cpp \
+  qt/pivx/moc_mnrow.cpp \
+  qt/pivx/moc_masternodeswidget.cpp \
   qt/pivx/moc_myaddressrow.cpp \
   qt/pivx/moc_contactsdropdown.cpp \
   qt/pivx/moc_sendchangeaddressdialog.cpp \
@@ -326,6 +330,8 @@ BITCOIN_QT_H = \
   qt/pivx/addresslabelrow.h \
   qt/pivx/contactdropdownrow.h \
   qt/pivx/optionbutton.h \
+  qt/pivx/mnrow.h \
+  qt/pivx/masternodeswidget.h \
   qt/pivx/myaddressrow.h \
   qt/pivx/contactsdropdown.h \
   qt/pivx/sendchangeaddressdialog.h \
@@ -695,6 +701,8 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/contactdropdownrow.cpp \
   qt/pivx/contactsdropdown.cpp \
   qt/pivx/optionbutton.cpp \
+  qt/pivx/mnrow.cpp \
+  qt/pivx/masternodeswidget.cpp \
   qt/pivx/myaddressrow.cpp \
   qt/pivx/sendchangeaddressdialog.cpp \
   qt/pivx/sendconfirmdialog.cpp \

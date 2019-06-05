@@ -60,8 +60,8 @@ public:
 
 #include "qt/pivx/moc_receivewidget.cpp"
 
-ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
-    PWidget(_window, parent),
+ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
+    PWidget(parent),
     ui(new Ui::ReceiveWidget)
 {
     ui->setupUi(this);
@@ -73,7 +73,7 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* _window, QWidget *parent) :
                 );
 
     // Stylesheet
-    this->setStyleSheet(_window->styleSheet());
+    this->setStyleSheet(parent->styleSheet());
 
     // Containers
     ui->left->setProperty("cssClass", "container");
@@ -216,7 +216,8 @@ void ReceiveWidget::handleAddressClicked(const QModelIndex &index){
 }
 
 void ReceiveWidget::onLabelClicked(){
-    if(walletModel) {
+    if(walletModel && !isShowingDialog) {
+        isShowingDialog = true;
         showHideOp(true);
         // TODO: Open this to "update" the label if the address already has it.
         AddNewContactDialog *dialog = new AddNewContactDialog(window);
@@ -238,6 +239,7 @@ void ReceiveWidget::onLabelClicked(){
                 inform(tr("Error storing address label"));
             }
         }
+        isShowingDialog = false;
     }
 }
 
@@ -267,7 +269,8 @@ void ReceiveWidget::onCopyClicked(){
 
 
 void ReceiveWidget::onRequestClicked(){
-    if(walletModel) {
+    if(walletModel && !isShowingDialog) {
+        isShowingDialog = true;
         if (!walletModel->isWalletUnlocked()) {
             inform(tr("Wallet locked, you need to unlock it to perform this action"));
             return;
@@ -276,6 +279,8 @@ void ReceiveWidget::onRequestClicked(){
         RequestDialog *dialog = new RequestDialog(window);
         dialog->setWalletModel(walletModel);
         openDialogWithOpaqueBackgroundY(dialog, window, 3.5, 12);
+        dialog->deleteLater();
+        isShowingDialog = false;
     }
 }
 

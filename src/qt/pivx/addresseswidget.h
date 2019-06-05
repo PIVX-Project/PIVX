@@ -27,7 +27,7 @@ class AddressesWidget : public PWidget
     Q_OBJECT
 
 public:
-    explicit AddressesWidget(PIVXGUI* _window, QWidget *parent = nullptr);
+    explicit AddressesWidget(PIVXGUI* parent);
     ~AddressesWidget();
 
     void loadWalletModel() override;

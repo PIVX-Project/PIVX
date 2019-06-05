@@ -31,7 +31,7 @@ class SettingsWidget : public PWidget
     Q_OBJECT
 
 public:
-    explicit SettingsWidget(PIVXGUI* _window, QWidget *parent = nullptr);
+    explicit SettingsWidget(PIVXGUI* parent);
     ~SettingsWidget();
 
     void loadClientModel() override;
@@ -43,23 +43,19 @@ signals:
     /** Get restart command-line parameters and handle restart */
     void handleRestart(QStringList args);
 
-
 private slots:
     // File
-
     void onFileClicked();
     void onBackupWalletClicked();
     void onSignMessageClicked();
     void onVerifyMessageClicked();
 
     // Wallet Configuration
-
     void onConfigurationClicked();
     void onBipToolClicked();
     void onMultisendClicked();
 
     // Options
-
     void onOptionsClicked();
     void onMainOptionsClicked();
     void onWalletOptionsClicked();
@@ -67,23 +63,19 @@ private slots:
     void onWindowOptionsClicked();
     void onDisplayOptionsClicked();
 
-
     // Tools
-
     void onToolsClicked();
     void onInformationClicked();
     void onDebugConsoleClicked();
     void onWalletRepairClicked();
 
     // Help
-
     void onHelpClicked();
     void onFaqClicked();
     void onAboutClicked();
 
 private:
     Ui::SettingsWidget *ui;
-    PIVXGUI* window;
 
     SettingsBackupWallet *settingsBackupWallet;
     SettingsBitToolWidget *settingsBitToolWidget;
