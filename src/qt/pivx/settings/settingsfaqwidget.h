@@ -14,6 +14,9 @@ class SettingsFaqWidget : public QDialog
 public:
     explicit SettingsFaqWidget(QWidget *parent = nullptr);
     ~SettingsFaqWidget();
+
+public slots:
+   void windowResizeEvent(QResizeEvent* event);
 private slots:
     void onFaq1Clicked();
     void onFaq2Clicked();

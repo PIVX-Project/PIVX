@@ -14,14 +14,13 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
     ui->container->setProperty("cssClass", "container-welcome");
 
     ui->labelTitle->setProperty("cssClass", "text-title-faq");
-    ui->labelTitle->setText("Frequently Asked Questions");
+    ui->labelTitle->setText(tr("Frequently Asked Questions"));
 
     ui->labelWebLink->setProperty("cssClass", "text-content-white");
-    ui->labelWebLink->setText("You can read more here");
+    ui->labelWebLink->setText(tr("You can read more here"));
 
 
     // Content
-
     ui->labelNumber1->setProperty("cssClass", "container-number-faq");
     ui->labelNumber1->setText("1");
     ui->labelNumber2->setProperty("cssClass", "container-number-faq");
@@ -39,27 +38,24 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
     ui->labelNumber8->setProperty("cssClass", "container-number-faq");
     ui->labelNumber8->setText("8");
 
-
-
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle-faq");
-    ui->labelSubtitle1->setText("What is PIVX");
+    ui->labelSubtitle1->setText(tr("What is PIVX"));
     ui->labelSubtitle2->setProperty("cssClass", "text-subtitle-faq");
-    ui->labelSubtitle2->setText("Why my PIV are unspendable");
+    ui->labelSubtitle2->setText(tr("Why my PIV are unspendable"));
     ui->labelSubtitle3->setProperty("cssClass", "text-subtitle-faq");
-    ui->labelSubtitle3->setText("PIVX privacy? What is zPIV, zerocoin.");
+    ui->labelSubtitle3->setText(tr("PIVX privacy? What is zPIV, zerocoin."));
     ui->labelSubtitle4->setProperty("cssClass", "text-subtitle-faq");
-    ui->labelSubtitle4->setText("Why my zPIV are unspendable");
+    ui->labelSubtitle4->setText(tr("Why my zPIV are unspendable"));
     ui->labelSubtitle5->setProperty("cssClass", "text-subtitle-faq");
-    ui->labelSubtitle5->setText("Why my wallet convert my balance into zPIV automatically?");
+    ui->labelSubtitle5->setText(tr("Why my wallet convert my balance into zPIV automatically?"));
     ui->labelSubtitle6->setProperty("cssClass", "text-subtitle-faq");
-    ui->labelSubtitle6->setText("How do i receive PIV/zPIV?");
+    ui->labelSubtitle6->setText(tr("How do i receive PIV/zPIV?"));
     ui->labelSubtitle7->setProperty("cssClass", "text-subtitle-faq");
-    ui->labelSubtitle7->setText("How do i stake PIV/zPIV?");
+    ui->labelSubtitle7->setText(tr("How do i stake PIV/zPIV?"));
     ui->labelSubtitle8->setProperty("cssClass", "text-subtitle-faq");
-    ui->labelSubtitle8->setText("Where i should go if i need support?");
+    ui->labelSubtitle8->setText(tr("Where i should go if i need support?"));
 
     ui->labelContent1->setProperty("cssClass", "text-content-faq");
-
     ui->labelContent2->setProperty("cssClass", "text-content-faq");
     ui->labelContent3->setProperty("cssClass", "text-content-faq");
     ui->labelContent3->setOpenExternalLinks( true );
@@ -73,17 +69,15 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
 
     // Exit button
 
-    ui->pushButtonExit->setText("Exit");
+    ui->pushButtonExit->setText(tr("Exit"));
     ui->pushButtonExit->setProperty("cssClass", "btn-faq-exit");
 
     // Web Link
-
     ui->pushButtonWebLink->setText("https://PIVX.org/zpiv");
     ui->pushButtonWebLink->setProperty("cssClass", "btn-faq-web");
 
 
     // Questions buttons
-
     ui->containerButtons->setProperty("cssClass", "container-faq-buttons");
 
     ui->pushButtonFaq1->setProperty("cssClass", "btn-faq-options");
@@ -107,6 +101,9 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
     connect(ui->pushButtonFaq6, SIGNAL(clicked()), this, SLOT(onFaq6Clicked()));
     connect(ui->pushButtonFaq7, SIGNAL(clicked()), this, SLOT(onFaq7Clicked()));
     connect(ui->pushButtonFaq8, SIGNAL(clicked()), this, SLOT(onFaq8Clicked()));
+
+    if (parent)
+        connect(parent, SIGNAL(windowResizeEvent(QResizeEvent*)), this, SLOT(windowResizeEvent(QResizeEvent*)));
 
 }
 
@@ -143,7 +140,14 @@ void SettingsFaqWidget::onFaq8Clicked(){
     ui->scrollAreaFaq->verticalScrollBar()->setValue(ui->widgetFaq8->y());
 }
 
-SettingsFaqWidget::~SettingsFaqWidget()
-{
+void SettingsFaqWidget::windowResizeEvent(QResizeEvent* event){
+    QWidget* w = qobject_cast<QWidget*>(parent());
+    this->resize(w->width(), w->height());
+    this->move(QPoint(0, 0));
+}
+
+SettingsFaqWidget::~SettingsFaqWidget(){
     delete ui;
 }
+
+
