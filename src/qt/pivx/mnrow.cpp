@@ -12,10 +12,11 @@ MNRow::MNRow(QWidget *parent) :
     setCssProperty(ui->labelDate, "text-list-caption");
 }
 
-void MNRow::updateView(QString address, QString label)
+void MNRow::updateView(QString address, QString label, QString status)
 {
     ui->labelName->setText(label);
     ui->labelAddress->setText(address);
+    ui->labelDate->setText("Status: " + status);
 }
 
 MNRow::~MNRow()

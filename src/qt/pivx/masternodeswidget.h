@@ -43,6 +43,7 @@ private:
 
 
     void startAlias(QString strAlias);
+    void updateListState();
 };
 
 #endif // MASTERNODESWIDGET_H

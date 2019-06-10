@@ -47,6 +47,10 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
                 return nodes.uniqueKeys().value(row);
             case ADDRESS:
                 return nodes.values().value(row).first;
+            case STATUS: {
+                std::pair<QString, CMasternode*> pair = nodes.values().value(row);
+                return (pair.second) ? QString::fromStdString(pair.second->GetStatus()) : "MISSING";
+            }
         }
     }
     return QVariant();
@@ -64,4 +68,15 @@ QModelIndex MNModel::index(int row, int column, const QModelIndex& parent) const
     } else {
         return QModelIndex();
     }
+}
+
+
+bool MNModel::removeMn(const QModelIndex& modelIndex) {
+    QString alias = modelIndex.data(Qt::DisplayRole).toString();
+    int idx = modelIndex.row();
+    beginRemoveRows(QModelIndex(), idx, idx);
+    nodes.take(alias);
+    endRemoveRows();
+    emit dataChanged(index(idx, 0, QModelIndex()), index(idx, 5, QModelIndex()) );
+    return true;
 }

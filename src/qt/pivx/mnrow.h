@@ -15,7 +15,7 @@ public:
     explicit MNRow(QWidget *parent = nullptr);
     ~MNRow();
 
-    void updateView(QString address, QString label);
+    void updateView(QString address, QString label, QString status);
 
 signals:
     void onMenuClicked();

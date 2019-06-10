@@ -17,6 +17,18 @@ void CMasternodeConfig::add(std::string alias, std::string ip, std::string privK
     entries.push_back(cme);
 }
 
+void CMasternodeConfig::remove(std::string alias) {
+    int pos = -1;
+    for (int i = 0; i < entries.size(); ++i) {
+        CMasternodeEntry e = entries[i];
+        if (e.getAlias() == alias) {
+            pos = i;
+            break;
+        }
+    }
+    entries.erase(entries.begin() + pos);
+}
+
 bool CMasternodeConfig::read(std::string& strErr)
 {
     int linenumber = 1;

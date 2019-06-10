@@ -14,6 +14,10 @@
 #include "wallet/wallet.h"
 #include "walletmodel.h"
 #include "askpassphrasedialog.h"
+#include "util.h"
+#include <boost/filesystem.hpp>
+#include <iostream>
+#include <fstream>
 
 #include <QMessageBox>
 #include <QTimer>
@@ -38,7 +42,8 @@ public:
         MNRow* row = static_cast<MNRow*>(holder);
         QString label = index.data(Qt::DisplayRole).toString();
         QString address = index.sibling(index.row(), MNModel::ADDRESS).data(Qt::DisplayRole).toString();
-        row->updateView("Address: " + address, label);
+        QString status = index.sibling(index.row(), MNModel::STATUS).data(Qt::DisplayRole).toString();
+        row->updateView("Address: " + address, label, status);
     }
 
     QColor rectColor(bool isHovered, bool isSelected) override{
@@ -114,13 +119,17 @@ void MasterNodesWidget::loadWalletModel(){
     if(walletModel) {
         ui->listMn->setModel(mnModel);
         ui->listMn->setModelColumn(AddressTableModel::Label);
-        if (mnModel->rowCount() > 0) {
-            ui->listMn->setVisible(true);
-            ui->emptyContainer->setVisible(false);
-        } else {
-            ui->listMn->setVisible(false);
-            ui->emptyContainer->setVisible(true);
-        }
+        updateListState();
+    }
+}
+
+void MasterNodesWidget::updateListState() {
+    if (mnModel->rowCount() > 0) {
+        ui->listMn->setVisible(true);
+        ui->emptyContainer->setVisible(false);
+    } else {
+        ui->listMn->setVisible(false);
+        ui->emptyContainer->setVisible(true);
     }
 }
 
@@ -129,7 +138,7 @@ void MasterNodesWidget::onMNClicked(const QModelIndex &index){
     QRect rect = ui->listMn->visualRect(index);
     QPoint pos = rect.topRight();
     pos.setX(pos.x() - (DECORATION_SIZE * 2));
-    pos.setY(pos.y() + (DECORATION_SIZE));
+    pos.setY(pos.y() + (DECORATION_SIZE * 1.5));
     if(!this->menu){
         this->menu = new TooltipMenu(window, this);
         this->menu->setEditBtnText(tr("Start"));
@@ -155,17 +164,10 @@ void MasterNodesWidget::onEditMNClicked(){
         ask(tr("Start Master Node"), tr("Are you sure you want to start masternode %1?").arg(strAlias), &ret);
 
         if (ret) {
-            WalletModel::EncryptionStatus encStatus = walletModel->getEncryptionStatus();
-
-            if (encStatus == walletModel->Locked || encStatus == walletModel->UnlockedForAnonymizationOnly) {
-                WalletModel::UnlockContext ctx(walletModel->requestUnlock(AskPassphraseDialog::Context::Unlock_Full));
-
-                if (!ctx.isValid()) return; // Unlock wallet was cancelled
-
-                startAlias(strAlias);
+            if (!walletModel->isWalletUnlocked()) {
+                inform(tr("Wallet locked, you need to unlock it to perform this action"));
                 return;
             }
-
             startAlias(strAlias);
         }
     }
@@ -201,7 +203,98 @@ void MasterNodesWidget::startAlias(QString strAlias)
 }
 
 void MasterNodesWidget::onDeleteMNClicked(){
-    // TODO: Remove Master Node unlocking the balance.
+    QString qAliasString = index.data(Qt::DisplayRole).toString();
+    std::string aliasToRemove = qAliasString.toStdString();
+
+    bool ret = false;
+    ask(tr("Delete Master Node"), tr("You are just about to delete Master Node:\n%1\n\nAre you sure?").arg(qAliasString), &ret);
+
+    if (!ret)
+        return;
+
+    std::string strConfFile = "masternode.conf";
+    std::string strDataDir = GetDataDir().string();
+    if (strConfFile != boost::filesystem::basename(strConfFile) + boost::filesystem::extension(strConfFile)){
+        throw std::runtime_error(strprintf(_("masternode.conf %s resides outside data directory %s"), strConfFile, strDataDir));
+    }
+
+    filesystem::path pathBootstrap = GetDataDir() / strConfFile;
+    if (filesystem::exists(pathBootstrap)) {
+        boost::filesystem::path pathMasternodeConfigFile = GetMasternodeConfigFile();
+        boost::filesystem::ifstream streamConfig(pathMasternodeConfigFile);
+
+        if (!streamConfig.good()) {
+            inform(tr("Invalid masternode.conf file"));
+            return;
+        }
+
+        int lineNumToRemove = -1;
+        int linenumber = 1;
+        std::string lineCopy = "";
+        for (std::string line; std::getline(streamConfig, line); linenumber++) {
+            if (line.empty()) continue;
+
+            std::istringstream iss(line);
+            std::string comment, alias, ip, privKey, txHash, outputIndex;
+
+            if (iss >> comment) {
+                if (comment.at(0) == '#') continue;
+                iss.str(line);
+                iss.clear();
+            }
+
+            if (!(iss >> alias >> ip >> privKey >> txHash >> outputIndex)) {
+                iss.str(line);
+                iss.clear();
+                if (!(iss >> alias >> ip >> privKey >> txHash >> outputIndex)) {
+                    streamConfig.close();
+                    inform(tr("Error parsing masternode.conf file"));
+                    return;
+                }
+            }
+
+            if (aliasToRemove == alias) {
+                lineNumToRemove = linenumber;
+            } else
+                lineCopy += line + "\n";
+
+        }
+
+        if (lineCopy.size() == 0) {
+            lineCopy = "# Masternode config file\n"
+                                    "# Format: alias IP:port masternodeprivkey collateral_output_txid collateral_output_index\n"
+                                    "# Example: mn1 127.0.0.2:51472 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0\n";
+        }
+
+        streamConfig.close();
+
+        if (lineNumToRemove != -1) {
+            boost::filesystem::path pathConfigFile("masternode_temp.conf");
+            if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir() / pathConfigFile;
+            FILE* configFile = fopen(pathConfigFile.string().c_str(), "w");
+            fwrite(lineCopy.c_str(), std::strlen(lineCopy.c_str()), 1, configFile);
+            fclose(configFile);
+
+            boost::filesystem::path pathOldConfFile("old_masternode.conf");
+            if (!pathOldConfFile.is_complete()) pathOldConfFile = GetDataDir() / pathOldConfFile;
+            if (filesystem::exists(pathOldConfFile)) {
+                filesystem::remove(pathOldConfFile);
+            }
+            rename(pathMasternodeConfigFile, pathOldConfFile);
+
+            boost::filesystem::path pathNewConfFile("masternode.conf");
+            if (!pathNewConfFile.is_complete()) pathNewConfFile = GetDataDir() / pathNewConfFile;
+            rename(pathConfigFile, pathNewConfFile);
+
+            // Remove alias
+            masternodeConfig.remove(aliasToRemove);
+            // Update list
+            mnModel->removeMn(index);
+            updateListState();
+        }
+    } else{
+        inform(tr("masternode.conf file doesn't exists"));
+    }
 }
 
 void MasterNodesWidget::onCreateMNClicked(){
