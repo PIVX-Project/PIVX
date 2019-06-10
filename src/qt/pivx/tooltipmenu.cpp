@@ -15,10 +15,10 @@ TooltipMenu::TooltipMenu(PIVXGUI *_window, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->container->setProperty("cssClass", "container-list-menu");
-    ui->btnCopy->setProperty("cssClass", "btn-list-menu");
-    ui->btnDelete->setProperty("cssClass", "btn-list-menu");
-    ui->btnEdit->setProperty("cssClass", "btn-list-menu");
+    setCssProperty(ui->container, "container-list-menu");
+    setCssProperty(ui->btnCopy, "btn-list-menu");
+    setCssProperty(ui->btnDelete, "btn-list-menu");
+    setCssProperty(ui->btnEdit, "btn-list-menu");
 
     connect(ui->btnCopy, SIGNAL(clicked()), this, SLOT(copyClicked()));
     connect(ui->btnDelete, SIGNAL(clicked()), this, SLOT(deleteClicked()));
@@ -29,8 +29,16 @@ void TooltipMenu::setEditBtnText(QString btnText){
     ui->btnEdit->setText(btnText);
 }
 
+void TooltipMenu::setDeleteBtnText(QString btnText){
+    ui->btnDelete->setText(btnText);
+}
+
 void TooltipMenu::setCopyBtnVisible(bool visible){
     ui->btnCopy->setVisible(visible);
+}
+
+void TooltipMenu::setDeleteBtnVisible(bool visible){
+    ui->btnDelete->setVisible(visible);
 }
 
 void TooltipMenu::deleteClicked(){

@@ -27,8 +27,8 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
                                                                                                             mode(mode),
                                                                                                             model(model),
                                                                                                             context(context),
-                                                                                                            btnWatch(new QCheckBox()),
-                                                                                                            fCapsLock(false)
+                                                                                                            fCapsLock(false),
+                                                                                                            btnWatch(new QCheckBox())
 {
     ui->setupUi(this);
     this->setStyleSheet(GUIUtil::loadStyleSheet());
@@ -358,7 +358,7 @@ void AskPassphraseDialog::onError(int type, QString error){
 
 void AskPassphraseDialog::initWatch(QWidget *parent) {
     btnWatch = new QCheckBox(parent);
-    btnWatch->setProperty("cssClass", "btn-watch-password");
+    setCssProperty(btnWatch, "btn-watch-password");
     btnWatch->setChecked(false);
     QSize BUTTON_CONTACT_SIZE = QSize(24, 24);
     btnWatch->setMinimumSize(BUTTON_CONTACT_SIZE);
@@ -366,7 +366,6 @@ void AskPassphraseDialog::initWatch(QWidget *parent) {
     btnWatch->show();
     btnWatch->raise();
 
-    int posXX = ui->layoutEdit->width() - 30;
     int posYY = 8;
     btnWatch->move(450, posYY);
 }

@@ -28,7 +28,9 @@ public:
     virtual void showEvent(QShowEvent *event) override;
 
     void setEditBtnText(QString btnText);
+    void setDeleteBtnText(QString btnText);
     void setCopyBtnVisible(bool visible);
+    void setDeleteBtnVisible(bool visible);
 
 signals:
     void onDeleteClicked();
