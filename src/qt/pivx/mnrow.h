@@ -17,6 +17,8 @@ public:
 
     void updateView(QString address, QString label);
 
+signals:
+    void onMenuClicked();
 private:
     Ui::MNRow *ui;
 };

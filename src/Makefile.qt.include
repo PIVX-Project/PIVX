@@ -189,6 +189,7 @@ QT_MOC_CPP = \
   qt/pivx/moc_addresslabelrow.cpp \
   qt/pivx/moc_contactdropdownrow.cpp \
   qt/pivx/moc_optionbutton.cpp \
+  qt/pivx/moc_mnmodel.cpp \
   qt/pivx/moc_mnrow.cpp \
   qt/pivx/moc_masternodeswidget.cpp \
   qt/pivx/moc_myaddressrow.cpp \
@@ -330,6 +331,7 @@ BITCOIN_QT_H = \
   qt/pivx/addresslabelrow.h \
   qt/pivx/contactdropdownrow.h \
   qt/pivx/optionbutton.h \
+  qt/pivx/mnmodel.h \
   qt/pivx/mnrow.h \
   qt/pivx/masternodeswidget.h \
   qt/pivx/myaddressrow.h \
@@ -701,6 +703,7 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/contactdropdownrow.cpp \
   qt/pivx/contactsdropdown.cpp \
   qt/pivx/optionbutton.cpp \
+  qt/pivx/mnmodel.cpp \
   qt/pivx/mnrow.cpp \
   qt/pivx/masternodeswidget.cpp \
   qt/pivx/myaddressrow.cpp \

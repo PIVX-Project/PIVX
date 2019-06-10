@@ -4,6 +4,8 @@
 #include <QWidget>
 #include "qt/pivx/pwidget.h"
 #include "qt/pivx/furabstractlistitemdelegate.h"
+#include "qt/pivx/mnmodel.h"
+#include "qt/pivx/tooltipmenu.h"
 
 class PIVXGUI;
 
@@ -28,10 +30,19 @@ public:
 private slots:
     void onCreateMNClicked();
     void changeTheme(bool isLightTheme, QString &theme);
+    void onMNClicked(const QModelIndex &index);
+    void onEditMNClicked();
+    void onDeleteMNClicked();
+
 private:
     Ui::MasterNodesWidget *ui;
     FurAbstractListItemDelegate *delegate;
+    MNModel *mnModel = nullptr;
+    TooltipMenu* menu = nullptr;
+    QModelIndex index;
 
+
+    void startAlias(QString strAlias);
 };
 
 #endif // MASTERNODESWIDGET_H

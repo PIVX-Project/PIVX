@@ -47,7 +47,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="spacing">
-         <number>0</number>
+         <number>6</number>
         </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -113,7 +113,7 @@
          <layout class="QVBoxLayout" name="verticalLayout_6"/>
         </item>
         <item>
-         <widget class="QListWidget" name="listMn"/>
+         <widget class="QListView" name="listMn"/>
         </item>
         <item>
          <widget class="QFrame" name="emptyContainer">
