@@ -29,6 +29,7 @@ public:
 
     void setEditBtnText(QString btnText);
     void setDeleteBtnText(QString btnText);
+    void setCopyBtnText(QString btnText);
     void setCopyBtnVisible(bool visible);
     void setDeleteBtnVisible(bool visible);
 

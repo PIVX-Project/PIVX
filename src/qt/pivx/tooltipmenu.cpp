@@ -33,6 +33,10 @@ void TooltipMenu::setDeleteBtnText(QString btnText){
     ui->btnDelete->setText(btnText);
 }
 
+void TooltipMenu::setDeleteBtnText(QString btnText){
+    ui->btnCopy->setText(btnText);
+}
+
 void TooltipMenu::setCopyBtnVisible(bool visible){
     ui->btnCopy->setVisible(visible);
 }

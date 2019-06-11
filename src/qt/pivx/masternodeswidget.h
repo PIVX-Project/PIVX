@@ -33,6 +33,7 @@ private slots:
     void onMNClicked(const QModelIndex &index);
     void onEditMNClicked();
     void onDeleteMNClicked();
+    void onInfoMNClicked();
 
 private:
     Ui::MasterNodesWidget *ui;

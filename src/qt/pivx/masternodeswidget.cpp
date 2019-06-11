@@ -88,7 +88,7 @@ MasterNodesWidget::MasterNodesWidget(PIVXGUI *parent) :
     ui->labelTitle->setFont(fontLight);
 
     /* Subtitle */
-    ui->labelSubtitle1->setText(tr("Minting zPIV anonymizes your PIV by removing transaction history,\nmaking transactions untraceable "));
+    ui->labelSubtitle1->setText(tr("Full nodes that incentivize node operators to perform the core consensus functions\nand vote on the treasury system receiving a periodic reward."));
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
     /* Buttons */
@@ -96,8 +96,8 @@ MasterNodesWidget::MasterNodesWidget(PIVXGUI *parent) :
     setCssBtnPrimary(ui->pushButtonSave);
 
     /* Options */
-    ui->btnAbout->setTitleClassAndText("btn-title-grey", "About Masternode");
-    ui->btnAbout->setSubTitleClassAndText("text-subtitle", "Select the source of the coins for your transaction.");
+    ui->btnAbout->setTitleClassAndText("btn-title-grey", "What is a Master Node?");
+    ui->btnAbout->setSubTitleClassAndText("text-subtitle", "FAQ explaining what Master Nodes are");
 
     setCssProperty(ui->listMn, "container");
     ui->listMn->setItemDelegate(delegate);
@@ -143,10 +143,11 @@ void MasterNodesWidget::onMNClicked(const QModelIndex &index){
         this->menu = new TooltipMenu(window, this);
         this->menu->setEditBtnText(tr("Start"));
         this->menu->setDeleteBtnText(tr("Delete"));
-        this->menu->setCopyBtnVisible(false);
+        this->menu->setCopyBtnText(tr("Info"));
         connect(this->menu, &TooltipMenu::message, this, &AddressesWidget::message);
         connect(this->menu, SIGNAL(onEditClicked()), this, SLOT(onEditMNClicked()));
         connect(this->menu, SIGNAL(onDeleteClicked()), this, SLOT(onDeleteMNClicked()));
+        connect(this->menu, SIGNAL(onCopyClicked()), this, SLOT(onInfoMNClicked()));
         this->menu->adjustSize();
     }else {
         this->menu->hide();
@@ -200,6 +201,10 @@ void MasterNodesWidget::startAlias(QString strAlias)
     inform(strStatusHtml);
 
     // TODO: Update MN list.
+}
+
+void MasterNodesWidget::onInfoMNClicked(){
+
 }
 
 void MasterNodesWidget::onDeleteMNClicked(){
