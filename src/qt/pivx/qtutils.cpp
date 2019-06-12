@@ -208,6 +208,10 @@ void setCssTextBodyDialog(QWidget* widget) {
     setCssProperty(widget, "text-body1-dialog", false);
 }
 
+void setCssProperty(std::initializer_list<QWidget*> args, QString value){
+    foreach (QWidget* w, args) { setCssProperty(w, value); }
+}
+
 void setCssProperty(QWidget *wid, QString value, bool forceUpdate){
     wid->setProperty("cssClass", value);
     forceUpdateStyle(wid, forceUpdate);

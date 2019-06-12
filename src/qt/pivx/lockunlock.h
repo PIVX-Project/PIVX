@@ -22,6 +22,7 @@ public:
     ~LockUnlock();
     void updateStatus(WalletModel::EncryptionStatus status);
     int lock = 0;
+    bool isHovered();
 signals:
     void Mouse_Entered();
     void Mouse_Leave();
@@ -38,6 +39,7 @@ public slots:
 
 private:
     Ui::LockUnlock *ui;
+    bool isOnHover = false;
 };
 
 #endif // LOCKUNLOCK_H

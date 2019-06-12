@@ -73,10 +73,16 @@ void LockUnlock::onStakingClicked(){
 
 void LockUnlock::enterEvent(QEvent *)
 {
+    isOnHover = true;
     emit Mouse_Entered();
 }
 
 void LockUnlock::leaveEvent(QEvent *)
 {
+    isOnHover = false;
     emit Mouse_Leave();
+}
+
+bool LockUnlock::isHovered(){
+    return isOnHover;
 }

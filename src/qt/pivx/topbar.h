@@ -45,6 +45,9 @@ public slots:
 signals:
     void themeChanged(bool isLight);
     void walletSynced(bool isSync);
+
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 private slots:
     void onBtnReceiveClicked();
     void onThemeClicked();
@@ -52,6 +55,7 @@ private slots:
     void lockDropdownMouseLeave();
     void lockDropdownClicked(const StateClicked&);
     void refreshStatus();
+    void openLockUnlock();
 private:
     Ui::TopBar *ui;
     LockUnlock *lockUnlockWidget = nullptr;
@@ -59,7 +63,6 @@ private:
 
     int nDisplayUnit = -1;
     QTimer* timerStakingIcon = nullptr;
-
 };
 
 #endif // TOPBAR_H

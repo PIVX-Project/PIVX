@@ -32,40 +32,23 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     ui->containerTop->setProperty("cssClass", "container-top");
     ui->containerTop->setContentsMargins(10,4,10,10);
 
+    setCssProperty({ui->labelTitle1, ui->labelTitle2, ui->labelTitle3, ui->labelTitle4, ui->labelTitle5, ui->labelTitle6}, "text-title-topbar");
     QFont font;
     font.setWeight(QFont::Light);
-
-
-    ui->labelTitle1->setProperty("cssClass", "text-title-topbar");
     ui->labelTitle1->setFont(font);
-    ui->labelTitle2->setProperty("cssClass", "text-title-topbar");
-    ui->labelTitle1->setFont(font);
-    ui->labelTitle3->setProperty("cssClass", "text-title-topbar");
-    ui->labelTitle1->setFont(font);
-    ui->labelTitle4->setProperty("cssClass", "text-title-topbar");
-    ui->labelTitle1->setFont(font);
-    ui->labelTitle5->setProperty("cssClass", "text-title-topbar");
-    ui->labelTitle1->setFont(font);
-    ui->labelTitle6->setProperty("cssClass", "text-title-topbar");
-    ui->labelTitle1->setFont(font);
+    ui->labelTitle2->setFont(font);
+    ui->labelTitle3->setFont(font);
+    ui->labelTitle4->setFont(font);
+    ui->labelTitle5->setFont(font);
+    ui->labelTitle6->setFont(font);
 
     // Amount information top
-
     ui->widgetTopAmount->setVisible(false);
-    ui->labelAmountTopPiv->setProperty("cssClass", "amount-small-topbar");
-    ui->labelAmountTopzPiv->setProperty("cssClass", "amount-small-topbar");
-
-    ui->labelAmountPiv->setProperty("cssClass", "amount-topbar");
-    ui->labelAmountzPiv->setProperty("cssClass", "amount-topbar");
-
-    ui->labelPendingPiv->setProperty("cssClass", "amount-small-topbar");
-    ui->labelPendingzPiv->setProperty("cssClass", "amount-small-topbar");
-
-    ui->labelImmaturePiv->setProperty("cssClass", "amount-small-topbar");
-    ui->labelImmaturezPiv->setProperty("cssClass", "amount-small-topbar");
+    setCssProperty({ui->labelAmountTopPiv, ui->labelAmountTopzPiv}, "amount-small-topbar");
+    setCssProperty({ui->labelAmountPiv, ui->labelAmountzPiv}, "amount-topbar");
+    setCssProperty({ui->labelPendingPiv, ui->labelPendingzPiv, ui->labelImmaturePiv, ui->labelImmaturezPiv}, "amount-small-topbar");
 
     // Progress Sync
-
     progressBar = new QProgressBar(ui->layoutSync);
     progressBar->setRange(1, 10);
     progressBar->setValue(4);
@@ -102,7 +85,6 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
         ui->pushButtonTheme->setButtonClassStyle("cssClass", "btn-check-theme-dark");
         ui->pushButtonTheme->setButtonText("Dark Theme");
     }
-
 
     ui->qrContainer->setProperty("cssClass", "container-qr");
     ui->pushButtonQR->setProperty("cssClass", "btn-qr");
@@ -150,36 +132,44 @@ void TopBar::onThemeClicked(){
 void TopBar::onBtnLockClicked(){
     if(walletModel) {
         if (walletModel->getEncryptionStatus() == WalletModel::Unencrypted) {
-            // Encrypt dialog
             encryptWallet();
         } else {
             if (!lockUnlockWidget) {
                 lockUnlockWidget = new LockUnlock(window);
+                lockUnlockWidget->setStyleSheet("margin:0px; padding:0px;");
                 connect(lockUnlockWidget, SIGNAL(Mouse_Leave()), this, SLOT(lockDropdownMouseLeave()));
-                connect(lockUnlockWidget, SIGNAL(lockClicked(const StateClicked&)),this, SLOT(lockDropdownClicked(const StateClicked&)));
+                connect(ui->pushButtonLock, &ExpandableButton::Mouse_HoverLeave, [this](){
+                    QMetaObject::invokeMethod(this, "lockDropdownMouseLeave", Qt::QueuedConnection);
+                }); //, SLOT(lockDropdownMouseLeave()));
+                connect(lockUnlockWidget, SIGNAL(lockClicked(
+                const StateClicked&)),this, SLOT(lockDropdownClicked(
+                const StateClicked&)));
             }
 
             lockUnlockWidget->updateStatus(walletModel->getEncryptionStatus());
-            lockUnlockWidget->setFixedWidth(ui->pushButtonLock->width());
-            lockUnlockWidget->adjustSize();
-
-            lockUnlockWidget->move(
-                    ui->pushButtonLock->pos().rx() + window->getNavWidth() + 10,
-                    ui->pushButtonLock->y() + 36
-            );
-
-            lockUnlockWidget->setStyleSheet("margin:0px; padding:0px;");
-
-            lockUnlockWidget->raise();
-            lockUnlockWidget->activateWindow();
-            lockUnlockWidget->show();
-
-            // Keep open
+            if (ui->pushButtonLock->width() <= 40) {
+                ui->pushButtonLock->setExpanded();
+            }
+            // Keep it open
             ui->pushButtonLock->setKeepExpanded(true);
+            QMetaObject::invokeMethod(this, "openLockUnlock", Qt::QueuedConnection);
         }
     }
 }
 
+void TopBar::openLockUnlock(){
+    lockUnlockWidget->setFixedWidth(ui->pushButtonLock->width());
+    lockUnlockWidget->adjustSize();
+
+    lockUnlockWidget->move(
+            ui->pushButtonLock->pos().rx() + window->getNavWidth() + 10,
+            ui->pushButtonLock->y() + 36
+    );
+
+    lockUnlockWidget->raise();
+    lockUnlockWidget->activateWindow();
+    lockUnlockWidget->show();
+}
 
 void TopBar::encryptWallet() {
     if (!walletModel)
@@ -218,6 +208,7 @@ void TopBar::lockDropdownClicked(const StateClicked& state){
                     ui->pushButtonLock->setButtonText("Wallet Unlocked");
                     ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-unlock", true);
                 }
+                dlg->deleteLater();
                 break;
             }
             case 2: {
@@ -230,13 +221,13 @@ void TopBar::lockDropdownClicked(const StateClicked& state){
                     ui->pushButtonLock->setButtonText(tr("Wallet Unlocked for staking"));
                     ui->pushButtonLock->setButtonClassStyle("cssClass", "btn-check-status-staking", true);
                 }
+                dlg->deleteLater();
                 break;
             }
         }
 
         ui->pushButtonLock->setKeepExpanded(false);
         ui->pushButtonLock->setSmall();
-
         ui->pushButtonLock->update();
 
         isExecuting = false;
@@ -244,10 +235,12 @@ void TopBar::lockDropdownClicked(const StateClicked& state){
 }
 
 void TopBar::lockDropdownMouseLeave(){
-    lockUnlockWidget->hide();
-    ui->pushButtonLock->setKeepExpanded(false);
-    ui->pushButtonLock->setSmall();
-    ui->pushButtonLock->update();
+    if (lockUnlockWidget->isVisible() && !lockUnlockWidget->isHovered()) {
+        lockUnlockWidget->hide();
+        ui->pushButtonLock->setKeepExpanded(false);
+        ui->pushButtonLock->setSmall();
+        ui->pushButtonLock->update();
+    }
 }
 
 void TopBar::onBtnReceiveClicked(){
@@ -259,6 +252,7 @@ void TopBar::onBtnReceiveClicked(){
         if (openDialogWithOpaqueBackground(receiveDialog, window)) {
             inform(tr("Address Copied"));
         }
+        receiveDialog->deleteLater();
     }
 }
 
@@ -517,4 +511,9 @@ void TopBar::updateBalances(const CAmount& balance, const CAmount& unconfirmedBa
 
     ui->labelImmaturePiv->setText(GUIUtil::formatBalance(immatureBalance, nDisplayUnit));
     ui->labelImmaturezPiv->setText(GUIUtil::formatBalance(immatureZerocoinBalance, nDisplayUnit, true));
+}
+
+void TopBar::resizeEvent(QResizeEvent *event){
+    if (lockUnlockWidget && lockUnlockWidget->isVisible()) lockDropdownMouseLeave();
+    QWidget::resizeEvent(event);
 }

@@ -51,6 +51,7 @@ void setCssBtnPrimary(QPushButton *btn, bool forceUpdate = false);
 void setCssBtnSecondary(QPushButton *btn, bool forceUpdate = false);
 void setCssTextBodyDialog(std::initializer_list<QWidget*> args);
 void setCssTextBodyDialog(QWidget* widget);
+void setCssProperty(std::initializer_list<QWidget*> args, QString value);
 void setCssProperty(QWidget *wid, QString value, bool forceUpdate = false);
 void forceUpdateStyle(QWidget *widget, bool forceUpdate);
 void forceUpdateStyle(std::initializer_list<QWidget*> args);
