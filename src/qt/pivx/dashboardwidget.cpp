@@ -45,7 +45,6 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
 
     // Title
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
-
     ui->labelTitle2->setText(tr("Staking Rewards"));
     ui->labelTitle2->setProperty("cssClass", "text-title-screen");
 
@@ -72,9 +71,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv-disable");
     ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv-disable");
 
-    ui->pushButtonAll->setProperty("cssClass", "btn-check-time");
-    ui->pushButtonMonth->setProperty("cssClass", "btn-check-time");
-    ui->pushButtonYear->setProperty("cssClass", "btn-check-time");
+    setCssProperty({ui->pushButtonAll,  ui->pushButtonMonth, ui->pushButtonYear}, "btn-check-time");
     ui->comboBoxMonths->setProperty("cssClass", "btn-combo-chart-selected");
     ui->comboBoxYears->setProperty("cssClass", "btn-combo-chart-selected");
 
@@ -271,8 +268,7 @@ void DashboardWidget::walletSynced(bool sync){
 
 void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){
     static_cast<TxViewHolder*>(this->txViewDelegate->getRowFactory())->isLightTheme = isLightTheme;
-    if (hasStakes())
-        this->changeChartColors();
+    if (chart) this->changeChartColors();
 }
 
 const QStringList monthsNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
