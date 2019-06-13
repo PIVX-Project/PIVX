@@ -1,7 +1,6 @@
 #include "qt/pivx/mnmodel.h"
 
 #include "masternode-sync.h"
-#include "masternodeconfig.h"
 #include "masternodeman.h"
 #include "activemasternode.h"
 #include "sync.h"
@@ -79,4 +78,16 @@ bool MNModel::removeMn(const QModelIndex& modelIndex) {
     endRemoveRows();
     emit dataChanged(index(idx, 0, QModelIndex()), index(idx, 5, QModelIndex()) );
     return true;
+}
+
+bool MNModel::addMn(CMasternodeConfig::CMasternodeEntry* mne){
+    beginInsertRows(QModelIndex(), nodes.size(), nodes.size());
+    int nIndex;
+    if(!mne->castOutputIndex(nIndex))
+        return false;
+
+    CTxIn txin = CTxIn(uint256S(mne->getTxHash()), uint32_t(nIndex));
+    CMasternode* pmn = mnodeman.Find(txin);
+    nodes.insert(QString::fromStdString(mne->getAlias()), std::make_pair(QString::fromStdString(mne->getIp()), pmn));
+    endInsertRows();
 }

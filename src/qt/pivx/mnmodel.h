@@ -3,6 +3,7 @@
 
 #include <QAbstractTableModel>
 #include "masternode.h"
+#include "masternodeconfig.h"
 
 class MNModel : public QAbstractTableModel
 {
@@ -25,6 +26,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent) const override;
     bool removeMn(const QModelIndex& index);
+    bool addMn(CMasternodeConfig::CMasternodeEntry* entry);
 
 
 private:
