@@ -7,11 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>528</width>
-    <height>133</height>
+    <height>141</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">margin:0px; padding:0px; border:none;</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_3">
    <property name="spacing">

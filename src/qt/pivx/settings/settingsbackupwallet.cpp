@@ -33,7 +33,6 @@ SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
     ui->labelSubtitle_2->setText(tr("Change your wallet encryption passphrase for another one that you like. This will decrypt and encrypt your whole data under the new passphrase.\nRemember to write it down to not lose access to your funds."));
     ui->labelSubtitle_2->setProperty("cssClass", "text-subtitle");
 
-
     // Location
     ui->labelSubtitleLocation->setText(tr("Where"));
     ui->labelSubtitleLocation->setProperty("cssClass", "text-title");
@@ -70,11 +69,13 @@ void SettingsBackupWallet::backupWallet(){
         inform(walletModel->backupWallet(filename) ? tr("Backup created") : tr("Backup creation failed"));
         filename = QString();
         ui->pushButtonDocuments->setText(tr("Set a folder location"));
+    } else {
+        inform(tr("Please select a folder to export the backup first."));
     }
 }
 
 void SettingsBackupWallet::changePassphrase(){
-    emit showHide(true);
+    showHideOp(true);
     AskPassphraseDialog *dlg = nullptr;
     if (walletModel->getEncryptionStatus() == WalletModel::Unencrypted) {
         dlg = new AskPassphraseDialog(AskPassphraseDialog::Mode::ChangePass, window,

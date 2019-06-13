@@ -47,6 +47,14 @@ void PWidget::emitMessage(const QString& title, const QString& body, unsigned in
     emit message(title, body, style, ret);
 }
 
+bool PWidget::verifyWalletUnlocked(){
+    if (!walletModel->isWalletUnlocked()) {
+        inform(tr("Wallet locked, you need to unlock it to perform this action"));
+        return false;
+    }
+    return true;
+}
+
 void PWidget::loadClientModel(){
     // override
 }

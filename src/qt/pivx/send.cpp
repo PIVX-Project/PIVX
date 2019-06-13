@@ -491,7 +491,6 @@ void SendWidget::updateEntryLabels(QList<SendCoinsRecipient> recipients){
     }
 }
 
-
 void SendWidget::processSendCoinsReturn(const WalletModel::SendCoinsReturn& sendCoinsReturn, const QString& msgArg, bool fPrepare)
 {
     bool fAskForUnlock = false;

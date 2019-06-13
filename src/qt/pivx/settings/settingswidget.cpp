@@ -15,7 +15,6 @@
 #include "qt/pivx/qtutils.h"
 #include <QFile>
 #include <QScrollBar>
-#include "qt/pivx/qtutils.h"
 #include <QDataWidgetMapper>
 #include "optionsmodel.h"
 #include "clientmodel.h"

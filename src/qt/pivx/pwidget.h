@@ -48,6 +48,8 @@ protected:
     void ask(const QString& title, const QString& message, bool* ret);
     void emitMessage(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
 
+    bool verifyWalletUnlocked();
+
 private:
     void init();
 
