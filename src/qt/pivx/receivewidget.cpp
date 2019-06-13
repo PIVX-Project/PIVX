@@ -182,7 +182,7 @@ void ReceiveWidget::refreshView(QString refreshAddress){
 void ReceiveWidget::updateLabel(){
     if(!info->address.isEmpty()) {
         // Check if address label exists
-        QString label = this->addressTableModel->labelForAddress(info->address);
+        QString label = addressTableModel->labelForAddress(info->address);
         if (!label.isEmpty()) {
             // TODO: Show label.. complete me..
             ui->labelLabel->setVisible(true);
@@ -219,8 +219,9 @@ void ReceiveWidget::onLabelClicked(){
     if(walletModel && !isShowingDialog) {
         isShowingDialog = true;
         showHideOp(true);
-        // TODO: Open this to "update" the label if the address already has it.
         AddNewContactDialog *dialog = new AddNewContactDialog(window);
+        dialog->setTexts(tr("Edit Address Label"));
+        dialog->setData(info->address, addressTableModel->labelForAddress(info->address));
         if (openDialogWithOpaqueBackgroundY(dialog, window, 3.5, 6)) {
             QString label = dialog->getLabel();
             const CBitcoinAddress address = CBitcoinAddress(info->address.toUtf8().constData());
@@ -245,11 +246,7 @@ void ReceiveWidget::onLabelClicked(){
 
 void ReceiveWidget::onNewAddressClicked(){
     try {
-        if (!walletModel->isWalletUnlocked()) {
-            inform(tr("Wallet locked, you need to unlock it to perform this action"));
-            return;
-        }
-
+        if (!verifyWalletUnlocked()) return;
         CBitcoinAddress address = walletModel->getNewAddress("");
         updateQr(QString::fromStdString(address.ToString()));
         ui->labelAddress->setText(!info->address.isEmpty() ? info->address : tr("No address"));
@@ -271,10 +268,7 @@ void ReceiveWidget::onCopyClicked(){
 void ReceiveWidget::onRequestClicked(){
     if(walletModel && !isShowingDialog) {
         isShowingDialog = true;
-        if (!walletModel->isWalletUnlocked()) {
-            inform(tr("Wallet locked, you need to unlock it to perform this action"));
-            return;
-        }
+        if (!verifyWalletUnlocked()) return;
         showHideOp(true);
         RequestDialog *dialog = new RequestDialog(window);
         dialog->setWalletModel(walletModel);

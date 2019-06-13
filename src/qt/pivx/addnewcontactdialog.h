@@ -15,7 +15,7 @@ public:
     explicit AddNewContactDialog(QWidget *parent = nullptr);
     ~AddNewContactDialog();
 
-    void setTexts(QString title, const char* message);
+    void setTexts(QString title, const char* message = nullptr);
     void setData(QString address, QString label);
     QString getLabel();
 
