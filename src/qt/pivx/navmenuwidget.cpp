@@ -1,6 +1,5 @@
 #include "qt/pivx/navmenuwidget.h"
 #include "qt/pivx/forms/ui_navmenuwidget.h"
-#include <QFile>
 #include "qt/pivx/PIVXGUI.h"
 #include "qt/pivx/qtutils.h"
 #include "clientversion.h"
@@ -11,45 +10,45 @@ NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
     window(mainWindow)
 {
     ui->setupUi(this);
-
     this->setFixedWidth(100);
-
-    ui->navContainer_2->setProperty("cssClass", "container-nav");
-
-    ui->imgLogo->setProperty("cssClass", "img-nav-logo");
+    setCssProperty(ui->navContainer_2, "container-nav");
+    setCssProperty(ui->imgLogo, "img-nav-logo");
 
     // App version
     ui->labelVersion->setText("v 4.0.0");//QString(tr("v %1")).arg(QString::fromStdString(FormatFullVersion())));
     ui->labelVersion->setProperty("cssClass", "text-title-white");
 
     // Buttons
-    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash-active");
+    ui->btnDashboard->setProperty("name", "dash");
     ui->btnDashboard->setText("HOME\n");
     ui->btnDashboard->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    ui->btnSend->setProperty("cssClass", "btn-nav-send");
+    ui->btnSend->setProperty("name", "send");
     ui->btnSend->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     ui->btnSend->setText("SEND\n");
 
-    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
+    ui->btnAddress->setProperty("name", "address");
     ui->btnAddress->setText("CONTACTS\n");
     ui->btnAddress->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
+    ui->btnPrivacy->setProperty("name", "privacy");
     ui->btnPrivacy->setText("PRIVACY\n");
     ui->btnPrivacy->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
+    ui->btnMaster->setProperty("name", "master");
     ui->btnMaster->setText("MASTER\r\nNODES");
     ui->btnMaster->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
+    ui->btnSettings->setProperty("name", "settings");
     ui->btnSettings->setText("SETTINGS\n");
     ui->btnSettings->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
+    ui->btnReceive->setProperty("name", "receive");
     ui->btnReceive->setText("RECEIVE\n");
     ui->btnReceive->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+    btns = {ui->btnDashboard, ui->btnSend, ui->btnReceive, ui->btnAddress, ui->btnPrivacy, ui->btnMaster, ui->btnSettings};
+    onNavSelected(ui->btnDashboard, true);
 
     connectActions();
 }
@@ -71,106 +70,72 @@ void NavMenuWidget::connectActions() {
     ui->btnReceive->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_3));
     ui->btnAddress->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_4));
     ui->btnPrivacy->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_5));
-    ui->btnSettings->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_6));
+    ui->btnMaster->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_6));
+    ui->btnSettings->setShortcut(QKeySequence(SHORT_KEY + Qt::Key_7));
 }
 
 void NavMenuWidget::onSendClicked(){
     window->goToSend();
-    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
-    ui->btnSend->setProperty("cssClass", "btn-nav-send-active");
-    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
-    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
-    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
-    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
-    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateButtonStyles();
+    onNavSelected(ui->btnSend);
 }
 
 void NavMenuWidget::onDashboardClicked(){
     window->goToDashboard();
-    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash-active");
-    ui->btnSend->setProperty("cssClass", "btn-nav-send");
-    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
-    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
-    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
-    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
-    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateButtonStyles();
+    onNavSelected(ui->btnDashboard);
 }
 
 void NavMenuWidget::onAddressClicked(){
     window->goToAddresses();
-    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
-    ui->btnSend->setProperty("cssClass", "btn-nav-send");
-    ui->btnAddress->setProperty("cssClass", "btn-nav-address-active");
-    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
-    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
-    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
-    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateButtonStyles();
+    onNavSelected(ui->btnAddress);
 }
 
 
 void NavMenuWidget::onPrivacyClicked(){
     window->goToPrivacy();
-    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
-    ui->btnSend->setProperty("cssClass", "btn-nav-send");
-    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
-    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy-active");
-    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
-    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
-    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateButtonStyles();
+    onNavSelected(ui->btnPrivacy);
 }
 
 void NavMenuWidget::onMasterNodesClicked(){
     window->goToMasterNodes();
-    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
-    ui->btnSend->setProperty("cssClass", "btn-nav-send");
-    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
-    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
-    ui->btnMaster->setProperty("cssClass", "btn-nav-master-active");
-    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
-    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateButtonStyles();
+    onNavSelected(ui->btnMaster);
 }
 
 void NavMenuWidget::onSettingsClicked(){
     window->goToSettings();
-    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
-    ui->btnSend->setProperty("cssClass", "btn-nav-send");
-    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
-    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
-    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
-    ui->btnSettings->setProperty("cssClass", "btn-nav-settings-active");
-    ui->btnReceive->setProperty("cssClass", "btn-nav-receive");
-    updateButtonStyles();
+    onNavSelected(ui->btnSettings);
 }
 
 void NavMenuWidget::onReceiveClicked(){
     window->goToReceive();
-    ui->btnDashboard->setProperty("cssClass", "btn-nav-dash");
-    ui->btnSend->setProperty("cssClass", "btn-nav-send");
-    ui->btnAddress->setProperty("cssClass", "btn-nav-address");
-    ui->btnPrivacy->setProperty("cssClass", "btn-nav-privacy");
-    ui->btnMaster->setProperty("cssClass", "btn-nav-master");
-    ui->btnSettings->setProperty("cssClass", "btn-nav-settings");
-    ui->btnReceive->setProperty("cssClass", "btn-nav-receive-active");
-    updateButtonStyles();
+    onNavSelected(ui->btnReceive);
+}
+
+void NavMenuWidget::onNavSelected(QWidget* active, bool startup) {
+    QString start = "btn-nav-";
+    foreach (QWidget* w, btns) {
+        QString clazz = start + w->property("name").toString();
+        if (w == active) {
+            clazz += "-active";
+        }
+        setCssProperty(w, clazz);
+    }
+    if (!startup) updateButtonStyles();
 }
 
 void NavMenuWidget::selectSettings(){
-    ui->btnSettings->setChecked(true);
+    onSettingsClicked();
 }
 
 void NavMenuWidget::updateButtonStyles(){
-    updateStyle(ui->btnDashboard);
-    updateStyle(ui->btnSend);
-    updateStyle(ui->btnAddress);
-    updateStyle(ui->btnPrivacy);
-    updateStyle(ui->btnMaster);
-    updateStyle(ui->btnSettings);
-    updateStyle(ui->btnReceive);
+    forceUpdateStyle({
+         ui->btnDashboard,
+         ui->btnSend,
+         ui->btnAddress,
+         ui->btnPrivacy,
+         ui->btnMaster,
+         ui->btnSettings,
+         ui->btnReceive
+    });
 }
 
 NavMenuWidget::~NavMenuWidget(){

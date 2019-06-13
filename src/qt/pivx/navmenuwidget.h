@@ -31,10 +31,11 @@ private slots:
     void updateButtonStyles();
 private:
     Ui::NavMenuWidget *ui;
-
     PIVXGUI* window;
+    QList<QWidget*> btns;
 
     void connectActions();
+    void onNavSelected(QWidget* active, bool startup = false);
 };
 
 #endif // NAVMENUWIDGET_H
