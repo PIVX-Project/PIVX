@@ -2279,7 +2279,7 @@ UniValue getautocombineinfo(const UniValue& params, bool fHelp)
     if (pwalletMain->fCombineDust) {
         obj.push_back(Pair("threshold",
                            int(pwalletMain->nAutoCombineThreshold)));
-        if (0 == pwalletMain->nAutoCombineBlockFrequency) {
+        if (pwalletMain->nAutoCombineBlockFrequency == 0) {
             obj.push_back(Pair("frequency", "nextblock"));
         } else {
             obj.push_back(Pair("frequency",
@@ -2287,7 +2287,7 @@ UniValue getautocombineinfo(const UniValue& params, bool fHelp)
         }
     }
     else {
-        if (0 == pwalletMain->nAutoCombineBlockFrequency) {
+        if (pwalletMain->nAutoCombineBlockFrequency == 0) {
             obj.push_back(Pair("threshold", int(pwalletMain->nAutoCombineThreshold)));
             obj.push_back(Pair("frequency", "startup"));
         }
@@ -2310,7 +2310,9 @@ UniValue autocombinerewards(const UniValue& params, bool fHelp)
             "autocombinerewards enable ( threshold ) ( frequency )\n"
             "\nWallet will automatically monitor for UTXOs with values below the threshold amount, "
             "and combine them into transactions sized to the threshold amount, if they reside with "
-            "the same UCC address.\n"
+            "the same PIVX address.\n"
+            "\nA threshold value of \"0\" will combine all the UTXOs, up to the maximum possible "
+            "within the maximum transaction size of a block.\n"
             "\nA frequency value of \"0\" will run the combine once, on the next available block, "
             "and once again on each wallet startup.\n"
             "\nWhen autocombinerewards runs it will create a transaction, and therefore will be subject "
@@ -2354,7 +2356,7 @@ UniValue autocombinerewards(const UniValue& params, bool fHelp)
     obj.push_back(Pair("enabled", pwalletMain->fCombineDust ? "on" : "off"));
     if (pwalletMain->fCombineDust) {
         obj.push_back(Pair("threshold", int(pwalletMain->nAutoCombineThreshold)));
-        if (0 == pwalletMain->nAutoCombineBlockFrequency) {
+        if (pwalletMain->nAutoCombineBlockFrequency == 0) {
             obj.push_back(Pair("frequency", "nextblock"));
         } else {
             obj.push_back(Pair("frequency", int(pwalletMain->nAutoCombineBlockFrequency)));

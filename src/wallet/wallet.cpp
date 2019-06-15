@@ -4190,7 +4190,7 @@ void CWallet::AutoCombineDust()
         return;
     }
 
-    if (0 != nAutoCombineBlockFrequency) {
+    if (nAutoCombineBlockFrequency != 0) {
         // If the block height hasn't exceeded our frequency; or is not a multiple of our frequency.
         if ((nAutoCombineBlockFrequency > chainActive.Tip()->nHeight) ||
             (chainActive.Tip()->nHeight % nAutoCombineBlockFrequency)) {
@@ -4229,7 +4229,9 @@ void CWallet::AutoCombineDust()
             vRewardCoins.push_back(out);
             nTotalRewardsValue += out.Value();
             // Combine until our total is enough above the threshold to remain above after adjustments
-            if ((nTotalRewardsValue - nTotalRewardsValue / 10) > nAutoCombineThreshold * COIN)
+            // Unless no threshold is set; in which case we want to keep going until we hit MAX_STANDARD_TX_SIZE
+            if (nAutoCombineThreshold && 
+                ((nTotalRewardsValue - nTotalRewardsValue / 10) > nAutoCombineThreshold * COIN))
                 break;
 
             // Around 180 bytes per input. We use 190 to be certain
