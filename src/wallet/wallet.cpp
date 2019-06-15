@@ -3361,6 +3361,18 @@ void CWallet::AutoCombineDust()
         return;
     }
 
+    if (nAutoCombineBlockFrequency != 0) {
+        // If the block height hasn't exceeded our frequency; or is not a multiple of our frequency.
+        if ((nAutoCombineBlockFrequency > chainActive.Tip()->nHeight) ||
+            (chainActive.Tip()->nHeight % nAutoCombineBlockFrequency)) {
+            return;
+        }
+    } else {
+        // If nAutoCombineBlockFrequency is 0, it's the special onetime case
+        // so let it rip but turn it off so it doesn't rip again.
+        fCombineDust = 0;
+    }
+
     std::map<CBitcoinAddress, std::vector<COutput> > mapCoinsByAddress = AvailableCoinsByAddress(true, nAutoCombineThreshold * COIN);
 
     //coins are sectioned by address. This combination code only wants to combine inputs that belong to the same address
@@ -3391,9 +3403,10 @@ void CWallet::AutoCombineDust()
             coinControl->Select(outpt);
             vRewardCoins.push_back(out);
             nTotalRewardsValue += out.Value();
-
-            // Combine to the threshold and not way above
-            if (nTotalRewardsValue > nAutoCombineThreshold * COIN)
+            // Combine until our total is enough above the threshold to remain above after adjustments
+            // Unless no threshold is set; in which case we want to keep going until we hit MAX_STANDARD_TX_SIZE
+            if (nAutoCombineThreshold &&
+                ((nTotalRewardsValue - nTotalRewardsValue / 10) > nAutoCombineThreshold * COIN))
                 break;
 
             // Around 180 bytes per input. We use 190 to be certain
@@ -3408,13 +3421,16 @@ void CWallet::AutoCombineDust()
         if (!coinControl->HasSelected())
             continue;
 
-        //we cannot combine one coin with itself
-        if (vRewardCoins.size() <= 1)
+        //we cannot combine one coin with itself, nor do we want to constantly combine the previous
+        //combine with the change.
+        if (vRewardCoins.size() <= 2)
             continue;
 
         std::vector<std::pair<CScript, CAmount> > vecSend;
         CScript scriptPubKey = GetScriptForDestination(it->first.Get());
-        vecSend.push_back(std::make_pair(scriptPubKey, nTotalRewardsValue));
+
+        // 10% safety margin to avoid "Insufficient funds" errors
+        vecSend.push_back(std::make_pair(scriptPubKey, nTotalRewardsValue - (nTotalRewardsValue / 10)));
 
         //Send change to same address
         CTxDestination destMyAddress;
@@ -3430,16 +3446,13 @@ void CWallet::AutoCombineDust()
         std::string strErr;
         CAmount nFeeRet = 0;
 
-        // 10% safety margin to avoid "Insufficient funds" errors
-        vecSend[0].second = nTotalRewardsValue - (nTotalRewardsValue / 10);
-
         if (!CreateTransaction(vecSend, wtx, keyChange, nFeeRet, strErr, coinControl, ALL_COINS, false, CAmount(0))) {
             LogPrintf("AutoCombineDust createtransaction failed, reason: %s\n", strErr);
             continue;
         }
 
         //we don't combine below the threshold unless the fees are 0 to avoid paying fees over fees over fees
-        if (!maxSize && nTotalRewardsValue < nAutoCombineThreshold * COIN && nFeeRet > 0)
+        if (!maxSize && vecSend[0].second < nAutoCombineThreshold * COIN && nFeeRet > 0)
             continue;
 
         if (!CommitTransaction(wtx, keyChange)) {
@@ -3447,7 +3460,8 @@ void CWallet::AutoCombineDust()
             continue;
         }
 
-        LogPrintf("AutoCombineDust sent transaction\n");
+        LogPrintf("AutoCombineDust sent transaction. Fee=%d, Total Value=%d Sending=%d\n",
+                  nFeeRet, nTotalRewardsValue, vecSend[0].second);
 
         delete coinControl;
     }

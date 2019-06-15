@@ -3077,38 +3077,123 @@ UniValue getstakesplitthreshold(const UniValue& params, bool fHelp)
     return ValueFromAmount(pwalletMain->nStakeSplitThreshold);
 }
 
+UniValue getautocombineinfo(const UniValue& params, bool fHelp)
+{
+    std::string strComment;
+
+    if (fHelp || params.size() != 0)
+        throw std::runtime_error(
+            "getautocombineinfo\n"
+            "Returns the autocombinerewards settings\n"
+            "\nResult:\n"
+            "1. enabled   (boolean) The feature is enabled (true) or disabled (false).\n"
+            "2. threshold (numeric) If enabled, returns autocombine threshold.\n"
+            "3. frequency (numeric) If enabled, returns frequency in blocks.\n"
+            "4. comment   (string)  A human readable state of the settings.\n");
+
+    UniValue obj(UniValue::VOBJ);
+    obj.push_back(Pair("enabled", pwalletMain->fCombineDust));
+    obj.push_back(Pair("threshold", int(pwalletMain->nAutoCombineThreshold)));
+    obj.push_back(Pair("frequency", int(pwalletMain->nAutoCombineBlockFrequency)));
+
+    if (pwalletMain->nAutoCombineThreshold == 0)
+        strComment = "Enabled for maximum combine, ";
+    else
+        strComment = "Enabled for ";
+
+    if (pwalletMain->fCombineDust) {
+        if (pwalletMain->nAutoCombineBlockFrequency == 0) {
+            obj.push_back(Pair("comment", strComment + "one shot on next block"));
+        } else {
+            obj.push_back(Pair("comment", strComment + "repeat on frequency"));
+        }
+    } else {
+        if (pwalletMain->nAutoCombineBlockFrequency == 0) {
+            obj.push_back(Pair("comment", strComment + "one shot on startup"));
+        } else {
+            obj.push_back(Pair("comment", "Disabled"));
+        }
+    }
+
+    return obj;
+}
+
 UniValue autocombinerewards(const UniValue& params, bool fHelp)
 {
-    bool fEnable;
-    if (params.size() >= 1)
-        fEnable = params[0].get_bool();
+    bool fEnable = false;
 
-    if (fHelp || params.size() < 1 || (fEnable && params.size() != 2) || params.size() > 2)
+    if (params.size() >= 1) {
+        fEnable = params[0].get_bool();
+    }
+
+    if (fHelp || params.size() < 1 || (fEnable && params.size() < 2) || params.size() > 3)
         throw std::runtime_error(
-            "autocombinerewards enable ( threshold )\n"
-            "\nWallet will automatically monitor for any coins with value below the threshold amount, and combine them if they reside with the same PIVX address\n"
-            "When autocombinerewards runs it will create a transaction, and therefore will be subject to transaction fees.\n"
+            "autocombinerewards enable ( threshold ) ( frequency )\n"
+            "\nWallet will automatically monitor for UTXOs with values below the threshold amount, "
+            "and combine them into transactions sized to the threshold amount, if they reside with "
+            "the same PIVX address.\n"
+            "\nA threshold value of \"0\" will combine all the UTXOs, up to the maximum possible "
+            "within the maximum transaction size of a block.\n"
+            "\nA frequency value of \"0\" will run the combine once, on the next available block, "
+            "and once again on each wallet startup.\n"
+            "\nWhen autocombinerewards runs it will create a transaction, and therefore will be subject "
+            "to transaction fees.  Transactions will be limited to a full combine of the threshold "
+            "amount unless the transaction fees are zero.\n"
 
             "\nArguments:\n"
-            "1. enable          (boolean, required) Enable auto combine (true) or disable (false)\n"
-            "2. threshold       (numeric, optional) Threshold amount (default: 0)\n"
+            "1. enable    (boolean, required) Enable auto combine (true) or disable (false).\n"
+            "2. threshold (numeric, optional) (required for enable) target total PIV to combine into one UTXO.\n"
+            "3. frequency (numeric, optional) Frequency (in blocks) for autocombine to run (default: 15)\n"
+
+            "\nResult:\n"
+            "1. enabled   (boolean) The feature is enabled (true) or disabled (false).\n"
+            "2. threshold (numeric) If enabled, returns autocombine threshold.\n"
+            "3. frequency (numeric) If enabled, returns frequency in blocks.\n"
+            "4. comment   (string)  A human readable state of the settings.\n"
 
             "\nExamples:\n" +
-            HelpExampleCli("autocombinerewards", "true 500") + HelpExampleRpc("autocombinerewards", "true 500"));
+            HelpExampleCli("autocombinerewards", "true 500 15") + HelpExampleRpc("autocombinerewards", "true 500 15"));
 
     CWalletDB walletdb(pwalletMain->strWalletFile);
     CAmount nThreshold = 0;
+    int nBlockFrequency = 15;
 
-    if (fEnable)
+    if (fEnable) {
         nThreshold = params[1].get_int();
+        if (params.size() > 2) {
+            nBlockFrequency = params[2].get_int();
+            if (nBlockFrequency < 0)
+                nBlockFrequency = 1;
+        }
+    }
 
     pwalletMain->fCombineDust = fEnable;
     pwalletMain->nAutoCombineThreshold = nThreshold;
+    pwalletMain->nAutoCombineBlockFrequency = nBlockFrequency;
 
-    if (!walletdb.WriteAutoCombineSettings(fEnable, nThreshold))
+    if (!walletdb.WriteAutoCombineSettings(fEnable, nThreshold, nBlockFrequency))
         throw std::runtime_error("Changed settings in wallet but failed to save to database\n");
 
-    return NullUniValue;
+    UniValue obj(UniValue::VOBJ);
+    obj.push_back(Pair("enabled", pwalletMain->fCombineDust));
+    if (pwalletMain->fCombineDust) {
+        std::string strComment;
+
+        if (pwalletMain->nAutoCombineThreshold == 0)
+            strComment = "Enabled for maximum combine, ";
+        else
+            strComment = "Enabled for ";
+
+        obj.push_back(Pair("threshold", int(pwalletMain->nAutoCombineThreshold)));
+        obj.push_back(Pair("frequency", int(pwalletMain->nAutoCombineBlockFrequency)));
+        if (pwalletMain->nAutoCombineBlockFrequency == 0) {
+            obj.push_back(Pair("comment", strComment + "one shot on next block"));
+        } else {
+            obj.push_back(Pair("comment", strComment + "repeat on frequency"));
+        }
+    }
+
+    return obj;
 }
 
 UniValue printMultiSend()

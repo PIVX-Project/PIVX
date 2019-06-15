@@ -308,6 +308,7 @@ public:
     //Auto Combine Inputs
     bool fCombineDust;
     CAmount nAutoCombineThreshold;
+    int nAutoCombineBlockFrequency;
 
     CWallet();
     CWallet(std::string strWalletFileIn);

@@ -142,7 +142,7 @@ public:
     bool WriteMSettings(bool fMultiSendStake, bool fMultiSendMasternode, int nLastMultiSendHeight);
     bool WriteMSDisabledAddresses(std::vector<std::string> vDisabledAddresses);
     bool EraseMSDisabledAddresses(std::vector<std::string> vDisabledAddresses);
-    bool WriteAutoCombineSettings(bool fEnable, CAmount nCombineThreshold);
+    bool WriteAutoCombineSettings(bool fEnable, CAmount nCombineThreshold, int nBlockFrequency);
 
     bool ReadPool(int64_t nPool, CKeyPool& keypool);
     bool WritePool(int64_t nPool, const CKeyPool& keypool);
