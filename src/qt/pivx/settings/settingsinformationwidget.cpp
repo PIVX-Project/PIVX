@@ -115,7 +115,7 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
     // Data
 #ifdef ENABLE_WALLET
     // Wallet data -- remove it with if it's needed
-    ui->labelInfoBerkeley->setText(DbEnv::version(0, 0, 0));
+    ui->labelInfoBerkeley->setText("Berkeley");//DbEnv::version(0, 0, 0));
     ui->labelInfoDataDir->setText(QString::fromStdString(GetDataDir().string() + QDir::separator().toLatin1() + GetArg("-wallet", "wallet.dat")));
 #else
     ui->labelInfoBerkeley->setText(tr("No information"));

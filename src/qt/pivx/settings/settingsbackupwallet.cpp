@@ -4,7 +4,7 @@
 #include <QGraphicsDropShadowEffect>
 #include "guiutil.h"
 #include "qt/pivx/qtutils.h"
-#include "ui_interface.h"
+#include "guiinterface.h"
 #include "qt/pivx/qtutils.h"
 SettingsBackupWallet::SettingsBackupWallet(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window, parent),

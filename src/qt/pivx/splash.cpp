@@ -3,14 +3,14 @@
 #include "QFile"
 
 #include "init.h"
-#include "ui_interface.h"
+#include "guiinterface.h"
 #include "networkstyle.h"
 #include "util.h"
 #include "version.h"
 #include "guiutil.h"
 
 #ifdef ENABLE_WALLET
-#include "wallet.h"
+#include "wallet/wallet.h"
 #endif
 
 #include <QCloseEvent>
