@@ -182,6 +182,7 @@
         <file alias="ic-check-staking">pivx/res/img/ic-check-staking.svg</file>
         <file alias="ic-check-sync-off">pivx/res/img/ic-check-sync-off.svg</file>
         <file alias="ic-check-sync">pivx/res/img/ic-check-sync.svg</file>
+        <file alias="ic-check-faq">pivx/res/img/ic-check-faq.svg</file>
         <file alias="ic-check-theme-dark">pivx/res/img/ic-check-theme-dark.svg</file>
         <file alias="ic-check-theme-light">pivx/res/img/ic-check-theme-light.svg</file>
         <file alias="ic-check-white">pivx/res/img/ic-check-white.svg</file>

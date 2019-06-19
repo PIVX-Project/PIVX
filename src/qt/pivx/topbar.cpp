@@ -61,7 +61,7 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     progressBar->move(0, 34);
 
     // New button
-    ui->pushButtonFAQ->setButtonClassStyle("cssClass", "btn-check-peers");
+    ui->pushButtonFAQ->setButtonClassStyle("cssClass", "btn-check-faq");
     ui->pushButtonFAQ->setButtonText("FAQ");
 
     ui->pushButtonConnection->setButtonClassStyle("cssClass", "btn-check-connect-inactive");

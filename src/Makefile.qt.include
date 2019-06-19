@@ -484,6 +484,7 @@ RES_ICONS = \
   qt/pivx/res/img/ic-nav-privacy-hover.svg \
   qt/pivx/res/img/img-empty-dark-contacts.svg \
   qt/pivx/res/img/ic-check-sync.svg \
+  qt/pivx/res/img/ic-check-faq.svg \
   qt/pivx/res/img/ic-nav-privacy.svg \
   qt/pivx/res/img/img-empty-dark-error.svg \
   qt/pivx/res/img/ic-add-label.svg \

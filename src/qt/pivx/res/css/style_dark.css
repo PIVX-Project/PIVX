@@ -347,6 +347,35 @@ QPushButton[cssClass="btn-qr"] {
     border-radius:2px;
 }
 
+
+QPushButton[cssClass="btn-check-faq"] {
+    qproperty-icon: url("://ic-check-faq");
+    qproperty-iconSize: 24px 24px;
+    background-color:#505c4b7d;
+    color:#FFFFFF;
+    padding-right:6px;
+    padding-left:6px;
+    border-bottom:2px solid #b088ff;
+    border-radius:2px;
+}
+
+QPushButton[cssClass="btn-check-faq-inactive"] {
+    qproperty-icon: url("://ic-check-faq") ;
+    qproperty-iconSize: 24px 24px;
+    background-color:#505c4b7d;
+    color:#FFFFFF;
+    padding-right:6px;
+    padding-left:6px;
+    border-bottom:2px solid #b088ff;
+    border-radius:2px;
+}
+
+QPushButton[cssClass="btn-check-faq"]:checked {
+    background-color:#505c4b7d;
+    border-bottom:2px solid #b088ff;
+    border-radius:2px;
+}
+
 QPushButton[cssClass="btn-check-sync"] {
     qproperty-icon: url("://ic-check-sync");
     qproperty-iconSize: 24px 24px;
