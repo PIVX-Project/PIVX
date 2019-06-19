@@ -1,7 +1,7 @@
 #include "qt/pivx/settings/settingsfaqwidget.h"
 #include "qt/pivx/settings/forms/ui_settingsfaqwidget.h"
 #include <QScrollBar>
-#include "QFile"
+#include "qt/pivx/qtutils.h"
 
 SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
     QDialog(parent),
@@ -21,54 +21,75 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
 
 
     // Content
-    ui->labelNumber1->setProperty("cssClass", "container-number-faq");
-    ui->labelNumber1->setText("1");
-    ui->labelNumber2->setProperty("cssClass", "container-number-faq");
-    ui->labelNumber2->setText("2");
-    ui->labelNumber3->setProperty("cssClass", "container-number-faq");
-    ui->labelNumber3->setText("3");
-    ui->labelNumber4->setProperty("cssClass", "container-number-faq");
-    ui->labelNumber4->setText("4");
-    ui->labelNumber5->setProperty("cssClass", "container-number-faq");
-    ui->labelNumber5->setText("5");
-    ui->labelNumber6->setProperty("cssClass", "container-number-faq");
-    ui->labelNumber6->setText("6");
-    ui->labelNumber7->setProperty("cssClass", "container-number-faq");
-    ui->labelNumber7->setText("7");
-    ui->labelNumber8->setProperty("cssClass", "container-number-faq");
-    ui->labelNumber8->setText("8");
+    setCssProperty(
+        {
+           ui->labelNumber1,
+           ui->labelNumber2,
+           ui->labelNumber3,
+           ui->labelNumber4,
+           ui->labelNumber5,
+           ui->labelNumber6,
+           ui->labelNumber7,
+           ui->labelNumber8,
+           ui->labelNumber9
+        }, "container-number-faq");
 
-    ui->labelSubtitle1->setProperty("cssClass", "text-subtitle-faq");
+    setCssProperty(
+            {
+              ui->labelSubtitle1,
+              ui->labelSubtitle2,
+              ui->labelSubtitle3,
+              ui->labelSubtitle4,
+              ui->labelSubtitle5,
+              ui->labelSubtitle6,
+              ui->labelSubtitle7,
+              ui->labelSubtitle8,
+              ui->labelSubtitle9
+            }, "text-subtitle-faq");
+
+
+    setCssProperty(
+            {
+              ui->labelContent1,
+              ui->labelContent2,
+              ui->labelContent3,
+              ui->labelContent4,
+              ui->labelContent5,
+              ui->labelContent6,
+              ui->labelContent7,
+              ui->labelContent8,
+              ui->labelContent9
+            }, "text-content-faq");
+
+
+    setCssProperty(
+            {
+              ui->pushButtonFaq1,
+              ui->pushButtonFaq2,
+              ui->pushButtonFaq3,
+              ui->pushButtonFaq4,
+              ui->pushButtonFaq5,
+              ui->pushButtonFaq6,
+              ui->pushButtonFaq7,
+              ui->pushButtonFaq8,
+              ui->pushButtonFaq9
+            }, "btn-faq-options");
+
     ui->labelSubtitle1->setText(tr("What is PIVX"));
-    ui->labelSubtitle2->setProperty("cssClass", "text-subtitle-faq");
     ui->labelSubtitle2->setText(tr("Why my PIV are unspendable"));
-    ui->labelSubtitle3->setProperty("cssClass", "text-subtitle-faq");
     ui->labelSubtitle3->setText(tr("PIVX privacy? What is zPIV, zerocoin."));
-    ui->labelSubtitle4->setProperty("cssClass", "text-subtitle-faq");
     ui->labelSubtitle4->setText(tr("Why my zPIV are unspendable"));
-    ui->labelSubtitle5->setProperty("cssClass", "text-subtitle-faq");
     ui->labelSubtitle5->setText(tr("Why my wallet convert my balance into zPIV automatically?"));
-    ui->labelSubtitle6->setProperty("cssClass", "text-subtitle-faq");
     ui->labelSubtitle6->setText(tr("How do i receive PIV/zPIV?"));
-    ui->labelSubtitle7->setProperty("cssClass", "text-subtitle-faq");
     ui->labelSubtitle7->setText(tr("How do i stake PIV/zPIV?"));
-    ui->labelSubtitle8->setProperty("cssClass", "text-subtitle-faq");
     ui->labelSubtitle8->setText(tr("Where i should go if i need support?"));
+    ui->labelSubtitle9->setText(tr("What is a Master Node?"));
 
-    ui->labelContent1->setProperty("cssClass", "text-content-faq");
-    ui->labelContent2->setProperty("cssClass", "text-content-faq");
-    ui->labelContent3->setProperty("cssClass", "text-content-faq");
     ui->labelContent3->setOpenExternalLinks( true );
-    ui->labelContent4->setProperty("cssClass", "text-content-faq");
-    ui->labelContent5->setProperty("cssClass", "text-content-faq");
     ui->labelContent5->setOpenExternalLinks( true );
-    ui->labelContent6->setProperty("cssClass", "text-content-faq");
-    ui->labelContent7->setProperty("cssClass", "text-content-faq");
-    ui->labelContent8->setProperty("cssClass", "text-content-faq");
     ui->labelContent8->setOpenExternalLinks( true );
 
     // Exit button
-
     ui->pushButtonExit->setText(tr("Exit"));
     ui->pushButtonExit->setProperty("cssClass", "btn-faq-exit");
 
@@ -76,23 +97,11 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
     ui->pushButtonWebLink->setText("https://PIVX.org/zpiv");
     ui->pushButtonWebLink->setProperty("cssClass", "btn-faq-web");
 
-
     // Questions buttons
     ui->containerButtons->setProperty("cssClass", "container-faq-buttons");
 
-    ui->pushButtonFaq1->setProperty("cssClass", "btn-faq-options");
-    ui->pushButtonFaq2->setProperty("cssClass", "btn-faq-options");
-    ui->pushButtonFaq3->setProperty("cssClass", "btn-faq-options");
-    ui->pushButtonFaq4->setProperty("cssClass", "btn-faq-options");
-    ui->pushButtonFaq5->setProperty("cssClass", "btn-faq-options");
-    ui->pushButtonFaq6->setProperty("cssClass", "btn-faq-options");
-    ui->pushButtonFaq7->setProperty("cssClass", "btn-faq-options");
-    ui->pushButtonFaq8->setProperty("cssClass", "btn-faq-options");
-
     // Buttons
-
     connect(ui->pushButtonExit, SIGNAL(clicked()), this, SLOT(close()));
-
     connect(ui->pushButtonFaq1, SIGNAL(clicked()), this, SLOT(onFaq1Clicked()));
     connect(ui->pushButtonFaq2, SIGNAL(clicked()), this, SLOT(onFaq2Clicked()));
     connect(ui->pushButtonFaq3, SIGNAL(clicked()), this, SLOT(onFaq3Clicked()));
@@ -101,6 +110,7 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
     connect(ui->pushButtonFaq6, SIGNAL(clicked()), this, SLOT(onFaq6Clicked()));
     connect(ui->pushButtonFaq7, SIGNAL(clicked()), this, SLOT(onFaq7Clicked()));
     connect(ui->pushButtonFaq8, SIGNAL(clicked()), this, SLOT(onFaq8Clicked()));
+    connect(ui->pushButtonFaq9, SIGNAL(clicked()), this, SLOT(onFaq9Clicked()));
 
     if (parent)
         connect(parent, SIGNAL(windowResizeEvent(QResizeEvent*)), this, SLOT(windowResizeEvent(QResizeEvent*)));
@@ -138,6 +148,10 @@ void SettingsFaqWidget::onFaq7Clicked(){
 
 void SettingsFaqWidget::onFaq8Clicked(){
     ui->scrollAreaFaq->verticalScrollBar()->setValue(ui->widgetFaq8->y());
+}
+
+void SettingsFaqWidget::onFaq9Clicked(){
+    ui->scrollAreaFaq->verticalScrollBar()->setValue(ui->widgetFaq9->y());
 }
 
 void SettingsFaqWidget::windowResizeEvent(QResizeEvent* event){
