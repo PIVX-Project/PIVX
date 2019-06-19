@@ -2,6 +2,7 @@
 #include "qt/pivx/forms/ui_masternodeswidget.h"
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/mnrow.h"
+#include "qt/pivx/mninfodialog.h"
 
 #include "qt/pivx/masternodewizarddialog.h"
 
@@ -163,57 +164,55 @@ void MasterNodesWidget::onEditMNClicked(){
     if(walletModel) {
         // Start MN
         QString strAlias = this->index.data(Qt::DisplayRole).toString();
-        bool ret;
-        ask(tr("Start Master Node"), tr("Are you sure you want to start masternode %1?").arg(strAlias), &ret);
-
-        if (ret) {
+        if (ask(tr("Start Master Node"), tr("Are you sure you want to start masternode %1?").arg(strAlias))) {
             if(!verifyWalletUnlocked()) return;
             startAlias(strAlias);
         }
     }
 }
 
-void MasterNodesWidget::startAlias(QString strAlias)
-{
+void MasterNodesWidget::startAlias(QString strAlias){
     QString strStatusHtml;
-    strStatusHtml += "<center>Alias: " + strAlias;
+    strStatusHtml += "Alias: " + strAlias + " ";
 
     for (CMasternodeConfig::CMasternodeEntry mne : masternodeConfig.getEntries()) {
         if (mne.getAlias() == strAlias.toStdString()) {
             std::string strError;
             CMasternodeBroadcast mnb;
-
-            bool fSuccess = CMasternodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strError, mnb);
-
-            if (fSuccess) {
-                strStatusHtml += "<br>Successfully started masternode.";
+            if (CMasternodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strError, mnb)) {
+                strStatusHtml += "successfully started.";
                 mnodeman.UpdateMasternodeList(mnb);
                 mnb.Relay();
+                mnModel->updateMNList();
             } else {
-                strStatusHtml += "<br>Failed to start masternode.<br>Error: " + QString::fromStdString(strError);
+                strStatusHtml += "failed to start.\nError: " + QString::fromStdString(strError);
             }
             break;
         }
     }
-    strStatusHtml += "</center>";
-
     inform(strStatusHtml);
-
-    // TODO: Update MN list.
 }
 
 void MasterNodesWidget::onInfoMNClicked(){
-
+    showHideOp(true);
+    MnInfoDialog* dialog = new MnInfoDialog(window);
+    QString label = index.data(Qt::DisplayRole).toString();
+    QString address = index.sibling(index.row(), MNModel::ADDRESS).data(Qt::DisplayRole).toString();
+    QString status = index.sibling(index.row(), MNModel::STATUS).data(Qt::DisplayRole).toString();
+    QString txId = index.sibling(index.row(), MNModel::COLLATERAL_ID).data(Qt::DisplayRole).toString();
+    QString outIndex = index.sibling(index.row(), MNModel::COLLATERAL_OUT_INDEX).data(Qt::DisplayRole).toString();
+    QString pubKey = index.sibling(index.row(), MNModel::PUB_KEY).data(Qt::DisplayRole).toString();
+    dialog->setData(pubKey, label, address, txId, outIndex, status);
+    dialog->adjustSize();
+    showDialog(dialog, 3, 17);
+    dialog->deleteLater();
 }
 
 void MasterNodesWidget::onDeleteMNClicked(){
     QString qAliasString = index.data(Qt::DisplayRole).toString();
     std::string aliasToRemove = qAliasString.toStdString();
 
-    bool ret = false;
-    ask(tr("Delete Master Node"), tr("You are just about to delete Master Node:\n%1\n\nAre you sure?").arg(qAliasString), &ret);
-
-    if (!ret)
+    if (!ask(tr("Delete Master Node"), tr("You are just about to delete Master Node:\n%1\n\nAre you sure?").arg(qAliasString)))
         return;
 
     std::string strConfFile = "masternode.conf";

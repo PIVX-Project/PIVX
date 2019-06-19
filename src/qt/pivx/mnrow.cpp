@@ -9,7 +9,7 @@ MNRow::MNRow(QWidget *parent) :
     ui->setupUi(this);
     setCssProperty(ui->labelAddress, "text-list-body2");
     setCssProperty(ui->labelName, "text-list-title1");
-    setCssProperty(ui->labelDate, "text-list-caption");
+    setCssProperty(ui->labelDate, "text-list-caption-medium");
 }
 
 void MNRow::updateView(QString address, QString label, QString status)

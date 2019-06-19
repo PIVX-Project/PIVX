@@ -206,9 +206,15 @@ bool MasterNodeWizardDialog::createMN(){
         }
         std::string alias = addressLabel.toStdString();
 
+        QString addressStr = ui->lineEditIpAddress->text();
+        QString portStr = ui->lineEditPort->text();
+        if (addressStr.isEmpty() || portStr.isEmpty()) {
+            returnStr = tr("IP or port cannot be empty");
+            return false;
+        }
         // ip + port
-        std::string ip = ui->lineEditPort->text().toStdString();
-        std::string port = ui->lineEditIpAddress->text().toStdString();
+        std::string ipAddress = addressStr.toStdString();
+        std::string port = portStr.toStdString();
 
         // New receive address
         CBitcoinAddress address = walletModel->getNewAddress(alias);
@@ -287,17 +293,32 @@ bool MasterNodeWizardDialog::createMN(){
                 if (lineCopy.size() == 0) {
                     lineCopy = "# Masternode config file\n"
                                "# Format: alias IP:port masternodeprivkey collateral_output_txid collateral_output_index\n"
-                               "# Example: mn1 127.0.0.2:51472 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0\n";
+                               "# Example: mn1 127.0.0.2:51472 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0"
+                               "#";
                 }
+                lineCopy += "\n";
 
                 streamConfig.close();
+
+                CWalletTx* walletTx = currentTransaction.getTransaction();
+                std::string txID = walletTx->GetHash().GetHex();
+                int indexOut = -1;
+                for (int i=0; i < (int)walletTx->vout.size(); i++){
+                    CTxOut& out = walletTx->vout[i];
+                    if (out.nValue == 10000 * COIN){
+                        indexOut = i;
+                    }
+                }
+                if (indexOut == -1) {
+                    returnStr = tr("Invalid collaterall output index");
+                    return false;
+                }
+                std::string indexOutStr = std::to_string(indexOut);
 
                 boost::filesystem::path pathConfigFile("masternode_temp.conf");
                 if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir() / pathConfigFile;
                 FILE* configFile = fopen(pathConfigFile.string().c_str(), "w");
-                //currentTransaction.getTransaction()->vout
-                lineCopy += alias+" "+ip+":"+port+" "+mnKeyString+" 4ea6a8cb6590ced43b4a6fa4ccba7badfa90ab6567392196075fb1e84ad02fce 1\n";
-                        //" 127.0.0.2:51479 91pzyW3p6vPEowRwwGkyRU1sACycJRoydnGcP7bnyfbyXYYae7R 4ea6a8cb6590ced43b4a6fa4ccba7badfa90ab6567392196075fb1e84ad02fce 1\n";
+                lineCopy += alias+" "+ipAddress+":"+port+" "+mnKeyString+" "+txID+" "+indexOutStr+"\n";
                 fwrite(lineCopy.c_str(), std::strlen(lineCopy.c_str()), 1, configFile);
                 fclose(configFile);
 
@@ -312,7 +333,7 @@ bool MasterNodeWizardDialog::createMN(){
                 if (!pathNewConfFile.is_complete()) pathNewConfFile = GetDataDir() / pathNewConfFile;
                 rename(pathConfigFile, pathNewConfFile);
 
-                mnEntry = masternodeConfig.add(alias, ip, mnKeyString, "4ea6a8cb6590ced43b4a6fa4ccba7badfa90ab6567392196075fb1e84ad02fce", "1");
+                mnEntry = masternodeConfig.add(alias, ipAddress, mnKeyString, txID, indexOutStr);
 
                 returnStr = tr("Master node created!");
                 return true;
