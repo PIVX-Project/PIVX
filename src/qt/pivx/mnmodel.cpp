@@ -61,7 +61,7 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
                 return (isAvailable) ? QString::number(rec->vin.prevout.n) : "No available";
             case STATUS: {
                 std::pair<QString, CMasternode*> pair = nodes.values().value(row);
-                return (pair.second) ? QString::fromStdString(pair.second->GetStatus()) : "MISSING";
+                return (pair.second) ? QString::fromStdString(pair.second->Status()) : "MISSING";
             }
         }
     }

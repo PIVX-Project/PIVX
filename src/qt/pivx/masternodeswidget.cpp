@@ -22,9 +22,6 @@
 #include <iostream>
 #include <fstream>
 
-#include <QMessageBox>
-#include <QTimer>
-
 #include <iostream>
 
 #define DECORATION_SIZE 65
@@ -116,6 +113,19 @@ MasterNodesWidget::MasterNodesWidget(PIVXGUI *parent) :
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(onCreateMNClicked()));
     connect(ui->listMn, SIGNAL(clicked(QModelIndex)), this, SLOT(onMNClicked(QModelIndex)));
+}
+
+void MasterNodesWidget::showEvent(QShowEvent *event){
+    if (mnModel) mnModel->updateMNList();
+    if(!timer) {
+        timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, [this]() {mnModel->updateMNList();});
+    }
+    timer->start(30000);
+}
+
+void MasterNodesWidget::hideEvent(QHideEvent *event){
+    if(timer) timer->stop();
 }
 
 void MasterNodesWidget::loadWalletModel(){

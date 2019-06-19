@@ -6,6 +6,7 @@
 #include "qt/pivx/furabstractlistitemdelegate.h"
 #include "qt/pivx/mnmodel.h"
 #include "qt/pivx/tooltipmenu.h"
+#include <QTimer>
 
 class PIVXGUI;
 
@@ -26,14 +27,18 @@ public:
     explicit MasterNodesWidget(PIVXGUI *parent = nullptr);
     ~MasterNodesWidget();
 
-    void loadWalletModel();
+    void loadWalletModel() override;
+    void showEvent(QShowEvent *event) override;
+    void hideEvent(QHideEvent *event) override;
+
 private slots:
     void onCreateMNClicked();
-    void changeTheme(bool isLightTheme, QString &theme);
+    void changeTheme(bool isLightTheme, QString &theme) override;
     void onMNClicked(const QModelIndex &index);
     void onEditMNClicked();
     void onDeleteMNClicked();
     void onInfoMNClicked();
+    void updateListState();
 
 private:
     Ui::MasterNodesWidget *ui;
@@ -41,10 +46,9 @@ private:
     MNModel *mnModel = nullptr;
     TooltipMenu* menu = nullptr;
     QModelIndex index;
-
+    QTimer *timer = nullptr;
 
     void startAlias(QString strAlias);
-    void updateListState();
 };
 
 #endif // MASTERNODESWIDGET_H

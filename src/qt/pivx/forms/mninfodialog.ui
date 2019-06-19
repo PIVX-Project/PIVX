@@ -372,7 +372,7 @@ background:transparent;
                 </item>
                 <item>
                  <widget class="QWidget" name="contentAmount" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1">
+                  <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1,0">
                    <property name="leftMargin">
                     <number>0</number>
                    </property>
@@ -393,6 +393,25 @@ background:transparent;
                     <widget class="QLabel" name="textAmount">
                      <property name="text">
                       <string>492526e7fa3c810b35016...40a5df85ee227ab00b1156994</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pushCopyId">
+                     <property name="minimumSize">
+                      <size>
+                       <width>34</width>
+                       <height>34</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>34</width>
+                       <height>34</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string/>
                      </property>
                     </widget>
                    </item>

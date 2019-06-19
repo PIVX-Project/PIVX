@@ -23,6 +23,8 @@ private:
     Ui::MnInfoDialog *ui;
     int nDisplayUnit = 0;
     WalletModel *model = nullptr;
+    QString txId;
+    QString pubKey;
 };
 
 #endif // MNINFODIALOG_H
