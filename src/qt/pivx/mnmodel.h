@@ -18,7 +18,10 @@ public:
         ADDRESS = 1, /**< Node address */
         PROTO_VERSION = 2, /**< Node protocol version */
         STATUS = 3, /**< Node status */
-        ACTIVE_TIMESTAMP = 4 /**<  */
+        ACTIVE_TIMESTAMP = 4, /**<  */
+        PUB_KEY = 5,
+        COLLATERAL_ID = 6,
+        COLLATERAL_OUT_INDEX = 7
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -27,6 +30,7 @@ public:
     QModelIndex index(int row, int column, const QModelIndex& parent) const override;
     bool removeMn(const QModelIndex& index);
     bool addMn(CMasternodeConfig::CMasternodeEntry* entry);
+    void updateMNList();
 
 
 private:
