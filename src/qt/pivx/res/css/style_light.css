@@ -723,6 +723,12 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="text-list-caption"] {
     color:#bababa;
+    font-size:12px;
+}
+
+*[cssClass="text-list-caption-medium"] {
+    color:#bababa;
+    font-size:14px;
 }
 
 *[cssClass="text-list-caption-unconfirmed"] {

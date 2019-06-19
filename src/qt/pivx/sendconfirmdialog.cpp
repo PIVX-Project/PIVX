@@ -4,7 +4,7 @@
 #include "walletmodel.h"
 #include "transactiontablemodel.h"
 #include "transactionrecord.h"
-#include "wallet.h"
+#include "wallet/wallet.h"
 #include "guiutil.h"
 #include "qt/pivx/snackbar.h"
 #include "qt/pivx/qtutils.h"
@@ -28,18 +28,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
 
     // Labels
     setCssTextBodyDialog({ui->labelAmount, ui->labelSend, ui->labelInputs, ui->labelFee, ui->labelChange, ui->labelId, ui->labelSize, ui->labelStatus, ui->labelConfirmations, ui->labelDate});
-
-    ui->labelDivider1->setProperty("cssClass", "container-divider");
-    ui->labelDivider2->setProperty("cssClass", "container-divider");
-    ui->labelDivider3->setProperty("cssClass", "container-divider");
-    ui->labelDivider4->setProperty("cssClass", "container-divider");
-    ui->labelDivider5->setProperty("cssClass", "container-divider");
-    ui->labelDivider6->setProperty("cssClass", "container-divider");
-    ui->labelDivider7->setProperty("cssClass", "container-divider");
-    ui->labelDivider8->setProperty("cssClass", "container-divider");
-    ui->labelDivider9->setProperty("cssClass", "container-divider");
-
-    // Content
+    setCssProperty({ui->labelDivider1, ui->labelDivider2, ui->labelDivider3, ui->labelDivider4, ui->labelDivider5, ui->labelDivider6, ui->labelDivider7, ui->labelDivider8, ui->labelDivider9}, "container-divider");
     setCssTextBodyDialog({ui->textAmount, ui->textSend, ui->textInputs, ui->textFee, ui->textChange, ui->textId, ui->textSize, ui->textStatus, ui->textConfirmations, ui->textDate});
 
     ui->pushCopy->setProperty("cssClass", "ic-copy-big");

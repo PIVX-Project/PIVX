@@ -13,11 +13,10 @@
 #include "optionsmodel.h"
 #include "networkstyle.h"
 #include "notificator.h"
-#include "ui_interface.h"
+#include "guiinterface.h"
 #include "qt/pivx/qtutils.h"
-
 #include "qt/pivx/defaultdialog.h"
-
+#include "qt/pivx/settings/settingsfaqwidget.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -25,10 +24,6 @@
 #include <QColor>
 #include <QShortcut>
 #include <QKeySequence>
-
-// TODO: Remove this..
-#include <QMessageBox>
-
 
 #include "util.h"
 
@@ -41,8 +36,8 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
 
     /* Open CSS when configured */
     this->setStyleSheet(GUIUtil::loadStyleSheet());
-    this->setMinimumSize(1200, 720);
-    GUIUtil::restoreWindowGeometry("nWindow", QSize(1200, 720), this);
+    this->setMinimumSize(1200, 740);
+    GUIUtil::restoreWindowGeometry("nWindow", QSize(1200, 740), this);
 
     QString windowTitle = tr("PIVX Core") + " - ";
 #ifdef ENABLE_WALLET
@@ -76,7 +71,7 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
 
         QFrame* centralWidget = new QFrame(this);
         this->setMinimumWidth(1200);
-        this->setMinimumHeight(720);
+        this->setMinimumHeight(740);
         QHBoxLayout* centralWidgetLayouot = new QHBoxLayout();
         centralWidget->setLayout(centralWidgetLayouot);
         centralWidgetLayouot->setContentsMargins(0,0,0,0);
@@ -183,6 +178,7 @@ void PIVXGUI::connectActions() {
     connect(addressesWidget, &AddressesWidget::showHide, this, &PIVXGUI::showHide);
     connect(privacyWidget, &PrivacyWidget::showHide, this, &PIVXGUI::showHide);
     connect(masterNodesWidget, &MasterNodesWidget::showHide, this, &PIVXGUI::showHide);
+    connect(masterNodesWidget, &MasterNodesWidget::execDialog, this, &PIVXGUI::execDialog);
     connect(settingsWidget, &SettingsWidget::execDialog, this, &PIVXGUI::execDialog);
 }
 
@@ -288,7 +284,6 @@ void PIVXGUI::message(const QString& title, const QString& message, unsigned int
     try {
         QString strTitle = tr("PIVX Core"); // default title
         // Default to information icon
-        int nMBoxIcon = QMessageBox::Information;
         int nNotifyIcon = Notificator::Information;
 
         QString msgType;
@@ -317,10 +312,8 @@ void PIVXGUI::message(const QString& title, const QString& message, unsigned int
 
         // Check for error/warning icon
         if (style & CClientUIInterface::ICON_ERROR) {
-            nMBoxIcon = QMessageBox::Critical;
             nNotifyIcon = Notificator::Critical;
         } else if (style & CClientUIInterface::ICON_WARNING) {
-            nMBoxIcon = QMessageBox::Warning;
             nNotifyIcon = Notificator::Warning;
         }
 
@@ -481,6 +474,13 @@ void PIVXGUI::showHide(bool show){
 
 int PIVXGUI::getNavWidth(){
     return this->navMenu->width();
+}
+
+void PIVXGUI::openFAQ(){
+    showHide(true);
+    SettingsFaqWidget* dialog = new SettingsFaqWidget(this);
+    openDialogWithOpaqueBackgroundFullScreen(dialog, this);
+    dialog->deleteLater();
 }
 
 

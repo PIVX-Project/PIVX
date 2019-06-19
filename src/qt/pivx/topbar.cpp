@@ -13,10 +13,10 @@
 #include "qt/guiutil.h"
 #include "optionsmodel.h"
 #include "qt/platformstyle.h"
-#include "wallet.h"
+#include "wallet/wallet.h"
 #include "walletmodel.h"
 #include "addresstablemodel.h"
-#include "ui_interface.h"
+#include "guiinterface.h"
 
 
 TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
@@ -61,8 +61,8 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     progressBar->move(0, 34);
 
     // New button
-    ui->pushButtonPeers->setButtonClassStyle("cssClass", "btn-check-peers");
-    ui->pushButtonPeers->setButtonText("No Online Peers");
+    ui->pushButtonFAQ->setButtonClassStyle("cssClass", "btn-check-peers");
+    ui->pushButtonFAQ->setButtonText("FAQ");
 
     ui->pushButtonConnection->setButtonClassStyle("cssClass", "btn-check-connect-inactive");
     ui->pushButtonConnection->setButtonText("No Connection");
@@ -107,6 +107,7 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     connect(ui->btnQr, SIGNAL(clicked()), this, SLOT(onBtnReceiveClicked()));
     connect(ui->pushButtonLock, SIGNAL(Mouse_Pressed()), this, SLOT(onBtnLockClicked()));
     connect(ui->pushButtonTheme, SIGNAL(Mouse_Pressed()), this, SLOT(onThemeClicked()));
+    connect(ui->pushButtonFAQ, SIGNAL(Mouse_Pressed()), _mainWindow, SLOT(openFAQ()));
 }
 
 void TopBar::onThemeClicked(){
@@ -368,6 +369,7 @@ void TopBar::setNumBlocks(int count) {
             // Node synced
             // TODO: Set synced icon to pushButtonSync here..
             ui->pushButtonSync->setButtonText(tr("Synchronized"));
+            progressBar->setValue(100);
             return;
         }else{
 

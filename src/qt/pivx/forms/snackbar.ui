@@ -76,6 +76,9 @@ color:white;</string>
         <property name="text">
          <string>Contact Stored</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
        </widget>
       </item>
       <item alignment="Qt::AlignVCenter">

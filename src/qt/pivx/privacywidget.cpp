@@ -12,7 +12,7 @@
 #include "optionsmodel.h"
 #include "coincontroldialog.h"
 #include "coincontrol.h"
-#include "accumulators.h"
+#include "zpiv/accumulators.h"
 
 #define DECORATION_SIZE 65
 #define NUM_ITEMS 3
@@ -97,7 +97,6 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* parent) :
     ui->labelValueDenom1000->setText("0x1000 = 0 zPIV");
     ui->labelValueDenom1000->setProperty("cssClass", "text-body2");
 
-
     ui->labelTitleDenom5000->setText("Denom. with value 5000:");
     ui->labelTitleDenom5000->setProperty("cssClass", "text-subtitle");
     ui->labelValueDenom5000->setText("0x5000 = 0 zPIV");
@@ -111,12 +110,11 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* parent) :
 
     //ui->emptyContainer->setVisible(false);
     ui->pushImgEmpty->setProperty("cssClass", "img-empty-privacy");
-
     ui->labelEmpty->setText(tr("No transactions yet"));
     ui->labelEmpty->setProperty("cssClass", "text-empty");
 
     // Buttons
-    ui->pushButtonSave->setProperty("cssClass", "btn-primary");
+    setCssBtnPrimary(ui->pushButtonSave);
     onMintSelected(true);
 
     ui->btnTotalzPIV->setTitleClassAndText("btn-title-grey", "Total 0 zPIV");
@@ -326,22 +324,18 @@ void PrivacyWidget::onDenomClicked(){
 }
 
 void PrivacyWidget::onRescanMintsClicked(){
-    bool ret = false;
-    ask(tr("Rescan Mints"),
-        tr("Your zerocoin mints are going to be scanned from the blockchain from scratch"),
-        &ret);
-    if (ret){
+    if (ask(tr("Rescan Mints"),
+        tr("Your zerocoin mints are going to be scanned from the blockchain from scratch"))
+    ){
         string strResetMintResult = walletModel->resetMintZerocoin();
         inform(QString::fromStdString(strResetMintResult));
     }
 }
 
 void PrivacyWidget::onResetZeroClicked(){
-    bool ret = false;
-    ask(tr("Reset Spent Zerocoins"),
-        tr("Your zerocoin spends are going to be scanned from the blockchain from scratch"),
-        &ret);
-    if (ret){
+    if (ask(tr("Reset Spent Zerocoins"),
+        tr("Your zerocoin spends are going to be scanned from the blockchain from scratch"))
+    ){
         string strResetMintResult = walletModel->resetSpentZerocoin();
         inform(QString::fromStdString(strResetMintResult));
     }

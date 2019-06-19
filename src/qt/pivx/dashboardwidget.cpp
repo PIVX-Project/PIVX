@@ -6,7 +6,6 @@
 #include "guiutil.h"
 #include "walletmodel.h"
 #include "optionsmodel.h"
-#include "qt/pivx/settings/settingsfaqwidget.h"
 #include <QPainter>
 #include <QModelIndex>
 #include <QList>
@@ -200,8 +199,8 @@ void DashboardWidget::loadWalletModel(){
         if(txModel->size() == 0){
             ui->emptyContainer->setVisible(true);
             ui->listTransactions->setVisible(false);
-            connect(ui->pushImgEmpty, SIGNAL(clicked()), this, SLOT(openFAQ()));
-            connect(ui->btnHowTo, SIGNAL(clicked()), this, SLOT(openFAQ()));
+            connect(ui->pushImgEmpty, SIGNAL(clicked()), window, SLOT(openFAQ()));
+            connect(ui->btnHowTo, SIGNAL(clicked()), window, SLOT(openFAQ()));
         }
         connect(txModel, &TransactionTableModel::txArrived, this, &DashboardWidget::onTxArrived);
 
@@ -214,13 +213,6 @@ void DashboardWidget::loadWalletModel(){
     }
     // update the display unit, to not use the default ("PIV")
     updateDisplayUnit();
-}
-
-void DashboardWidget::openFAQ(){
-    showHideOp(true);
-    SettingsFaqWidget* dialog = new SettingsFaqWidget(window);
-    openDialogWithOpaqueBackgroundFullScreen(dialog, window);
-    dialog->deleteLater();
 }
 
 void DashboardWidget::onTxArrived(const QString& hash) {

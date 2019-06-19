@@ -83,7 +83,6 @@ private slots:
     void updateDisplayUnit();
     void showList();
     void onTxArrived(const QString& hash);
-    void openFAQ();
     void onChartYearChanged(const QString&);
     void onChartMonthChanged(const QString&);
     void onChartArrowClicked();

@@ -45,7 +45,8 @@ protected:
     void showHideOp(bool show);
     void inform(const QString& message);
     void warn(const QString& title, const QString& message);
-    void ask(const QString& title, const QString& message, bool* ret);
+    bool ask(const QString& title, const QString& message);
+    void showDialog(QDialog *dialog, int xDiv = 3, int yDiv = 5);
     void emitMessage(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
 
     bool verifyWalletUnlocked();

@@ -77,12 +77,12 @@ AddressesWidget::AddressesWidget(PIVXGUI* parent) :
     ui->listAddresses->setProperty("cssClass", "container");
 
     // Title
-    ui->labelTitle->setText("Contacts");
+    ui->labelTitle->setText(tr("Contacts"));
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
 
     /* Subtitle */
 
-    ui->labelSubtitle1->setText("You can add a new one in the options menu to the side.");
+    ui->labelSubtitle1->setText(tr("You can add a new one in the options menu to the side."));
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
     // Change eddress option
@@ -91,46 +91,39 @@ AddressesWidget::AddressesWidget(PIVXGUI* parent) :
     ui->btnAddContact->setRightIconClass("ic-arrow-down");
 
     // List Addresses
-
     ui->listAddresses->setItemDelegate(delegate);
     ui->listAddresses->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
     ui->listAddresses->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
     ui->listAddresses->setAttribute(Qt::WA_MacShowFocusRect, false);
     ui->listAddresses->setSelectionBehavior(QAbstractItemView::SelectRows);
-    //ui->listAddresses->setVisible(false);
-
 
     //Empty List
-
     ui->emptyContainer->setVisible(false);
     ui->pushImgEmpty->setProperty("cssClass", "img-empty-contacts");
 
-    ui->labelEmpty->setText("No contacts yet");
+    ui->labelEmpty->setText(tr("No contacts yet"));
     ui->labelEmpty->setProperty("cssClass", "text-empty");
 
 
     // Add Contact
-
     ui->layoutNewContact->setProperty("cssClass", "container-options");
 
 
     // Name
 
-    ui->labelName->setText("Contact name");
+    ui->labelName->setText(tr("Contact name"));
     ui->labelName->setProperty("cssClass", "text-title");
 
 
-    ui->lineEditName->setPlaceholderText("e.g John doe ");
+    ui->lineEditName->setPlaceholderText(tr("e.g John doe "));
     setCssEditLine(ui->lineEditName, true);
     ui->lineEditName->setAttribute(Qt::WA_MacShowFocusRect, 0);
     setShadow(ui->lineEditName);
 
 
     // Address
-
-    ui->labelAddress->setText("Enter a PIVX address");
+    ui->labelAddress->setText(tr("Enter a PIVX address"));
     ui->labelAddress->setProperty("cssClass", "text-title");
-
     ui->lineEditAddress->setPlaceholderText("e.g D7VFR83SQbiezrW72hjc…");
     setCssEditLine(ui->lineEditAddress, true);
     ui->lineEditAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -138,9 +131,8 @@ AddressesWidget::AddressesWidget(PIVXGUI* parent) :
 
 
     // Buttons
-
-    ui->btnSave->setText("SAVE");
-    ui->btnSave->setProperty("cssClass", "btn-primary");
+    ui->btnSave->setText(tr("SAVE"));
+    setCssBtnPrimary(ui->btnSave);
 
     connect(ui->listAddresses, SIGNAL(clicked(QModelIndex)), this, SLOT(handleAddressClicked(QModelIndex)));
     connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(onStoreContactClicked()));
@@ -177,7 +169,6 @@ void AddressesWidget::loadWalletModel(){
         ui->listAddresses->setModel(this->filter);
         ui->listAddresses->setModelColumn(AddressTableModel::Address);
 
-
         if(addressTablemodel->sizeSend() == 0){
             ui->emptyContainer->setVisible(true);
             ui->listAddresses->setVisible(false);
@@ -208,7 +199,6 @@ void AddressesWidget::onStoreContactClicked(){
         }
 
         if (walletModel->updateAddressBookLabels(pivAdd.Get(), label.toUtf8().constData(), "send")) {
-            // TODO: Complete me..
             ui->lineEditAddress->setText("");
             ui->lineEditName->setText("");
             setCssEditLine(ui->lineEditAddress, true, true);
@@ -218,7 +208,6 @@ void AddressesWidget::onStoreContactClicked(){
                 ui->emptyContainer->setVisible(false);
                 ui->listAddresses->setVisible(true);
             }
-
             inform(tr("New Contact Stored"));
         } else {
             inform(tr("Error Storing Contact"));
@@ -241,15 +230,13 @@ void AddressesWidget::onEditClicked(){
             inform(tr("Contact edit failed"));
         }
     }
+    dialog->deleteLater();
 }
 
 void AddressesWidget::onDeleteClicked(){
     if(walletModel) {
-        bool ret = false;
-        ask(tr("Delete Contact"),
-            tr("You are just about to remove the contact:\n\n%1\n\nAre you sure?").arg(index.data(Qt::DisplayRole).toString().toUtf8().constData()),
-            &ret);
-        if (ret) {
+        if (ask(tr("Delete Contact"), tr("You are just about to remove the contact:\n\n%1\n\nAre you sure?").arg(index.data(Qt::DisplayRole).toString().toUtf8().constData()))
+        ) {
             if (this->walletModel->getAddressTableModel()->removeRows(index.row(), 1, index)) {
                 inform(tr("Contact Deleted"));
             } else {

@@ -13,7 +13,7 @@
 #include "addresstablemodel.h"
 #include "coincontrol.h"
 #include "script/standard.h"
-#include <primitives/deterministicmint.h>
+#include "zpiv/deterministicmint.h"
 #include "openuridialog.h"
 #include "zpivcontroldialog.h"
 

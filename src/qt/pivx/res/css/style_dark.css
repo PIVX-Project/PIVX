@@ -725,6 +725,11 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     font-size:12px;
 }
 
+*[cssClass="text-list-caption-medium"] {
+    color:#B3FFFFFF;
+    font-size:14px;
+}
+
 *[cssClass="text-list-caption-unconfirmed"] {
     color:#B6B6B6;
 }

@@ -21,7 +21,6 @@ void PWidget::setWalletModel(WalletModel* model){
 }
 
 void PWidget::onChangeTheme(bool isLightTheme, QString& theme){
-    // Change theme in all of the childs here..
     this->setStyleSheet(theme);
     changeTheme(isLightTheme, theme);
     updateStyle(this);
@@ -39,8 +38,14 @@ void PWidget::warn(const QString& title, const QString& message){
     emitMessage(title, message, CClientUIInterface::MSG_ERROR);
 }
 
-void PWidget::ask(const QString& title, const QString& message, bool* ret){
-    emitMessage(title, message, CClientUIInterface::MSG_INFORMATION | CClientUIInterface::BTN_MASK | CClientUIInterface::MODAL, ret);
+bool PWidget::ask(const QString& title, const QString& message){
+    bool ret = false;
+    emitMessage(title, message, CClientUIInterface::MSG_INFORMATION | CClientUIInterface::BTN_MASK | CClientUIInterface::MODAL, &ret);
+    return ret;
+}
+
+void PWidget::showDialog(QDialog *dlg, int xDiv, int yDiv){
+    emit execDialog(dlg, xDiv, yDiv);
 }
 
 void PWidget::emitMessage(const QString& title, const QString& body, unsigned int style, bool* ret){

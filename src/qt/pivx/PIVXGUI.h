@@ -84,6 +84,7 @@ public slots:
     void message(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
     void messageInfo(const QString& message);
     bool execDialog(QDialog *dialog, int xDiv = 3, int yDiv = 5);
+    void openFAQ();
 #ifdef ENABLE_WALLET
     /** Set the wallet model.
         The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending

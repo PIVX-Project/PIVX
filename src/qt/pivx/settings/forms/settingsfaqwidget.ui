@@ -325,6 +325,22 @@
                      </property>
                     </widget>
                    </item>
+                   <item>
+                    <widget class="QPushButton" name="pushButtonFaq9">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>50</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>9) What is a Master Node?</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
                   </layout>
                  </widget>
                 </item>
@@ -457,7 +473,7 @@ background:transparent;
                   <x>0</x>
                   <y>0</y>
                   <width>628</width>
-                  <height>1820</height>
+                  <height>2332</height>
                  </rect>
                 </property>
                 <property name="autoFillBackground">
@@ -602,7 +618,7 @@ background:transparent;
                        </size>
                       </property>
                       <property name="text">
-                       <string>1</string>
+                       <string>2</string>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignCenter</set>
@@ -695,7 +711,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </size>
                       </property>
                       <property name="text">
-                       <string>1</string>
+                       <string>3</string>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignCenter</set>
@@ -782,7 +798,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </size>
                       </property>
                       <property name="text">
-                       <string>1</string>
+                       <string>4</string>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignCenter</set>
@@ -871,7 +887,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </size>
                       </property>
                       <property name="text">
-                       <string>1</string>
+                       <string>5</string>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignCenter</set>
@@ -961,7 +977,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </size>
                       </property>
                       <property name="text">
-                       <string>1</string>
+                       <string>6</string>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignCenter</set>
@@ -1055,7 +1071,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                        </size>
                       </property>
                       <property name="text">
-                       <string>1</string>
+                       <string>7</string>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignCenter</set>
@@ -1142,7 +1158,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                        </size>
                       </property>
                       <property name="text">
-                       <string>1</string>
+                       <string>8</string>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignCenter</set>
@@ -1196,6 +1212,119 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                       </item>
                       <item>
                        <spacer name="verticalSpacer_71">
+                        <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>20</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QWidget" name="widgetFaq9" native="true">
+                   <layout class="QHBoxLayout" name="horizontalpage_9" stretch="0,1">
+                    <item alignment="Qt::AlignTop">
+                     <widget class="QLabel" name="labelNumber9">
+                      <property name="minimumSize">
+                       <size>
+                        <width>24</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>9</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QVBoxLayout" name="verticalLayoutpage_9">
+                      <property name="leftMargin">
+                       <number>20</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="labelSubtitle9">
+                        <property name="text">
+                         <string>What is a Master Node</string>
+                        </property>
+                        <property name="wordWrap">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="verticalSpacer_Page25">
+                        <property name="orientation">
+                         <enum>Qt::Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                         <enum>QSizePolicy::Fixed</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>20</width>
+                          <height>30</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="labelContent9">
+                        <property name="text">
+                         <string>&lt;p&gt;A masternode is a computer running a full node PIVX core wallet with a requirement of 10,000 PIV secured collateral to provide extra services to the network and in return, receive a portion of the block reward regularly.  These services include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Instant transactions (SwiftX)&lt;/li&gt;
+&lt;li&gt;A decentralized governance (Proposal Voting)&lt;/li&gt;
+&lt;li&gt;A decentralized budgeting system (Treasury)&lt;/li&gt;
+&lt;li&gt;Validation of transactions within each block&lt;/li&gt;
+&lt;li&gt;Act as an additional full node in the network&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For providing such services, masternodes are also paid a certain portion of reward for each block. This can serve as a passive income to the masternode owners minus their running cost.&lt;/p&gt;
+
+&lt;p&gt;Masternode Perks&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Participate in PIVX Governance&lt;/li&gt;
+&lt;li&gt;Earn Masternode Rewards&lt;/li&gt;
+&lt;li&gt;Commodity option for future sale&lt;/li&gt;
+&lt;li&gt;Help secure the PIVX network&lt;/li&gt;
+&lt;/ul&gt;
+
+Requirements:
+&lt;ul&gt;
+&lt;li&gt;10,000 PIV per single Masternode instance&lt;/li&gt;
+&lt;li&gt;Must be stored in a core wallet&lt;/li&gt;
+&lt;li&gt;Need dedicated IP address&lt;/li&gt;
+&lt;li&gt;Masternode wallet to remain online&lt;/li&gt;
+&lt;/ul&gt;</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                        </property>
+                        <property name="wordWrap">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="verticalSpacer_72">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
