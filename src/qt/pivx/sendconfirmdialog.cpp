@@ -106,6 +106,7 @@ void TxDetailDialog::setData(WalletModel *model, QModelIndex &index){
             snackBar->setText(tr("ID copied"));
             snackBar->resize(this->width(), snackBar->height());
             openDialog(snackBar, this);
+            snackBar->deleteLater();
         });
     }
 
