@@ -36,13 +36,11 @@ ZPivControlDialog::ZPivControlDialog(QWidget *parent) :
     ui->frame->setProperty("cssClass", "container-dialog");
 
     // Title
-
-    ui->labelTitle->setText("Select zPIV Denominations to Spend");
+    ui->labelTitle->setText(tr("Select zPIV Denominations to Spend"));
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
 
     // Label Style
-
     ui->labelZPiv->setProperty("cssClass", "text-main-purple");
     ui->labelZPiv_int->setProperty("cssClass", "text-main-purple");
     ui->labelQuantity->setProperty("cssClass", "text-main-purple");
@@ -57,11 +55,8 @@ ZPivControlDialog::ZPivControlDialog(QWidget *parent) :
     ui->btnEsc->setProperty("cssClass", "ic-close");
     ui->pushButtonAll->setProperty("cssClass", "btn-check");
 
-
-
     // click on checkbox
     connect(ui->treeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this, SLOT(updateSelection(QTreeWidgetItem*, int)));
-
     // push select/deselect all button
     connect(ui->pushButtonAll, SIGNAL(clicked()), this, SLOT(ButtonAllClicked()));
 }

@@ -3,7 +3,6 @@
 #include <QFile>
 #include "qt/pivx/qtutils.h"
 #include "guiutil.h"
-#include "qt/pivx/coincontrolzpivdialog.h"
 #include "qt/pivx/denomgenerationdialog.h"
 #include "qt/pivx/defaultdialog.h"
 #include "qt/pivx/furlistrow.h"

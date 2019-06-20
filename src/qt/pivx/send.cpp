@@ -6,7 +6,6 @@
 #include "qt/pivx/sendchangeaddressdialog.h"
 #include "qt/pivx/optionbutton.h"
 #include "qt/pivx/sendcustomfeedialog.h"
-#include "qt/pivx/coincontrolzpivdialog.h"
 #include "qt/pivx/sendconfirmdialog.h"
 #include "qt/pivx/myaddressrow.h"
 #include "optionsmodel.h"
