@@ -979,7 +979,7 @@
                   <item>
                    <widget class="QLabel" name="labelMessage2_3">
                     <property name="text">
-                     <string>Puede ver el master node, mantener activo y posee la privkey ni el balance.</string>
+                     <string>Run a master node on this wallet, must be 24/7 online and have an static ip and open port.</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1015,7 +1015,7 @@
                   <item>
                    <widget class="QLabel" name="labelMessage2_4">
                     <property name="text">
-                     <string>Puede ver el master node y mantenerlo activo pero no posee la privkey ni el balance.</string>
+                     <string>Create a Master Node on this wallet, collateral will not leave this wallet and you can have as many as you want.</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
