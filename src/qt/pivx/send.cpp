@@ -266,7 +266,13 @@ void SendWidget::onUriParsed(SendCoinsRecipient rcp){
 }
 
 void SendWidget::onAddEntryClicked(){
-    // TODO: Validations here..
+    // Check prev valid entries before add a new one.
+    for (SendMultiRow* entry : entries){
+        if(!entry || !entry->validate()) {
+            inform(tr("Invalid entry, previous entries must be valid before add a new one"));
+            return;
+        }
+    }
     addEntry();
 }
 
@@ -285,7 +291,6 @@ void SendWidget::onSendClicked(){
 
     for (SendMultiRow* entry : entries){
         // TODO: Check what is the UTXO splitter here..
-
         // Validate send..
         if(entry && entry->validate()) {
             recipients.append(entry->getValue());
@@ -293,7 +298,6 @@ void SendWidget::onSendClicked(){
             inform(tr("Invalid entry"));
             return;
         }
-
     }
 
     if (recipients.isEmpty()) {
@@ -356,7 +360,6 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
             inform(tr("Transaction sent"));
             return true;
         }
-
     }
 
     dialog->deleteLater();
@@ -778,7 +781,6 @@ void SendWidget::resizeMenu(){
         menuContacts->resizeList(width, menuContacts->height());
         menuContacts->resize(width, menuContacts->height());
         QPoint pos = focusedEntry->getEditLineRect().bottomLeft();
-        // TODO: Change this position..
         pos.setX(pos.x() + 20);
         pos.setY(pos.y() + ((focusedEntry->getEditHeight() - 12)  * 3));
         menuContacts->move(pos);
