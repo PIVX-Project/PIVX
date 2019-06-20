@@ -46,7 +46,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     ui->pushButtonFile->setProperty("cssClass", "btn-settings-check");
     ui->pushButtonFile2->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonFile3->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonFile4->setProperty("cssClass", "btn-settings-options");
 
     ui->pushButtonConfiguration->setProperty("cssClass", "btn-settings-check");
     ui->pushButtonConfiguration3->setProperty("cssClass", "btn-settings-options");
@@ -109,7 +108,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     connect(ui->pushButtonFile, SIGNAL(clicked()), this, SLOT(onFileClicked()));
     connect(ui->pushButtonFile2, SIGNAL(clicked()), this, SLOT(onBackupWalletClicked()));
     connect(ui->pushButtonFile3, SIGNAL(clicked()), this, SLOT(onSignMessageClicked()));
-    connect(ui->pushButtonFile4, SIGNAL(clicked()), this, SLOT(onVerifyMessageClicked()));
 
     // Options
     connect(ui->pushButtonOptions, SIGNAL(clicked()), this, SLOT(onOptionsClicked()));
@@ -198,10 +196,6 @@ void SettingsWidget::onBackupWalletClicked() {
 }
 
 void SettingsWidget::onSignMessageClicked() {
-    ui->stackedWidgetContainer->setCurrentWidget(settingsSingMessageWidgets);
-}
-
-void SettingsWidget::onVerifyMessageClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsSingMessageWidgets);
 }
 

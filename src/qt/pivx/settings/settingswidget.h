@@ -48,7 +48,6 @@ private slots:
     void onFileClicked();
     void onBackupWalletClicked();
     void onSignMessageClicked();
-    void onVerifyMessageClicked();
 
     // Wallet Configuration
     void onConfigurationClicked();
