@@ -51,7 +51,6 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     ui->pushRight->setProperty("cssClass", "btn-check-right");
 
     /* Subtitle */
-
     ui->labelSubtitle1->setText(tr("You can transfer public coins: PIV or private ones: zPIV"));
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
@@ -59,18 +58,15 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     ui->labelSubtitle2->setProperty("cssClass", "text-subtitle");
 
     /* Address */
-
     ui->labelSubtitleAddress->setText(tr("Enter a PIVX address or contact label"));
     ui->labelSubtitleAddress->setProperty("cssClass", "text-title");
 
 
     /* Amount */
-
     ui->labelSubtitleAmount->setText(tr("Amount"));
     ui->labelSubtitleAmount->setProperty("cssClass", "text-title");
 
-    // Buttons
-
+    /* Buttons */
     ui->pushButtonFee->setText(tr("Standard Fee %1").arg("0.000005 PIV"));
     ui->pushButtonFee->setProperty("cssClass", "btn-secundary");
 
@@ -108,7 +104,6 @@ SendWidget::SendWidget(PIVXGUI* parent) :
 
 
     // Total Send
-
     ui->labelTitleTotalSend->setText(tr("Total to send"));
     ui->labelTitleTotalSend->setProperty("cssClass", "text-title");
 
@@ -116,7 +111,6 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     ui->labelAmountSend->setProperty("cssClass", "text-body1");
 
     // Total Remaining
-
     ui->labelTitleTotalRemaining->setText(tr("Total remaining"));
     ui->labelTitleTotalRemaining->setProperty("cssClass", "text-title");
 
@@ -290,7 +284,7 @@ void SendWidget::onSendClicked(){
     QList<SendCoinsRecipient> recipients;
 
     for (SendMultiRow* entry : entries){
-        // TODO: Check what is the UTXO splitter here..
+        // TODO: Check UTXO splitter here..
         // Validate send..
         if(entry && entry->validate()) {
             recipients.append(entry->getValue());

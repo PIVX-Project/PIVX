@@ -18,7 +18,7 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
     this->setStyleSheet(parent->styleSheet());
 
     ui->lineEditAddress->setPlaceholderText(tr("Add address"));
-    ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book");
+    setCssProperty(ui->lineEditAddress, "edit-primary-multi-book");
     ui->lineEditAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
     setShadow(ui->stackedAddress);
 
@@ -69,6 +69,7 @@ void SendMultiRow::amountChanged(const QString& amount){
         CAmount value = getAmountValue(amount);
         if (value > 0) {
             ui->lineEditAmount->setText(amount);
+            setCssEditLine(ui->lineEditAmount, true, true);
         }
     }
     emit onValueChanged();
@@ -102,10 +103,10 @@ bool SendMultiRow::addressChanged(const QString& str){
 
                 emit onUriParsed(rcp);
             } else {
-                ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book-error");
+                setCssProperty(ui->lineEditAddress, "edit-primary-multi-book-error");
             }
         } else {
-            ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book");
+            setCssProperty(ui->lineEditAddress, "edit-primary-multi-book");
             QString label = walletModel->getAddressTableModel()->labelForAddress(trimmedStr);
             if (!label.isNull()){
                 ui->lineEditDescription->setText(label);
@@ -155,7 +156,11 @@ bool SendMultiRow::validate()
 
     // Check address validity, returns false if it's invalid
     QString address = ui->lineEditAddress->text();
-    retval = addressChanged(address);
+    if (address.isEmpty()){
+        retval = false;
+        setCssProperty(ui->lineEditAddress, "edit-primary-multi-book-error", true);
+    } else
+        retval = addressChanged(address);
 
     CAmount value = getAmountValue(ui->lineEditAmount->text());
 
