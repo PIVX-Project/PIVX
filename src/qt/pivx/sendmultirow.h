@@ -29,7 +29,7 @@ public:
     void setNumber(int number);
     int getNumber();
 
-    void setModel(WalletModel* model);
+    void loadWalletModel() override;
     bool validate();
     SendCoinsRecipient getValue();
     QString getAddress();
@@ -50,12 +50,14 @@ public:
 
 public slots:
     void clear();
+    void updateDisplayUnit();
 
 signals:
     void removeEntry(SendMultiRow* entry);
     void onContactsClicked(SendMultiRow* entry);
     void onMenuClicked(SendMultiRow* entry);
     void onValueChanged();
+    void onUriParsed(SendCoinsRecipient rcp);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -74,7 +76,6 @@ private:
     QPushButton *iconNumber;
     QAction *btnContact;
 
-    WalletModel *model = nullptr;
     int displayUnit;
     int number = 0;
     bool isExpanded = false;

@@ -17,7 +17,7 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
 
     this->setStyleSheet(parent->styleSheet());
 
-    ui->lineEditAddress->setPlaceholderText("Add address");
+    ui->lineEditAddress->setPlaceholderText(tr("Add address"));
     ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book");
     ui->lineEditAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
     setShadow(ui->stackedAddress);
@@ -32,7 +32,7 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
     ui->labelSubtitleDescription->setText("Label address (optional)");
     ui->labelSubtitleDescription->setProperty("cssClass", "text-title");
 
-    ui->lineEditDescription->setPlaceholderText("Add description");
+    ui->lineEditDescription->setPlaceholderText(tr("Add description"));
     initCssEditLine(ui->lineEditDescription);
 
     // Button menu
@@ -41,7 +41,6 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
 
     // Button Contact
     btnContact = ui->lineEditAddress->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
-
     // Icon Number
     ui->stackedAddress->addWidget(iconNumber);
     iconNumber->show();
@@ -59,7 +58,6 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
     int posIconY = 14;
     iconNumber->move(posIconX, posIconY);
 
-    // TODO: add validator --> there is a class in the core QValidateLineEdit and some methods..
     connect(ui->lineEditAmount, SIGNAL(textChanged(const QString&)), this, SLOT(amountChanged(const QString&)));
     connect(ui->lineEditAddress, SIGNAL(textChanged(const QString&)), this, SLOT(addressChanged(const QString&)));
     connect(btnContact, &QAction::triggered, [this](){emit onContactsClicked(this);});
@@ -88,12 +86,27 @@ CAmount SendMultiRow::getAmountValue(QString amount){
 bool SendMultiRow::addressChanged(const QString& str){
     if(!str.isEmpty()) {
         QString trimmedStr = str.trimmed();
-        bool valid = model->validateAddress(trimmedStr);
+        bool valid = walletModel->validateAddress(trimmedStr);
         if (!valid) {
-            ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book-error");
+            // check URI
+            SendCoinsRecipient rcp;
+            if (GUIUtil::parseBitcoinURI(trimmedStr, &rcp)) {
+                ui->lineEditAddress->setText(rcp.address);
+                ui->lineEditAmount->setText(BitcoinUnits::format(displayUnit, rcp.amount, false));
+
+                QString label = walletModel->getAddressTableModel()->labelForAddress(rcp.address);
+                if (!label.isNull() && !label.isEmpty()){
+                    ui->lineEditDescription->setText(label);
+                } else if(!rcp.message.isEmpty())
+                    ui->lineEditDescription->setText(rcp.message);
+
+                emit onUriParsed(rcp);
+            } else {
+                ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book-error");
+            }
         } else {
             ui->lineEditAddress->setProperty("cssClass", "edit-primary-multi-book");
-            QString label = model->getAddressTableModel()->labelForAddress(trimmedStr);
+            QString label = walletModel->getAddressTableModel()->labelForAddress(trimmedStr);
             if (!label.isNull()){
                 ui->lineEditDescription->setText(label);
             }
@@ -105,16 +118,17 @@ bool SendMultiRow::addressChanged(const QString& str){
 }
 
 
-void SendMultiRow::setModel(WalletModel* model) {
-    this->model = model;
-
-    // TODO:Complete me..
-    if (model && model->getOptionsModel()) {
-        displayUnit = model->getOptionsModel()->getDisplayUnit();
-        //connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
+void SendMultiRow::loadWalletModel() {
+    if (walletModel && walletModel->getOptionsModel()) {
+        displayUnit = walletModel->getOptionsModel()->getDisplayUnit();
+        connect(walletModel->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
     }
-
     clear();
+}
+
+void SendMultiRow::updateDisplayUnit(){
+    // Update edit text..
+    displayUnit = walletModel->getOptionsModel()->getDisplayUnit();
 }
 
 void SendMultiRow::deleteClicked() {
@@ -129,7 +143,7 @@ void SendMultiRow::clear() {
 
 bool SendMultiRow::validate()
 {
-    if (!model)
+    if (!walletModel)
         return false;
 
     // Check input validity

@@ -10,10 +10,8 @@
 #include "qt/pivx/settings/settingsinformationwidget.h"
 #include "qt/pivx/settings/settingsconsolewidget.h"
 #include "qt/pivx/settings/settingswindowoptionswidget.h"
-#include "qt/pivx/settings/settingsfaqwidget.h"
 #include "qt/pivx/settings/forms/ui_settingswidget.h"
 #include "qt/pivx/qtutils.h"
-#include <QFile>
 #include <QScrollBar>
 #include <QDataWidgetMapper>
 #include "optionsmodel.h"
@@ -135,7 +133,7 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
 
     // Help
     connect(ui->pushButtonHelp, SIGNAL(clicked()), this, SLOT(onHelpClicked()));
-    connect(ui->pushButtonHelp1, SIGNAL(clicked()), this, SLOT(onFaqClicked()));
+    connect(ui->pushButtonHelp1, SIGNAL(clicked()), window, SLOT(openFAQ()));
 
     // Get restart command-line parameters and handle restart
     connect(settingsWalletRepairWidget, &SettingsWalletRepairWidget::handleRestart, [this](QStringList arg){emit handleRestart(arg);});
@@ -325,13 +323,6 @@ void SettingsWidget::onHelpClicked() {
     } else {
         ui->helpButtonsWidget->setVisible(false);
     }
-}
-
-void SettingsWidget::onFaqClicked() {
-    window->showHide(true);
-    SettingsFaqWidget* dialog = new SettingsFaqWidget(window);
-    openDialogWithOpaqueBackgroundFullScreen(dialog, window);
-    dialog->deleteLater();
 }
 
 void SettingsWidget::onAboutClicked() {

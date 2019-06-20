@@ -71,7 +71,6 @@ private slots:
 
     // Help
     void onHelpClicked();
-    void onFaqClicked();
     void onAboutClicked();
 
 private:

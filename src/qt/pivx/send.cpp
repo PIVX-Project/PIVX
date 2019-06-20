@@ -97,6 +97,7 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     // Uri
     ui->btnUri->setTitleClassAndText("btn-title-grey", "Open URI");
     ui->btnUri->setSubTitleClassAndText("text-subtitle", "Parse a payment request.");
+    ui->btnUri->setVisible(false);
 
     connect(ui->pushButtonFee, SIGNAL(clicked()), this, SLOT(onChangeCustomFeeClicked()));
     connect(ui->btnCoinControl, SIGNAL(clicked()), this, SLOT(onCoinControlClicked()));
@@ -197,26 +198,20 @@ void SendWidget::loadWalletModel() {
     if (walletModel && walletModel->getOptionsModel()) {
         for(SendMultiRow *entry : entries){
             if(entry){
-                entry->setModel(walletModel);
+                entry->setWalletModel(walletModel);
             }
         }
-
-        // TODO: Unit display complete me
-        //connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
-        //updateDisplayUnit();
 
         // Refresh view
         refreshView();
 
         // TODO: Coin control complet eme
         // Coin Control
-        //connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(coinControlUpdateLabels()));
         //connect(model->getOptionsModel(), SIGNAL(coinControlFeaturesChanged(bool)), this, SLOT(coinControlFeatureChanged(bool)));
         //ui->frameCoinControl->setVisible(model->getOptionsModel()->getCoinControlFeatures());
         //coinControlUpdateLabels();
 
         // TODO: fee section, check sendDialog, same method
-
     }
 }
 
@@ -246,7 +241,6 @@ void SendWidget::addEntry(){
             entry->hideLabels();
             entry->setNumber(1);
         }else if(entries.length() == MAX_SEND_POPUP_ENTRIES){
-            // TODO: Snackbar notifying that it surpassed the max amount of entries
             inform(tr("Maximum amount of outputs reached"));
             return;
         }
@@ -259,13 +253,17 @@ void SendWidget::addEntry(){
 
 SendMultiRow* SendWidget::createEntry(){
     SendMultiRow *sendMultiRow = new SendMultiRow(this);
-    if(this->walletModel)sendMultiRow->setModel(this->walletModel);
+    if(this->walletModel) sendMultiRow->setWalletModel(this->walletModel);
     entries.append(sendMultiRow);
     ui->scrollAreaWidgetContents->layout()->addWidget(sendMultiRow);
     connect(sendMultiRow, &SendMultiRow::onContactsClicked, this, &SendWidget::onContactsClicked);
     connect(sendMultiRow, &SendMultiRow::onMenuClicked, this, &SendWidget::onMenuClicked);
     connect(sendMultiRow, &SendMultiRow::onValueChanged, this, &SendWidget::onValueChanged);
     return sendMultiRow;
+}
+
+void SendWidget::onUriParsed(SendCoinsRecipient rcp){
+    // Amount changed..
 }
 
 void SendWidget::onAddEntryClicked(){
@@ -319,8 +317,6 @@ void SendWidget::onSendClicked(){
     if((sendPiv) ? send(recipients) : sendZpiv(recipients)) {
         updateEntryLabels(recipients);
     }
-
-
 }
 
 bool SendWidget::send(QList<SendCoinsRecipient> recipients){
@@ -341,9 +337,6 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
         inform(tr("Prepare status failed.."));
         return false;
     }
-
-    CAmount txFee = currentTransaction.getTransactionFee();
-    CAmount totalAmount = currentTransaction.getTotalTransactionAmount() + txFee;
 
     showHideOp(true);
     TxDetailDialog* dialog = new TxDetailDialog(window);

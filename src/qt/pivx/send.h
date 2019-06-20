@@ -48,6 +48,7 @@ public slots:
     void onOpenUriClicked();
     void onValueChanged();
     void refreshAmounts();
+    void onUriParsed(SendCoinsRecipient rcp);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
