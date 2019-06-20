@@ -21,10 +21,12 @@ public:
     ~RequestDialog();
 
     void setWalletModel(WalletModel *model);
+    int res = -1;
 
 private slots:
     void onNextClicked();
     void onCopyClicked();
+    void onCopyUriClicked();
 
 private:
     Ui::RequestDialog *ui;

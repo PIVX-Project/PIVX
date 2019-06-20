@@ -267,12 +267,17 @@ void ReceiveWidget::onCopyClicked(){
 
 void ReceiveWidget::onRequestClicked(){
     if(walletModel && !isShowingDialog) {
-        isShowingDialog = true;
         if (!verifyWalletUnlocked()) return;
+        isShowingDialog = true;
         showHideOp(true);
         RequestDialog *dialog = new RequestDialog(window);
         dialog->setWalletModel(walletModel);
         openDialogWithOpaqueBackgroundY(dialog, window, 3.5, 12);
+        if (dialog->res == 1){
+            inform(tr("URI copied to clipboard"));
+        } else if (dialog->res == 2){
+            inform(tr("Address copied to clipboard"));
+        }
         dialog->deleteLater();
         isShowingDialog = false;
     }

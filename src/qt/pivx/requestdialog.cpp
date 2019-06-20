@@ -82,6 +82,7 @@ RequestDialog::RequestDialog(QWidget *parent) :
     connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(onNextClicked()));
     // TODO: Change copy address for save image (the method is already implemented in other class called exportQr or something like that)
     connect(ui->btnCopyAddress, SIGNAL(clicked()), this, SLOT(onCopyClicked()));
+    connect(ui->btnCopyUrl, SIGNAL(clicked()), this, SLOT(onCopyUriClicked()));
 }
 
 void RequestDialog::setWalletModel(WalletModel *model){
@@ -123,9 +124,17 @@ void RequestDialog::onNextClicked(){
 
 void RequestDialog::onCopyClicked(){
     if(info) {
+        GUIUtil::setClipboard(info->address);
+        res = 2;
+        accept();
+    }
+}
+
+void RequestDialog::onCopyUriClicked(){
+    if(info) {
         GUIUtil::setClipboard(GUIUtil::formatBitcoinURI(*info));
-        static_cast<PIVXGUI*>(parentWidget())->messageInfo(tr("URI copied to clipboard"));
-        close();
+        res = 1;
+        accept();
     }
 }
 
