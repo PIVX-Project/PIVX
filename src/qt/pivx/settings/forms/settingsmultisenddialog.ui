@@ -206,7 +206,7 @@
        </spacer>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="2,0,1">
+       <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="4,0,1">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -234,7 +234,7 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item alignment="Qt::AlignVCenter">
            <widget class="QLineEdit" name="lineEditAddress">
             <property name="minimumSize">
              <size>
@@ -280,11 +280,11 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item alignment="Qt::AlignVCenter">
            <widget class="QComboBox" name="comboBoxPercentage">
             <property name="minimumSize">
              <size>
-              <width>170</width>
+              <width>100</width>
               <height>50</height>
              </size>
             </property>
