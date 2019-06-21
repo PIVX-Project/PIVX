@@ -92,18 +92,31 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QValidatedLineEdit" name="uriEdit"/>
+         <widget class="QValidatedLineEdit" name="uriEdit">
+          <property name="styleSheet">
+           <string notr="true">#uriEdit{
+	border-top-right-radius:0px;
+	border-bottom-right-radius:0px;
+}</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="selectFileButton">
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>40</height>
+            <height>41</height>
            </size>
           </property>
           <property name="toolTip">
            <string>Select payment request file</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#selectFileButton{
+	border-top-left-radius:0px;
+	border-bottom-left-radius:0px;
+}</string>
           </property>
           <property name="text">
            <string notr="true">...</string>

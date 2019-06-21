@@ -41,6 +41,8 @@ public:
 
     void setAddress(const QString& address);
     void setLabel(const QString& label);
+    void setAmount(const QString& amount);
+    void setAddressAndLabelOrDescription(const QString& address, const QString& message);
     void setFocus();
 
     QRect getEditLineRect();

@@ -27,8 +27,8 @@ OpenURIDialog::OpenURIDialog(QWidget* parent) : QDialog(parent, Qt::WindowSystem
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
     setCssBtnPrimary(ui->pushButtonOK);
-    setCssBtnPrimary(ui->pushButtonCancel);
     setCssBtnPrimary(ui->selectFileButton);
+    ui->pushButtonCancel->setProperty("cssClass", "btn-dialog-cancel");
 
     ui->uriEdit->setPlaceholderText("0.000001 zPIV");
     initCssEditLine(ui->uriEdit, true);

@@ -92,7 +92,6 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     // Uri
     ui->btnUri->setTitleClassAndText("btn-title-grey", "Open URI");
     ui->btnUri->setSubTitleClassAndText("text-subtitle", "Parse a payment request.");
-    ui->btnUri->setVisible(false);
 
     connect(ui->pushButtonFee, SIGNAL(clicked()), this, SLOT(onChangeCustomFeeClicked()));
     connect(ui->btnCoinControl, SIGNAL(clicked()), this, SLOT(onCoinControlClicked()));
@@ -168,7 +167,7 @@ void SendWidget::refreshAmounts() {
     }
 
     bool isZpiv = ui->pushRight->isChecked();
-    int nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
+    nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
 
     ui->labelAmountSend->setText(GUIUtil::formatBalance(total, nDisplayUnit, isZpiv));
     ui->labelAmountRemaining->setText(
@@ -189,6 +188,9 @@ void SendWidget::loadClientModel(){
 
 void SendWidget::loadWalletModel() {
     if (walletModel && walletModel->getOptionsModel()) {
+        // display unit
+        nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
+
         for(SendMultiRow *entry : entries){
             if(entry){
                 entry->setWalletModel(walletModel);
@@ -253,10 +255,6 @@ SendMultiRow* SendWidget::createEntry(){
     connect(sendMultiRow, &SendMultiRow::onMenuClicked, this, &SendWidget::onMenuClicked);
     connect(sendMultiRow, &SendMultiRow::onValueChanged, this, &SendWidget::onValueChanged);
     return sendMultiRow;
-}
-
-void SendWidget::onUriParsed(SendCoinsRecipient rcp){
-    // Amount changed..
 }
 
 void SendWidget::onAddEntryClicked(){
@@ -573,6 +571,32 @@ void SendWidget::onOpenUriClicked(){
     showHideOp(true);
     OpenURIDialog *dlg = new OpenURIDialog(window);
     if (openDialogWithOpaqueBackgroundY(dlg, window, 3, 5)) {
+
+        SendCoinsRecipient rcp;
+        if (!GUIUtil::parseBitcoinURI(dlg->getURI(), &rcp)) {
+            inform(tr("Invalid URI"));
+            return;
+        }
+        if (!walletModel->validateAddress(rcp.address)) {
+            inform(tr("Invalid address in URI"));
+            return;
+        }
+
+        int listSize = entries.size();
+        if (listSize == 1) {
+            SendMultiRow *entry = entries[0];
+            entry->setAddressAndLabelOrDescription(rcp.address, rcp.message);
+            entry->setAmount(BitcoinUnits::format(nDisplayUnit, rcp.amount, false));
+        } else {
+            // Use the last one if it's invalid or add a new one
+            SendMultiRow *entry = entries[listSize - 1];
+            if (!entry->validate()) {
+                addEntry();
+                entry = entries[listSize];
+            }
+            entry->setAddressAndLabelOrDescription(rcp.address, rcp.message);
+            entry->setAmount(BitcoinUnits::format(nDisplayUnit, rcp.amount, false));
+        }
         emit receivedURI(dlg->getURI());
     }
     dlg->deleteLater();

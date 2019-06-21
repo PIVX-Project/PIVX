@@ -48,7 +48,6 @@ public slots:
     void onOpenUriClicked();
     void onValueChanged();
     void refreshAmounts();
-    void onUriParsed(SendCoinsRecipient rcp);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -69,6 +68,7 @@ private:
     QPushButton *coinIcon;
     QPushButton *btnContacts;
 
+    int nDisplayUnit;
     QList<SendMultiRow*> entries;
     CoinControlDialog *coinControlDialog = nullptr;
 

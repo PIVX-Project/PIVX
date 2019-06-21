@@ -227,6 +227,18 @@ void SendMultiRow::setAddress(const QString& address) {
     ui->lineEditAmount->setFocus();
 }
 
+void SendMultiRow::setAmount(const QString& amount){
+    ui->lineEditAmount->setText(amount);
+}
+
+void SendMultiRow::setAddressAndLabelOrDescription(const QString& address, const QString& message){
+    QString label = walletModel->getAddressTableModel()->labelForAddress(address);
+    if (!label.isNull() && !label.isEmpty()){
+        ui->lineEditDescription->setText(label);
+    } else if(!message.isEmpty())
+        ui->lineEditDescription->setText(message);
+}
+
 void SendMultiRow::setLabel(const QString& label){
     ui->lineEditDescription->setText(label);
 }
