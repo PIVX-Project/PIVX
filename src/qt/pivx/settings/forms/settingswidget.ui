@@ -203,7 +203,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>File</string>
+                        <string>Wallet Data</string>
                        </property>
                        <property name="checkable">
                         <bool>true</bool>
@@ -273,7 +273,7 @@
                          </size>
                         </property>
                         <property name="text">
-                         <string>Sign/Verify Message</string>
+                         <string>Multisend</string>
                         </property>
                         <property name="checkable">
                          <bool>true</bool>
@@ -312,7 +312,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>Wallet Configuration</string>
+                        <string>Tools</string>
                        </property>
                        <property name="checkable">
                         <bool>true</bool>
@@ -343,6 +343,31 @@
                        <number>0</number>
                       </property>
                       <item>
+                       <widget class="QPushButton" name="pushButtonConfiguration4">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>50</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>16777215</width>
+                          <height>50</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string>Sign/Verify Message</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
                        <widget class="QPushButton" name="pushButtonConfiguration3">
                         <property name="minimumSize">
                          <size>
@@ -358,31 +383,6 @@
                         </property>
                         <property name="text">
                          <string>BIP38 Tool</string>
-                        </property>
-                        <property name="checkable">
-                         <bool>true</bool>
-                        </property>
-                        <property name="autoExclusive">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="pushButtonConfiguration4">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16777215</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <property name="text">
-                         <string>Multisend</string>
                         </property>
                         <property name="checkable">
                          <bool>true</bool>

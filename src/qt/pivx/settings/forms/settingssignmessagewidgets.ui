@@ -91,11 +91,16 @@
              </item>
             </layout>
            </item>
-           <item alignment="Qt::AlignRight">
+           <item alignment="Qt::AlignRight|Qt::AlignTop">
             <widget class="QWidget" name="containerSwitch" native="true">
+             <property name="styleSheet">
+              <string notr="true">#containerSwitch{
+	padding-top:9px;
+}</string>
+             </property>
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <property name="spacing">
-               <number>0</number>
+               <number>4</number>
               </property>
               <property name="leftMargin">
                <number>0</number>

@@ -57,7 +57,6 @@ SettingsSignMessageWidgets::SettingsSignMessageWidgets(PIVXGUI* _window, QWidget
     ui->labelSubtitleMessage->setText(tr("Message"));
     ui->labelSubtitleMessage->setProperty("cssClass", "text-title");
 
-    ui->messageIn_SM->setProperty("cssClass", "edit-primary");
     ui->messageIn_SM->setPlaceholderText(tr("Write a message"));
     ui->messageIn_SM->setProperty("cssClass","edit-primary");
     setShadow(ui->messageIn_SM);
@@ -260,7 +259,7 @@ void SettingsSignMessageWidgets::onVerifyMessage(){
 void SettingsSignMessageWidgets::onAddressesClicked(){
     int addressSize = walletModel->getAddressTableModel()->sizeRecv();
     if(addressSize == 0) {
-        inform(tr("No contacts available, you can go to the contacts screen and add some there!"));
+        inform(tr("No addresses available, you can go to the receive screen and add some there!"));
         return;
     }
 

@@ -107,7 +107,7 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     // File Section
     connect(ui->pushButtonFile, SIGNAL(clicked()), this, SLOT(onFileClicked()));
     connect(ui->pushButtonFile2, SIGNAL(clicked()), this, SLOT(onBackupWalletClicked()));
-    connect(ui->pushButtonFile3, SIGNAL(clicked()), this, SLOT(onSignMessageClicked()));
+    connect(ui->pushButtonFile3, SIGNAL(clicked()), this, SLOT(onMultisendClicked()));
 
     // Options
     connect(ui->pushButtonOptions, SIGNAL(clicked()), this, SLOT(onOptionsClicked()));
@@ -120,7 +120,7 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     // Configuration
     connect(ui->pushButtonConfiguration, SIGNAL(clicked()), this, SLOT(onConfigurationClicked()));
     connect(ui->pushButtonConfiguration3, SIGNAL(clicked()), this, SLOT(onBipToolClicked()));
-    connect(ui->pushButtonConfiguration4, SIGNAL(clicked()), this, SLOT(onMultisendClicked()));
+    connect(ui->pushButtonConfiguration4, SIGNAL(clicked()), this, SLOT(onSignMessageClicked()));
 
     // Tools
     connect(ui->pushButtonTools, SIGNAL(clicked()), this, SLOT(onToolsClicked()));
