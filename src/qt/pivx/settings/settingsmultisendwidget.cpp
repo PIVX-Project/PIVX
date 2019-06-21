@@ -2,6 +2,10 @@
 #include "qt/pivx/settings/forms/ui_settingsmultisendwidget.h"
 #include "qt/pivx/settings/settingsmultisenddialog.h"
 #include "qt/pivx/qtutils.h"
+#include "addresstablemodel.h"
+#include "base58.h"
+#include "init.h"
+#include "walletmodel.h"
 
 SettingsMultisendWidget::SettingsMultisendWidget(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window, parent),
@@ -13,38 +17,35 @@ SettingsMultisendWidget::SettingsMultisendWidget(PIVXGUI* _window, QWidget *pare
     this->setStyleSheet(parent->styleSheet());
 
     // Containers
-
     ui->left->setProperty("cssClass", "container");
     ui->left->setContentsMargins(10,10,10,10);
 
     // Title
-
     ui->labelTitle->setText("Multisend");
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
 
-
-    // Subtitle
-
-    ui->labelSubtitle1->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
+    ui->labelSubtitle1->setText(tr("MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other PIVX addresses after it matures.\n\nTo Add: enter percentage to give and PIVX address to add to the MultiSend vector.\n\nTo Delete: Enter address to delete and press delete."));
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
     // list
-
     ui->listView->setVisible(false);
 
-    //ui->emptyContainer->setVisible(false);
-    ui->pushImgEmpty->setProperty("cssClass", "img-empty-multisend");
+    //Button Group
+    ui->pushLeft->setText(tr("Active"));
+    ui->pushLeft->setProperty("cssClass", "btn-check-left");
+    ui->pushRight->setText(tr("Disable"));
+    ui->pushRight->setProperty("cssClass", "btn-check-right");
+    ui->pushLeft->setChecked(true);
 
-    ui->labelEmpty->setText("No active recipient yet");
+    ui->pushImgEmpty->setProperty("cssClass", "img-empty-multisend");
+    ui->labelEmpty->setText(tr("No active recipient yet"));
     ui->labelEmpty->setProperty("cssClass", "text-empty");
 
     // Buttons
-
-    ui->pushButtonSave->setText("ADD RECIPIENT");
-    ui->pushButtonSave->setProperty("cssClass", "btn-primary");
-
-    ui->pushButtonClear->setText("CLEAR ALL");
-    ui->pushButtonClear->setProperty("cssClass", "btn-text-primary");
+    ui->pushButtonSave->setText(tr("ADD RECIPIENT"));
+    ui->pushButtonClear->setText(tr("CLEAR ALL"));
+    setCssBtnPrimary(ui->pushButtonSave);
+    setCssBtnSecondary(ui->pushButtonClear);
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(onAddRecipientClicked()));
 }

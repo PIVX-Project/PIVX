@@ -2,6 +2,7 @@
 #include "qt/pivx/settings/forms/ui_settingsmultisenddialog.h"
 #include "QGraphicsDropShadowEffect"
 #include "QListView"
+#include "qt/pivx/qtutils.h"
 
 SettingsMultisendDialog::SettingsMultisendDialog(QWidget *parent) :
     QDialog(parent),
@@ -13,87 +14,49 @@ SettingsMultisendDialog::SettingsMultisendDialog(QWidget *parent) :
     this->setStyleSheet(parent->styleSheet());
 
     // Container
-
     ui->frame->setProperty("cssClass", "container-dialog");
 
     // Text
-
-    ui->labelTitle->setText("New recipient for multisend");
+    ui->labelTitle->setText(tr("New recipient for multisend"));
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
     // CheckBox
-
-    ui->checkBoxStake->setText("Stakes");
-    ui->checkBoxRewards->setText("Masternode rewards");
-
-
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22)
-);
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
-    QGraphicsDropShadowEffect* shadowEffect2 = new QGraphicsDropShadowEffect();
-    shadowEffect2->setColor(QColor(0, 0, 0, 22));
-    shadowEffect2->setXOffset(0);
-    shadowEffect2->setYOffset(3);
-    shadowEffect2->setBlurRadius(6);
-
-    QGraphicsDropShadowEffect* shadowEffect3 = new QGraphicsDropShadowEffect();
-    shadowEffect3->setColor(QColor(0, 0, 0, 22));
-    shadowEffect3->setXOffset(0);
-    shadowEffect3->setYOffset(3);
-    shadowEffect3->setBlurRadius(6);
-
+    ui->checkBoxStake->setText(tr("Stakes"));
+    ui->checkBoxRewards->setText(tr("Masternode rewards"));
 
     // Label
-
-    ui->labelSubtitleLabel->setText("Label (optional)");
+    ui->labelSubtitleLabel->setText(tr("Label (optional)"));
     ui->labelSubtitleLabel->setProperty("cssClass", "text-title2-dialog");
 
-    ui->lineEditLabel->setPlaceholderText("Enter a label to add this address in your address book");
-    ui->lineEditLabel->setProperty("cssClass", "edit-primary-dialog");
-    ui->lineEditLabel->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditLabel->setGraphicsEffect(shadowEffect);
+    ui->lineEditLabel->setPlaceholderText(tr("Enter a label to add this address in your address book"));
+    initCssEditLine(ui->lineEditLabel, true);
 
 
     // Address
-
     ui->labelSubtitleAddress->setText("Enter a PIVX address or contact label");
     ui->labelSubtitleAddress->setProperty("cssClass", "text-title2-dialog");
 
     ui->lineEditAddress->setPlaceholderText("e.g D7VFR83SQbiezrW72hjc… ");
-    ui->lineEditAddress->setProperty("cssClass", "edit-primary-dialog");
-    ui->lineEditAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditAddress->setGraphicsEffect(shadowEffect2);
-
+    initCssEditLine(ui->lineEditAddress, true);
 
     // Combobox
-
-    ui->labelSubtitlePercentage->setText("Porcentage");
+    ui->labelSubtitlePercentage->setText(tr("Percentage"));
     ui->labelSubtitlePercentage->setProperty("cssClass", "text-title2-dialog");
 
 
     ui->comboBoxPercentage->setProperty("cssClass", "btn-combo-edit-dialog");
-    ui->comboBoxPercentage->setGraphicsEffect(shadowEffect3);
-
-    QListView * listViewStake = new QListView();
-    ui->comboBoxPercentage->setView(listViewStake);
+    setShadow(ui->comboBoxPercentage);
+    ui->comboBoxPercentage->setView(new QListView());
 
     ui->comboBoxPercentage->addItem("8%");
     ui->comboBoxPercentage->addItem("10%");
 
-
-
     // Buttons
-
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");
-
     ui->btnCancel->setProperty("cssClass", "btn-dialog-cancel");
-    ui->btnSave->setText("ACTIVATE");
-    ui->btnSave->setProperty("cssClass", "btn-primary");
+    ui->btnSave->setText("ADD");
+    setCssBtnPrimary(ui->btnSave);
 
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
