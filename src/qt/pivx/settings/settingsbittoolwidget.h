@@ -16,6 +16,8 @@ class SettingsBitToolWidget : public PWidget
 public:
     explicit SettingsBitToolWidget(PIVXGUI* _window, QWidget *parent = nullptr);
     ~SettingsBitToolWidget();
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 public slots:
     void onEncryptSelected(bool isEncr);
     void setAddress_ENC(const QString& address);
@@ -26,6 +28,9 @@ public slots:
 private:
     Ui::SettingsBitToolWidget *ui;
     QAction *btnContact;
+    ContactsDropdown *menuContacts = nullptr;
+
+    void resizeMenu();
 };
 
 #endif // SETTINGSBITTOOLWIDGET_H

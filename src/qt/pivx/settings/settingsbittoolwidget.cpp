@@ -39,13 +39,12 @@ SettingsBitToolWidget::SettingsBitToolWidget(PIVXGUI* _window, QWidget *parent) 
     ui->pushLeft->setChecked(true);
 
     // Subtitle
-    ui->labelSubtitle1->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
+    ui->labelSubtitle1->setText("Enter a PIVX Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.");
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
     // Key
     ui->labelSubtitleKey->setText(tr("Encrypted key"));
     ui->labelSubtitleKey->setProperty("cssClass", "text-title");
-
     ui->lineEditKey->setPlaceholderText(tr("Enter a encrypted key"));
     initCssEditLine(ui->lineEditKey);
 
@@ -58,7 +57,7 @@ SettingsBitToolWidget::SettingsBitToolWidget(PIVXGUI* _window, QWidget *parent) 
 
     // Buttons
     ui->pushButtonSave->setText(tr("DECRYPT KEY"));
-    ui->pushButtonSave->setProperty("cssClass", "btn-primary");
+    setCssBtnPrimary(ui->pushButtonSave);
 
     ui->pushButtonImport->setText(tr("Import Address"));
     ui->pushButtonImport->setProperty("cssClass", "btn-text-primary");
@@ -98,9 +97,9 @@ SettingsBitToolWidget::SettingsBitToolWidget(PIVXGUI* _window, QWidget *parent) 
 
     btnContact = ui->addressIn_ENC->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
     ui->pushButtonEncrypt->setText(tr("ENCRYPT"));
-    ui->pushButtonEncrypt->setProperty("cssClass", "btn-primary");
     ui->pushButtonClear->setText(tr("CLEAR ALL"));
-    ui->pushButtonClear->setProperty("cssClass", "btn-secundary-clear");
+    setCssBtnPrimary(ui->pushButtonEncrypt);
+    setCssBtnSecondary(ui->pushButtonClear);
 
     ui->statusLabel_ENC->setStyleSheet("QLabel { color: transparent; }");
 
@@ -197,7 +196,59 @@ void SettingsBitToolWidget::on_clear_all(){
 }
 
 void SettingsBitToolWidget::onAddressesClicked(){
-    // TODO: Complete me..
+    int addressSize = walletModel->getAddressTableModel()->sizeRecv();
+    if(addressSize == 0) {
+        inform(tr("No addresses available, you can go to the receive screen and add some there!"));
+        return;
+    }
+
+    int height = (addressSize <= 2) ? ui->addressIn_ENC->height() * ( 2 * (addressSize + 1 )) : ui->addressIn_ENC->height() * 4;
+    int width = ui->containerAddressEnc->width();
+
+    if(!menuContacts){
+        menuContacts = new ContactsDropdown(
+                width,
+                height,
+                this
+        );
+        menuContacts->setWalletModel(walletModel, AddressTableModel::Receive);
+        connect(menuContacts, &ContactsDropdown::contactSelected, [this](QString address, QString label){
+            setAddress_ENC(address);
+        });
+
+    }
+
+    if(menuContacts->isVisible()){
+        menuContacts->hide();
+        return;
+    }
+
+    menuContacts->resizeList(width, height);
+    menuContacts->setStyleSheet(this->styleSheet());
+    menuContacts->adjustSize();
+
+    QPoint pos = ui->containerAddressEnc->rect().bottomLeft();
+    pos.setY(pos.y() + ui->containerAddressEnc->height());
+    pos.setX(pos.x() + 10);
+    menuContacts->move(pos);
+    menuContacts->show();
+}
+
+void SettingsBitToolWidget::resizeMenu(){
+    if(menuContacts && menuContacts->isVisible()){
+        int width = ui->containerAddress->width();
+        menuContacts->resizeList(width, menuContacts->height());
+        menuContacts->resize(width, menuContacts->height());
+        QPoint pos = ui->containerAddressEnc->rect().bottomLeft();
+        pos.setY(pos.y() + ui->containerAddressEnc->height());
+        pos.setX(pos.x() + 10);
+        menuContacts->move(pos);
+    }
+}
+
+void SettingsBitToolWidget::resizeEvent(QResizeEvent *event){
+    resizeMenu();
+    QWidget::resizeEvent(event);
 }
 
 SettingsBitToolWidget::~SettingsBitToolWidget()
