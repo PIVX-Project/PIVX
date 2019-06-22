@@ -39,7 +39,7 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     fontLight.setWeight(QFont::Light);
 
     /* Title */
-    ui->labelTitle->setText("Settings");
+    ui->labelTitle->setText(tr("Settings"));
     ui->labelTitle->setProperty("cssClass", "text-title-screen");
     ui->labelTitle->setFont(fontLight);
 
@@ -66,6 +66,22 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     ui->pushButtonHelp->setProperty("cssClass", "btn-settings-check");
     ui->pushButtonHelp1->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonHelp2->setProperty("cssClass", "btn-settings-options");
+
+    options = {
+        ui->pushButtonFile2,
+        ui->pushButtonFile3,
+        ui->pushButtonOptions1,
+        ui->pushButtonOptions2,
+        ui->pushButtonOptions3,
+        ui->pushButtonOptions4,
+        ui->pushButtonOptions5,
+        ui->pushButtonConfiguration3,
+        ui->pushButtonConfiguration4,
+        ui->pushButtonHelp2,
+        ui->pushButtonTools1,
+        ui->pushButtonTools2,
+        ui->pushButtonTools5,
+    };
 
     ui->pushButtonFile->setChecked(true);
     ui->fileButtonsWidget->setVisible(true);
@@ -193,10 +209,12 @@ void SettingsWidget::onFileClicked() {
 
 void SettingsWidget::onBackupWalletClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsBackupWallet);
+    selectOption(ui->pushButtonFile2);
 }
 
 void SettingsWidget::onSignMessageClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsSingMessageWidgets);
+    selectOption(ui->pushButtonConfiguration4);
 }
 
 void SettingsWidget::onConfigurationClicked() {
@@ -219,10 +237,12 @@ void SettingsWidget::onConfigurationClicked() {
 
 void SettingsWidget::onBipToolClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsBitToolWidget);
+    selectOption(ui->pushButtonConfiguration3);
 }
 
 void SettingsWidget::onMultisendClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsMultisendWidget);
+    selectOption(ui->pushButtonFile3);
 }
 
 void SettingsWidget::onOptionsClicked() {
@@ -245,22 +265,27 @@ void SettingsWidget::onOptionsClicked() {
 
 void SettingsWidget::onMainOptionsClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsMainOptionsWidget);
+    selectOption(ui->pushButtonOptions1);
 }
 
 void SettingsWidget::onWalletOptionsClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsWalletOptionsWidget);
+    selectOption(ui->pushButtonOptions2);
 }
 
 void SettingsWidget::onNetworkOptionsClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsNetworkWidget);
+    selectOption(ui->pushButtonOptions3);
 }
 
 void SettingsWidget::onWindowOptionsClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsWindowOptionsWidget);
+    selectOption(ui->pushButtonOptions4);
 }
 
 void SettingsWidget::onDisplayOptionsClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsDisplayOptionsWidget);
+    selectOption(ui->pushButtonOptions5);
 }
 
 
@@ -284,6 +309,7 @@ void SettingsWidget::onToolsClicked() {
 
 void SettingsWidget::onInformationClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsInformationWidget);
+    selectOption(ui->pushButtonTools1);
 }
 
 void SettingsWidget::showDebugConsole(){
@@ -295,10 +321,12 @@ void SettingsWidget::showDebugConsole(){
 
 void SettingsWidget::onDebugConsoleClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsConsoleWidget);
+    selectOption(ui->pushButtonTools2);
 }
 
 void SettingsWidget::onWalletRepairClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsWalletRepairWidget);
+    selectOption(ui->pushButtonTools5);
 }
 
 
@@ -321,6 +349,12 @@ void SettingsWidget::onHelpClicked() {
 
 void SettingsWidget::onAboutClicked() {
 
+}
+
+void SettingsWidget::selectOption(QPushButton* option){
+    for (QPushButton* wid : options) {
+        if(wid) wid->setChecked(wid == option);
+    }
 }
 
 void SettingsWidget::setMapper(){

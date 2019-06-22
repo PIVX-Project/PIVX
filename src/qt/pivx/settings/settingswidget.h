@@ -89,6 +89,10 @@ private:
     SettingsWindowOptionsWidget *settingsWindowOptionsWidget;
 
     QDataWidgetMapper* mapper;
+
+    QList<QPushButton*> options;
+
+    void selectOption(QPushButton* option);
 };
 
 #endif // SETTINGSWIDGET_H

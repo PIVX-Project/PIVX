@@ -127,7 +127,7 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>0</y>
+               <y>-629</y>
                <width>230</width>
                <height>987</height>
               </rect>
@@ -254,7 +254,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -279,7 +279,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -363,7 +363,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -388,7 +388,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -475,7 +475,7 @@
                          <bool>false</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -500,7 +500,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -525,7 +525,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -550,7 +550,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -575,7 +575,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -662,7 +662,7 @@
                          <bool>false</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -687,7 +687,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -712,7 +712,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -793,13 +793,13 @@
                          <string>FAQ</string>
                         </property>
                         <property name="checkable">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                         <property name="checked">
                          <bool>false</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
@@ -821,10 +821,10 @@
                          <string>About PIVX</string>
                         </property>
                         <property name="checkable">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                         <property name="autoExclusive">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
