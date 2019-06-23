@@ -127,7 +127,7 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-319</y>
+               <y>-508</y>
                <width>230</width>
                <height>937</height>
               </rect>
@@ -583,7 +583,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>Tools</string>
+                        <string>Debug</string>
                        </property>
                        <property name="checkable">
                         <bool>true</bool>
@@ -656,7 +656,7 @@
                          </size>
                         </property>
                         <property name="text">
-                         <string>Debug Console</string>
+                         <string>Console</string>
                         </property>
                         <property name="checkable">
                          <bool>true</bool>
