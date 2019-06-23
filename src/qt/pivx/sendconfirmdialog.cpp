@@ -21,9 +21,6 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
 
     // Container
     ui->frame->setProperty("cssClass", "container-dialog");
-
-    // Title
-    ui->labelTitle->setText(tr("Confirm your transaction"));
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
     // Labels
@@ -47,7 +44,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
     ui->labelTitlePrevTx->setProperty("cssClass", "text-body2-dialog");
 
     if(isConfirmDialog){
-
+        ui->labelTitle->setText(tr("Confirm Your Transaction"));
         ui->btnCancel->setProperty("cssClass", "btn-dialog-cancel");
         ui->btnSave->setText(tr("SEND"));
         setCssBtnPrimary(ui->btnSave);
@@ -62,10 +59,12 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
         ui->labelDivider7->setVisible(false);
         ui->labelDivider5->setVisible(false);
         ui->labelDivider3->setVisible(false);
+        ui->labelDivider9->setVisible(false);
 
         connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
         connect(ui->btnSave, &QPushButton::clicked, [this](){acceptTx();});
     }else{
+        ui->labelTitle->setText(tr("Transaction Details"));
         ui->containerButtons->setVisible(false);
     }
 
