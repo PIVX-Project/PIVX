@@ -208,6 +208,14 @@ void setCssTextBodyDialog(QWidget* widget) {
     setCssProperty(widget, "text-body1-dialog", false);
 }
 
+void setCssTitleScreen(QLabel* label) {
+    setCssProperty(label, "text-title-screen", false);
+}
+
+void setCssSubtitleScreen(QWidget* wid) {
+    setCssProperty(wid, "text-subtitle", false);
+}
+
 void setCssProperty(std::initializer_list<QWidget*> args, QString value){
     foreach (QWidget* w, args) { setCssProperty(w, value); }
 }

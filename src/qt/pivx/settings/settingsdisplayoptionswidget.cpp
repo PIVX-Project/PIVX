@@ -1,12 +1,12 @@
 #include "qt/pivx/settings/settingsdisplayoptionswidget.h"
 #include "qt/pivx/settings/forms/ui_settingsdisplayoptionswidget.h"
-#include "QGraphicsDropShadowEffect"
-#include "QListView"
+#include <QListView>
+#include <QSettings>
 #include <QDir>
 #include "guiutil.h"
 #include "optionsmodel.h"
 #include "bitcoinunits.h"
-#include <QSettings>
+#include "qt/pivx/qtutils.h"
 
 SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWidget *parent) :
     PWidget(_window,parent),
@@ -17,41 +17,34 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
     this->setStyleSheet(parent->styleSheet());
 
     // Containers
-
     ui->left->setProperty("cssClass", "container");
     ui->left->setContentsMargins(10,10,10,10);
 
     // Title
-
-    ui->labelTitle->setText("Display");
-    ui->labelTitle->setProperty("cssClass", "text-title-screen");
-
+    ui->labelTitle->setText(tr("Display"));
+    setCssTitleScreen(ui->labelTitle);
 
     // Subtitle
+    ui->labelSubtitle1->setText(tr("Customize the display view options"));
+    setCssSubtitleScreen(ui->labelSubtitle1);
 
-    ui->labelSubtitle1->setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
-    ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
-
-    ui->labelTitleLanguage->setText("Language");
+    ui->labelTitleLanguage->setText(tr("Language"));
     ui->labelTitleLanguage->setProperty("cssClass", "text-main-grey");
 
-    ui->labelTitleUnit->setText("Unit to show amount");
+    ui->labelTitleUnit->setText(tr("Unit to show amount"));
     ui->labelTitleUnit->setProperty("cssClass", "text-main-grey");
 
-    ui->labelTitleDigits->setText("Decimal digits");
+    ui->labelTitleDigits->setText(tr("Decimal digits"));
     ui->labelTitleDigits->setProperty("cssClass", "text-main-grey");
 
-    ui->labelTitleUrl->setText("Third party transactions URLs");
+    ui->labelTitleUrl->setText(tr("Third party transactions URLs"));
     ui->labelTitleUrl->setProperty("cssClass", "text-main-grey");
 
     // Switch
-
-
-    ui->pushButtonSwitchBalance->setText("Hide empty balances");
+    ui->pushButtonSwitchBalance->setText(tr("Hide empty balances"));
     ui->pushButtonSwitchBalance->setProperty("cssClass", "btn-switch");
 
     // Combobox
-
     ui->comboBoxLanguage->setProperty("cssClass", "btn-combo");
     ui->comboBoxLanguage->setView(new QListView());
     ui->comboBoxLanguage->setEditable(true);
@@ -71,9 +64,7 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
 
     ui->comboBoxDigits->setProperty("cssClass", "btn-combo-options");
 
-    QListView * listViewDigits = new QListView();
-    ui->comboBoxDigits->setView(listViewDigits);
-
+    ui->comboBoxDigits->setView(new QListView());
     ui->comboBoxDigits->setEditable(true);
     QLineEdit* DigitsEdit = new QLineEdit(ui->comboBoxDigits);
     DigitsEdit->setReadOnly(true);
@@ -86,29 +77,17 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
         digits.setNum(index);
         ui->comboBoxDigits->addItem(digits, digits);
     }
-
-    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
-    shadowEffect->setColor(QColor(0, 0, 0, 22));
-    shadowEffect->setXOffset(0);
-    shadowEffect->setYOffset(3);
-    shadowEffect->setBlurRadius(6);
-
-    ui->comboBoxDigits->setGraphicsEffect(shadowEffect);
+    setShadow(ui->comboBoxDigits);
 
     // Urls
-
     ui->lineEditUrl->setPlaceholderText("e.g. https://example.com/tx/%s");
-    ui->lineEditUrl->setProperty("cssClass", "edit-primary");
-    ui->lineEditUrl->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    ui->lineEditUrl->setGraphicsEffect(shadowEffect);
+    initCssEditLine(ui->lineEditUrl);
 
     // Buttons
-
-    ui->pushButtonSave->setText("SAVE");
-    ui->pushButtonSave->setProperty("cssClass", "btn-primary");
-
-    ui->pushButtonReset->setText("Reset to default");
-    ui->pushButtonReset->setProperty("cssClass", "btn-secundary");
+    ui->pushButtonSave->setText(tr("SAVE"));
+    ui->pushButtonReset->setText(tr("Reset to default"));
+    setCssBtnPrimary(ui->pushButtonSave);
+    setCssBtnSecondary(ui->pushButtonReset);
 
     initLanguages();
     connect(ui->comboBoxLanguage, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));

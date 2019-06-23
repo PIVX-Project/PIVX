@@ -924,7 +924,7 @@ QPushButton[cssClass="btn-dropdown"]:checked {
 }
 
 QPushButton[cssClass="btn-switch"] {
-    background-image: url("://switch_on_2");
+    background-image: url("://ic-switch-off");
     background-position:right center;
     background-repeat:no-repeat;
     background-color:#0f0b16;

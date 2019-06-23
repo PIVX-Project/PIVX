@@ -49,6 +49,8 @@ void setShadow(QWidget *edit);
 
 void setCssBtnPrimary(QPushButton *btn, bool forceUpdate = false);
 void setCssBtnSecondary(QPushButton *btn, bool forceUpdate = false);
+void setCssTitleScreen(QLabel* label);
+void setCssSubtitleScreen(QWidget* wid);
 void setCssTextBodyDialog(std::initializer_list<QWidget*> args);
 void setCssTextBodyDialog(QWidget* widget);
 void setCssProperty(std::initializer_list<QWidget*> args, QString value);

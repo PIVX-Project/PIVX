@@ -277,73 +277,38 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pushSwitchAutomint">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>30</height>
-           </size>
+         <layout class="QHBoxLayout" name="horizontalLayout_34" stretch="1">
+          <property name="spacing">
+           <number>0</number>
           </property>
-          <property name="text">
-           <string>PushButton</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Minimum</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>10</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalPercentagezPiv">
           <item>
-           <widget class="QLabel" name="labelTitlePercentagezPiv">
-            <property name="text">
-             <string>TextLabel</string>
+           <layout class="QVBoxLayout" name="verticalLayoutTitle2">
+            <property name="spacing">
+             <number>5</number>
             </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacerPercentagezPiv">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="zeromintPercentage">
-            <property name="minimumSize">
-             <size>
-              <width>120</width>
-              <height>0</height>
-             </size>
-            </property>
-           </widget>
+            <item>
+             <widget class="QLabel" name="labelTitleDown">
+              <property name="text">
+               <string>Window</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelSubtitleDown">
+              <property name="text">
+               <string>Customize the application window options</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
         <item>
-         <spacer name="verticalDenomzPiv">
+         <spacer name="verticalSpacer_5">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
@@ -359,38 +324,34 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalDenomzPiv">
-          <item>
-           <widget class="QLabel" name="labelTitleDenomzPiv">
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalDenomzPiv">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxDenomzPiv">
-            <property name="minimumSize">
-             <size>
-              <width>120</width>
-              <height>0</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QCheckBox" name="checkBoxMinTaskbar">
+          <property name="text">
+           <string>CheckBox</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="checkBoxMinClose">
+          <property name="text">
+           <string>CheckBox</string>
+          </property>
+         </widget>
         </item>
         <item>
          <spacer name="verticalSpacer">

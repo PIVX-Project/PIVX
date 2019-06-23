@@ -14,7 +14,6 @@
 #include "qt/pivx/settings/settingsmultisendwidget.h"
 #include "qt/pivx/settings/settingsinformationwidget.h"
 #include "qt/pivx/settings/settingsconsolewidget.h"
-#include "qt/pivx/settings/settingswindowoptionswidget.h"
 
 class PIVXGUI;
 
@@ -59,7 +58,6 @@ private slots:
     void onMainOptionsClicked();
     void onWalletOptionsClicked();
     void onNetworkOptionsClicked();
-    void onWindowOptionsClicked();
     void onDisplayOptionsClicked();
 
     // Tools
@@ -86,7 +84,6 @@ private:
     SettingsMultisendWidget *settingsMultisendWidget;
     SettingsInformationWidget *settingsInformationWidget;
     SettingsConsoleWidget *settingsConsoleWidget;
-    SettingsWindowOptionsWidget *settingsWindowOptionsWidget;
 
     QDataWidgetMapper* mapper;
 
