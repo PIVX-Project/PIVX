@@ -15,6 +15,7 @@ SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidg
     // Containers
     ui->left->setProperty("cssClass", "container");
     ui->left->setContentsMargins(10,10,10,10);
+    ui->labelDivider->setProperty("cssClass", "container-divider");
 
     // Title
     ui->labelTitle->setText(tr("Wallet"));
@@ -24,30 +25,61 @@ SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidg
 
     // Combobox
     ui->labelTitleStake->setText(tr("Stake split threshold:"));
-    ui->labelTitleStake->setProperty("cssClass", "text-title");
+    ui->labelTitleStake->setProperty("cssClass", "text-main-grey");
 
     ui->spinBoxStakeSplitThreshold->setProperty("cssClass", "btn-spin-box");
     ui->spinBoxStakeSplitThreshold->setAttribute(Qt::WA_MacShowFocusRect, 0);
     setShadow(ui->spinBoxStakeSplitThreshold);
 
     // Radio buttons
-    ui->labelTitleExpert->setText(tr("Expert"));
-    ui->labelTitleExpert->setProperty("cssClass", "text-title");
-
     ui->radioButtonShow->setText(tr("Show Masternodes tab"));
-    ui->radioButtonShow->setVisible(false);
     ui->radioButtonSpend->setText(tr("Spend unconfirmed change"));
+
+    // Title
+    ui->labelTitleNetwork->setText(tr("Network"));
+    ui->labelSubtitleNetwork->setText(tr("Customize the node network options"));
+    setCssTitleScreen(ui->labelTitleNetwork);
+    setCssSubtitleScreen(ui->labelSubtitleNetwork);
+
+    // Proxy
+    ui->labelSubtitleProxy->setText(tr("Proxy IP:"));
+    ui->labelSubtitleProxy->setProperty("cssClass", "text-main-grey");
+
+    ui->lineEditProxy->setPlaceholderText(tr("Enter proxy IP"));
+    initCssEditLine(ui->lineEditProxy);
+
+    // Port
+    ui->labelSubtitlePort->setText(tr("Port:"));
+    ui->labelSubtitlePort->setProperty("cssClass", "text-main-grey");
+
+    ui->lineEditPort->setPlaceholderText("Enter port");
+    initCssEditLine(ui->lineEditPort);
+
+    // Radio buttons
+    ui->checkBoxMap->setText(tr("Map port using UPnP"));
+    ui->checkBoxAllow->setText(tr("Allow incoming connections"));
+    ui->checkBoxConnect->setText(tr("Connect through SOCKS5 proxy (default proxy):"));
 
     // Buttons
     ui->pushButtonSave->setText(tr("SAVE"));
     ui->pushButtonReset->setText(tr("Reset to default"));
     setCssBtnPrimary(ui->pushButtonSave);
     setCssBtnSecondary(ui->pushButtonReset);
+
+    connect(ui->pushButtonSave, SIGNAL(clicked()), parent, SLOT(onSaveOptionsClicked()));
 }
 
 void SettingsWalletOptionsWidget::setMapper(QDataWidgetMapper *mapper){
     mapper->addMapping(ui->radioButtonSpend, OptionsModel::SpendZeroConfChange);
     mapper->addMapping(ui->spinBoxStakeSplitThreshold, OptionsModel::StakeSplitThreshold);
+
+    // Network
+    mapper->addMapping(ui->checkBoxMap, OptionsModel::MapPortUPnP);
+    mapper->addMapping(ui->checkBoxAllow, OptionsModel::Listen);
+
+    mapper->addMapping(ui->checkBoxConnect, OptionsModel::ProxyUse);
+    mapper->addMapping(ui->lineEditProxy, OptionsModel::ProxyIP);
+    mapper->addMapping(ui->lineEditPort, OptionsModel::ProxyPort);
 }
 
 SettingsWalletOptionsWidget::~SettingsWalletOptionsWidget()

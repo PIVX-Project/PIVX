@@ -3,7 +3,6 @@
 #include "qt/pivx/settings/settingsbackupwallet.h"
 #include "qt/pivx/settings/settingsbittoolwidget.h"
 #include "qt/pivx/settings/settingswalletrepairwidget.h"
-#include "qt/pivx/settings/settingsnetworkwidget.h"
 #include "qt/pivx/settings/settingswalletoptionswidget.h"
 #include "qt/pivx/settings/settingsmainoptionswidget.h"
 #include "qt/pivx/settings/settingsdisplayoptionswidget.h"
@@ -14,6 +13,7 @@
 #include "optionsmodel.h"
 #include "clientmodel.h"
 #include "utilitydialog.h"
+#include "wallet/wallet.h"
 #include <QScrollBar>
 #include <QDataWidgetMapper>
 
@@ -54,7 +54,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     ui->pushButtonOptions->setProperty("cssClass", "btn-settings-check");
     ui->pushButtonOptions1->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonOptions2->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonOptions3->setProperty("cssClass", "btn-settings-options");
     ui->pushButtonOptions5->setProperty("cssClass", "btn-settings-options");
 
     ui->pushButtonTools->setProperty("cssClass", "btn-settings-check");
@@ -71,7 +70,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
         ui->pushButtonFile3,
         ui->pushButtonOptions1,
         ui->pushButtonOptions2,
-        ui->pushButtonOptions3,
         ui->pushButtonOptions5,
         ui->pushButtonConfiguration3,
         ui->pushButtonConfiguration4,
@@ -94,7 +92,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     settingsBitToolWidget = new SettingsBitToolWidget(window, this);
     settingsSingMessageWidgets = new SettingsSignMessageWidgets(window, this);
     settingsWalletRepairWidget = new SettingsWalletRepairWidget(window, this);
-    settingsNetworkWidget = new SettingsNetworkWidget(window, this);
     settingsWalletOptionsWidget = new SettingsWalletOptionsWidget(window, this);
     settingsMainOptionsWidget = new SettingsMainOptionsWidget(window, this);
     settingsDisplayOptionsWidget = new SettingsDisplayOptionsWidget(window, this);
@@ -106,7 +103,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     ui->stackedWidgetContainer->addWidget(settingsBitToolWidget);
     ui->stackedWidgetContainer->addWidget(settingsSingMessageWidgets);
     ui->stackedWidgetContainer->addWidget(settingsWalletRepairWidget);
-    ui->stackedWidgetContainer->addWidget(settingsNetworkWidget);
     ui->stackedWidgetContainer->addWidget(settingsWalletOptionsWidget);
     ui->stackedWidgetContainer->addWidget(settingsMainOptionsWidget);
     ui->stackedWidgetContainer->addWidget(settingsDisplayOptionsWidget);
@@ -124,7 +120,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     connect(ui->pushButtonOptions, SIGNAL(clicked()), this, SLOT(onOptionsClicked()));
     connect(ui->pushButtonOptions1, SIGNAL(clicked()), this, SLOT(onMainOptionsClicked()));
     connect(ui->pushButtonOptions2, SIGNAL(clicked()), this, SLOT(onWalletOptionsClicked()));
-    connect(ui->pushButtonOptions3, SIGNAL(clicked()), this, SLOT(onNetworkOptionsClicked()));
     connect(ui->pushButtonOptions5, SIGNAL(clicked()), this, SLOT(onDisplayOptionsClicked()));
 
     // Configuration
@@ -180,6 +175,23 @@ void SettingsWidget::loadWalletModel(){
     this->settingsBitToolWidget->setWalletModel(this->walletModel);
 }
 
+void SettingsWidget::onResetAction(){
+    if (walletModel) {
+        // confirmation dialog
+        if (!ask(tr("Confirm options reset"), tr("Client restart required to activate changes.") + "<br><br>" + tr("Client will be shutdown, do you want to proceed?")))
+            return;
+
+        /* reset all options and close GUI */
+        this->clientModel->getOptionsModel()->Reset();
+        QApplication::quit();
+    }
+}
+
+void SettingsWidget::onSaveOptionsClicked(){
+    mapper->submit();
+    pwalletMain->MarkDirty();
+    inform(tr("Options stored"));
+}
 
 void SettingsWidget::onFileClicked() {
     if (ui->pushButtonFile->isChecked()) {
@@ -265,11 +277,6 @@ void SettingsWidget::onWalletOptionsClicked() {
     selectOption(ui->pushButtonOptions2);
 }
 
-void SettingsWidget::onNetworkOptionsClicked() {
-    ui->stackedWidgetContainer->setCurrentWidget(settingsNetworkWidget);
-    selectOption(ui->pushButtonOptions3);
-}
-
 void SettingsWidget::onDisplayOptionsClicked() {
     ui->stackedWidgetContainer->setCurrentWidget(settingsDisplayOptionsWidget);
     selectOption(ui->pushButtonOptions5);
@@ -352,7 +359,6 @@ void SettingsWidget::selectOption(QPushButton* option){
 void SettingsWidget::setMapper(){
     settingsMainOptionsWidget->setMapper(mapper);
     settingsWalletOptionsWidget->setMapper(mapper);
-    settingsNetworkWidget->setMapper(mapper);
     settingsDisplayOptionsWidget->setMapper(mapper);
 }
 

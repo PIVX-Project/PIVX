@@ -97,7 +97,8 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
 void SettingsDisplayOptionsWidget::initLanguages(){
     /* Language selector */
     QDir translations(":translations");
-    ui->comboBoxLanguage->addItem(QString("(") + tr("default") + QString(")"), QVariant(""));
+    QString defaultStr = QString("(") + tr("default") + QString(")");
+    ui->comboBoxLanguage->addItem(defaultStr, QVariant(""));
     foreach (const QString& langStr, translations.entryList()) {
         QLocale locale(langStr);
 

@@ -127,9 +127,9 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-508</y>
+               <y>-278</y>
                <width>230</width>
-               <height>937</height>
+               <height>887</height>
               </rect>
              </property>
              <property name="autoFillBackground">
@@ -495,31 +495,6 @@
                         </property>
                         <property name="text">
                          <string>Wallet</string>
-                        </property>
-                        <property name="checkable">
-                         <bool>true</bool>
-                        </property>
-                        <property name="autoExclusive">
-                         <bool>false</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QPushButton" name="pushButtonOptions3">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16777215</width>
-                          <height>50</height>
-                         </size>
-                        </property>
-                        <property name="text">
-                         <string>Network</string>
                         </property>
                         <property name="checkable">
                          <bool>true</bool>

@@ -7,7 +7,6 @@
 #include "qt/pivx/settings/settingsbittoolwidget.h"
 #include "qt/pivx/settings/settingssignmessagewidgets.h"
 #include "qt/pivx/settings/settingswalletrepairwidget.h"
-#include "qt/pivx/settings/settingsnetworkwidget.h"
 #include "qt/pivx/settings/settingswalletoptionswidget.h"
 #include "qt/pivx/settings/settingsmainoptionswidget.h"
 #include "qt/pivx/settings/settingsdisplayoptionswidget.h"
@@ -57,7 +56,6 @@ private slots:
     void onOptionsClicked();
     void onMainOptionsClicked();
     void onWalletOptionsClicked();
-    void onNetworkOptionsClicked();
     void onDisplayOptionsClicked();
 
     // Tools
@@ -70,6 +68,8 @@ private slots:
     void onHelpClicked();
     void onAboutClicked();
 
+    void onResetAction();
+    void onSaveOptionsClicked();
 private:
     Ui::SettingsWidget *ui;
 
@@ -77,7 +77,6 @@ private:
     SettingsBitToolWidget *settingsBitToolWidget;
     SettingsSignMessageWidgets *settingsSingMessageWidgets;
     SettingsWalletRepairWidget *settingsWalletRepairWidget;
-    SettingsNetworkWidget *settingsNetworkWidget;
     SettingsWalletOptionsWidget *settingsWalletOptionsWidget;
     SettingsMainOptionsWidget *settingsMainOptionsWidget;
     SettingsDisplayOptionsWidget *settingsDisplayOptionsWidget;

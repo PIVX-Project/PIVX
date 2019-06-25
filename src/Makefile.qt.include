@@ -109,7 +109,6 @@ QT_FORMS_UI = \
   qt/pivx/settings/forms/settingsmainoptionswidget.ui \
   qt/pivx/settings/forms/settingsmultisenddialog.ui \
   qt/pivx/settings/forms/settingsmultisendwidget.ui \
-  qt/pivx/settings/forms/settingsnetworkwidget.ui \
   qt/pivx/settings/forms/settingssignmessagewidgets.ui \
   qt/pivx/settings/forms/settingswalletoptionswidget.ui \
   qt/pivx/settings/forms/settingswalletrepairwidget.ui \
@@ -219,7 +218,6 @@ QT_MOC_CPP = \
   qt/pivx/settings/moc_settingsmainoptionswidget.cpp \
   qt/pivx/settings/moc_settingsmultisenddialog.cpp \
   qt/pivx/settings/moc_settingsmultisendwidget.cpp \
-  qt/pivx/settings/moc_settingsnetworkwidget.cpp \
   qt/pivx/settings/moc_settingssignmessagewidgets.cpp \
   qt/pivx/settings/moc_settingswalletoptionswidget.cpp \
   qt/pivx/settings/moc_settingswalletrepairwidget.cpp \
@@ -361,7 +359,6 @@ BITCOIN_QT_H = \
   qt/pivx/settings/settingsmainoptionswidget.h \
   qt/pivx/settings/settingsmultisenddialog.h \
   qt/pivx/settings/settingsmultisendwidget.h \
-  qt/pivx/settings/settingsnetworkwidget.h \
   qt/pivx/settings/settingssignmessagewidgets.h \
   qt/pivx/settings/settingswalletoptionswidget.h \
   qt/pivx/settings/settingswalletrepairwidget.h \
@@ -733,7 +730,6 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/settings/settingsmainoptionswidget.cpp \
   qt/pivx/settings/settingsmultisenddialog.cpp \
   qt/pivx/settings/settingsmultisendwidget.cpp \
-  qt/pivx/settings/settingsnetworkwidget.cpp \
   qt/pivx/settings/settingssignmessagewidgets.cpp \
   qt/pivx/settings/settingswalletoptionswidget.cpp \
   qt/pivx/settings/settingswalletrepairwidget.cpp \
