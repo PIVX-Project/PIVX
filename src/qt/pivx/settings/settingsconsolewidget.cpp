@@ -33,6 +33,7 @@
 #include <QTimer>
 #include <QStringList>
 #include "qt/pivx/qtutils.h"
+#include "utilitydialog.h"
 
 const int CONSOLE_HISTORY = 50;
 
@@ -246,26 +247,26 @@ SettingsConsoleWidget::SettingsConsoleWidget(PIVXGUI* _window, QWidget *parent) 
     ui->left->setContentsMargins(10,10,10,10);
 
     // Title
-    ui->labelTitle->setText("Console");
-    ui->labelTitle->setProperty("cssClass", "text-title-screen");
+    ui->labelTitle->setText(tr("Console"));
+    setCssTitleScreen(ui->labelTitle);
 
     // Console container
     ui->consoleWidget->setProperty("cssClass", "container-square");
     setShadow(ui->consoleWidget);
 
     // Edit
-    ui->lineEdit->setPlaceholderText("Console input");
+    ui->lineEdit->setPlaceholderText(tr("Console input"));
     initCssEditLine(ui->lineEdit);
 
     // Buttons
     ui->pushButton->setProperty("cssClass", "ic-arrow");
-    ui->pushButtonCommandOptions->setText("Command Line Options ");
-    ui->pushButtonCommandOptions->setProperty("cssClass", "btn-secundary");
-
-    ui->pushButtonOpenDebug->setText("Open Debug File");
-    ui->pushButtonOpenDebug->setProperty("cssClass", "btn-secundary");
+    ui->pushButtonCommandOptions->setText(tr("Command Line Options "));
+    ui->pushButtonOpenDebug->setText(tr("Open Debug File"));
+    setCssBtnSecondary(ui->pushButtonOpenDebug);
+    setCssBtnSecondary(ui->pushButtonCommandOptions);
 
     connect(ui->pushButtonOpenDebug, &QPushButton::clicked, [](){GUIUtil::openDebugLogfile();});
+    connect(ui->pushButtonCommandOptions, SIGNAL(clicked()), this, SLOT(onCommandsClicked()));
 
     // Install event filter for up and down arrow
     ui->lineEdit->installEventFilter(this);
@@ -518,4 +519,13 @@ void SettingsConsoleWidget::changeTheme(bool isLightTheme, QString &theme)
                 "b { color: #FFFFFF; } ");
     }
     updateStyle(ui->messagesWidget);
+}
+
+void SettingsConsoleWidget::onCommandsClicked() {
+    if (!clientModel)
+        return;
+
+    HelpMessageDialog dlg(this, false);
+    dlg.exec();
+
 }

@@ -44,6 +44,7 @@ public slots:
     void browseHistory(int offset);
     /** Scroll console view to end */
     void scrollToEnd();
+    void onCommandsClicked();
 
 protected:
     virtual bool eventFilter(QObject* obj, QEvent* event) override;
