@@ -25,7 +25,7 @@ SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidg
 
     // Combobox
     ui->labelTitleStake->setText(tr("Stake split threshold:"));
-    ui->labelTitleStake->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleStake->setProperty("cssClass", "text-main-settings");
 
     ui->spinBoxStakeSplitThreshold->setProperty("cssClass", "btn-spin-box");
     ui->spinBoxStakeSplitThreshold->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -43,14 +43,14 @@ SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidg
 
     // Proxy
     ui->labelSubtitleProxy->setText(tr("Proxy IP:"));
-    ui->labelSubtitleProxy->setProperty("cssClass", "text-main-grey");
+    ui->labelSubtitleProxy->setProperty("cssClass", "text-main-settings");
 
     ui->lineEditProxy->setPlaceholderText(tr("Enter proxy IP"));
     initCssEditLine(ui->lineEditProxy);
 
     // Port
     ui->labelSubtitlePort->setText(tr("Port:"));
-    ui->labelSubtitlePort->setProperty("cssClass", "text-main-grey");
+    ui->labelSubtitlePort->setProperty("cssClass", "text-main-settings");
 
     ui->lineEditPort->setPlaceholderText("Enter port");
     initCssEditLine(ui->lineEditPort);

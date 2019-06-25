@@ -29,16 +29,16 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
     setCssSubtitleScreen(ui->labelSubtitle1);
 
     ui->labelTitleLanguage->setText(tr("Language"));
-    ui->labelTitleLanguage->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleLanguage->setProperty("cssClass", "text-main-settings");
 
     ui->labelTitleUnit->setText(tr("Unit to show amount"));
-    ui->labelTitleUnit->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleUnit->setProperty("cssClass", "text-main-settings");
 
     ui->labelTitleDigits->setText(tr("Decimal digits"));
-    ui->labelTitleDigits->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleDigits->setProperty("cssClass", "text-main-settings");
 
     ui->labelTitleUrl->setText(tr("Third party transactions URLs"));
-    ui->labelTitleUrl->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleUrl->setProperty("cssClass", "text-main-settings");
 
     // Switch
     ui->pushButtonSwitchBalance->setText(tr("Hide empty balances"));

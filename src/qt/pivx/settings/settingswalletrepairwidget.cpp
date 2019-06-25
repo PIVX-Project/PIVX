@@ -36,25 +36,25 @@ SettingsWalletRepairWidget::SettingsWalletRepairWidget(PIVXGUI* _window, QWidget
 
     // Labels
     ui->labelMessageSalvage->setText(tr("Attempt to recover private keys from a corrupt wallet.dat."));
-    ui->labelMessageSalvage->setProperty("cssClass", "text-main-grey");
+    ui->labelMessageSalvage->setProperty("cssClass", "text-main-settings");
 
     ui->labelMessageRescan->setText(tr("Rescan the blockchain for missing wallet transactions."));
-    ui->labelMessageRescan->setProperty("cssClass", "text-main-grey");
+    ui->labelMessageRescan->setProperty("cssClass", "text-main-settings");
 
     ui->labelMessageRecover1->setText(tr("Recover transactions from blockchain (keep-meta-data, e.g. account owner)."));
-    ui->labelMessageRecover1->setProperty("cssClass", "text-main-grey");
+    ui->labelMessageRecover1->setProperty("cssClass", "text-main-settings");
 
     ui->labelMessageRecover2->setText(tr("Recover transactions from blockchain (drop meta-data)."));
-    ui->labelMessageRecover2->setProperty("cssClass", "text-main-grey");
+    ui->labelMessageRecover2->setProperty("cssClass", "text-main-settings");
 
     ui->labelMessageUpgrade->setText(tr("Upgrade wallet to latest format on startup. (Note: this is NOT an update of the wallet itself)"));
-    ui->labelMessageUpgrade->setProperty("cssClass", "text-main-grey");
+    ui->labelMessageUpgrade->setProperty("cssClass", "text-main-settings");
 
     ui->labelMessageRebuild->setText(tr("Rebuild blockchain index from current blk000???.dat files."));
-    ui->labelMessageRebuild->setProperty("cssClass", "text-main-grey");
+    ui->labelMessageRebuild->setProperty("cssClass", "text-main-settings");
 
     ui->labelMessageDelete->setText(tr("Deletes all local blockchain folders so the wallet synchronizes from scratch."));
-    ui->labelMessageDelete->setProperty("cssClass", "text-main-grey");
+    ui->labelMessageDelete->setProperty("cssClass", "text-main-settings");
 
     // Buttons
     ui->pushButtonSalvage->setText(tr("Salvage wallet"));

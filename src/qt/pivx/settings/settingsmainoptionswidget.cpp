@@ -50,10 +50,10 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
     setCssSubtitleScreen(ui->labelSubtitleDown);
 
     ui->labelTitleSizeDb->setText(tr("Size of database cache"));
-    ui->labelTitleSizeDb->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleSizeDb->setProperty("cssClass", "text-main-settings");
 
     ui->labelTitleThreads->setText(tr("Number of script verification threads"));
-    ui->labelTitleThreads->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleThreads->setProperty("cssClass", "text-main-settings");
 
     // Switch
     ui->pushSwitchStart->setText(tr("Start PIVX on system login"));

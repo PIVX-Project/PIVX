@@ -861,6 +861,12 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     font-size:17px;
 }
 
+
+*[cssClass="text-main-settings"] {
+    color:#FFFFFF;
+    font-size:18px;
+}
+
 *[cssClass="text-main-purple"] {
     color:#b088ff;
     font-size:17px;

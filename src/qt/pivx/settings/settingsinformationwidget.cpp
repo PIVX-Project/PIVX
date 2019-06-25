@@ -38,65 +38,65 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
 
 
     ui->labelTitleClient->setText("Client Version: ");
-    ui->labelTitleClient->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleClient->setProperty("cssClass", "text-main-settings");
     ui->labelTitleAgent->setText("User Agent:");
-    ui->labelTitleAgent->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleAgent->setProperty("cssClass", "text-main-settings");
     ui->labelTitleBerkeley->setText("Using BerkeleyDB version:");
-    ui->labelTitleBerkeley->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleBerkeley->setProperty("cssClass", "text-main-settings");
     ui->labelTitleDataDir->setText("Datadir: ");
-    ui->labelTitleDataDir->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleDataDir->setProperty("cssClass", "text-main-settings");
     ui->labelTitleTime->setText("Startup Time:  ");
-    ui->labelTitleTime->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleTime->setProperty("cssClass", "text-main-settings");
 
     ui->labelTitleNetwork->setText("Network");
     ui->labelTitleNetwork->setProperty("cssClass", "text-title");
 
     ui->labelTitleName->setText("Name:");
-    ui->labelTitleName->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleName->setProperty("cssClass", "text-main-settings");
     ui->labelTitleConnections->setText("Number Connections:");
-    ui->labelTitleConnections->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleConnections->setProperty("cssClass", "text-main-settings");
 
 
     ui->labelTitleBlockchain->setText("Blockchain");
     ui->labelTitleBlockchain->setProperty("cssClass", "text-title");
 
     ui->labelTitleBlockNumber->setText("Current Number of Blocks:");
-    ui->labelTitleBlockNumber->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleBlockNumber->setProperty("cssClass", "text-main-settings");
     ui->labelTitleBlockTime->setText("Last Block Time:");
-    ui->labelTitleBlockTime->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleBlockTime->setProperty("cssClass", "text-main-settings");
 
     ui->labelTitleMemory->setText("Memory Pool");
     ui->labelTitleMemory->setProperty("cssClass", "text-title");
     ui->labelTitleMemory->setVisible(false);
 
     ui->labelTitleNumberTransactions->setText("Current Number of Transactions:");
-    ui->labelTitleNumberTransactions->setProperty("cssClass", "text-main-grey");
+    ui->labelTitleNumberTransactions->setProperty("cssClass", "text-main-settings");
     ui->labelTitleNumberTransactions->setVisible(false);
 
     ui->labelInfoNumberTransactions->setText("0");
-    ui->labelInfoNumberTransactions->setProperty("cssClass", "text-main-grey");
+    ui->labelInfoNumberTransactions->setProperty("cssClass", "text-main-settings");
     ui->labelInfoNumberTransactions->setVisible(false);
 
 
     // Information General
 
-    ui->labelInfoClient->setProperty("cssClass", "text-main-grey");
-    ui->labelInfoAgent->setProperty("cssClass", "text-main-grey");
-    ui->labelInfoBerkeley->setProperty("cssClass", "text-main-grey");
-    ui->labelInfoDataDir->setProperty("cssClass", "text-main-grey");
-    ui->labelInfoTime->setProperty("cssClass", "text-main-grey");
+    ui->labelInfoClient->setProperty("cssClass", "text-main-settings");
+    ui->labelInfoAgent->setProperty("cssClass", "text-main-settings");
+    ui->labelInfoBerkeley->setProperty("cssClass", "text-main-settings");
+    ui->labelInfoDataDir->setProperty("cssClass", "text-main-settings");
+    ui->labelInfoTime->setProperty("cssClass", "text-main-settings");
 
     // Information Network
 
     ui->labelInfoName->setText("Main");
-    ui->labelInfoName->setProperty("cssClass", "text-main-grey");
+    ui->labelInfoName->setProperty("cssClass", "text-main-settings");
     ui->labelInfoConnections->setText("0 (In: 0 / Out:0)");
-    ui->labelInfoConnections->setProperty("cssClass", "text-main-grey");
+    ui->labelInfoConnections->setProperty("cssClass", "text-main-settings");
 
     // Information Blockchain
 
     ui->labelInfoBlockNumber->setText("0");
-    ui->labelInfoBlockNumber->setProperty("cssClass", "text-main-grey");
+    ui->labelInfoBlockNumber->setProperty("cssClass", "text-main-settings");
     ui->labelInfoBlockTime->setText("Sept 6, 2018. Thursday, 8:21:49 PM");
     ui->labelInfoBlockTime->setProperty("cssClass", "text-main-grey");
 
