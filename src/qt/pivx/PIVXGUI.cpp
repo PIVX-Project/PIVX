@@ -303,12 +303,10 @@ void PIVXGUI::message(const QString& title, const QString& message, unsigned int
                     msgType = tr("Information");
                     break;
                 default:
+                    msgType = tr("System Message");
                     break;
             }
         }
-        // Append title to "PIVX - "
-        if (!msgType.isEmpty())
-            strTitle += " - " + msgType;
 
         // Check for error/warning icon
         if (style & CClientUIInterface::ICON_ERROR) {
@@ -321,19 +319,23 @@ void PIVXGUI::message(const QString& title, const QString& message, unsigned int
         if (style & CClientUIInterface::MODAL) {
             // Check for buttons, use OK as default, if none was supplied
             int r = 0;
-            // TODO: check this method..
             showNormalIfMinimized();
             if(style & CClientUIInterface::BTN_MASK){
-                r = openStandardDialog(title, message, "OK", "CANCEL");
+                r = openStandardDialog(strTitle, message, "OK", "CANCEL");
             }else{
-                r = openStandardDialog(title, message, "OK");
+                r = openStandardDialog(strTitle, message, "OK");
             }
             if (ret != NULL)
                 *ret = r;
         } else if(style & CClientUIInterface::MSG_INFORMATION_SNACK){
             messageInfo(message);
-        }else
+        }else {
+            // Append title to "PIVX - "
+            std::cout << "notify" << std::endl;
+            if (!msgType.isEmpty())
+                strTitle += " - " + msgType;
             notificator->notify((Notificator::Class) nNotifyIcon, strTitle, message);
+        }
 
     // TODO: Furszy remove this please..
     } catch (std::exception &e){
@@ -344,11 +346,21 @@ void PIVXGUI::message(const QString& title, const QString& message, unsigned int
 }
 
 bool PIVXGUI::openStandardDialog(QString title, QString body, QString okBtn, QString cancelBtn){
-    showHide(true);
-    DefaultDialog *dialog = new DefaultDialog(this);
-    dialog->setText(title, body, okBtn, cancelBtn);
-    dialog->adjustSize();
-    openDialogWithOpaqueBackground(dialog, this);
+    DefaultDialog *dialog;
+    if (isVisible()) {
+        showHide(true);
+        dialog = new DefaultDialog(this);
+        dialog->setText(title, body, okBtn, cancelBtn);
+        dialog->adjustSize();
+        openDialogWithOpaqueBackground(dialog, this);
+    } else {
+        dialog = new DefaultDialog();
+        dialog->setText(title, body, okBtn);
+        dialog->setWindowTitle(tr("PIVX Core"));
+        dialog->adjustSize();
+        dialog->raise();
+        dialog->exec();
+    }
     bool ret = dialog->isOk;
     dialog->deleteLater();
     return ret;

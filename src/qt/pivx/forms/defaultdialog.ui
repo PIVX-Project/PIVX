@@ -130,7 +130,7 @@
            </size>
           </property>
           <property name="text">
-           <string>PushButton</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -182,7 +182,7 @@
        </spacer>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,2,2,0">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,3,3,0">
         <item>
          <spacer name="horizontalSpacer11">
           <property name="orientation">
@@ -200,8 +200,14 @@
          <widget class="QPushButton" name="btnCancel">
           <property name="minimumSize">
            <size>
-            <width>0</width>
+            <width>170</width>
             <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>170</width>
+            <height>16777215</height>
            </size>
           </property>
           <property name="text">
@@ -213,8 +219,14 @@
          <widget class="QPushButton" name="btnSave">
           <property name="minimumSize">
            <size>
-            <width>0</width>
+            <width>170</width>
             <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>170</width>
+            <height>16777215</height>
            </size>
           </property>
           <property name="text">

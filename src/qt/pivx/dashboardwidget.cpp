@@ -9,8 +9,6 @@
 #include <QPainter>
 #include <QModelIndex>
 #include <QList>
-
-// Chart
 #include <QGraphicsLayout>
 
 #define DECORATION_SIZE 65
@@ -31,7 +29,6 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
                 this
     );
 
-    // Load css.
     this->setStyleSheet(parent->styleSheet());
     this->setContentsMargins(0,0,0,0);
 
@@ -43,13 +40,13 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     ui->right->setContentsMargins(20,20,20,0);
 
     // Title
-    ui->labelTitle->setProperty("cssClass", "text-title-screen");
     ui->labelTitle2->setText(tr("Staking Rewards"));
-    ui->labelTitle2->setProperty("cssClass", "text-title-screen");
+    setCssTitleScreen(ui->labelTitle);
+    setCssTitleScreen(ui->labelTitle2);
 
     /* Subtitle */
     ui->labelSubtitle->setText(tr("You can view your account's history"));
-    ui->labelSubtitle->setProperty("cssClass", "text-subtitle");
+    setCssSubtitleScreen(ui->labelSubtitle);
 
     // Staking Information
     ui->labelMessage->setText(tr("Amount of PIV and zPIV staked."));
@@ -71,8 +68,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv-disable");
 
     setCssProperty({ui->pushButtonAll,  ui->pushButtonMonth, ui->pushButtonYear}, "btn-check-time");
-    ui->comboBoxMonths->setProperty("cssClass", "btn-combo-chart-selected");
-    ui->comboBoxYears->setProperty("cssClass", "btn-combo-chart-selected");
+    setCssProperty({ui->comboBoxMonths,  ui->comboBoxYears}, "btn-combo-chart-selected");
 
     ui->comboBoxMonths->setView(new QListView());
     ui->comboBoxMonths->setStyleSheet("selection-background-color:transparent; selection-color:transparent;");
@@ -127,7 +123,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     ui->pushImgEmptyChart->setProperty("cssClass", "img-empty-staking-on");
 
     ui->btnHowTo->setText(tr("How to get PIV or zPIV"));
-    ui->btnHowTo->setProperty("cssClass", "btn-secundary");
+    setCssBtnSecondary(ui->btnHowTo);
 
     // Staking off
     //ui->pushImgEmptyChart->setProperty("cssClass", "img-empty-staking-off");
@@ -137,7 +133,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     ui->labelEmptyChart->setProperty("cssClass", "text-empty");
 
     ui->labelMessageEmpty->setText(tr("You can activate and deactivate the Staking mode in the status bar at the top right of the wallet"));
-    ui->labelMessageEmpty->setProperty("cssClass", "text-subtitle");
+    setCssSubtitleScreen(ui->labelMessageEmpty);
 
     // Chart State
     ui->layoutChart->setVisible(false);
