@@ -453,6 +453,13 @@ bool WalletModel::isCoinStake(QString id){
     return tx->IsCoinStake();
 }
 
+bool WalletModel::isCoinStakeMine(QString id){
+    uint256 hashTx;
+    hashTx.SetHex(id.toStdString());
+    const CWalletTx* tx = getTx(hashTx);
+    return tx->IsCoinStake() && wallet->IsMine(tx->vout[1]) == ISMINE_ALL;
+}
+
 bool WalletModel::mintCoins(CAmount value, CCoinControl* coinControl ,std::string &strError){
     CWalletTx wtx;
     vector<CDeterministicMint> vMints;

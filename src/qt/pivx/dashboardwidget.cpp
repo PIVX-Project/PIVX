@@ -33,10 +33,10 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     this->setContentsMargins(0,0,0,0);
 
     // Containers
-    setProperty("cssClass", "container");
-    ui->left->setProperty("cssClass", "container");
+    setCssProperty(this, "container");
+    setCssProperty(ui->left, "container");
     ui->left->setContentsMargins(0,0,0,0);
-    ui->right->setProperty("cssClass", "container-right");
+    setCssProperty(ui->right, "container-right");
     ui->right->setContentsMargins(20,20,20,0);
 
     // Title
@@ -50,22 +50,22 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
 
     // Staking Information
     ui->labelMessage->setText(tr("Amount of PIV and zPIV staked."));
-    ui->labelMessage->setProperty("cssClass", "text-subtitle");
-    ui->labelSquarePiv->setProperty("cssClass", "square-chart-piv");
-    ui->labelSquarezPiv->setProperty("cssClass", "square-chart-zpiv");
-    ui->labelPiv->setProperty("cssClass", "text-chart-piv");
-    ui->labelZpiv->setProperty("cssClass", "text-chart-zpiv");
+    setCssSubtitleScreen(ui->labelMessage);
+    setCssProperty(ui->labelSquarePiv, "square-chart-piv");
+    setCssProperty(ui->labelSquarezPiv, "square-chart-zpiv");
+    setCssProperty(ui->labelPiv, "text-chart-piv");
+    setCssProperty(ui->labelZpiv, "text-chart-zpiv");
 
     // Staking Amount
     QFont fontBold;
     fontBold.setWeight(QFont::Bold);
 
-    ui->labelChart->setProperty("cssClass", "legend-chart");
+    setCssProperty(ui->labelChart, "legend-chart");
 
     ui->labelAmountZpiv->setText("0 zPIV");
     ui->labelAmountPiv->setText("0 PIV");
-    ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv-disable");
-    ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv-disable");
+    setCssProperty(ui->labelAmountPiv, "text-stake-piv-disable");
+    setCssProperty(ui->labelAmountZpiv, "text-stake-zpiv-disable");
 
     setCssProperty({ui->pushButtonAll,  ui->pushButtonMonth, ui->pushButtonYear}, "btn-check-time");
     setCssProperty({ui->comboBoxMonths,  ui->comboBoxYears}, "btn-combo-chart-selected");
@@ -82,7 +82,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     connect(ui->comboBoxYears, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onChartYearChanged(const QString&)));
 
     // Sort Transactions
-    ui->comboBoxSort->setProperty("cssClass", "btn-combo");
+    setCssProperty(ui->comboBoxSort, "btn-combo");
     ui->comboBoxSort->setEditable(true);
     SortEdit* lineEdit = new SortEdit(ui->comboBoxSort);
     lineEdit->setReadOnly(true);
@@ -98,7 +98,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     connect(ui->comboBoxSort, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onSortChanged(const QString&)));
 
     // transactions
-    ui->listTransactions->setProperty("cssClass", "container");
+    setCssProperty(ui->listTransactions, "container");
     ui->listTransactions->setItemDelegate(txViewDelegate);
     ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
     ui->listTransactions->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
@@ -108,29 +108,25 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     // Sync Warning
     ui->layoutWarning->setVisible(true);
     ui->lblWarning->setText(tr("Please wait until the wallet is fully synced to see your correct balance"));
-    ui->lblWarning->setProperty("cssClass", "text-warning");
-    ui->imgWarning->setProperty("cssClass", "ic-warning");
+    setCssProperty(ui->lblWarning, "text-warning");
+    setCssProperty(ui->imgWarning, "ic-warning");
 
     //Empty List
     ui->emptyContainer->setVisible(false);
-    ui->pushImgEmpty->setProperty("cssClass", "img-empty-transactions");
+    setCssProperty(ui->pushImgEmpty, "img-empty-transactions");
 
     ui->labelEmpty->setText(tr("No transactions yet"));
-    ui->labelEmpty->setProperty("cssClass", "text-empty");
+    setCssProperty(ui->labelEmpty, "text-empty");
 
-    ui->chartContainer->setProperty("cssClass", "container-chart");
+    setCssProperty(ui->chartContainer, "container-chart");
 
-    ui->pushImgEmptyChart->setProperty("cssClass", "img-empty-staking-on");
+    setCssProperty(ui->pushImgEmptyChart, "img-empty-staking-on");
 
     ui->btnHowTo->setText(tr("How to get PIV or zPIV"));
     setCssBtnSecondary(ui->btnHowTo);
 
-    // Staking off
-    //ui->pushImgEmptyChart->setProperty("cssClass", "img-empty-staking-off");
-    //ui->labelEmptyChart->setText("Staking off");
-
     ui->labelEmptyChart->setText(tr("Staking off"));
-    ui->labelEmptyChart->setProperty("cssClass", "text-empty");
+    setCssProperty(ui->labelEmptyChart, "text-empty");
 
     ui->labelMessageEmpty->setText(tr("You can activate and deactivate the Staking mode in the status bar at the top right of the wallet"));
     setCssSubtitleScreen(ui->labelMessageEmpty);
@@ -213,7 +209,7 @@ void DashboardWidget::loadWalletModel(){
 
 void DashboardWidget::onTxArrived(const QString& hash) {
     showList();
-    if (hasStakes() && walletModel->isCoinStake(hash)) {
+    if (hasStakes() && walletModel->isCoinStakeMine(hash)) {
         refreshChart();
     }
 }
@@ -310,7 +306,7 @@ void DashboardWidget::initChart() {
     baseScreensContainer->addWidget(chartView);
     ui->chartContainer->setLayout(baseScreensContainer);
     ui->chartContainer->setContentsMargins(0,0,0,0);
-    ui->chartContainer->setProperty("cssClass", "container-chart");
+    setCssProperty(ui->chartContainer, "container-chart");
 }
 
 void DashboardWidget::changeChartColors(){
@@ -378,21 +374,21 @@ QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy() {
     for (int i = 0; i < size; ++i) {
         QModelIndex modelIndex = stakesFilter->index(i, TransactionTableModel::ToAddress);
         qint64 amount = llabs(modelIndex.data(TransactionTableModel::AmountRole).toLongLong());
-        QDateTime datetime = modelIndex.data(TransactionTableModel::DateRole).toDateTime();
+        QDate date = modelIndex.data(TransactionTableModel::DateRole).toDateTime().date();
         bool isPiv = modelIndex.data(TransactionTableModel::TypeRole).toInt() != TransactionRecord::StakeZPIV;
 
         int time = 0;
         switch (chartShow) {
             case YEAR: {
-                time = datetime.date().month();
+                time = date.month();
                 break;
             }
             case ALL: {
-                time = datetime.date().year();
+                time = date.year();
                 break;
             }
             case MONTH: {
-                time = datetime.date().day();
+                time = date.day();
                 break;
             }
             default:
@@ -498,11 +494,11 @@ void DashboardWidget::refreshChart(){
     // Total
     nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
     if (totalPiv > 0 || totalZpiv > 0) {
-        ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv");
-        ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv");
+        setCssProperty(ui->labelAmountPiv, "text-stake-piv");
+        setCssProperty(ui->labelAmountZpiv, "text-stake-zpiv");
     } else {
-        ui->labelAmountPiv->setProperty("cssClass", "text-stake-piv-disable");
-        ui->labelAmountZpiv->setProperty("cssClass", "text-stake-zpiv-disable");
+        setCssProperty(ui->labelAmountPiv, "text-stake-piv-disable");
+        setCssProperty(ui->labelAmountZpiv, "text-stake-zpiv-disable");
     }
     forceUpdateStyle({ui->labelAmountPiv, ui->labelAmountZpiv});
     ui->labelAmountPiv->setText(GUIUtil::formatBalance(totalPiv, nDisplayUnit));
@@ -538,9 +534,6 @@ void DashboardWidget::refreshChart(){
             ui->containerBoxMonths->setVisible(true);
             break;
         }
-        default:
-            // No more filters for now.
-            break;
     }
 
     // Refresh years filter, first address created is the start
@@ -614,10 +607,7 @@ void DashboardWidget::windowResizeEvent(QResizeEvent *event){
                         updateAxisX(&monthsNames);
                         break;
                     }
-                    case ALL: {
-                        // TODO: Complete me..
-                        break;
-                    }
+                    case ALL: break;
                     case MONTH: {
                         updateAxisX();
                         break;
