@@ -164,6 +164,8 @@ public:
         StatusCode status;
     };
 
+    void setWalletDefaultFee(CAmount fee = DEFAULT_TRANSACTION_FEE);
+
     const CWalletTx* getTx(uint256 id);
     bool isCoinStake(QString id);
     bool isCoinStakeMine(QString id);

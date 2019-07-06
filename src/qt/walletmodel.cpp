@@ -215,6 +215,11 @@ void WalletModel::checkBalanceChanged()
     }
 }
 
+void WalletModel::setWalletDefaultFee(CAmount fee)
+{
+    payTxFee = CFeeRate(fee);
+}
+
 void WalletModel::updateTransaction()
 {
     // Balance and number of transactions might have changed
