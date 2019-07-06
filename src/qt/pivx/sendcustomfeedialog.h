@@ -27,6 +27,7 @@ public slots:
     void onRecommendedChecked();
     void onCustomChecked();
     void updateFee();
+    void onChangeTheme(bool isLightTheme, QString& theme);
 private:
     Ui::SendCustomFeeDialog *ui;
     WalletModel* walletModel = nullptr;

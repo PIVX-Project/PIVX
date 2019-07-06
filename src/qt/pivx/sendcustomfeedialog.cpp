@@ -48,6 +48,7 @@ SendCustomFeeDialog::SendCustomFeeDialog(QWidget *parent) :
     connect(ui->checkBoxCustom, SIGNAL(clicked()), this, SLOT(onCustomChecked()));
     connect(ui->checkBoxRecommended, SIGNAL(clicked()), this, SLOT(onRecommendedChecked()));
     connect(ui->comboBoxRecommended, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(updateFee()));
+    if(parent) connect(parent, SIGNAL(themeChanged(bool, QString&)), this, SLOT(onChangeTheme(bool, QString&)));
     ui->checkBoxRecommended->setChecked(true);
 }
 
@@ -111,6 +112,10 @@ CFeeRate SendCustomFeeDialog::getFeeRate(){
            feeRate : CFeeRate(GUIUtil::parseValue(ui->lineEditCustomFee->text(), walletModel->getOptionsModel()->getDisplayUnit()));
 }
 
+void SendCustomFeeDialog::onChangeTheme(bool isLightTheme, QString& theme){
+    this->setStyleSheet(theme);
+    updateStyle(this);
+}
 
 SendCustomFeeDialog::~SendCustomFeeDialog(){
     delete ui;
