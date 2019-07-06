@@ -7,6 +7,7 @@
 #include "qt/pivx/pwidget.h"
 #include "qt/pivx/contactsdropdown.h"
 #include "qt/pivx/sendmultirow.h"
+#include "qt/pivx/sendcustomfeedialog.h"
 #include "walletmodel.h"
 #include "coincontroldialog.h"
 #include "zpivcontroldialog.h"
@@ -67,6 +68,9 @@ private:
     Ui::send *ui;
     QPushButton *coinIcon;
     QPushButton *btnContacts;
+
+    SendCustomFeeDialog* customFeeDialog = nullptr;
+    bool isCustomFeeSelected = false;
 
     int nDisplayUnit;
     QList<SendMultiRow*> entries;

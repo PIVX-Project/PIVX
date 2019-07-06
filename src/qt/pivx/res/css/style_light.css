@@ -2270,6 +2270,15 @@ QComboBox[cssClass="btn-combo-dialog"] {
     text-align: right;
 }
 
+QLabel[cssClass="label-subtitle-dialog"] {
+    background-color:#ffffff;
+    font-size:16px;
+    color: #5c4b7d;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 HH      SETTINGS

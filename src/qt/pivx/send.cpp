@@ -1,11 +1,9 @@
 #include "qt/pivx/send.h"
 #include "qt/pivx/forms/ui_send.h"
-
 #include "qt/pivx/addnewcontactdialog.h"
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/sendchangeaddressdialog.h"
 #include "qt/pivx/optionbutton.h"
-#include "qt/pivx/sendcustomfeedialog.h"
 #include "qt/pivx/sendconfirmdialog.h"
 #include "qt/pivx/myaddressrow.h"
 #include "optionsmodel.h"
@@ -67,8 +65,8 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     ui->labelSubtitleAmount->setProperty("cssClass", "text-title");
 
     /* Buttons */
-    ui->pushButtonFee->setText(tr("Standard Fee %1").arg("0.000005 PIV"));
-    ui->pushButtonFee->setProperty("cssClass", "btn-secundary");
+    ui->pushButtonFee->setText(tr("Customize fee"));
+    setCssBtnSecondary(ui->pushButtonFee);
 
     ui->pushButtonClear->setText(tr("Clear all"));
     ui->pushButtonClear->setProperty("cssClass", "btn-secundary-clear");
@@ -76,10 +74,9 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     ui->pushButtonAddRecipient->setText(tr("Add recipient"));
     ui->pushButtonAddRecipient->setProperty("cssClass", "btn-secundary-add");
 
-    ui->pushButtonSave->setProperty("cssClass", "btn-primary");
-
+    setCssBtnPrimary(ui->pushButtonSave);
     ui->pushButtonReset->setText(tr("Reset to default"));
-    ui->pushButtonReset->setProperty("cssClass", "btn-secundary");
+    setCssBtnSecondary(ui->pushButtonReset);
 
     // Coin control
     ui->btnCoinControl->setTitleClassAndText("btn-title-grey", "Control coin");
@@ -214,6 +211,9 @@ void SendWidget::clearAll(){
     CoinControlDialog::coinControl->SetNull();
     ui->btnChangeAddress->setActive(false);
     ui->btnCoinControl->setActive(false);
+    customFeeDialog->clear();
+    ui->pushButtonFee->setText(tr("Customize Fee"));
+    walletModel->setWalletDefaultFee();
     clearEntries();
 }
 
@@ -604,13 +604,22 @@ void SendWidget::onOpenUriClicked(){
 
 void SendWidget::onChangeCustomFeeClicked(){
     showHideOp(true);
-    SendCustomFeeDialog* dialog = new SendCustomFeeDialog(window);
-    openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
-    dialog->deleteLater();
+    if (!customFeeDialog) {
+        customFeeDialog = new SendCustomFeeDialog(window);
+        customFeeDialog->setWalletModel(walletModel);
+    }
+    if (openDialogWithOpaqueBackgroundY(customFeeDialog, window, 3, 5)){
+        ui->pushButtonFee->setText(tr("Custom Fee %1").arg(BitcoinUnits::formatWithUnit(nDisplayUnit, customFeeDialog->getFeeRate().GetFeePerK()) + "/kB"));
+        isCustomFeeSelected = true;
+        walletModel->setWalletDefaultFee(customFeeDialog->getFeeRate().GetFeePerK());
+    } else {
+        ui->pushButtonFee->setText(tr("Customize Fee"));
+        isCustomFeeSelected = false;
+        walletModel->setWalletDefaultFee();
+    }
 }
 
-void SendWidget::onCoinControlClicked()
-{
+void SendWidget::onCoinControlClicked(){
     if(isPIV){
         if (walletModel->getBalance() > 0) {
             if (!coinControlDialog) {

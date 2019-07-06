@@ -130,7 +130,7 @@
            </size>
           </property>
           <property name="text">
-           <string>PushButton</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -155,7 +155,7 @@
       <item>
        <widget class="QLabel" name="labelMessage">
         <property name="text">
-         <string>This will unlock your wallet fully, so that anyone with access to it can spend until the wallet is closed or locked again.</string>
+         <string>Customize the transaction fee at your to your liking, depending on the fee value your transaction will be included or not in the blockchain.</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -176,7 +176,7 @@
         <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
-          <height>30</height>
+          <height>20</height>
          </size>
         </property>
        </spacer>
@@ -224,7 +224,7 @@
            <item alignment="Qt::AlignHCenter">
             <widget class="QLabel" name="labelFee">
              <property name="text">
-              <string>0.0026896 zPIV/KB</string>
+              <string>0.00 KB</string>
              </property>
             </widget>
            </item>
@@ -281,7 +281,11 @@
             <widget class="QLineEdit" name="lineEditCustomFee"/>
            </item>
            <item alignment="Qt::AlignHCenter">
-            <widget class="QComboBox" name="comboBoxCustom"/>
+            <widget class="QLabel" name="labelCustomFee">
+             <property name="text">
+              <string>Per kilobyte</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>

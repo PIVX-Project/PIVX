@@ -2257,6 +2257,14 @@ QLineEdit[cssClass="edit-primary-dialog-error"] {
     color: #FFFFFF;
 }
 
+QLabel[cssClass="label-subtitle-dialog"] {
+    background-color:#0f0b16;
+    font-size:16px;
+    color: #B088FF;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 
 QComboBox[cssClass="btn-combo-dialog"] {
     background-image: url("://ic-arrow-drop-down-white");
