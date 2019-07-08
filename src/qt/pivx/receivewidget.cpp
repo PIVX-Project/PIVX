@@ -13,16 +13,11 @@
 #include "base58.h"
 #include "script/standard.h"
 
-#include <QAbstractItemDelegate>
 #include <QPainter>
-#include <QSettings>
 #include <QModelIndex>
-#include <QFile>
 #include <QClipboard>
 #include <QColor>
 #include <QDateTime>
-
-#include <iostream>
 
 #define DECORATION_SIZE 70
 #define NUM_ITEMS 3
@@ -76,28 +71,28 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
     this->setStyleSheet(parent->styleSheet());
 
     // Containers
-    ui->left->setProperty("cssClass", "container");
+    setCssProperty(ui->left, "container");
     ui->left->setContentsMargins(20,20,20,20);
-    ui->right->setProperty("cssClass", "container-right");
+    setCssProperty(ui->right, "container-right");
     ui->right->setContentsMargins(0,9,0,0);
 
 
     // Title
     ui->labelTitle->setText(tr("Receive"));
-    ui->labelTitle->setProperty("cssClass", "text-title-screen");
+    setCssTitleScreen(ui->labelTitle);
 
     ui->labelSubtitle1->setText(tr("Scan the QR code or copy the address to receive PIV."));
-    ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
+    setCssSubtitleScreen(ui->labelSubtitle1);
 
 
     // Address
     ui->labelAddress->setText(tr("No address "));
-    ui->labelAddress->setProperty("cssClass", "label-address-box");
+    setCssProperty(ui->labelAddress, "label-address-box");
 
     ui->labelDate->setText("Dec. 19, 2018");
-    ui->labelDate->setProperty("cssClass", "text-subtitle");
+    setCssSubtitleScreen(ui->labelDate);
     ui->labelLabel->setText("");
-    ui->labelLabel->setProperty("cssClass", "text-subtitle");
+    setCssSubtitleScreen(ui->labelLabel);
 
     // Options
 
@@ -116,17 +111,17 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
 
 
     ui->pushButtonLabel->setText(tr("Add Label"));
-    ui->pushButtonLabel->setProperty("cssClass", "btn-secundary-label");
+    setCssProperty(ui->pushButtonLabel, "btn-secundary-label");
 
     ui->pushButtonNewAddress->setText(tr("Generate Address"));
-    ui->pushButtonNewAddress->setProperty("cssClass", "btn-secundary-new-address");
+    setCssProperty(ui->pushButtonNewAddress, "btn-secundary-new-address");
 
     ui->pushButtonCopy->setText(tr("Copy"));
-    ui->pushButtonCopy->setProperty("cssClass", "btn-secundary-copy");
+    setCssProperty(ui->pushButtonCopy, "btn-secundary-copy");
 
 
     // List Addresses
-    ui->listViewAddress->setProperty("cssClass", "container");
+    setCssProperty(ui->listViewAddress, "container");
     ui->listViewAddress->setItemDelegate(delegate);
     ui->listViewAddress->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
     ui->listViewAddress->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
@@ -175,7 +170,7 @@ void ReceiveWidget::refreshView(QString refreshAddress){
     } catch (const runtime_error& error){
         ui->labelQrImg->setText(tr("No available address, try unlocking the wallet"));
         std::cout << "Error generating address, correct me: " << error.what() << std::endl;
-        inform("Error generating address");
+        inform(tr("Error generating address"));
     }
 }
 
@@ -184,7 +179,6 @@ void ReceiveWidget::updateLabel(){
         // Check if address label exists
         QString label = addressTableModel->labelForAddress(info->address);
         if (!label.isEmpty()) {
-            // TODO: Show label.. complete me..
             ui->labelLabel->setVisible(true);
             ui->labelLabel->setText(label);
             ui->pushButtonLabel->setText(tr("Change Label"));

@@ -14,7 +14,6 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
     iconNumber(new QPushButton())
 {
     ui->setupUi(this);
-
     this->setStyleSheet(parent->styleSheet());
 
     ui->lineEditAddress->setPlaceholderText(tr("Add address"));
@@ -30,13 +29,12 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
 
     /* Description */
     ui->labelSubtitleDescription->setText("Label address (optional)");
-    ui->labelSubtitleDescription->setProperty("cssClass", "text-title");
-
+    setCssProperty(ui->labelSubtitleDescription, "text-title");
     ui->lineEditDescription->setPlaceholderText(tr("Add description"));
     initCssEditLine(ui->lineEditDescription);
 
     // Button menu
-    ui->btnMenu->setProperty("cssClass", "btn-menu");
+    setCssProperty(ui->btnMenu, "btn-menu");
     ui->btnMenu->setVisible(false);
 
     // Button Contact
@@ -46,13 +44,12 @@ SendMultiRow::SendMultiRow(PWidget *parent) :
     iconNumber->show();
     iconNumber->raise();
 
-    iconNumber->setProperty("cssClass", "ic-multi-number");
+    setCssProperty(iconNumber, "ic-multi-number");
     iconNumber->setText("1");
     iconNumber->setVisible(false);
-
-    QSize BUTTON_SIZE = QSize(24, 24);
-    iconNumber->setMinimumSize(BUTTON_SIZE);
-    iconNumber->setMaximumSize(BUTTON_SIZE);
+    QSize size = QSize(24, 24);
+    iconNumber->setMinimumSize(size);
+    iconNumber->setMaximumSize(size);
 
     int posIconX = 0;
     int posIconY = 14;
@@ -187,14 +184,7 @@ SendCoinsRecipient SendMultiRow::getValue() {
     // Normal payment
     recipient.address = getAddress();
     recipient.label = ui->lineEditDescription->text();
-
-    // TODO: Convert this into a value..
-    CAmount value = getAmountValue();
-    if(value == -1){
-        // Invalid value..
-        // todo: Notificate user..
-    }
-    recipient.amount = value;
+    recipient.amount = getAmountValue();;
     return recipient;
 }
 
@@ -237,6 +227,7 @@ void SendMultiRow::setAddressAndLabelOrDescription(const QString& address, const
         ui->lineEditDescription->setText(label);
     } else if(!message.isEmpty())
         ui->lineEditDescription->setText(message);
+    setAddress(address);
 }
 
 void SendMultiRow::setLabel(const QString& label){
@@ -289,7 +280,6 @@ int SendMultiRow::getMenuBtnWidth(){
     return ui->btnMenu->width();
 }
 
-SendMultiRow::~SendMultiRow()
-{
+SendMultiRow::~SendMultiRow(){
     delete ui;
 }

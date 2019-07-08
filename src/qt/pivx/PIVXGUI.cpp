@@ -281,67 +281,58 @@ void PIVXGUI::messageInfo(const QString& text){
 
 void PIVXGUI::message(const QString& title, const QString& message, unsigned int style, bool* ret)
 {
-    try {
-        QString strTitle = tr("PIVX Core"); // default title
-        // Default to information icon
-        int nNotifyIcon = Notificator::Information;
+    QString strTitle = tr("PIVX Core"); // default title
+    // Default to information icon
+    int nNotifyIcon = Notificator::Information;
 
-        QString msgType;
+    QString msgType;
 
-        // Prefer supplied title over style based title
-        if (!title.isEmpty()) {
-            msgType = title;
-        } else {
-            switch (style) {
-                case CClientUIInterface::MSG_ERROR:
-                    msgType = tr("Error");
-                    break;
-                case CClientUIInterface::MSG_WARNING:
-                    msgType = tr("Warning");
-                    break;
-                case CClientUIInterface::MSG_INFORMATION:
-                    msgType = tr("Information");
-                    break;
-                default:
-                    msgType = tr("System Message");
-                    break;
-            }
+    // Prefer supplied title over style based title
+    if (!title.isEmpty()) {
+        msgType = title;
+    } else {
+        switch (style) {
+            case CClientUIInterface::MSG_ERROR:
+                msgType = tr("Error");
+                break;
+            case CClientUIInterface::MSG_WARNING:
+                msgType = tr("Warning");
+                break;
+            case CClientUIInterface::MSG_INFORMATION:
+                msgType = tr("Information");
+                break;
+            default:
+                msgType = tr("System Message");
+                break;
         }
+    }
 
-        // Check for error/warning icon
-        if (style & CClientUIInterface::ICON_ERROR) {
-            nNotifyIcon = Notificator::Critical;
-        } else if (style & CClientUIInterface::ICON_WARNING) {
-            nNotifyIcon = Notificator::Warning;
+    // Check for error/warning icon
+    if (style & CClientUIInterface::ICON_ERROR) {
+        nNotifyIcon = Notificator::Critical;
+    } else if (style & CClientUIInterface::ICON_WARNING) {
+        nNotifyIcon = Notificator::Warning;
+    }
+
+    // Display message
+    if (style & CClientUIInterface::MODAL) {
+        // Check for buttons, use OK as default, if none was supplied
+        int r = 0;
+        showNormalIfMinimized();
+        if(style & CClientUIInterface::BTN_MASK){
+            r = openStandardDialog(strTitle, message, "OK", "CANCEL");
+        }else{
+            r = openStandardDialog(strTitle, message, "OK");
         }
-
-        // Display message
-        if (style & CClientUIInterface::MODAL) {
-            // Check for buttons, use OK as default, if none was supplied
-            int r = 0;
-            showNormalIfMinimized();
-            if(style & CClientUIInterface::BTN_MASK){
-                r = openStandardDialog(strTitle, message, "OK", "CANCEL");
-            }else{
-                r = openStandardDialog(strTitle, message, "OK");
-            }
-            if (ret != NULL)
-                *ret = r;
-        } else if(style & CClientUIInterface::MSG_INFORMATION_SNACK){
-            messageInfo(message);
-        }else {
-            // Append title to "PIVX - "
-            std::cout << "notify" << std::endl;
-            if (!msgType.isEmpty())
-                strTitle += " - " + msgType;
-            notificator->notify((Notificator::Class) nNotifyIcon, strTitle, message);
-        }
-
-    // TODO: Furszy remove this please..
-    } catch (std::exception &e){
-        LogPrintf("ERROR in message PIVXGUI.. %s\n", e.what());
-    } catch (...){
-        LogPrintf("ERROR in message  PIVXGUI..\n");
+        if (ret != NULL)
+            *ret = r;
+    } else if(style & CClientUIInterface::MSG_INFORMATION_SNACK){
+        messageInfo(message);
+    }else {
+        // Append title to "PIVX - "
+        if (!msgType.isEmpty())
+            strTitle += " - " + msgType;
+        notificator->notify((Notificator::Class) nNotifyIcon, strTitle, message);
     }
 }
 

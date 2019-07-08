@@ -64,6 +64,7 @@ private slots:
     void refreshView();
     void onContactMultiClicked();
     void onDeleteClicked();
+    void onResetCustomOptions();
 private:
     Ui::send *ui;
     QPushButton *coinIcon;

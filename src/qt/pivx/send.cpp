@@ -94,6 +94,7 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     connect(ui->btnCoinControl, SIGNAL(clicked()), this, SLOT(onCoinControlClicked()));
     connect(ui->btnChangeAddress, SIGNAL(clicked()), this, SLOT(onChangeAddressClicked()));
     connect(ui->btnUri, SIGNAL(clicked()), this, SLOT(onOpenUriClicked()));
+    connect(ui->pushButtonReset, SIGNAL(clicked()), this, SLOT(onResetCustomOptions()));
 
     ui->coinWidget->setProperty("cssClass", "container-coin-type");
     ui->labelLine->setProperty("cssClass", "container-divider");
@@ -178,8 +179,8 @@ void SendWidget::refreshAmounts() {
 
 void SendWidget::loadClientModel(){
     if (clientModel) {
-        // TODO: Complete me..
-        //connect(clientModel, SIGNAL(numBlocksChanged(int)), this, SLOT(updateSmartFeeLabel()));
+        // TODO: Update fee on every block.
+        //connect(clientModel, SIGNAL(numBlocksChanged(int)), this, SLOT(updateFee()));
     }
 }
 
@@ -197,24 +198,26 @@ void SendWidget::loadWalletModel() {
         // Refresh view
         refreshView();
 
-        // TODO: Coin control complet eme
+        // TODO: This only happen when the coin control features are modified in other screen, check before do this if the wallet has another screen modifying it.
         // Coin Control
         //connect(model->getOptionsModel(), SIGNAL(coinControlFeaturesChanged(bool)), this, SLOT(coinControlFeatureChanged(bool)));
         //ui->frameCoinControl->setVisible(model->getOptionsModel()->getCoinControlFeatures());
         //coinControlUpdateLabels();
-
-        // TODO: fee section, check sendDialog, same method
     }
 }
 
 void SendWidget::clearAll(){
+    onResetCustomOptions();
+    if(customFeeDialog) customFeeDialog->clear();
+    ui->pushButtonFee->setText(tr("Customize Fee"));
+    if(walletModel) walletModel->setWalletDefaultFee();
+    clearEntries();
+}
+
+void SendWidget::onResetCustomOptions(){
     CoinControlDialog::coinControl->SetNull();
     ui->btnChangeAddress->setActive(false);
     ui->btnCoinControl->setActive(false);
-    customFeeDialog->clear();
-    ui->pushButtonFee->setText(tr("Customize Fee"));
-    walletModel->setWalletDefaultFee();
-    clearEntries();
 }
 
 void SendWidget::clearEntries(){
@@ -814,7 +817,6 @@ void SendWidget::resizeMenu(){
     }
 }
 
-SendWidget::~SendWidget()
-{
+SendWidget::~SendWidget(){
     delete ui;
 }

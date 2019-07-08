@@ -1,6 +1,4 @@
-// Copyright (c) 2011-2014 The Bitcoin developers
-// Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2018 The PIVX developers
+// Copyright (c) 2019 The PIVX developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -21,19 +19,23 @@ OpenURIDialog::OpenURIDialog(QWidget* parent) : QDialog(parent, Qt::WindowSystem
     ui->uriEdit->setPlaceholderText("pivx:");
 
     ui->labelSubtitle->setText("URI");
-    ui->labelSubtitle->setProperty("cssClass", "text-title2-dialog");
-
-    ui->frame->setProperty("cssClass", "container-dialog");
-    ui->labelTitle->setProperty("cssClass", "text-title-dialog");
+    setCssProperty(ui->labelSubtitle, "text-title2-dialog");
+    setCssProperty(ui->frame, "container-dialog");
+    setCssProperty(ui->labelTitle, "text-title-dialog");
 
     setCssBtnPrimary(ui->pushButtonOK);
     setCssBtnPrimary(ui->selectFileButton);
-    ui->pushButtonCancel->setProperty("cssClass", "btn-dialog-cancel");
+    setCssProperty(ui->pushButtonCancel, "btn-dialog-cancel");
 
     ui->uriEdit->setPlaceholderText("0.000001 zPIV");
     initCssEditLine(ui->uriEdit, true);
     connect(ui->pushButtonOK, SIGNAL(clicked()), this, SLOT(accept()));
     connect(ui->pushButtonCancel, SIGNAL(clicked()), this, SLOT(close()));
+}
+
+void OpenURIDialog::showEvent(QShowEvent *event)
+{
+    ui->uriEdit->setFocus();
 }
 
 OpenURIDialog::~OpenURIDialog()

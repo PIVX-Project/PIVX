@@ -2283,15 +2283,18 @@ QComboBox[cssClass="btn-combo-dialog"]::down-arrow {
 
 
 QComboBox[cssClass="btn-combo-edit-dialog"] {
-    background-image: url("://ic-arrow-drop-down-white");
-    background-position:right center;
-    background-repeat:no-repeat;
     background-color:#0f0b16;
     padding:10px 20px 10px 10px;
     font-size:16px;
     border:1px solid #bababa;
     color: #B088FF;
     text-align: right;
+}
+
+QComboBox[cssClass="btn-combo-edit-dialog"]::down-arrow {
+    image: url("://ic-arrow-drop-down-white");
+    width: 24px;
+    height: 24px;
 }
 
 

@@ -95,7 +95,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     ui->comboBoxSort->addItem("Amount");
     //ui->comboBoxSort->addItem("Sent");
     //ui->comboBoxSort->addItem("Received");
-    connect(ui->comboBoxSort, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onSortChanged(const QString&)));
+    connect(ui->comboBoxSort, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onSortChanged(const QString&)));
 
     // transactions
     setCssProperty(ui->listTransactions, "container");
@@ -534,6 +534,7 @@ void DashboardWidget::refreshChart(){
             ui->containerBoxMonths->setVisible(true);
             break;
         }
+        default: break;
     }
 
     // Refresh years filter, first address created is the start

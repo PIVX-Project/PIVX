@@ -19,12 +19,6 @@ public:
 
     void updateStatus(bool isLightTheme, bool isHover, bool isSelected);
 
-    void sendRow(bool isLightTheme);
-    void receiveRow(bool isLightTheme);
-    void stakeRow(bool isLightTheme);
-    void zPIVStakeRow(bool isLightTheme);
-    void mintRow(bool isLightTheme);
-
     void setDate(QDateTime);
     void setLabel(QString);
     void setAmount(QString);

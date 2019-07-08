@@ -1,7 +1,7 @@
 #include "qt/pivx/requestdialog.h"
 #include "qt/pivx/forms/ui_requestdialog.h"
-#include "QGraphicsDropShadowEffect"
-#include "QListView"
+#include <QListView>
+#include <QDoubleValidator>
 
 #include "qt/pivx/qtutils.h"
 #include "guiutil.h"
@@ -18,60 +18,55 @@ RequestDialog::RequestDialog(QWidget *parent) :
 
     // Text
     ui->labelTitle->setText(tr("New Request Payment"));
-    ui->labelTitle->setProperty("cssClass", "text-title-dialog");
+    setCssProperty(ui->labelTitle, "text-title-dialog");
 
     ui->labelMessage->setText(tr("Instead of sending somebody a PIVX address and asking them to pay to that address, you give them a Payment Request message which bundles up more information than is contained in just a PIVX address."));
-    ui->labelMessage->setProperty("cssClass", "text-main-grey");
+    setCssProperty(ui->labelMessage, "text-main-grey");
 
     // Container
-    ui->frame->setProperty("cssClass", "container-dialog");
+    setCssProperty(ui->frame, "container-dialog");
 
     // Combo Coins
-    ui->comboBoxCoin->setProperty("cssClass", "btn-combo-coins");
-    ui->comboContainer->setProperty("cssClass", "container-purple");
+    setCssProperty(ui->comboBoxCoin, "btn-combo-coins");
+    setCssProperty(ui->comboContainer, "container-purple");
 
-    QListView * listView = new QListView();
-    ui->comboBoxCoin->addItem("PIV");
-    ui->comboBoxCoin->addItem("zPIV");
-    ui->comboBoxCoin->setView(listView);
+    ui->comboBoxCoin->addItem("PIV", 0);
+    ui->comboBoxCoin->addItem("zPIV", 1);
+    ui->comboBoxCoin->setView(new QListView());
 
     // Label
     ui->labelSubtitleLabel->setText(tr("Label"));
-    ui->labelSubtitleLabel->setProperty("cssClass", "text-title2-dialog");
+    setCssProperty(ui->labelSubtitleLabel, "text-title2-dialog");
     ui->lineEditLabel->setPlaceholderText(tr("Enter a label to be saved withing the address"));
     setCssEditLineDialog(ui->lineEditLabel, true);
-    ui->lineEditLabel->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    setShadow(ui->lineEditLabel);
 
     // Amount
     ui->labelSubtitleAmount->setText(tr("Amount"));
-    ui->labelSubtitleAmount->setProperty("cssClass", "text-title2-dialog");
+    setCssProperty(ui->labelSubtitleAmount, "text-title2-dialog");
     ui->lineEditAmount->setPlaceholderText("0.00 PIV");
     setCssEditLineDialog(ui->lineEditAmount, true);
-    ui->lineEditAmount->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    setShadow(ui->layoutAmount);
+
+    QDoubleValidator *doubleValidator = new QDoubleValidator(0, 9999999, 7, this);
+    doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+    ui->lineEditAmount->setValidator(doubleValidator);
 
     // Description
     ui->labelSubtitleDescription->setText(tr("Description (optional)"));
-    ui->labelSubtitleDescription->setProperty("cssClass", "text-title2-dialog");
+    setCssProperty(ui->labelSubtitleDescription, "text-title2-dialog");
 
     ui->lineEditDescription->setPlaceholderText(tr("Add description "));
     setCssEditLineDialog(ui->lineEditDescription, true);
-    ui->lineEditDescription->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    setShadow(ui->lineEditDescription);
 
     // Stack
     ui->stack->setCurrentIndex(pos);
     // Request QR Page
     // Address
     ui->labelAddress->setText(tr("Error"));
-    ui->labelAddress->setProperty("cssClass", "text-main-grey-big");
+    setCssProperty(ui->labelAddress, "text-main-grey-big");
 
     // Buttons
-    ui->btnEsc->setText("");
-    ui->btnEsc->setProperty("cssClass", "ic-close");
-
-    ui->btnCancel->setProperty("cssClass", "btn-dialog-cancel");
+    setCssProperty(ui->btnEsc, "ic-close");
+    setCssProperty(ui->btnCancel, "btn-dialog-cancel");
     ui->btnSave->setText(tr("GENERATE"));
     setCssBtnPrimary(ui->btnSave);
     setCssBtnPrimary(ui->btnCopyAddress);
@@ -92,7 +87,6 @@ void RequestDialog::setWalletModel(WalletModel *model){
 
 void RequestDialog::onNextClicked(){
     if(walletModel) {
-        // info
         info = new SendCoinsRecipient();
         info->label = ui->lineEditLabel->text();
         info->message = ui->lineEditDescription->text();
@@ -107,12 +101,8 @@ void RequestDialog::onNextClicked(){
         info->amount = value;
 
         if(value <= 0 || !isValueValid){
-            // TODO: Notify problem..
             return;
         }
-        // TODO: validate address etc etc.
-
-        // TODO: Complete amount and QR.
         ui->labelTitle->setText("Request for " + BitcoinUnits::format(displayUnit, value, false, BitcoinUnits::separatorAlways) + " PIV");
         updateQr(info->address);
         ui->labelAddress->setText(info->address);
@@ -151,7 +141,6 @@ void RequestDialog::updateQr(QString str){
     }
 }
 
-RequestDialog::~RequestDialog()
-{
+RequestDialog::~RequestDialog(){
     delete ui;
 }

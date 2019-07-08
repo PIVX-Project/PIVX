@@ -10,12 +10,7 @@
 #include "qt/pivx/qtutils.h"
 #include "walletmodel.h"
 
-#include <QAbstractItemDelegate>
-#include <QPainter>
-#include <QSettings>
 #include <QModelIndex>
-
-#include <iostream>
 
 #define DECORATION_SIZE 60
 #define NUM_ITEMS 3
@@ -69,21 +64,17 @@ AddressesWidget::AddressesWidget(PIVXGUI* parent) :
     );
 
     /* Containers */
-    ui->left->setProperty("cssClass", "container");
+    setCssProperty(ui->left, "container");
     ui->left->setContentsMargins(0,20,0,20);
-    ui->right->setProperty("cssClass", "container-right");
+    setCssProperty(ui->right, "container-right");
     ui->right->setContentsMargins(20,10,20,20);
-
-    ui->listAddresses->setProperty("cssClass", "container");
+    setCssProperty(ui->listAddresses, "container");
 
     // Title
     ui->labelTitle->setText(tr("Contacts"));
-    ui->labelTitle->setProperty("cssClass", "text-title-screen");
-
-    /* Subtitle */
-
     ui->labelSubtitle1->setText(tr("You can add a new one in the options menu to the side."));
-    ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
+    setCssTitleScreen(ui->labelTitle);
+    setCssSubtitleScreen(ui->labelSubtitle1);
 
     // Change eddress option
     ui->btnAddContact->setTitleClassAndText("btn-title-grey", "Add new contact");
@@ -99,36 +90,27 @@ AddressesWidget::AddressesWidget(PIVXGUI* parent) :
 
     //Empty List
     ui->emptyContainer->setVisible(false);
-    ui->pushImgEmpty->setProperty("cssClass", "img-empty-contacts");
+    setCssProperty(ui->pushImgEmpty, "img-empty-contacts");
 
     ui->labelEmpty->setText(tr("No contacts yet"));
-    ui->labelEmpty->setProperty("cssClass", "text-empty");
-
+    setCssProperty(ui->labelEmpty, "text-empty");
 
     // Add Contact
-    ui->layoutNewContact->setProperty("cssClass", "container-options");
-
+    setCssProperty(ui->layoutNewContact, "container-options");
 
     // Name
-
     ui->labelName->setText(tr("Contact name"));
-    ui->labelName->setProperty("cssClass", "text-title");
-
-
+    setCssProperty(ui->labelName, "text-title");
     ui->lineEditName->setPlaceholderText(tr("e.g John doe "));
     setCssEditLine(ui->lineEditName, true);
-    ui->lineEditName->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    setShadow(ui->lineEditName);
-
 
     // Address
     ui->labelAddress->setText(tr("Enter a PIVX address"));
-    ui->labelAddress->setProperty("cssClass", "text-title");
+    setCssProperty(ui->labelAddress, "text-title");
     ui->lineEditAddress->setPlaceholderText("e.g D7VFR83SQbiezrW72hjc…");
     setCssEditLine(ui->lineEditAddress, true);
     ui->lineEditAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
     setShadow(ui->lineEditAddress);
-
 
     // Buttons
     ui->btnSave->setText(tr("SAVE"));
@@ -184,7 +166,6 @@ void AddressesWidget::onStoreContactClicked(){
         QString label = ui->lineEditName->text();
         QString address = ui->lineEditAddress->text();
 
-        // TODO: Update address status on text change..
         if (!walletModel->validateAddress(address)) {
             setCssEditLine(ui->lineEditAddress, false, true);
             inform(tr("Invalid Contact Address"));
@@ -212,7 +193,6 @@ void AddressesWidget::onStoreContactClicked(){
         } else {
             inform(tr("Error Storing Contact"));
         }
-
     }
 }
 

@@ -55,7 +55,7 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     progressBar->setTextVisible(false);
     progressBar->setMaximumHeight(2);
     progressBar->setMaximumWidth(36);
-    progressBar->setProperty("cssClass", "progress-sync");
+    setCssProperty(progressBar, "progress-sync");
     progressBar->show();
     progressBar->raise();
     progressBar->move(0, 34);
@@ -86,8 +86,8 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
         ui->pushButtonTheme->setButtonText("Dark Theme");
     }
 
-    ui->qrContainer->setProperty("cssClass", "container-qr");
-    ui->pushButtonQR->setProperty("cssClass", "btn-qr");
+    setCssProperty(ui->qrContainer, "container-qr");
+    setCssProperty(ui->pushButtonQR, "btn-qr");
 
     // QR image
 
@@ -437,7 +437,6 @@ void TopBar::loadWalletModel(){
     // update the display unit, to not use the default ("PIVX")
     updateDisplayUnit();
 
-    // TODO: Complete me..
     refreshStatus();
 }
 
