@@ -109,6 +109,25 @@ Intro::Intro(QWidget* parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::W
                                 signalled(false)
 {
     ui->setupUi(this);
+
+    this->setStyleSheet(GUIUtil::loadStyleSheet());
+
+    ui->frame->setProperty("cssClass", "container-welcome-stack");
+    ui->frame_2->setProperty("cssClass", "container-welcome");
+
+    ui->label_2->setProperty("cssClass", "text-title-welcome");
+
+    ui->dataDirDefault->setProperty("cssClass", "radio-welcome");
+
+    ui->dataDirCustom->setProperty("cssClass", "radio-welcome");
+
+    ui->dataDirectory->setProperty("cssClass", "edit-primary-welcome");
+    ui->dataDirectory->setAttribute(Qt::WA_MacShowFocusRect, 0);
+
+
+    ui->ellipsisButton->setProperty("cssClass", "btn-dots-welcome");
+
+
     ui->sizeWarningLabel->setText(ui->sizeWarningLabel->text().arg(BLOCK_CHAIN_SIZE / GB_BYTES));
     startThread();
 }
@@ -158,15 +177,16 @@ bool Intro::pickDataDirectory()
     /* 2) Allow QSettings to override default dir */
     dataDir = settings.value("strDataDir", dataDir).toString();
 
+    
     if (!fs::exists(GUIUtil::qstringToBoostPath(dataDir)) || GetBoolArg("-choosedatadir", false)) {
-        /* If current default data directory does not exist, let the user choose one */
+        // If current default data directory does not exist, let the user choose one 
         Intro intro;
         intro.setDataDirectory(dataDir);
         intro.setWindowIcon(QIcon(":icons/bitcoin"));
 
         while (true) {
             if (!intro.exec()) {
-                /* Cancel clicked */
+                // Cancel clicked 
                 return false;
             }
             dataDir = intro.getDataDirectory();
@@ -176,16 +196,18 @@ bool Intro::pickDataDirectory()
             } catch (fs::filesystem_error& e) {
                 QMessageBox::critical(0, tr("PIVX Core"),
                     tr("Error: Specified data directory \"%1\" cannot be created.").arg(dataDir));
-                /* fall through, back to choosing screen */
+                // fall through, back to choosing screen 
             }
         }
 
         settings.setValue("strDataDir", dataDir);
     }
+    
     /* Only override -datadir if different from the default, to make it possible to
      * override -datadir in the pivx.conf file in the default data directory
      * (to be consistent with pivxd behavior)
      */
+
     if (dataDir != getDefaultDataDirectory())
         SoftSetArg("-datadir", GUIUtil::qstringToBoostPath(dataDir).string()); // use OS locale for path setting
     return true;
@@ -200,7 +222,7 @@ void Intro::setStatus(int status, const QString& message, quint64 bytesAvailable
         break;
     case FreespaceChecker::ST_ERROR:
         ui->errorMessage->setText(tr("Error") + ": " + message);
-        ui->errorMessage->setStyleSheet("QLabel { color: #800000 }");
+        ui->errorMessage->setStyleSheet("QLabel { color: #f84444 }");
         break;
     }
     /* Indicate number of bytes available */
@@ -247,6 +269,11 @@ void Intro::on_dataDirCustom_clicked()
 
 void Intro::startThread()
 {
+
+
+
+
+
     thread = new QThread(this);
     FreespaceChecker* executor = new FreespaceChecker(this);
     executor->moveToThread(thread);

@@ -2968,3 +2968,96 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
     color:#ffffff;
     font-size:20px;
 }
+
+
+/*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+HH      INTRO 
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+ */
+
+QPushButton[cssClass="btn-dots-welcome"] {
+    border:  1px solid #b088ff;
+    background-color:#b088ff;
+    font-size:18px;
+    padding:8px;
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+
+QPushButton[cssClass="btn-dots-welcome"]:hover {
+    border:  1px solid #b088ff;
+    background-color:#44375f;
+    font-size:18px;
+    padding:8px;
+    color: #FFFFFF;
+    border-radius: 2px;
+}
+
+QPushButton[cssClass="btn-dots-welcome"]:pressed {
+    border:  1px solid #b088ff;
+    background-color:#44375f;
+    font-size:18px;
+    padding:8px;
+    color: #b088ff;
+    border-radius: 2px;
+}
+
+*[cssClass="edit-primary-welcome"] {
+    border:1px solid #b088ff;
+    border-right: 0px;
+    background-color:#171022;
+    font-size:18px;
+    border-radius: 2px;
+    padding:8px;
+    color: #FFFFFF;
+}
+
+*[cssClass="edit-primary-welcome"]:focus {
+    border: 1px solid #b088ff;
+    border-right: 0px;
+}
+
+*[cssClass="edit-primary-welcome"]:focus:hover {
+    border: 1px solid #b088ff;
+    border-right: 0px;
+}
+
+*[cssClass="edit-primary"]:hover {
+    border: 1px solid #b088ff;
+    border-right: 0px;
+}
+
+QRadioButton[cssClass="radio-welcome"]:checked {
+    color: #b088ff;
+    font-size:20px;
+}
+
+QRadioButton[cssClass="radio-welcome"]:unchecked {
+    color: #bababa;
+    font-size:20px;
+}
+
+QRadioButton[cssClass="radio-welcome"] {
+    color: #bababa;
+    font-size:20px;
+    spacing:20px;
+}
+
+QRadioButton[cssClass="radio-welcome"]::indicator {
+    width:                  26px;
+    height:                 26px;
+}
+
+QRadioButton[cssClass="radio-welcome"]::indicator:checked {
+    background: url("://ic-radio-liliac-on");
+    background-repeat:no-repeat;
+    background-position:center;
+}
+
+QRadioButton[cssClass="radio-welcome"]::indicator:unchecked {
+    background: url("://btn-radio-off");
+    background-repeat:no-repeat;
+    background-position:center;
+}
+
