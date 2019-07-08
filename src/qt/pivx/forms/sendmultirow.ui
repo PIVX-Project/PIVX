@@ -278,6 +278,9 @@
       </item>
       <item>
        <widget class="QLabel" name="labelSubtitleDescription">
+        <property name="styleSheet">
+         <string notr="true">padding-bottom:1px;</string>
+        </property>
         <property name="text">
          <string>TextLabel</string>
         </property>

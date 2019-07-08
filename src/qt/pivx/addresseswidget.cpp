@@ -11,6 +11,7 @@
 #include "walletmodel.h"
 
 #include <QModelIndex>
+#include <QRegExpValidator>
 
 #define DECORATION_SIZE 60
 #define NUM_ITEMS 3
@@ -103,14 +104,14 @@ AddressesWidget::AddressesWidget(PIVXGUI* parent) :
     setCssProperty(ui->labelName, "text-title");
     ui->lineEditName->setPlaceholderText(tr("e.g John doe "));
     setCssEditLine(ui->lineEditName, true);
+    ui->lineEditName->setValidator(new QRegExpValidator(QRegExp("^[A-Za-z0-9]+"), ui->lineEditName));
 
     // Address
     ui->labelAddress->setText(tr("Enter a PIVX address"));
     setCssProperty(ui->labelAddress, "text-title");
     ui->lineEditAddress->setPlaceholderText("e.g D7VFR83SQbiezrW72hjc…");
     setCssEditLine(ui->lineEditAddress, true);
-    ui->lineEditAddress->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    setShadow(ui->lineEditAddress);
+    ui->lineEditAddress->setValidator(new QRegExpValidator(QRegExp("^[A-Za-z0-9]+"), ui->lineEditName));
 
     // Buttons
     ui->btnSave->setText(tr("SAVE"));
@@ -176,6 +177,13 @@ void AddressesWidget::onStoreContactClicked(){
         if (walletModel->isMine(pivAdd)) {
             setCssEditLine(ui->lineEditAddress, false, true);
             inform(tr("Cannot store your own address as contact"));
+            return;
+        }
+
+        QString storedLabel = walletModel->getAddressTableModel()->labelForAddress(address);
+
+        if(!storedLabel.isEmpty()){
+            inform(tr("Address already stored, label: %1").arg("\'"+storedLabel+"\'"));
             return;
         }
 
