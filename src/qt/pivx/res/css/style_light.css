@@ -2961,6 +2961,11 @@ HH      INTRO
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
  */
 
+*[cssClass="text-intro-white"] {
+    color:#FFFFFF;
+    font-size:16px;
+}
+
 QPushButton[cssClass="btn-dots-welcome"] {
     border:  1px solid #b088ff;
     background-color:#b088ff;

@@ -10,6 +10,7 @@
 #include "guiutil.h"
 
 #include "util.h"
+#include "qt/pivx/qtutils.h"
 
 #include <boost/filesystem.hpp>
 
@@ -109,27 +110,25 @@ Intro::Intro(QWidget* parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::W
                                 signalled(false)
 {
     ui->setupUi(this);
-
     this->setStyleSheet(GUIUtil::loadStyleSheet());
 
-    ui->frame->setProperty("cssClass", "container-welcome-step2");
-    ui->container->setProperty("cssClass", "container-welcome-stack");
-    ui->frame_2->setProperty("cssClass", "container-welcome");
+    setCssProperty(ui->frame, "container-welcome-step2");
+    setCssProperty(ui->container, "container-welcome-stack");
+    setCssProperty(ui->frame_2, "container-welcome");
+    setCssProperty(ui->label_2, "text-title-welcome");
+    setCssProperty(ui->label_4, "text-intro-white");
+    setCssProperty(ui->sizeWarningLabel, "text-intro-white");
+    setCssProperty(ui->freeSpace, "text-intro-white");
 
-    ui->label_2->setProperty("cssClass", "text-title-welcome");
-
-    ui->dataDirDefault->setProperty("cssClass", "radio-welcome");
-
-    ui->dataDirCustom->setProperty("cssClass", "radio-welcome");
-
-
-
-    ui->dataDirectory->setProperty("cssClass", "edit-primary-welcome");
+    setCssProperty({ui->dataDirDefault, ui->dataDirCustom}, "radio-welcome");
+    setCssProperty(ui->dataDirectory, "edit-primary-welcome");
     ui->dataDirectory->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    setCssProperty(ui->ellipsisButton, "btn-dots-welcome");
+    setCssBtnPrimary(ui->pushButtonOk);
+    setCssBtnSecondary(ui->pushButtonCancel);
 
-
-    ui->ellipsisButton->setProperty("cssClass", "btn-dots-welcome");
-
+    connect(ui->pushButtonOk, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(ui->pushButtonCancel, SIGNAL(clicked()), this, SLOT(close()));
 
     ui->sizeWarningLabel->setText(ui->sizeWarningLabel->text().arg(BLOCK_CHAIN_SIZE / GB_BYTES));
     startThread();
@@ -242,13 +241,13 @@ void Intro::setStatus(int status, const QString& message, quint64 bytesAvailable
         ui->freeSpace->setText(freeString + ".");
     }
     /* Don't allow confirm in ERROR state */
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(status != FreespaceChecker::ST_ERROR);
+    ui->pushButtonOk->setEnabled(status != FreespaceChecker::ST_ERROR);
 }
 
 void Intro::on_dataDirectory_textChanged(const QString& dataDirStr)
 {
     /* Disable OK button until check result comes in */
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+    ui->pushButtonOk->setEnabled(false);
     checkPath(dataDirStr);
 }
 
@@ -272,11 +271,6 @@ void Intro::on_dataDirCustom_clicked()
 
 void Intro::startThread()
 {
-
-
-
-
-
     thread = new QThread(this);
     FreespaceChecker* executor = new FreespaceChecker(this);
     executor->moveToThread(thread);
