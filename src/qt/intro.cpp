@@ -119,6 +119,7 @@ Intro::Intro(QWidget* parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::W
     setCssProperty(ui->label_4, "text-intro-white");
     setCssProperty(ui->sizeWarningLabel, "text-intro-white");
     setCssProperty(ui->freeSpace, "text-intro-white");
+    setCssProperty(ui->errorMessage, "text-intro-white");
 
     setCssProperty({ui->dataDirDefault, ui->dataDirCustom}, "radio-welcome");
     setCssProperty(ui->dataDirectory, "edit-primary-welcome");
