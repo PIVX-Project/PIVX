@@ -51,13 +51,13 @@
        <widget class="QWidget" name="container" native="true">
         <property name="minimumSize">
          <size>
-          <width>880</width>
+          <width>820</width>
           <height>520</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>880</width>
+          <width>820</width>
           <height>520</height>
          </size>
         </property>
@@ -66,10 +66,16 @@
           <number>0</number>
          </property>
          <property name="leftMargin">
-          <number>30</number>
+          <number>1</number>
+         </property>
+         <property name="topMargin">
+          <number>1</number>
          </property>
          <property name="rightMargin">
-          <number>30</number>
+          <number>1</number>
+         </property>
+         <property name="bottomMargin">
+          <number>1</number>
          </property>
          <item>
           <widget class="QWidget" name="frame" native="true">

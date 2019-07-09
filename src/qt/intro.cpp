@@ -112,7 +112,8 @@ Intro::Intro(QWidget* parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::W
 
     this->setStyleSheet(GUIUtil::loadStyleSheet());
 
-    ui->frame->setProperty("cssClass", "container-welcome-stack");
+    ui->frame->setProperty("cssClass", "container-welcome-step2");
+    ui->container->setProperty("cssClass", "container-welcome-stack");
     ui->frame_2->setProperty("cssClass", "container-welcome");
 
     ui->label_2->setProperty("cssClass", "text-title-welcome");
@@ -120,6 +121,8 @@ Intro::Intro(QWidget* parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::W
     ui->dataDirDefault->setProperty("cssClass", "radio-welcome");
 
     ui->dataDirCustom->setProperty("cssClass", "radio-welcome");
+
+
 
     ui->dataDirectory->setProperty("cssClass", "edit-primary-welcome");
     ui->dataDirectory->setAttribute(Qt::WA_MacShowFocusRect, 0);
