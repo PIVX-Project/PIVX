@@ -155,10 +155,12 @@ void Intro::setDataDirectory(const QString& dataDir)
         ui->dataDirDefault->setChecked(true);
         ui->dataDirectory->setEnabled(false);
         ui->ellipsisButton->setEnabled(false);
+        updateDataDirStatus(false);
     } else {
         ui->dataDirCustom->setChecked(true);
         ui->dataDirectory->setEnabled(true);
         ui->ellipsisButton->setEnabled(true);
+        updateDataDirStatus(true);
     }
 }
 
@@ -180,7 +182,7 @@ bool Intro::pickDataDirectory()
     /* 2) Allow QSettings to override default dir */
     dataDir = settings.value("strDataDir", dataDir).toString();
 
-    
+
     if (!fs::exists(GUIUtil::qstringToBoostPath(dataDir)) || GetBoolArg("-choosedatadir", false)) {
         // If current default data directory does not exist, let the user choose one 
         Intro intro;
@@ -245,6 +247,15 @@ void Intro::setStatus(int status, const QString& message, quint64 bytesAvailable
     ui->pushButtonOk->setEnabled(status != FreespaceChecker::ST_ERROR);
 }
 
+void Intro::updateDataDirStatus(bool enabled){
+    if(enabled){
+        setCssProperty(ui->dataDirectory, "edit-primary-welcome", true);
+    } else {
+        setCssProperty(ui->dataDirectory, "edit-primary-welcome-disabled", true);
+
+    }
+}
+
 void Intro::on_dataDirectory_textChanged(const QString& dataDirStr)
 {
     /* Disable OK button until check result comes in */
@@ -262,12 +273,14 @@ void Intro::on_ellipsisButton_clicked()
 void Intro::on_dataDirDefault_clicked()
 {
     setDataDirectory(getDefaultDataDirectory());
+    updateDataDirStatus(false);
 }
 
 void Intro::on_dataDirCustom_clicked()
 {
     ui->dataDirectory->setEnabled(true);
     ui->ellipsisButton->setEnabled(true);
+    updateDataDirStatus(true);
 }
 
 void Intro::startThread()
