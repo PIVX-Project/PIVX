@@ -6,6 +6,7 @@
 #include "qt/pivx/optionbutton.h"
 #include "qt/pivx/sendconfirmdialog.h"
 #include "qt/pivx/myaddressrow.h"
+#include "clientmodel.h"
 #include "optionsmodel.h"
 #include "addresstablemodel.h"
 #include "coincontrol.h"
@@ -13,8 +14,6 @@
 #include "zpiv/deterministicmint.h"
 #include "openuridialog.h"
 #include "zpivcontroldialog.h"
-
-#include <iostream>
 
 SendWidget::SendWidget(PIVXGUI* parent) :
     PWidget(parent),
@@ -104,7 +103,7 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     ui->labelTitleTotalSend->setText(tr("Total to send"));
     ui->labelTitleTotalSend->setProperty("cssClass", "text-title");
 
-    ui->labelAmountSend->setText("0.00 zPIV");
+    ui->labelAmountSend->setText("0.00 PIV");
     ui->labelAmountSend->setProperty("cssClass", "text-body1");
 
     // Total Remaining
@@ -179,8 +178,9 @@ void SendWidget::refreshAmounts() {
 
 void SendWidget::loadClientModel(){
     if (clientModel) {
-        // TODO: Update fee on every block.
-        //connect(clientModel, SIGNAL(numBlocksChanged(int)), this, SLOT(updateFee()));
+        connect(clientModel, &ClientModel::numBlocksChanged, [this](){
+            if (customFeeDialog) customFeeDialog->updateFee();
+        });
     }
 }
 
@@ -212,6 +212,7 @@ void SendWidget::clearAll(){
     ui->pushButtonFee->setText(tr("Customize Fee"));
     if(walletModel) walletModel->setWalletDefaultFee();
     clearEntries();
+    refreshAmounts();
 }
 
 void SendWidget::onResetCustomOptions(){
@@ -332,7 +333,7 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
     );
 
     if (prepareStatus.status != WalletModel::OK) {
-        inform(tr("Prepare status failed.."));
+        inform(tr("Cannot create transaction."));
         return false;
     }
 

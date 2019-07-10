@@ -1513,6 +1513,14 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border: 1px solid #707070;
 }
 
+*[cssClass="edit-primary-disabled"] {
+    border:  1px solid #33ffffff;
+    background-color:#0f0b16;
+    font-size:18px;
+    border-radius: 2px;
+    padding:8px;
+    color: #FFFFFF;
+}
 
 *[cssClass="edit-primary-error"] {
     border:  1px solid #f84444;
@@ -3014,9 +3022,19 @@ QPushButton[cssClass="btn-dots-welcome"]:pressed {
     border-right: 0px;
 }
 
-*[cssClass="edit-primary"]:hover {
+*[cssClass="edit-primary-welcome"]:hover {
     border: 1px solid #b088ff;
     border-right: 0px;
+}
+
+*[cssClass="edit-primary-welcome-disabled"] {
+    border:1px solid #33ffffff;
+    border-right: 0px;
+    background-color:#171022;
+    font-size:18px;
+    border-radius: 2px;
+    padding:8px;
+    color: #66FFFFFF;
 }
 
 QRadioButton[cssClass="radio-welcome"]:checked {
