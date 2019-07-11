@@ -3,6 +3,7 @@
 #include "qt/pivx/qtutils.h"
 #include "optionsmodel.h"
 #include <QFile>
+#include <QIntValidator>
 
 MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *parent) :
     QDialog(parent),
@@ -15,7 +16,7 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
     ui->setupUi(this);
 
     this->setStyleSheet(parent->styleSheet());
-    ui->frame->setProperty("cssClass", "container-dialog");
+    setCssProperty(ui->frame, "container-dialog");
     ui->frame->setContentsMargins(10,10,10,10);
 
     setCssProperty({ui->labelLine1, ui->labelLine3}, "line-purple");
@@ -31,27 +32,29 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
     ui->pushName4->setEnabled(false);
 
     // Frame 1
-    ui->labelTitle1->setProperty("cssClass", "text-title-dialog");
-    ui->labelMessage1a->setProperty("cssClass", "text-main-grey");
-    ui->labelMessage1b->setProperty("cssClass", "text-main-purple");
+    setCssProperty(ui->labelTitle1, "text-title-dialog");
+    setCssProperty(ui->labelMessage1a, "text-main-grey");
+    setCssProperty(ui->labelMessage1b, "text-main-purple");
 
     // Frame 3
-    ui->labelTitle3->setProperty("cssClass", "text-title-dialog");
-    ui->labelMessage3->setProperty("cssClass", "text-main-grey");
+    setCssProperty(ui->labelTitle3, "text-title-dialog");
+    setCssProperty(ui->labelMessage3, "text-main-grey");
 
     ui->lineEditName->setPlaceholderText(tr("e.g user_masternode"));
     initCssEditLine(ui->lineEditName);
 
     // Frame 4
-    ui->labelTitle4->setProperty("cssClass", "text-title-dialog");
-    ui->labelSubtitleIp->setProperty("cssClass", "text-title");
-    ui->labelSubtitlePort->setProperty("cssClass", "text-title");
+    setCssProperty(ui->labelTitle4, "text-title-dialog");
+    setCssProperty(ui->labelSubtitleIp, "text-title");
+    setCssProperty(ui->labelSubtitlePort, "text-title");
+    setCssSubtitleScreen(ui->labelSubtitleAddressIp);
 
     ui->lineEditIpAddress->setPlaceholderText("e.g 18.255.255.255");
     ui->lineEditPort->setPlaceholderText("e.g 51472");
     initCssEditLine(ui->lineEditIpAddress);
     initCssEditLine(ui->lineEditPort);
     ui->stackedWidget->setCurrentIndex(pos);
+    ui->lineEditPort->setValidator(new QIntValidator(0, 9999999, ui->lineEditPort));
 
     // Confirm icons
     ui->stackedIcon1->addWidget(icConfirm1);
@@ -73,7 +76,7 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
     icConfirm3->show();
     icConfirm3->raise();
     icConfirm3->setVisible(false);
-    icConfirm4->setProperty("cssClass", "ic-step-confirm");
+    setCssProperty(icConfirm4, "ic-step-confirm");
     icConfirm4->setMinimumSize(BUTTON_SIZE);
     icConfirm4->setMaximumSize(BUTTON_SIZE);
     icConfirm4->move(posX, posY);
@@ -85,11 +88,11 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
     // Connect btns
     setCssBtnPrimary(ui->btnNext);
     ui->btnNext->setText(tr("NEXT"));
-    ui->btnBack->setProperty("cssClass" , "btn-dialog-cancel");
+    setCssProperty(ui->btnBack , "btn-dialog-cancel");
     ui->btnBack->setVisible(false);
     ui->btnBack->setText(tr("BACK"));
 
-    ui->pushButtonSkip->setProperty("cssClass", "ic-close");
+    setCssProperty(ui->pushButtonSkip, "ic-close");
 
     connect(ui->pushButtonSkip, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->btnNext, SIGNAL(clicked()), this, SLOT(onNextClicked()));
@@ -100,32 +103,38 @@ void MasterNodeWizardDialog::onNextClicked(){
     switch(pos){
         case 0:{
             ui->stackedWidget->setCurrentIndex(1);
-
             ui->pushName4->setChecked(false);
             ui->pushName3->setChecked(true);
             ui->pushName1->setChecked(true);
-
             icConfirm1->setVisible(true);
-
             ui->pushNumber3->setChecked(true);
 
             ui->btnBack->setVisible(true);
             break;
         }
         case 1:{
-            ui->stackedWidget->setCurrentIndex(2);
 
+            // No empty names accepted.
+            if (ui->lineEditName->text().isEmpty()) {
+                return;
+            }
+
+            ui->stackedWidget->setCurrentIndex(2);
             ui->pushName4->setChecked(false);
             ui->pushName3->setChecked(true);
             ui->pushName1->setChecked(true);
-
             icConfirm3->setVisible(true);
             ui->pushNumber4->setChecked(true);
-
             ui->btnBack->setVisible(true);
             break;
         }
         case 2:{
+
+            // No empty address accepted
+            if (ui->lineEditIpAddress->text().isEmpty()) {
+                return;
+            }
+
             icConfirm4->setVisible(true);
             ui->btnBack->setVisible(true);
             ui->btnBack->setVisible(true);
@@ -318,13 +327,10 @@ void MasterNodeWizardDialog::onBackClicked(){
         }
         case 1:{
             ui->stackedWidget->setCurrentIndex(1);
-
             ui->pushNumber4->setChecked(false);
             ui->pushNumber3->setChecked(true);
-
             ui->pushName4->setChecked(false);
             ui->pushName3->setChecked(true);
-
             icConfirm3->setVisible(false);
 
             break;
@@ -405,6 +411,7 @@ void MasterNodeWizardDialog::inform(QString text){
     snackBar->setText(text);
     snackBar->resize(this->width(), snackBar->height());
     openDialog(snackBar, this);
+    snackBar->deleteLater();
 }
 
 MasterNodeWizardDialog::~MasterNodeWizardDialog()

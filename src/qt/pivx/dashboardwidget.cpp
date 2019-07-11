@@ -117,18 +117,16 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
 
     ui->labelEmpty->setText(tr("No transactions yet"));
     setCssProperty(ui->labelEmpty, "text-empty");
-
     setCssProperty(ui->chartContainer, "container-chart");
-
     setCssProperty(ui->pushImgEmptyChart, "img-empty-staking-on");
 
     ui->btnHowTo->setText(tr("How to get PIV or zPIV"));
     setCssBtnSecondary(ui->btnHowTo);
 
-    ui->labelEmptyChart->setText(tr("Staking off"));
+    ui->labelEmptyChart->setText(tr("You have no staking rewards"));
     setCssProperty(ui->labelEmptyChart, "text-empty");
 
-    ui->labelMessageEmpty->setText(tr("You can activate and deactivate the Staking mode in the status bar at the top right of the wallet"));
+    ui->labelMessageEmpty->setText(tr("You can verify the staking activity in the status bar at the top right of the wallet.\nIt will start alone as soon as the wallet has some balance."));
     setCssSubtitleScreen(ui->labelMessageEmpty);
 
     // Chart State
