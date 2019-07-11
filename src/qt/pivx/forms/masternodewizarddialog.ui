@@ -231,107 +231,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QStackedWidget" name="stackedIcon2">
-           <property name="minimumSize">
-            <size>
-             <width>22</width>
-             <height>22</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>22</width>
-             <height>22</height>
-            </size>
-           </property>
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <widget class="QWidget" name="pageIcon2">
-            <property name="minimumSize">
-             <size>
-              <width>22</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>22</width>
-              <height>22</height>
-             </size>
-            </property>
-            <layout class="QVBoxLayout" name="layoutIcon2">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item alignment="Qt::AlignVCenter">
-              <widget class="QPushButton" name="pushNumber2">
-               <property name="minimumSize">
-                <size>
-                 <width>22</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>22</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>2</string>
-               </property>
-               <property name="checkable">
-                <bool>true</bool>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-               <property name="autoExclusive">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="page_6"/>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="labelLine2">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>1</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>1</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true"/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QStackedWidget" name="stackedIcon3">
            <property name="minimumSize">
             <size>
@@ -392,7 +291,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>3</string>
+                <string>2</string>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -493,7 +392,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>4</string>
+                <string>3</string>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -612,44 +511,6 @@
                <bool>true</bool>
               </property>
               <property name="checked">
-               <bool>true</bool>
-              </property>
-              <property name="autoExclusive">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushName2">
-              <property name="minimumSize">
-               <size>
-                <width>80</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>80</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Type</string>
-              </property>
-              <property name="checkable">
                <bool>true</bool>
               </property>
               <property name="autoExclusive">
@@ -817,7 +678,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Create New Master Node</string>
+             <string>Create New Master Node Controller</string>
             </property>
            </widget>
           </item>
@@ -894,144 +755,6 @@
              </size>
             </property>
            </spacer>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="page_2">
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <property name="leftMargin">
-           <number>40</number>
-          </property>
-          <property name="rightMargin">
-           <number>40</number>
-          </property>
-          <item>
-           <widget class="QWidget" name="widget_3" native="true">
-            <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,1,4">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item alignment="Qt::AlignHCenter">
-              <widget class="QLabel" name="labelTitle2">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>50</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Select Master Node Type</string>
-               </property>
-              </widget>
-             </item>
-             <item alignment="Qt::AlignHCenter">
-              <widget class="QLabel" name="labelMessage2">
-               <property name="text">
-                <string>There are two possible types:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QGroupBox" name="groupBox">
-               <property name="styleSheet">
-                <string notr="true">border:none;</string>
-               </property>
-               <property name="title">
-                <string/>
-               </property>
-               <layout class="QVBoxLayout" name="verticalLayout_8">
-                <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_3">
-                  <property name="leftMargin">
-                   <number>140</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>140</number>
-                  </property>
-                  <item alignment="Qt::AlignLeft">
-                   <widget class="QRadioButton" name="radioButtonInWallet">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="text">
-                     <string>Master Node</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="labelMessage2_3">
-                    <property name="text">
-                     <string>Run a master node on this wallet, must be 24/7 online and have an static ip and open port.</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                    </property>
-                    <property name="wordWrap">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_4">
-                  <property name="leftMargin">
-                   <number>140</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>140</number>
-                  </property>
-                  <item alignment="Qt::AlignLeft">
-                   <widget class="QRadioButton" name="radioButtonController">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="text">
-                     <string>Master Node Controller</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="labelMessage2_4">
-                    <property name="text">
-                     <string>Create a Master Node on this wallet, collateral will not leave this wallet and you can have as many as you want.</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                    </property>
-                    <property name="wordWrap">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-               </layout>
-              </widget>
-             </item>
-            </layout>
-           </widget>
           </item>
          </layout>
         </widget>

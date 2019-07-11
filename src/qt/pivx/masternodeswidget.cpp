@@ -22,8 +22,6 @@
 #include <iostream>
 #include <fstream>
 
-#include <iostream>
-
 #define DECORATION_SIZE 65
 #define NUM_ITEMS 3
 
@@ -84,12 +82,11 @@ MasterNodesWidget::MasterNodesWidget(PIVXGUI *parent) :
 
     /* Title */
     ui->labelTitle->setText(tr("Master Node"));
-    ui->labelTitle->setProperty("cssClass", "text-title-screen");
+    setCssTitleScreen(ui->labelTitle);
     ui->labelTitle->setFont(fontLight);
 
-    /* Subtitle */
     ui->labelSubtitle1->setText(tr("Full nodes that incentivize node operators to perform the core consensus functions\nand vote on the treasury system receiving a periodic reward."));
-    ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
+    setCssSubtitleScreen(ui->labelSubtitle1);
 
     /* Buttons */
     ui->pushButtonSave->setText(tr("Create Master Node"));
@@ -113,6 +110,7 @@ MasterNodesWidget::MasterNodesWidget(PIVXGUI *parent) :
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(onCreateMNClicked()));
     connect(ui->listMn, SIGNAL(clicked(QModelIndex)), this, SLOT(onMNClicked(QModelIndex)));
+    connect(ui->btnAbout, SIGNAL(clicked()), window, SLOT(openFAQ()));
 }
 
 void MasterNodesWidget::showEvent(QShowEvent *event){
@@ -168,6 +166,11 @@ void MasterNodesWidget::onMNClicked(const QModelIndex &index){
     this->index = index;
     menu->move(pos);
     menu->show();
+
+    // Back to regular status
+    ui->listMn->scrollTo(index);
+    ui->listMn->clearSelection();
+    ui->listMn->setFocus();
 }
 
 void MasterNodesWidget::onEditMNClicked(){

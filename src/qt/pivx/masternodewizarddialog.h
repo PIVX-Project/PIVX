@@ -31,7 +31,6 @@ private slots:
 private:
     Ui::MasterNodeWizardDialog *ui;
     QPushButton *icConfirm1;
-    QPushButton *icConfirm2;
     QPushButton *icConfirm3;
     QPushButton *icConfirm4;
     SnackBar *snackBar = nullptr;

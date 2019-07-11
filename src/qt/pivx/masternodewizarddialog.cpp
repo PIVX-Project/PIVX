@@ -1,14 +1,13 @@
 #include "qt/pivx/masternodewizarddialog.h"
 #include "qt/pivx/forms/ui_masternodewizarddialog.h"
 #include "qt/pivx/qtutils.h"
-#include "QFile"
 #include "optionsmodel.h"
+#include <QFile>
 
 MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MasterNodeWizardDialog),
     icConfirm1(new QPushButton()),
-    icConfirm2(new QPushButton()),
     icConfirm3(new QPushButton()),
     icConfirm4(new QPushButton()),
     walletModel(model)
@@ -16,34 +15,19 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
     ui->setupUi(this);
 
     this->setStyleSheet(parent->styleSheet());
-
     ui->frame->setProperty("cssClass", "container-dialog");
     ui->frame->setContentsMargins(10,10,10,10);
 
-    ui->labelLine1->setProperty("cssClass", "line-purple");
-    ui->labelLine2->setProperty("cssClass", "line-purple");
-    ui->labelLine3->setProperty("cssClass", "line-purple");
+    setCssProperty({ui->labelLine1, ui->labelLine3}, "line-purple");
+    setCssProperty({ui->groupBoxName, ui->groupContainer}, "container-border");
+    setCssProperty({ui->pushNumber1, ui->pushNumber3, ui->pushNumber4}, "btn-number-check");
+    setCssProperty({ui->pushName1, ui->pushName3, ui->pushName4}, "btn-name-check");
 
-
-    ui->groupBoxName->setProperty("cssClass", "container-border");
-    ui->groupContainer->setProperty("cssClass", "container-border");
-
-    ui->pushNumber1->setProperty("cssClass", "btn-number-check");
     ui->pushNumber1->setEnabled(false);
-    ui->pushNumber2->setProperty("cssClass", "btn-number-check");
-    ui->pushNumber2->setEnabled(false);
-    ui->pushNumber3->setProperty("cssClass", "btn-number-check");
     ui->pushNumber3->setEnabled(false);
-    ui->pushNumber4->setProperty("cssClass", "btn-number-check");
     ui->pushNumber4->setEnabled(false);
-
-    ui->pushName1->setProperty("cssClass", "btn-name-check");
     ui->pushName1->setEnabled(false);
-    ui->pushName2->setProperty("cssClass", "btn-name-check");
-    ui->pushName2->setEnabled(false);
-    ui->pushName3->setProperty("cssClass", "btn-name-check");
     ui->pushName3->setEnabled(false);
-    ui->pushName4->setProperty("cssClass", "btn-name-check");
     ui->pushName4->setEnabled(false);
 
     // Frame 1
@@ -51,60 +35,38 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
     ui->labelMessage1a->setProperty("cssClass", "text-main-grey");
     ui->labelMessage1b->setProperty("cssClass", "text-main-purple");
 
-    // Frame 2
-    ui->labelTitle2->setProperty("cssClass", "text-title-dialog");
-    ui->labelMessage2->setProperty("cssClass", "text-main-grey");
-
-    ui->labelMessage2_3->setProperty("cssClass", "text-subtitle");
-    ui->labelMessage2_3->setStyleSheet("padding-left: 40px;");
-    ui->labelMessage2_4->setProperty("cssClass", "text-subtitle");
-    ui->labelMessage2_4->setStyleSheet("padding-left: 40px;");
-
     // Frame 3
     ui->labelTitle3->setProperty("cssClass", "text-title-dialog");
     ui->labelMessage3->setProperty("cssClass", "text-main-grey");
 
-    ui->lineEditName->setPlaceholderText("e.g user_masternode");
+    ui->lineEditName->setPlaceholderText(tr("e.g user_masternode"));
     initCssEditLine(ui->lineEditName);
 
     // Frame 4
     ui->labelTitle4->setProperty("cssClass", "text-title-dialog");
-
     ui->labelSubtitleIp->setProperty("cssClass", "text-title");
     ui->labelSubtitlePort->setProperty("cssClass", "text-title");
 
     ui->lineEditIpAddress->setPlaceholderText("e.g 18.255.255.255");
-    initCssEditLine(ui->lineEditIpAddress);
-
     ui->lineEditPort->setPlaceholderText("e.g 51472");
+    initCssEditLine(ui->lineEditIpAddress);
     initCssEditLine(ui->lineEditPort);
-
     ui->stackedWidget->setCurrentIndex(pos);
 
     // Confirm icons
-
     ui->stackedIcon1->addWidget(icConfirm1);
-    ui->stackedIcon2->addWidget(icConfirm2);
     ui->stackedIcon3->addWidget(icConfirm3);
     ui->stackedIcon4->addWidget(icConfirm4);
+
     QSize BUTTON_SIZE = QSize(22, 22);
     int posX = 0;
     int posY = 0;
-    icConfirm1->setProperty("cssClass", "ic-step-confirm");
     icConfirm1->setMinimumSize(BUTTON_SIZE);
     icConfirm1->setMaximumSize(BUTTON_SIZE);
     icConfirm1->move(posX, posY);
     icConfirm1->show();
     icConfirm1->raise();
     icConfirm1->setVisible(false);
-    icConfirm2->setProperty("cssClass", "ic-step-confirm");
-    icConfirm2->setMinimumSize(BUTTON_SIZE);
-    icConfirm2->setMaximumSize(BUTTON_SIZE);
-    icConfirm2->move(posX, posY);
-    icConfirm2->show();
-    icConfirm2->raise();
-    icConfirm2->setVisible(false);
-    icConfirm3->setProperty("cssClass", "ic-step-confirm");
     icConfirm3->setMinimumSize(BUTTON_SIZE);
     icConfirm3->setMaximumSize(BUTTON_SIZE);
     icConfirm3->move(posX, posY);
@@ -119,6 +81,7 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
     icConfirm4->raise();
     icConfirm4->setVisible(false);
 
+    setCssProperty({icConfirm1, icConfirm3, icConfirm4}, "ic-step-confirm");
     // Connect btns
     setCssBtnPrimary(ui->btnNext);
     ui->btnNext->setText(tr("NEXT"));
@@ -134,43 +97,35 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
 }
 
 void MasterNodeWizardDialog::onNextClicked(){
-
     switch(pos){
         case 0:{
             ui->stackedWidget->setCurrentIndex(1);
-            ui->pushNumber2->setChecked(true);
+
             ui->pushName4->setChecked(false);
-            ui->pushName3->setChecked(false);
-            ui->pushName2->setChecked(true);
+            ui->pushName3->setChecked(true);
             ui->pushName1->setChecked(true);
+
             icConfirm1->setVisible(true);
+
+            ui->pushNumber3->setChecked(true);
+
             ui->btnBack->setVisible(true);
             break;
         }
         case 1:{
             ui->stackedWidget->setCurrentIndex(2);
-            ui->pushNumber3->setChecked(true);
+
             ui->pushName4->setChecked(false);
             ui->pushName3->setChecked(true);
-            ui->pushName2->setChecked(true);
             ui->pushName1->setChecked(true);
-            icConfirm2->setVisible(true);
+
+            icConfirm3->setVisible(true);
+            ui->pushNumber4->setChecked(true);
+
             ui->btnBack->setVisible(true);
             break;
         }
         case 2:{
-            ui->stackedWidget->setCurrentIndex(3);
-            ui->pushNumber4->setChecked(true);
-            ui->pushName4->setChecked(true);
-            ui->pushName3->setChecked(true);
-            ui->pushName2->setChecked(true);
-            ui->pushName1->setChecked(true);
-            icConfirm3->setVisible(true);
-            ui->btnBack->setVisible(true);
-            break;
-        }
-
-        case 3:{
             icConfirm4->setVisible(true);
             ui->btnBack->setVisible(true);
             ui->btnBack->setVisible(true);
@@ -354,10 +309,8 @@ void MasterNodeWizardDialog::onBackClicked(){
             ui->pushNumber1->setChecked(true);
             ui->pushNumber4->setChecked(false);
             ui->pushNumber3->setChecked(false);
-            ui->pushNumber2->setChecked(false);
             ui->pushName4->setChecked(false);
             ui->pushName3->setChecked(false);
-            ui->pushName2->setChecked(false);
             ui->pushName1->setChecked(true);
             icConfirm1->setVisible(false);
             ui->btnBack->setVisible(false);
@@ -365,28 +318,17 @@ void MasterNodeWizardDialog::onBackClicked(){
         }
         case 1:{
             ui->stackedWidget->setCurrentIndex(1);
-            ui->pushNumber2->setChecked(true);
+
             ui->pushNumber4->setChecked(false);
-            ui->pushNumber3->setChecked(false);
-            ui->pushName4->setChecked(false);
-            ui->pushName3->setChecked(false);
-            ui->pushName2->setChecked(true);
-            ui->pushName1->setChecked(true);
-            icConfirm2->setVisible(false);
-            break;
-        }
-        case 2:{
-            ui->stackedWidget->setCurrentIndex(2);
             ui->pushNumber3->setChecked(true);
-            ui->pushNumber4->setChecked(false);
+
             ui->pushName4->setChecked(false);
             ui->pushName3->setChecked(true);
-            ui->pushName2->setChecked(true);
-            ui->pushName1->setChecked(true);
+
             icConfirm3->setVisible(false);
+
             break;
         }
-
     }
 }
 
