@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "qt/pivx/pwidget.h"
 #include "qt/pivx/contactsdropdown.h"
+#include "key.h"
 
 namespace Ui {
 class SettingsBitToolWidget;
@@ -23,12 +24,18 @@ public slots:
     void setAddress_ENC(const QString& address);
     void on_encryptKeyButton_ENC_clicked();
     void on_clear_all();
+    void onClearDecrypt();
     void onAddressesClicked();
+    void onDecryptClicked();
+    void importAddressFromDecKey();
 
 private:
     Ui::SettingsBitToolWidget *ui;
     QAction *btnContact;
     ContactsDropdown *menuContacts = nullptr;
+
+    // Cached key
+    CKey key;
 
     void resizeMenu();
 };
