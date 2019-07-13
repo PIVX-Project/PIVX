@@ -26,10 +26,10 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     this->setStyleSheet(parent->styleSheet());
 
     /* Containers */
-    ui->scrollArea->setProperty("cssClass", "container");
-    ui->left->setProperty("cssClass", "container");
+    setCssProperty(ui->scrollArea, "container");
+    setCssProperty(ui->left, "container");
     ui->left->setContentsMargins(0,20,0,20);
-    ui->right->setProperty("cssClass", "container-right");
+    setCssProperty(ui->right, "container-right");
     ui->right->setContentsMargins(20,10,20,20);
 
     ui->verticalLayout->setAlignment(Qt::AlignTop);
@@ -40,30 +40,30 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
 
     /* Title */
     ui->labelTitle->setText(tr("Settings"));
-    ui->labelTitle->setProperty("cssClass", "text-title-screen");
+    setCssProperty(ui->labelTitle, "text-title-screen");
     ui->labelTitle->setFont(fontLight);
 
-    ui->pushButtonFile->setProperty("cssClass", "btn-settings-check");
-    ui->pushButtonFile2->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonFile3->setProperty("cssClass", "btn-settings-options");
+    setCssProperty(ui->pushButtonFile, "btn-settings-check");
+    setCssProperty(ui->pushButtonFile2, "btn-settings-options");
+    setCssProperty(ui->pushButtonFile3, "btn-settings-options");
 
-    ui->pushButtonConfiguration->setProperty("cssClass", "btn-settings-check");
-    ui->pushButtonConfiguration3->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonConfiguration4->setProperty("cssClass", "btn-settings-options");
+    setCssProperty(ui->pushButtonConfiguration, "btn-settings-check");
+    setCssProperty(ui->pushButtonConfiguration3, "btn-settings-options");
+    setCssProperty(ui->pushButtonConfiguration4, "btn-settings-options");
 
-    ui->pushButtonOptions->setProperty("cssClass", "btn-settings-check");
-    ui->pushButtonOptions1->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonOptions2->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonOptions5->setProperty("cssClass", "btn-settings-options");
+    setCssProperty(ui->pushButtonOptions, "btn-settings-check");
+    setCssProperty(ui->pushButtonOptions1, "btn-settings-options");
+    setCssProperty(ui->pushButtonOptions2, "btn-settings-options");
+    setCssProperty(ui->pushButtonOptions5, "btn-settings-options");
 
-    ui->pushButtonTools->setProperty("cssClass", "btn-settings-check");
-    ui->pushButtonTools1->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonTools2->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonTools5->setProperty("cssClass", "btn-settings-options");
+    setCssProperty(ui->pushButtonTools, "btn-settings-check");
+    setCssProperty(ui->pushButtonTools1, "btn-settings-options");
+    setCssProperty(ui->pushButtonTools2, "btn-settings-options");
+    setCssProperty(ui->pushButtonTools5, "btn-settings-options");
 
-    ui->pushButtonHelp->setProperty("cssClass", "btn-settings-check");
-    ui->pushButtonHelp1->setProperty("cssClass", "btn-settings-options");
-    ui->pushButtonHelp2->setProperty("cssClass", "btn-settings-options");
+    setCssProperty(ui->pushButtonHelp, "btn-settings-check");
+    setCssProperty(ui->pushButtonHelp1, "btn-settings-options");
+    setCssProperty(ui->pushButtonHelp2, "btn-settings-options");
 
     options = {
         ui->pushButtonFile2,
@@ -95,7 +95,7 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     settingsWalletOptionsWidget = new SettingsWalletOptionsWidget(window, this);
     settingsMainOptionsWidget = new SettingsMainOptionsWidget(window, this);
     settingsDisplayOptionsWidget = new SettingsDisplayOptionsWidget(window, this);
-    settingsMultisendWidget = new SettingsMultisendWidget(window, this);
+    settingsMultisendWidget = new SettingsMultisendWidget(this);
     settingsInformationWidget = new SettingsInformationWidget(window, this);
     settingsConsoleWidget = new SettingsConsoleWidget(window, this);
 
@@ -146,6 +146,8 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     connect(settingsBackupWallet,&SettingsBackupWallet::message,this, &SettingsWidget::message);
     connect(settingsBackupWallet, &SettingsBackupWallet::showHide, this, &SettingsWidget::showHide);
     connect(settingsBackupWallet, &SettingsBackupWallet::execDialog, this, &SettingsWidget::execDialog);
+    connect(settingsMultisendWidget, &SettingsMultisendWidget::showHide, this, &SettingsWidget::showHide);
+    connect(settingsMultisendWidget,&SettingsMultisendWidget::message,this, &SettingsWidget::message);
 
     /* Widget-to-option mapper */
     mapper = new QDataWidgetMapper(this);
@@ -173,6 +175,7 @@ void SettingsWidget::loadWalletModel(){
     this->settingsBackupWallet->setWalletModel(this->walletModel);
     this->settingsSingMessageWidgets->setWalletModel(this->walletModel);
     this->settingsBitToolWidget->setWalletModel(this->walletModel);
+    this->settingsMultisendWidget->setWalletModel(this->walletModel);
 }
 
 void SettingsWidget::onResetAction(){

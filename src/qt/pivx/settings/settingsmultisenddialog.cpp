@@ -1,7 +1,7 @@
 #include "qt/pivx/settings/settingsmultisenddialog.h"
 #include "qt/pivx/settings/forms/ui_settingsmultisenddialog.h"
-#include "QGraphicsDropShadowEffect"
-#include "QListView"
+#include <QListView>
+#include <QIntValidator>
 #include "qt/pivx/qtutils.h"
 
 SettingsMultisendDialog::SettingsMultisendDialog(QWidget *parent) :
@@ -14,55 +14,59 @@ SettingsMultisendDialog::SettingsMultisendDialog(QWidget *parent) :
     this->setStyleSheet(parent->styleSheet());
 
     // Container
-    ui->frame->setProperty("cssClass", "container-dialog");
+    setCssProperty(ui->frame, "container-dialog");
 
     // Text
     ui->labelTitle->setText(tr("New recipient for multisend"));
-    ui->labelTitle->setProperty("cssClass", "text-title-dialog");
-
-    // CheckBox
-    ui->checkBoxStake->setText(tr("Stakes"));
-    ui->checkBoxRewards->setText(tr("Masternode rewards"));
+    setCssProperty(ui->labelTitle, "text-title-dialog");
 
     // Label
     ui->labelSubtitleLabel->setText(tr("Label (optional)"));
-    ui->labelSubtitleLabel->setProperty("cssClass", "text-title2-dialog");
+    setCssProperty(ui->labelSubtitleLabel, "text-title2-dialog");
 
     ui->lineEditLabel->setPlaceholderText(tr("Enter a label to add this address in your address book"));
     initCssEditLine(ui->lineEditLabel, true);
 
-
     // Address
     ui->labelSubtitleAddress->setText("Enter a PIVX address or contact label");
-    ui->labelSubtitleAddress->setProperty("cssClass", "text-title2-dialog");
-
+    setCssProperty(ui->labelSubtitleAddress, "text-title2-dialog");
     ui->lineEditAddress->setPlaceholderText("e.g D7VFR83SQbiezrW72hjc… ");
     initCssEditLine(ui->lineEditAddress, true);
+    ui->lineEditAddress->setValidator(new QRegExpValidator(QRegExp("^[A-Za-z0-9]+"), ui->lineEditAddress));
 
-    // Combobox
+
     ui->labelSubtitlePercentage->setText(tr("Percentage"));
-    ui->labelSubtitlePercentage->setProperty("cssClass", "text-title2-dialog");
-
-
-    ui->comboBoxPercentage->setProperty("cssClass", "btn-combo-edit-dialog");
-    setShadow(ui->comboBoxPercentage);
-    ui->comboBoxPercentage->setView(new QListView());
-
-    ui->comboBoxPercentage->addItem("8%");
-    ui->comboBoxPercentage->addItem("10%");
+    setCssProperty(ui->labelSubtitlePercentage, "text-title2-dialog");
+    ui->lineEditPercentage->setPlaceholderText("10%");
+    initCssEditLine(ui->lineEditPercentage, true);
+    ui->lineEditPercentage->setValidator(new QIntValidator(0, 100, ui->lineEditPercentage));
 
     // Buttons
-    ui->btnEsc->setText("");
-    ui->btnEsc->setProperty("cssClass", "ic-close");
-    ui->btnCancel->setProperty("cssClass", "btn-dialog-cancel");
+    setCssProperty(ui->btnEsc, "ic-close");
+    setCssProperty(ui->btnCancel, "btn-dialog-cancel");
     ui->btnSave->setText("ADD");
     setCssBtnPrimary(ui->btnSave);
 
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->btnSave, &QPushButton::clicked, [this](){
+        this->isOk = true;
+        accept();
+    });
 }
 
-SettingsMultisendDialog::~SettingsMultisendDialog()
-{
+QString SettingsMultisendDialog::getAddress(){
+    return ui->lineEditAddress->text();
+}
+QString SettingsMultisendDialog::getLabel(){
+    return ui->lineEditLabel->text();
+}
+int SettingsMultisendDialog::getPercentage(){
+    QString percentage = ui->lineEditPercentage->text();
+    if (percentage.isEmpty()) return 0;
+    return percentage.toInt();
+}
+
+SettingsMultisendDialog::~SettingsMultisendDialog(){
     delete ui;
 }

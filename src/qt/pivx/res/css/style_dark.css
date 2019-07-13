@@ -2304,6 +2304,7 @@ QComboBox[cssClass="btn-combo-edit-dialog"]::down-arrow {
     image: url("://ic-arrow-drop-down-white");
     width: 24px;
     height: 24px;
+    padding-right: 12px;
 }
 
 

@@ -15,6 +15,11 @@ public:
     explicit SettingsMultisendDialog(QWidget *parent = nullptr);
     ~SettingsMultisendDialog();
 
+    QString getAddress();
+    QString getLabel();
+    int getPercentage();
+
+    bool isOk = false;
 private:
     Ui::SettingsMultisendDialog *ui;
 };
