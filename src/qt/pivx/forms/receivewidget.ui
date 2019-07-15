@@ -228,8 +228,14 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="minimumSize">
+              <size>
+               <width>300</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="text">
-              <string>D7VFR83SQbiezrW72hjcWJtcfip5krte2Z</string>
+              <string>No address</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
