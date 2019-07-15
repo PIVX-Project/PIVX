@@ -1547,9 +1547,9 @@ HH      SPLASH
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="container-splash"] {
-    border-image: url(:/res/img/bg-splash.png) 0 0 0 0 stretch stretch;
     background-color:transparent;
-    border-radius: 3px;
+    border-image: url("://bg-splash-png") 0 0 0 0 stretch stretch;
+    border-radius: 4px;
 }
 
 *[cssClass="img-splash-logo"] {
@@ -1560,11 +1560,11 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 }
 
 *[cssClass="bg-progress"] {
-    border-top:3px solid #b088ff ;
+    border-top:2px solid #b088ff ;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    border-bottom-right-radius: 3px;
-    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
     background-color:transparent;
 }
 
@@ -1734,7 +1734,7 @@ QComboBox[cssClass="btn-combo-chart-selected"]::down-arrow {
     height: 24px;
 }
 
-QComboBox[cssClass="btn-combo-chart-selected"]:on { 
+QComboBox[cssClass="btn-combo-chart-selected"]:on {
     padding-top: 10px;
     padding-left: 10px;
     background-color: #B35c4b7d;
@@ -1827,7 +1827,7 @@ QCheckBox[cssClass="btn-watch-password"]::indicator:checked {
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-HH        REQUEST DIALOG 
+HH        REQUEST DIALOG
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
@@ -1844,7 +1844,7 @@ QComboBox[cssClass="btn-combo-coins"] {
 
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-HH        RECEIVE 
+HH        RECEIVE
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="label-address-box"] {
@@ -2981,7 +2981,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
-HH      INTRO 
+HH      INTRO
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
  */
 
@@ -3086,4 +3086,3 @@ QRadioButton[cssClass="radio-welcome"]::indicator:unchecked {
     background-repeat:no-repeat;
     background-position:center;
 }
-
