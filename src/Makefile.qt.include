@@ -541,6 +541,7 @@ RES_ICONS = \
   qt/pivx/res/img/ic-connect.svg \
   qt/pivx/res/img/ic-submenu-lock.svg \
   qt/pivx/res/img/img-logo-pivx@3x.png \
+  qt/pivx/res/img/img-logo-pivx.svg \
   qt/pivx/res/img/ic-arrow-right-white.svg \
   qt/pivx/res/img/ic-arrow-left-white.svg \
   qt/pivx/res/img/ic-arrow-left.svg \

@@ -375,6 +375,7 @@ void TopBar::setNumBlocks(int count) {
             // Node synced
             // TODO: Set synced icon to pushButtonSync here..
             ui->pushButtonSync->setButtonText(tr("Synchronized"));
+            progressBar->setRange(0,100);
             progressBar->setValue(100);
             return;
         }else{

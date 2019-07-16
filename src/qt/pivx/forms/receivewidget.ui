@@ -260,21 +260,21 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
+             <item alignment="Qt::AlignHCenter">
               <widget class="QPushButton" name="pushButtonLabel">
                <property name="text">
                 <string>Add Label</string>
                </property>
               </widget>
              </item>
-             <item>
+             <item alignment="Qt::AlignHCenter">
               <widget class="QPushButton" name="pushButtonNewAddress">
                <property name="text">
                 <string>Generate Address</string>
                </property>
               </widget>
              </item>
-             <item>
+             <item alignment="Qt::AlignHCenter">
               <widget class="QPushButton" name="pushButtonCopy">
                <property name="text">
                 <string>Copy</string>

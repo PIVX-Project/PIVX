@@ -26,9 +26,9 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     this->setStyleSheet(parent->styleSheet());
 
     /* Containers */
-    ui->left->setProperty("cssClass", "container");
+    setCssProperty(ui->left, "container");
     ui->left->setContentsMargins(0,20,0,20);
-    ui->right->setProperty("cssClass", "container-right");
+    setCssProperty(ui->right, "container-right");
     ui->right->setContentsMargins(20,10,20,20);
 
     /* Light Font */
@@ -37,41 +37,41 @@ SendWidget::SendWidget(PIVXGUI* parent) :
 
     /* Title */
     ui->labelTitle->setText(tr("Send"));
-    ui->labelTitle->setProperty("cssClass", "text-title-screen");
+    setCssProperty(ui->labelTitle, "text-title-screen");
     ui->labelTitle->setFont(fontLight);
 
     /* Button Group */
     ui->pushLeft->setText("PIV");
-    ui->pushLeft->setProperty("cssClass", "btn-check-left");
+    setCssProperty(ui->pushLeft, "btn-check-left");
     ui->pushLeft->setChecked(true);
     ui->pushRight->setText("zPIV");
-    ui->pushRight->setProperty("cssClass", "btn-check-right");
+    setCssProperty(ui->pushRight, "btn-check-right");
 
     /* Subtitle */
     ui->labelSubtitle1->setText(tr("You can transfer public coins: PIV or private ones: zPIV"));
-    ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
+    setCssProperty(ui->labelSubtitle1, "text-subtitle");
 
     ui->labelSubtitle2->setText(tr("Select coin type to spend"));
-    ui->labelSubtitle2->setProperty("cssClass", "text-subtitle");
+    setCssProperty(ui->labelSubtitle2, "text-subtitle");
 
     /* Address */
     ui->labelSubtitleAddress->setText(tr("Enter a PIVX address or contact label"));
-    ui->labelSubtitleAddress->setProperty("cssClass", "text-title");
+    setCssProperty(ui->labelSubtitleAddress, "text-title");
 
 
     /* Amount */
     ui->labelSubtitleAmount->setText(tr("Amount"));
-    ui->labelSubtitleAmount->setProperty("cssClass", "text-title");
+    setCssProperty(ui->labelSubtitleAmount, "text-title");
 
     /* Buttons */
     ui->pushButtonFee->setText(tr("Customize fee"));
     setCssBtnSecondary(ui->pushButtonFee);
 
     ui->pushButtonClear->setText(tr("Clear all"));
-    ui->pushButtonClear->setProperty("cssClass", "btn-secundary-clear");
+    setCssProperty(ui->pushButtonClear, "btn-secundary-clear");
 
     ui->pushButtonAddRecipient->setText(tr("Add recipient"));
-    ui->pushButtonAddRecipient->setProperty("cssClass", "btn-secundary-add");
+    setCssProperty(ui->pushButtonAddRecipient, "btn-secundary-add");
 
     setCssBtnPrimary(ui->pushButtonSave);
     ui->pushButtonReset->setText(tr("Reset to default"));
@@ -95,29 +95,29 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     connect(ui->btnUri, SIGNAL(clicked()), this, SLOT(onOpenUriClicked()));
     connect(ui->pushButtonReset, SIGNAL(clicked()), this, SLOT(onResetCustomOptions()));
 
-    ui->coinWidget->setProperty("cssClass", "container-coin-type");
-    ui->labelLine->setProperty("cssClass", "container-divider");
+    setCssProperty(ui->coinWidget, "container-coin-type");
+    setCssProperty(ui->labelLine, "container-divider");
 
 
     // Total Send
     ui->labelTitleTotalSend->setText(tr("Total to send"));
-    ui->labelTitleTotalSend->setProperty("cssClass", "text-title");
+    setCssProperty(ui->labelTitleTotalSend, "text-title");
 
     ui->labelAmountSend->setText("0.00 PIV");
-    ui->labelAmountSend->setProperty("cssClass", "text-body1");
+    setCssProperty(ui->labelAmountSend, "text-body1");
 
     // Total Remaining
     ui->labelTitleTotalRemaining->setText(tr("Total remaining"));
-    ui->labelTitleTotalRemaining->setProperty("cssClass", "text-title");
+    setCssProperty(ui->labelTitleTotalRemaining, "text-title");
 
-    ui->labelAmountRemaining->setProperty("cssClass", "text-body1");
+    setCssProperty(ui->labelAmountRemaining, "text-body1");
 
     // Icon Send
     ui->stackedWidget->addWidget(coinIcon);
     coinIcon->show();
     coinIcon->raise();
 
-    coinIcon->setProperty("cssClass", "coin-icon-zpiv");
+    setCssProperty(coinIcon, "coin-icon-piv");
 
     QSize BUTTON_SIZE = QSize(24, 24);
     coinIcon->setMinimumSize(BUTTON_SIZE);
@@ -654,7 +654,7 @@ void SendWidget::onValueChanged() {
 
 void SendWidget::onPIVSelected(bool _isPIV){
     isPIV = _isPIV;
-    coinIcon->setProperty("cssClass", _isPIV ? "coin-icon-piv" : "coin-icon-zpiv");
+    setCssProperty(coinIcon, _isPIV ? "coin-icon-piv" : "coin-icon-zpiv");
     refreshView();
     updateStyle(coinIcon);
 }

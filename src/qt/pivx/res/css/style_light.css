@@ -1337,16 +1337,16 @@ QLineEdit[cssClass="edit-primary-book-send"]:hover {
 
 
 QPushButton[cssClass="btn-secundary-clear"] {
-    background-image: url("://ic-clear-purple");
-    background-position:right center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://ic-clear-purple") off,
+    url("://ic-clear-purple") on ;
+    qproperty-iconSize: 24px 24px;
     border:  1px solid #335c4b7d;
     background-color:#FFFFFF;
     font-size:18px;
     padding-top:4px;
     padding-left:6px;
     padding-bottom:4px;
-    padding-right:30px;
+    padding-right:6px;
     color: #5c4b7d;
     border-radius: 2px;
 }
@@ -1362,16 +1362,16 @@ QPushButton[cssClass="btn-secundary-clear"]:pressed {
 }
 
 QPushButton[cssClass="btn-secundary-new-address"] {
-    background-image: url("://ic-update");
-    background-position:right center;
-    background-repeat:no-repeat;
+            qproperty-icon: url("://ic-update") off,
+    url("://ic-update") on ;
+    qproperty-iconSize: 30px 30px;
     border:  1px solid #335c4b7d;
     background-color:#FFFFFF;
     font-size:18px;
     padding-top:4px;
     padding-left:6px;
     padding-bottom:4px;
-    padding-right:30px;
+    padding-right:6px;
     color: #5c4b7d;
     border-radius: 2px;
 }
@@ -1387,16 +1387,16 @@ QPushButton[cssClass="btn-secundary-new-address"]:pressed {
 }
 
 QPushButton[cssClass="btn-secundary-label"] {
-    background-image: url("://ic-label");
-    background-position:right center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://ic-label") off,
+    url("://ic-label") on ;
+    qproperty-iconSize: 30px 30px;
     border:  1px solid #335c4b7d;
     background-color:#FFFFFF;
     font-size:18px;
     padding-top:4px;
     padding-left:6px;
     padding-bottom:4px;
-    padding-right:30px;
+    padding-right:10px;
     color: #5c4b7d;
     border-radius: 2px;
 }
@@ -1412,16 +1412,16 @@ QPushButton[cssClass="btn-secundary-label"]:pressed {
 }
 
 QPushButton[cssClass="btn-secundary-copy"] {
-    background-image: url("://ic-copy");
-    background-position:right center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://ic-copy") off,
+    url("://ic-copy") on ;
+    qproperty-iconSize: 30px 30px;
     border:  1px solid #335c4b7d;
     background-color:#FFFFFF;
     font-size:18px;
     padding-top:4px;
     padding-left:6px;
     padding-bottom:4px;
-    padding-right:30px;
+    padding-right:6px;
     color: #5c4b7d;
     border-radius: 2px;
 }

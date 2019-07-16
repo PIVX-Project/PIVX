@@ -1340,16 +1340,16 @@ QLineEdit[cssClass="edit-primary-book-send"]:hover {
 
 
 QPushButton[cssClass="btn-secundary-clear"] {
-    background-image: url("://ic-clear-liliac");
-    background-position:right center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://ic-clear-liliac") off,
+    url("://ic-clear-liliac") on ;
+    qproperty-iconSize: 30px 22px;
     border:  1px solid #5c4b7d;
     background-color:#0f0b16;
     font-size:18px;
     padding-top:4px;
-    padding-left:6px;
+    padding-left:0px;
     padding-bottom:4px;
-    padding-right:30px;
+    padding-right:6px;
     color: #b088ff;
     border-radius: 2px;
 }
@@ -1365,16 +1365,16 @@ QPushButton[cssClass="btn-secundary-clear"]:pressed {
 }
 
 QPushButton[cssClass="btn-secundary-new-address"] {
-    background-image: url("://ic-update-liliac");
-    background-position:right center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://ic-update-liliac") off,
+    url("://ic-update-liliac") on ;
+    qproperty-iconSize: 30px 30px;
     border:  1px solid #5c4b7d;
     background-color:#0f0b16;
     font-size:18px;
     padding-top:4px;
     padding-left:6px;
     padding-bottom:4px;
-    padding-right:30px;
+    padding-right:6px;
     color: #b088ff;
     border-radius: 2px;
 }
@@ -1390,16 +1390,16 @@ QPushButton[cssClass="btn-secundary-new-address"]:pressed {
 }
 
 QPushButton[cssClass="btn-secundary-label"] {
-    background-image: url("://ic-label-liliac");
-    background-position:right center;
-    background-repeat:no-repeat;
+    qproperty-icon: url("://ic-label-liliac") off,
+    url("://ic-label-liliac") on ;
+    qproperty-iconSize: 30px 30px;
     border:  1px solid #5c4b7d;
     background-color:#0f0b16;
     font-size:18px;
     padding-top:4px;
     padding-left:6px;
     padding-bottom:4px;
-    padding-right:30px;
+    padding-right:6px;
     color: #b088ff;
     border-radius: 2px;
 }
@@ -1415,16 +1415,16 @@ QPushButton[cssClass="btn-secundary-label"]:pressed {
 }
 
 QPushButton[cssClass="btn-secundary-copy"] {
-    background-image: url("://ic-copy-liliac");
-    background-position:right center;
-    background-repeat:no-repeat;
+        qproperty-icon: url("://ic-copy-liliac") off,
+    url("://ic-copy-liliac") on ;
+    qproperty-iconSize: 30px 30px;
     border:  1px solid #5c4b7d;
     background-color:#0f0b16;
     font-size:18px;
     padding-top:4px;
     padding-left:6px;
     padding-bottom:4px;
-    padding-right:30px;
+    padding-right:6px;
     color: #b088ff;
     border-radius: 2px;
 }

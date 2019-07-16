@@ -401,6 +401,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButtonClear">
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
             <property name="text">
              <string>PushButton</string>
             </property>

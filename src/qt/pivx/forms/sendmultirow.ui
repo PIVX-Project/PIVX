@@ -246,7 +246,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_9">
       <property name="spacing">
-       <number>5</number>
+       <number>6</number>
       </property>
       <property name="leftMargin">
        <number>20</number>
@@ -279,7 +279,9 @@
       <item>
        <widget class="QLabel" name="labelSubtitleDescription">
         <property name="styleSheet">
-         <string notr="true">padding-bottom:1px;</string>
+         <string notr="true">margin-bottom:2px; 
+margin-left:0.05px;
+padding:0px;</string>
         </property>
         <property name="text">
          <string>TextLabel</string>
