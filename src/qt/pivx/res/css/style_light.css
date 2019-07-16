@@ -1829,14 +1829,18 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 QComboBox[cssClass="btn-combo-coins"] {
-    background-image: url("://ic-arrow-drop-white-down");
-    background-position:right center;
-    background-repeat:no-repeat;
     background-color:#5c4b7d;
     padding:10px 20px 10px 10px;
     font-size:16px;
     border:1px solid #5c4b7d;
     color: #FFFFFF;
+}
+
+QComboBox[cssClass="btn-combo-coins"]::down-arrow {
+    image: url("://ic-arrow-drop-white-down");
+    padding-right: 10px;
+    height: 16px;
+    width: 16px;
 }
 
 
