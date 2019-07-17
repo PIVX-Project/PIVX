@@ -35,7 +35,7 @@ public slots:
     void onRequestClicked();
     void onMyAddressesClicked();
     void onNewAddressClicked();
-    
+
 private slots:
     void changeTheme(bool isLightTheme, QString &theme) override ;
     void onLabelClicked();

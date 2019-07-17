@@ -41,9 +41,6 @@ public:
     bool isLightTheme;
 };
 
-
-#include "qt/pivx/moc_contactsdropdown.cpp"
-
 ContactsDropdown::ContactsDropdown(int minWidth, int minHeight, PWidget *parent) :
    PWidget(parent)
 {

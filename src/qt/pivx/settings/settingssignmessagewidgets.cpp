@@ -72,7 +72,7 @@ SettingsSignMessageWidgets::SettingsSignMessageWidgets(PIVXGUI* _window, QWidget
 
     // Buttons
     btnContact = ui->addressIn_SM->addAction(QIcon("://ic-contact-arrow-down"), QLineEdit::TrailingPosition);
-    
+
     ui->pushButtonSave->setText(tr("SIGN"));
     ui->pushButtonClear->setText(tr("CLEAR ALL"));
     setCssBtnPrimary(ui->pushButtonSave);

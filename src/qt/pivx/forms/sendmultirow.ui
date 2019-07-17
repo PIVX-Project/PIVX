@@ -279,7 +279,7 @@
       <item>
        <widget class="QLabel" name="labelSubtitleDescription">
         <property name="styleSheet">
-         <string notr="true">margin-bottom:2px; 
+         <string notr="true">margin-bottom:2px;
 margin-left:0.05px;
 padding:0px;</string>
         </property>

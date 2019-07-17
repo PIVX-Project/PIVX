@@ -37,7 +37,6 @@ ReceiveDialog::ReceiveDialog(QWidget *parent) :
 
 
     // Buttons
-    
     ui->btnEsc->setText("");
     ui->btnEsc->setProperty("cssClass", "ic-close");
 

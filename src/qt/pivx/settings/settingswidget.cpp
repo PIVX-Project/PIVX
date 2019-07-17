@@ -138,7 +138,6 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     connect(ui->pushButtonHelp, SIGNAL(clicked()), this, SLOT(onHelpClicked()));
     connect(ui->pushButtonHelp1, SIGNAL(clicked()), window, SLOT(openFAQ()));
     connect(ui->pushButtonHelp2, SIGNAL(clicked()), this, SLOT(onAboutClicked()));
-    
 
     // Get restart command-line parameters and handle restart
     connect(settingsWalletRepairWidget, &SettingsWalletRepairWidget::handleRestart, [this](QStringList arg){emit handleRestart(arg);});
