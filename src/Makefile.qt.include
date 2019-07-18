@@ -426,10 +426,10 @@ RES_ICONS = \
   qt/res/icons/tx_input.png \
   qt/res/icons/tx_output.png \
   qt/res/icons/tx_mined.png \
-  qt/res/icons/ic-transaction-received.png \
-  qt/res/icons/ic-transaction-mint.png \
-  qt/res/icons/ic-transaction-sent.png \
-  qt/res/icons/ic-transaction-staked.png \
+  qt/res/icons/ic-transaction-received.svg \
+  qt/res/icons/ic-transaction-mint.svg \
+  qt/res/icons/ic-transaction-sent.svg \
+  qt/res/icons/ic-transaction-staked.svg \
   qt/res/icons/unit_pivx.png \
   qt/res/icons/unit_mpivx.png \
   qt/res/icons/unit_upivx.png \
@@ -439,6 +439,7 @@ RES_ICONS = \
   qt/res/icons/yesvote.png \
   qt/res/icons/novote.png \
   qt/res/icons/abstainvote.png \
+  qt/pivx/res/img/bg-dashboard-banner.png \
   qt/pivx/res/img/bg-multi-number-dark.svg \
   qt/pivx/res/img/ic-check-locked.svg \
   qt/pivx/res/img/ic-nav-address.svg \
@@ -459,10 +460,18 @@ RES_ICONS = \
   qt/pivx/res/img/ic-nav-master-active.svg \
   qt/pivx/res/img/ic-watch-password-white.svg \
   qt/pivx/res/img/bg-welcome-container.jpg \
+  qt/pivx/res/img/bg-welcome-container.png \
+  qt/pivx/res/img/bg-welcome-container.svg \
+  qt/pivx/res/img/bg-welcome-container@2x.png \
+  qt/pivx/res/img/bg-welcome-container@3x.png \
   qt/pivx/res/img/ic-check-staking-off.svg \
   qt/pivx/res/img/ic-nav-master-hover.svg \
   qt/pivx/res/img/ic-watch-password.svg \
   qt/pivx/res/img/bg-welcome.jpg \
+  qt/pivx/res/img/bg-welcome.svg \
+  qt/pivx/res/img/bg-welcome@2x.jpg \
+  qt/pivx/res/img/bg-welcome@3x.jpg \
+  qt/pivx/res/img/bg-welcome.png \
   qt/pivx/res/img/ic-check-staking.svg \
   qt/pivx/res/img/ic-nav-master.svg \
   qt/pivx/res/img/img-dashboard-banner.jpg \
@@ -474,6 +483,8 @@ RES_ICONS = \
   qt/pivx/res/img/ic-check-sync.png \
   qt/pivx/res/img/ic-nav-privacy-hover.svg \
   qt/pivx/res/img/img-empty-dark-contacts.svg \
+  qt/pivx/res/img/ic-contact-arrow-down.svg \
+  qt/pivx/res/img/ic-contact-arrow-down-white.svg \
   qt/pivx/res/img/ic-check-sync.svg \
   qt/pivx/res/img/ic-check-faq.svg \
   qt/pivx/res/img/ic-nav-privacy.svg \
@@ -611,7 +622,6 @@ RES_ICONS = \
   qt/pivx/res/img/ic-check-liliac-indeterminate.svg \
   qt/pivx/res/img/ic-check-box-liliac-indeterminate.svg \
   qt/pivx/res/img/ic-check-box-indeterminate.svg \
-  qt/pivx/res/img/ic-check-liliac-indeterminate.svg \
   qt/pivx/res/img/ani-loading-dark.gif \
   qt/pivx/res/img/ani-loading.gif
 
@@ -763,7 +773,9 @@ RES_IMAGES = \
   qt/res/images/qtreeview_selected.png
 
 RES_CSS = \
-  qt/res/css/default.css
+  qt/res/css/default.css \
+  qt/pivx/res/css/style_dark.css \
+  qt/pivx/res/css/style_light.css
 
 RES_MOVIES = $(wildcard $(srcdir)/qt/res/movies/spinner-*.png)
 
