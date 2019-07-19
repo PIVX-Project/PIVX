@@ -188,7 +188,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>2) Why my PIV are unspendable</string>
+                      <string>2) Why are my PIV unspendable?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -238,7 +238,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>4) Why my zPIV are unspendable</string>
+                      <string>4) Why are my zPIV unspendable?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -257,7 +257,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>5) Why my wallet convert my balance into
+                      <string>5) Why did my wallet convert the balance into
      zPIV automatically?</string>
                      </property>
                      <property name="checkable">
@@ -571,9 +571,9 @@ background:transparent;
                       <item>
                        <widget class="QLabel" name="labelContent1">
                         <property name="text">
-                         <string>PIVX is a form of digital online money using blockchain technology that can be easily transferred globally, instantly, and with near zero fees.  PIVX incorporates market leading security &amp; privacy and  is also the first PoS (Proof of Stake) Cryptocurrency to implement ZeroCoin(zPIV) and Zerocoin staking.
+                         <string>PIVX is a form of digital online money using blockchain technology that can be easily transferred globally, instantly, and with near zero fees.  PIVX incorporates market leading security &amp; privacy and is also the first PoS (Proof of Stake) Cryptocurrency to implement ZeroCoin(zPIV) and Zerocoin staking.
 
-  PIVX utilizes a Proof of Stake (PoS) consensus system algorithm allowing all owners of PIVX to participate in earning block rewards while securing the network with full node wallets as well as to run Masternodes to create and vote on proposals.
+  PIVX utilizes a Proof of Stake (PoS) consensus system algorithm, allowing all owners of PIVX to participate in earning block rewards while securing the network with full node wallets, as well as to run Masternodes to create and vote on proposals.
 
   </string>
                         </property>
@@ -931,7 +931,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                       <item>
                        <widget class="QLabel" name="labelContent5">
                         <property name="text">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By default the PIVX wallet will convert 10% of your entire PIV balance to zPIV to assist the network. If you do not wish to stake zPIV or take advantage of the privacy benefits it brings you can disable the automatic minting in your PIVX wallet by going to Settings - Options and deselecting “Enable zPIV Automint”. If you are not making use of the PIVX-QT or GUI you can simply open your pivx.conf file and add “enablezeromint=0” Without the quotation marks and restart your wallet to disable automint.&lt;/p&gt;
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By default the PIVX wallet will convert 10% of your entire PIV balance to zPIV to assist the network. If you do not wish to stake zPIV or take advantage of the privacy benefit it brings, you can disable the automatic minting in your PIVX wallet by going to Settings - Options and deselecting “Enable zPIV Automint”. If you are not making use of the PIVX-QT or GUI you can simply open your pivx.conf file and add “enablezeromint=0” Without the quotation marks and restart your wallet to disable automint.&lt;/p&gt;
 
 &lt;p&gt;To learn more about zPIV please navigate to &lt;a style='color: #b088ff' href='https://PIVX.org/zpiv/ '&gt;https://PIVX.org/zpiv/ &lt;/a&gt; If you would like to keep your zPIV and stake then read the FAQ below.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 </string>
@@ -1115,7 +1115,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                       <item>
                        <widget class="QLabel" name="labelContent7">
                         <property name="text">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To Stake PIVX:&lt;/p&gt;&lt;p&gt;    1) Make Sure your wallet is completely synchronized and you are using the latest release.&lt;/p&gt;&lt;p&gt;    2) You must have a balance of PIVX with a minimum of 101 confirmations.&lt;/p&gt;&lt;p&gt;    3) Your wallet must stay online and be Unlocked for Anonymization and Staking Purposes.&lt;/p&gt;&lt;p&gt;    4)Once all those steps are followed staking should be enabled.&lt;/p&gt;&lt;p&gt;    5)You can see the status of staking in the wallet by viewing the bottom right of the wallet interface. There should be a green light indicating it is staking. If you are using the Daemon then you can run getstakingstatus to confirm that staking is active.&lt;/p&gt;&lt;p&gt;To Stake PIVX:&lt;/p&gt;&lt;p&gt;    1) Make sure your wallet is completely synchronized and you are using the latest release.&lt;/p&gt;&lt;p&gt;    2) Your newly minted or existing zPIV balance must have a minimum of 200 confirmations.&lt;/p&gt;&lt;p&gt;    3) Your wallet must stay online and be Unlocked for Anonymization and Staking Purposes. Staking should now be enabled.&lt;/p&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To Stake PIVX:&lt;/p&gt;&lt;p&gt;    1) Make sure your wallet is completely synchronized and you are using the latest release.&lt;/p&gt;&lt;p&gt;    2) You must have a balance of PIVX with a minimum of 101 confirmations.&lt;/p&gt;&lt;p&gt;    3) Your wallet must stay online and be unlocked for anonymization and staking purposes.&lt;/p&gt;&lt;p&gt;    4)Once all those steps are followed staking should be enabled.&lt;/p&gt;&lt;p&gt;    5)You can see the status of staking in the wallet by viewing the bottom right of the wallet interface. There should be a green light indicating it is staking. If you are using the Daemon then you can run getstakingstatus to confirm that staking is active.&lt;/p&gt;&lt;p&gt;To Stake zPIV:&lt;/p&gt;&lt;p&gt;    1) Make sure your wallet is completely synchronized and you are using the latest release.&lt;/p&gt;&lt;p&gt;    2) Your newly minted or existing zPIV balance must have a minimum of 200 confirmations.&lt;/p&gt;&lt;p&gt;    3) Your wallet must stay online and be Unlocked for Anonymization and Staking Purposes. Staking should now be enabled.&lt;/p&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1202,7 +1202,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                       <item>
                        <widget class="QLabel" name="labelContent8">
                         <property name="text">
-                         <string>We have support channels in most of our official chat groups for example #support in our Discord which can be joined by navigating to https://Discord.PIVX.org and if you prefer to submit a ticket, One can be submitted at &lt;a style='color: #b088ff' href='https://PIVX.FreshDesk.com '&gt;https://PIVX.FreshDesk.com&lt;/a&gt;
+                         <string>We have support channels in most of our official chat groups, for example #support in our Discord which can be joined by navigating to https://Discord.PIVX.org. If you prefer to submit a ticket, One can be submitted at &lt;a style='color: #b088ff' href='https://PIVX.FreshDesk.com '&gt;https://PIVX.FreshDesk.com&lt;/a&gt;
 </string>
                         </property>
                         <property name="alignment">
