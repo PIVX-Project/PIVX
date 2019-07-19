@@ -491,11 +491,13 @@ QString AddressTableModel::getLastUnusedAddress() const{
     LOCK(wallet->cs_wallet);
     if(!wallet->mapAddressBook.empty()) {
         for (std::map<CTxDestination, CAddressBookData>::iterator it = wallet->mapAddressBook.end(); it != wallet->mapAddressBook.begin(); --it) {
-            if(it->second.purpose == "receive"){
-                const CBitcoinAddress& address = it->first;
-                bool fMine = IsMine(*wallet, address.Get());
-                if(fMine){
-                    return QString::fromStdString(address.ToString());
+            if(it != wallet->mapAddressBook.end()) {
+                if (it->second.purpose == "receive") {
+                    const CBitcoinAddress &address = it->first;
+                    bool fMine = IsMine(*wallet, address.Get());
+                    if (fMine) {
+                        return QString::fromStdString(address.ToString());
+                    }
                 }
             }
         }
