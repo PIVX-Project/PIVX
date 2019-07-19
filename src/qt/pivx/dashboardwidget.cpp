@@ -24,9 +24,9 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
 
     txHolder = new TxViewHolder(isLightTheme());
     txViewDelegate = new FurAbstractListItemDelegate(
-                DECORATION_SIZE,
-                txHolder,
-                this
+        DECORATION_SIZE,
+        txHolder,
+        this
     );
 
     this->setStyleSheet(parent->styleSheet());
@@ -432,8 +432,11 @@ void DashboardWidget::onChartMonthChanged(const QString& monthStr) {
 
 void DashboardWidget::refreshChart(){
     if (chart) {
-        if (chart->series().size() > 0)
-            chart->removeAllSeries();
+        if(series){
+            series->clear();
+            series->detachAxis(axisX);
+            series->detachAxis(axisY);
+        }
         axisX->clear();
     }
     // init sets
@@ -442,7 +445,8 @@ void DashboardWidget::refreshChart(){
     set0->setColor(QColor(92,75,125));
     set1->setColor(QColor(176,136,255));
 
-    series = new QBarSeries();
+    if(!series)
+        series = new QBarSeries();
     series->attachAxis(axisX);
     series->attachAxis(axisY);
 
@@ -631,6 +635,6 @@ bool DashboardWidget::hasStakes() {
 }
 
 DashboardWidget::~DashboardWidget(){
-    delete ui;
     delete chart;
+    delete ui;
 }
