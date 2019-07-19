@@ -1,3 +1,7 @@
+// Copyright (c) 2019 The PIVX developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include "qt/pivx/settings/settingswalletrepairwidget.h"
 #include "qt/pivx/settings/forms/ui_settingswalletrepairwidget.h"
 #include "qt/pivx/qtutils.h"

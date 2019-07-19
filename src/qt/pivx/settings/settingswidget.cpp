@@ -1,3 +1,7 @@
+// Copyright (c) 2019 The PIVX developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include "qt/pivx/settings/settingswidget.h"
 #include "qt/pivx/settings/forms/ui_settingswidget.h"
 #include "qt/pivx/settings/settingsbackupwallet.h"
