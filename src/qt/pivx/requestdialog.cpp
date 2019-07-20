@@ -39,7 +39,7 @@ RequestDialog::RequestDialog(QWidget *parent) :
     // Label
     ui->labelSubtitleLabel->setText(tr("Label"));
     setCssProperty(ui->labelSubtitleLabel, "text-title2-dialog");
-    ui->lineEditLabel->setPlaceholderText(tr("Enter a label to be saved withing the address"));
+    ui->lineEditLabel->setPlaceholderText(tr("Enter a label to be saved within the address"));
     setCssEditLineDialog(ui->lineEditLabel, true);
 
     // Amount

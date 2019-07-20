@@ -352,7 +352,7 @@ QString TransactionTableModel::lookupAddress(const std::string& address, bool to
     QString label = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(address));
     QString description;
     if (!label.isEmpty()) {
-        description += label;
+        description += label + QString(" ");
     }
     if (label.isEmpty() || tooltip) {
         description += QString::fromStdString(address);

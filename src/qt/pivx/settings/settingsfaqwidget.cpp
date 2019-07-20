@@ -79,16 +79,6 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
               ui->pushButtonFaq9
             }, "btn-faq-options");
 
-    ui->labelSubtitle1->setText(tr("What is PIVX"));
-    ui->labelSubtitle2->setText(tr("Why my PIV are unspendable"));
-    ui->labelSubtitle3->setText(tr("PIVX privacy? What is zPIV, zerocoin."));
-    ui->labelSubtitle4->setText(tr("Why my zPIV are unspendable"));
-    ui->labelSubtitle5->setText(tr("Why my wallet convert my balance into zPIV automatically?"));
-    ui->labelSubtitle6->setText(tr("How do i receive PIV/zPIV?"));
-    ui->labelSubtitle7->setText(tr("How do i stake PIV/zPIV?"));
-    ui->labelSubtitle8->setText(tr("Where i should go if i need support?"));
-    ui->labelSubtitle9->setText(tr("What is a Master Node?"));
-
     ui->labelContent3->setOpenExternalLinks( true );
     ui->labelContent5->setOpenExternalLinks( true );
     ui->labelContent8->setOpenExternalLinks( true );

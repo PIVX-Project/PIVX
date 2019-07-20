@@ -72,7 +72,7 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
     setShadow(ui->threadsScriptVerif);
 
     // CheckBox
-    ui->checkBoxMinTaskbar->setText(tr("Minimize to they tray instead of the taskbar"));
+    ui->checkBoxMinTaskbar->setText(tr("Minimize to the tray instead of the taskbar"));
     ui->checkBoxMinClose->setText(tr("Minimize on close"));
 
     // Buttons

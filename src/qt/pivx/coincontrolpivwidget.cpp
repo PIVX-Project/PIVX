@@ -27,7 +27,7 @@ CoinControlPivWidget::CoinControlPivWidget(QWidget *parent) :
 
     // Title
 
-    ui->labelTitle->setText("Select PIV Denominations to Spend");
+    ui->labelTitle->setText("Select PIV Outputs to Spend");
     ui->labelTitle->setProperty("cssClass", "text-title-dialog");
 
     // Label Style

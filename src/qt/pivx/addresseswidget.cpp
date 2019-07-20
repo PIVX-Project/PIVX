@@ -106,14 +106,14 @@ AddressesWidget::AddressesWidget(PIVXGUI* parent) :
     // Name
     ui->labelName->setText(tr("Contact name"));
     setCssProperty(ui->labelName, "text-title");
-    ui->lineEditName->setPlaceholderText(tr("e.g John doe "));
+    ui->lineEditName->setPlaceholderText(tr("e.g. John Doe"));
     setCssEditLine(ui->lineEditName, true);
     ui->lineEditName->setValidator(new QRegExpValidator(QRegExp("^[A-Za-z0-9]+"), ui->lineEditName));
 
     // Address
     ui->labelAddress->setText(tr("Enter a PIVX address"));
     setCssProperty(ui->labelAddress, "text-title");
-    ui->lineEditAddress->setPlaceholderText("e.g D7VFR83SQbiezrW72hjc…");
+    ui->lineEditAddress->setPlaceholderText("e.g. D7VFR83SQbiezrW72hjc…");
     setCssEditLine(ui->lineEditAddress, true);
     ui->lineEditAddress->setValidator(new QRegExpValidator(QRegExp("^[A-Za-z0-9]+"), ui->lineEditName));
 

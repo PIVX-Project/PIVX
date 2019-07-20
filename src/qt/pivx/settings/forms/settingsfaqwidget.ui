@@ -160,7 +160,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>1) What is PIVX</string>
+                      <string>1) What is PIVX?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -213,7 +213,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>3) PIVX privacy? --&gt; what is zPIV, zerocoin</string>
+                      <string>3) PIVX privacy? What is Zerocoin (zPIV)?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -257,8 +257,8 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>5) Why did my wallet convert the balance into
-     zPIV automatically?</string>
+                      <string>5) Why did my wallet convert the balance
+    into zPIV automatically?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -277,7 +277,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>6) How do i receive PIV/zPIV?</string>
+                      <string>6) How do I receive PIV/zPIV?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -296,7 +296,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>7) How do i stake PIV/zPIV?</string>
+                      <string>7) How do I stake PIV/zPIV?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -315,7 +315,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>8) Where i should go if i need support?</string>
+                      <string>8) Where I should go if I need support?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -454,9 +454,7 @@
              <item>
               <widget class="QScrollArea" name="scrollAreaFaq">
                <property name="styleSheet">
-                <string notr="true">#scrollAreaFaq {
-background:transparent;
-}</string>
+                <string notr="true">#scrollAreaFaq { background:transparent; }</string>
                </property>
                <property name="horizontalScrollBarPolicy">
                 <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -483,9 +481,7 @@ background:transparent;
                  <bool>false</bool>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">#scrollAreaWidgetContents {
-background:transparent;
-}</string>
+                 <string notr="true">#scrollAreaWidgetContents { background:transparent; }</string>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_7">
                  <property name="spacing">
@@ -542,10 +538,13 @@ background:transparent;
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
+                      <property name="rightMargin">
+                       <number>20</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="labelSubtitle1">
                         <property name="text">
-                         <string>What is PIVX</string>
+                         <string>What is PIVX?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -553,7 +552,7 @@ background:transparent;
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_8">
+                       <spacer name="verticalSpacer_10">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -571,11 +570,20 @@ background:transparent;
                       <item>
                        <widget class="QLabel" name="labelContent1">
                         <property name="text">
-                         <string>PIVX is a form of digital online money using blockchain technology that can be easily transferred globally, instantly, and with near zero fees.  PIVX incorporates market leading security &amp; privacy and is also the first PoS (Proof of Stake) Cryptocurrency to implement ZeroCoin(zPIV) and Zerocoin staking.
-
-  PIVX utilizes a Proof of Stake (PoS) consensus system algorithm, allowing all owners of PIVX to participate in earning block rewards while securing the network with full node wallets, as well as to run Masternodes to create and vote on proposals.
-
-  </string>
+                         <string>
+                           &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
+                           PIVX is a form of digital online money using blockchain technology
+                           that can be easily transferred globally, instantly, and with near
+                           zero fees.  PIVX incorporates market leading security &amp;
+                           privacy and is also the first PoS (Proof of Stake) Cryptocurrency
+                           to implement ZeroCoin(zPIV) and Zerocoin staking.
+                           &lt;/p&gt;&lt;p align="justify"&gt;
+                           PIVX utilizes a Proof of Stake (PoS) consensus system algorithm,
+                           allowing all owners of PIVX to participate in earning block rewards
+                           while securing the network with full node wallets, as well as to
+                           run Masternodes to create and vote on proposals.
+                           &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                         </string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -586,7 +594,7 @@ background:transparent;
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_7">
+                       <spacer name="verticalSpacer_11">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -636,10 +644,13 @@ background:transparent;
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
+                      <property name="rightMargin">
+                       <number>20</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="labelSubtitle2">
                         <property name="text">
-                         <string>What is PIVX</string>
+                         <string>Why are my PIV unspendable?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -647,7 +658,7 @@ background:transparent;
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_Page23">
+                       <spacer name="verticalSpacer_20">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -665,10 +676,15 @@ background:transparent;
                       <item>
                        <widget class="QLabel" name="labelContent2">
                         <property name="text">
-                         <string>Newly received PIVX requires 6 confirmations on the network to become eligible for spending which can take ~6 minutes.
-
-Your PIVX wallet also needs to be completely synchronized to see and spend balances on the network.
-</string>
+                         <string>
+                           &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
+                           Newly received PIVX requires 6 confirmations on the network
+                           to become eligible for spending which can take ~6 minutes.
+                           &lt;/p&gt;&lt;p align="justify"&gt;
+                           Your PIVX wallet also needs to be completely synchronized
+                           to see and spend balances on the network.
+                           &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                         </string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -679,7 +695,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_71">
+                       <spacer name="verticalSpacer_21">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -726,10 +742,13 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
+                      <property name="rightMargin">
+                       <number>20</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="labelSubtitle3">
                         <property name="text">
-                         <string>What is PIVX</string>
+                         <string>PIVX privacy? What is Zerocoin (zPIV)?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -737,7 +756,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_Page2">
+                       <spacer name="verticalSpacer_30">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -755,7 +774,15 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                       <item>
                        <widget class="QLabel" name="labelContent3">
                         <property name="text">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;zPIV is an optional Privacy Centric method of coin mixing on the PIVX blockchain. Basically all your transactions cannot be tracked on to any block explorer. You can read more about the technicals here &lt;/p&gt;&lt;p&gt;&lt;a style='color: #b088ff' href='https://PIVX.org/zpiv/ '&gt;https://PIVX.org/zpiv/ &lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         <string>
+                           &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
+                           zPIV is an optional privacy-centric method of coin mixing on the
+                           PIVX blockchain. Basically all your transactions cannot be tracked
+                           on to any block explorer. You can read more about the technicals in the
+                           &lt;a style='color: #b088ff' href='https://PIVX.org/zpiv/'&gt;
+                           "PIVX Zerocoin (zPIV) Technical Paper"&lt;/a&gt;.
+                           &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                         </string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -766,7 +793,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_72">
+                       <spacer name="verticalSpacer_31">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -813,10 +840,13 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
+                      <property name="rightMargin">
+                       <number>20</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="labelSubtitle4">
                         <property name="text">
-                         <string>What is PIVX</string>
+                         <string>Why are my zPIV unspendable?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -824,7 +854,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_Page22">
+                       <spacer name="verticalSpacer_40">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -842,9 +872,13 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                       <item>
                        <widget class="QLabel" name="labelContent4">
                         <property name="text">
-                         <string>After minting, zPIV will require 20 confirmations as well as 1 additional mint of the same denomination on the network to become eligible for spending.
-
-</string>
+                         <string>
+                           &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
+                           After minting, zPIV will require 20 confirmations as well as 1
+                           additional mint of the same denomination on the network to
+                           become eligible for spending.
+                           &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                         </string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -855,7 +889,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_4">
+                       <spacer name="verticalSpacer_41">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -902,10 +936,13 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
+                      <property name="rightMargin">
+                       <number>20</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="labelSubtitle5">
                         <property name="text">
-                         <string>What is PIVX</string>
+                         <string>Why did my wallet convert the balance into zPIV automatically?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -913,7 +950,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_Page_5">
+                       <spacer name="verticalSpacer_50">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -931,10 +968,23 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                       <item>
                        <widget class="QLabel" name="labelContent5">
                         <property name="text">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;By default the PIVX wallet will convert 10% of your entire PIV balance to zPIV to assist the network. If you do not wish to stake zPIV or take advantage of the privacy benefit it brings, you can disable the automatic minting in your PIVX wallet by going to Settings - Options and deselecting “Enable zPIV Automint”. If you are not making use of the PIVX-QT or GUI you can simply open your pivx.conf file and add “enablezeromint=0” Without the quotation marks and restart your wallet to disable automint.&lt;/p&gt;
-
-&lt;p&gt;To learn more about zPIV please navigate to &lt;a style='color: #b088ff' href='https://PIVX.org/zpiv/ '&gt;https://PIVX.org/zpiv/ &lt;/a&gt; If you would like to keep your zPIV and stake then read the FAQ below.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-</string>
+                         <string>
+                           &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
+                           By default the PIVX wallet will convert 10% of your entire PIV
+                           balance to zPIV to assist the network. If you do not wish to
+                           stake zPIV or take advantage of the privacy benefit it brings,
+                           you can disable the automatic minting in your PIVX wallet by
+                           going to Settings-&gt;Options and deselecting “Enable zPIV Automint”.
+                           If you are not making use of the PIVX-QT or GUI you can simply open
+                           your pivx.conf file and add &lt;i&gt;enablezeromint=0&lt;/i&gt; Without the quotation
+                           marks and restart your wallet to disable automint.&lt;/p&gt;
+                           &lt;/p&gt;&lt;p align="justify"&gt;
+                           You can read more about zPIV in the
+                           &lt;a style='color: #b088ff' href='https://PIVX.org/zpiv/'&gt; "PIVX Zerocoin (zPIV) Technical Paper"&lt;/a&gt;.
+                           If you would like to keep and stake your zPIV, please read the "How do I stake"
+                           section of the FAQ below.
+                           &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                         </string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -945,7 +995,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_73">
+                       <spacer name="verticalSpacer_51">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -995,11 +1045,13 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
+                      <property name="rightMargin">
+                       <number>20</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="labelSubtitle6">
                         <property name="text">
-                         <string>How do i receive PIV/zPIV?
-</string>
+                         <string>How do I receive PIV/zPIV?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -1007,7 +1059,7 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacerpage_6">
+                       <spacer name="verticalSpacer_60">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -1025,10 +1077,14 @@ Your PIVX wallet also needs to be completely synchronized to see and spend balan
                       <item>
                        <widget class="QLabel" name="labelContent6">
                         <property name="text">
-                         <string>zPIV can be spent and sent to any PIVX address. The receiver will receive standard PIVX but the origin of the PIVX is anonymized by the zPIV Protocol.
-
-If you want more zPIV you will need to mint your balance in the “Privacy” tab
-             </string>
+                         <string>
+                           &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
+                           zPIV can be spent and sent to any PIVX address. The receiver will
+                           receive standard PIVX but the origin of the PIVX is anonymized by the zPIV Protocol.
+                           &lt;/p&gt;&lt;p align="justify"&gt;
+                           If you want more zPIV you will need to mint your balance in the “Privacy” tab.
+                           &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                         </string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1039,7 +1095,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_2">
+                       <spacer name="verticalSpacer_61">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -1086,10 +1142,13 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
+                      <property name="rightMargin">
+                       <number>20</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="labelSubtitle7">
                         <property name="text">
-                         <string>What is PIVX</string>
+                         <string>How do I stake PIV/zPIV?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -1097,7 +1156,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_page_7">
+                       <spacer name="verticalSpacer_70">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -1115,7 +1174,37 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                       <item>
                        <widget class="QLabel" name="labelContent7">
                         <property name="text">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To Stake PIVX:&lt;/p&gt;&lt;p&gt;    1) Make sure your wallet is completely synchronized and you are using the latest release.&lt;/p&gt;&lt;p&gt;    2) You must have a balance of PIVX with a minimum of 101 confirmations.&lt;/p&gt;&lt;p&gt;    3) Your wallet must stay online and be unlocked for anonymization and staking purposes.&lt;/p&gt;&lt;p&gt;    4)Once all those steps are followed staking should be enabled.&lt;/p&gt;&lt;p&gt;    5)You can see the status of staking in the wallet by viewing the bottom right of the wallet interface. There should be a green light indicating it is staking. If you are using the Daemon then you can run getstakingstatus to confirm that staking is active.&lt;/p&gt;&lt;p&gt;To Stake zPIV:&lt;/p&gt;&lt;p&gt;    1) Make sure your wallet is completely synchronized and you are using the latest release.&lt;/p&gt;&lt;p&gt;    2) Your newly minted or existing zPIV balance must have a minimum of 200 confirmations.&lt;/p&gt;&lt;p&gt;    3) Your wallet must stay online and be Unlocked for Anonymization and Staking Purposes. Staking should now be enabled.&lt;/p&gt;&lt;p/&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         <string>
+                           &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
+                           To Stake PIVX:
+                           &lt;/p&gt;&lt;p align="justify"&gt;
+                           &lt;ol&gt;&lt;li&gt;
+                           Make sure your wallet is completely synchronized and you are using the latest release.
+                           &lt;li&gt;
+                           You must have a balance of PIVX with a minimum of 101 confirmations.
+                           &lt;li&gt;
+                           Your wallet must stay online and be unlocked for anonymization and staking purposes.
+                           &lt;li&gt;
+                           Once all those steps are followed staking should be enabled.
+                           &lt;li&gt;
+                           You can see the status of staking in the wallet by mousing over the package icon in the
+                           row on the top left of the wallet interface. There package will be lit up and will state
+                           "Staking Enabled" to indicate it is staking.  Using the command line 
+                           interface (pivx-cli); the command &lt;i&gt;getstakingstatus&lt;/i&gt; will confirm that staking is active.
+                           &lt;/li&gt;&lt;/ol&gt;
+                           &lt;/p&gt;&lt;p align="justify"&gt;
+                           To Stake zPIV:
+                           &lt;/p&gt;&lt;p align="justify"&gt;
+                           &lt;ol&gt;&lt;li&gt;
+                           Make sure your wallet is completely synchronized and you are using the latest release.
+                           &lt;li&gt;
+                           Your newly minted or existing zPIV balance must have a minimum of 200 confirmations.
+                           &lt;li&gt;
+                           Your wallet must stay online and be unlocked for anonymization and staking purposes.
+                           Staking should now be enabled.
+                           &lt;/li&gt;&lt;/ol&gt;
+                           &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                         </string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1126,7 +1215,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_page_71">
+                       <spacer name="verticalSpacer_71">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -1173,10 +1262,13 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
+                      <property name="rightMargin">
+                       <number>20</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="labelSubtitle8">
                         <property name="text">
-                         <string>What is PIVX</string>
+                         <string>Where I should go if I need support?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -1184,7 +1276,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_Page24">
+                       <spacer name="verticalSpacer_80">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -1202,8 +1294,16 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                       <item>
                        <widget class="QLabel" name="labelContent8">
                         <property name="text">
-                         <string>We have support channels in most of our official chat groups, for example #support in our Discord which can be joined by navigating to https://Discord.PIVX.org. If you prefer to submit a ticket, One can be submitted at &lt;a style='color: #b088ff' href='https://PIVX.FreshDesk.com '&gt;https://PIVX.FreshDesk.com&lt;/a&gt;
-</string>
+                         <string>
+                           &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
+                           We have support channels in most of our official chat groups, for example
+                           &lt;a style='color: #b088ff' href='https://Discord.PIVX.com'&gt;
+                           #support in our Discord&lt;/a&gt;.
+                           If you prefer to submit a ticket, One can be
+                           &lt;a style='color: #b088ff' href='https://PIVX.FreshDesk.com'&gt;
+                           our Freshdesk support site&lt;/a&gt;.
+                           &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                         </string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1214,7 +1314,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_71">
+                       <spacer name="verticalSpacer_81">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -1261,10 +1361,13 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
+                      <property name="rightMargin">
+                       <number>20</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="labelSubtitle9">
                         <property name="text">
-                         <string>What is a Master Node</string>
+                         <string>What is a Master Node?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -1272,7 +1375,7 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_Page25">
+                       <spacer name="verticalSpacer_90">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -1290,33 +1393,48 @@ If you want more zPIV you will need to mint your balance in the “Privacy” ta
                       <item>
                        <widget class="QLabel" name="labelContent9">
                         <property name="text">
-                         <string>&lt;p&gt;A masternode is a computer running a full node PIVX core wallet with a requirement of 10,000 PIV secured collateral to provide extra services to the network and in return, receive a portion of the block reward regularly.  These services include:&lt;/p&gt;
+                         <string>
+                           &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
+                           A masternode is a computer running a full node PIVX core wallet with a
+                           requirement of 10,000 PIV secured collateral to provide extra services
+                           to the network and in return, receive a portion of the block reward
+                           regularly.  These services include:
+                           &lt;/p&gt;&lt;p align="justify"&gt;
 
-&lt;ul&gt;
-&lt;li&gt;Instant transactions (SwiftX)&lt;/li&gt;
-&lt;li&gt;A decentralized governance (Proposal Voting)&lt;/li&gt;
-&lt;li&gt;A decentralized budgeting system (Treasury)&lt;/li&gt;
-&lt;li&gt;Validation of transactions within each block&lt;/li&gt;
-&lt;li&gt;Act as an additional full node in the network&lt;/li&gt;
-&lt;/ul&gt;
+                           &lt;ul&gt;
+                           &lt;li&gt;Instant transactions (SwiftX)&lt;/li&gt;
+                           &lt;li&gt;A decentralized governance (Proposal Voting)&lt;/li&gt;
+                           &lt;li&gt;A decentralized budgeting system (Treasury)&lt;/li&gt;
+                           &lt;li&gt;Validation of transactions within each block&lt;/li&gt;
+                           &lt;li&gt;Act as an additional full node in the network&lt;/li&gt;
+                           &lt;/ul&gt;
 
-&lt;p&gt;For providing such services, masternodes are also paid a certain portion of reward for each block. This can serve as a passive income to the masternode owners minus their running cost.&lt;/p&gt;
+                           &lt;/p&gt;&lt;p align="justify"&gt;
+                           For providing such services, masternodes are also paid a certain portion
+                           of reward for each block. This can serve as a passive income to the
+                           masternode owners minus their running cost.
+                           &lt;/p&gt;&lt;p align="justify"&gt;
 
-&lt;p&gt;Masternode Perks&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Participate in PIVX Governance&lt;/li&gt;
-&lt;li&gt;Earn Masternode Rewards&lt;/li&gt;
-&lt;li&gt;Commodity option for future sale&lt;/li&gt;
-&lt;li&gt;Help secure the PIVX network&lt;/li&gt;
-&lt;/ul&gt;
+                           Masternode Perks:
+                           &lt;/p&gt;&lt;p align="justify"&gt;
+                           &lt;ul&gt;
+                           &lt;li&gt;Participate in PIVX Governance&lt;/li&gt;
+                           &lt;li&gt;Earn Masternode Rewards&lt;/li&gt;
+                           &lt;li&gt;Commodity option for future sale&lt;/li&gt;
+                           &lt;li&gt;Help secure the PIVX network&lt;/li&gt;
+                           &lt;/ul&gt;
+                           &lt;/p&gt;&lt;p align="justify"&gt;
 
-Requirements:
-&lt;ul&gt;
-&lt;li&gt;10,000 PIV per single Masternode instance&lt;/li&gt;
-&lt;li&gt;Must be stored in a core wallet&lt;/li&gt;
-&lt;li&gt;Need dedicated IP address&lt;/li&gt;
-&lt;li&gt;Masternode wallet to remain online&lt;/li&gt;
-&lt;/ul&gt;</string>
+                           Requirements:
+                           &lt;/p&gt;&lt;p align="justify"&gt;
+                           &lt;ul&gt;
+                           &lt;li&gt;10,000 PIV per single Masternode instance&lt;/li&gt;
+                           &lt;li&gt;Must be stored in a core wallet&lt;/li&gt;
+                           &lt;li&gt;Need dedicated IP address&lt;/li&gt;
+                           &lt;li&gt;Masternode wallet to remain online&lt;/li&gt;
+                           &lt;/ul&gt;
+                           &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                         </string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1327,7 +1445,7 @@ Requirements:
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer_72">
+                       <spacer name="verticalSpacer_91">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>

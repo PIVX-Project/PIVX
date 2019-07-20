@@ -130,7 +130,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     ui->labelEmptyChart->setText(tr("You have no staking rewards"));
     setCssProperty(ui->labelEmptyChart, "text-empty");
 
-    ui->labelMessageEmpty->setText(tr("You can verify the staking activity in the status bar at the top right of the wallet.\nIt will start alone as soon as the wallet has some balance."));
+    ui->labelMessageEmpty->setText(tr("You can verify the staking activity in the status bar at the top right of the wallet.\nIt will start automatically as soon as the wallet has enough confirmations on any unspent balances, and the wallet has synced."));
     setCssSubtitleScreen(ui->labelMessageEmpty);
 
     // Chart State

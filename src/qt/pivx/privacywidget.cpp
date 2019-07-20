@@ -46,7 +46,7 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* parent) :
     setCssProperty(ui->pushRight, "btn-check-right");
 
     /* Subtitle */
-    ui->labelSubtitle1->setText(tr("Minting zPIV anonymizes your PIV by removing\ntransaction history, making transactions untraceable "));
+    ui->labelSubtitle1->setText(tr("Minting zPIV anonymizes your PIV by removing any\ntransaction history, making transactions untraceable "));
     setCssSubtitleScreen(ui->labelSubtitle1);
 
     ui->labelSubtitle2->setText(tr("Mint new zPIV or convert back to PIV"));
@@ -117,17 +117,17 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* parent) :
     onMintSelected(true);
 
     ui->btnTotalzPIV->setTitleClassAndText("btn-title-grey", "Total 0 zPIV");
-    ui->btnTotalzPIV->setSubTitleClassAndText("text-subtitle", "Show own coins denominations.");
+    ui->btnTotalzPIV->setSubTitleClassAndText("text-subtitle", "Show denominations of zPIV owned.");
     ui->btnTotalzPIV->setRightIconClass("btn-dropdown");
 
     ui->btnCoinControl->setTitleClassAndText("btn-title-grey", "Coin Control");
     ui->btnCoinControl->setSubTitleClassAndText("text-subtitle", "Select PIV outputs to mint into zPIV.");
 
-    ui->btnDenomGeneration->setTitleClassAndText("btn-title-grey", "Denom generation");
+    ui->btnDenomGeneration->setTitleClassAndText("btn-title-grey", "Denom Generation");
     ui->btnDenomGeneration->setSubTitleClassAndText("text-subtitle", "Select the denomination of the coins.");
     ui->btnDenomGeneration->setVisible(false);
 
-    ui->btnRescanMints->setTitleClassAndText("btn-title-grey", "Rescan mints");
+    ui->btnRescanMints->setTitleClassAndText("btn-title-grey", "Rescan Mints");
     ui->btnRescanMints->setSubTitleClassAndText("text-subtitle", "Find mints in the blockchain.");
 
     ui->btnResetZerocoin->setTitleClassAndText("btn-title-grey", "Reset Zerocoin");
