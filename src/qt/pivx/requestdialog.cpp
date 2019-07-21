@@ -19,16 +19,14 @@ RequestDialog::RequestDialog(QWidget *parent) :
     ui->setupUi(this);
 
     this->setStyleSheet(parent->styleSheet());
+    setCssProperty(ui->frame, "container-dialog");
 
     // Text
     ui->labelTitle->setText(tr("New Request Payment"));
     setCssProperty(ui->labelTitle, "text-title-dialog");
 
-    ui->labelMessage->setText(tr("Instead of sending somebody a PIVX address and asking them to pay to that address, you give them a Payment Request message which bundles up more information than is contained in just a PIVX address."));
+    ui->labelMessage->setText(tr("Instead of share a PIVX address, you can create a Payment Request message which bundles up more information than is contained in just a PIVX address."));
     setCssProperty(ui->labelMessage, "text-main-grey");
-
-    // Container
-    setCssProperty(ui->frame, "container-dialog");
 
     // Combo Coins
     setCssProperty(ui->comboBoxCoin, "btn-combo-coins");
@@ -94,7 +92,7 @@ void RequestDialog::onNextClicked(){
         info = new SendCoinsRecipient();
         info->label = ui->lineEditLabel->text();
         info->message = ui->lineEditDescription->text();
-        info->address = QString::fromStdString(walletModel->getNewAddress().ToString());
+        info->address = QString::fromStdString(walletModel->getNewAddress((info->label.isEmpty() ? "" : info->label.toStdString())).ToString());
         int displayUnit = walletModel->getOptionsModel()->getDisplayUnit();
         bool isValueValid = true;
         CAmount value = GUIUtil::parseValue(
