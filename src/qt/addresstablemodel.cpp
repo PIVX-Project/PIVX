@@ -36,7 +36,7 @@ struct AddressTableEntry {
 
     AddressTableEntry() {}
     AddressTableEntry(Type type, const QString &pubcoin):    type(type), pubcoin(pubcoin) {}
-    AddressTableEntry(Type type, const QString& label, const QString& address, const uint creationTime) : type(type), label(label), address(address), creationTime(creationTime) {}
+    AddressTableEntry(Type type, const QString& label, const QString& address, const uint _creationTime) : type(type), label(label), address(address), creationTime(_creationTime) {}
 };
 
 struct AddressTableEntryLessThan {
@@ -91,18 +91,22 @@ public:
                 AddressTableEntry::Type addressType = translateTransactionType(
                     QString::fromStdString(item.second.purpose), fMine);
                 const std::string& strName = item.second.name;
-                cachedAddressTable.append(
-                        AddressTableEntry(addressType,
-                                QString::fromStdString(strName),
-                                QString::fromStdString(address.ToString()),
-                                static_cast<uint>(wallet->GetKeyCreationTime(address))
-                ));
 
+                uint creationTime = 0;
                 if(item.second.purpose == "receive"){
+                    creationTime = static_cast<uint>(wallet->GetKeyCreationTime(address));
                     recvNum++;
                 }else if(item.second.purpose == "send"){
                     sendNum++;
                 }
+
+                cachedAddressTable.append(
+                        AddressTableEntry(addressType,
+                                  QString::fromStdString(strName),
+                                  QString::fromStdString(address.ToString()),
+                                  creationTime
+                        )
+                );
             }
         }
         // qLowerBound() and qUpperBound() require our cachedAddressTable list to be sorted in asc order
@@ -129,15 +133,16 @@ public:
                 qWarning() << "AddressTablePriv::updateEntry : Warning: Got CT_NEW, but entry is already in model";
                 break;
             }
-            uint creationTime = static_cast<uint>(wallet->GetKeyCreationTime(CBitcoinAddress(address.toStdString())));
-            parent->beginInsertRows(QModelIndex(), lowerIndex, lowerIndex);
-            cachedAddressTable.insert(lowerIndex, AddressTableEntry(newEntryType, label, address, creationTime));
-            parent->endInsertRows();
+            uint creationTime = 0;
             if (purpose == "receive") {
+                creationTime = static_cast<uint>(wallet->GetKeyCreationTime(CBitcoinAddress(address.toStdString())));
                 recvNum++;
             } else if (purpose == "send") {
                 sendNum++;
             }
+            parent->beginInsertRows(QModelIndex(), lowerIndex, lowerIndex);
+            cachedAddressTable.insert(lowerIndex, AddressTableEntry(newEntryType, label, address, creationTime));
+            parent->endInsertRows();
             break;
         }
         case CT_UPDATED: {
@@ -230,7 +235,7 @@ public:
 
 AddressTableModel::AddressTableModel(CWallet* wallet, WalletModel* parent) : QAbstractTableModel(parent), walletModel(parent), wallet(wallet), priv(0)
 {
-    columns << tr("Label") << tr("Address");
+    columns << tr("Label") << tr("Address") << tr("Date");
     priv = new AddressTablePriv(wallet, this);
     priv->refreshAddressTable();
 }
