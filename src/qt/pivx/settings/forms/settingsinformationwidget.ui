@@ -137,13 +137,13 @@
               <widget class="QPushButton" name="pushButtonFile">
                <property name="minimumSize">
                 <size>
-                 <width>120</width>
+                 <width>125</width>
                  <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>120</width>
+                 <width>125</width>
                  <height>30</height>
                 </size>
                </property>

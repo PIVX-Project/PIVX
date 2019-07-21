@@ -12,25 +12,21 @@ OptionButton::OptionButton(QWidget *parent) :
     ui(new Ui::OptionButton)
 {
     ui->setupUi(this);
-
-    ui->labelArrow3->setProperty("cssClass", "ic-arrow");
-
-    ui->layoutOptions2->setProperty("cssClass", "container-options");
+    setCssProperty(ui->labelArrow3, "ic-arrow");
+    setCssProperty(ui->layoutOptions2, "container-options");
     ui->layoutOptions2->setContentsMargins(0,10,10,10);
-
-    ui->labelCircle->setProperty("cssClass", "btn-options-indicator");
+    setCssProperty(ui->labelCircle, "btn-options-indicator");
     connect(ui->labelArrow3, &QPushButton::clicked, [this](){setChecked(!ui->labelArrow3->isChecked());});
     setActive(false);
 }
 
-OptionButton::~OptionButton()
-{
+OptionButton::~OptionButton(){
     delete ui;
 }
 
 void OptionButton::setTitleClassAndText(QString className, QString text){
     ui->labelTitleChange->setText(text);
-    ui->labelTitleChange->setProperty("cssClass", className);
+    setCssProperty(ui->labelTitleChange, className);
 }
 
 void OptionButton::setTitleText(QString text){
@@ -39,11 +35,11 @@ void OptionButton::setTitleText(QString text){
 
 void OptionButton::setSubTitleClassAndText(QString className, QString text){
     ui->labelSubtitleChange->setText(text);
-    ui->labelSubtitleChange->setProperty("cssClass", className);
+    setCssProperty(ui->labelSubtitleChange, className);
 }
 
 void OptionButton::setRightIconClass(QString className){
-    ui->labelArrow3->setProperty("cssClass", className);
+    setCssProperty(ui->labelArrow3, className);
 }
 
 void OptionButton::setRightIcon(QPixmap icon){
@@ -53,11 +49,11 @@ void OptionButton::setRightIcon(QPixmap icon){
 void OptionButton::setActive(bool isActive){
     if (isActive) {
         ui->layoutCircle->setVisible(true);
-        ui->labelTitleChange->setProperty("cssClass", "btn-title-purple");
+        setCssProperty(ui->labelTitleChange, "btn-title-purple");
         updateStyle(ui->labelTitleChange);
     } else {
         ui->layoutCircle->setVisible(false);
-        ui->labelTitleChange->setProperty("cssClass", "btn-title-grey");
+        setCssProperty(ui->labelTitleChange, "btn-title-grey");
         updateStyle(ui->labelTitleChange);
     }
 }

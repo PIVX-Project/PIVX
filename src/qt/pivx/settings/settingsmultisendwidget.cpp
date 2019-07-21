@@ -64,7 +64,6 @@ public:
         QVBoxLayout *verticalLayout_2;
         QFrame *frame_2;
         QHBoxLayout *horizontalLayout;
-        QFrame *frame;
         QLabel *labelName;
         QSpacerItem *horizontalSpacer;
         QLabel *labelDate;

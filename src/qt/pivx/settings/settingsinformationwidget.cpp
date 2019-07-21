@@ -9,6 +9,7 @@
 #include "db.h"
 #include "util.h"
 #include "guiutil.h"
+#include "qt/pivx/qtutils.h"
 #include <QDir>
 
 SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *parent) :
@@ -20,105 +21,88 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
     this->setStyleSheet(parent->styleSheet());
 
     // Containers
-
-    ui->left->setProperty("cssClass", "container");
+    setCssProperty(ui->left, "container");
     ui->left->setContentsMargins(10,10,10,10);
-
-    ui->layoutOptions1->setProperty("cssClass", "container-options");
-    ui->layoutOptions2->setProperty("cssClass", "container-options");
-    ui->layoutOptions3->setProperty("cssClass", "container-options");
-
+    setCssProperty({ui->layoutOptions1, ui->layoutOptions2, ui->layoutOptions3}, "container-options");
 
     // Title
+    ui->labelTitle->setText(tr("Information"));
+    setCssTitleScreen(ui->labelTitle);
 
-    ui->labelTitle->setText("Information");
-    ui->labelTitle->setProperty("cssClass", "text-title-screen");
+    ui->labelTitleGeneral->setText(tr("General"));
+    ui->labelTitleClient->setText(tr("Client Version: "));
+    ui->labelTitleAgent->setText(tr("User Agent:"));
+    ui->labelTitleBerkeley->setText(tr("Using BerkeleyDB version:"));
+    ui->labelTitleDataDir->setText(tr("Datadir: "));
+    ui->labelTitleTime->setText(tr("Startup Time:  "));
+    ui->labelTitleNetwork->setText(tr("Network"));
+    ui->labelTitleName->setText(tr("Name:"));
+    ui->labelTitleConnections->setText(tr("Number Connections:"));
 
+    setCssProperty({
+        ui->labelTitleDataDir,
+        ui->labelTitleBerkeley,
+        ui->labelTitleAgent,
+        ui->labelTitleClient,
+        ui->labelTitleTime,
+        ui->labelTitleName,
+        ui->labelTitleConnections,
+        ui->labelTitleBlockNumber,
+        ui->labelTitleBlockTime,
+        ui->labelTitleNumberTransactions,
+        ui->labelInfoNumberTransactions,
+        ui->labelInfoClient,
+        ui->labelInfoAgent,
+        ui->labelInfoBerkeley,
+        ui->labelInfoDataDir,
+        ui->labelInfoTime,
+        ui->labelInfoConnections,
+        ui->labelInfoBlockNumber
+        }, "text-main-settings");
 
-    // Subtitle
+    setCssProperty({
+        ui->labelTitleGeneral,
+        ui->labelTitleNetwork,
+        ui->labelTitleBlockchain,
+        ui->labelTitleMemory,
 
-    ui->labelTitleGeneral->setText("General");
-    ui->labelTitleGeneral->setProperty("cssClass", "text-title");
+    },"text-title");
 
+    ui->labelTitleBlockchain->setText(tr("Blockchain"));
+    ui->labelTitleBlockNumber->setText(tr("Current Number of Blocks:"));
+    ui->labelTitleBlockTime->setText(tr("Last Block Time:"));
 
-    ui->labelTitleClient->setText("Client Version: ");
-    ui->labelTitleClient->setProperty("cssClass", "text-main-settings");
-    ui->labelTitleAgent->setText("User Agent:");
-    ui->labelTitleAgent->setProperty("cssClass", "text-main-settings");
-    ui->labelTitleBerkeley->setText("Using BerkeleyDB version:");
-    ui->labelTitleBerkeley->setProperty("cssClass", "text-main-settings");
-    ui->labelTitleDataDir->setText("Datadir: ");
-    ui->labelTitleDataDir->setProperty("cssClass", "text-main-settings");
-    ui->labelTitleTime->setText("Startup Time:  ");
-    ui->labelTitleTime->setProperty("cssClass", "text-main-settings");
-
-    ui->labelTitleNetwork->setText("Network");
-    ui->labelTitleNetwork->setProperty("cssClass", "text-title");
-
-    ui->labelTitleName->setText("Name:");
-    ui->labelTitleName->setProperty("cssClass", "text-main-settings");
-    ui->labelTitleConnections->setText("Number Connections:");
-    ui->labelTitleConnections->setProperty("cssClass", "text-main-settings");
-
-
-    ui->labelTitleBlockchain->setText("Blockchain");
-    ui->labelTitleBlockchain->setProperty("cssClass", "text-title");
-
-    ui->labelTitleBlockNumber->setText("Current Number of Blocks:");
-    ui->labelTitleBlockNumber->setProperty("cssClass", "text-main-settings");
-    ui->labelTitleBlockTime->setText("Last Block Time:");
-    ui->labelTitleBlockTime->setProperty("cssClass", "text-main-settings");
-
-    ui->labelTitleMemory->setText("Memory Pool");
-    ui->labelTitleMemory->setProperty("cssClass", "text-title");
+    ui->labelTitleMemory->setText(tr("Memory Pool"));
     ui->labelTitleMemory->setVisible(false);
 
-    ui->labelTitleNumberTransactions->setText("Current Number of Transactions:");
-    ui->labelTitleNumberTransactions->setProperty("cssClass", "text-main-settings");
+    ui->labelTitleNumberTransactions->setText(tr("Current Number of Transactions:"));
     ui->labelTitleNumberTransactions->setVisible(false);
 
     ui->labelInfoNumberTransactions->setText("0");
-    ui->labelInfoNumberTransactions->setProperty("cssClass", "text-main-settings");
     ui->labelInfoNumberTransactions->setVisible(false);
 
-
-    // Information General
-
-    ui->labelInfoClient->setProperty("cssClass", "text-main-settings");
-    ui->labelInfoAgent->setProperty("cssClass", "text-main-settings");
-    ui->labelInfoBerkeley->setProperty("cssClass", "text-main-settings");
-    ui->labelInfoDataDir->setProperty("cssClass", "text-main-settings");
-    ui->labelInfoTime->setProperty("cssClass", "text-main-settings");
-
     // Information Network
-
-    ui->labelInfoName->setText("Main");
+    ui->labelInfoName->setText(tr("Main"));
     ui->labelInfoName->setProperty("cssClass", "text-main-settings");
     ui->labelInfoConnections->setText("0 (In: 0 / Out:0)");
-    ui->labelInfoConnections->setProperty("cssClass", "text-main-settings");
 
     // Information Blockchain
-
     ui->labelInfoBlockNumber->setText("0");
-    ui->labelInfoBlockNumber->setProperty("cssClass", "text-main-settings");
     ui->labelInfoBlockTime->setText("Sept 6, 2018. Thursday, 8:21:49 PM");
     ui->labelInfoBlockTime->setProperty("cssClass", "text-main-grey");
 
     // Buttons
-
-    ui->pushButtonFile->setText("Wallet Conf");
-    ui->pushButtonFile->setProperty("cssClass", "btn-secundary");
-
-    ui->pushButtonBackups->setText("Backups");
-    ui->pushButtonBackups->setProperty("cssClass", "btn-secundary");
-
+    ui->pushButtonFile->setText(tr("Wallet Conf"));
     ui->pushButtonNetworkMonitor->setText(tr("Network Monitor"));
-    ui->pushButtonNetworkMonitor->setProperty("cssClass", "btn-secundary");
-
+    ui->pushButtonBackups->setText(tr("Backups"));
+    setCssBtnSecondary(ui->pushButtonBackups);
+    setCssBtnSecondary(ui->pushButtonFile);
+    setCssBtnSecondary(ui->pushButtonNetworkMonitor);
 
     // Data
 #ifdef ENABLE_WALLET
     // Wallet data -- remove it with if it's needed
+    // TODO: Complete this.
     ui->labelInfoBerkeley->setText("Berkeley");//DbEnv::version(0, 0, 0));
     ui->labelInfoDataDir->setText(QString::fromStdString(GetDataDir().string() + QDir::separator().toLatin1() + GetArg("-wallet", "wallet.dat")));
 #else
@@ -128,7 +112,6 @@ SettingsInformationWidget::SettingsInformationWidget(PIVXGUI* _window,QWidget *p
     connect(ui->pushButtonBackups, &QPushButton::clicked, [](){GUIUtil::showBackups();});
     connect(ui->pushButtonFile, &QPushButton::clicked, [](){GUIUtil::openConfigfile();});
     connect(ui->pushButtonNetworkMonitor, SIGNAL(clicked()), this, SLOT(openNetworkMonitor()));
-
 }
 
 

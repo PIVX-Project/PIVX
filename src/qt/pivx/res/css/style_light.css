@@ -1852,7 +1852,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     color:#707070;
     background-color: #f2f2f2;
     font-size:22px;
-    padding:10px 15px;
+    padding:10px 10px;
 }
 
 
@@ -2362,6 +2362,12 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 *[cssClass="ic-arrow"] {
     qproperty-icon: url("://ic-arrow-right") off,
     url("://ic-arrow-right") on ;
+    qproperty-iconSize: 24px 24px;
+}
+
+QPushButton[cssClass="ic-arrow"]:checked{
+    qproperty-icon: url("://ic-arrow-drop-down") off,
+                    url("://ic-arrow-drop-down") on ;
     qproperty-iconSize: 24px 24px;
 }
 
