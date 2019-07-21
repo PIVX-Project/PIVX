@@ -36,7 +36,6 @@ SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidg
     setShadow(ui->spinBoxStakeSplitThreshold);
 
     // Radio buttons
-    ui->radioButtonShow->setText(tr("Show Masternodes tab"));
     ui->radioButtonSpend->setText(tr("Spend unconfirmed change"));
 
     // Title

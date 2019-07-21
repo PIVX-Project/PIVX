@@ -148,13 +148,6 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QCheckBox" name="radioButtonShow">
-             <property name="text">
-              <string>RadioButton</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QCheckBox" name="radioButtonSpend">
              <property name="text">
               <string>CheckBox</string>
