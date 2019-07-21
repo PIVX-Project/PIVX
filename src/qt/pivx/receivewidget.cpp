@@ -39,12 +39,11 @@ public:
 
     void init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const override{
         MyAddressRow *row = static_cast<MyAddressRow*>(holder);
-
         QString address = index.data(Qt::DisplayRole).toString();
-        QModelIndex sibling = index.sibling(index.row(), AddressTableModel::Label);
-        QString label = sibling.data(Qt::DisplayRole).toString();
-
-        row->updateView(address, label);
+        QString label = index.sibling(index.row(), AddressTableModel::Label).data(Qt::DisplayRole).toString();
+        uint time = index.sibling(index.row(), AddressTableModel::Date).data(Qt::DisplayRole).toUInt();
+        QString date = (time == 0) ? "" : GUIUtil::dateTimeStr(QDateTime::fromTime_t(time));
+        row->updateView(address, label, date);
 
     }
 
@@ -80,14 +79,12 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
     setCssProperty(ui->right, "container-right");
     ui->right->setContentsMargins(0,9,0,0);
 
-
     // Title
     ui->labelTitle->setText(tr("Receive"));
     setCssTitleScreen(ui->labelTitle);
 
     ui->labelSubtitle1->setText(tr("Scan the QR code or copy the address to receive PIV."));
     setCssSubtitleScreen(ui->labelSubtitle1);
-
 
     // Address
     ui->labelAddress->setText(tr("No address "));
@@ -128,8 +125,6 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
     ui->pushButtonCopy->setLayoutDirection(Qt::RightToLeft);
     setCssProperty(ui->pushButtonCopy, "btn-secundary-copy");
 
-
-
     // List Addresses
     setCssProperty(ui->listViewAddress, "container");
     ui->listViewAddress->setItemDelegate(delegate);
@@ -137,7 +132,6 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
     ui->listViewAddress->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
     ui->listViewAddress->setAttribute(Qt::WA_MacShowFocusRect, false);
     ui->listViewAddress->setSelectionBehavior(QAbstractItemView::SelectRows);
-
 
     spacer = new QSpacerItem(40, 20, QSizePolicy::Maximum, QSizePolicy::Expanding);
     ui->btnMyAddresses->setChecked(true);
@@ -179,7 +173,6 @@ void ReceiveWidget::refreshView(QString refreshAddress){
         updateLabel();
     } catch (const runtime_error& error){
         ui->labelQrImg->setText(tr("No available address, try unlocking the wallet"));
-        std::cout << "Error generating address, correct me: " << error.what() << std::endl;
         inform(tr("Error generating address"));
     }
 }
@@ -289,7 +282,6 @@ void ReceiveWidget::onRequestClicked(){
 
 void ReceiveWidget::onMyAddressesClicked(){
     bool isVisible = ui->listViewAddress->isVisible();
-
     if(!isVisible){
         ui->listViewAddress->setVisible(true);
         ui->container_right->removeItem(spacer);
@@ -304,7 +296,6 @@ void ReceiveWidget::changeTheme(bool isLightTheme, QString& theme){
     static_cast<AddressHolder*>(this->delegate->getRowFactory())->isLightTheme = isLightTheme;
 }
 
-ReceiveWidget::~ReceiveWidget()
-{
+ReceiveWidget::~ReceiveWidget(){
     delete ui;
 }

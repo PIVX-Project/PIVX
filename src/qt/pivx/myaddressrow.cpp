@@ -16,12 +16,17 @@ MyAddressRow::MyAddressRow(QWidget *parent) :
 
 }
 
-void MyAddressRow::updateView(QString address, QString label){
+void MyAddressRow::updateView(QString address, QString label, QString date){
     ui->labelName->setText(label);
     ui->labelAddress->setText(address);
+    if (date.isEmpty()){
+        ui->labelDate->setVisible(false);
+    } else {
+        ui->labelDate->setVisible(true);
+        ui->labelDate->setText(date);
+    }
 }
 
-MyAddressRow::~MyAddressRow()
-{
+MyAddressRow::~MyAddressRow(){
     delete ui;
 }
