@@ -3034,6 +3034,8 @@ UniValue setstakesplitthreshold(const UniValue& params, bool fHelp)
             "{\n"
             "  \"threshold\": n,        (numeric) Threshold value set\n"
             "  \"saved\": true|false    (boolean) 'true' if successfully saved to the wallet file\n"
+            "  \"warning\":             (string)  A human readable warning, if any are present.\n"
+
             "}\n"
 
             "\nExamples:\n" +
@@ -3042,6 +3044,16 @@ UniValue setstakesplitthreshold(const UniValue& params, bool fHelp)
     EnsureWalletIsUnlocked();
 
     CAmount nStakeSplitThreshold = AmountFromValue(params[0]);
+
+    std::string strComment;
+
+    // Warn if this will conflict with AutoCombineRewards
+    if (((pwalletMain->nAutoCombineThreshold > nStakeSplitThreshold) || !pwalletMain->nAutoCombineThreshold)
+          && (pwalletMain->fCombineDust)) {
+        strComment = "***Warning: Threshold level may conflict with autocombinerewards threshold!***";
+    } else {
+        strComment = "(none)";
+    }
 
     CWalletDB walletdb(pwalletMain->strWalletFile);
     LOCK(pwalletMain->cs_wallet);
@@ -3057,6 +3069,7 @@ UniValue setstakesplitthreshold(const UniValue& params, bool fHelp)
         } else
             result.push_back(Pair("saved", "false"));
 
+        result.push_back(Pair("warning", strComment));
         return result;
     }
 }
@@ -3079,8 +3092,6 @@ UniValue getstakesplitthreshold(const UniValue& params, bool fHelp)
 
 UniValue getautocombineinfo(const UniValue& params, bool fHelp)
 {
-    std::string strComment;
-
     if (fHelp || params.size() != 0)
         throw std::runtime_error(
             "getautocombineinfo\n"
@@ -3089,13 +3100,15 @@ UniValue getautocombineinfo(const UniValue& params, bool fHelp)
             "1. enabled   (boolean) The feature is enabled (true) or disabled (false).\n"
             "2. threshold (numeric) If enabled, returns autocombine threshold.\n"
             "3. frequency (numeric) If enabled, returns frequency in blocks.\n"
-            "4. comment   (string)  A human readable state of the settings.\n");
+            "4. comment   (string)  A human readable state of the settings.\n"
+            "5. warning   (string)  A human readable warning, if any are present.\n");
 
     UniValue obj(UniValue::VOBJ);
     obj.push_back(Pair("enabled", pwalletMain->fCombineDust));
     obj.push_back(Pair("threshold", int(pwalletMain->nAutoCombineThreshold)));
     obj.push_back(Pair("frequency", int(pwalletMain->nAutoCombineBlockFrequency)));
 
+    std::string strComment;
     if (pwalletMain->nAutoCombineThreshold == 0)
         strComment = "Enabled for maximum combine, ";
     else
@@ -3103,17 +3116,27 @@ UniValue getautocombineinfo(const UniValue& params, bool fHelp)
 
     if (pwalletMain->fCombineDust) {
         if (pwalletMain->nAutoCombineBlockFrequency == 0) {
-            obj.push_back(Pair("comment", strComment + "one shot on next block"));
+            strComment += "one shot on next block";
         } else {
-            obj.push_back(Pair("comment", strComment + "repeat on frequency"));
+            strComment += "repeat on frequency";
         }
     } else {
         if (pwalletMain->nAutoCombineBlockFrequency == 0) {
-            obj.push_back(Pair("comment", strComment + "one shot on startup"));
+            strComment += "one shot on startup";
         } else {
-            obj.push_back(Pair("comment", "Disabled"));
+            strComment = "Disabled";
         }
     }
+    obj.push_back(Pair("comment", strComment));
+
+    // Warn if this will conflict with StakeSplitThreshold
+    if (((pwalletMain->nAutoCombineThreshold > pwalletMain->nStakeSplitThreshold) || !pwalletMain->nAutoCombineThreshold)
+          && (pwalletMain->fCombineDust)) {
+        strComment = "***Warning: Threshold level may conflict with stakesplitthreshold!***";
+    } else {
+        strComment = "(none)";
+    }
+    obj.push_back(Pair("warning", strComment));
 
     return obj;
 }
@@ -3150,6 +3173,7 @@ UniValue autocombinerewards(const UniValue& params, bool fHelp)
             "2. threshold (numeric) If enabled, returns autocombine threshold.\n"
             "3. frequency (numeric) If enabled, returns frequency in blocks.\n"
             "4. comment   (string)  A human readable state of the settings.\n"
+            "5. warning   (string)  A human readable warning, if any are present.\n"
 
             "\nExamples:\n" +
             HelpExampleCli("autocombinerewards", "true 500 15") + HelpExampleRpc("autocombinerewards", "true 500 15"));
@@ -3179,18 +3203,30 @@ UniValue autocombinerewards(const UniValue& params, bool fHelp)
     if (pwalletMain->fCombineDust) {
         std::string strComment;
 
-        if (pwalletMain->nAutoCombineThreshold == 0)
-            strComment = "Enabled for maximum combine, ";
-        else
-            strComment = "Enabled for ";
-
         obj.push_back(Pair("threshold", int(pwalletMain->nAutoCombineThreshold)));
         obj.push_back(Pair("frequency", int(pwalletMain->nAutoCombineBlockFrequency)));
-        if (pwalletMain->nAutoCombineBlockFrequency == 0) {
-            obj.push_back(Pair("comment", strComment + "one shot on next block"));
+
+        if (pwalletMain->nAutoCombineThreshold == 0) {
+            strComment = "Enabled for maximum combine, ";
         } else {
-            obj.push_back(Pair("comment", strComment + "repeat on frequency"));
+            strComment = "Enabled for ";
         }
+
+        if (pwalletMain->nAutoCombineBlockFrequency == 0) {
+            strComment += "one shot on next block";
+        } else {
+            strComment += "repeat on frequency";
+        }
+        obj.push_back(Pair("comment", strComment));
+
+        // Warn if this will conflict with StakeSplitThreshold
+        if ((pwalletMain->nAutoCombineThreshold > pwalletMain->nStakeSplitThreshold) || !pwalletMain->nAutoCombineThreshold) {
+            strComment = "***Warning: Threshold level may conflict with stakesplitthreshold!***";
+        } else {
+            strComment = "(none)";
+        }
+        obj.push_back(Pair("warning", strComment));
+
     }
 
     return obj;
