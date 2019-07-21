@@ -847,13 +847,7 @@ int64_t WalletModel::getKeyCreationTime(const CPubKey& key){
 
 int64_t WalletModel::getKeyCreationTime(const CBitcoinAddress& address){
     if(this->isMine(address)) {
-        CKeyID keyID;
-        if (address.GetKeyID(keyID)) {
-            CPubKey key;
-            if (getPubKey(keyID, key)) {
-                return getKeyCreationTime(key);
-            }
-        }
+        return pwalletMain->GetKeyCreationTime(address);
     }
     return 0;
 }

@@ -120,6 +120,18 @@ int64_t CWallet::GetKeyCreationTime(CPubKey pubkey)
     return mapKeyMetadata[pubkey.GetID()].nCreateTime;
 }
 
+int64_t CWallet::GetKeyCreationTime(const CBitcoinAddress& address)
+{
+    CKeyID keyID;
+    if (address.GetKeyID(keyID)) {
+        CPubKey keyRet;
+        if (GetPubKey(keyID, keyRet)) {
+            return GetKeyCreationTime(keyRet);
+        }
+    }
+    return 0;
+}
+
 CBitcoinAddress CWallet::GenerateNewAutoMintKey()
 {
     CBitcoinAddress btcAddress;
