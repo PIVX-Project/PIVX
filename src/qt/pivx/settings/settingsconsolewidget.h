@@ -59,7 +59,7 @@ protected slots:
 signals:
     // For RPC command executor
     void stopExecutor();
-    void cmdRequest(const QString& command);
+    void cmdCommandRequest(const QString& command);
 
 private:
     Ui::SettingsConsoleWidget *ui;

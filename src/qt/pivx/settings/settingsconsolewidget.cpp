@@ -58,10 +58,10 @@ class RPCExecutor : public QObject
     Q_OBJECT
 
 public slots:
-            void requestCommand(const QString& command);
+     void requestCommand(const QString& command);
 
-    signals:
-            void reply(int category, const QString& command);
+signals:
+     void reply(int category, const QString& command);
 };
 
 /** Class for handling RPC timers
@@ -249,6 +249,7 @@ SettingsConsoleWidget::SettingsConsoleWidget(PIVXGUI* _window, QWidget *parent) 
     // Containers
     ui->left->setProperty("cssClass", "container");
     ui->left->setContentsMargins(10,10,10,10);
+    ui->messagesWidget->setProperty("cssClass", "container");
 
     // Title
     ui->labelTitle->setText(tr("Console"));
@@ -283,11 +284,7 @@ SettingsConsoleWidget::SettingsConsoleWidget(PIVXGUI* _window, QWidget *parent) 
     RPCSetTimerInterfaceIfUnset(rpcTimerInterface);
 
     startExecutor();
-
     clear();
-
-    ui->messagesWidget->setProperty("cssClass", "container");
-
 }
 
 SettingsConsoleWidget::~SettingsConsoleWidget()
@@ -440,7 +437,7 @@ void SettingsConsoleWidget::on_lineEdit_returnPressed()
 
     if (!cmd.isEmpty()) {
         message(CMD_REQUEST, cmd);
-        emit cmdRequest(cmd);
+        emit cmdCommandRequest(cmd);
         // Remove command, if already in history
         history.removeOne(cmd);
         // Append command to history
@@ -478,7 +475,7 @@ void SettingsConsoleWidget::startExecutor()
     // Replies from executor object must go to this object
     connect(executor, SIGNAL(reply(int, QString)), this, SLOT(message(int, QString)));
     // Requests from this object must go to executor
-    connect(this, SIGNAL(cmdRequest(QString)), executor, SLOT(requestCommand(QString)));
+    connect(this, &SettingsConsoleWidget::cmdCommandRequest, executor, &RPCExecutor::requestCommand);
 
     // On stopExecutor signal
     // - queue executor for deletion (in execution thread)

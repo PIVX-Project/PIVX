@@ -122,7 +122,14 @@
            </spacer>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBoxStakeSplitThreshold"/>
+           <widget class="QSpinBox" name="spinBoxStakeSplitThreshold">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>999999</number>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
