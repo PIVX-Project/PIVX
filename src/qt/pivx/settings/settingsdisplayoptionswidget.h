@@ -23,6 +23,7 @@ public:
 
     void setMapper(QDataWidgetMapper *mapper);
     void initLanguages();
+    void loadClientModel() override;
 
 public slots:
     void showRestartWarning(bool fPersistent);

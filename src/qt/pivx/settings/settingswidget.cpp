@@ -159,18 +159,21 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
 }
 
 void SettingsWidget::loadClientModel(){
-    this->settingsInformationWidget->setClientModel(this->clientModel);
-    this->settingsConsoleWidget->setClientModel(this->clientModel);
+    if(clientModel) {
+        this->settingsInformationWidget->setClientModel(this->clientModel);
+        this->settingsConsoleWidget->setClientModel(this->clientModel);
 
-    OptionsModel *optionsModel = this->clientModel->getOptionsModel();
-    if(optionsModel) {
-        mapper->setModel(optionsModel);
-        setMapper();
-        mapper->toFirst();
-        /* keep consistency for action triggered elsewhere */
-        connect(optionsModel, SIGNAL(hideOrphansChanged(bool)), this, SLOT(updateHideOrphans(bool)));
+        OptionsModel *optionsModel = this->clientModel->getOptionsModel();
+        if (optionsModel) {
+            mapper->setModel(optionsModel);
+            setMapper();
+            mapper->toFirst();
+            settingsDisplayOptionsWidget->setClientModel(clientModel);
+            /* keep consistency for action triggered elsewhere */
+            connect(optionsModel, SIGNAL(hideOrphansChanged(bool)), this, SLOT(updateHideOrphans(bool)));
 
-        // TODO: Connect show restart needed and apply changes.
+            // TODO: Connect show restart needed and apply changes.
+        }
     }
 }
 

@@ -8,6 +8,7 @@
 #include <QSettings>
 #include <QDir>
 #include "guiutil.h"
+#include "clientmodel.h"
 #include "optionsmodel.h"
 #include "bitcoinunits.h"
 #include "qt/pivx/qtutils.h"
@@ -60,6 +61,7 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
     ui->comboBoxUnit->setProperty("cssClass", "btn-combo");
     ui->comboBoxUnit->setView(new QListView());
     ui->comboBoxUnit->setModel(new BitcoinUnits(this));
+    ui->comboBoxUnit->setModelColumn(Qt::DisplayRole);
     ui->comboBoxUnit->setEditable(true);
     QLineEdit* UnitEdit = new QLineEdit(ui->comboBoxUnit);
     UnitEdit->setReadOnly(true);
@@ -151,7 +153,12 @@ void SettingsDisplayOptionsWidget::setMapper(QDataWidgetMapper *mapper){
     //mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
     mapper->addMapping(ui->pushButtonSwitchBalance, OptionsModel::HideZeroBalances);
     //mapper->addMapping(ui->checkBoxHideOrphans, OptionsModel::HideOrphans);
+}
 
+void SettingsDisplayOptionsWidget::loadClientModel(){
+    if(clientModel) {
+        ui->comboBoxUnit->setCurrentIndex(this->clientModel->getOptionsModel()->getDisplayUnit());
+    }
 }
 
 SettingsDisplayOptionsWidget::~SettingsDisplayOptionsWidget()

@@ -35,9 +35,6 @@ SettingsWalletRepairWidget::SettingsWalletRepairWidget(PIVXGUI* _window, QWidget
     ui->labelSubtitle1->setText(tr("The buttons below will restart the wallet with command-line options to repair this wallet, fix issues with corrupt blockchain files or missing/obsolete transactions."));
     ui->labelSubtitle1->setProperty("cssClass", "text-subtitle");
 
-    ui->labelLocation->setText("Wallet in use: /Users/johndoe/Library/Application Support/PIVX/wallet.dat");
-    ui->labelLocation->setProperty("cssClass", "text-main-purple");
-
     // Labels
     ui->labelMessageSalvage->setText(tr("Attempt to recover private keys from a corrupt wallet.dat."));
     ui->labelMessageSalvage->setProperty("cssClass", "text-main-settings");
