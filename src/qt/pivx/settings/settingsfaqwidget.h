@@ -19,8 +19,11 @@ public:
     explicit SettingsFaqWidget(QWidget *parent = nullptr);
     ~SettingsFaqWidget();
 
+    void showEvent(QShowEvent *event) override;
+
 public slots:
    void windowResizeEvent(QResizeEvent* event);
+   void setSection(int num);
 private slots:
     void onFaq1Clicked();
     void onFaq2Clicked();
@@ -34,6 +37,8 @@ private slots:
 private:
     Ui::SettingsFaqWidget *ui;
     int pos = 0;
+
+    std::vector<QPushButton*> getButtons();
 };
 
 #endif // SETTINGSFAQWIDGET_H

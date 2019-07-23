@@ -5,6 +5,7 @@
 #include "qt/pivx/settings/settingsfaqwidget.h"
 #include "qt/pivx/settings/forms/ui_settingsfaqwidget.h"
 #include <QScrollBar>
+#include <QMetaObject>
 #include "qt/pivx/qtutils.h"
 
 SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
@@ -111,9 +112,22 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
 
 }
 
+void SettingsFaqWidget::showEvent(QShowEvent *event){
+    if(pos != 0){
+        QPushButton* btn = getButtons()[pos - 1];
+        QMetaObject::invokeMethod(btn, "setChecked", Qt::QueuedConnection, Q_ARG(bool, true));
+        QMetaObject::invokeMethod(btn, "clicked", Qt::QueuedConnection);
+    }
+}
+
+void SettingsFaqWidget::setSection(int num){
+    if (num < 1 || num > 9)
+        return;
+    pos = num;
+}
+
 void SettingsFaqWidget::onFaq1Clicked(){
     ui->scrollAreaFaq->verticalScrollBar()->setValue(ui->widgetFaq1->y());
-
 }
 
 void SettingsFaqWidget::onFaq2Clicked(){
@@ -152,6 +166,20 @@ void SettingsFaqWidget::windowResizeEvent(QResizeEvent* event){
     QWidget* w = qobject_cast<QWidget*>(parent());
     this->resize(w->width(), w->height());
     this->move(QPoint(0, 0));
+}
+
+std::vector<QPushButton*> SettingsFaqWidget::getButtons(){
+    return {
+            ui->pushButtonFaq1,
+            ui->pushButtonFaq2,
+            ui->pushButtonFaq3,
+            ui->pushButtonFaq4,
+            ui->pushButtonFaq5,
+            ui->pushButtonFaq6,
+            ui->pushButtonFaq7,
+            ui->pushButtonFaq8,
+            ui->pushButtonFaq9
+    };
 }
 
 SettingsFaqWidget::~SettingsFaqWidget(){
