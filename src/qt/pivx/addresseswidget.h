@@ -43,6 +43,7 @@ private slots:
     void onEditClicked();
     void onDeleteClicked();
     void onCopyClicked();
+    void onAddContactShowHideClicked();
 
     void changeTheme(bool isLightTheme, QString &theme) override;
 private:

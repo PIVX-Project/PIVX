@@ -108,7 +108,6 @@ AddressesWidget::AddressesWidget(PIVXGUI* parent) :
     setCssProperty(ui->labelName, "text-title");
     ui->lineEditName->setPlaceholderText(tr("e.g. John Doe"));
     setCssEditLine(ui->lineEditName, true);
-    ui->lineEditName->setValidator(new QRegExpValidator(QRegExp("^[A-Za-z0-9]+"), ui->lineEditName));
 
     // Address
     ui->labelAddress->setText(tr("Enter a PIVX address"));
@@ -123,6 +122,7 @@ AddressesWidget::AddressesWidget(PIVXGUI* parent) :
 
     connect(ui->listAddresses, SIGNAL(clicked(QModelIndex)), this, SLOT(handleAddressClicked(QModelIndex)));
     connect(ui->btnSave, SIGNAL(clicked()), this, SLOT(onStoreContactClicked()));
+    connect(ui->btnAddContact, SIGNAL(clicked()), this, SLOT(onAddContactShowHideClicked()));
 }
 
 void AddressesWidget::handleAddressClicked(const QModelIndex &index){
@@ -241,6 +241,16 @@ void AddressesWidget::onDeleteClicked(){
 void AddressesWidget::onCopyClicked(){
     GUIUtil::setClipboard(index.data(Qt::DisplayRole).toString());
     inform(tr("Address copied"));
+}
+
+void AddressesWidget::onAddContactShowHideClicked(){
+    if(!ui->layoutNewContact->isVisible()){
+        ui->btnAddContact->setRightIconClass("btn-dropdown", true);
+        ui->layoutNewContact->setVisible(true);
+    }else {
+        ui->btnAddContact->setRightIconClass("ic-arrow", true);
+        ui->layoutNewContact->setVisible(false);
+    }
 }
 
 void AddressesWidget::changeTheme(bool isLightTheme, QString& theme){

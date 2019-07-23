@@ -38,8 +38,9 @@ void OptionButton::setSubTitleClassAndText(QString className, QString text){
     setCssProperty(ui->labelSubtitleChange, className);
 }
 
-void OptionButton::setRightIconClass(QString className){
+void OptionButton::setRightIconClass(QString className, bool forceUpdate){
     setCssProperty(ui->labelArrow3, className);
+    if(forceUpdate) updateStyle(ui->labelArrow3);
 }
 
 void OptionButton::setRightIcon(QPixmap icon){

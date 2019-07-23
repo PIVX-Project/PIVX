@@ -96,25 +96,18 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
     setCssSubtitleScreen(ui->labelLabel);
 
     // Options
-
     ui->btnMyAddresses->setTitleClassAndText("btn-title-grey", "My Addresses");
     ui->btnMyAddresses->setSubTitleClassAndText("text-subtitle", "List your own addresses.");
     ui->btnMyAddresses->layout()->setMargin(0);
-    ui->btnMyAddresses->setRightIconClass("btn-dropdown");
+    ui->btnMyAddresses->setRightIconClass("ic-arrow");
 
     ui->btnRequest->setTitleClassAndText("btn-title-grey", "Create Request");
     ui->btnRequest->setSubTitleClassAndText("text-subtitle", "Request payment with a fixed amount.");
     ui->btnRequest->layout()->setMargin(0);
 
-    // Buttons
-    connect(ui->btnRequest, SIGNAL(clicked()), this, SLOT(onRequestClicked()));
-    connect(ui->btnMyAddresses, SIGNAL(clicked()), this, SLOT(onMyAddressesClicked()));
-
-
     ui->pushButtonLabel->setText(tr("Add Label"));
     ui->pushButtonLabel->setLayoutDirection(Qt::RightToLeft);
     setCssProperty(ui->pushButtonLabel, "btn-secundary-label");
-
 
     ui->pushButtonNewAddress->setText(tr("Generate Address"));
     ui->pushButtonNewAddress->setLayoutDirection(Qt::RightToLeft);
@@ -143,6 +136,8 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
     connect(ui->pushButtonCopy, SIGNAL(clicked()), this, SLOT(onCopyClicked()));
     connect(ui->pushButtonNewAddress, SIGNAL(clicked()), this, SLOT(onNewAddressClicked()));
     connect(ui->listViewAddress, SIGNAL(clicked(QModelIndex)), this, SLOT(handleAddressClicked(QModelIndex)));
+    connect(ui->btnRequest, SIGNAL(clicked()), this, SLOT(onRequestClicked()));
+    connect(ui->btnMyAddresses, SIGNAL(clicked()), this, SLOT(onMyAddressesClicked()));
 }
 
 void ReceiveWidget::loadWalletModel(){
@@ -283,10 +278,12 @@ void ReceiveWidget::onRequestClicked(){
 void ReceiveWidget::onMyAddressesClicked(){
     bool isVisible = ui->listViewAddress->isVisible();
     if(!isVisible){
+        ui->btnMyAddresses->setRightIconClass("btn-dropdown", true);
         ui->listViewAddress->setVisible(true);
         ui->container_right->removeItem(spacer);
         ui->listViewAddress->update();
     }else{
+        ui->btnMyAddresses->setRightIconClass("ic-arrow", true);
         ui->container_right->addItem(spacer);
         ui->listViewAddress->setVisible(false);
     }

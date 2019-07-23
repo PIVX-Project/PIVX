@@ -118,7 +118,7 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* parent) :
 
     ui->btnTotalzPIV->setTitleClassAndText("btn-title-grey", "Total 0 zPIV");
     ui->btnTotalzPIV->setSubTitleClassAndText("text-subtitle", "Show denominations of zPIV owned.");
-    ui->btnTotalzPIV->setRightIconClass("btn-dropdown");
+    ui->btnTotalzPIV->setRightIconClass("ic-arrow");
 
     ui->btnCoinControl->setTitleClassAndText("btn-title-grey", "Coin Control");
     ui->btnCoinControl->setSubTitleClassAndText("text-subtitle", "Select PIV outputs to mint into zPIV.");
@@ -212,15 +212,14 @@ void PrivacyWidget::showList(){
 }
 
 void PrivacyWidget::onTotalZpivClicked(){
-
     bool isVisible = ui->layoutDenom->isVisible();
-
     if(!isVisible){
         ui->layoutDenom->setVisible(true);
+        ui->btnTotalzPIV->setRightIconClass("btn-dropdown", true);
     }else{
         ui->layoutDenom->setVisible(false);
+        ui->btnTotalzPIV->setRightIconClass("ic-arrow", true);
     }
-
 }
 
 void PrivacyWidget::onSendClicked(){
