@@ -5,7 +5,6 @@
 #include "qt/pivx/topbar.h"
 #include "qt/pivx/forms/ui_topbar.h"
 #include <QPixmap>
-#include <QFile>
 #include "qt/pivx/lockunlock.h"
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/receivedialog.h"
@@ -36,15 +35,11 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     ui->containerTop->setProperty("cssClass", "container-top");
     ui->containerTop->setContentsMargins(10,4,10,10);
 
-    setCssProperty({ui->labelTitle1, ui->labelTitle2, ui->labelTitle3, ui->labelTitle4, ui->labelTitle5, ui->labelTitle6}, "text-title-topbar");
+    std::initializer_list<QWidget*> lblTitles = {ui->labelTitle1, ui->labelTitle2, ui->labelTitle3, ui->labelTitle4, ui->labelTitle5, ui->labelTitle6};
+    setCssProperty(lblTitles, "text-title-topbar");
     QFont font;
     font.setWeight(QFont::Light);
-    ui->labelTitle1->setFont(font);
-    ui->labelTitle2->setFont(font);
-    ui->labelTitle3->setFont(font);
-    ui->labelTitle4->setFont(font);
-    ui->labelTitle5->setFont(font);
-    ui->labelTitle6->setFont(font);
+    foreach (QWidget* w, lblTitles) { w->setFont(font); }
 
     // Amount information top
     ui->widgetTopAmount->setVisible(false);
@@ -76,6 +71,7 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
 
     ui->pushButtonMint->setButtonClassStyle("cssClass", "btn-check-mint-inactive");
     ui->pushButtonMint->setButtonText("Automint Enabled");
+    ui->pushButtonMint->setVisible(false);
 
     ui->pushButtonSync->setButtonClassStyle("cssClass", "btn-check-sync");
     ui->pushButtonSync->setButtonText(" %54 Synchronizing..");
@@ -94,7 +90,6 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     setCssProperty(ui->pushButtonQR, "btn-qr");
 
     // QR image
-
     QPixmap pixmap("://img-qr-test");
     ui->btnQr->setIcon(
                 QIcon(pixmap.scaled(
@@ -275,16 +270,14 @@ void TopBar::showTop(){
     }
 }
 
-void TopBar::showBottom()
-{
+void TopBar::showBottom(){
     ui->widgetTopAmount->setVisible(false);
     ui->bottom_container->setVisible(true);
     this->setFixedHeight(200);
     this->adjustSize();
 }
 
-TopBar::~TopBar()
-{
+TopBar::~TopBar(){
     if(timerStakingIcon){
         timerStakingIcon->stop();
     }
@@ -299,9 +292,6 @@ void TopBar::loadClientModel(){
 
         setNumBlocks(clientModel->getNumBlocks());
         connect(clientModel, SIGNAL(numBlocksChanged(int)), this, SLOT(setNumBlocks(int)));
-
-        connect(clientModel->getOptionsModel(), SIGNAL(zeromintEnableChanged(bool)), this, SLOT(updateAutoMintStatus()));
-        updateAutoMintStatus();
 
         timerStakingIcon = new QTimer(ui->pushButtonStack);
         connect(timerStakingIcon, SIGNAL(timeout()), this, SLOT(updateStakingStatus()));

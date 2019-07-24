@@ -89,7 +89,7 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
     ui->pushButtonExit->setProperty("cssClass", "btn-faq-exit");
 
     // Web Link
-    ui->pushButtonWebLink->setText("https://PIVX.org/zpiv");
+    ui->pushButtonWebLink->setText("https://PIVX.org/");
     ui->pushButtonWebLink->setProperty("cssClass", "btn-faq-web");
 
     // Questions buttons
