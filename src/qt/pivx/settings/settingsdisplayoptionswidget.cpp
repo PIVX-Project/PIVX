@@ -98,6 +98,7 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
     initLanguages();
     connect(ui->comboBoxLanguage, SIGNAL(currentIndexChanged()), this, SLOT(showRestartWarning(bool)));
     connect(ui->comboBoxLanguage ,SIGNAL(currentIndexChanged(const QString&)),this, SLOT(languageChanged(const QString&)));
+    connect(ui->pushButtonReset, SIGNAL(clicked()), this, SLOT(onResetClicked()));
 }
 
 void SettingsDisplayOptionsWidget::initLanguages(){
@@ -146,13 +147,20 @@ void SettingsDisplayOptionsWidget::showRestartWarning(bool fPersistent){
      */
 }
 
+void SettingsDisplayOptionsWidget::onResetClicked() {
+    if (clientModel) {
+        OptionsModel *optionsModel = clientModel->getOptionsModel();
+        QSettings settings;
+        optionsModel->setDisplayDefaultOptions(settings, true);
+        inform(tr("Options reset succeed"));
+    }
+}
+
 void SettingsDisplayOptionsWidget::setMapper(QDataWidgetMapper *mapper){
     mapper->addMapping(ui->comboBoxDigits, OptionsModel::Digits);
     mapper->addMapping(ui->comboBoxLanguage, OptionsModel::Language);
     mapper->addMapping(ui->comboBoxUnit, OptionsModel::DisplayUnit);
-    //mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
     mapper->addMapping(ui->pushButtonSwitchBalance, OptionsModel::HideZeroBalances);
-    //mapper->addMapping(ui->checkBoxHideOrphans, OptionsModel::HideOrphans);
 }
 
 void SettingsDisplayOptionsWidget::loadClientModel(){
@@ -161,7 +169,6 @@ void SettingsDisplayOptionsWidget::loadClientModel(){
     }
 }
 
-SettingsDisplayOptionsWidget::~SettingsDisplayOptionsWidget()
-{
+SettingsDisplayOptionsWidget::~SettingsDisplayOptionsWidget(){
     delete ui;
 }

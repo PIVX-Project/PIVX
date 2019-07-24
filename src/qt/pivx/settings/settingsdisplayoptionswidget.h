@@ -28,6 +28,7 @@ public:
 public slots:
     void showRestartWarning(bool fPersistent);
     void languageChanged(const QString& newValue);
+    void onResetClicked();
 
 private:
     Ui::SettingsDisplayOptionsWidget *ui;

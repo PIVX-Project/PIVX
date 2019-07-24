@@ -150,7 +150,10 @@ SettingsWidget::SettingsWidget(PIVXGUI* parent) :
     connect(settingsBackupWallet, &SettingsBackupWallet::showHide, this, &SettingsWidget::showHide);
     connect(settingsBackupWallet, &SettingsBackupWallet::execDialog, this, &SettingsWidget::execDialog);
     connect(settingsMultisendWidget, &SettingsMultisendWidget::showHide, this, &SettingsWidget::showHide);
-    connect(settingsMultisendWidget,&SettingsMultisendWidget::message,this, &SettingsWidget::message);
+    connect(settingsMultisendWidget, &SettingsMultisendWidget::message, this, &SettingsWidget::message);
+    connect(settingsMainOptionsWidget, &SettingsMainOptionsWidget::message, this, &SettingsWidget::message);
+    connect(settingsDisplayOptionsWidget, &SettingsDisplayOptionsWidget::message, this, &SettingsWidget::message);
+    connect(settingsWalletOptionsWidget, &SettingsWalletOptionsWidget::message, this, &SettingsWidget::message);
 
     /* Widget-to-option mapper */
     mapper = new QDataWidgetMapper(this);
@@ -168,7 +171,9 @@ void SettingsWidget::loadClientModel(){
             mapper->setModel(optionsModel);
             setMapper();
             mapper->toFirst();
+            settingsMainOptionsWidget->setClientModel(clientModel);
             settingsDisplayOptionsWidget->setClientModel(clientModel);
+            settingsWalletOptionsWidget->setClientModel(clientModel);
             /* keep consistency for action triggered elsewhere */
             connect(optionsModel, SIGNAL(hideOrphansChanged(bool)), this, SLOT(updateHideOrphans(bool)));
 

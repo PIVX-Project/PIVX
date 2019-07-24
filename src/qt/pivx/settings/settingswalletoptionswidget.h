@@ -22,6 +22,9 @@ public:
 
     void setMapper(QDataWidgetMapper *mapper);
 
+public slots:
+    void onResetClicked();
+
 private:
     Ui::SettingsWalletOptionsWidget *ui;
 };

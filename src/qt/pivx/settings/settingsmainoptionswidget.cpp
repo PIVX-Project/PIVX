@@ -13,6 +13,7 @@
 #include "bitcoinunits.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
+#include "clientmodel.h"
 #include "qt/pivx/qtutils.h"
 
 #include "main.h" // for MAX_SCRIPTCHECK_THREADS
@@ -88,6 +89,20 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
     ui->threadsScriptVerif->setMaximum(MAX_SCRIPTCHECK_THREADS);
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), parent, SLOT(onSaveOptionsClicked()));
+    connect(ui->pushButtonReset, SIGNAL(clicked()), this, SLOT(onResetClicked()));
+}
+
+void SettingsMainOptionsWidget::onResetClicked(){
+    if(clientModel) {
+        OptionsModel *optionsModel = clientModel->getOptionsModel();
+        QSettings settings;
+        // default setting for OptionsModel::StartAtStartup - disabled
+        if (GUIUtil::GetStartOnSystemStartup())
+            GUIUtil::SetStartOnSystemStartup(false);
+        optionsModel->setMainDefaultOptions(settings, true);
+        optionsModel->setWindowDefaultOptions(settings, true);
+        inform(tr("Options reset succeed"));
+    }
 }
 
 void SettingsMainOptionsWidget::setMapper(QDataWidgetMapper *mapper){
@@ -101,7 +116,6 @@ void SettingsMainOptionsWidget::setMapper(QDataWidgetMapper *mapper){
 #endif
 }
 
-SettingsMainOptionsWidget::~SettingsMainOptionsWidget()
-{
+SettingsMainOptionsWidget::~SettingsMainOptionsWidget(){
     delete ui;
 }

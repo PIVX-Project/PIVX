@@ -27,7 +27,6 @@
 #endif
 
 #include <QNetworkProxy>
-#include <QSettings>
 #include <QStringList>
 
 OptionsModel::OptionsModel(QObject* parent) : QAbstractListModel(parent)
@@ -52,29 +51,15 @@ void OptionsModel::Init()
     // These are Qt-only settings:
 
     // Window
-    if (!settings.contains("fMinimizeToTray"))
-        settings.setValue("fMinimizeToTray", false);
-    fMinimizeToTray = settings.value("fMinimizeToTray").toBool();
-
-    if (!settings.contains("fMinimizeOnClose"))
-        settings.setValue("fMinimizeOnClose", false);
-    fMinimizeOnClose = settings.value("fMinimizeOnClose").toBool();
+    setWindowDefaultOptions(settings);
 
     // Display
-    if (!settings.contains("nDisplayUnit"))
-        settings.setValue("nDisplayUnit", BitcoinUnits::PIV);
-    nDisplayUnit = settings.value("nDisplayUnit").toInt();
-
-    if (!settings.contains("strThirdPartyTxUrls"))
-        settings.setValue("strThirdPartyTxUrls", "");
-    strThirdPartyTxUrls = settings.value("strThirdPartyTxUrls", "").toString();
-
     if (!settings.contains("fHideZeroBalances"))
         settings.setValue("fHideZeroBalances", true);
     fHideZeroBalances = settings.value("fHideZeroBalances").toBool();
 
     if (!settings.contains("fHideOrphans"))
-        settings.setValue("fHideOrphans", false);
+        settings.setValue("fHideOrphans", true);
     fHideOrphans = settings.value("fHideOrphans").toBool();
 
     if (!settings.contains("fCoinControlFeatures"))
@@ -100,6 +85,23 @@ void OptionsModel::Init()
     if (!settings.contains("fShowMasternodesTab"))
         settings.setValue("fShowMasternodesTab", masternodeConfig.getCount());
 
+    // Main
+    setMainDefaultOptions(settings);
+
+// Wallet
+#ifdef ENABLE_WALLET
+    setWalletDefaultOptions(settings);
+#endif
+
+    // Network
+    setNetworkDefaultOptions(settings);
+    // Display
+    setDisplayDefaultOptions(settings);
+
+    language = settings.value("language").toString();
+}
+
+void OptionsModel::setMainDefaultOptions(QSettings& settings, bool reset){
     // These are shared with the core or have a command-line parameter
     // and we want command-line parameters to overwrite the GUI settings.
     //
@@ -107,43 +109,49 @@ void OptionsModel::Init()
     //
     // If SoftSetArg() or SoftSetBoolArg() return false we were overridden
     // by command-line and show this in the UI.
-
     // Main
-    if (!settings.contains("nDatabaseCache"))
+    if (!settings.contains("nDatabaseCache") || reset)
         settings.setValue("nDatabaseCache", (qint64)nDefaultDbCache);
     if (!SoftSetArg("-dbcache", settings.value("nDatabaseCache").toString().toStdString()))
         addOverriddenOption("-dbcache");
 
-    if (!settings.contains("nThreadsScriptVerif"))
+    if (!settings.contains("nThreadsScriptVerif") || reset)
         settings.setValue("nThreadsScriptVerif", DEFAULT_SCRIPTCHECK_THREADS);
     if (!SoftSetArg("-par", settings.value("nThreadsScriptVerif").toString().toStdString()))
         addOverriddenOption("-par");
+}
 
-// Wallet
-#ifdef ENABLE_WALLET
-    if (!settings.contains("bSpendZeroConfChange"))
+void OptionsModel::setWalletDefaultOptions(QSettings& settings, bool reset){
+    if (!settings.contains("bSpendZeroConfChange") || reset)
         settings.setValue("bSpendZeroConfChange", false);
     if (!SoftSetBoolArg("-spendzeroconfchange", settings.value("bSpendZeroConfChange").toBool()))
         addOverriddenOption("-spendzeroconfchange");
-#endif
-    if (!settings.contains("nStakeSplitThreshold"))
+
+    if (!settings.contains("nStakeSplitThreshold") || reset)
         settings.setValue("nStakeSplitThreshold", 1);
+    if (reset){
+        setStakeSplitThreshold(1);
+    }
 
+    if(reset){
+        emit dataChanged(index(0), index(rowCount(QModelIndex()) - 1));
+    }
+}
 
-    // Network
-    if (!settings.contains("fUseUPnP"))
+void OptionsModel::setNetworkDefaultOptions(QSettings& settings, bool reset){
+    if (!settings.contains("fUseUPnP") || reset)
         settings.setValue("fUseUPnP", DEFAULT_UPNP);
     if (!SoftSetBoolArg("-upnp", settings.value("fUseUPnP").toBool()))
         addOverriddenOption("-upnp");
 
-    if (!settings.contains("fListen"))
+    if (!settings.contains("fListen") || reset)
         settings.setValue("fListen", DEFAULT_LISTEN);
     if (!SoftSetBoolArg("-listen", settings.value("fListen").toBool()))
         addOverriddenOption("-listen");
 
-    if (!settings.contains("fUseProxy"))
+    if (!settings.contains("fUseProxy") || reset)
         settings.setValue("fUseProxy", false);
-    if (!settings.contains("addrProxy"))
+    if (!settings.contains("addrProxy") || reset)
         settings.setValue("addrProxy", "127.0.0.1:9050");
     // Only try to set -proxy, if user has enabled fUseProxy
     if (settings.value("fUseProxy").toBool() && !SoftSetArg("-proxy", settings.value("addrProxy").toString().toStdString()))
@@ -151,30 +159,58 @@ void OptionsModel::Init()
     else if (!settings.value("fUseProxy").toBool() && !GetArg("-proxy", "").empty())
         addOverriddenOption("-proxy");
 
-    // Display
-    if (!settings.contains("digits"))
+    if(reset){
+        emit dataChanged(index(0), index(rowCount(QModelIndex()) - 1));
+    }
+}
+
+void OptionsModel::setWindowDefaultOptions(QSettings& settings, bool reset){
+    if (!settings.contains("fMinimizeToTray") || reset)
+        settings.setValue("fMinimizeToTray", false);
+    fMinimizeToTray = settings.value("fMinimizeToTray").toBool();
+
+    if (!settings.contains("fMinimizeOnClose") || reset)
+        settings.setValue("fMinimizeOnClose", false);
+    fMinimizeOnClose = settings.value("fMinimizeOnClose").toBool();
+
+    if(reset){
+        emit dataChanged(index(0), index(rowCount(QModelIndex()) - 1));
+    }
+}
+
+void OptionsModel::setDisplayDefaultOptions(QSettings& settings, bool reset){
+    if (!settings.contains("nDisplayUnit") || reset)
+        settings.setValue("nDisplayUnit", BitcoinUnits::PIV);
+    nDisplayUnit = settings.value("nDisplayUnit").toInt();
+    if (!settings.contains("digits") || reset)
         settings.setValue("digits", "2");
-    if (!settings.contains("theme"))
+    if (!settings.contains("theme") || reset)
         settings.setValue("theme", "");
-    if (!settings.contains("fCSSexternal"))
+    if (!settings.contains("fCSSexternal") || reset)
         settings.setValue("fCSSexternal", false);
-    if (!settings.contains("language"))
+    if (!settings.contains("language") || reset)
         settings.setValue("language", "");
     if (!SoftSetArg("-lang", settings.value("language").toString().toStdString()))
         addOverriddenOption("-lang");
 
-    if (settings.contains("fZeromintEnable"))
+    if (settings.contains("fZeromintEnable") || reset)
         SoftSetBoolArg("-enablezeromint", settings.value("fZeromintEnable").toBool());
-    if (settings.contains("fEnableAutoConvert"))
+    if (settings.contains("fEnableAutoConvert") || reset)
         SoftSetBoolArg("-enableautoconvertaddress", settings.value("fEnableAutoConvert").toBool());
-    if (settings.contains("nZeromintPercentage"))
+    if (settings.contains("nZeromintPercentage") || reset)
         SoftSetArg("-zeromintpercentage", settings.value("nZeromintPercentage").toString().toStdString());
-    if (settings.contains("nPreferredDenom"))
+    if (settings.contains("nPreferredDenom") || reset)
         SoftSetArg("-preferredDenom", settings.value("nPreferredDenom").toString().toStdString());
-    if (settings.contains("nAnonymizePivxAmount"))
+    if (settings.contains("nAnonymizePivxAmount") || reset)
         SoftSetArg("-anonymizepivxamount", settings.value("nAnonymizePivxAmount").toString().toStdString());
 
-    language = settings.value("language").toString();
+    if (!settings.contains("strThirdPartyTxUrls") || reset)
+        settings.setValue("strThirdPartyTxUrls", "");
+    strThirdPartyTxUrls = settings.value("strThirdPartyTxUrls", "").toString();
+
+    if(reset){
+        emit dataChanged(index(0), index(rowCount(QModelIndex()) - 1));
+    }
 }
 
 void OptionsModel::Reset()

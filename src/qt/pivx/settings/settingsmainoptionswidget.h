@@ -27,6 +27,9 @@ public:
 
     void setMapper(QDataWidgetMapper *mapper);
 
+public slots:
+    void onResetClicked();
+
 private:
     Ui::SettingsMainOptionsWidget *ui;
 };

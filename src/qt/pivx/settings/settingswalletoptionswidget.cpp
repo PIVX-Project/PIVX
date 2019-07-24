@@ -6,6 +6,7 @@
 #include "qt/pivx/settings/forms/ui_settingswalletoptionswidget.h"
 #include <QListView>
 #include "optionsmodel.h"
+#include "clientmodel.h"
 #include "qt/pivx/qtutils.h"
 
 SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidget *parent) :
@@ -70,6 +71,17 @@ SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidg
     setCssBtnSecondary(ui->pushButtonReset);
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), parent, SLOT(onSaveOptionsClicked()));
+    connect(ui->pushButtonReset, SIGNAL(clicked()), this, SLOT(onResetClicked()));
+}
+
+void SettingsWalletOptionsWidget::onResetClicked(){
+    if (clientModel) {
+        OptionsModel *optionsModel = clientModel->getOptionsModel();
+        QSettings settings;
+        optionsModel->setWalletDefaultOptions(settings, true);
+        optionsModel->setNetworkDefaultOptions(settings, true);
+        inform(tr("Options reset succeed"));
+    }
 }
 
 void SettingsWalletOptionsWidget::setMapper(QDataWidgetMapper *mapper){
@@ -79,13 +91,11 @@ void SettingsWalletOptionsWidget::setMapper(QDataWidgetMapper *mapper){
     // Network
     mapper->addMapping(ui->checkBoxMap, OptionsModel::MapPortUPnP);
     mapper->addMapping(ui->checkBoxAllow, OptionsModel::Listen);
-
     mapper->addMapping(ui->checkBoxConnect, OptionsModel::ProxyUse);
     mapper->addMapping(ui->lineEditProxy, OptionsModel::ProxyIP);
     mapper->addMapping(ui->lineEditPort, OptionsModel::ProxyPort);
 }
 
-SettingsWalletOptionsWidget::~SettingsWalletOptionsWidget()
-{
+SettingsWalletOptionsWidget::~SettingsWalletOptionsWidget(){
     delete ui;
 }
