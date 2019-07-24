@@ -20,7 +20,13 @@ void MNModel::updateMNList(){
         if(!mne.castOutputIndex(nIndex))
             continue;
 
-        CMasternode* pmn = mnodeman.Find(CTxIn(uint256S(mne.getTxHash()), uint32_t(nIndex)));
+        CTxIn txIn(uint256S(mne.getTxHash()), uint32_t(nIndex));
+        CMasternode* pmn = mnodeman.Find(txIn);
+        if (!pmn){
+            pmn = new CMasternode();
+            pmn->vin = txIn;
+            pmn->activeState = CMasternode::MASTERNODE_MISSING;
+        }
         nodes.insert(QString::fromStdString(mne.getAlias()), std::make_pair(QString::fromStdString(mne.getIp()), pmn));
     }
     emit dataChanged(index(0, 0, QModelIndex()), index(end, 5, QModelIndex()) );
@@ -57,14 +63,14 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
             case ADDRESS:
                 return nodes.values().value(row).first;
             case PUB_KEY:
-                return (isAvailable) ? QString::fromStdString(nodes.values().value(row).second->pubKeyMasternode.GetHash().GetHex()) : "No available";
+                return (isAvailable) ? QString::fromStdString(nodes.values().value(row).second->pubKeyMasternode.GetHash().GetHex()) : "Not available";
             case COLLATERAL_ID:
-                return (isAvailable) ? QString::fromStdString(rec->vin.prevout.hash.GetHex()) : "No available";
+                return (isAvailable) ? QString::fromStdString(rec->vin.prevout.hash.GetHex()) : "Not available";
             case COLLATERAL_OUT_INDEX:
-                return (isAvailable) ? QString::number(rec->vin.prevout.n) : "No available";
+                return (isAvailable) ? QString::number(rec->vin.prevout.n) : "Not available";
             case STATUS: {
                 std::pair<QString, CMasternode*> pair = nodes.values().value(row);
-                return (pair.second) ? QString::fromStdString(pair.second->Status()) : "MISSING";
+                return QString::fromStdString(pair.second->Status());
             }
         }
     }
