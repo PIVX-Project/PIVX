@@ -196,6 +196,9 @@ private:
     void SyncMetaData(std::pair<TxSpends::iterator, TxSpends::iterator>);
 
 public:
+
+    static const int STAKE_SPLIT_THRESHOLD = 2000;
+
     bool MintableCoins();
     bool SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInputs, CAmount nTargetAmount, int blockHeight, bool fPrecompute = false);
     bool IsCollateralAmount(CAmount nInputAmount) const;
@@ -337,7 +340,7 @@ public:
 
         // Stake Settings
         nHashDrift = 45;
-        nStakeSplitThreshold = 2000;
+        nStakeSplitThreshold = STAKE_SPLIT_THRESHOLD;
         nHashInterval = 22;
         nStakeSetUpdateTime = 300; // 5 minutes
 

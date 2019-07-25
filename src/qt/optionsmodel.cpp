@@ -136,12 +136,10 @@ void OptionsModel::setWalletDefaultOptions(QSettings& settings, bool reset){
         addOverriddenOption("-spendzeroconfchange");
 
     if (!settings.contains("nStakeSplitThreshold") || reset)
-        settings.setValue("nStakeSplitThreshold", 1);
-    if (reset){
-        setStakeSplitThreshold(1);
-    }
+        settings.setValue("nStakeSplitThreshold", CWallet::STAKE_SPLIT_THRESHOLD);
 
-    if(reset){
+    if (reset){
+        setStakeSplitThreshold(CWallet::STAKE_SPLIT_THRESHOLD);
         refreshDataView();
     }
 }
@@ -217,7 +215,7 @@ void OptionsModel::setDisplayDefaultOptions(QSettings& settings, bool reset){
     strThirdPartyTxUrls = settings.value("strThirdPartyTxUrls", "").toString();
 
     if(reset){
-        emit dataChanged(index(0), index(rowCount(QModelIndex()) - 1));
+        refreshDataView();
     }
 }
 
