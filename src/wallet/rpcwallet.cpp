@@ -2022,14 +2022,33 @@ void ListTransactions(const CWalletTx& wtx, const std::string& strAccount, int n
     if ((!listSent.empty() || nFee != 0) && (fAllAccounts || strAccount == strSentAccount)) {
         for (const COutputEntry& s : listSent) {
             UniValue entry(UniValue::VOBJ);
+            std::string sCat="send";
+            const bool isCoinStake = wtx.IsCoinStake();
+
             if (involvesWatchonly || (::IsMine(*pwalletMain, s.destination) & ISMINE_WATCH_ONLY))
                 entry.push_back(Pair("involvesWatchonly", true));
             entry.push_back(Pair("account", strSentAccount));
             MaybePushAddress(entry, s.destination);
-            entry.push_back(Pair("category", "send"));
+            std::map<std::string, std::string>::const_iterator it = wtx.mapValue.find("DS");
+            if (isCoinStake) {
+                static CTxDestination stakeAddr;
+                if (s.vout == 1) stakeAddr = s.destination;  // save the stake destination
+                if ((s.vout > 1) && (stakeAddr != static_cast<CTxDestination>(s.destination))) {
+                    // If the destination doesn't match the staking destination, don't show it.
+                    continue;
+                }
+                sCat="stake";
+            } else {
+                sCat = (it != wtx.mapValue.end() && it->second == "1") ? "darksent" : "send";
+            }
+            entry.push_back(Pair("category", sCat));
             entry.push_back(Pair("amount", ValueFromAmount(-s.amount)));
             entry.push_back(Pair("vout", s.vout));
-            entry.push_back(Pair("fee", ValueFromAmount(-nFee)));
+            if (isCoinStake) {
+                entry.push_back(Pair("fee", ValueFromAmount(0)));
+            } else {
+                entry.push_back(Pair("fee", ValueFromAmount(-nFee)));
+            }
             if (fLong)
                 WalletTxToJSON(wtx, entry);
             ret.push_back(entry);
@@ -2040,6 +2059,7 @@ void ListTransactions(const CWalletTx& wtx, const std::string& strAccount, int n
     int depth = wtx.GetDepthInMainChain();
     if (listReceived.size() > 0 && depth >= nMinDepth) {
         for (const COutputEntry& r : listReceived) {
+            const bool isCoinStake = wtx.IsCoinStake();
             std::string account;
             if (pwalletMain->mapAddressBook.count(r.destination))
                 account = pwalletMain->mapAddressBook[r.destination].name;
@@ -2055,12 +2075,14 @@ void ListTransactions(const CWalletTx& wtx, const std::string& strAccount, int n
                     else if (wtx.GetBlocksToMaturity() > 0)
                         entry.push_back(Pair("category", "immature"));
                     else
-                        entry.push_back(Pair("category", "generate"));
+                        entry.push_back(Pair("category", (isCoinStake) ? "stake" : "generate"));
                 } else {
                     entry.push_back(Pair("category", "receive"));
                 }
                 entry.push_back(Pair("amount", ValueFromAmount(r.amount)));
                 entry.push_back(Pair("vout", r.vout));
+                if (isCoinStake)
+                    entry.push_back(Pair("generated", ValueFromAmount(-nFee)));
                 if (fLong)
                     WalletTxToJSON(wtx, entry);
                 ret.push_back(entry);
@@ -2437,9 +2459,17 @@ UniValue gettransaction(const UniValue& params, bool fHelp)
     CAmount nNet = nCredit - nDebit;
     CAmount nFee = (wtx.IsFromMe(filter) ? wtx.GetValueOut() - nDebit : 0);
 
-    entry.push_back(Pair("amount", ValueFromAmount(nNet - nFee)));
-    if (wtx.IsFromMe(filter))
-        entry.push_back(Pair("fee", ValueFromAmount(nFee)));
+    if (wtx.IsCoinStake()) {
+        entry.push_back(Pair("amount", ValueFromAmount(nCredit)));
+        entry.push_back(Pair("fee", ValueFromAmount(0)));
+        entry.push_back(Pair("generated", ValueFromAmount(nFee)));
+    }
+    else {
+        entry.push_back(Pair("amount", ValueFromAmount(nNet - nFee)));
+
+        if (wtx.IsFromMe(filter))
+            entry.push_back(Pair("fee", ValueFromAmount(nFee)));
+    }
 
     WalletTxToJSON(wtx, entry);
 
