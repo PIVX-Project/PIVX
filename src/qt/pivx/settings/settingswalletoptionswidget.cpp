@@ -69,9 +69,11 @@ SettingsWalletOptionsWidget::SettingsWalletOptionsWidget(PIVXGUI* _window, QWidg
     ui->pushButtonReset->setText(tr("Reset to default"));
     setCssBtnPrimary(ui->pushButtonSave);
     setCssBtnSecondary(ui->pushButtonReset);
+    setCssBtnSecondary(ui->pushButtonClean);
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), parent, SLOT(onSaveOptionsClicked()));
     connect(ui->pushButtonReset, SIGNAL(clicked()), this, SLOT(onResetClicked()));
+    connect(ui->pushButtonClean, SIGNAL(clicked()), parent, SLOT(onDiscardChanges()));
 }
 
 void SettingsWalletOptionsWidget::onResetClicked(){

@@ -370,6 +370,14 @@ void SettingsWidget::selectOption(QPushButton* option){
     }
 }
 
+void SettingsWidget::onDiscardChanges(){
+    if(clientModel) {
+        if (!ask(tr("Discard Unsaved Changes"), tr("You are just about to discard all of your unsaved options.\n\nAre you sure?\n")))
+            return;
+        clientModel->getOptionsModel()->refreshDataView();
+    }
+}
+
 void SettingsWidget::setMapper(){
     settingsMainOptionsWidget->setMapper(mapper);
     settingsWalletOptionsWidget->setMapper(mapper);

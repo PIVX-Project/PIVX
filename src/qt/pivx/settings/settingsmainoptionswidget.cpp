@@ -81,6 +81,7 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
     ui->pushButtonReset->setText(tr("Reset to default"));
     setCssBtnPrimary(ui->pushButtonSave);
     setCssBtnSecondary(ui->pushButtonReset);
+    setCssBtnSecondary(ui->pushButtonClean);
 
     /* Main elements init */
     ui->databaseCache->setMinimum(nMinDbCache);
@@ -90,10 +91,13 @@ SettingsMainOptionsWidget::SettingsMainOptionsWidget(PIVXGUI* _window, QWidget *
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), parent, SLOT(onSaveOptionsClicked()));
     connect(ui->pushButtonReset, SIGNAL(clicked()), this, SLOT(onResetClicked()));
+    connect(ui->pushButtonClean, SIGNAL(clicked()), parent, SLOT(onDiscardChanges()));
 }
 
 void SettingsMainOptionsWidget::onResetClicked(){
     if(clientModel) {
+        if (!ask(tr("Reset Options"), tr("You are just about to reset the app\'s options to the default values.\n\nAre you sure?\n")))
+            return;
         OptionsModel *optionsModel = clientModel->getOptionsModel();
         QSettings settings;
         // default setting for OptionsModel::StartAtStartup - disabled

@@ -368,11 +368,14 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <property name="spacing">
+           <number>12</number>
+          </property>
           <item>
            <widget class="QPushButton" name="pushButtonReset">
             <property name="minimumSize">
              <size>
-              <width>200</width>
+              <width>160</width>
               <height>50</height>
              </size>
             </property>
@@ -383,7 +386,20 @@
              </size>
             </property>
             <property name="text">
-             <string>PushButton</string>
+             <string>Reset to default</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonClean">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Discard changes</string>
             </property>
            </widget>
           </item>
@@ -418,7 +434,7 @@
              </size>
             </property>
             <property name="text">
-             <string>PushButton</string>
+             <string>SAVE</string>
             </property>
            </widget>
           </item>

@@ -62,6 +62,8 @@ private slots:
     void onWalletOptionsClicked();
     void onDisplayOptionsClicked();
 
+    void onDiscardChanges();
+
     // Tools
     void onToolsClicked();
     void onInformationClicked();

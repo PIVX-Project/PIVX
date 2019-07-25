@@ -101,6 +101,10 @@ void OptionsModel::Init()
     language = settings.value("language").toString();
 }
 
+void OptionsModel::refreshDataView(){
+    emit dataChanged(index(0), index(rowCount(QModelIndex()) - 1));
+}
+
 void OptionsModel::setMainDefaultOptions(QSettings& settings, bool reset){
     // These are shared with the core or have a command-line parameter
     // and we want command-line parameters to overwrite the GUI settings.
@@ -119,6 +123,10 @@ void OptionsModel::setMainDefaultOptions(QSettings& settings, bool reset){
         settings.setValue("nThreadsScriptVerif", DEFAULT_SCRIPTCHECK_THREADS);
     if (!SoftSetArg("-par", settings.value("nThreadsScriptVerif").toString().toStdString()))
         addOverriddenOption("-par");
+
+    if(reset){
+        refreshDataView();
+    }
 }
 
 void OptionsModel::setWalletDefaultOptions(QSettings& settings, bool reset){
@@ -134,7 +142,7 @@ void OptionsModel::setWalletDefaultOptions(QSettings& settings, bool reset){
     }
 
     if(reset){
-        emit dataChanged(index(0), index(rowCount(QModelIndex()) - 1));
+        refreshDataView();
     }
 }
 
@@ -160,7 +168,7 @@ void OptionsModel::setNetworkDefaultOptions(QSettings& settings, bool reset){
         addOverriddenOption("-proxy");
 
     if(reset){
-        emit dataChanged(index(0), index(rowCount(QModelIndex()) - 1));
+        refreshDataView();
     }
 }
 
@@ -174,7 +182,7 @@ void OptionsModel::setWindowDefaultOptions(QSettings& settings, bool reset){
     fMinimizeOnClose = settings.value("fMinimizeOnClose").toBool();
 
     if(reset){
-        emit dataChanged(index(0), index(rowCount(QModelIndex()) - 1));
+        refreshDataView();
     }
 }
 

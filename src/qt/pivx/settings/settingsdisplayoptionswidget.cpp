@@ -83,7 +83,6 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
         digits.setNum(index);
         ui->comboBoxDigits->addItem(digits, digits);
     }
-    setShadow(ui->comboBoxDigits);
 
     // Urls
     ui->lineEditUrl->setPlaceholderText("e.g. https://example.com/tx/%s");
@@ -94,11 +93,13 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
     ui->pushButtonReset->setText(tr("Reset to default"));
     setCssBtnPrimary(ui->pushButtonSave);
     setCssBtnSecondary(ui->pushButtonReset);
+    setCssBtnSecondary(ui->pushButtonClean);
 
     initLanguages();
     connect(ui->comboBoxLanguage, SIGNAL(currentIndexChanged()), this, SLOT(showRestartWarning(bool)));
     connect(ui->comboBoxLanguage ,SIGNAL(currentIndexChanged(const QString&)),this, SLOT(languageChanged(const QString&)));
     connect(ui->pushButtonReset, SIGNAL(clicked()), this, SLOT(onResetClicked()));
+    connect(ui->pushButtonClean, SIGNAL(clicked()), parent, SLOT(onDiscardChanges()));
 }
 
 void SettingsDisplayOptionsWidget::initLanguages(){
