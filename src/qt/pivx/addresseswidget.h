@@ -58,6 +58,8 @@ private:
 
     // Cached index
     QModelIndex index;
+
+    void updateListView();
 };
 
 #endif // ADDRESSESWIDGET_H

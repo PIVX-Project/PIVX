@@ -156,14 +156,14 @@ void AddressesWidget::loadWalletModel(){
         ui->listAddresses->setModel(this->filter);
         ui->listAddresses->setModelColumn(AddressTableModel::Address);
 
-        if(addressTablemodel->sizeSend() == 0){
-            ui->emptyContainer->setVisible(true);
-            ui->listAddresses->setVisible(false);
-        }else{
-            ui->emptyContainer->setVisible(false);
-            ui->listAddresses->setVisible(true);
-        }
+        updateListView();
     }
+}
+
+void AddressesWidget::updateListView(){
+    bool empty = addressTablemodel->sizeSend() == 0;
+    ui->emptyContainer->setVisible(empty);
+    ui->listAddresses->setVisible(!empty);
 }
 
 void AddressesWidget::onStoreContactClicked(){
@@ -230,6 +230,7 @@ void AddressesWidget::onDeleteClicked(){
         if (ask(tr("Delete Contact"), tr("You are just about to remove the contact:\n\n%1\n\nAre you sure?").arg(index.data(Qt::DisplayRole).toString().toUtf8().constData()))
         ) {
             if (this->walletModel->getAddressTableModel()->removeRows(index.row(), 1, index)) {
+                updateListView();
                 inform(tr("Contact Deleted"));
             } else {
                 inform(tr("Error deleting a contact"));
