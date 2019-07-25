@@ -8,6 +8,7 @@
 #include "optionsmodel.h"
 #include <QFile>
 #include <QIntValidator>
+#include <QRegExpValidator>
 
 MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *parent) :
     QDialog(parent),
@@ -46,6 +47,7 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
 
     ui->lineEditName->setPlaceholderText(tr("e.g user_masternode"));
     initCssEditLine(ui->lineEditName);
+    ui->lineEditName->setValidator(new QRegExpValidator(QRegExp("^[A-Za-z0-9]+"), ui->lineEditName));
 
     // Frame 4
     setCssProperty(ui->labelTitle4, "text-title-dialog");
@@ -59,6 +61,12 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
     initCssEditLine(ui->lineEditPort);
     ui->stackedWidget->setCurrentIndex(pos);
     ui->lineEditPort->setValidator(new QIntValidator(0, 9999999, ui->lineEditPort));
+    if(walletModel->isTestnet()){
+        ui->lineEditPort->setEnabled(false);
+        ui->lineEditPort->setText("51474");
+    } else {
+        ui->lineEditPort->setText("51472");
+    }
 
     // Confirm icons
     ui->stackedIcon1->addWidget(icConfirm1);
@@ -120,8 +128,10 @@ void MasterNodeWizardDialog::onNextClicked(){
 
             // No empty names accepted.
             if (ui->lineEditName->text().isEmpty()) {
+                setCssEditLine(ui->lineEditName, false, true);
                 return;
             }
+            setCssEditLine(ui->lineEditName, true, true);
 
             ui->stackedWidget->setCurrentIndex(2);
             ui->pushName4->setChecked(false);

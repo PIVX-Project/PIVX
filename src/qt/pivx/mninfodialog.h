@@ -29,6 +29,9 @@ private:
     WalletModel *model = nullptr;
     QString txId;
     QString pubKey;
+    bool exportMN = false;
+
+    void copyInform(QString& copyStr, QString message);
 };
 
 #endif // MNINFODIALOG_H

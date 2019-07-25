@@ -16,18 +16,14 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
 
     this->setStyleSheet(parent->styleSheet());
 
-    ui->container->setProperty("cssClass", "container-welcome");
-
-    ui->labelTitle->setProperty("cssClass", "text-title-faq");
     ui->labelTitle->setText(tr("Frequently Asked Questions"));
-
-    ui->labelWebLink->setProperty("cssClass", "text-content-white");
     ui->labelWebLink->setText(tr("You can read more here"));
-
+    setCssProperty(ui->container, "container-welcome");
+    setCssProperty(ui->labelTitle, "text-title-faq");
+    setCssProperty(ui->labelWebLink, "text-content-white");
 
     // Content
-    setCssProperty(
-        {
+    setCssProperty({
            ui->labelNumber1,
            ui->labelNumber2,
            ui->labelNumber3,
@@ -36,11 +32,11 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
            ui->labelNumber6,
            ui->labelNumber7,
            ui->labelNumber8,
-           ui->labelNumber9
+           ui->labelNumber9,
+           ui->labelNumber10
         }, "container-number-faq");
 
-    setCssProperty(
-            {
+    setCssProperty({
               ui->labelSubtitle1,
               ui->labelSubtitle2,
               ui->labelSubtitle3,
@@ -49,12 +45,12 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
               ui->labelSubtitle6,
               ui->labelSubtitle7,
               ui->labelSubtitle8,
-              ui->labelSubtitle9
+              ui->labelSubtitle9,
+              ui->labelSubtitle10
             }, "text-subtitle-faq");
 
 
-    setCssProperty(
-            {
+    setCssProperty({
               ui->labelContent1,
               ui->labelContent2,
               ui->labelContent3,
@@ -63,12 +59,12 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
               ui->labelContent6,
               ui->labelContent7,
               ui->labelContent8,
-              ui->labelContent9
+              ui->labelContent9,
+              ui->labelContent10
             }, "text-content-faq");
 
 
-    setCssProperty(
-            {
+    setCssProperty({
               ui->pushButtonFaq1,
               ui->pushButtonFaq2,
               ui->pushButtonFaq3,
@@ -77,23 +73,22 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
               ui->pushButtonFaq6,
               ui->pushButtonFaq7,
               ui->pushButtonFaq8,
-              ui->pushButtonFaq9
+              ui->pushButtonFaq9,
+              ui->pushButtonFaq10
             }, "btn-faq-options");
 
-    ui->labelContent3->setOpenExternalLinks( true );
-    ui->labelContent5->setOpenExternalLinks( true );
-    ui->labelContent8->setOpenExternalLinks( true );
+    ui->labelContent3->setOpenExternalLinks(true);
+    ui->labelContent5->setOpenExternalLinks(true);
+    ui->labelContent8->setOpenExternalLinks(true);
 
     // Exit button
     ui->pushButtonExit->setText(tr("Exit"));
-    ui->pushButtonExit->setProperty("cssClass", "btn-faq-exit");
+    setCssProperty(ui->pushButtonExit, "btn-faq-exit");
 
     // Web Link
     ui->pushButtonWebLink->setText("https://PIVX.org/");
-    ui->pushButtonWebLink->setProperty("cssClass", "btn-faq-web");
-
-    // Questions buttons
-    ui->containerButtons->setProperty("cssClass", "container-faq-buttons");
+    setCssProperty(ui->pushButtonWebLink, "btn-faq-web");
+    setCssProperty(ui->containerButtons, "container-faq-buttons");
 
     // Buttons
     connect(ui->pushButtonExit, SIGNAL(clicked()), this, SLOT(close()));
@@ -106,10 +101,10 @@ SettingsFaqWidget::SettingsFaqWidget(QWidget *parent) :
     connect(ui->pushButtonFaq7, SIGNAL(clicked()), this, SLOT(onFaq7Clicked()));
     connect(ui->pushButtonFaq8, SIGNAL(clicked()), this, SLOT(onFaq8Clicked()));
     connect(ui->pushButtonFaq9, SIGNAL(clicked()), this, SLOT(onFaq9Clicked()));
+    connect(ui->pushButtonFaq10, SIGNAL(clicked()), this, SLOT(onFaq10Clicked()));
 
     if (parent)
         connect(parent, SIGNAL(windowResizeEvent(QResizeEvent*)), this, SLOT(windowResizeEvent(QResizeEvent*)));
-
 }
 
 void SettingsFaqWidget::showEvent(QShowEvent *event){
@@ -121,7 +116,7 @@ void SettingsFaqWidget::showEvent(QShowEvent *event){
 }
 
 void SettingsFaqWidget::setSection(int num){
-    if (num < 1 || num > 9)
+    if (num < 1 || num > 10)
         return;
     pos = num;
 }
@@ -162,6 +157,10 @@ void SettingsFaqWidget::onFaq9Clicked(){
     ui->scrollAreaFaq->verticalScrollBar()->setValue(ui->widgetFaq9->y());
 }
 
+void SettingsFaqWidget::onFaq10Clicked(){
+    ui->scrollAreaFaq->verticalScrollBar()->setValue(ui->widgetFaq10->y());
+}
+
 void SettingsFaqWidget::windowResizeEvent(QResizeEvent* event){
     QWidget* w = qobject_cast<QWidget*>(parent());
     this->resize(w->width(), w->height());
@@ -178,7 +177,8 @@ std::vector<QPushButton*> SettingsFaqWidget::getButtons(){
             ui->pushButtonFaq6,
             ui->pushButtonFaq7,
             ui->pushButtonFaq8,
-            ui->pushButtonFaq9
+            ui->pushButtonFaq9,
+            ui->pushButtonFaq10
     };
 }
 

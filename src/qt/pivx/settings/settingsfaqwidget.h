@@ -34,6 +34,7 @@ private slots:
     void onFaq7Clicked();
     void onFaq8Clicked();
     void onFaq9Clicked();
+    void onFaq10Clicked();
 private:
     Ui::SettingsFaqWidget *ui;
     int pos = 0;

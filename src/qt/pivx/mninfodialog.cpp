@@ -18,37 +18,20 @@ MnInfoDialog::MnInfoDialog(QWidget *parent) :
     ui->setupUi(this);
     this->setStyleSheet(parent->styleSheet());
     setCssProperty(ui->frame, "container-dialog");
-    // Title
     ui->labelTitle->setText(tr("Master Node Information"));
     setCssProperty(ui->labelTitle, "text-title-dialog");
-    // Labels
-    setCssTextBodyDialog({ui->labelAmount, ui->labelSend, ui->labelInputs, ui->labelFee, ui->labelId, ui->labelSize, ui->labelConfirmations});
+    setCssTextBodyDialog({ui->labelAmount, ui->labelSend, ui->labelInputs, ui->labelFee, ui->labelId, ui->labelSize, ui->labelExport});
     setCssProperty({ui->labelDivider1, ui->labelDivider4, ui->labelDivider5, ui->labelDivider6, ui->labelDivider7, ui->labelDivider8, ui->labelDivider9}, "container-divider");
-    setCssTextBodyDialog({ui->textAmount, ui->textAddress, ui->textInputs, ui->textStatus, ui->textId, ui->textSize, ui->textConfirmations});
-    setCssProperty(ui->pushCopy, "ic-copy-big");
-    setCssProperty(ui->pushCopyId, "ic-copy-big");
+    setCssTextBodyDialog({ui->textAmount, ui->textAddress, ui->textInputs, ui->textStatus, ui->textId, ui->textSize, ui->textExport});
+    setCssProperty({ui->pushCopy, ui->pushCopyId}, "ic-copy-big");
     setCssProperty(ui->btnEsc, "ic-close");
-    ui->contentConfirmations->setVisible(false);
+    ui->contentExport->setVisible(false);
     ui->labelDivider7->setVisible(false);
     ui->contentSize->setVisible(false);
     ui->labelDivider5->setVisible(false);
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
-    connect(ui->pushCopy, &QPushButton::clicked, [this](){
-        GUIUtil::setClipboard(txId);
-        SnackBar *snackBar = new SnackBar(nullptr, this);
-        snackBar->setText(tr("Master Node public key copied"));
-        snackBar->resize(this->width(), snackBar->height());
-        openDialog(snackBar, this);
-        snackBar->deleteLater();
-    });
-    connect(ui->pushCopyId, &QPushButton::clicked, [this](){
-        GUIUtil::setClipboard(pubKey);
-        SnackBar *snackBar = new SnackBar(nullptr, this);
-        snackBar->setText(tr("Collateral tx id copied"));
-        snackBar->resize(this->width(), snackBar->height());
-        openDialog(snackBar, this);
-        snackBar->deleteLater();
-    });
+    connect(ui->pushCopy, &QPushButton::clicked, [this](){ copyInform(txId, "Master Node public key copied"); });
+    connect(ui->pushCopyId, &QPushButton::clicked, [this](){ copyInform(pubKey, "Collateral tx id copied"); });
 }
 
 void MnInfoDialog::setData(QString pubKey, QString name, QString address, QString txId, QString outputIndex, QString status){
@@ -69,7 +52,15 @@ void MnInfoDialog::setData(QString pubKey, QString name, QString address, QStrin
     ui->textStatus->setText(status);
 }
 
-MnInfoDialog::~MnInfoDialog()
-{
+void MnInfoDialog::copyInform(QString& copyStr, QString message){
+    GUIUtil::setClipboard(copyStr);
+    SnackBar *snackBar = new SnackBar(nullptr, this);
+    snackBar->setText(tr(message.toStdString().c_str()));
+    snackBar->resize(this->width(), snackBar->height());
+    openDialog(snackBar, this);
+    snackBar->deleteLater();
+}
+
+MnInfoDialog::~MnInfoDialog(){
     delete ui;
 }
