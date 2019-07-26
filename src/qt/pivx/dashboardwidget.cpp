@@ -449,8 +449,10 @@ void DashboardWidget::refreshChart(){
     set0->setColor(QColor(92,75,125));
     set1->setColor(QColor(176,136,255));
 
-    if(!series)
+    if(!series) {
         series = new QBarSeries();
+        chart->addSeries(series);
+    }
     series->attachAxis(axisX);
     series->attachAxis(axisY);
 
@@ -513,7 +515,6 @@ void DashboardWidget::refreshChart(){
     series->append(set0);
     if(hasZpivStakes)
         series->append(set1);
-    chart->addSeries(series);
 
     // bar width
     if (chartShow == YEAR)
