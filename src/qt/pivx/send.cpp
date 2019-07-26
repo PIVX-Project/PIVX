@@ -111,7 +111,6 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     setCssProperty(ui->labelAmountSend, "text-body1");
 
     // Total Remaining
-    ui->labelTitleTotalRemaining->setText(tr("Total remaining"));
     setCssProperty(ui->labelTitleTotalRemaining, "text-title");
 
     setCssProperty(ui->labelAmountRemaining, "text-body1");
@@ -171,9 +170,20 @@ void SendWidget::refreshAmounts() {
     nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
 
     ui->labelAmountSend->setText(GUIUtil::formatBalance(total, nDisplayUnit, isZpiv));
+
+    CAmount totalAmount = 0;
+    if (CoinControlDialog::coinControl->HasSelected()){
+        // Set remaining balance to the sum of the coinControl selected inputs
+        totalAmount = walletModel->getBalance(CoinControlDialog::coinControl) - total;
+        ui->labelTitleTotalRemaining->setText(tr("Total remaining from the selected UTXO"));
+    } else {
+        // Wallet's balance
+        totalAmount = (isZpiv ? walletModel->getZerocoinBalance() : walletModel->getBalance()) - total;
+        ui->labelTitleTotalRemaining->setText(tr("Total remaining"));
+    }
     ui->labelAmountRemaining->setText(
             GUIUtil::formatBalance(
-                    (isZpiv ? walletModel->getZerocoinBalance() : walletModel->getBalance()) - total,
+                    totalAmount,
                     nDisplayUnit,
                     isZpiv
                     )
@@ -636,6 +646,7 @@ void SendWidget::onCoinControlClicked(){
             }
             coinControlDialog->exec();
             ui->btnCoinControl->setActive(CoinControlDialog::coinControl->HasSelected());
+            refreshAmounts();
         } else {
             inform(tr("You don't have any PIV to select."));
         }
