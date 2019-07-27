@@ -12,6 +12,7 @@
 #include <QPoint>
 #include <QString>
 #include <QColor>
+#include <QComboBox>
 #include <QSettings>
 #include <QPixmap>
 #include <QStandardPaths>
@@ -45,6 +46,8 @@ void setupSettings(QSettings *settings);
 
 bool isLightTheme();
 void setTheme(bool isLight);
+
+void initComboBox(QComboBox* combo, QLineEdit* lineEdit = nullptr);
 
 void initCssEditLine(QLineEdit *edit, bool isDialog = false);
 void setCssEditLine(QLineEdit *edit, bool isValid, bool forceUpdate = false);

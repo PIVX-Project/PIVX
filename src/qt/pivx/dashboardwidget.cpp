@@ -86,22 +86,32 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     connect(ui->comboBoxYears, SIGNAL(currentIndexChanged(const QString&)), this,SLOT(onChartYearChanged(const QString&)));
 
     // Sort Transactions
-    setCssProperty(ui->comboBoxSort, "btn-combo");
-    ui->comboBoxSort->setEditable(true);
     SortEdit* lineEdit = new SortEdit(ui->comboBoxSort);
-    lineEdit->setReadOnly(true);
-    lineEdit->setAlignment(Qt::AlignRight);
-    ui->comboBoxSort->setLineEdit(lineEdit);
-    ui->comboBoxSort->setStyleSheet("selection-background-color:transparent; selection-color:transparent;");
-    connect(lineEdit, SIGNAL(Mouse_Pressed()), this, SLOT(onSortTxPressed()));
-    ui->comboBoxSort->setView(new QListView());
-    ui->comboBoxSort->addItem("Date");
-    ui->comboBoxSort->addItem("Amount");
-    //ui->comboBoxSort->addItem("Sent");
-    //ui->comboBoxSort->addItem("Received");
+    initComboBox(ui->comboBoxSort, lineEdit);
+    connect(lineEdit, &SortEdit::Mouse_Pressed, [this](){ui->comboBoxSort->showPopup();});
+    ui->comboBoxSort->addItem("Date desc", SortTx::DATE_DESC);
+    ui->comboBoxSort->addItem("Date asc", SortTx::DATE_ASC);
+    ui->comboBoxSort->addItem("Amount desc", SortTx::AMOUNT_ASC);
+    ui->comboBoxSort->addItem("Amount asc", SortTx::AMOUNT_DESC);
     connect(ui->comboBoxSort, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onSortChanged(const QString&)));
 
-    // transactions
+    // Sort type
+    SortEdit* lineEditType = new SortEdit(ui->comboBoxSortType);
+    initComboBox(ui->comboBoxSortType, lineEditType);
+    connect(lineEditType, &SortEdit::Mouse_Pressed, [this](){ui->comboBoxSortType->showPopup();});
+
+    QSettings settings;
+    ui->comboBoxSortType->addItem(tr("All"), TransactionFilterProxy::ALL_TYPES);
+    ui->comboBoxSortType->addItem(tr("Received"), TransactionFilterProxy::TYPE(TransactionRecord::RecvWithAddress) | TransactionFilterProxy::TYPE(TransactionRecord::RecvFromOther));
+    ui->comboBoxSortType->addItem(tr("Sent"), TransactionFilterProxy::TYPE(TransactionRecord::SendToAddress) | TransactionFilterProxy::TYPE(TransactionRecord::SendToOther));
+    ui->comboBoxSortType->addItem(tr("Mined"), TransactionFilterProxy::TYPE(TransactionRecord::Generated));
+    ui->comboBoxSortType->addItem(tr("Minted"), TransactionFilterProxy::TYPE(TransactionRecord::StakeMint));
+    ui->comboBoxSortType->addItem(tr("MN reward"), TransactionFilterProxy::TYPE(TransactionRecord::MNReward));
+    ui->comboBoxSortType->addItem(tr("To yourself"), TransactionFilterProxy::TYPE(TransactionRecord::SendToSelf));
+    ui->comboBoxSortType->setCurrentIndex(0);
+    connect(ui->comboBoxSortType, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onSortTypeChanged(const QString&)));
+
+    // Transactions
     setCssProperty(ui->listTransactions, "container");
     ui->listTransactions->setItemDelegate(txViewDelegate);
     ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
@@ -193,9 +203,10 @@ void DashboardWidget::loadWalletModel(){
         if(txModel->size() == 0){
             ui->emptyContainer->setVisible(true);
             ui->listTransactions->setVisible(false);
-            connect(ui->pushImgEmpty, SIGNAL(clicked()), window, SLOT(openFAQ()));
-            connect(ui->btnHowTo, SIGNAL(clicked()), window, SLOT(openFAQ()));
         }
+
+        connect(ui->pushImgEmpty, SIGNAL(clicked()), window, SLOT(openFAQ()));
+        connect(ui->btnHowTo, SIGNAL(clicked()), window, SLOT(openFAQ()));
         connect(txModel, &TransactionTableModel::txArrived, this, &DashboardWidget::onTxArrived);
 
         // chart filter
@@ -231,18 +242,53 @@ void DashboardWidget::updateDisplayUnit() {
     }
 }
 
-void DashboardWidget::onSortTxPressed(){
-    ui->comboBoxSort->showPopup();
+void DashboardWidget::onSortChanged(const QString& value){
+    if (!filter) return;
+    int columnIndex = 0;
+    Qt::SortOrder order = Qt::DescendingOrder;
+    if(!value.isNull()) {
+        switch (ui->comboBoxSort->itemData(ui->comboBoxSort->currentIndex()).toInt()) {
+            case SortTx::DATE_ASC:{
+                columnIndex = TransactionTableModel::Date;
+                order = Qt::AscendingOrder;
+                break;
+            }
+            case SortTx::DATE_DESC:{
+                columnIndex = TransactionTableModel::Date;
+                break;
+            }
+            case SortTx::AMOUNT_ASC:{
+                columnIndex = TransactionTableModel::Amount;
+                order = Qt::AscendingOrder;
+                break;
+            }
+            case SortTx::AMOUNT_DESC:{
+                columnIndex = TransactionTableModel::Amount;
+                break;
+            }
+
+        }
+    }
+    filter->sort(columnIndex, order);
+    ui->listTransactions->update();
 }
 
-void DashboardWidget::onSortChanged(const QString& value){
-    if(!value.isNull()) {
-        if (value == "Amount")
-            filter->sort(TransactionTableModel::Amount, Qt::DescendingOrder);
-        else if (value == "Date")
-            filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
-        ui->listTransactions->update();
+void DashboardWidget::onSortTypeChanged(const QString& value){
+    if (!filter) return;
+    int filterByType = ui->comboBoxSortType->itemData(ui->comboBoxSortType->currentIndex()).toInt();
+    filter->setTypeFilter(filterByType);
+    ui->listTransactions->update();
+
+    if (filter->rowCount() == 0){
+        ui->emptyContainer->setVisible(true);
+        ui->listTransactions->setVisible(false);
+    } else {
+        showList();
     }
+
+    // Store settings
+    QSettings settings;
+    settings.setValue("transactionType", filterByType);
 }
 
 void DashboardWidget::walletSynced(bool sync){

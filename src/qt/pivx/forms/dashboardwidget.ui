@@ -120,6 +120,16 @@
             </spacer>
            </item>
            <item>
+            <widget class="QComboBox" name="comboBoxSortType">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QComboBox" name="comboBoxSort">
              <property name="minimumSize">
               <size>

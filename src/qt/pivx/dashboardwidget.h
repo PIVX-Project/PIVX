@@ -53,6 +53,13 @@ signals:
 
 };
 
+enum SortTx {
+    DATE_ASC = 0,
+    DATE_DESC = 1,
+    AMOUNT_ASC = 2,
+    AMOUNT_DESC = 3
+};
+
 enum ChartShowType {
     ALL,
     YEAR,
@@ -82,8 +89,8 @@ private slots:
     void handleTransactionClicked(const QModelIndex &index);
     void changeTheme(bool isLightTheme, QString &theme) override;
     void changeChartColors();
-    void onSortTxPressed();
     void onSortChanged(const QString&);
+    void onSortTypeChanged(const QString& value);
     void updateDisplayUnit();
     void showList();
     void onTxArrived(const QString& hash);
