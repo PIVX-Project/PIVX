@@ -215,6 +215,7 @@ void MasterNodesWidget::startAlias(QString strAlias){
 }
 
 void MasterNodesWidget::onInfoMNClicked(){
+    if(!verifyWalletUnlocked()) return;
     showHideOp(true);
     MnInfoDialog* dialog = new MnInfoDialog(window);
     QString label = index.data(Qt::DisplayRole).toString();
@@ -226,6 +227,22 @@ void MasterNodesWidget::onInfoMNClicked(){
     dialog->setData(pubKey, label, address, txId, outIndex, status);
     dialog->adjustSize();
     showDialog(dialog, 3, 17);
+    if (dialog->exportMN){
+        if (ask(tr("Remote Masternode Data"),
+                tr("You are just about to export the required data to run a Masternode\non a remote server to your clipboard.\n\n\n"
+                   "You will only have to paste the data in the pivx.conf file\nof your remote server and start it, "
+                   "then start the Masternode using\nthis controller wallet (select the Masternode in the list and press \"start\").\n"
+                ))) {
+            // export data
+            QString exportedMN = "masternode=1\n"
+                                 "externalip=" + address.split(":")[0] + "\n" +
+                                 "masternodeaddr=" + address + + "\n" +
+                                 "masternodeprivkey=" + index.sibling(index.row(), MNModel::PRIV_KEY).data(Qt::DisplayRole).toString() + "\n";
+            GUIUtil::setClipboard(exportedMN);
+            inform(tr("Masternode exported!, check your clipboard"));
+        }
+    }
+
     dialog->deleteLater();
 }
 

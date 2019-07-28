@@ -13,7 +13,7 @@
   <property name="minimumSize">
    <size>
     <width>574</width>
-    <height>470</height>
+    <height>530</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -458,7 +458,7 @@ background:transparent;
                       </size>
                      </property>
                      <property name="text">
-                      <string>Output index</string>
+                      <string>Output index:</string>
                      </property>
                     </widget>
                    </item>
@@ -503,7 +503,7 @@ background:transparent;
                       </size>
                      </property>
                      <property name="text">
-                      <string>Status</string>
+                      <string>Status:</string>
                      </property>
                     </widget>
                    </item>
@@ -535,33 +535,26 @@ background:transparent;
                 </item>
                 <item>
                  <widget class="QWidget" name="contentExport" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,1,0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="3,0">
                    <property name="leftMargin">
                     <number>0</number>
                    </property>
                    <item>
-                    <widget class="QLabel" name="labelExport">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>Export Master Node:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
                     <widget class="QLabel" name="textExport">
                      <property name="styleSheet">
-                      <string notr="true">margin-top: 13.5px;</string>
+                      <string notr="true">padding-top:1px;</string>
+                     </property>
+                     <property name="lineWidth">
+                      <number>0</number>
                      </property>
                      <property name="text">
-                      <string>pivx.conf required data to initialize the Master Node will be exported to your clipboard.</string>
+                      <string>Export data to run the Master Node on a remote server</string>
                      </property>
                      <property name="wordWrap">
                       <bool>true</bool>
+                     </property>
+                     <property name="indent">
+                      <number>0</number>
                      </property>
                     </widget>
                    </item>
@@ -589,51 +582,6 @@ background:transparent;
                 </item>
                 <item>
                  <widget class="QLabel" name="labelDivider7">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>1</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color:#bababa;</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QWidget" name="contentSize" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,1">
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QLabel" name="labelSize">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>Size:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="textSize">
-                     <property name="text">
-                      <string>2 kB</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="labelDivider5">
                   <property name="maximumSize">
                    <size>
                     <width>16777215</width>

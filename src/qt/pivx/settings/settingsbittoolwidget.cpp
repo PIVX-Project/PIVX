@@ -117,11 +117,11 @@ SettingsBitToolWidget::SettingsBitToolWidget(PIVXGUI* _window, QWidget *parent) 
     ui->statusLabel_ENC->setStyleSheet("QLabel { color: transparent; }");
     ui->statusLabel_DEC->setStyleSheet("QLabel { color: transparent; }");
 
-    connect(ui->pushButtonEncrypt, SIGNAL(clicked()), this, SLOT(on_encryptKeyButton_ENC_clicked()));
+    connect(ui->pushButtonEncrypt, &QPushButton::clicked, this, &SettingsBitToolWidget::on_encryptKeyButton_ENC_clicked);
     connect(ui->pushButtonDecrypt, SIGNAL(clicked()), this, SLOT(onDecryptClicked()));
     connect(ui->pushButtonImport, SIGNAL(clicked()), this, SLOT(importAddressFromDecKey()));
     connect(btnContact, SIGNAL(triggered()), this, SLOT(onAddressesClicked()));
-    connect(ui->pushButtonClear, SIGNAL(clicked()), this, SLOT(on_clear_all()));
+    connect(ui->pushButtonClear, &QPushButton::clicked, this, &SettingsBitToolWidget::on_clear_all);
     connect(ui->pushButtonDecryptClear, SIGNAL(clicked()), this, SLOT(onClearDecrypt()));
 }
 

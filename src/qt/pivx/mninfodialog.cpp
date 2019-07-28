@@ -20,18 +20,15 @@ MnInfoDialog::MnInfoDialog(QWidget *parent) :
     setCssProperty(ui->frame, "container-dialog");
     ui->labelTitle->setText(tr("Master Node Information"));
     setCssProperty(ui->labelTitle, "text-title-dialog");
-    setCssTextBodyDialog({ui->labelAmount, ui->labelSend, ui->labelInputs, ui->labelFee, ui->labelId, ui->labelSize, ui->labelExport});
-    setCssProperty({ui->labelDivider1, ui->labelDivider4, ui->labelDivider5, ui->labelDivider6, ui->labelDivider7, ui->labelDivider8, ui->labelDivider9}, "container-divider");
-    setCssTextBodyDialog({ui->textAmount, ui->textAddress, ui->textInputs, ui->textStatus, ui->textId, ui->textSize, ui->textExport});
-    setCssProperty({ui->pushCopy, ui->pushCopyId}, "ic-copy-big");
+    setCssTextBodyDialog({ui->labelAmount, ui->labelSend, ui->labelInputs, ui->labelFee, ui->labelId});
+    setCssProperty({ui->labelDivider1, ui->labelDivider4, ui->labelDivider6, ui->labelDivider7, ui->labelDivider8, ui->labelDivider9}, "container-divider");
+    setCssTextBodyDialog({ui->textAmount, ui->textAddress, ui->textInputs, ui->textStatus, ui->textId, ui->textExport});
+    setCssProperty({ui->pushCopy, ui->pushCopyId, ui->pushExport}, "ic-copy-big");
     setCssProperty(ui->btnEsc, "ic-close");
-    ui->contentExport->setVisible(false);
-    ui->labelDivider7->setVisible(false);
-    ui->contentSize->setVisible(false);
-    ui->labelDivider5->setVisible(false);
     connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->pushCopy, &QPushButton::clicked, [this](){ copyInform(txId, "Master Node public key copied"); });
     connect(ui->pushCopyId, &QPushButton::clicked, [this](){ copyInform(pubKey, "Collateral tx id copied"); });
+    connect(ui->pushExport, &QPushButton::clicked, [this](){ exportMN = true; accept(); });
 }
 
 void MnInfoDialog::setData(QString pubKey, QString name, QString address, QString txId, QString outputIndex, QString status){
@@ -40,7 +37,7 @@ void MnInfoDialog::setData(QString pubKey, QString name, QString address, QStrin
     QString shortPubKey = pubKey;
     QString shortTxId = txId;
     if(shortPubKey.length() > 20) {
-        shortPubKey = shortPubKey.left(12) + "..." + shortPubKey.right(12);
+        shortPubKey = shortPubKey.left(13) + "..." + shortPubKey.right(13);
     }
     if(shortTxId.length() > 20) {
         shortTxId = shortTxId.left(12) + "..." + shortTxId.right(12);

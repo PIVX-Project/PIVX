@@ -72,6 +72,14 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
                 std::pair<QString, CMasternode*> pair = nodes.values().value(row);
                 return QString::fromStdString(pair.second->Status());
             }
+            case PRIV_KEY: {
+                for (CMasternodeConfig::CMasternodeEntry mne : masternodeConfig.getEntries()) {
+                    if (mne.getTxHash().compare(rec->vin.prevout.hash.GetHex()) == 0){
+                        return QString::fromStdString(mne.getPrivKey());
+                    }
+                }
+                return "Not available";
+            }
         }
     }
     return QVariant();

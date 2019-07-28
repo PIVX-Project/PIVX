@@ -21,6 +21,8 @@ public:
     explicit MnInfoDialog(QWidget *parent = nullptr);
     ~MnInfoDialog();
 
+    bool exportMN = false;
+
     void setData(QString privKey, QString name, QString address, QString txId, QString outputIndex, QString status);
 
 private:
@@ -29,7 +31,6 @@ private:
     WalletModel *model = nullptr;
     QString txId;
     QString pubKey;
-    bool exportMN = false;
 
     void copyInform(QString& copyStr, QString message);
 };
