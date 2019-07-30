@@ -37,8 +37,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     this->setContentsMargins(0,0,0,0);
 
     // Containers
-    setCssProperty(this, "container");
-    setCssProperty(ui->left, "container");
+    setCssProperty({this, ui->left}, "container");
     ui->left->setContentsMargins(0,0,0,0);
     setCssProperty(ui->right, "container-right");
     ui->right->setContentsMargins(20,20,20,0);
@@ -203,6 +202,8 @@ void DashboardWidget::loadWalletModel(){
         if(txModel->size() == 0){
             ui->emptyContainer->setVisible(true);
             ui->listTransactions->setVisible(false);
+            ui->comboBoxSortType->setVisible(false);
+            ui->comboBoxSort->setVisible(false);
         }
 
         connect(ui->pushImgEmpty, SIGNAL(clicked()), window, SLOT(openFAQ()));
@@ -231,6 +232,8 @@ void DashboardWidget::showList(){
     if (ui->emptyContainer->isVisible()) {
         ui->emptyContainer->setVisible(false);
         ui->listTransactions->setVisible(true);
+        ui->comboBoxSortType->setVisible(true);
+        ui->comboBoxSort->setVisible(true);
     }
 }
 
