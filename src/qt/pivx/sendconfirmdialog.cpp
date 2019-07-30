@@ -10,7 +10,6 @@
 #include "transactionrecord.h"
 #include "wallet/wallet.h"
 #include "guiutil.h"
-#include "qt/pivx/snackbar.h"
 #include "qt/pivx/qtutils.h"
 #include <QList>
 #include <QDateTime>
@@ -24,32 +23,28 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
     this->setStyleSheet(parent->styleSheet());
 
     // Container
-    ui->frame->setProperty("cssClass", "container-dialog");
-    ui->labelTitle->setProperty("cssClass", "text-title-dialog");
+    setCssProperty(ui->frame, "container-dialog");
+    setCssProperty(ui->labelTitle, "text-title-dialog");
 
     // Labels
     setCssTextBodyDialog({ui->labelAmount, ui->labelSend, ui->labelInputs, ui->labelFee, ui->labelChange, ui->labelId, ui->labelSize, ui->labelStatus, ui->labelConfirmations, ui->labelDate});
     setCssProperty({ui->labelDivider1, ui->labelDivider2, ui->labelDivider3, ui->labelDivider4, ui->labelDivider5, ui->labelDivider6, ui->labelDivider7, ui->labelDivider8, ui->labelDivider9}, "container-divider");
     setCssTextBodyDialog({ui->textAmount, ui->textSend, ui->textInputs, ui->textFee, ui->textChange, ui->textId, ui->textSize, ui->textStatus, ui->textConfirmations, ui->textDate});
 
-    ui->pushCopy->setProperty("cssClass", "ic-copy-big");
-    ui->pushInputs->setProperty("cssClass", "ic-arrow-down");
-    ui->pushOutputs->setProperty("cssClass", "ic-arrow-down");
-
-    ui->btnEsc->setText("");
-    ui->btnEsc->setProperty("cssClass", "ic-close");
+    setCssProperty(ui->pushCopy, "ic-copy-big");
+    setCssProperty({ui->pushInputs, ui->pushOutputs}, "ic-arrow-down");
+    setCssProperty(ui->btnEsc, "ic-close");
 
     ui->gridInputs->setVisible(false);
     ui->outputsScrollArea->setVisible(false);
     ui->contentChangeAddress->setVisible(false);
     ui->labelDivider4->setVisible(false);
 
-    ui->labelOutputIndex->setProperty("cssClass", "text-body2-dialog");
-    ui->labelTitlePrevTx->setProperty("cssClass", "text-body2-dialog");
+    setCssProperty({ui->labelOutputIndex, ui->labelTitlePrevTx}, "text-body2-dialog");
 
     if(isConfirmDialog){
         ui->labelTitle->setText(tr("Confirm Your Transaction"));
-        ui->btnCancel->setProperty("cssClass", "btn-dialog-cancel");
+        setCssProperty(ui->btnCancel, "btn-dialog-cancel");
         ui->btnSave->setText(tr("SEND"));
         setCssBtnPrimary(ui->btnSave);
 
@@ -72,7 +67,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog) :
         ui->containerButtons->setVisible(false);
     }
 
-    connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(closeDialog()));
     connect(ui->pushInputs, SIGNAL(clicked()), this, SLOT(onInputsClicked()));
     connect(ui->pushOutputs, SIGNAL(clicked()), this, SLOT(onOutputsClicked()));
 }
@@ -105,11 +100,10 @@ void TxDetailDialog::setData(WalletModel *model, QModelIndex &index){
 
         connect(ui->pushCopy, &QPushButton::clicked, [this](){
             GUIUtil::setClipboard(QString::fromStdString(this->txHash.GetHex()));
-            SnackBar *snackBar = new SnackBar(nullptr, this);
+            if (!snackBar) snackBar = new SnackBar(nullptr, this);
             snackBar->setText(tr("ID copied"));
             snackBar->resize(this->width(), snackBar->height());
             openDialog(snackBar, this);
-            snackBar->deleteLater();
         });
     }
 
@@ -154,10 +148,9 @@ void TxDetailDialog::onInputsClicked() {
                 for (const CTxIn &in : tx->vin) {
                     QString hash = QString::fromStdString(in.prevout.hash.GetHex());
                     QLabel *label = new QLabel(hash.left(18) + "..." + hash.right(18));
-                    label->setProperty("cssClass", "text-body2-dialog");
                     QLabel *label1 = new QLabel(QString::number(in.prevout.n));
-                    label1->setProperty("cssClass", "text-body2-dialog");
                     label1->setAlignment(Qt::AlignCenter);
+                    setCssProperty({label, label1}, "text-body2-dialog");
 
                     ui->gridLayoutInput->addWidget(label,i,0);
                     ui->gridLayoutInput->addWidget(label1,i,1, Qt::AlignCenter);
@@ -201,10 +194,9 @@ void TxDetailDialog::onOutputsClicked() {
                         labelRes = tr("Unknown");
                     }
                     label = new QLabel(labelRes);
-                    label->setProperty("cssClass", "text-body2-dialog");
                     QLabel *label1 = new QLabel(BitcoinUnits::formatWithUnit(nDisplayUnit, out.nValue, false, BitcoinUnits::separatorAlways));
-                    label1->setProperty("cssClass", "text-body2-dialog");
                     label1->setAlignment(Qt::AlignCenter | Qt::AlignRight);
+                    setCssProperty({label, label1}, "text-body2-dialog");
 
                     layout->addWidget(label);
                     layout->addWidget(label1);
@@ -215,7 +207,12 @@ void TxDetailDialog::onOutputsClicked() {
     }
 }
 
-TxDetailDialog::~TxDetailDialog()
-{
+void TxDetailDialog::closeDialog(){
+    if(snackBar && snackBar->isVisible()) snackBar->hide();
+    close();
+}
+
+TxDetailDialog::~TxDetailDialog(){
+    if(snackBar) delete snackBar;
     delete ui;
 }

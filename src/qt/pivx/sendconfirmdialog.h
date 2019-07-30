@@ -7,6 +7,7 @@
 
 #include <QDialog>
 #include "walletmodeltransaction.h"
+#include "qt/pivx/snackbar.h"
 
 class WalletModelTransaction;
 class WalletModel;
@@ -38,9 +39,11 @@ public slots:
     void acceptTx();
     void onInputsClicked();
     void onOutputsClicked();
+    void closeDialog();
 
 private:
     Ui::TxDetailDialog *ui;
+    SnackBar *snackBar = nullptr;
     int nDisplayUnit = 0;
     bool confirm = false;
     WalletModel *model = nullptr;

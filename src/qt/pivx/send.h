@@ -83,7 +83,6 @@ private:
 
     ContactsDropdown *menuContacts = nullptr;
     TooltipMenu *menu = nullptr;
-    SendMultiRow *sendMultiRow = nullptr;
     // Current focus entry
     SendMultiRow* focusedEntry = nullptr;
 
