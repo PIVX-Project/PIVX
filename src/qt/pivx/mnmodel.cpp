@@ -7,6 +7,8 @@
 #include "masternodeman.h"
 #include "activemasternode.h"
 #include "sync.h"
+#include "uint256.h"
+#include "wallet/wallet.h"
 
 MNModel::MNModel(QObject *parent) : QAbstractTableModel(parent){
     updateMNList();
@@ -15,12 +17,14 @@ MNModel::MNModel(QObject *parent) : QAbstractTableModel(parent){
 void MNModel::updateMNList(){
     int end = nodes.size();
     nodes.clear();
+    collateralTxAccepted.clear();
     for (CMasternodeConfig::CMasternodeEntry mne : masternodeConfig.getEntries()) {
         int nIndex;
         if(!mne.castOutputIndex(nIndex))
             continue;
 
-        CTxIn txIn(uint256S(mne.getTxHash()), uint32_t(nIndex));
+        uint256 txHash(mne.getTxHash());
+        CTxIn txIn(txHash, uint32_t(nIndex));
         CMasternode* pmn = mnodeman.Find(txIn);
         if (!pmn){
             pmn = new CMasternode();
@@ -28,6 +32,17 @@ void MNModel::updateMNList(){
             pmn->activeState = CMasternode::MASTERNODE_MISSING;
         }
         nodes.insert(QString::fromStdString(mne.getAlias()), std::make_pair(QString::fromStdString(mne.getIp()), pmn));
+        if(pwalletMain) {
+            bool txAccepted = false;
+            {
+                LOCK2(cs_main, pwalletMain->cs_wallet);
+                const CWalletTx *walletTx = pwalletMain->GetWalletTx(txHash);
+                if (walletTx->GetDepthInMainChain() > 0) {
+                    txAccepted = true;
+                }
+            }
+            collateralTxAccepted.insert(mne.getTxHash(), txAccepted);
+        }
     }
     emit dataChanged(index(0, 0, QModelIndex()), index(end, 5, QModelIndex()) );
 }
@@ -82,11 +97,15 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
             }
             case WAS_COLLATERAL_ACCEPTED:{
                 if (!isAvailable) return false;
-                CTransaction txCollateral;
-                uint256 nBlockHash;
-                if (!GetTransaction(rec->vin.prevout.hash, txCollateral, nBlockHash, true)) {
-                    LogPrint("mnmodel","WAS_COLLATERAL_ACCEPTED - %s\n", strprintf("Can't find collateral tx %s", txCollateral.ToString()));
-                    return false;
+                std::string txHash = rec->vin.prevout.hash.GetHex();
+                if(!collateralTxAccepted.value(txHash)){
+                    bool txAccepted = false;
+                    {
+                        LOCK2(cs_main, pwalletMain->cs_wallet);
+                        const CWalletTx *walletTx = pwalletMain->GetWalletTx(rec->vin.prevout.hash);
+                        txAccepted = walletTx->GetDepthInMainChain() > 0;
+                    }
+                    return txAccepted;
                 }
                 return true;
             }
