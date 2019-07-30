@@ -43,7 +43,7 @@ int MNModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return 5;
+    return 6;
 }
 
 
@@ -70,7 +70,7 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
                 return (isAvailable) ? QString::number(rec->vin.prevout.n) : "Not available";
             case STATUS: {
                 std::pair<QString, CMasternode*> pair = nodes.values().value(row);
-                return QString::fromStdString(pair.second->Status());
+                return (pair.second) ? QString::fromStdString(pair.second->Status()) : "MISSING";
             }
             case PRIV_KEY: {
                 for (CMasternodeConfig::CMasternodeEntry mne : masternodeConfig.getEntries()) {
@@ -79,6 +79,16 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
                     }
                 }
                 return "Not available";
+            }
+            case WAS_COLLATERAL_ACCEPTED:{
+                if (!isAvailable) return false;
+                CTransaction txCollateral;
+                uint256 nBlockHash;
+                if (!GetTransaction(rec->vin.prevout.hash, txCollateral, nBlockHash, true)) {
+                    LogPrint("mnmodel","WAS_COLLATERAL_ACCEPTED - %s\n", strprintf("Can't find collateral tx %s", txCollateral.ToString()));
+                    return false;
+                }
+                return true;
             }
         }
     }

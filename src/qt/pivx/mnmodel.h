@@ -26,7 +26,8 @@ public:
         PUB_KEY = 5,
         COLLATERAL_ID = 6,
         COLLATERAL_OUT_INDEX = 7,
-        PRIV_KEY = 8
+        PRIV_KEY = 8,
+        WAS_COLLATERAL_ACCEPTED = 9
     };
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

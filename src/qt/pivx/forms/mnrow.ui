@@ -123,7 +123,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../../pivx.qrc">
+         <iconset>
           <normaloff>:/ic-menu-hover</normaloff>:/ic-menu-hover</iconset>
         </property>
         <property name="iconSize">
@@ -151,9 +151,6 @@
        <height>1</height>
       </size>
      </property>
-     <property name="styleSheet">
-      <string notr="true">background-color:#bababa;</string>
-     </property>
      <property name="text">
       <string/>
      </property>
@@ -164,8 +161,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../pivx.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

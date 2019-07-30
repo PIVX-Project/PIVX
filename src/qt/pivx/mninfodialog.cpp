@@ -7,7 +7,6 @@
 #include "walletmodel.h"
 #include "wallet/wallet.h"
 #include "guiutil.h"
-#include "qt/pivx/snackbar.h"
 #include "qt/pivx/qtutils.h"
 #include <QDateTime>
 
@@ -25,7 +24,7 @@ MnInfoDialog::MnInfoDialog(QWidget *parent) :
     setCssTextBodyDialog({ui->textAmount, ui->textAddress, ui->textInputs, ui->textStatus, ui->textId, ui->textExport});
     setCssProperty({ui->pushCopy, ui->pushCopyId, ui->pushExport}, "ic-copy-big");
     setCssProperty(ui->btnEsc, "ic-close");
-    connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->btnEsc, SIGNAL(clicked()), this, SLOT(closeDialog()));
     connect(ui->pushCopy, &QPushButton::clicked, [this](){ copyInform(txId, "Master Node public key copied"); });
     connect(ui->pushCopyId, &QPushButton::clicked, [this](){ copyInform(pubKey, "Collateral tx id copied"); });
     connect(ui->pushExport, &QPushButton::clicked, [this](){ exportMN = true; accept(); });
@@ -51,13 +50,18 @@ void MnInfoDialog::setData(QString pubKey, QString name, QString address, QStrin
 
 void MnInfoDialog::copyInform(QString& copyStr, QString message){
     GUIUtil::setClipboard(copyStr);
-    SnackBar *snackBar = new SnackBar(nullptr, this);
+    if(!snackBar) snackBar = new SnackBar(nullptr, this);
     snackBar->setText(tr(message.toStdString().c_str()));
     snackBar->resize(this->width(), snackBar->height());
     openDialog(snackBar, this);
-    snackBar->deleteLater();
+}
+
+void MnInfoDialog::closeDialog(){
+    if(snackBar && snackBar->isVisible()) snackBar->hide();
+    close();
 }
 
 MnInfoDialog::~MnInfoDialog(){
+    if(snackBar) delete snackBar;
     delete ui;
 }

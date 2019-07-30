@@ -46,7 +46,8 @@ public:
         QString label = index.data(Qt::DisplayRole).toString();
         QString address = index.sibling(index.row(), MNModel::ADDRESS).data(Qt::DisplayRole).toString();
         QString status = index.sibling(index.row(), MNModel::STATUS).data(Qt::DisplayRole).toString();
-        row->updateView("Address: " + address, label, status);
+        bool wasCollateralAccepted = index.sibling(index.row(), MNModel::WAS_COLLATERAL_ACCEPTED).data(Qt::DisplayRole).toBool();
+        row->updateView("Address: " + address, label, status, wasCollateralAccepted);
     }
 
     QColor rectColor(bool isHovered, bool isSelected) override{
@@ -86,7 +87,7 @@ MasterNodesWidget::MasterNodesWidget(PIVXGUI *parent) :
     fontLight.setWeight(QFont::Light);
 
     /* Title */
-    ui->labelTitle->setText(tr("Master Node"));
+    ui->labelTitle->setText(tr("Masternodes"));
     setCssTitleScreen(ui->labelTitle);
     ui->labelTitle->setFont(fontLight);
 
@@ -94,7 +95,7 @@ MasterNodesWidget::MasterNodesWidget(PIVXGUI *parent) :
     setCssSubtitleScreen(ui->labelSubtitle1);
 
     /* Buttons */
-    ui->pushButtonSave->setText(tr("Create Master Node Controller"));
+    ui->pushButtonSave->setText(tr("Create Masternode Controller"));
     setCssBtnPrimary(ui->pushButtonSave);
 
     /* Options */
@@ -183,11 +184,15 @@ void MasterNodesWidget::onMNClicked(const QModelIndex &index){
 
 void MasterNodesWidget::onEditMNClicked(){
     if(walletModel) {
-        // Start MN
-        QString strAlias = this->index.data(Qt::DisplayRole).toString();
-        if (ask(tr("Start Master Node"), tr("Are you sure you want to start masternode %1?").arg(strAlias))) {
-            if(!verifyWalletUnlocked()) return;
-            startAlias(strAlias);
+        if (index.sibling(index.row(), MNModel::WAS_COLLATERAL_ACCEPTED).data(Qt::DisplayRole).toBool()) {
+            // Start MN
+            QString strAlias = this->index.data(Qt::DisplayRole).toString();
+            if (ask(tr("Start Master Node"), tr("Are you sure you want to start masternode %1?\n").arg(strAlias))) {
+                if (!verifyWalletUnlocked()) return;
+                startAlias(strAlias);
+            }
+        }else {
+            inform(tr("Cannot start masternode, the collateral transaction has not been accepted by the network.\nPlease wait few more minutes."));
         }
     }
 }

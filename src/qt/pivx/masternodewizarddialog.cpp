@@ -6,6 +6,7 @@
 #include "qt/pivx/forms/ui_masternodewizarddialog.h"
 #include "qt/pivx/qtutils.h"
 #include "optionsmodel.h"
+#include "activemasternode.h"
 #include <QFile>
 #include <QIntValidator>
 #include <QRegExpValidator>
@@ -51,8 +52,7 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
 
     // Frame 4
     setCssProperty(ui->labelTitle4, "text-title-dialog");
-    setCssProperty(ui->labelSubtitleIp, "text-title");
-    setCssProperty(ui->labelSubtitlePort, "text-title");
+    setCssProperty({ui->labelSubtitleIp, ui->labelSubtitlePort}, "text-title");
     setCssSubtitleScreen(ui->labelSubtitleAddressIp);
 
     ui->lineEditIpAddress->setPlaceholderText("e.g 18.255.255.255");
@@ -72,38 +72,15 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel *model, QWidget *pare
     ui->stackedIcon1->addWidget(icConfirm1);
     ui->stackedIcon3->addWidget(icConfirm3);
     ui->stackedIcon4->addWidget(icConfirm4);
-
-    QSize BUTTON_SIZE = QSize(22, 22);
-    int posX = 0;
-    int posY = 0;
-    icConfirm1->setMinimumSize(BUTTON_SIZE);
-    icConfirm1->setMaximumSize(BUTTON_SIZE);
-    icConfirm1->move(posX, posY);
-    icConfirm1->show();
-    icConfirm1->raise();
-    icConfirm1->setVisible(false);
-    icConfirm3->setMinimumSize(BUTTON_SIZE);
-    icConfirm3->setMaximumSize(BUTTON_SIZE);
-    icConfirm3->move(posX, posY);
-    icConfirm3->show();
-    icConfirm3->raise();
-    icConfirm3->setVisible(false);
-    setCssProperty(icConfirm4, "ic-step-confirm");
-    icConfirm4->setMinimumSize(BUTTON_SIZE);
-    icConfirm4->setMaximumSize(BUTTON_SIZE);
-    icConfirm4->move(posX, posY);
-    icConfirm4->show();
-    icConfirm4->raise();
-    icConfirm4->setVisible(false);
-
+    initBtn({icConfirm1, icConfirm3, icConfirm4});
     setCssProperty({icConfirm1, icConfirm3, icConfirm4}, "ic-step-confirm");
+
     // Connect btns
     setCssBtnPrimary(ui->btnNext);
     ui->btnNext->setText(tr("NEXT"));
     setCssProperty(ui->btnBack , "btn-dialog-cancel");
     ui->btnBack->setVisible(false);
     ui->btnBack->setText(tr("BACK"));
-
     setCssProperty(ui->pushButtonSkip, "ic-close");
 
     connect(ui->pushButtonSkip, SIGNAL(clicked()), this, SLOT(close()));
@@ -188,6 +165,12 @@ bool MasterNodeWizardDialog::createMN(){
         QString portStr = ui->lineEditPort->text();
         if (addressStr.isEmpty() || portStr.isEmpty()) {
             returnStr = tr("IP or port cannot be empty");
+            return false;
+        }
+        // TODO: Validate IP address..
+        int portInt = portStr.toInt();
+        if (portInt <= 0 && portInt > 999999){
+            returnStr = tr("Invalid port number");
             return false;
         }
         // ip + port
@@ -311,7 +294,7 @@ bool MasterNodeWizardDialog::createMN(){
                 if (!pathNewConfFile.is_complete()) pathNewConfFile = GetDataDir() / pathNewConfFile;
                 rename(pathConfigFile, pathNewConfFile);
 
-                mnEntry = masternodeConfig.add(alias, ipAddress, mnKeyString, txID, indexOutStr);
+                mnEntry = masternodeConfig.add(alias, ipAddress+":"+port, mnKeyString, txID, indexOutStr);
 
                 returnStr = tr("Master node created!");
                 return true;
@@ -425,10 +408,21 @@ void MasterNodeWizardDialog::inform(QString text){
     snackBar->setText(text);
     snackBar->resize(this->width(), snackBar->height());
     openDialog(snackBar, this);
-    snackBar->deleteLater();
 }
 
-MasterNodeWizardDialog::~MasterNodeWizardDialog()
-{
+QSize BUTTON_SIZE = QSize(22, 22);
+void MasterNodeWizardDialog::initBtn(std::initializer_list<QPushButton*> args){
+    for (QPushButton* btn : args) {
+        btn->setMinimumSize(BUTTON_SIZE);
+        btn->setMaximumSize(BUTTON_SIZE);
+        btn->move(0, 0);
+        btn->show();
+        btn->raise();
+        btn->setVisible(false);
+    }
+}
+
+MasterNodeWizardDialog::~MasterNodeWizardDialog(){
+    if(snackBar) delete snackBar;
     delete ui;
 }
