@@ -403,7 +403,6 @@ QString TransactionTableModel::formatTxType(const TransactionRecord* wtx) const
     case TransactionRecord::ZerocoinSpend_FromMe:
         return tr("Converted zPIV to PIV");
     default:
-        std::cout << "Type: " << wtx->type << std::endl;
         return QString();
     }
 }
