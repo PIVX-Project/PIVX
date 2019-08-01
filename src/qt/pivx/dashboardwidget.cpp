@@ -479,6 +479,11 @@ void DashboardWidget::onChartMonthChanged(const QString& monthStr) {
         if (newMonth != monthFilter) {
             monthFilter = newMonth;
             refreshChart();
+#ifndef Q_OS_MAC
+        // quick hack to re paint the chart view.
+        chart->removeSeries(series);
+        chart->addSeries(series);
+#endif
         }
     }
 }
