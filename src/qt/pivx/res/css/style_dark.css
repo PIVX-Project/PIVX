@@ -1994,7 +1994,10 @@ QComboBox QAbstractItemView {
     min-width: 150px;
     border-radius:0px;
     font-size:16px;
+    outline: 0px;
 }
+
+QComboBox::selected:item { border: none; outline: 0px; }
 
 QComboBox QAbstractItemView::item {
     margin:0px;
@@ -2003,6 +2006,7 @@ QComboBox QAbstractItemView::item {
     font-size:16px;
     color: #707070;
     border-radius:0px;
+    outline: 0px;
 }
 QComboBox QAbstractItemView::item:selected {
     background-color: #d8d5e0;
@@ -2011,6 +2015,17 @@ QComboBox QAbstractItemView::item:selected {
     margin:0px;
     color: #5c4b7d;
     border-radius:0px;
+    outline: 0px;
+}
+
+QComboBox QAbstractItemView QPushButton{
+    border:0px;
+    outline: 0px;
+}
+
+QComboBox QAbstractItemView::item:selected QPushButton:hover{
+    border:0px;
+    outline: 0px;
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH

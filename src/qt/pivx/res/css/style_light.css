@@ -1362,8 +1362,8 @@ QPushButton[cssClass="btn-secundary-clear"]:pressed {
 }
 
 QPushButton[cssClass="btn-secundary-new-address"] {
-            qproperty-icon: url("://ic-update") off,
-    url("://ic-update") on ;
+    qproperty-icon: url("://ic-update") off,
+                    url("://ic-update") on ;
     qproperty-iconSize: 30px 30px;
     border:  1px solid #335c4b7d;
     background-color:#FFFFFF;
@@ -1984,6 +1984,7 @@ QComboBox::down-arrow:on { /* shift the arrow when popup is open */
 QComboBox:item {
     color: #707070;
     font-size:18px;
+    outline: 0px;
 }
 
 QComboBox QAbstractItemView {
@@ -1991,7 +1992,10 @@ QComboBox QAbstractItemView {
     min-width: 150px;
     border-radius:0px;
     font-size:16px;
+    outline: 0px;
 }
+
+QComboBox::selected:item { border: none; outline: 0px; }
 
 QComboBox QAbstractItemView::item {
     margin:0px;
@@ -2000,6 +2004,8 @@ QComboBox QAbstractItemView::item {
     font-size:16px;
     color: #707070;
     border-radius:0px;
+    border:0px;
+    outline: 0px;
 }
 QComboBox QAbstractItemView::item:selected {
     background-color: #d8d5e0;
@@ -2008,8 +2014,19 @@ QComboBox QAbstractItemView::item:selected {
     margin:0px;
     color: #5c4b7d;
     border-radius:0px;
+    border:none;
+    outline: 0px;
 }
 
+QComboBox QAbstractItemView QPushButton{
+    border:0px;
+    outline: 0px;
+}
+
+QComboBox QAbstractItemView::item:selected QPushButton:hover{
+    border:0px;
+    outline: 0px;
+}
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 HH       RADIO BUTTON
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
