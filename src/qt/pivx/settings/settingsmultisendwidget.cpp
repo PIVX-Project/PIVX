@@ -167,6 +167,7 @@ SettingsMultisendWidget::SettingsMultisendWidget(PWidget *parent) :
     ui->checkBoxStake->setText(tr("Send stakes"));
     ui->checkBoxRewards->setText(tr("Send masternode rewards"));
 
+    setCssProperty(ui->listView, "container");
     ui->listView->setItemDelegate(delegate);
     ui->listView->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
     ui->listView->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
