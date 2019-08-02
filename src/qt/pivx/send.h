@@ -53,6 +53,7 @@ public slots:
     void onOpenUriClicked();
     void onValueChanged();
     void refreshAmounts();
+    void changeTheme(bool isLightTheme, QString &theme) override;
 
 protected:
     void resizeEvent(QResizeEvent *event) override;

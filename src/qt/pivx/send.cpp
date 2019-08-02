@@ -833,6 +833,10 @@ void SendWidget::resizeMenu(){
     }
 }
 
+void SendWidget::changeTheme(bool isLightTheme, QString& theme){
+    if (coinControlDialog) coinControlDialog->setStyleSheet(theme);
+}
+
 SendWidget::~SendWidget(){
     delete ui;
 }
