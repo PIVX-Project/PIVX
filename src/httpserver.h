@@ -82,7 +82,7 @@ public:
 
     /**
      * Get the request header specified by hdr, or an empty string.
-     * Return an pair (isPresent,string).
+     * Return an pair (isPresent,std::string).
      */
     std::pair<bool, std::string> GetHeader(const std::string& hdr);
 

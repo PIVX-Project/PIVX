@@ -23,8 +23,8 @@ CBigNum SeedTo1024(uint256 hashSeed) {
     CHashWriter hasher(0,0);
     hasher << hashSeed;
 
-    vector<unsigned char> vResult;
-    vector<unsigned char> vHash = CBigNum(hasher.GetHash()).getvch();
+    std::vector<unsigned char> vResult;
+    std::vector<unsigned char> vHash = CBigNum(hasher.GetHash()).getvch();
     vResult.insert(vResult.end(), vHash.begin(), vHash.end());
     for (int i = 0; i < 3; i ++) {
         hasher << vResult;
@@ -56,10 +56,10 @@ SerialNumberSignatureOfKnowledge::SerialNumberSignatureOfKnowledge(const
     CHashWriter hasher(0,0);
     hasher << *params << commitmentToCoin.getCommitmentValue() << coin.getSerialNumber() << msghash;
 
-    vector<CBigNum> r(params->zkp_iterations);
-    vector<CBigNum> v_seed(params->zkp_iterations);
-    vector<CBigNum> v_expanded(params->zkp_iterations);
-    vector<CBigNum> c(params->zkp_iterations);
+    std::vector<CBigNum> r(params->zkp_iterations);
+    std::vector<CBigNum> v_seed(params->zkp_iterations);
+    std::vector<CBigNum> v_expanded(params->zkp_iterations);
+    std::vector<CBigNum> c(params->zkp_iterations);
 
     for(uint32_t i=0; i < params->zkp_iterations; i++) {
         r[i] = CBigNum::randBignum(params->coinCommitmentGroup.groupOrder);
@@ -144,7 +144,7 @@ bool SerialNumberSignatureOfKnowledge::Verify(const CBigNum& coinSerialNumber, c
     CHashWriter hasher(0,0);
     hasher << *params << valueOfCommitmentToCoin << coinSerialNumber << msghash;
 
-    vector<CBigNum> tprime(params->zkp_iterations);
+    std::vector<CBigNum> tprime(params->zkp_iterations);
     unsigned char *hashbytes = (unsigned char*) &this->hash;
 
     try {

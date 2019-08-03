@@ -36,7 +36,6 @@
 #define MSG_NOSIGNAL 0
 #endif
 
-using namespace std;
 
 // Settings
 static proxyType proxyInfo[NET_MAX];
@@ -296,7 +295,7 @@ struct ProxyCredentials
 };
 
 /** Connect using SOCKS5 (as described in RFC1928) */
-bool static Socks5(string strDest, int port, const ProxyCredentials *auth, SOCKET& hSocket)
+bool static Socks5(std::string strDest, int port, const ProxyCredentials *auth, SOCKET& hSocket)
 {
     LogPrintf("SOCKS5 connecting %s\n", strDest);
     if (strDest.size() > 255) {
@@ -613,13 +612,13 @@ bool ConnectSocket(const CService &addrDest, SOCKET& hSocketRet, int nTimeout, b
 
 bool ConnectSocketByName(CService& addr, SOCKET& hSocketRet, const char* pszDest, int portDefault, int nTimeout, bool* outProxyConnectionFailed)
 {
-    string strDest;
+    std::string strDest;
     int port = portDefault;
 
     if (outProxyConnectionFailed)
         *outProxyConnectionFailed = false;
 
-    SplitHostPort(string(pszDest), port, strDest);
+    SplitHostPort(std::string(pszDest), port, strDest);
 
     proxyType nameProxy;
     GetNameProxy(nameProxy);

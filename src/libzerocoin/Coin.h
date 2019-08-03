@@ -26,7 +26,7 @@ namespace libzerocoin
     class InvalidSerialException : public std::exception {
     public:
         std::string message;
-        InvalidSerialException(const string &message) : message(message) {}
+        InvalidSerialException(const std::string &message) : message(message) {}
     };
 
     int ExtractVersionFromSerial(const CBigNum& bnSerial);
@@ -53,11 +53,11 @@ public:
     PublicCoin(const ZerocoinParams* p);
 
     /**Generates a public coin
-	 *
-	 * @param p cryptographic paramters
-	 * @param coin the value of the commitment.
-	 * @param denomination The denomination of the coin. 
-	 */
+     *
+     * @param p cryptographic paramters
+     * @param coin the value of the commitment.
+     * @param denomination The denomination of the coin.
+     */
     PublicCoin(const ZerocoinParams* p, const CBigNum& coin, const CoinDenomination d);
     const CBigNum& getValue() const { return this->value; }
 
@@ -149,31 +149,31 @@ private:
     CPrivKey privkey;
 
     /**
-	 * @brief Mint a new coin.
-	 * @param denomination the denomination of the coin to mint
-	 * @throws ZerocoinException if the process takes too long
-	 *
-	 * Generates a new Zerocoin by (a) selecting a random serial
-	 * number, (b) committing to this serial number and repeating until
-	 * the resulting commitment is prime. Stores the
-	 * resulting commitment (coin) and randomness (trapdoor).
-	 **/
+     * @brief Mint a new coin.
+     * @param denomination the denomination of the coin to mint
+     * @throws ZerocoinException if the process takes too long
+     *
+     * Generates a new Zerocoin by (a) selecting a random serial
+     * number, (b) committing to this serial number and repeating until
+     * the resulting commitment is prime. Stores the
+     * resulting commitment (coin) and randomness (trapdoor).
+     **/
     void mintCoin(const CoinDenomination denomination);
 
     /**
-	 * @brief Mint a new coin using a faster process.
-	 * @param denomination the denomination of the coin to mint
-	 * @throws ZerocoinException if the process takes too long
-	 *
-	 * Generates a new Zerocoin by (a) selecting a random serial
-	 * number, (b) committing to this serial number and repeating until
-	 * the resulting commitment is prime. Stores the
-	 * resulting commitment (coin) and randomness (trapdoor).
-	 * This routine is substantially faster than the
-	 * mintCoin() routine, but could be more vulnerable
-	 * to timing attacks. Don't use it if you think someone
-	 * could be timing your coin minting.
-	 **/
+     * @brief Mint a new coin using a faster process.
+     * @param denomination the denomination of the coin to mint
+     * @throws ZerocoinException if the process takes too long
+     *
+     * Generates a new Zerocoin by (a) selecting a random serial
+     * number, (b) committing to this serial number and repeating until
+     * the resulting commitment is prime. Stores the
+     * resulting commitment (coin) and randomness (trapdoor).
+     * This routine is substantially faster than the
+     * mintCoin() routine, but could be more vulnerable
+     * to timing attacks. Don't use it if you think someone
+     * could be timing your coin minting.
+     **/
     void mintCoinFast(const CoinDenomination denomination);
 };
 

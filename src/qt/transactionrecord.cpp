@@ -121,7 +121,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet* 
                 continue;
             }
 
-            string strAddress = "";
+            std::string strAddress = "";
             CTxDestination address;
             if (ExtractDestination(txout.scriptPubKey, address))
                 strAddress = CBitcoinAddress(address).ToString();

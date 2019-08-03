@@ -104,7 +104,7 @@ PrivateCoin::PrivateCoin(const ZerocoinParams* p, const CoinDenomination denomin
 bool PrivateCoin::IsValid()
 {
     if (!IsValidSerial(params, serialNumber)) {
-        cout << "Serial not valid\n";
+        std::cout << "Serial not valid\n";
         return false;
     }
 
@@ -150,7 +150,7 @@ const CPubKey PrivateCoin::getPubKey() const
 	return key.GetPubKey();
 }
 
-bool PrivateCoin::sign(const uint256& hash, vector<unsigned char>& vchSig) const
+bool PrivateCoin::sign(const uint256& hash, std::vector<unsigned char>& vchSig) const
 {
 	CKey key;
 	key.SetPrivKey(privkey, true);

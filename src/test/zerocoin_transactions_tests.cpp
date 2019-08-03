@@ -16,7 +16,6 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-using namespace libzerocoin;
 
 
 BOOST_FIXTURE_TEST_SUITE(zerocoin_transactions_tests, TestingSetup)
@@ -26,12 +25,12 @@ static CWallet cWallet("unlocked.dat");
 BOOST_AUTO_TEST_CASE(zerocoin_spend_test)
 {
     SelectParams(CBaseChainParams::MAIN);
-    ZerocoinParams *ZCParams = Params().Zerocoin_Params(false);
+    libzerocoin::ZerocoinParams *ZCParams = Params().Zerocoin_Params(false);
     (void)ZCParams;
 
     bool fFirstRun;
     cWallet.LoadWallet(fFirstRun);
-    cWallet.zpivTracker = unique_ptr<CzPIVTracker>(new CzPIVTracker(cWallet.strWalletFile));
+    cWallet.zpivTracker = std::unique_ptr<CzPIVTracker>(new CzPIVTracker(cWallet.strWalletFile));
     CMutableTransaction tx;
     CWalletTx* wtx = new CWalletTx(&cWallet, tx);
     bool fMintChange=true;
@@ -59,10 +58,10 @@ BOOST_AUTO_TEST_CASE(zerocoin_spend_test)
 BOOST_AUTO_TEST_CASE(zerocoin_public_spend_test)
 {
     SelectParams(CBaseChainParams::MAIN);
-    ZerocoinParams *ZCParams = Params().Zerocoin_Params(false);
+    libzerocoin::ZerocoinParams *ZCParams = Params().Zerocoin_Params(false);
     (void)ZCParams;
 
-    PrivateCoin privCoin(ZCParams, libzerocoin::CoinDenomination::ZQ_ONE, true);
+    libzerocoin::PrivateCoin privCoin(ZCParams, libzerocoin::CoinDenomination::ZQ_ONE, true);
     const CPrivKey privKey = privCoin.getPrivKey();
 
     CZerocoinMint mint = CZerocoinMint(

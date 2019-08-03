@@ -10,7 +10,6 @@
 #include "main.h"
 #include "masternode.h"
 
-using namespace std;
 
 extern CCriticalSection cs_vecPayments;
 extern CCriticalSection cs_mapMasternodeBlocks;

@@ -17,7 +17,6 @@
 #include <stdint.h>
 #include <fstream>
 
-using namespace std;
 
 /**
  * JSON-RPC protocol.  PIVX speaks version 1.0 for maximum compatibility,
@@ -29,7 +28,7 @@ using namespace std;
  * http://www.codeproject.com/KB/recipes/JSON_Spirit.aspx
  */
 
-string JSONRPCRequest(const string& strMethod, const UniValue& params, const UniValue& id)
+std::string JSONRPCRequest(const std::string& strMethod, const UniValue& params, const UniValue& id)
 {
     UniValue request(UniValue::VOBJ);
     request.push_back(Pair("method", strMethod));
@@ -50,13 +49,13 @@ UniValue JSONRPCReplyObj(const UniValue& result, const UniValue& error, const Un
     return reply;
 }
 
-string JSONRPCReply(const UniValue& result, const UniValue& error, const UniValue& id)
+std::string JSONRPCReply(const UniValue& result, const UniValue& error, const UniValue& id)
 {
     UniValue reply = JSONRPCReplyObj(result, error, id);
     return reply.write() + "\n";
 }
 
-UniValue JSONRPCError(int code, const string& message)
+UniValue JSONRPCError(int code, const std::string& message)
 {
     UniValue error(UniValue::VOBJ);
     error.push_back(Pair("code", code));

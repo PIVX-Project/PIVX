@@ -340,7 +340,7 @@ BOOST_AUTO_TEST_CASE(addrman_getaddr)
     // Test 22: Sanity check, GetAddr should never return anything if addrman
     //  is empty.
     BOOST_CHECK(addrman.size() == 0);
-    vector<CAddress> vAddr1 = addrman.GetAddr();
+    std::vector<CAddress> vAddr1 = addrman.GetAddr();
     BOOST_CHECK(vAddr1.size() == 0);
 
     CAddress addr1 = CAddress(CService("250.250.2.1", 8333));

@@ -179,19 +179,19 @@ public:
     bool ReadZerocoinSpendSerialEntry(const CBigNum& bnSerial);
     bool WriteCurrentSeedHash(const uint256& hashSeed);
     bool ReadCurrentSeedHash(uint256& hashSeed);
-    bool WriteZPIVSeed(const uint256& hashSeed, const vector<unsigned char>& seed);
-    bool ReadZPIVSeed(const uint256& hashSeed, vector<unsigned char>& seed);
+    bool WriteZPIVSeed(const uint256& hashSeed, const std::vector<unsigned char>& seed);
+    bool ReadZPIVSeed(const uint256& hashSeed, std::vector<unsigned char>& seed);
     bool ReadZPIVSeed_deprecated(uint256& seed);
     bool EraseZPIVSeed();
     bool EraseZPIVSeed_deprecated();
 
     bool WriteZPIVCount(const uint32_t& nCount);
     bool ReadZPIVCount(uint32_t& nCount);
-    std::map<uint256, std::vector<pair<uint256, uint32_t> > > MapMintPool();
+    std::map<uint256, std::vector<std::pair<uint256, uint32_t> > > MapMintPool();
     bool WriteMintPoolPair(const uint256& hashMasterSeed, const uint256& hashPubcoin, const uint32_t& nCount);
 
-    void LoadPrecomputes(std::list<std::pair<uint256, CoinWitnessCacheData> >& itemList, std::map<uint256, list<std::pair<uint256, CoinWitnessCacheData> >::iterator>& itemMap);
-    void LoadPrecomputes(set<uint256> setHashes);
+    void LoadPrecomputes(std::list<std::pair<uint256, CoinWitnessCacheData> >& itemList, std::map<uint256, std::list<std::pair<uint256, CoinWitnessCacheData> >::iterator>& itemMap);
+    void LoadPrecomputes(std::set<uint256> setHashes);
     void EraseAllPrecomputes();
     bool WritePrecompute(const uint256& hash, const CoinWitnessCacheData& data);
     bool ReadPrecompute(const uint256& hash, CoinWitnessCacheData& data);
@@ -204,7 +204,7 @@ private:
     bool WriteAccountingEntry(const uint64_t nAccEntryNum, const CAccountingEntry& acentry);
 };
 
-void NotifyBacked(const CWallet& wallet, bool fSuccess, string strMessage);
+void NotifyBacked(const CWallet& wallet, bool fSuccess, std::string strMessage);
 bool BackupWallet(const CWallet& wallet, const boost::filesystem::path& strDest, bool fEnableCustom = true);
 bool AttemptBackupWallet(const CWallet& wallet, const boost::filesystem::path& pathSrc, const boost::filesystem::path& pathDest);
 

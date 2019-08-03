@@ -355,7 +355,7 @@ maxParams = 16
 
 def makeCommaSepLists(lineTemplate, elemTemplate, startInd=1):
     for j in range(startInd,maxParams+1):
-        list = ', '.join([elemTemplate % {'i':i} for i in range(startInd,j+1)])
+        std::list = ', '.join([elemTemplate % {'i':i} for i in range(startInd,j+1)])
         cog.outl(lineTemplate % {'j':j, 'list':list})
 
 makeCommaSepLists('#define TINYFORMAT_ARGTYPES_%(j)d %(list)s',

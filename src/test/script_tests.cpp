@@ -35,16 +35,14 @@
 
 #include <univalue.h>
 
-using namespace std;
-using namespace boost::algorithm;
 
 // Uncomment if you want to output updated JSON tests.
 // #define UPDATE_JSON_TESTS
 
 static const unsigned int flags = SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC;
 
-unsigned int ParseScriptFlags(string strFlags);
-string FormatScriptFlags(unsigned int flags);
+unsigned int ParseScriptFlags(std::string strFlags);
+std::string FormatScriptFlags(unsigned int flags);
 
 UniValue
 read_json(const std::string& jsondata)
@@ -625,7 +623,7 @@ BOOST_AUTO_TEST_CASE(script_valid)
 
     for (unsigned int idx = 0; idx < tests.size(); idx++) {
         UniValue test = tests[idx];
-        string strTest = test.write();
+        std::string strTest = test.write();
         if (test.size() < 3) // Allow size > 3; extra stuff ignored (useful for comments)
         {
             if (test.size() != 1) {
@@ -633,9 +631,9 @@ BOOST_AUTO_TEST_CASE(script_valid)
             }
             continue;
         }
-        string scriptSigString = test[0].get_str();
+        std::string scriptSigString = test[0].get_str();
         CScript scriptSig = ParseScript(scriptSigString);
-        string scriptPubKeyString = test[1].get_str();
+        std::string scriptPubKeyString = test[1].get_str();
         CScript scriptPubKey = ParseScript(scriptPubKeyString);
         unsigned int scriptflags = ParseScriptFlags(test[2].get_str());
 
@@ -650,7 +648,7 @@ BOOST_AUTO_TEST_CASE(script_invalid)
 
     for (unsigned int idx = 0; idx < tests.size(); idx++) {
         UniValue test = tests[idx];
-        string strTest = test.write();
+        std::string strTest = test.write();
         if (test.size() < 3) // Allow size > 3; extra stuff ignored (useful for comments)
         {
             if (test.size() != 1) {
@@ -658,9 +656,9 @@ BOOST_AUTO_TEST_CASE(script_invalid)
             }
             continue;
         }
-        string scriptSigString = test[0].get_str();
+        std::string scriptSigString = test[0].get_str();
         CScript scriptSig = ParseScript(scriptSigString);
-        string scriptPubKeyString = test[1].get_str();
+        std::string scriptPubKeyString = test[1].get_str();
         CScript scriptPubKey = ParseScript(scriptPubKeyString);
         unsigned int scriptflags = ParseScriptFlags(test[2].get_str());
 
@@ -678,21 +676,21 @@ BOOST_AUTO_TEST_CASE(script_PushData)
     static const unsigned char pushdata4[] = { OP_PUSHDATA4, 1, 0, 0, 0, 0x5a };
 
     ScriptError err;
-    vector<vector<unsigned char> > directStack;
+    std::vector<std::vector<unsigned char> > directStack;
     BOOST_CHECK(EvalScript(directStack, CScript(&direct[0], &direct[sizeof(direct)]), true, BaseSignatureChecker(), &err));
     BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
 
-    vector<vector<unsigned char> > pushdata1Stack;
+    std::vector<std::vector<unsigned char> > pushdata1Stack;
     BOOST_CHECK(EvalScript(pushdata1Stack, CScript(&pushdata1[0], &pushdata1[sizeof(pushdata1)]), true, BaseSignatureChecker(), &err));
     BOOST_CHECK(pushdata1Stack == directStack);
     BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
 
-    vector<vector<unsigned char> > pushdata2Stack;
+    std::vector<std::vector<unsigned char> > pushdata2Stack;
     BOOST_CHECK(EvalScript(pushdata2Stack, CScript(&pushdata2[0], &pushdata2[sizeof(pushdata2)]), true, BaseSignatureChecker(), &err));
     BOOST_CHECK(pushdata2Stack == directStack);
     BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
 
-    vector<vector<unsigned char> > pushdata4Stack;
+    std::vector<std::vector<unsigned char> > pushdata4Stack;
     BOOST_CHECK(EvalScript(pushdata4Stack, CScript(&pushdata4[0], &pushdata4[sizeof(pushdata4)]), true, BaseSignatureChecker(), &err));
     BOOST_CHECK(pushdata4Stack == directStack);
     BOOST_CHECK_MESSAGE(err == SCRIPT_ERR_OK, ScriptErrorString(err));
@@ -715,7 +713,7 @@ sign_multisig(CScript scriptPubKey, std::vector<CKey> keys, CTransaction transac
     result << OP_0;
     for (const CKey &key : keys)
     {
-        vector<unsigned char> vchSig;
+        std::vector<unsigned char> vchSig;
         BOOST_CHECK(key.Sign(hash, vchSig));
         vchSig.push_back((unsigned char)SIGHASH_ALL);
         result << vchSig;
@@ -833,8 +831,8 @@ BOOST_AUTO_TEST_CASE(script_combineSigs)
 {
     // Test the CombineSignatures function
     CBasicKeyStore keystore;
-    vector<CKey> keys;
-    vector<CPubKey> pubkeys;
+    std::vector<CKey> keys;
+    std::vector<CPubKey> pubkeys;
     for (int i = 0; i < 3; i++)
     {
         CKey key;
@@ -879,7 +877,7 @@ BOOST_AUTO_TEST_CASE(script_combineSigs)
     combined = CombineSignatures(scriptPubKey, txTo, 0, scriptSigCopy, scriptSig);
     BOOST_CHECK(combined == scriptSigCopy || combined == scriptSig);
     // dummy scriptSigCopy with placeholder, should always choose non-placeholder:
-    scriptSigCopy = CScript() << OP_0 << static_cast<vector<unsigned char> >(pkSingle);
+    scriptSigCopy = CScript() << OP_0 << static_cast<std::vector<unsigned char> >(pkSingle);
     combined = CombineSignatures(scriptPubKey, txTo, 0, scriptSigCopy, scriptSig);
     BOOST_CHECK(combined == scriptSig);
     combined = CombineSignatures(scriptPubKey, txTo, 0, scriptSig, scriptSigCopy);
@@ -895,15 +893,15 @@ BOOST_AUTO_TEST_CASE(script_combineSigs)
     BOOST_CHECK(combined == scriptSig);
 
     // A couple of partially-signed versions:
-    vector<unsigned char> sig1;
+    std::vector<unsigned char> sig1;
     uint256 hash1 = SignatureHash(scriptPubKey, txTo, 0, SIGHASH_ALL);
     BOOST_CHECK(keys[0].Sign(hash1, sig1));
     sig1.push_back(SIGHASH_ALL);
-    vector<unsigned char> sig2;
+    std::vector<unsigned char> sig2;
     uint256 hash2 = SignatureHash(scriptPubKey, txTo, 0, SIGHASH_NONE);
     BOOST_CHECK(keys[1].Sign(hash2, sig2));
     sig2.push_back(SIGHASH_NONE);
-    vector<unsigned char> sig3;
+    std::vector<unsigned char> sig3;
     uint256 hash3 = SignatureHash(scriptPubKey, txTo, 0, SIGHASH_SINGLE);
     BOOST_CHECK(keys[2].Sign(hash3, sig3));
     sig3.push_back(SIGHASH_SINGLE);

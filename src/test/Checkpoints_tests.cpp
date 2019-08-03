@@ -14,7 +14,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-using namespace std;
 
 BOOST_FIXTURE_TEST_SUITE(Checkpoints_tests, BasicTestingSetup)
 

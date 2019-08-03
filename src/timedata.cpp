@@ -12,7 +12,6 @@
 #include "utilstrencodings.h"
 
 
-using namespace std;
 
 static CCriticalSection cs_nTimeOffset;
 static int64_t nTimeOffset = 0;
@@ -44,7 +43,7 @@ void AddTimeData(const CNetAddr& ip, int64_t nOffsetSample)
 {
     LOCK(cs_nTimeOffset);
     // Ignore duplicates
-    static set<CNetAddr> setKnown;
+    static std::set<CNetAddr> setKnown;
     if (!setKnown.insert(ip).second)
         return;
 
@@ -89,7 +88,7 @@ void AddTimeData(const CNetAddr& ip, int64_t nOffsetSample)
 
                 if (!fMatch) {
                     fDone = true;
-                    string strMessage = _("Warning: Please check that your computer's date and time are correct! If your clock is wrong PIVX Core will not work properly.");
+                    std::string strMessage = _("Warning: Please check that your computer's date and time are correct! If your clock is wrong PIVX Core will not work properly.");
                     strMiscWarning = strMessage;
                     LogPrintf("*** %s\n", strMessage);
                     uiInterface.ThreadSafeMessageBox(strMessage, "", CClientUIInterface::MSG_WARNING);

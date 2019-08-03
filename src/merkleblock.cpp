@@ -10,14 +10,13 @@
 #include "primitives/block.h" // for MAX_BLOCK_SIZE
 #include "utilstrencodings.h"
 
-using namespace std;
 
 CMerkleBlock::CMerkleBlock(const CBlock& block, CBloomFilter& filter)
 {
     header = block.GetBlockHeader();
 
-    vector<bool> vMatch;
-    vector<uint256> vHashes;
+    std::vector<bool> vMatch;
+    std::vector<uint256> vHashes;
 
     vMatch.reserve(block.vtx.size());
     vHashes.reserve(block.vtx.size());
@@ -26,7 +25,7 @@ CMerkleBlock::CMerkleBlock(const CBlock& block, CBloomFilter& filter)
         const uint256& hash = block.vtx[i].GetHash();
         if (filter.IsRelevantAndUpdate(block.vtx[i])) {
             vMatch.push_back(true);
-            vMatchedTxn.push_back(make_pair(i, hash));
+            vMatchedTxn.push_back(std::make_pair(i, hash));
         } else
             vMatch.push_back(false);
         vHashes.push_back(hash);

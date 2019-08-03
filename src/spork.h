@@ -16,8 +16,6 @@
 #include "obfuscation.h"
 #include "protocol.h"
 
-using namespace std;
-using namespace boost;
 
 /*
     Don't ever reuse these IDs for other sporks

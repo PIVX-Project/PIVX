@@ -32,14 +32,11 @@
 
 #include <univalue.h>
 
-using namespace boost;
-using namespace boost::assign;
-using namespace std;
 
 void ScriptPubKeyToJSON(const CScript& scriptPubKey, UniValue& out, bool fIncludeHex)
 {
     txnouttype type;
-    vector<CTxDestination> addresses;
+    std::vector<CTxDestination> addresses;
     int nRequired;
 
     out.push_back(Pair("asm", scriptPubKey.ToString()));
@@ -88,7 +85,7 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)
 UniValue getrawtransaction(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 3)
-        throw runtime_error(
+        throw std::runtime_error(
             "getrawtransaction \"txid\" ( verbose \"blockhash\" )\n"
 
             "\nNOTE: By default this function only works sometimes. This is when the tx is in the mempool\n"
@@ -210,7 +207,7 @@ UniValue getrawtransaction(const UniValue& params, bool fHelp)
 UniValue listunspent(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() > 4)
-        throw runtime_error(
+        throw std::runtime_error(
             "listunspent ( minconf maxconf  [\"address\",...] watchonlyconfig )\n"
             "\nReturns array of unspent transaction outputs\n"
             "with between minconf and maxconf (inclusive) confirmations.\n"
@@ -257,16 +254,16 @@ UniValue listunspent(const UniValue& params, bool fHelp)
     if (params.size() > 1)
         nMaxDepth = params[1].get_int();
 
-    set<CBitcoinAddress> setAddress;
+    std::set<CBitcoinAddress> setAddress;
     if (params.size() > 2) {
         UniValue inputs = params[2].get_array();
         for (unsigned int inx = 0; inx < inputs.size(); inx++) {
             const UniValue& input = inputs[inx];
             CBitcoinAddress address(input.get_str());
             if (!address.IsValid())
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid PIVX address: ") + input.get_str());
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid PIVX address: ") + input.get_str());
             if (setAddress.count(address))
-                throw JSONRPCError(RPC_INVALID_PARAMETER, string("Invalid parameter, duplicated address: ") + input.get_str());
+                throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ") + input.get_str());
             setAddress.insert(address);
         }
     }
@@ -279,7 +276,7 @@ UniValue listunspent(const UniValue& params, bool fHelp)
     }
 
     UniValue results(UniValue::VARR);
-    vector<COutput> vecOutputs;
+    std::vector<COutput> vecOutputs;
     assert(pwalletMain != NULL);
     LOCK2(cs_main, pwalletMain->cs_wallet);
     pwalletMain->AvailableCoins(vecOutputs, false, NULL, false, ALL_COINS, false, nWatchonlyConfig);
@@ -330,7 +327,7 @@ UniValue listunspent(const UniValue& params, bool fHelp)
 UniValue createrawtransaction(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 3)
-        throw runtime_error(
+        throw std::runtime_error(
             "createrawtransaction [{\"txid\":\"id\",\"vout\":n},...] {\"address\":amount,...} ( locktime )\n"
             "\nCreate a transaction spending the given inputs and sending to the given addresses.\n"
             "Returns hex-encoded raw transaction.\n"
@@ -407,15 +404,15 @@ UniValue createrawtransaction(const UniValue& params, bool fHelp)
         rawTx.vin.push_back(in);
     }
 
-    set<CBitcoinAddress> setAddress;
-    vector<string> addrList = sendTo.getKeys();
-    for (const string& name_ : addrList) {
+    std::set<CBitcoinAddress> setAddress;
+    std::vector<std::string> addrList = sendTo.getKeys();
+    for (const std::string& name_ : addrList) {
         CBitcoinAddress address(name_);
         if (!address.IsValid())
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, string("Invalid PIVX address: ")+name_);
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, std::string("Invalid PIVX address: ")+name_);
 
         if (setAddress.count(address))
-            throw JSONRPCError(RPC_INVALID_PARAMETER, string("Invalid parameter, duplicated address: ")+name_);
+            throw JSONRPCError(RPC_INVALID_PARAMETER, std::string("Invalid parameter, duplicated address: ")+name_);
         setAddress.insert(address);
 
         CScript scriptPubKey = GetScriptForDestination(address.Get());
@@ -431,7 +428,7 @@ UniValue createrawtransaction(const UniValue& params, bool fHelp)
 UniValue decoderawtransaction(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
-        throw runtime_error(
+        throw std::runtime_error(
             "decoderawtransaction \"hexstring\"\n"
             "\nReturn a JSON object representing the serialized, hex-encoded transaction.\n"
 
@@ -495,7 +492,7 @@ UniValue decoderawtransaction(const UniValue& params, bool fHelp)
 UniValue decodescript(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
-        throw runtime_error(
+        throw std::runtime_error(
             "decodescript \"hex\"\n"
             "\nDecode a hex-encoded script.\n"
 
@@ -524,7 +521,7 @@ UniValue decodescript(const UniValue& params, bool fHelp)
     UniValue r(UniValue::VOBJ);
     CScript script;
     if (params[0].get_str().size() > 0) {
-        vector<unsigned char> scriptData(ParseHexV(params[0], "argument"));
+        std::vector<unsigned char> scriptData(ParseHexV(params[0], "argument"));
         script = CScript(scriptData.begin(), scriptData.end());
     } else {
         // Empty scripts are valid
@@ -550,7 +547,7 @@ static void TxInErrorToJSON(const CTxIn& txin, UniValue& vErrorsRet, const std::
 UniValue signrawtransaction(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 4)
-        throw runtime_error(
+        throw std::runtime_error(
             "signrawtransaction \"hexstring\" ( [{\"txid\":\"id\",\"vout\":n,\"scriptPubKey\":\"hex\",\"redeemScript\":\"hex\"},...] [\"privatekey1\",...] sighashtype )\n"
             "\nSign inputs for raw transaction (serialized, hex-encoded).\n"
             "The second optional argument (may be null) is an array of previous transaction outputs that\n"
@@ -612,9 +609,9 @@ UniValue signrawtransaction(const UniValue& params, bool fHelp)
 #endif
     RPCTypeCheck(params, boost::assign::list_of(UniValue::VSTR)(UniValue::VARR)(UniValue::VARR)(UniValue::VSTR), true);
 
-    vector<unsigned char> txData(ParseHexV(params[0], "argument 1"));
+    std::vector<unsigned char> txData(ParseHexV(params[0], "argument 1"));
     CDataStream ssData(txData, SER_NETWORK, PROTOCOL_VERSION);
-    vector<CMutableTransaction> txVariants;
+    std::vector<CMutableTransaction> txVariants;
     while (!ssData.empty()) {
         try {
             CMutableTransaction tx;
@@ -702,13 +699,13 @@ UniValue signrawtransaction(const UniValue& params, bool fHelp)
             if (nOut < 0)
                 throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "vout must be positive");
 
-            vector<unsigned char> pkData(ParseHexO(prevOut, "scriptPubKey"));
+            std::vector<unsigned char> pkData(ParseHexO(prevOut, "scriptPubKey"));
             CScript scriptPubKey(pkData.begin(), pkData.end());
 
             {
                 CCoinsModifier coins = view.ModifyCoins(txid);
                 if (coins->IsAvailable(nOut) && coins->vout[nOut].scriptPubKey != scriptPubKey) {
-                    string err("Previous output scriptPubKey mismatch:\n");
+                    std::string err("Previous output scriptPubKey mismatch:\n");
                     err = err + coins->vout[nOut].scriptPubKey.ToString() + "\nvs:\n" +
                           scriptPubKey.ToString();
                     throw JSONRPCError(RPC_DESERIALIZATION_ERROR, err);
@@ -725,7 +722,7 @@ UniValue signrawtransaction(const UniValue& params, bool fHelp)
                 RPCTypeCheckObj(prevOut, boost::assign::map_list_of("txid", UniValue::VSTR)("vout", UniValue::VNUM)("scriptPubKey", UniValue::VSTR)("redeemScript",UniValue::VSTR));
                 UniValue v = find_value(prevOut, "redeemScript");
                 if (!v.isNull()) {
-                    vector<unsigned char> rsData(ParseHexV(v, "redeemScript"));
+                    std::vector<unsigned char> rsData(ParseHexV(v, "redeemScript"));
                     CScript redeemScript(rsData.begin(), rsData.end());
                     tempKeystore.AddCScript(redeemScript);
                 }
@@ -741,9 +738,9 @@ UniValue signrawtransaction(const UniValue& params, bool fHelp)
 
     int nHashType = SIGHASH_ALL;
     if (params.size() > 3 && !params[3].isNull()) {
-        static map<string, int> mapSigHashValues =
-            boost::assign::map_list_of(string("ALL"), int(SIGHASH_ALL))(string("ALL|ANYONECANPAY"), int(SIGHASH_ALL | SIGHASH_ANYONECANPAY))(string("NONE"), int(SIGHASH_NONE))(string("NONE|ANYONECANPAY"), int(SIGHASH_NONE | SIGHASH_ANYONECANPAY))(string("SINGLE"), int(SIGHASH_SINGLE))(string("SINGLE|ANYONECANPAY"), int(SIGHASH_SINGLE | SIGHASH_ANYONECANPAY));
-        string strHashType = params[3].get_str();
+        static std::map<std::string, int> mapSigHashValues =
+            boost::assign::map_list_of(std::string("ALL"), int(SIGHASH_ALL))(std::string("ALL|ANYONECANPAY"), int(SIGHASH_ALL | SIGHASH_ANYONECANPAY))(std::string("NONE"), int(SIGHASH_NONE))(std::string("NONE|ANYONECANPAY"), int(SIGHASH_NONE | SIGHASH_ANYONECANPAY))(std::string("SINGLE"), int(SIGHASH_SINGLE))(std::string("SINGLE|ANYONECANPAY"), int(SIGHASH_SINGLE | SIGHASH_ANYONECANPAY));
+        std::string strHashType = params[3].get_str();
         if (mapSigHashValues.count(strHashType))
             nHashType = mapSigHashValues[strHashType];
         else
@@ -802,7 +799,7 @@ UniValue signrawtransaction(const UniValue& params, bool fHelp)
 UniValue sendrawtransaction(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 3)
-        throw runtime_error(
+        throw std::runtime_error(
             "sendrawtransaction \"hexstring\" ( allowhighfees )\n"
             "\nSubmits raw transaction (serialized, hex-encoded) to local node and network.\n"
             "\nAlso see createrawtransaction and signrawtransaction calls.\n"
@@ -846,7 +843,7 @@ UniValue sendrawtransaction(const UniValue& params, bool fHelp)
     if (!fHaveMempool && !fHaveChain) {
         // push to local node and sync with wallets
         if (fSwiftX) {
-            mapTxLockReq.insert(make_pair(tx.GetHash(), tx));
+            mapTxLockReq.insert(std::make_pair(tx.GetHash(), tx));
             CreateNewLock(tx);
             RelayTransactionLockReq(tx, true);
         }
@@ -873,7 +870,7 @@ UniValue sendrawtransaction(const UniValue& params, bool fHelp)
 UniValue getspentzerocoinamount(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 2)
-        throw runtime_error(
+        throw std::runtime_error(
             "getspentzerocoinamount hexstring index\n"
             "\nReturns value of spent zerocoin output designated by transaction hash and input index.\n"
 
@@ -915,7 +912,7 @@ UniValue getspentzerocoinamount(const UniValue& params, bool fHelp)
 UniValue createrawzerocoinstake(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
-        throw runtime_error(
+        throw std::runtime_error(
             "createrawzerocoinstake mint_input \n"
             "\nCreates raw zPIV coinstakes (without MN output).\n" +
             HelpRequiringPassphrase() + "\n"
@@ -997,7 +994,7 @@ UniValue createrawzerocoinstake(const UniValue& params, bool fHelp)
 UniValue createrawzerocoinpublicspend(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 2)
-        throw runtime_error(
+        throw std::runtime_error(
             "createrawzerocoinpublicspend mint_input \n"
             "\nCreates raw zPIV public spend.\n" +
             HelpRequiringPassphrase() + "\n"
@@ -1043,13 +1040,13 @@ UniValue createrawzerocoinpublicspend(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_WALLET_ERROR, strErr);
     }
     CAmount nAmount = input_mint.GetDenominationAsAmount();
-    vector<CZerocoinMint> vMintsSelected = vector<CZerocoinMint>(1,input_mint);
+    std::vector<CZerocoinMint> vMintsSelected = std::vector<CZerocoinMint>(1,input_mint);
 
     // create the spend
     CWalletTx rawTx;
     CZerocoinSpendReceipt receipt;
     CReserveKey reserveKey(pwalletMain);
-    vector<CDeterministicMint> vNewMints;
+    std::vector<CDeterministicMint> vNewMints;
     if (!pwalletMain->CreateZerocoinSpendTransaction(nAmount, rawTx, reserveKey, receipt, vMintsSelected, vNewMints, false, true, addr_ptr, true))
         throw JSONRPCError(RPC_WALLET_ERROR, receipt.GetStatusMessage());
 

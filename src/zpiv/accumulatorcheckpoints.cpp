@@ -58,7 +58,7 @@ namespace AccumulatorCheckpoints
                 checkpoint.insert(std::make_pair(denom, bn));
             }
 
-            mapCheckpoints.insert(make_pair(nHeight, checkpoint));
+            mapCheckpoints.insert(std::make_pair(nHeight, checkpoint));
         }
         return true;
     }

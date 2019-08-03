@@ -211,7 +211,7 @@ public:
         nAccumulatorCheckpoint = 0;
         // Start supply of each denomination with 0s
         for (auto& denom : libzerocoin::zerocoinDenomList) {
-            mapZerocoinSupply.insert(make_pair(denom, 0));
+            mapZerocoinSupply.insert(std::make_pair(denom, 0));
         }
         vMintDenominationsInBlock.clear();
     }
