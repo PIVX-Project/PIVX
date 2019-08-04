@@ -31,7 +31,7 @@
    </property>
    <item>
     <widget class="QWidget" name="left" native="true">
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QVBoxLayout" name="verticalLayout">
       <property name="leftMargin">
        <number>0</number>
       </property>
@@ -73,7 +73,7 @@
          <property name="autoFillBackground">
           <bool>true</bool>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_7">
+         <layout class="QVBoxLayout" name="verticalLayout_1">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -124,7 +124,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="verticalSpacer_4">
+           <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -145,7 +145,7 @@
              <number>20</number>
             </property>
             <item>
-             <layout class="QVBoxLayout" name="verticalLayout_7">
+             <layout class="QVBoxLayout" name="verticalLayout_2">
               <property name="spacing">
                <number>5</number>
               </property>
@@ -186,7 +186,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="verticalSpacer_3">
+           <spacer name="verticalSpacer_1">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -248,7 +248,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="verticalSpacer_3">
+           <spacer name="verticalSpacer_2">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -372,7 +372,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="verticalSpacer_3">
+           <spacer name="verticalSpacer_4">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -434,7 +434,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="verticalSpacer_3">
+           <spacer name="verticalSpacer_5">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -496,7 +496,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="verticalSpacer_3">
+           <spacer name="verticalSpacer_6">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
@@ -564,7 +564,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="verticalSpacer">
+           <spacer name="verticalSpacer_7">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>

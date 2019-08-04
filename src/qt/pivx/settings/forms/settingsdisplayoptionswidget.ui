@@ -218,7 +218,7 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalDenomzPiv">
+           <spacer name="horizontalDenomzPiv_1">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
