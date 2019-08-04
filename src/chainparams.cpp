@@ -100,7 +100,6 @@ static const Checkpoints::CCheckpointData dataRegtest = {
 
 libzerocoin::ZerocoinParams* CChainParams::Zerocoin_Params(bool useModulusV1) const
 {
-    assert(this);
     static CBigNum bnHexModulus = 0;
     if (!bnHexModulus)
         bnHexModulus.SetHex(zerocoinModulus);

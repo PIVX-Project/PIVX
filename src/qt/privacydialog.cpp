@@ -706,10 +706,6 @@ void PrivacyDialog::setBalance(const CAmount& balance, const CAmount& unconfirme
         }
     }
     CAmount matureZerocoinBalance = zerocoinBalance - unconfirmedZerocoinBalance - immatureZerocoinBalance;
-    CAmount nLockedBalance = 0;
-    if (walletModel) {
-        nLockedBalance = walletModel->getLockedBalance();
-    }
 
     ui->labelzAvailableAmount->setText(QString::number(zerocoinBalance/COIN) + QString(" zPIV "));
     ui->labelzAvailableAmount_2->setText(QString::number(matureZerocoinBalance/COIN) + QString(" zPIV "));
