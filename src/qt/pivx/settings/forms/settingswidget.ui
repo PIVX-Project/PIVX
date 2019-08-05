@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>629</width>
-    <height>406</height>
+    <height>430</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -108,6 +108,12 @@
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QScrollArea" name="scrollArea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
@@ -127,10 +133,16 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-278</y>
+               <y>0</y>
                <width>230</width>
                <height>887</height>
               </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
              <property name="autoFillBackground">
               <bool>true</bool>
@@ -158,6 +170,12 @@
                <layout class="QVBoxLayout" name="verticalLayout_4">
                 <item>
                  <widget class="QGroupBox" name="groupBox">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="title">
                    <string/>
                   </property>
