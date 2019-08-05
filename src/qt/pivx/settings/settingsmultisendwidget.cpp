@@ -220,6 +220,7 @@ void SettingsMultisendWidget::updateListState(){
 }
 
 void SettingsMultisendWidget::clearAll(){
+    if(!verifyWalletUnlocked()) return;
     std::vector<std::pair<std::string, int> > vMultiSendTemp = pwalletMain->vMultiSend;
     bool fRemoved = true;
     pwalletMain->vMultiSend.clear();
@@ -241,6 +242,7 @@ void SettingsMultisendWidget::checkBoxChanged(){
 }
 
 void SettingsMultisendWidget::onAddRecipientClicked() {
+    if(!verifyWalletUnlocked()) return;
     showHideOp(true);
     SettingsMultisendDialog* dialog = new SettingsMultisendDialog(window);
     openDialogWithOpaqueBackgroundY(dialog, window, 3, 5);
