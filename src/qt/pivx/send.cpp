@@ -393,8 +393,8 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
     }
 
     // use mints from zPIV selector if applicable
-    vector<CMintMeta> vMintsToFetch;
-    vector<CZerocoinMint> vMintsSelected;
+    std::vector<CMintMeta> vMintsToFetch;
+    std::vector<CZerocoinMint> vMintsSelected;
     if (!ZPivControlDialog::setSelectedMints.empty()) {
         vMintsToFetch = ZPivControlDialog::GetSelectedMints();
 

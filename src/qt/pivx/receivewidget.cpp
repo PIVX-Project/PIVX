@@ -166,7 +166,7 @@ void ReceiveWidget::refreshView(QString refreshAddress){
         ui->labelDate->setText(GUIUtil::dateTimeStr(QDateTime::fromTime_t(static_cast<uint>(time))));
         updateQr(latestAddress);
         updateLabel();
-    } catch (const runtime_error& error){
+    } catch (const std::runtime_error& error){
         ui->labelQrImg->setText(tr("No available address, try unlocking the wallet"));
         inform(tr("Error generating address"));
     }
@@ -244,7 +244,7 @@ void ReceiveWidget::onNewAddressClicked(){
         ui->labelAddress->setText(!info->address.isEmpty() ? info->address : tr("No address"));
         updateLabel();
         inform(tr("New address created"));
-    } catch (const runtime_error& error){
+    } catch (const std::runtime_error& error){
         // Error generating address
         std::cout << "Error generating address, correct me" << std::endl;
         inform("Error generating address");

@@ -320,7 +320,7 @@ void PrivacyWidget::onRescanMintsClicked(){
     if (ask(tr("Rescan Mints"),
         tr("Your zerocoin mints are going to be scanned from the blockchain from scratch"))
     ){
-        string strResetMintResult = walletModel->resetMintZerocoin();
+        std::string strResetMintResult = walletModel->resetMintZerocoin();
         inform(QString::fromStdString(strResetMintResult));
     }
 }
@@ -329,7 +329,7 @@ void PrivacyWidget::onResetZeroClicked(){
     if (ask(tr("Reset Spent Zerocoins"),
         tr("Your zerocoin spends are going to be scanned from the blockchain from scratch"))
     ){
-        string strResetMintResult = walletModel->resetSpentZerocoin();
+        std::string strResetMintResult = walletModel->resetSpentZerocoin();
         inform(QString::fromStdString(strResetMintResult));
     }
 }
@@ -339,15 +339,15 @@ void PrivacyWidget::updateDenomsSupply(){
     std::map<libzerocoin::CoinDenomination, int> mapUnconfirmed;
     std::map<libzerocoin::CoinDenomination, int> mapImmature;
     for (const auto& denom : libzerocoin::zerocoinDenomList){
-        mapDenomBalances.insert(make_pair(denom, 0));
-        mapUnconfirmed.insert(make_pair(denom, 0));
-        mapImmature.insert(make_pair(denom, 0));
+        mapDenomBalances.insert(std::make_pair(denom, 0));
+        mapUnconfirmed.insert(std::make_pair(denom, 0));
+        mapImmature.insert(std::make_pair(denom, 0));
     }
 
     std::set<CMintMeta> vMints;
     walletModel->listZerocoinMints(vMints, true, false, true, true);
 
-    map<libzerocoin::CoinDenomination, int> mapMaturityHeights = GetMintMaturityHeight();
+    std::map<libzerocoin::CoinDenomination, int> mapMaturityHeights = GetMintMaturityHeight();
     for (auto& meta : vMints){
         // All denominations
         mapDenomBalances.at(meta.denom)++;

@@ -471,7 +471,7 @@ bool WalletModel::isCoinStakeMine(QString id){
 
 bool WalletModel::mintCoins(CAmount value, CCoinControl* coinControl ,std::string &strError){
     CWalletTx wtx;
-    vector<CDeterministicMint> vMints;
+    std::vector<CDeterministicMint> vMints;
     strError = wallet->MintZerocoin(value, wtx, vMints, coinControl);
     return strError.empty();
 }
@@ -479,7 +479,7 @@ bool WalletModel::mintCoins(CAmount value, CCoinControl* coinControl ,std::strin
 
 bool WalletModel::createZpivSpend(
         CWalletTx &wtxNew,
-        vector<CZerocoinMint> &vMintsSelected,
+        std::vector<CZerocoinMint> &vMintsSelected,
         bool fMintChange,
         bool fMinimizeChange,
         CZerocoinSpendReceipt &receipt,
@@ -499,7 +499,7 @@ bool WalletModel::createZpivSpend(
     }
 
     CReserveKey reserveKey(wallet);
-    vector<CDeterministicMint> vNewMints;
+    std::vector<CDeterministicMint> vNewMints;
     if (!wallet->CreateZerocoinSpendTransaction(
             value,
             wtxNew,
@@ -521,7 +521,7 @@ bool WalletModel::createZpivSpend(
 }
 
 bool WalletModel::sendZpiv(
-        vector<CZerocoinMint> &vMintsSelected,
+        std::vector<CZerocoinMint> &vMintsSelected,
         bool fMintChange,
         bool fMinimizeChange,
         CZerocoinSpendReceipt &receipt,
@@ -551,7 +551,7 @@ bool WalletModel::sendZpiv(
 
 bool WalletModel::convertBackZpiv(
         CAmount value,
-        vector<CZerocoinMint> &vMintsSelected,
+        std::vector<CZerocoinMint> &vMintsSelected,
         bool fMintChange,
         bool fMinimizeChange,
         CZerocoinSpendReceipt &receipt,

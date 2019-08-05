@@ -267,8 +267,8 @@ void SettingsBitToolWidget::onClearDecrypt(){
 }
 
 void SettingsBitToolWidget::onDecryptClicked(){
-    string strPassphrase = ui->lineEditPassphrase->text().toStdString();
-    string strKey = ui->lineEditKey->text().toStdString();
+    std::string strPassphrase = ui->lineEditPassphrase->text().toStdString();
+    std::string strKey = ui->lineEditKey->text().toStdString();
 
     uint256 privKey;
     bool fCompressed;

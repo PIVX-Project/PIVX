@@ -4,8 +4,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_WALLETMODEL_H
-#define BITCOIN_QT_WALLETMODEL_H
+#ifndef PIVX_QT_WALLETMODEL_H
+#define PIVX_QT_WALLETMODEL_H
 
 #include "askpassphrasedialog.h"
 #include "paymentrequestplus.h"
@@ -182,7 +182,7 @@ public:
 
     bool createZpivSpend(
             CWalletTx &wtxNew,
-            vector<CZerocoinMint> &vMintsSelected,
+            std::vector<CZerocoinMint> &vMintsSelected,
             bool fMintChange,
             bool fMinimizeChange,
             CZerocoinSpendReceipt &receipt,
@@ -191,7 +191,7 @@ public:
     );
 
     bool sendZpiv(
-            vector<CZerocoinMint> &vMintsSelected,
+            std::vector<CZerocoinMint> &vMintsSelected,
             bool fMintChange,
             bool fMinimizeChange,
             CZerocoinSpendReceipt &receipt,
@@ -201,7 +201,7 @@ public:
 
     bool convertBackZpiv(
             CAmount value,
-            vector<CZerocoinMint> &vMintsSelected,
+            std::vector<CZerocoinMint> &vMintsSelected,
             bool fMintChange,
             bool fMinimizeChange,
             CZerocoinSpendReceipt &receipt,
@@ -248,7 +248,7 @@ public:
     int64_t getCreationTime() const;
     int64_t getKeyCreationTime(const CPubKey& key);
     int64_t getKeyCreationTime(const CBitcoinAddress& address);
-    CBitcoinAddress getNewAddress(string label = "") const;
+    CBitcoinAddress getNewAddress(std::string label = "") const;
     bool isMine(CBitcoinAddress address);
     bool isUsed(CBitcoinAddress address);
     void getOutputs(const std::vector<COutPoint>& vOutpoints, std::vector<COutput>& vOutputs);
@@ -352,7 +352,7 @@ public slots:
     /* Current, immature or unconfirmed balance might have changed - emit 'balanceChanged' if so */
     void pollBalanceChanged();
     /* Update address book labels in the database */
-    void updateAddressBookLabels(const CTxDestination& address, const std::string& strName, const std::string& strPurpose);
+    bool updateAddressBookLabels(const CTxDestination& address, const std::string& strName, const std::string& strPurpose);
 };
 
-#endif // BITCOIN_QT_WALLETMODEL_H
+#endif // PIVX_QT_WALLETMODEL_H

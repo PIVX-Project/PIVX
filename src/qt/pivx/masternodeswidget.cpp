@@ -264,8 +264,8 @@ void MasterNodesWidget::onDeleteMNClicked(){
         throw std::runtime_error(strprintf(_("masternode.conf %s resides outside data directory %s"), strConfFile, strDataDir));
     }
 
-    filesystem::path pathBootstrap = GetDataDir() / strConfFile;
-    if (filesystem::exists(pathBootstrap)) {
+    boost::filesystem::path pathBootstrap = GetDataDir() / strConfFile;
+    if (boost::filesystem::exists(pathBootstrap)) {
         boost::filesystem::path pathMasternodeConfigFile = GetMasternodeConfigFile();
         boost::filesystem::ifstream streamConfig(pathMasternodeConfigFile);
 
@@ -323,8 +323,8 @@ void MasterNodesWidget::onDeleteMNClicked(){
 
             boost::filesystem::path pathOldConfFile("old_masternode.conf");
             if (!pathOldConfFile.is_complete()) pathOldConfFile = GetDataDir() / pathOldConfFile;
-            if (filesystem::exists(pathOldConfFile)) {
-                filesystem::remove(pathOldConfFile);
+            if (boost::filesystem::exists(pathOldConfFile)) {
+                boost::filesystem::remove(pathOldConfFile);
             }
             rename(pathMasternodeConfigFile, pathOldConfFile);
 
