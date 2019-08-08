@@ -138,6 +138,8 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         setCentralWidget(rpcConsole);
     }
 
+    // Create actions for the toolbar, menu bar and tray/dock icon
+    createActions(networkStyle);
 
     // Create system tray icon and notification
     createTrayIcon(networkStyle);
@@ -154,22 +156,30 @@ PIVXGUI::PIVXGUI(const NetworkStyle* networkStyle, QWidget* parent) :
 
 }
 
+void PIVXGUI::createActions(const NetworkStyle* networkStyle){
+    toggleHideAction = new QAction(networkStyle->getAppIcon(), tr("&Show / Hide"), this);
+    toggleHideAction->setStatusTip(tr("Show or hide the main Window"));
 
+    quitAction = new QAction(QIcon(":/icons/quit"), tr("E&xit"), this);
+    quitAction->setStatusTip(tr("Quit application"));
+    quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
+    quitAction->setMenuRole(QAction::QuitRole);
+
+    connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
+    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+}
 
 /**
  * Here add every event connection
  */
 void PIVXGUI::connectActions() {
-
     QShortcut *consoleShort = new QShortcut(this);
-
     consoleShort->setKey(QKeySequence(SHORT_KEY + Qt::Key_C));
     connect(consoleShort, &QShortcut::activated, [this](){
         navMenu->selectSettings();
         settingsWidget->showDebugConsole();
         goToSettings();
     });
-
     connect(topBar, &TopBar::showHide, this, &PIVXGUI::showHide);
     connect(topBar, &TopBar::themeChanged, this, &PIVXGUI::changeTheme);
     connect(settingsWidget, &SettingsWidget::showHide, this, &PIVXGUI::showHide);
@@ -183,8 +193,7 @@ void PIVXGUI::connectActions() {
 }
 
 
-void PIVXGUI::createTrayIcon(const NetworkStyle* networkStyle)
-{
+void PIVXGUI::createTrayIcon(const NetworkStyle* networkStyle) {
 #ifndef Q_OS_MAC
     trayIcon = new QSystemTrayIcon(this);
     QString toolTip = tr("PIVX Core client") + " " + networkStyle->getTitleAddText();
@@ -192,7 +201,6 @@ void PIVXGUI::createTrayIcon(const NetworkStyle* networkStyle)
     trayIcon->setIcon(networkStyle->getAppIcon());
     trayIcon->hide();
 #endif
-
     notificator = new Notificator(QApplication::applicationName(), trayIcon, this);
 }
 
@@ -220,7 +228,13 @@ void PIVXGUI::handleRestart(QStringList args){
 void PIVXGUI::setClientModel(ClientModel* clientModel) {
     this->clientModel = clientModel;
     if(this->clientModel) {
+
+        // Create system tray menu (or setup the dock menu) that late to prevent users from calling actions,
+        // while the client has not yet fully loaded
+        createTrayIconMenu();
+
         topBar->setClientModel(clientModel);
+        dashboard->setClientModel(clientModel);
         sendWidget->setClientModel(clientModel);
         settingsWidget->setClientModel(clientModel);
 
@@ -238,9 +252,74 @@ void PIVXGUI::setClientModel(ClientModel* clientModel) {
         if (trayIcon) {
             trayIcon->show();
         }
+    } else {
+        // Disable possibility to show main window via action
+        toggleHideAction->setEnabled(false);
+        if (trayIconMenu) {
+            // Disable context menu on tray icon
+            trayIconMenu->clear();
+        }
     }
 }
 
+void PIVXGUI::createTrayIconMenu() {
+#ifndef Q_OS_MAC
+    // return if trayIcon is unset (only on non-Mac OSes)
+    if (!trayIcon)
+        return;
+
+    trayIconMenu = new QMenu(this);
+    trayIcon->setContextMenu(trayIconMenu);
+
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
+#else
+    // Note: On Mac, the dock icon is used to provide the tray's functionality.
+    MacDockIconHandler* dockIconHandler = MacDockIconHandler::instance();
+    dockIconHandler->setMainWindow((QMainWindow*)this);
+    trayIconMenu = dockIconHandler->dockMenu();
+#endif
+
+    // Configuration of the tray icon (or dock icon) icon menu
+    trayIconMenu->addAction(toggleHideAction);
+    trayIconMenu->addSeparator();
+    /*
+    trayIconMenu->addAction(sendCoinsAction);
+    trayIconMenu->addAction(receiveCoinsAction);
+    trayIconMenu->addAction(privacyAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(signMessageAction);
+    trayIconMenu->addAction(verifyMessageAction);
+    trayIconMenu->addAction(bip38ToolAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(optionsAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(openInfoAction);
+    trayIconMenu->addAction(openRPCConsoleAction);
+    trayIconMenu->addAction(openNetworkAction);
+    trayIconMenu->addAction(openPeersAction);
+    trayIconMenu->addAction(openRepairAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(openConfEditorAction);
+    trayIconMenu->addAction(openMNConfEditorAction);
+    trayIconMenu->addAction(showBackupsAction);
+    trayIconMenu->addAction(openBlockExplorerAction);
+     */
+#ifndef Q_OS_MAC // This is built-in on Mac
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
+#endif
+}
+
+#ifndef Q_OS_MAC
+void PIVXGUI::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    if (reason == QSystemTrayIcon::Trigger) {
+        // Click on system tray icon triggers show/hide of the main window
+        toggleHidden();
+    }
+}
+#endif
 
 void PIVXGUI::changeEvent(QEvent* e)
 {
@@ -279,8 +358,7 @@ void PIVXGUI::messageInfo(const QString& text){
 }
 
 
-void PIVXGUI::message(const QString& title, const QString& message, unsigned int style, bool* ret)
-{
+void PIVXGUI::message(const QString& title, const QString& message, unsigned int style, bool* ret) {
     QString strTitle =  tr("PIVX Core"); // default title
     // Default to information icon
     int nNotifyIcon = Notificator::Information;
@@ -360,11 +438,9 @@ bool PIVXGUI::openStandardDialog(QString title, QString body, QString okBtn, QSt
 }
 
 
-void PIVXGUI::showNormalIfMinimized(bool fToggleHidden)
-{
+void PIVXGUI::showNormalIfMinimized(bool fToggleHidden) {
     if (!clientModel)
         return;
-
     // activateWindow() (sometimes) helps with keyboard focus on Windows
     if (isHidden()) {
         show();
@@ -377,6 +453,10 @@ void PIVXGUI::showNormalIfMinimized(bool fToggleHidden)
         activateWindow();
     } else if (fToggleHidden)
         hide();
+}
+
+void PIVXGUI::toggleHidden() {
+    showNormalIfMinimized(true);
 }
 
 void PIVXGUI::detectShutdown() {
@@ -520,23 +600,40 @@ bool PIVXGUI::addWallet(const QString& name, WalletModel* walletModel)
     connect(addressesWidget, &AddressesWidget::message,this, &PIVXGUI::message);
     connect(settingsWidget, &SettingsWidget::message, this, &PIVXGUI::message);
 
+    // Pass through transaction notifications
+    connect(dashboard, SIGNAL(incomingTransaction(QString, int, CAmount, QString, QString)), this, SLOT(incomingTransaction(QString, int, CAmount, QString, QString)));
+
     return true;
 }
 
-bool PIVXGUI::setCurrentWallet(const QString& name)
-{
-    //if (!walletFrame)
-    //    return false;
-    return true;//walletFrame->setCurrentWallet(name);
+bool PIVXGUI::setCurrentWallet(const QString& name) {
+    // Single wallet supported.
+    return true;
 }
 
-void PIVXGUI::removeAllWallets()
-{
-    //if (!walletFrame)
-    //    return;
-    //setWalletActionsEnabled(false);
-    //walletFrame->removeAllWallets();
+void PIVXGUI::removeAllWallets() {
+    // Single wallet supported.
 }
+
+void PIVXGUI::incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address) {
+    // Only send notifications when not disabled
+    if(!bdisableSystemnotifications){
+        // On new transaction, make an info balloon
+        message((amount) < 0 ? (pwalletMain->fMultiSendNotify == true ? tr("Sent MultiSend transaction") : tr("Sent transaction")) : tr("Incoming transaction"),
+            tr("Date: %1\n"
+               "Amount: %2\n"
+               "Type: %3\n"
+               "Address: %4\n")
+                .arg(date)
+                .arg(BitcoinUnits::formatWithUnit(unit, amount, true))
+                .arg(type)
+                .arg(address),
+            CClientUIInterface::MSG_INFORMATION);
+
+        pwalletMain->fMultiSendNotify = false;
+    }
+}
+
 #endif // ENABLE_WALLET
 
 

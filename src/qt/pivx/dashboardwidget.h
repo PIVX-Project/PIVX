@@ -84,6 +84,14 @@ public:
 
 public slots:
     void walletSynced(bool isSync);
+    /**
+     * Show incoming transaction notification for new transactions.
+     * The new items are those between start and end inclusive, under the given parent item.
+    */
+    void processNewTransaction(const QModelIndex& parent, int start, int /*end*/);
+signals:
+    /** Notify that a new transaction appeared */
+    void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address);
 private slots:
     void windowResizeEvent(QResizeEvent *event);
     void handleTransactionClicked(const QModelIndex &index);

@@ -9,6 +9,7 @@
 #include "qt/pivx/qtutils.h"
 #include "guiutil.h"
 #include "walletmodel.h"
+#include "clientmodel.h"
 #include "optionsmodel.h"
 #include <QPainter>
 #include <QModelIndex>
@@ -209,6 +210,10 @@ void DashboardWidget::loadWalletModel(){
         connect(ui->pushImgEmpty, SIGNAL(clicked()), window, SLOT(openFAQ()));
         connect(ui->btnHowTo, SIGNAL(clicked()), window, SLOT(openFAQ()));
         connect(txModel, &TransactionTableModel::txArrived, this, &DashboardWidget::onTxArrived);
+
+        // Notification pop-up for new transaction
+        connect(txModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
+                this, SLOT(processNewTransaction(QModelIndex, int, int)));
 
         // chart filter
         stakesFilter = new TransactionFilterProxy();
@@ -691,6 +696,22 @@ void DashboardWidget::windowResizeEvent(QResizeEvent *event){
 
 bool DashboardWidget::hasStakes() {
     return stakesFilter->rowCount() > 0;
+}
+
+void DashboardWidget::processNewTransaction(const QModelIndex& parent, int start, int /*end*/) {
+    // Prevent notifications-spam when initial block download is in progress
+    if (!walletModel || !clientModel || clientModel->inInitialBlockDownload())
+        return;
+
+    if (!txModel || txModel->processingQueuedTransactions())
+        return;
+
+    QString date = txModel->index(start, TransactionTableModel::Date, parent).data().toString();
+    qint64 amount = txModel->index(start, TransactionTableModel::Amount, parent).data(Qt::EditRole).toULongLong();
+    QString type = txModel->index(start, TransactionTableModel::Type, parent).data().toString();
+    QString address = txModel->index(start, TransactionTableModel::ToAddress, parent).data().toString();
+
+    emit incomingTransaction(date, walletModel->getOptionsModel()->getDisplayUnit(), amount, type, address);
 }
 
 DashboardWidget::~DashboardWidget(){

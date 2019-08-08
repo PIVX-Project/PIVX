@@ -84,7 +84,11 @@ public slots:
     void message(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
     void messageInfo(const QString& message);
     bool execDialog(QDialog *dialog, int xDiv = 3, int yDiv = 5);
+    /** Open FAQ dialog **/
     void openFAQ(int section = 0);
+
+    /** Show incoming transaction notification for new transactions. */
+    void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address);
 #ifdef ENABLE_WALLET
     /** Set the wallet model.
         The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending
@@ -108,14 +112,17 @@ protected:
 
 private:
     bool enableWallet;
-    ClientModel* clientModel;
-    //WalletFrame* walletFrame;
+    ClientModel* clientModel = nullptr;
+
+    // Actions
+    QAction* quitAction = nullptr;
+    QAction* toggleHideAction = nullptr;
 
 
     // Frame
-    NavMenuWidget *navMenu;
+    NavMenuWidget *navMenu = nullptr;
     TopBar *topBar = nullptr;
-    QStackedWidget *stackedContainer;
+    QStackedWidget *stackedContainer = nullptr;
 
     DashboardWidget *dashboard = nullptr;
     SendWidget *sendWidget = nullptr;
@@ -131,12 +138,19 @@ private:
 
     //
     QSystemTrayIcon* trayIcon = nullptr;
+    QMenu* trayIconMenu = nullptr;
     Notificator* notificator = nullptr;
 
     QLabel *op = nullptr;
     bool opEnabled = false;
 
+    /** Create the main UI actions. */
+    void createActions(const NetworkStyle* networkStyle);
+    /** Create system tray icon and notification */
     void createTrayIcon(const NetworkStyle* networkStyle);
+    /** Create system tray menu (or setup the dock menu) */
+    void createTrayIconMenu();
+
     void showTop(QWidget *view);
     bool openStandardDialog(QString title = "", QString body = "", QString okBtn = "OK", QString cancelBtn = "CANCEL");
 
@@ -149,8 +163,16 @@ private slots:
     /** Show window if hidden, unminimize when minimized, rise when obscured or show if hidden and fToggleHidden is true */
     void showNormalIfMinimized(bool fToggleHidden = false);
 
+    /** Simply calls showNormalIfMinimized(true) for use in SLOT() macro */
+    void toggleHidden();
+
     /** called by a timer to check if fRequestShutdown has been set **/
     void detectShutdown();
+
+#ifndef Q_OS_MAC
+    /** Handle tray icon clicked */
+    void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
+#endif
 
 signals:
     /** Signal raised when a URI was entered or dragged to the GUI */
