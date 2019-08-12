@@ -7,19 +7,12 @@
 #include "qt/pivx/requestdialog.h"
 #include "qt/pivx/addnewcontactdialog.h"
 #include "qt/pivx/qtutils.h"
-
-#include "qt/pivx/PIVXGUI.h"
 #include "qt/pivx/myaddressrow.h"
-#include "qt/pivx/qtutils.h"
 #include "qt/pivx/furlistrow.h"
 #include "walletmodel.h"
 #include "guiutil.h"
-#include "base58.h"
-#include "script/standard.h"
 
-#include <QPainter>
 #include <QModelIndex>
-#include <QClipboard>
 #include <QColor>
 #include <QDateTime>
 
@@ -44,7 +37,6 @@ public:
         uint time = index.sibling(index.row(), AddressTableModel::Date).data(Qt::DisplayRole).toUInt();
         QString date = (time == 0) ? "" : GUIUtil::dateTimeStr(QDateTime::fromTime_t(time));
         row->updateView(address, label, date);
-
     }
 
     QColor rectColor(bool isHovered, bool isSelected) override{
@@ -63,15 +55,13 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
     ui(new Ui::ReceiveWidget)
 {
     ui->setupUi(this);
+    this->setStyleSheet(parent->styleSheet());
 
     delegate = new FurAbstractListItemDelegate(
                 DECORATION_SIZE,
                 new AddressHolder(isLightTheme()),
                 this
                 );
-
-    // Stylesheet
-    this->setStyleSheet(parent->styleSheet());
 
     // Containers
     setCssProperty(ui->left, "container");
@@ -81,9 +71,8 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
 
     // Title
     ui->labelTitle->setText(tr("Receive"));
-    setCssTitleScreen(ui->labelTitle);
-
     ui->labelSubtitle1->setText(tr("Scan the QR code or copy the address to receive PIV."));
+    setCssTitleScreen(ui->labelTitle);
     setCssSubtitleScreen(ui->labelSubtitle1);
 
     // Address
@@ -112,7 +101,6 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
     ui->pushButtonNewAddress->setText(tr("Generate Address"));
     ui->pushButtonNewAddress->setLayoutDirection(Qt::RightToLeft);
     setCssProperty(ui->pushButtonNewAddress, "btn-secundary-new-address");
-
 
     ui->pushButtonCopy->setText(tr("Copy"));
     ui->pushButtonCopy->setLayoutDirection(Qt::RightToLeft);
@@ -223,12 +211,10 @@ void ReceiveWidget::onLabelClicked(){
                     "receive"
             )
                     ) {
-                // Show snackbar
                 // update label status (icon color)
                 updateLabel();
                 inform(tr("Address label saved"));
             } else {
-                // Show snackbar error
                 inform(tr("Error storing address label"));
             }
         }
@@ -246,7 +232,6 @@ void ReceiveWidget::onNewAddressClicked(){
         inform(tr("New address created"));
     } catch (const std::runtime_error& error){
         // Error generating address
-        std::cout << "Error generating address, correct me" << std::endl;
         inform("Error generating address");
     }
 }
