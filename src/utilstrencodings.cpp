@@ -39,6 +39,33 @@ std::string SanitizeString(const std::string& str, int rule)
     return strResult;
 }
 
+bool validateURL(std::string strURL, std::string& strErr, unsigned int maxSize) {
+
+    // Check URL size
+    if (strURL.size() > maxSize) {
+        strErr = strprintf("Invalid URL: %d exceeds limit of %d characters.", strURL.size(), maxSize);
+        return false;
+    }
+
+    std::vector<std::string> reqPre;
+
+    // Required initial strings; URL must contain one
+    reqPre.push_back("http://");
+    reqPre.push_back("https://");
+
+    // check fronts
+    bool found = false;
+    for (int i=0; i < reqPre.size() && !found; i++) {
+        if (strURL.find(reqPre[i]) == 0) found = true;
+    }
+    if ((!found) && (reqPre.size() > 0)) {
+        strErr = "Invalid URL, check scheme (e.g. https://)";
+        return false;
+    }
+
+    return true;
+}
+
 const signed char p_util_hexdigit[256] =
     {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,

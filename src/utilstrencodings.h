@@ -40,6 +40,16 @@ enum SafeChars
 * @return           A new string without unsafe chars
 */
 std::string SanitizeString(const std::string& str, int rule = SAFE_CHARS_DEFAULT);
+
+/**
+* Check URL format for conformance for validity to a defined pattern
+* @param[in] strURL   The string to be processed for validity
+* @param[in] stdErr   A string that will be loaded with any validation error message
+* @param[in] maxSize  An unsigned int, defaulted to 64, to restrict the length
+* @return             A bool, true if valid, false if not (reason in stdErr)
+*/
+bool validateURL(std::string strURL, std::string& strErr, unsigned int maxSize = 64);
+
 std::vector<unsigned char> ParseHex(const char* psz);
 std::vector<unsigned char> ParseHex(const std::string& str);
 signed char HexDigit(char c);

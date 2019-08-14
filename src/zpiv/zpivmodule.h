@@ -74,6 +74,7 @@ class CValidationState;
 
 namespace ZPIVModule {
     bool createInput(CTxIn &in, CZerocoinMint& mint, uint256 hashTxOut);
+    PublicCoinSpend parseCoinSpend(const CTxIn &in);
     bool parseCoinSpend(const CTxIn &in, const CTransaction& tx, const CTxOut &prevOut, PublicCoinSpend& publicCoinSpend);
     bool validateInput(const CTxIn &in, const CTxOut &prevOut, const CTransaction& tx, PublicCoinSpend& ret);
 
