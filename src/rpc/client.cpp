@@ -120,6 +120,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
         {"mnvoteraw", 4},
         {"reservebalance", 0},
         {"reservebalance", 1},
+        {"setblockminsize", 0},
         {"setstakesplitthreshold", 0},
         {"autocombinerewards", 0},
         {"autocombinerewards", 1},

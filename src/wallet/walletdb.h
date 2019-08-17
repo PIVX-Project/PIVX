@@ -118,6 +118,7 @@ public:
 
     bool WriteOrderPosNext(int64_t nOrderPosNext);
 
+    bool WriteBlockMinSize(uint32_t nBlockMinSize);
     // presstab
     bool WriteStakeSplitThreshold(uint64_t nStakeSplitThreshold);
     bool WriteMultiSend(std::vector<std::pair<std::string, int> > vMultiSend);

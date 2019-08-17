@@ -164,7 +164,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
         }
 
         if (!fStakeFound) {
-            LogPrint("staking", "CreateNewBlock(): stake not found\n");
+            LogPrint("staking", "%s: stake not found\n", __func__);
             return NULL;
         }
     }
@@ -182,8 +182,13 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
 
     // Minimum block size you want to create; block will be filled with free transactions
     // until there are no more or the block reaches this size:
-    unsigned int nBlockMinSize = GetArg("-blockminsize", DEFAULT_BLOCK_MIN_SIZE);
-    nBlockMinSize = std::min(nBlockMaxSize, nBlockMinSize);
+    uint32_t nBlockMinSize;
+    if (pwalletMain != nullptr) {
+        nBlockMinSize = pwalletMain->nBlockMinSize;
+    } else {
+        nBlockMinSize = GetArg("-blockminsize", DEFAULT_BLOCK_MIN_SIZE);
+        nBlockMinSize = std::min(nBlockMaxSize, nBlockMinSize);
+    }
 
     // Collect memory pool transactions into the block
     CAmount nFees = 0;
@@ -315,7 +320,8 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
         uint64_t nBlockSize = 1000;
         uint64_t nBlockTx = 0;
         int nBlockSigOps = 100;
-        bool fSortedByFee = (nBlockPrioritySize <= 0);
+        // If there's no priority queue, start sorting.
+        bool fSortedByFee = (nBlockPrioritySize == 0);
 
         TxPriorityCompare comparer(fSortedByFee);
         std::make_heap(vecPriority.begin(), vecPriority.end(), comparer);
@@ -342,13 +348,15 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             if (nBlockSigOps + nTxSigOps >= nMaxBlockSigOps)
                 continue;
 
-            // Skip free transactions if we're past the minimum block size:
             const uint256& hash = tx.GetHash();
             double dPriorityDelta = 0;
             CAmount nFeeDelta = 0;
             mempool.ApplyDeltas(hash, dPriorityDelta, nFeeDelta);
-            if (!tx.HasZerocoinSpendInputs() && fSortedByFee && (dPriorityDelta <= 0) && (nFeeDelta <= 0) && (feeRate < ::minRelayTxFee) && (nBlockSize + nTxSize >= nBlockMinSize))
+            if (!tx.HasZerocoinSpendInputs() && (dPriorityDelta <= 0) && (nFeeDelta <= 0)
+                && (feeRate < ::minRelayTxFee) && (nBlockSize + nTxSize > nBlockMinSize)) {
+                // Skip free transactions if we're past the minimum block size
                 continue;
+            }
 
             // Prioritise by fee once past the priority size or we run out of high-priority
             // transactions:
@@ -467,7 +475,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
 
         nLastBlockTx = nBlockTx;
         nLastBlockSize = nBlockSize;
-        LogPrintf("CreateNewBlock(): total size %u\n", nBlockSize);
+        LogPrintf("%s: total size %u\n", __func__, nBlockSize);
 
         // Compute final coinbase transaction.
         pblock->vtx[0].vin[0].scriptSig = CScript() << nHeight << OP_0;
@@ -536,7 +544,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
 
         CValidationState state;
         if (!TestBlockValidity(state, *pblock, pindexPrev, false, false)) {
-            LogPrintf("CreateNewBlock() : TestBlockValidity failed\n");
+            LogPrintf("%s: TestBlockValidity failed\n", __func__);
             mempool.clear();
             return NULL;
         }

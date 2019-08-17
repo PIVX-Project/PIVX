@@ -2196,6 +2196,73 @@ UniValue reservebalance(const UniValue& params, bool fHelp)
     return result;
 }
 
+UniValue setblockminsize(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() > 1)
+        throw std::runtime_error(
+            "setblockminsize value\n"
+            "\nMinimum block size you want to create; block will be filled with free transactions until\n"
+            "there are no more, or the block reaches this size. This will override the -blockminsize flag\n"
+            "on a running node; but the saved value can be overridden by the flag.  A size under 1000 will\n"
+            "effectively mean you will not include free transactions.\n" +
+            HelpRequiringPassphrase() + "\n"
+
+            "\nArguments:\n"
+            "1. value   (numeric, optional) Blocksize value between 0 and "
+            + strprintf("%d (default: %d)", MAX_BLOCK_SIZE_CURRENT, DEFAULT_BLOCK_MIN_SIZE) + "\n"
+
+            "\nResult:\n"
+            "{\n"
+            "  \"blockminsize\": n,    (numeric) Minimum block size value set\n"
+            "  \"saved\": true|false    (boolean) 'true' if successfully saved to the wallet file\n"
+            "}\n"
+
+            "\nExamples:\n" +
+            HelpExampleCli("setblockminsize", "5000") + HelpExampleRpc("setblockminsize", "5000"));
+
+    EnsureWalletIsUnlocked();
+
+    uint32_t nBlockMinSize = DEFAULT_BLOCK_MIN_SIZE;
+    if (params.size() > 0)
+        nBlockMinSize = params[0].get_int();
+
+    if (nBlockMinSize > MAX_BLOCK_SIZE_CURRENT)
+        nBlockMinSize = MAX_BLOCK_SIZE_CURRENT;
+
+    CWalletDB walletdb(pwalletMain->strWalletFile);
+    LOCK(pwalletMain->cs_wallet);
+    {
+        bool fFileBacked = pwalletMain->fFileBacked;
+
+        UniValue result(UniValue::VOBJ);
+        pwalletMain->nBlockMinSize = nBlockMinSize;
+        result.push_back(Pair("blockminsize", int(pwalletMain->nBlockMinSize)));
+        if (fFileBacked) {
+            walletdb.WriteBlockMinSize(nBlockMinSize);
+            result.push_back(Pair("saved", "true"));
+        } else
+            result.push_back(Pair("saved", "false"));
+
+        return result;
+    }
+}
+
+UniValue getblockminsize(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+        throw std::runtime_error(
+            "getblockminsize\n"
+            "Returns the minimum size block you will create if there are enough transactions.\n"
+
+            "\nResult:\n"
+            "n      (numeric) Minimum block size value\n"
+
+            "\nExamples:\n" +
+            HelpExampleCli("getblockminsize", "") + HelpExampleRpc("getblockminsize", ""));
+
+    return int(pwalletMain->nBlockMinSize);
+}
+
 // presstab HyperStake
 UniValue setstakesplitthreshold(const UniValue& params, bool fHelp)
 {

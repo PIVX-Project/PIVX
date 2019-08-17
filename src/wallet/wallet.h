@@ -263,6 +263,7 @@ public:
     // Stake Settings
     unsigned int nHashDrift;
     unsigned int nHashInterval;
+    uint32_t nBlockMinSize;
     uint64_t nStakeSplitThreshold;
     int nStakeSetUpdateTime;
 
@@ -313,6 +314,7 @@ public:
 
         // Stake Settings
         nHashDrift = 45;
+        nBlockMinSize = DEFAULT_BLOCK_MIN_SIZE;
         nStakeSplitThreshold = 2000;
         nHashInterval = 22;
         nStakeSetUpdateTime = 300; // 5 minutes

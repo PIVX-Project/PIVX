@@ -211,6 +211,12 @@ bool CWalletDB::WriteOrderPosNext(int64_t nOrderPosNext)
     return Write(std::string("orderposnext"), nOrderPosNext);
 }
 
+bool CWalletDB::WriteBlockMinSize(uint32_t nBlockMinSize)
+{
+    nWalletDBUpdated++;
+    return Write(std::string("blockMinSize"), nBlockMinSize);
+}
+
 // presstab HyperStake
 bool CWalletDB::WriteStakeSplitThreshold(uint64_t nStakeSplitThreshold)
 {
@@ -672,6 +678,9 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
             }
         } else if (strType == "orderposnext") {
             ssValue >> pwallet->nOrderPosNext;
+        } else if (strType == "blockMinSize")
+        {
+            ssValue >> pwallet->nBlockMinSize;
         } else if (strType == "stakeSplitThreshold") //presstab HyperStake
         {
             ssValue >> pwallet->nStakeSplitThreshold;
