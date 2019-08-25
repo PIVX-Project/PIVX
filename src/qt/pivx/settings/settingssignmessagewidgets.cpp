@@ -86,7 +86,7 @@ SettingsSignMessageWidgets::SettingsSignMessageWidgets(PIVXGUI* _window, QWidget
 
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(onGoClicked()));
     connect(btnContact, SIGNAL(triggered()), this, SLOT(onAddressesClicked()));
-    connect(ui->pushButtonClear, SIGNAL(clicked()), this, SLOT(on_clear_all()));
+    connect(ui->pushButtonClear, SIGNAL(clicked()), this, SLOT(onClearAll()));
     connect(ui->pushSign, &QPushButton::clicked, [this](){onModeSelected(true);});
     connect(ui->pushVerify,  &QPushButton::clicked, [this](){onModeSelected(false);});
 }
@@ -102,7 +102,7 @@ void SettingsSignMessageWidgets::onModeSelected(bool isSign){
 
 void SettingsSignMessageWidgets::onGoClicked(){
     if(isSign){
-        on_signMessageButton_SM_clicked();
+        onSignMessageButtonSMClicked();
     } else {
         onVerifyMessage();
     }
@@ -130,7 +130,7 @@ void SettingsSignMessageWidgets::setAddress_SM(const QString& address){
     ui->messageIn_SM->setFocus();
 }
 
-void SettingsSignMessageWidgets::on_addressBookButton_SM_clicked(){
+void SettingsSignMessageWidgets::onAddressBookButtonSMClicked(){
     if (walletModel && walletModel->getAddressTableModel()) {
         AddressBookPage dlg(AddressBookPage::ForSelection, AddressBookPage::ReceivingTab, this);
         dlg.setModel(walletModel->getAddressTableModel());
@@ -140,18 +140,18 @@ void SettingsSignMessageWidgets::on_addressBookButton_SM_clicked(){
     }
 }
 
-void SettingsSignMessageWidgets::on_pasteButton_SM_clicked(){
+void SettingsSignMessageWidgets::onPasteButtonSMClicked(){
     setAddress_SM(QApplication::clipboard()->text());
 }
 
-void SettingsSignMessageWidgets::on_clear_all() {
+void SettingsSignMessageWidgets::onClearAll() {
     ui->addressIn_SM->clear();
     ui->signatureOut_SM->clear();
     ui->messageIn_SM->clear();
     ui->statusLabel_SM->setStyleSheet("QLabel { color: transparent; }");
 }
 
-void SettingsSignMessageWidgets::on_signMessageButton_SM_clicked(){
+void SettingsSignMessageWidgets::onSignMessageButtonSMClicked(){
 
     if (!walletModel)
         return;

@@ -25,12 +25,12 @@ public:
 protected:
     void resizeEvent(QResizeEvent *event) override;
 public slots:
-    void on_signMessageButton_SM_clicked();
+    void onSignMessageButtonSMClicked();
     void onVerifyMessage();
-    void on_pasteButton_SM_clicked();
-    void on_addressBookButton_SM_clicked();
+    void onPasteButtonSMClicked();
+    void onAddressBookButtonSMClicked();
     void onGoClicked();
-    void on_clear_all();
+    void onClearAll();
     void onAddressesClicked();
     void onModeSelected(bool isSign);
     void updateMode();

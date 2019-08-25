@@ -117,11 +117,11 @@ SettingsBitToolWidget::SettingsBitToolWidget(PIVXGUI* _window, QWidget *parent) 
     ui->statusLabel_ENC->setStyleSheet("QLabel { color: transparent; }");
     ui->statusLabel_DEC->setStyleSheet("QLabel { color: transparent; }");
 
-    connect(ui->pushButtonEncrypt, &QPushButton::clicked, this, &SettingsBitToolWidget::on_encryptKeyButton_ENC_clicked);
+    connect(ui->pushButtonEncrypt, &QPushButton::clicked, this, &SettingsBitToolWidget::onEncryptKeyButtonENCClicked);
     connect(ui->pushButtonDecrypt, SIGNAL(clicked()), this, SLOT(onDecryptClicked()));
     connect(ui->pushButtonImport, SIGNAL(clicked()), this, SLOT(importAddressFromDecKey()));
     connect(btnContact, SIGNAL(triggered()), this, SLOT(onAddressesClicked()));
-    connect(ui->pushButtonClear, &QPushButton::clicked, this, &SettingsBitToolWidget::on_clear_all);
+    connect(ui->pushButtonClear, &QPushButton::clicked, this, &SettingsBitToolWidget::onClearAll);
     connect(ui->pushButtonDecryptClear, SIGNAL(clicked()), this, SLOT(onClearDecrypt()));
 }
 
@@ -151,7 +151,7 @@ bool isValidPassphrase(QString strPassphrase, QString& strInvalid)
     return true;
 }
 
-void SettingsBitToolWidget::on_encryptKeyButton_ENC_clicked()
+void SettingsBitToolWidget::onEncryptKeyButtonENCClicked()
 {
     if (!walletModel)
         return;
@@ -200,7 +200,7 @@ void SettingsBitToolWidget::on_encryptKeyButton_ENC_clicked()
     ui->statusLabel_ENC->setText(QString("<nobr>") + tr("Address encrypted.") + QString("</nobr>"));
 }
 
-void SettingsBitToolWidget::on_clear_all(){
+void SettingsBitToolWidget::onClearAll(){
     ui->addressIn_ENC->clear();
     ui->passphraseIn_ENC->clear();
     ui->encryptedKeyOut_ENC->clear();

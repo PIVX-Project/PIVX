@@ -72,7 +72,7 @@ private:
     void startExecutor();
 
 private slots:
-    void on_lineEdit_returnPressed();
+    void onLineEditReturnPressed();
 
 
 };

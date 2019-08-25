@@ -434,7 +434,7 @@ void SettingsConsoleWidget::message(int category, const QString& message, bool h
     ui->messagesWidget->append(out);
 }
 
-void SettingsConsoleWidget::on_lineEdit_returnPressed()
+void SettingsConsoleWidget::onLineEditReturnPressed()
 {
     QString cmd = ui->lineEdit->text();
     ui->lineEdit->clear();
