@@ -31,7 +31,7 @@
    </property>
    <item>
     <widget class="QWidget" name="frame_2" native="true">
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QVBoxLayout" name="verticalLayout_1">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -61,7 +61,7 @@
           <height>520</height>
          </size>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout_9">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -73,7 +73,7 @@
          </property>
          <item>
           <widget class="QWidget" name="frame" native="true">
-           <layout class="QVBoxLayout" name="verticalLayout_6">
+           <layout class="QVBoxLayout" name="verticalLayout_3">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -750,7 +750,7 @@
             <item>
              <widget class="QStackedWidget" name="stackedWidget">
               <widget class="QWidget" name="page_0">
-               <layout class="QVBoxLayout" name="verticalLayout_2">
+               <layout class="QVBoxLayout" name="verticalLayout_4">
                 <property name="leftMargin">
                  <number>40</number>
                 </property>
@@ -758,7 +758,7 @@
                  <number>40</number>
                 </property>
                 <item>
-                 <spacer name="verticalSpacer_4">
+                 <spacer name="verticalSpacer_1">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -776,7 +776,7 @@
                </layout>
               </widget>
               <widget class="QWidget" name="page_1">
-               <layout class="QVBoxLayout" name="verticalLayout_7" stretch="0,0,0,0,0">
+               <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0,0,0,0">
                 <property name="spacing">
                  <number>6</number>
                 </property>
@@ -793,7 +793,7 @@
                  <number>12</number>
                 </property>
                 <item>
-                 <spacer name="verticalSpacer_3">
+                 <spacer name="verticalSpacer_2">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -828,7 +828,7 @@
                  </widget>
                 </item>
                 <item>
-                 <spacer name="verticalSpacer_2">
+                 <spacer name="verticalSpacer_3">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -844,7 +844,7 @@
                  <widget class="QComboBox" name="comboBoxLanguage"/>
                 </item>
                 <item>
-                 <spacer name="verticalSpacer_7">
+                 <spacer name="verticalSpacer_4">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -859,7 +859,7 @@
                </layout>
               </widget>
               <widget class="QWidget" name="page_2">
-               <layout class="QVBoxLayout" name="verticalLayout_2">
+               <layout class="QVBoxLayout" name="verticalLayout_6">
                 <property name="leftMargin">
                  <number>40</number>
                 </property>
@@ -867,7 +867,7 @@
                  <number>40</number>
                 </property>
                 <item>
-                 <spacer name="verticalSpacer_4">
+                 <spacer name="verticalSpacer_5">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -884,7 +884,7 @@
                 </item>
                 <item>
                  <widget class="QWidget" name="widget_3" native="true">
-                  <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,0,1,0">
+                  <layout class="QVBoxLayout" name="verticalLayout_7" stretch="1,0,1,0">
                    <property name="spacing">
                     <number>0</number>
                    </property>
@@ -921,7 +921,7 @@ PIVX Core Wallet</string>
                     </widget>
                    </item>
                    <item>
-                    <spacer name="verticalSpacer_9">
+                    <spacer name="verticalSpacer_5_1">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
                      </property>
@@ -950,7 +950,7 @@ PIVX Core Wallet</string>
                     </widget>
                    </item>
                    <item>
-                    <spacer name="verticalSpacer_8">
+                    <spacer name="verticalSpacer_5_2">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
                      </property>
@@ -968,7 +968,7 @@ PIVX Core Wallet</string>
                </layout>
               </widget>
               <widget class="QWidget" name="page_3">
-               <layout class="QVBoxLayout" name="verticalLayout_10" stretch="0,0,0,3">
+               <layout class="QVBoxLayout" name="verticalLayout_8" stretch="0,0,0,3">
                 <property name="spacing">
                  <number>6</number>
                 </property>
@@ -985,7 +985,7 @@ PIVX Core Wallet</string>
                  <number>12</number>
                 </property>
                 <item>
-                 <spacer name="verticalSpacer_5">
+                 <spacer name="verticalSpacer_6">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -1017,7 +1017,7 @@ PIVX Core Wallet</string>
                  </widget>
                 </item>
                 <item>
-                 <spacer name="verticalSpacer_2">
+                 <spacer name="verticalSpacer_7">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -1045,7 +1045,7 @@ PIVX Core Wallet</string>
                </layout>
               </widget>
               <widget class="QWidget" name="page_4">
-               <layout class="QVBoxLayout" name="verticalLayout_10" stretch="0,0,0,0,0">
+               <layout class="QVBoxLayout" name="verticalLayout_9" stretch="0,0,0,0,0">
                 <property name="spacing">
                  <number>6</number>
                 </property>
@@ -1062,7 +1062,7 @@ PIVX Core Wallet</string>
                  <number>12</number>
                 </property>
                 <item>
-                 <spacer name="verticalSpacer_10">
+                 <spacer name="verticalSpacer_8">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -1097,7 +1097,7 @@ PIVX Core Wallet</string>
                  </widget>
                 </item>
                 <item>
-                 <spacer name="verticalSpacer_2">
+                 <spacer name="verticalSpacer_9">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -1126,7 +1126,7 @@ PIVX Core Wallet</string>
                  </widget>
                 </item>
                 <item>
-                 <spacer name="verticalSpacer_6">
+                 <spacer name="verticalSpacer_10">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>

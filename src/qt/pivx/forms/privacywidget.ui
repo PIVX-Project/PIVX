@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,1">
+  <layout class="QHBoxLayout" name="horizontalLayout_1" stretch="2,1">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -61,7 +61,7 @@
            <number>20</number>
           </property>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -115,7 +115,7 @@
                 <property name="title">
                  <string/>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <layout class="QHBoxLayout" name="horizontalLayout_2_1">
                  <property name="spacing">
                   <number>0</number>
                  </property>
@@ -218,7 +218,7 @@
            </spacer>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="2">
+           <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="2">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -247,7 +247,7 @@
                </widget>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,0">
+               <layout class="QHBoxLayout" name="horizontalLayout_3_1" stretch="1,0,0">
                 <property name="spacing">
                  <number>0</number>
                 </property>
@@ -315,7 +315,7 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -575,7 +575,7 @@
             <number>0</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_84">
+            <layout class="QHBoxLayout" name="horizontalLayout_4_1">
              <item>
               <widget class="QLabel" name="labelTitleDenom1">
                <property name="text">
@@ -596,7 +596,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="horizontalLayout_4_2">
              <item>
               <widget class="QLabel" name="labelTitleDenom5">
                <property name="text">
@@ -617,7 +617,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_81">
+            <layout class="QHBoxLayout" name="horizontalLayout_4_3">
              <item>
               <widget class="QLabel" name="labelTitleDenom10">
                <property name="text">
@@ -638,7 +638,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_82">
+            <layout class="QHBoxLayout" name="horizontalLayout_4_4">
              <item>
               <widget class="QLabel" name="labelTitleDenom50">
                <property name="text">
@@ -659,7 +659,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="horizontalLayout_4_5">
              <item>
               <widget class="QLabel" name="labelTitleDenom100">
                <property name="text">
@@ -680,7 +680,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="horizontalLayout_4_6">
              <item>
               <widget class="QLabel" name="labelTitleDenom500">
                <property name="text">
@@ -701,7 +701,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_83">
+            <layout class="QHBoxLayout" name="horizontalLayout_4_7">
              <item>
               <widget class="QLabel" name="labelTitleDenom1000">
                <property name="text">
@@ -722,7 +722,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="horizontalLayout_4_8">
              <item>
               <widget class="QLabel" name="labelTitleDenom5000">
                <property name="text">

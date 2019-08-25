@@ -71,7 +71,7 @@
          <number>20</number>
         </property>
         <item>
-         <spacer name="horizontalSpacer_2">
+         <spacer name="horizontalSpacer_1">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -112,7 +112,7 @@
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer">
+         <spacer name="horizontalSpacer_2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -868,7 +868,7 @@ background:transparent;
           <number>20</number>
          </property>
          <item>
-          <spacer name="horizontalSpacer">
+          <spacer name="horizontalSpacer_3">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>

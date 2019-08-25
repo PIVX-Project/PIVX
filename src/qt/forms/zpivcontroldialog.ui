@@ -19,7 +19,7 @@
         <property name="windowTitle">
             <string>Select zPIV to Spend</string>
         </property>
-        <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
+        <layout class="QVBoxLayout" name="verticalLayout_1" stretch="0">
             <property name="spacing">
                 <number>0</number>
             </property>
@@ -68,7 +68,7 @@
                                     <number>30</number>
                                 </property>
                                 <item>
-                                    <spacer name="horizontalSpacer_4">
+                                    <spacer name="horizontalSpacer_1">
                                         <property name="orientation">
                                             <enum>Qt::Horizontal</enum>
                                         </property>
@@ -109,7 +109,7 @@
                                     </widget>
                                 </item>
                                 <item>
-                                    <spacer name="horizontalSpacer_5">
+                                    <spacer name="horizontalSpacer_2">
                                         <property name="orientation">
                                             <enum>Qt::Horizontal</enum>
                                         </property>
@@ -177,7 +177,7 @@
                                     </widget>
                                 </item>
                                 <item>
-                                    <spacer name="horizontalSpacer_2">
+                                    <spacer name="horizontalSpacer_3">
                                         <property name="orientation">
                                             <enum>Qt::Horizontal</enum>
                                         </property>
@@ -213,7 +213,7 @@
                                     </widget>
                                 </item>
                                 <item>
-                                    <spacer name="horizontalSpacer_2">
+                                    <spacer name="horizontalSpacer_4">
                                         <property name="orientation">
                                             <enum>Qt::Horizontal</enum>
                                         </property>
@@ -258,7 +258,7 @@
                                     </widget>
                                 </item>
                                 <item>
-                                    <spacer name="horizontalSpacer">
+                                    <spacer name="horizontalSpacer_5">
                                         <property name="orientation">
                                             <enum>Qt::Horizontal</enum>
                                         </property>
@@ -273,7 +273,7 @@
                             </layout>
                         </item>
                         <item>
-                            <layout class="QVBoxLayout" name="verticalLayout">
+                            <layout class="QVBoxLayout" name="verticalLayout_3">
                                 <property name="leftMargin">
                                     <number>20</number>
                                 </property>
@@ -352,7 +352,7 @@
                                     <number>26</number>
                                 </property>
                                 <item>
-                                    <spacer name="horizontalSpacer_3">
+                                    <spacer name="horizontalSpacer_6">
                                         <property name="orientation">
                                             <enum>Qt::Horizontal</enum>
                                         </property>
