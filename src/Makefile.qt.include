@@ -490,6 +490,7 @@ RES_ICONS = \
   qt/pivx/res/img/ic-nav-privacy.svg \
   qt/pivx/res/img/img-empty-dark-error.svg \
   qt/pivx/res/img/ic-add-label.svg \
+  qt/pivx/res/img/ic-pending.svg \
   qt/pivx/res/img/ic-check-theme-dark.svg \
   qt/pivx/res/img/ic-nav-receive-active.svg \
   qt/pivx/res/img/img-empty-dark-masternode.svg \

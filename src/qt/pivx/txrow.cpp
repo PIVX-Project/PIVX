@@ -49,6 +49,7 @@ void TxRow::setAmount(QString str){
 void TxRow::setType(bool isLightTheme, int type, bool isConfirmed){
     QString path;
     QString css;
+    bool sameIcon = false;
     switch (type) {
         case TransactionRecord::ZerocoinMint:
             path = "://ic-transaction-mint";
@@ -81,11 +82,13 @@ void TxRow::setType(bool isLightTheme, int type, bool isConfirmed){
             css = "text-list-amount-send";
             break;
         default:
-            path = ":/icons/tx_inout";
+            path = "://ic-pending";
+            sameIcon = true;
+            css = "text-list-amount-unconfirmed";
             break;
     }
 
-    if (!isLightTheme){
+    if (!isLightTheme && !sameIcon){
         path += "-dark";
     }
 

@@ -823,7 +823,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>SELECT LANGUAGE</string>
+                   <string>Select your language</string>
                   </property>
                  </widget>
                 </item>

@@ -4,12 +4,9 @@
 
 #include "qt/pivx/txviewholder.h"
 #include "qt/pivx/txrow.h"
-
 #include "qt/pivx/qtutils.h"
 #include "transactiontablemodel.h"
-#include "transactionrecord.h"
 #include <QModelIndex>
-#include <iostream>
 
 #define ADDRESS_SIZE 12
 
@@ -22,24 +19,29 @@ void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered
     txRow->updateStatus(isLightTheme, isHovered, isSelected);
 
     QModelIndex rIndex = (filter) ? filter->mapToSource(index) : index;
-    TransactionRecord *rec = static_cast<TransactionRecord*>(rIndex.internalPointer());
     QDateTime date = rIndex.data(TransactionTableModel::DateRole).toDateTime();
     qint64 amount = rIndex.data(TransactionTableModel::AmountRole).toLongLong();
     QString amountText = BitcoinUnits::formatWithUnit(nDisplayUnit, amount, true, BitcoinUnits::separatorAlways);
     QModelIndex indexType = rIndex.sibling(rIndex.row(),TransactionTableModel::Type);
     QString label = indexType.data(Qt::DisplayRole).toString();
     int type = rIndex.data(TransactionTableModel::TypeRole).toInt();
+
     if(type != TransactionRecord::ZerocoinMint &&
             type !=  TransactionRecord::ZerocoinSpend_Change_zPiv &&
-            type !=  TransactionRecord::StakeZPIV){
+            type !=  TransactionRecord::StakeZPIV &&
+            type != TransactionRecord::Other){
         QString address = rIndex.data(Qt::DisplayRole).toString();
         if(address.length() > 20) {
             address = address.left(ADDRESS_SIZE) + "..." + address.right(ADDRESS_SIZE);
         }
         label += " " + address;
+    } else if (type == TransactionRecord::Other) {
+        label += rIndex.data(Qt::DisplayRole).toString();
     }
-    bool isUnconfirmed = (rec->status.status == TransactionStatus::Unconfirmed) || (rec->status.status == TransactionStatus::Immature)
-                         || (rec->status.status == TransactionStatus::Conflicted) || (rec->status.status == TransactionStatus::NotAccepted);
+
+    int status = rIndex.data(TransactionTableModel::StatusRole).toInt();
+    bool isUnconfirmed = (status == TransactionStatus::Unconfirmed) || (status == TransactionStatus::Immature)
+                         || (status == TransactionStatus::Conflicted) || (status == TransactionStatus::NotAccepted);
 
     txRow->setDate(date);
     txRow->setLabel(label);

@@ -304,5 +304,6 @@
         <file alias="ic-check-liliac-indeterminate">pivx/res/img/ic-check-liliac-indeterminate.svg</file>
         <file alias="ani-loading-dark">pivx/res/img/ani-loading-dark.gif</file>
         <file alias="ani-loading">pivx/res/img/ani-loading.gif</file>
+        <file alias="ic-pending">pivx/res/img/ic-pending.svg</file>
     </qresource>
 </RCC>

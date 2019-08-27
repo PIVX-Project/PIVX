@@ -462,8 +462,13 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord* wtx, b
         QString label = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(wtx->address));
         return label.isEmpty() ? "" : label;
     }
-    default:
-        return tr("(n/a)") + watchAddress;
+    default: {
+        if (watchAddress.isEmpty()) {
+            return tr("No information");
+        } else {
+            return tr("(n/a)") + watchAddress;
+        }
+    }
     }
 }
 
