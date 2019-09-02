@@ -12,12 +12,16 @@
 #include "qt/pivx/txviewholder.h"
 #include "transactionfilterproxy.h"
 
-#include <iostream>
 #include <cstdlib>
-
 #include <QWidget>
 #include <QLineEdit>
 #include <QMap>
+
+#if defined(HAVE_CONFIG_H)
+#include "config/pivx-config.h" /* for USE_QTCHARTS */
+#endif
+
+#ifdef USE_QTCHARTS
 
 #include <QtCharts/QChartView>
 #include <QtCharts/QBarSeries>
@@ -29,6 +33,8 @@
 QT_CHARTS_USE_NAMESPACE
 
 using namespace QtCharts;
+
+#endif
 
 class PIVXGUI;
 class WalletModel;
@@ -93,30 +99,35 @@ signals:
     /** Notify that a new transaction appeared */
     void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address);
 private slots:
-    void windowResizeEvent(QResizeEvent *event);
     void handleTransactionClicked(const QModelIndex &index);
     void changeTheme(bool isLightTheme, QString &theme) override;
-    void changeChartColors();
     void onSortChanged(const QString&);
     void onSortTypeChanged(const QString& value);
     void updateDisplayUnit();
     void showList();
     void onTxArrived(const QString& hash);
+
+#ifdef USE_QTCHARTS
+    void windowResizeEvent(QResizeEvent *event);
+    void changeChartColors();
     void onChartYearChanged(const QString&);
     void onChartMonthChanged(const QString&);
     void onChartArrowClicked();
+#endif
 
 private:
     Ui::DashboardWidget *ui;
     FurAbstractListItemDelegate* txViewDelegate;
     TransactionFilterProxy* filter;
-    TransactionFilterProxy* stakesFilter;
     TxViewHolder* txHolder;
     TransactionTableModel* txModel;
     int nDisplayUnit = -1;
     bool isSync = false;
 
+#ifdef USE_QTCHARTS
+
     // Chart
+    TransactionFilterProxy* stakesFilter = nullptr;
     bool isChartInitialized = false;
     QChartView *chartView = nullptr;
     QBarSeries *series = nullptr;
@@ -143,6 +154,9 @@ private:
     void setChartShow(ChartShowType type);
     std::pair<int, int> getChartRange(QMap<int, std::pair<qint64, qint64>> amountsBy);
     bool hasStakes();
+
+#endif
+
 };
 
 #endif // DASHBOARDWIDGET_H

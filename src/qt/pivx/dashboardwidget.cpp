@@ -79,7 +79,6 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     ui->comboBoxYears->setView(new QListView());
     ui->comboBoxYears->setStyleSheet("selection-background-color:transparent; selection-color:transparent;");
     ui->pushButtonYear->setChecked(true);
-    setChartShow(YEAR);
 
     setCssProperty(ui->pushButtonChartArrow, "btn-chart-arrow");
 
@@ -137,9 +136,8 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     ui->btnHowTo->setText(tr("How to get PIV or zPIV"));
     setCssBtnSecondary(ui->btnHowTo);
 
-    ui->labelEmptyChart->setText(tr("You have no staking rewards"));
-    setCssProperty(ui->labelEmptyChart, "text-empty");
 
+    setCssProperty(ui->labelEmptyChart, "text-empty");
     ui->labelMessageEmpty->setText(tr("You can verify the staking activity in the status bar at the top right of the wallet.\nIt will start automatically as soon as the wallet has enough confirmations on any unspent balances, and the wallet has synced."));
     setCssSubtitleScreen(ui->labelMessageEmpty);
 
@@ -152,19 +150,20 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     if (window)
         connect(window, SIGNAL(windowResizeEvent(QResizeEvent*)), this, SLOT(windowResizeEvent(QResizeEvent*)));
 
+bool hasCharts = false;
+#ifdef USE_QTCHARTS
+    hasCharts = true;
+    setChartShow(YEAR);
     connect(ui->pushButtonYear, &QPushButton::clicked, [this](){setChartShow(YEAR);});
     connect(ui->pushButtonMonth, &QPushButton::clicked, [this](){setChartShow(MONTH);});
     connect(ui->pushButtonAll, &QPushButton::clicked, [this](){setChartShow(ALL);});
-}
+#endif
 
-void DashboardWidget::setChartShow(ChartShowType type) {
-    this->chartShow = type;
-    if (chartShow == MONTH) {
-        ui->containerChartArrow->setVisible(true);
+    if (hasCharts) {
+        ui->labelEmptyChart->setText(tr("You have no staking rewards"));
     } else {
-        ui->containerChartArrow->setVisible(false);
+        ui->labelEmptyChart->setText(tr("No charts library"));
     }
-    if (isChartInitialized) refreshChart();
 }
 
 void DashboardWidget::handleTransactionClicked(const QModelIndex &index){
@@ -214,13 +213,14 @@ void DashboardWidget::loadWalletModel(){
         // Notification pop-up for new transaction
         connect(txModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
                 this, SLOT(processNewTransaction(QModelIndex, int, int)));
-
+#ifdef USE_QTCHARTS
         // chart filter
         stakesFilter = new TransactionFilterProxy();
         stakesFilter->setSourceModel(txModel);
         stakesFilter->sort(TransactionTableModel::Date, Qt::AscendingOrder);
         stakesFilter->setOnlyStakes(true);
         loadChart();
+#endif
     }
     // update the display unit, to not use the default ("PIV")
     updateDisplayUnit();
@@ -228,9 +228,11 @@ void DashboardWidget::loadWalletModel(){
 
 void DashboardWidget::onTxArrived(const QString& hash) {
     showList();
+#ifdef USE_QTCHARTS
     if (hasStakes() && walletModel->isCoinStakeMine(hash)) {
         refreshChart();
     }
+#endif
 }
 
 void DashboardWidget::showList(){
@@ -308,7 +310,22 @@ void DashboardWidget::walletSynced(bool sync){
 
 void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){
     static_cast<TxViewHolder*>(this->txViewDelegate->getRowFactory())->isLightTheme = isLightTheme;
+#ifdef USE_QTCHARTS
     if (chart) this->changeChartColors();
+#endif
+
+}
+
+#ifdef USE_QTCHARTS
+
+void DashboardWidget::setChartShow(ChartShowType type) {
+    this->chartShow = type;
+    if (chartShow == MONTH) {
+        ui->containerChartArrow->setVisible(true);
+    } else {
+        ui->containerChartArrow->setVisible(false);
+    }
+    if (isChartInitialized) refreshChart();
 }
 
 const QStringList monthsNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -698,6 +715,8 @@ bool DashboardWidget::hasStakes() {
     return stakesFilter->rowCount() > 0;
 }
 
+#endif
+
 void DashboardWidget::processNewTransaction(const QModelIndex& parent, int start, int /*end*/) {
     // Prevent notifications-spam when initial block download is in progress
     if (!walletModel || !clientModel || clientModel->inInitialBlockDownload())
@@ -715,6 +734,8 @@ void DashboardWidget::processNewTransaction(const QModelIndex& parent, int start
 }
 
 DashboardWidget::~DashboardWidget(){
+#ifdef USE_QTCHARTS
     delete chart;
+#endif
     delete ui;
 }
