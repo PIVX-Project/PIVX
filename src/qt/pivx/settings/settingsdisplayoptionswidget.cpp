@@ -96,8 +96,7 @@ SettingsDisplayOptionsWidget::SettingsDisplayOptionsWidget(PIVXGUI* _window, QWi
     setCssBtnSecondary(ui->pushButtonClean);
 
     initLanguages();
-    connect(ui->comboBoxLanguage, SIGNAL(currentIndexChanged()), this, SLOT(showRestartWarning(bool)));
-    connect(ui->comboBoxLanguage ,SIGNAL(currentIndexChanged(const QString&)),this, SLOT(languageChanged(const QString&)));
+    connect(ui->pushButtonSave, SIGNAL(clicked()), parent, SLOT(onSaveOptionsClicked()));
     connect(ui->pushButtonReset, SIGNAL(clicked()), this, SLOT(onResetClicked()));
     connect(ui->pushButtonClean, SIGNAL(clicked()), parent, SLOT(onDiscardChanges()));
 }
@@ -120,32 +119,6 @@ void SettingsDisplayOptionsWidget::initLanguages(){
             ui->comboBoxLanguage->addItem(locale.nativeLanguageName() + QString(" (") + langStr + QString(")"), QVariant(langStr));
         }
     }
-}
-
-void SettingsDisplayOptionsWidget::languageChanged(const QString& newValue){
-    QString sel = ui->comboBoxLanguage->currentData().toString();
-    QSettings settings;
-    if (settings.value("language") != sel){
-        settings.setValue("language", sel);
-        //emit onLanguageSelected();
-    }
-}
-
-void SettingsDisplayOptionsWidget::showRestartWarning(bool fPersistent){
-
-    // TODO: Add warning..
-    /*
-    ui->statusLabel->setStyleSheet("QLabel { color: red; }");
-
-    if (fPersistent) {
-        ui->statusLabel->setText(tr("Client restart required to activate changes."));
-    } else {
-        ui->statusLabel->setText(tr("This change would require a client restart."));
-        // clear non-persistent status label after 10 seconds
-        // Todo: should perhaps be a class attribute, if we extend the use of statusLabel
-        QTimer::singleShot(10000, this, SLOT(clearStatusLabel()));
-    }
-     */
 }
 
 void SettingsDisplayOptionsWidget::onResetClicked() {

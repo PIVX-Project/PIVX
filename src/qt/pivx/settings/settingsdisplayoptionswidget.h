@@ -26,8 +26,6 @@ public:
     void loadClientModel() override;
 
 public slots:
-    void showRestartWarning(bool fPersistent);
-    void languageChanged(const QString& newValue);
     void onResetClicked();
 
 private:

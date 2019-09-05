@@ -14,6 +14,7 @@
 #include "qt/pivx/settings/settingsinformationwidget.h"
 #include "qt/pivx/settings/settingsconsolewidget.h"
 #include "qt/pivx/qtutils.h"
+#include "qt/pivx/defaultdialog.h"
 #include "optionsmodel.h"
 #include "clientmodel.h"
 #include "utilitydialog.h"
@@ -202,9 +203,17 @@ void SettingsWidget::onResetAction(){
 }
 
 void SettingsWidget::onSaveOptionsClicked(){
-    mapper->submit();
-    pwalletMain->MarkDirty();
-    inform(tr("Options stored"));
+    if(mapper->submit()) {
+        pwalletMain->MarkDirty();
+        if (this->clientModel->getOptionsModel()->isRestartRequired()) {
+            openStandardDialog(tr("Restart required"), tr("You wallet will be restarted to apply the changes\n"), tr("OK"));
+            emit handleRestart(QStringList());
+        } else {
+            inform(tr("Options stored"));
+        }
+    } else {
+        inform(tr("Options store failed"));
+    }
 }
 
 void SettingsWidget::onFileClicked() {
@@ -382,6 +391,15 @@ void SettingsWidget::setMapper(){
     settingsMainOptionsWidget->setMapper(mapper);
     settingsWalletOptionsWidget->setMapper(mapper);
     settingsDisplayOptionsWidget->setMapper(mapper);
+}
+
+void SettingsWidget::openStandardDialog(QString title, QString body, QString okBtn, QString cancelBtn){
+    showHideOp(true);
+    DefaultDialog *confirmDialog = new DefaultDialog(window);
+    confirmDialog->setText(title, body, okBtn, cancelBtn);
+    confirmDialog->adjustSize();
+    openDialogWithOpaqueBackground(confirmDialog, window);
+    confirmDialog->deleteLater();
 }
 
 SettingsWidget::~SettingsWidget(){

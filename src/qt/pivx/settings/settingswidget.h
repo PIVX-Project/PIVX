@@ -95,6 +95,7 @@ private:
     QList<QPushButton*> options;
 
     void selectOption(QPushButton* option);
+    void openStandardDialog(QString title = "", QString body = "", QString okBtn = "OK", QString cancelBtn = "");
 };
 
 #endif // SETTINGSWIDGET_H
