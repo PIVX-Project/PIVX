@@ -173,7 +173,7 @@ QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, Separator
         // Clean remainder
         QString cleanRemainder = remainder_str;
         for (int i = (remainder_str.length() - 1); i > 1; i--) {
-            if (remainder_str.at(i) == "0") {
+            if (remainder_str.at(i) == QChar('0')) {
                 cleanRemainder = cleanRemainder.left(cleanRemainder.lastIndexOf("0"));
             } else
                 break;
