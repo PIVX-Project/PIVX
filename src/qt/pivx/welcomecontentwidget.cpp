@@ -4,7 +4,6 @@
 
 #include "qt/pivx/welcomecontentwidget.h"
 #include "qt/pivx/forms/ui_welcomecontentwidget.h"
-#include <QGraphicsDropShadowEffect>
 #include <QFile>
 #include <QListView>
 #include <QDir>
@@ -17,11 +16,11 @@ WelcomeContentWidget::WelcomeContentWidget(QWidget *parent) :
     QDialog(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint),
     ui(new Ui::WelcomeContentWidget),
     backButton(new QPushButton()),
-    nextButton(new QPushButton()),
     icConfirm1(new QPushButton()),
     icConfirm2(new QPushButton()),
     icConfirm3(new QPushButton()),
-    icConfirm4(new QPushButton())
+    icConfirm4(new QPushButton()),
+    nextButton(new QPushButton())
 {
     ui->setupUi(this);
 

@@ -14,7 +14,7 @@
 #include "qt/pivx/qtutils.h"
 #include "qt/pivx/loadingdialog.h"
 #include "qt/pivx/defaultdialog.h"
-#include "qt/pivx/PIVXGUI.h"
+#include "qt/pivx/pivxgui.h"
 #include <QDebug>
 
 #include <QKeyEvent>

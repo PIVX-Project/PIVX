@@ -8,7 +8,7 @@
 #include "config/pivx-config.h"
 #endif
 
-#include "qt/pivx/PIVXGUI.h"
+#include "qt/pivx/pivxgui.h"
 
 #include "clientmodel.h"
 #include "guiconstants.h"

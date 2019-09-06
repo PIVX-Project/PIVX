@@ -9,7 +9,7 @@
 #include "qt/pivx/pwidget.h"
 #include "qt/pivx/contactdropdownrow.h"
 #include "qt/pivx/furabstractlistitemdelegate.h"
-#include "qt/pivx/AddressFilterProxyModel.h"
+#include "qt/pivx/addressfilterproxymodel.h"
 #include <QListView>
 #include <QObject>
 #include <QWidget>

@@ -9,7 +9,7 @@
 #include "addresstablemodel.h"
 #include "qt/pivx/tooltipmenu.h"
 #include "furabstractlistitemdelegate.h"
-#include "qt/pivx/AddressFilterProxyModel.h"
+#include "qt/pivx/addressfilterproxymodel.h"
 
 #include <QWidget>
 

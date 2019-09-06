@@ -8,7 +8,7 @@
 #include "qt/pivx/pwidget.h"
 #include "addresstablemodel.h"
 #include "qt/pivx/furabstractlistitemdelegate.h"
-#include "qt/pivx/AddressFilterProxyModel.h"
+#include "qt/pivx/addressfilterproxymodel.h"
 
 #include <QSpacerItem>
 #include <QWidget>

@@ -125,7 +125,7 @@ QT_MOC_CPP = \
   qt/moc_bitcoinaddressvalidator.cpp \
   qt/moc_bitcoinamountfield.cpp \
   qt/moc_bitcoingui.cpp \
-  qt/pivx/moc_PIVXGUI.cpp \
+  qt/pivx/moc_pivxgui.cpp \
   qt/moc_bitcoinunits.cpp \
   qt/moc_blockexplorer.cpp \
   qt/moc_clientmodel.cpp \
@@ -254,7 +254,7 @@ BITCOIN_QT_H = \
   qt/bitcoinaddressvalidator.h \
   qt/bitcoinamountfield.h \
   qt/bitcoingui.h \
-  qt/pivx/PIVXGUI.h \
+  qt/pivx/pivxgui.h \
   qt/bitcoinunits.h \
   qt/blockexplorer.h \
   qt/clientmodel.h \
@@ -322,7 +322,7 @@ BITCOIN_QT_H = \
   qt/pivx/walletpassworddialog.h \
   qt/pivx/topbar.h \
   qt/pivx/txrow.h \
-  qt/pivx/AddressFilterProxyModel.h \
+  qt/pivx/addressfilterproxymodel.h \
   qt/pivx/dashboardwidget.h \
   qt/pivx/coincontrolpivwidget.h \
   qt/pivx/addresslabelrow.h \
@@ -633,7 +633,7 @@ BITCOIN_QT_BASE_CPP = \
   qt/bitcoinaddressvalidator.cpp \
   qt/bitcoinamountfield.cpp \
   qt/bitcoingui.cpp \
-  qt/pivx/PIVXGUI.cpp \
+  qt/pivx/pivxgui.cpp \
   qt/bitcoinunits.cpp \
   qt/blockexplorer.cpp \
   qt/clientmodel.cpp \
@@ -705,7 +705,7 @@ BITCOIN_QT_WALLET_CPP = \
   qt/pivx/walletpassworddialog.cpp \
   qt/pivx/topbar.cpp \
   qt/pivx/txrow.cpp \
-  qt/pivx/AddressFilterProxyModel.cpp \
+  qt/pivx/addressfilterproxymodel.cpp \
   qt/pivx/dashboardwidget.cpp \
   qt/pivx/coincontrolpivwidget.cpp \
   qt/pivx/addresslabelrow.cpp \
