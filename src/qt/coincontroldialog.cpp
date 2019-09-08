@@ -780,7 +780,7 @@ void CoinControlDialog::updateView()
     QFlags<Qt::ItemFlag> flgTristate = Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsTristate;
 
     int nDisplayUnit = model->getOptionsModel()->getDisplayUnit();
-    double mempoolEstimatePriority = mempool.estimatePriority(nTxConfirmTarget);
+//    double mempoolEstimatePriority = mempool.estimatePriority(nTxConfirmTarget);
 
     std::map<QString, std::vector<COutput>> mapCoins;
     model->listCoins(mapCoins);
