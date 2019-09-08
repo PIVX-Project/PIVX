@@ -52,8 +52,6 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* parent) :
     ui->labelSubtitle2->setText(tr("Mint new zPIV or convert back to PIV"));
     setCssSubtitleScreen(ui->labelSubtitle2);
     ui->labelSubtitle2->setContentsMargins(0,2,0,0);
-    /* Amount */
-    ui->labelSubtitleAmount->setText(tr("Enter amount of PIV to mint into zPIV "));
     setCssProperty(ui->labelSubtitleAmount, "text-title");
 
     ui->lineEditAmount->setPlaceholderText("0.00 PIV ");
@@ -114,7 +112,10 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* parent) :
 
     // Buttons
     setCssBtnPrimary(ui->pushButtonSave);
-    onMintSelected(true);
+
+    // Only Convert to PIV enabled.
+    ui->containerViewPrivacyChecks->setVisible(false);
+    onMintSelected(false);
 
     ui->btnTotalzPIV->setTitleClassAndText("btn-title-grey", "Total 0 zPIV");
     ui->btnTotalzPIV->setSubTitleClassAndText("text-subtitle", "Show denominations of zPIV owned.");
@@ -139,6 +140,7 @@ PrivacyWidget::PrivacyWidget(PIVXGUI* parent) :
     connect(ui->btnRescanMints, SIGNAL(clicked()), this, SLOT(onRescanMintsClicked()));
     connect(ui->btnResetZerocoin, SIGNAL(clicked()), this, SLOT(onResetZeroClicked()));
 
+    ui->pushRight->setChecked(true);
     connect(ui->pushLeft, &QPushButton::clicked, [this](){onMintSelected(false);});
     connect(ui->pushRight,  &QPushButton::clicked, [this](){onMintSelected(true);});
 
@@ -190,9 +192,11 @@ void PrivacyWidget::onMintSelected(bool isMint){
     if(isMint){
         btnText = tr("Mint zPIV");
         ui->btnCoinControl->setVisible(true);
+        ui->labelSubtitleAmount->setText(tr("Enter amount of PIV to mint into zPIV"));
     }else{
         btnText = tr("Convert back to PIV");
         ui->btnCoinControl->setVisible(false);
+        ui->labelSubtitleAmount->setText(tr("Enter amount of zPIV to convert back into PIV"));
     }
     ui->pushButtonSave->setText(btnText);
 }
@@ -227,11 +231,12 @@ void PrivacyWidget::onSendClicked(){
         return;
 
     if(GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
-        warn(tr("Mint Zerocoin"), tr("zPIV is currently undergoing maintenance"));
+        warn(tr("Zerocoin"), tr("zPIV is currently undergoing maintenance"));
         return;
     }
 
-    bool isConvert = ui->pushLeft->isChecked();
+    // Only convert enabled.
+    bool isConvert = true;// ui->pushLeft->isChecked();
 
     if(!GUIUtil::requestUnlock(walletModel, AskPassphraseDialog::Context::Mint_zPIV, true)){
         inform(tr("You need to unlock the wallet to be able to %1 zPIV").arg(isConvert ? tr("convert") : tr("mint")));

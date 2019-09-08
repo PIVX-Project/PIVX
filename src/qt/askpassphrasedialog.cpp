@@ -153,6 +153,11 @@ AskPassphraseDialog::~AskPassphraseDialog()
     delete ui;
 }
 
+void AskPassphraseDialog::showEvent(QShowEvent *event)
+{
+    if (ui->passEdit1) ui->passEdit1->setFocus();
+}
+
 void AskPassphraseDialog::accept()
 {
     SecureString oldpass, newpass1, newpass2;

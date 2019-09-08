@@ -55,6 +55,7 @@ public:
     explicit AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel* model, Context context);
     ~AskPassphraseDialog();
 
+    void showEvent(QShowEvent *event) override;
     void accept() override;
 
 private:
