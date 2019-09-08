@@ -18,6 +18,8 @@
 
 #define DECORATION_SIZE 65
 #define NUM_ITEMS 3
+#define SHOW_EMPTY_CHART_VIEW_THRESHOLD 4000
+#define REQUEST_LOAD_TASK 1
 
 #include "moc_dashboardwidget.cpp"
 
@@ -333,8 +335,7 @@ const QStringList monthsNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"
 void DashboardWidget::loadChart(){
     if (hasStakes()) {
         if (!chart) {
-            ui->layoutChart->setVisible(true);
-            ui->emptyContainerChart->setVisible(false);
+            showHideEmptyChart(false, false);
             initChart();
             QDate currentDate = QDate::currentDate();
             monthFilter = currentDate.month();
@@ -346,11 +347,19 @@ void DashboardWidget::loadChart(){
         }
         refreshChart();
         changeChartColors();
-        isChartInitialized = true;
     } else {
-        ui->layoutChart->setVisible(false);
-        ui->emptyContainerChart->setVisible(true);
+        showHideEmptyChart(true, false);
     }
+}
+
+void DashboardWidget::showHideEmptyChart(bool showEmpty, bool loading, bool forceView) {
+    if (stakesFilter->rowCount() > SHOW_EMPTY_CHART_VIEW_THRESHOLD || forceView) {
+        if (!ui->layoutChart->isVisible()) {
+            ui->layoutChart->setVisible(!showEmpty);
+            ui->emptyContainerChart->setVisible(showEmpty);
+        }
+    }
+    ui->labelEmptyChart->setText(loading ? tr("Loading chart..") : tr("You have no staking rewards"));
 }
 
 void DashboardWidget::initChart() {
@@ -403,8 +412,8 @@ void DashboardWidget::changeChartColors(){
     axisX->setGridLineColor(gridLineColorX);
     axisY->setLinePenColor(linePenColorY);
     chart->setBackgroundBrush(QBrush(backgroundColor));
-    set0->setBorderColor(gridLineColorX);
-    set1->setBorderColor(gridLineColorX);
+    if (set0) set0->setBorderColor(gridLineColorX);
+    if (set1) set1->setBorderColor(gridLineColorX);
 }
 
 // pair PIV, zPIV
@@ -485,6 +494,38 @@ QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy() {
     return amountBy;
 }
 
+ChartData DashboardWidget::loadChartData(bool withMonthNames) {
+    ChartData chartData;
+    chartData.amountsByCache = getAmountBy(); // pair PIV, zPIV
+    std::pair<int,int> range = getChartRange(chartData.amountsByCache);
+    bool isOrderedByMonth = chartShow == MONTH;
+    int daysInMonth = QDate(yearFilter, monthFilter, 1).daysInMonth();
+
+    for (int j = range.first; j < range.second; j++) {
+        int num = (isOrderedByMonth && j > daysInMonth) ? (j % daysInMonth) : j;
+        qreal piv = 0;
+        qreal zpiv = 0;
+        if (chartData.amountsByCache.contains(num)) {
+            std::pair <qint64, qint64> pair = chartData.amountsByCache[num];
+            piv = (pair.first != 0) ? pair.first / 100000000 : 0;
+            zpiv = (pair.second != 0) ? pair.second / 100000000 : 0;
+            chartData.totalPiv += pair.first;
+            chartData.totalZpiv += pair.second;
+        }
+
+        chartData.xLabels << ((withMonthNames) ? monthsNames[num - 1] : QString::number(num));
+
+        chartData.valuesPiv.append(piv);
+        chartData.valueszPiv.append(zpiv);
+
+        int max = std::max(piv, zpiv);
+        if (max > chartData.maxValue) {
+            chartData.maxValue = max;
+        }
+    }
+    return chartData;
+}
+
 void DashboardWidget::onChartYearChanged(const QString& yearStr) {
     if (isChartInitialized) {
         int newYear = yearStr.toInt();
@@ -510,7 +551,14 @@ void DashboardWidget::onChartMonthChanged(const QString& monthStr) {
     }
 }
 
-void DashboardWidget::refreshChart(){
+bool DashboardWidget::refreshChart(){
+    isChartMin = width() < 1300;
+    isChartInitialized = false;
+    showHideEmptyChart(true, true);
+    return execute(REQUEST_LOAD_TASK);
+}
+
+void DashboardWidget::onChartRefreshed() {
     if (chart) {
         if(series){
             series->clear();
@@ -532,52 +580,12 @@ void DashboardWidget::refreshChart(){
     series->attachAxis(axisX);
     series->attachAxis(axisY);
 
-    // pair PIV, zPIV
-    amountsByCache = getAmountBy();
-
-    QStringList xLabels;
-    isChartMin = width() < 1300;
-    bool withMonthNames = !isChartMin && (chartShow == YEAR);
-
-    qreal maxValue = 0;
-    qint64 totalPiv = 0;
-    qint64 totalZpiv = 0;
-
-    QList<qreal> valuesPiv;
-    QList<qreal> valueszPiv;
-
-    std::pair<int,int> range = getChartRange(amountsByCache);
-    bool isOrderedByMonth = chartShow == MONTH;
-    int daysInMonth = QDate(yearFilter, monthFilter, 1).daysInMonth();
-
-    for (int j = range.first; j < range.second; j++) {
-        int num = (isOrderedByMonth && j > daysInMonth) ? (j % daysInMonth) : j;
-        qreal piv = 0;
-        qreal zpiv = 0;
-        if (amountsByCache.contains(num)) {
-            std::pair <qint64, qint64> pair = amountsByCache[num];
-            piv = (pair.first != 0) ? pair.first / 100000000 : 0;
-            zpiv = (pair.second != 0) ? pair.second / 100000000 : 0;
-            totalPiv += pair.first;
-            totalZpiv += pair.second;
-        }
-
-        xLabels << ((withMonthNames) ? monthsNames[num - 1] : QString::number(num));
-        valuesPiv.append(piv);
-        valueszPiv.append(zpiv);
-
-        int max = std::max(piv, zpiv);
-        if (max > maxValue) {
-            maxValue = max;
-        }
-    }
-
-    set0->append(valuesPiv);
-    set1->append(valueszPiv);
+    set0->append(chartData.valuesPiv);
+    set1->append(chartData.valueszPiv);
 
     // Total
     nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
-    if (totalPiv > 0 || totalZpiv > 0) {
+    if (chartData.totalPiv > 0 || chartData.totalZpiv > 0) {
         setCssProperty(ui->labelAmountPiv, "text-stake-piv");
         setCssProperty(ui->labelAmountZpiv, "text-stake-zpiv");
     } else {
@@ -585,8 +593,8 @@ void DashboardWidget::refreshChart(){
         setCssProperty(ui->labelAmountZpiv, "text-stake-zpiv-disable");
     }
     forceUpdateStyle({ui->labelAmountPiv, ui->labelAmountZpiv});
-    ui->labelAmountPiv->setText(GUIUtil::formatBalance(totalPiv, nDisplayUnit));
-    ui->labelAmountZpiv->setText(GUIUtil::formatBalance(totalZpiv, nDisplayUnit, true));
+    ui->labelAmountPiv->setText(GUIUtil::formatBalance(chartData.totalPiv, nDisplayUnit));
+    ui->labelAmountZpiv->setText(GUIUtil::formatBalance(chartData.totalZpiv, nDisplayUnit, true));
 
     series->append(set0);
     if(hasZpivStakes)
@@ -598,8 +606,8 @@ void DashboardWidget::refreshChart(){
     else {
         series->setBarWidth(0.3);
     }
-    axisX->append(xLabels);
-    axisY->setRange(0,maxValue);
+    axisX->append(chartData.xLabels);
+    axisY->setRange(0, chartData.maxValue);
 
     // Controllers
     switch (chartShow) {
@@ -642,6 +650,10 @@ void DashboardWidget::refreshChart(){
     } else {
         ui->comboBoxYears->setCurrentText(QString::number(currentYear));
     }
+
+    // back to normal
+    isChartInitialized = true;
+    showHideEmptyChart(false, false, true);
 }
 
 std::pair<int, int> DashboardWidget::getChartRange(QMap<int, std::pair<qint64, qint64>> amountsBy) {
@@ -664,7 +676,7 @@ std::pair<int, int> DashboardWidget::getChartRange(QMap<int, std::pair<qint64, q
 void DashboardWidget::updateAxisX(const QStringList* args) {
     axisX->clear();
     QStringList months;
-    std::pair<int,int> range = getChartRange(amountsByCache);
+    std::pair<int,int> range = getChartRange(chartData.amountsByCache);
     if (args) {
         months = *args;
     } else {
@@ -717,6 +729,19 @@ bool DashboardWidget::hasStakes() {
 
 #endif
 
+void DashboardWidget::run(int type) {
+#ifdef USE_QTCHARTS
+    if (type == REQUEST_LOAD_TASK) {
+        bool withMonthNames = !isChartMin && (chartShow == YEAR);
+        chartData = loadChartData(withMonthNames);
+        QMetaObject::invokeMethod(this, "onChartRefreshed", Qt::QueuedConnection);
+    }
+#endif
+}
+void DashboardWidget::onError(int type, QString error) {
+    inform(tr("Error loading chart: %1").arg(error));
+}
+
 void DashboardWidget::processNewTransaction(const QModelIndex& parent, int start, int /*end*/) {
     // Prevent notifications-spam when initial block download is in progress
     if (!walletModel || !clientModel || clientModel->inInitialBlockDownload())
@@ -736,6 +761,7 @@ void DashboardWidget::processNewTransaction(const QModelIndex& parent, int start
 DashboardWidget::~DashboardWidget(){
 #ifdef USE_QTCHARTS
     delete chart;
+    quitWorker(true);
 #endif
     delete ui;
 }

@@ -8,6 +8,8 @@
 #include <QObject>
 #include <QWidget>
 #include <QString>
+#include <QThread>
+#include "qt/pivx/prunnable.h"
 
 class PIVXGUI;
 class ClientModel;
@@ -17,7 +19,7 @@ namespace Ui {
 class PWidget;
 }
 
-class PWidget : public QWidget
+class PWidget : public QWidget, public Runnable
 {
     Q_OBJECT
 public:
@@ -28,6 +30,9 @@ public:
     void setWalletModel(WalletModel* model);
 
     PIVXGUI* getWindow() { return this->window; }
+
+    void run(int type) override;
+    void onError(int type, QString error) override;
 
 signals:
     void message(const QString& title, const QString& body, unsigned int style, bool* ret = nullptr);
@@ -47,6 +52,7 @@ protected:
     virtual void loadWalletModel();
 
     void showHideOp(bool show);
+    bool execute(int type);
     void inform(const QString& message);
     void warn(const QString& title, const QString& message);
     bool ask(const QString& title, const QString& message);
@@ -54,10 +60,12 @@ protected:
     void emitMessage(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
 
     bool verifyWalletUnlocked();
+    bool quitWorker(bool forceTermination);
 
 private:
-    void init();
+    QThread* thread = nullptr;
 
+    void init();
 };
 
 #endif // PWIDGET_H

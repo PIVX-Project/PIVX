@@ -73,6 +73,19 @@ enum ChartShowType {
     DAY
 };
 
+class ChartData {
+public:
+    ChartData() {}
+
+    QMap<int, std::pair<qint64, qint64>> amountsByCache;
+    qreal maxValue = 0;
+    qint64 totalPiv = 0;
+    qint64 totalZpiv = 0;
+    QList<qreal> valuesPiv;
+    QList<qreal> valueszPiv;
+    QStringList xLabels;
+};
+
 QT_BEGIN_NAMESPACE
 class QModelIndex;
 QT_END_NAMESPACE
@@ -87,6 +100,9 @@ public:
 
     void loadWalletModel() override;
     void loadChart();
+
+    void run(int type) override;
+    void onError(int type, QString error) override;
 
 public slots:
     void walletSynced(bool isSync);
@@ -145,15 +161,20 @@ private:
     int dayStart = 1;
     bool hasZpivStakes = false;
 
-    QMap<int, std::pair<qint64, qint64>> amountsByCache;
+    ChartData chartData;
 
     void initChart();
-    void refreshChart();
+    void showHideEmptyChart(bool show, bool loading, bool forceView = false);
+    bool refreshChart();
     QMap<int, std::pair<qint64, qint64>> getAmountBy();
+    ChartData loadChartData(bool withMonthNames);
     void updateAxisX(const QStringList *arg = nullptr);
     void setChartShow(ChartShowType type);
     std::pair<int, int> getChartRange(QMap<int, std::pair<qint64, qint64>> amountsBy);
     bool hasStakes();
+
+private slots:
+    void onChartRefreshed();
 
 #endif
 

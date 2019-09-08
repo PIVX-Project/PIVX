@@ -416,7 +416,7 @@
                <string notr="true"/>
               </property>
               <property name="text">
-               <string>No active Master Node yet</string>
+               <string>No transactions</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -1002,7 +1002,7 @@ margin:0px;</string>
                <widget class="QGroupBox" name="container_chart_dropboxes">
                 <property name="minimumSize">
                  <size>
-                  <width>50</width>
+                  <width>55</width>
                   <height>80</height>
                  </size>
                 </property>
@@ -1015,7 +1015,7 @@ margin:0px;</string>
                 <property name="title">
                  <string>Filter by</string>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_8">
+                <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,1">
                  <property name="spacing">
                   <number>5</number>
                  </property>
@@ -1035,7 +1035,7 @@ margin:0px;</string>
                   <widget class="QWidget" name="containerBoxMonths" native="true">
                    <property name="minimumSize">
                     <size>
-                     <width>50</width>
+                     <width>55</width>
                      <height>0</height>
                     </size>
                    </property>
@@ -1059,7 +1059,7 @@ margin:0px;</string>
                      <widget class="QComboBox" name="comboBoxMonths">
                       <property name="minimumSize">
                        <size>
-                        <width>40</width>
+                        <width>55</width>
                         <height>0</height>
                        </size>
                       </property>
