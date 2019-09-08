@@ -90,6 +90,7 @@ bool PWidget::quitWorker(bool forceTermination) {
             return false;
         thread->quit();
         delete thread;
+        thread = nullptr;
     }
     return true;
 }
