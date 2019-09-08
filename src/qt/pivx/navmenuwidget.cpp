@@ -19,7 +19,7 @@ NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
     setCssProperty(ui->imgLogo, "img-nav-logo");
 
     // App version
-    ui->labelVersion->setText("v 4.0.0");//QString(tr("v %1")).arg(QString::fromStdString(FormatFullVersion())));
+    ui->labelVersion->setText(QString(tr("v%1")).arg(QString::fromStdString(FormatVersionFriendly())));
     ui->labelVersion->setProperty("cssClass", "text-title-white");
 
     // Buttons
