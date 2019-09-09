@@ -142,6 +142,8 @@ private:
 
 #ifdef USE_QTCHARTS
 
+    int64_t lastRefreshTime = 0;
+
     // Chart
     TransactionFilterProxy* stakesFilter = nullptr;
     bool isChartInitialized = false;
@@ -166,6 +168,7 @@ private:
     void initChart();
     void showHideEmptyChart(bool show, bool loading, bool forceView = false);
     bool refreshChart();
+    void tryChartRefresh();
     QMap<int, std::pair<qint64, qint64>> getAmountBy();
     ChartData loadChartData(bool withMonthNames);
     void updateAxisX(const QStringList *arg = nullptr);

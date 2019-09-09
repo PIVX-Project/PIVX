@@ -11,6 +11,7 @@
 #include "walletmodel.h"
 #include "clientmodel.h"
 #include "optionsmodel.h"
+#include "utiltime.h"
 #include <QPainter>
 #include <QModelIndex>
 #include <QList>
@@ -20,6 +21,7 @@
 #define NUM_ITEMS 3
 #define SHOW_EMPTY_CHART_VIEW_THRESHOLD 4000
 #define REQUEST_LOAD_TASK 1
+#define CHART_LOAD_MIN_TIME_INTERVAL 15
 
 #include "moc_dashboardwidget.cpp"
 
@@ -231,9 +233,8 @@ void DashboardWidget::loadWalletModel(){
 void DashboardWidget::onTxArrived(const QString& hash) {
     showList();
 #ifdef USE_QTCHARTS
-    if (hasStakes() && walletModel->isCoinStakeMine(hash)) {
-        refreshChart();
-    }
+    if (walletModel->isCoinStakeMine(hash))
+        tryChartRefresh();
 #endif
 }
 
@@ -307,6 +308,9 @@ void DashboardWidget::walletSynced(bool sync){
     if (this->isSync != sync) {
         this->isSync = sync;
         ui->layoutWarning->setVisible(!this->isSync);
+#ifdef USE_QTCHARTS
+        tryChartRefresh();
+#endif
     }
 }
 
@@ -315,10 +319,20 @@ void DashboardWidget::changeTheme(bool isLightTheme, QString& theme){
 #ifdef USE_QTCHARTS
     if (chart) this->changeChartColors();
 #endif
-
 }
 
 #ifdef USE_QTCHARTS
+
+void DashboardWidget::tryChartRefresh() {
+    if (hasStakes()) {
+        // Check for min update time to not reload the UI so often if the node is syncing.
+        int64_t now = GetTime();
+        if (lastRefreshTime + CHART_LOAD_MIN_TIME_INTERVAL < now) {
+            lastRefreshTime = now;
+            refreshChart();
+        }
+    }
+}
 
 void DashboardWidget::setChartShow(ChartShowType type) {
     this->chartShow = type;
