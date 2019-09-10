@@ -13,6 +13,9 @@ fi
 if test -z $with_qt_translationdir; then
   with_qt_translationdir=$depends_prefix/translations
 fi
+if test -z $with_qt_svgdir; then
+  with_qt_svgdir=$depends_prefix/svg
+fi
 if test -z $with_qt_bindir && test -z "@no_qt@"; then
   with_qt_bindir=$depends_prefix/native/bin
 fi

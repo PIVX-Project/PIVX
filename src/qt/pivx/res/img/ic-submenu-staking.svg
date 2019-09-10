@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="24px" viewBox="0 0 28 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Sub Menu Locked Copy</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Sub-Menu-Locked-Copy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic-unlock-staking" transform="translate(3.000000, 0.000000)">
+            <g id="Group_8891">
+                <polygon id="Rectangle_4445" points="0 0 24 0 24 24 0 24"></polygon>
+            </g>
+            <path d="M21.448,11.966 L22.707,10.707 L21.293,9.293 L20.034,10.552 C18.5867703,9.34548559 16.8530091,8.53233297 15,8.191 L15,7 C15,4.23857625 12.7614237,2 10,2 C7.23857625,2 5,4.23857625 5,7 L5,8 L4,8 L4,18 L11.16,18 L13.16,16 L6,16 L6,10 L14,10 L14,15.16 L16,13.16 L16,10.525 C16.9450768,10.8594071 17.8275801,11.3494989 18.611,11.975 L9.793,20.793 L11.207,22.207 L20.025,13.389 C21.3039398,14.9793801 22.0007997,16.959168 22,19 L22,20 L24,20 L24,19 C24.0014312,16.4284525 23.098013,13.9383884 21.448,11.966 Z M13,8 L7,8 L7,7 C7,5.34314575 8.34314575,4 10,4 C11.6568542,4 13,5.34314575 13,7 L13,8 Z" id="Path_18910" fill="#FFFFFF" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

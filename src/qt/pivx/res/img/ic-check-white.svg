@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_check" width="16" height="16" viewBox="0 0 16 16">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:none}.cls-2{fill:#fff}
+        </style>
+    </defs>
+    <path id="Rectangle_3779" d="M0 0h16v16H0z" class="cls-1" data-name="Rectangle 3779"/>
+    <path id="Path_18587" d="M13.92 4.125a.655.655 0 0 0-.835 0L5.723 10.8 2.914 8.2a.655.655 0 0 0-.835 0l-.379.33 3.643 3.337a.624.624 0 0 0 .38.133.624.624 0 0 0 .38-.133l8.2-7.341z" class="cls-2" data-name="Path 18587"/>
+</svg>

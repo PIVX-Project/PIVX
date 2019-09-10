@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_error_sync" width="24" height="24" viewBox="0 0 24 24" shape-rendering="geometricPrecision">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#7c7687}.cls-2{fill:none}
+        </style>
+    </defs>
+    <g id="Group_8889" data-name="Group 8889">
+        <g id="Group_8887" data-name="Group 8887">
+            <path id="Path_18905" d="M19.611 16.782A8.933 8.933 0 0 0 21 12h-2a6.95 6.95 0 0 1-.844 3.328z" class="cls-1" data-name="Path 18905"/>
+            <path id="Path_18906" d="M15.328 18.156A6.993 6.993 0 0 1 6.257 16H9v-2H3v6h2v-2.372a8.942 8.942 0 0 0 11.782 1.983z" class="cls-1" data-name="Path 18906"/>
+        </g>
+        <g id="Group_8888" data-name="Group 8888">
+            <path id="Path_18907" d="M8.672 5.844A7 7 0 0 1 17.745 8H15v2h6V4h-2v2.37A8.944 8.944 0 0 0 7.218 4.389z" class="cls-1" data-name="Path 18907"/>
+            <path id="Path_18908" d="M4.389 7.218A8.933 8.933 0 0 0 3 12h2a6.95 6.95 0 0 1 .844-3.328z" class="cls-1" data-name="Path 18908"/>
+        </g>
+    </g>
+    <g id="Group_8890" data-name="Group 8890">
+        <path id="Rectangle_4442" d="M0 0h2v22.627H0z" class="cls-1" data-name="Rectangle 4442" transform="rotate(-45 7.328 -1.622)"/>
+    </g>
+    <path id="Rectangle_4443" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4443"/>
+</svg>

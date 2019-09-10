@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_peers_connection" width="24" height="24" viewBox="0 0 24 24" shape-rendering="geometricPrecision">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#7c7687}.cls-2{fill:none}
+        </style>
+    </defs>
+    <path id="Path_18890" d="M16.333 15L13 12.5V9h2.5V2h-7v7H11v3.5L7.667 15H2v7h7v-5.5l3-2.25 3 2.25V22h7v-7zM10.5 4h3v3h-3zM7 20H4v-3h3zm13 0h-3v-3h3z" class="cls-1" data-name="Path 18890"/>
+    <path id="Rectangle_4410" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4410"/>
+</svg>

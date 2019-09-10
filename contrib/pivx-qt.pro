@@ -658,3 +658,6 @@ TRANSLATIONS += src/qt/locale/pivx_bg.ts \
                 src/qt/locale/pivx_vi.ts \
                 src/qt/locale/pivx_zh_CN.ts \
                 src/qt/locale/pivx_zh_TW.ts
+
+DISTFILES += \
+    README.md

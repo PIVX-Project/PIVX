@@ -50,6 +50,9 @@ extern const std::string CLIENT_DATE;
 std::string FormatFullVersion();
 std::string FormatSubVersion(const std::string& name, int nClientVersion, const std::vector<std::string>& comments);
 
+// Returns a friendly formatted version string to show in the UI
+std::string FormatVersionFriendly();
+
 #endif // WINDRES_PREPROC
 
 #endif // BITCOIN_CLIENTVERSION_H

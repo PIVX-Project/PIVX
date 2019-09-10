@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_empty_Dark_masternode" width="100" height="100" viewBox="0 0 100 100">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#413d4a}.cls-2{fill:#a09ea5}.cls-3{fill:none}
+        </style>
+    </defs>
+    <g id="Group_9047" data-name="Group 9047">
+        <g id="Group_9045" data-name="Group 9045">
+            <circle id="Ellipse_630" cx="8.4" cy="8.4" r="8.4" class="cls-1" data-name="Ellipse 630" transform="translate(43.6 8)"/>
+            <circle id="Ellipse_631" cx="8.4" cy="8.4" r="8.4" class="cls-1" data-name="Ellipse 631" transform="translate(77.2 71)"/>
+            <circle id="Ellipse_632" cx="8.4" cy="8.4" r="8.4" class="cls-1" data-name="Ellipse 632" transform="translate(10 71)"/>
+            <g id="Group_9044" data-name="Group 9044">
+                <path id="Path_18995" d="M39.2 53.154V71h-8V36.346l20.8 16.9 20.8-16.9V71h-8V53.154L52 63.555" class="cls-1" data-name="Path 18995"/>
+            </g>
+        </g>
+        <g id="Group_9046" data-name="Group 9046">
+            <path id="Path_18996" d="M30.2 34.245V72h10V55.255l3.881 3.154 1.261-1.553-7.143-5.8V70h-6V38.447L52 54.534l19.8-16.087V52h2V34.245L52 51.958z" class="cls-2" data-name="Path 18996"/>
+            <path id="Path_18997" d="M71.8 70h-6V51.053L52 62.267l-3.7-3.01-1.264 1.553L52 64.843l11.8-9.587V72h10v-8h-2z" class="cls-2" data-name="Path 18997"/>
+            <path id="Rectangle_4703" d="M0 0h2v4H0z" class="cls-2" data-name="Rectangle 4703" transform="translate(71.8 56)"/>
+            <path id="Path_18998" d="M87.356 70.17A38.409 38.409 0 0 0 90.8 54.2a39.056 39.056 0 0 0-29.408-37.645c0-.052.008-.1.008-.155a9.4 9.4 0 0 0-18.8 0c0 .052.007.1.008.154A38.787 38.787 0 0 0 16.645 70.17a9.4 9.4 0 1 0 10.122 13.492 38.761 38.761 0 0 0 50.466 0A9.395 9.395 0 1 0 87.356 70.17zM52 9a7.4 7.4 0 1 1-7.4 7.4A7.409 7.409 0 0 1 52 9zM18.4 86.8a7.4 7.4 0 1 1 7.4-7.4 7.409 7.409 0 0 1-7.4 7.4zM52 91a36.732 36.732 0 0 1-24.488-9.332 9.352 9.352 0 0 0-8.735-11.649 36.794 36.794 0 0 1 24.081-51.467 9.389 9.389 0 0 0 18.284 0A37.047 37.047 0 0 1 88.8 54.2a36.419 36.419 0 0 1-3.577 15.819 9.352 9.352 0 0 0-8.735 11.649A36.734 36.734 0 0 1 52 91zm33.6-4.2a7.4 7.4 0 1 1 7.4-7.4 7.409 7.409 0 0 1-7.4 7.4z" class="cls-2" data-name="Path 18998"/>
+        </g>
+    </g>
+    <path id="Rectangle_4704" d="M0 0h100v100H0z" class="cls-3" data-name="Rectangle 4704"/>
+</svg>

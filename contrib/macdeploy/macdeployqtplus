@@ -424,7 +424,11 @@ def deployPlugins(appBundleInfo, deploymentInfo, strip, verbose):
             elif pluginPath == "imageformats/libqsvg.dylib" or pluginPath == "iconengines/libqsvgicon.dylib":
                 # Deploy the svg plugins only if QtSvg is in use
                 if not deploymentInfo.usesFramework("QtSvg"):
+                    print ("qtSVG NOT FOUND")
                     continue
+                else:
+                    print ("qtSVG FOUND!")
+                #a = deploymentInfo.usesFramework("QtSvg")
             elif pluginPath == "accessible/libqtaccessiblecompatwidgets.dylib":
                 # Deploy accessibility for Qt3Support only if the Qt3Support is in use
                 if not deploymentInfo.usesFramework("Qt3Support"):

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Artboard</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic-label" transform="translate(2.000000, 2.000000)">
+            <g id="Group_8996" transform="translate(5.000000, 2.000000)" fill="#5C4B7D" fill-rule="nonzero">
+                <path d="M10,16.414 L5,11.414 L0,16.414 L0,0 L10,0 L10,16.414 Z M5,8.586 L8,11.586 L8,2 L2,2 L2,11.586 L5,8.586 Z" id="Path_18961"></path>
+            </g>
+            <polygon id="Rectangle_4641" points="0 0 20 0 20 20 0 20"></polygon>
+        </g>
+    </g>
+</svg>

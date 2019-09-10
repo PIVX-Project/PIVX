@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>ComboBox</title>
+    <desc>Created with Sketch.</desc>
+    <g id="ComboBox" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(5.000000, 0.000000)">
+            <g id="ic-arrow-drop-down" transform="translate(0.000000, 16.000000)">
+                <g id="Group_8822" transform="translate(4.000000, 7.000000)" fill="#5C4B7D">
+                    <polygon id="Path_18879" points="8 9.365 0.319 2.233 1.681 0.767 8 6.635 14.319 0.767 15.68 2.233"></polygon>
+                </g>
+                <polygon id="Rectangle_4407" points="0 0 24 0 24 24 0 24"></polygon>
+            </g>
+            <g id="ic-arrow-drop-up">
+                <g id="ic_arrow_drop_up" transform="translate(12.000000, 12.000000) rotate(180.000000) translate(-12.000000, -12.000000) translate(-0.000000, 0.000000)">
+                    <g id="Group_8822" transform="translate(4.000000, 7.000000)" fill="#5C4B7D">
+                        <polygon id="Path_18879" points="8 9.365 0.319 2.233 1.681 0.767 8 6.635 14.319 0.767 15.68 2.233"></polygon>
+                    </g>
+                    <polygon id="Rectangle_4407" points="0 0 24 0 24 24 0 24"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

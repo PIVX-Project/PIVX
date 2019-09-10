@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="ic_close" width="20" height="20" viewBox="0 0 20 20">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#707070}.cls-2{fill:none}
+        </style>
+    </defs>
+    <path id="Path_18917" d="M17.707 3.707l-1.414-1.414L10 8.586 3.707 2.293 2.293 3.707 8.586 10l-6.293 6.293 1.414 1.414L10 11.414l6.293 6.293 1.414-1.414L11.414 10z" class="cls-1" data-name="Path 18917"/>
+    <path id="Rectangle_4530" d="M0 0h20v20H0z" class="cls-2" data-name="Rectangle 4530"/>
+</svg>

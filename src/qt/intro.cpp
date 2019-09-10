@@ -10,6 +10,7 @@
 #include "guiutil.h"
 
 #include "util.h"
+#include "qt/pivx/qtutils.h"
 
 #include <boost/filesystem.hpp>
 
@@ -109,6 +110,27 @@ Intro::Intro(QWidget* parent) : QDialog(parent, Qt::WindowSystemMenuHint | Qt::W
                                 signalled(false)
 {
     ui->setupUi(this);
+    this->setStyleSheet(GUIUtil::loadStyleSheet());
+
+    setCssProperty(ui->frame, "container-welcome-step2");
+    setCssProperty(ui->container, "container-welcome-stack");
+    setCssProperty(ui->frame_2, "container-welcome");
+    setCssProperty(ui->label_2, "text-title-welcome");
+    setCssProperty(ui->label_4, "text-intro-white");
+    setCssProperty(ui->sizeWarningLabel, "text-intro-white");
+    setCssProperty(ui->freeSpace, "text-intro-white");
+    setCssProperty(ui->errorMessage, "text-intro-white");
+
+    setCssProperty({ui->dataDirDefault, ui->dataDirCustom}, "radio-welcome");
+    setCssProperty(ui->dataDirectory, "edit-primary-welcome");
+    ui->dataDirectory->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    setCssProperty(ui->ellipsisButton, "btn-dots-welcome");
+    setCssBtnPrimary(ui->pushButtonOk);
+    setCssBtnSecondary(ui->pushButtonCancel);
+
+    connect(ui->pushButtonOk, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(ui->pushButtonCancel, SIGNAL(clicked()), this, SLOT(close()));
+
     ui->sizeWarningLabel->setText(ui->sizeWarningLabel->text().arg(BLOCK_CHAIN_SIZE / GB_BYTES));
     startThread();
 }
@@ -133,10 +155,12 @@ void Intro::setDataDirectory(const QString& dataDir)
         ui->dataDirDefault->setChecked(true);
         ui->dataDirectory->setEnabled(false);
         ui->ellipsisButton->setEnabled(false);
+        updateDataDirStatus(false);
     } else {
         ui->dataDirCustom->setChecked(true);
         ui->dataDirectory->setEnabled(true);
         ui->ellipsisButton->setEnabled(true);
+        updateDataDirStatus(true);
     }
 }
 
@@ -158,15 +182,16 @@ bool Intro::pickDataDirectory()
     /* 2) Allow QSettings to override default dir */
     dataDir = settings.value("strDataDir", dataDir).toString();
 
+
     if (!fs::exists(GUIUtil::qstringToBoostPath(dataDir)) || GetBoolArg("-choosedatadir", false)) {
-        /* If current default data directory does not exist, let the user choose one */
+        // If current default data directory does not exist, let the user choose one
         Intro intro;
         intro.setDataDirectory(dataDir);
         intro.setWindowIcon(QIcon(":icons/bitcoin"));
 
         while (true) {
             if (!intro.exec()) {
-                /* Cancel clicked */
+                // Cancel clicked
                 return false;
             }
             dataDir = intro.getDataDirectory();
@@ -176,16 +201,18 @@ bool Intro::pickDataDirectory()
             } catch (fs::filesystem_error& e) {
                 QMessageBox::critical(0, tr("PIVX Core"),
                     tr("Error: Specified data directory \"%1\" cannot be created.").arg(dataDir));
-                /* fall through, back to choosing screen */
+                // fall through, back to choosing screen
             }
         }
 
         settings.setValue("strDataDir", dataDir);
     }
+
     /* Only override -datadir if different from the default, to make it possible to
      * override -datadir in the pivx.conf file in the default data directory
      * (to be consistent with pivxd behavior)
      */
+
     if (dataDir != getDefaultDataDirectory())
         SoftSetArg("-datadir", GUIUtil::qstringToBoostPath(dataDir).string()); // use OS locale for path setting
     return true;
@@ -200,7 +227,7 @@ void Intro::setStatus(int status, const QString& message, quint64 bytesAvailable
         break;
     case FreespaceChecker::ST_ERROR:
         ui->errorMessage->setText(tr("Error") + ": " + message);
-        ui->errorMessage->setStyleSheet("QLabel { color: #800000 }");
+        ui->errorMessage->setStyleSheet("QLabel { color: #f84444 }");
         break;
     }
     /* Indicate number of bytes available */
@@ -217,13 +244,22 @@ void Intro::setStatus(int status, const QString& message, quint64 bytesAvailable
         ui->freeSpace->setText(freeString + ".");
     }
     /* Don't allow confirm in ERROR state */
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(status != FreespaceChecker::ST_ERROR);
+    ui->pushButtonOk->setEnabled(status != FreespaceChecker::ST_ERROR);
+}
+
+void Intro::updateDataDirStatus(bool enabled){
+    if(enabled){
+        setCssProperty(ui->dataDirectory, "edit-primary-welcome", true);
+    } else {
+        setCssProperty(ui->dataDirectory, "edit-primary-welcome-disabled", true);
+
+    }
 }
 
 void Intro::on_dataDirectory_textChanged(const QString& dataDirStr)
 {
     /* Disable OK button until check result comes in */
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+    ui->pushButtonOk->setEnabled(false);
     checkPath(dataDirStr);
 }
 
@@ -237,12 +273,14 @@ void Intro::on_ellipsisButton_clicked()
 void Intro::on_dataDirDefault_clicked()
 {
     setDataDirectory(getDefaultDataDirectory());
+    updateDataDirStatus(false);
 }
 
 void Intro::on_dataDirCustom_clicked()
 {
     ui->dataDirectory->setEnabled(true);
     ui->ellipsisButton->setEnabled(true);
+    updateDataDirStatus(true);
 }
 
 void Intro::startThread()

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#fff}.cls-2{fill:none}
+        </style>
+    </defs>
+    <g id="ic_chevron_left" transform="rotate(-90 26 26)">
+        <g id="Group_8822" data-name="Group 8822" transform="translate(16.266 19)">
+            <path id="Path_18879" d="M15.039 19.767L4.319 9.813l1.9-2.046 8.82 8.19 8.82-8.19 1.9 2.046z" class="cls-1" data-name="Path 18879" transform="translate(-4.319 -7.767)"/>
+        </g>
+        <path id="Rectangle_4407" d="M0 0h50v50H0z" class="cls-2" data-name="Rectangle 4407" transform="translate(2)"/>
+    </g>
+</svg>

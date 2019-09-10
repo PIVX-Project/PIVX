@@ -1,5 +1,5 @@
 ---
-name: "pivx-osx-3.4"
+name: "pivx-osx-4.0"
 enable_cache: true
 distro: "ubuntu"
 suites:

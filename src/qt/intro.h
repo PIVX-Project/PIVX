@@ -73,6 +73,7 @@ private:
     void startThread();
     void checkPath(const QString& dataDir);
     QString getPathToCheck();
+    void updateDataDirStatus(bool enabled);
 
     friend class FreespaceChecker;
 };

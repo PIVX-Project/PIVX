@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Artboard</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.7">
+        <g id="ic-copy" transform="translate(3.000000, 3.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Group_8993">
+                <polygon id="Path_18959" points="2.95454545 15 0.590909091 15 0.590909091 0 12.4090909 0 12.4090909 2.30769231 2.95454545 2.30769231"></polygon>
+            </g>
+            <g id="Group_8994" transform="translate(4.000000, 4.000000)">
+                <path d="M12.4090909,15 L0.590909091,15 L0.590909091,0 L12.4090909,0 L12.4090909,15 Z M2.95454545,12.6923077 L10.0454545,12.6923077 L10.0454545,2.30769231 L2.95454545,2.30769231 L2.95454545,12.6923077 Z" id="Path_18960"></path>
+            </g>
+        </g>
+    </g>
+</svg>

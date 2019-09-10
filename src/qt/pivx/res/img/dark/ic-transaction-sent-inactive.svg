@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style type="text/css">
+            .cls-1{opacity:.7}.cls-2{fill:#fff}.cls-3{fill:none}
+        </style>
+    </defs>
+    <g id="ic-transaction-sent" class="cls-1">
+        <g id="Group_8832" data-name="Group 8832">
+            <path id="Path_18891" d="M22.2 1.8L1.8 9.782l6.37 3.43-.1-.1 1.445-1.445-2.964-1.597 12.122-4.744-4.743 12.123-1.593-2.958-1.445 1.445-.1-.1 3.43 6.37z" class="cls-2" data-name="Path 18891"/>
+            <g id="Group_8831" data-name="Group 8831">
+                <path id="Rectangle_4411" d="M0 0h7v2H0z" class="cls-2" data-name="Rectangle 4411" transform="rotate(-45 21.062 -3.68)"/>
+            </g>
+        </g>
+        <path id="Rectangle_4412" d="M0 0h24v24H0z" class="cls-3" data-name="Rectangle 4412"/>
+    </g>
+</svg>

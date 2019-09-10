@@ -132,3 +132,10 @@ libbitcoinconsensus.pc
 .idea
 CMakeLists.txt
 cmake-build-debug
+
+moc_*
+*.tmp
+ui_*
+build*
+pivxd.*
+pivxd-new-gui.*

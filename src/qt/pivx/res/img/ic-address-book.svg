@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <defs>
+        <style type="text/css">
+            .cls-1{opacity:.5}.cls-2{fill:#fff}.cls-3{fill:none}
+        </style>
+    </defs>
+    <g id="ic_address_book" class="cls-1">
+        <g id="Group_8809" data-name="Group 8809">
+            <path id="Path_18863" d="M8 2H4v22h18V2zM6 22V4h1v18zm14 0H9V4h11z" class="cls-2" data-name="Path 18863"/>
+            <path id="Path_18864" d="M19 6h-9v6h9zm-2 4h-5V8h5z" class="cls-2" data-name="Path 18864"/>
+        </g>
+        <path id="Rectangle_4393" d="M0 0h26v26H0z" class="cls-3" data-name="Rectangle 4393"/>
+    </g>
+</svg>

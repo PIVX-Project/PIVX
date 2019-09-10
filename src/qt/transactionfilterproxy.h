@@ -37,6 +37,11 @@ public:
     };
 
     void setDateRange(const QDateTime& from, const QDateTime& to);
+    void clearDateRange() {
+        if (dateFrom != MIN_DATE || dateTo == MAX_DATE)
+            setDateRange(MIN_DATE, MAX_DATE);
+    }
+
     void setAddressPrefix(const QString& addrPrefix);
     /**
       @note Type filter takes a bit field created with TYPE() or ALL_TYPES
@@ -54,8 +59,16 @@ public:
     /** Set whether to hide orphan stakes. */
     void setHideOrphans(bool fHide);
 
+    /** Only zc txes **/
+    void setShowZcTxes(bool fOnlyZc);
+
+    /** Only stakes txes **/
+    void setOnlyStakes(bool fOnlyStakes);
+
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     static bool isOrphan(const int status, const int type);
+
+    //QVariant dataFromSourcePos(int sourceRow, int role) const;
 
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
@@ -69,7 +82,12 @@ private:
     CAmount minAmount;
     int limitRows;
     bool showInactive;
-    bool fHideOrphans;
+    bool fHideOrphans = true;
+    bool fOnlyZc = false;
+    bool fOnlyStakes = false;
+
+    bool isZcTx(int type) const;
+    bool isStakeTx(int type) const;
 };
 
 #endif // BITCOIN_QT_TRANSACTIONFILTERPROXY_H

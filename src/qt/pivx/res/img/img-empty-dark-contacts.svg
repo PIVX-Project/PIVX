@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="Group_9058" width="100" height="100" data-name="Group 9058" viewBox="0 0 100 100">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#413d4a}.cls-2{fill:#a09ea5}.cls-3{fill:none}
+        </style>
+    </defs>
+    <g id="Group_9057" data-name="Group 9057">
+        <g id="Group_9055" data-name="Group 9055">
+            <path id="Rectangle_4710" d="M0 0h11v84H0z" class="cls-1" data-name="Rectangle 4710" transform="translate(18 8)"/>
+            <path id="Rectangle_4711" d="M0 0h5v12H0z" class="cls-1" data-name="Rectangle 4711" transform="translate(81 17)"/>
+            <path id="Rectangle_4712" d="M0 0h5v12H0z" class="cls-1" data-name="Rectangle 4712" transform="translate(81 38)"/>
+            <path id="Rectangle_4713" d="M0 0h5v12H0z" class="cls-1" data-name="Rectangle 4713" transform="translate(81 59)"/>
+            <circle id="Ellipse_642" cx="9" cy="9" r="9" class="cls-1" data-name="Ellipse 642" transform="translate(46 27)"/>
+            <path id="Path_19002" d="M70.581 64c-3.087-8.828-7.13-15-15.331-15S42.73 55.172 39.5 64z" class="cls-1" data-name="Path 19002"/>
+        </g>
+        <g id="Group_9056" data-name="Group 9056">
+            <path id="Rectangle_4714" d="M0 0h4.001v2H0z" class="cls-2" data-name="Rectangle 4714" transform="translate(64 7)"/>
+            <path id="Rectangle_4715" d="M0 0h2v4H0z" class="cls-2" data-name="Rectangle 4715" transform="translate(28 76)"/>
+            <path id="Path_19003" d="M87 30V16h-5V7H72v2h8v82H30v-7h-2v7h-9V9h9v63h2V9h30V7H17v86h65V72h5V58h-5v-7h5V37h-5v-7zm-5-12h3v10h-3zm3 42v10h-3V60zm0-21v10h-3V39z" class="cls-2" data-name="Path 19003"/>
+            <path id="Path_19004" d="M45 36a10 10 0 1 0 10-10 10.011 10.011 0 0 0-10 10zm18 0a8 8 0 1 1-8-8 8.009 8.009 0 0 1 8 8z" class="cls-2" data-name="Path 19004"/>
+            <path id="Path_19005" d="M55.25 48c-9.716 0-14.022 8.367-16.687 15.656L38.071 65H71.99l-.465-1.33C68.815 55.921 64.763 48 55.25 48zm-14.3 15c3.577-9.094 7.9-13 14.3-13 6.362 0 10.45 3.788 13.906 13z" class="cls-2" data-name="Path 19005"/>
+        </g>
+    </g>
+    <path id="Rectangle_4716" d="M0 0h100v100H0z" class="cls-3" data-name="Rectangle 4716"/>
+</svg>

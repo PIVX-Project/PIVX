@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Artboard</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic-update" transform="translate(2.000000, 2.000000)">
+            <polygon id="Rectangle_4642" points="0 0 20 0 20 20 0 20"></polygon>
+            <path d="M13,8.5 L18,8.5 L18,3.5 L16,3.5 L16,4.715 C13.5656847,1.94871304 9.55671298,1.2030267 6.29053814,2.90899747 C3.0243633,4.61496824 1.34594778,8.33125994 2.22552783,11.9096078 C3.10510789,15.4879556 6.31513536,18.0026378 10,18.0000301 C12.1229023,18.0058338 14.1599129,17.1621506 15.657,15.657 L14.243,14.243 C12.4656191,16.0235516 9.76616433,16.5061689 7.48194074,15.4517642 C5.19771716,14.3973595 3.81387589,12.02988 4.01596945,9.52217092 C4.21806302,7.01446183 5.96316833,4.89914079 8.38676331,4.2241341 C10.8103583,3.5491274 13.3976904,4.45780116 14.867,6.5 L13,6.5 L13,8.5 Z" id="Path_18962" fill="#5C4B7D" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

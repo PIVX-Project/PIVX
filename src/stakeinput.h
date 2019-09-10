@@ -16,7 +16,7 @@ class CWalletTx;
 class CStakeInput
 {
 protected:
-    CBlockIndex* pindexFrom;
+    CBlockIndex* pindexFrom = nullptr;
 
 public:
     virtual ~CStakeInput(){};
@@ -29,6 +29,10 @@ public:
     virtual bool IsZPIV() = 0;
     virtual CDataStream GetUniqueness() = 0;
     virtual uint256 GetSerialHash() const = 0;
+
+    virtual uint64_t getStakeModifierHeight() const {
+        return 0;
+    }
 };
 
 
@@ -48,7 +52,6 @@ public:
     {
         this->denom = denom;
         this->hashSerial = hashSerial;
-        this->pindexFrom = nullptr;
         fMint = true;
     }
 
@@ -74,11 +77,13 @@ class CPivStake : public CStakeInput
 private:
     CTransaction txFrom;
     unsigned int nPosition;
+
+    // cached data
+    uint64_t nStakeModifier = 0;
+    int nStakeModifierHeight = 0;
+    int64_t nStakeModifierTime = 0;
 public:
-    CPivStake()
-    {
-        this->pindexFrom = nullptr;
-    }
+    CPivStake(){}
 
     bool SetInput(CTransaction txPrev, unsigned int n);
 
@@ -91,6 +96,8 @@ public:
     bool CreateTxOuts(CWallet* pwallet, std::vector<CTxOut>& vout, CAmount nTotal) override;
     bool IsZPIV() override { return false; }
     uint256 GetSerialHash() const override { return uint256(0); }
+
+    uint64_t getStakeModifierHeight() const override { return nStakeModifierHeight; }
 };
 
 

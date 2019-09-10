@@ -21,6 +21,8 @@
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h" // for BackupWallet
 #include <stdint.h>
+#include <iostream>
+#include "zpiv/deterministicmint.h"
 
 #include <QDebug>
 #include <QSet>
@@ -54,6 +56,10 @@ WalletModel::WalletModel(CWallet* wallet, OptionsModel* optionsModel, QObject* p
 WalletModel::~WalletModel()
 {
     unsubscribeFromCoreSignals();
+}
+
+bool WalletModel::isTestnet() const {
+    return Params().NetworkID() == CBaseChainParams::TESTNET;
 }
 
 CAmount WalletModel::getBalance(const CCoinControl* coinControl) const
@@ -129,6 +135,11 @@ void WalletModel::updateStatus()
 
     if (cachedEncryptionStatus != newEncryptionStatus)
         emit encryptionStatusChanged(newEncryptionStatus);
+}
+
+bool WalletModel::isWalletUnlocked() const {
+    EncryptionStatus status = getEncryptionStatus();
+    return status == Unencrypted || status == Unlocked;
 }
 
 void WalletModel::pollBalanceChanged()
@@ -208,6 +219,11 @@ void WalletModel::checkBalanceChanged()
     }
 }
 
+void WalletModel::setWalletDefaultFee(CAmount fee)
+{
+    payTxFee = CFeeRate(fee);
+}
+
 void WalletModel::updateTransaction()
 {
     // Balance and number of transactions might have changed
@@ -216,13 +232,21 @@ void WalletModel::updateTransaction()
 
 void WalletModel::updateAddressBook(const QString& address, const QString& label, bool isMine, const QString& purpose, int status)
 {
-    if (addressTableModel)
-        addressTableModel->updateEntry(address, label, isMine, purpose, status);
+    try {
+        if (addressTableModel)
+            addressTableModel->updateEntry(address, label, isMine, purpose, status);
+    }catch (...){
+        std::cout << "Exception updateAddressBook" << std::endl;
+    }
 }
 void WalletModel::updateAddressBook(const QString &pubCoin, const QString &isUsed, int status)
 {
-    if(addressTableModel)
-        addressTableModel->updateEntry(pubCoin, isUsed, status);
+    try{
+        if(addressTableModel)
+            addressTableModel->updateEntry(pubCoin, isUsed, status);
+    }catch (...){
+        std::cout << "Exception updateAddressBook" << std::endl;
+    }
 }
 
 
@@ -238,13 +262,17 @@ void WalletModel::updateMultiSigFlag(bool fHaveMultiSig)
     emit notifyMultiSigChanged(fHaveMultiSig);
 }
 
+bool WalletModel::getMint(const uint256& hashSerial, CZerocoinMint& mint){
+    return wallet->GetMint(hashSerial, mint);
+}
+
 bool WalletModel::validateAddress(const QString& address)
 {
     CBitcoinAddress addressParsed(address.toStdString());
     return addressParsed.IsValid();
 }
 
-void WalletModel::updateAddressBookLabels(const CTxDestination& dest, const std::string& strName, const std::string& strPurpose)
+bool WalletModel::updateAddressBookLabels(const CTxDestination& dest, const std::string& strName, const std::string& strPurpose)
 {
     LOCK(wallet->cs_wallet);
 
@@ -252,10 +280,11 @@ void WalletModel::updateAddressBookLabels(const CTxDestination& dest, const std:
 
     // Check if we have a new address or an updated label
     if (mi == wallet->mapAddressBook.end()) {
-        wallet->SetAddressBook(dest, strName, strPurpose);
+        return wallet->SetAddressBook(dest, strName, strPurpose);
     } else if (mi->second.name != strName) {
-        wallet->SetAddressBook(dest, strName, ""); // "" means don't change purpose
+        return wallet->SetAddressBook(dest, strName, ""); // "" means don't change purpose
     }
+    return false;
 }
 
 WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction& transaction, const CCoinControl* coinControl)
@@ -369,6 +398,12 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& tran
         return AnonymizeOnlyUnlocked;
     }
 
+    // Double check tx before do anything
+    CValidationState state;
+    if(!CheckTransaction(*transaction.getTransaction(), true, true, state, true)){
+        return TransactionCommitFailed;
+    }
+
     {
         LOCK2(cs_main, wallet->cs_wallet);
         CWalletTx* newTx = transaction.getTransaction();
@@ -388,9 +423,6 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& tran
         }
 
         CReserveKey* keyChange = transaction.getPossibleKeyChange();
-
-        transaction.getRecipients();
-
         if (!wallet->CommitTransaction(*newTx, *keyChange, (recipients[0].useSwiftTX) ? "ix" : "tx"))
             return TransactionCommitFailed;
 
@@ -417,6 +449,132 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& tran
     checkBalanceChanged(); // update balance immediately, otherwise there could be a short noticeable delay until pollBalanceChanged hits
 
     return SendCoinsReturn(OK);
+}
+
+const CWalletTx* WalletModel::getTx(uint256 id){
+    return wallet->GetWalletTx(id);
+}
+
+bool WalletModel::isCoinStake(QString id){
+    uint256 hashTx;
+    hashTx.SetHex(id.toStdString());
+    const CWalletTx* tx = getTx(hashTx);
+    return tx->IsCoinStake();
+}
+
+bool WalletModel::isCoinStakeMine(QString id){
+    uint256 hashTx;
+    hashTx.SetHex(id.toStdString());
+    const CWalletTx* tx = getTx(hashTx);
+    return tx->IsCoinStake() && wallet->IsMine(tx->vin[0]);
+}
+
+bool WalletModel::mintCoins(CAmount value, CCoinControl* coinControl ,std::string &strError){
+    CWalletTx wtx;
+    std::vector<CDeterministicMint> vMints;
+    strError = wallet->MintZerocoin(value, wtx, vMints, coinControl);
+    return strError.empty();
+}
+
+
+bool WalletModel::createZpivSpend(
+        CWalletTx &wtxNew,
+        std::vector<CZerocoinMint> &vMintsSelected,
+        bool fMintChange,
+        bool fMinimizeChange,
+        CZerocoinSpendReceipt &receipt,
+        std::list<std::pair<CBitcoinAddress*, CAmount>> outputs,
+        std::string changeAddress
+        ){
+
+    CBitcoinAddress *changeAdd = (!changeAddress.empty()) ? new CBitcoinAddress(changeAddress) : nullptr;
+    CAmount value = 0;
+    for(std::pair<CBitcoinAddress*, CAmount> pair : outputs){
+        value += pair.second;
+    }
+
+    if (wallet->IsLocked()) {
+        receipt.SetStatus("Error: Wallet locked, unable to create transaction!", ZPIV_WALLET_LOCKED);
+        return false;
+    }
+
+    CReserveKey reserveKey(wallet);
+    std::vector<CDeterministicMint> vNewMints;
+    if (!wallet->CreateZerocoinSpendTransaction(
+            value,
+            wtxNew,
+            reserveKey,
+            receipt,
+            vMintsSelected,
+            vNewMints,
+            false, // No more mints
+            fMinimizeChange,
+            outputs,
+            changeAdd
+    )) {
+        return false;
+    }
+
+    // Double check tx before do anything
+    CValidationState state;
+    return CheckTransaction(wtxNew, true, true, state, true);
+}
+
+bool WalletModel::sendZpiv(
+        std::vector<CZerocoinMint> &vMintsSelected,
+        bool fMintChange,
+        bool fMinimizeChange,
+        CZerocoinSpendReceipt &receipt,
+        std::list<std::pair<CBitcoinAddress*, CAmount>> outputs,
+        std::string changeAddress
+        ){
+
+    CBitcoinAddress *changeAdd = (!changeAddress.empty()) ? new CBitcoinAddress(changeAddress) : nullptr;
+    CAmount value = 0;
+    for(std::pair<CBitcoinAddress*, CAmount> pair : outputs){
+        value += pair.second;
+    }
+
+    CWalletTx wtxNew;
+    return wallet->SpendZerocoin(
+            value,
+            wtxNew,
+            receipt,
+            vMintsSelected,
+            false, // No more mints
+            fMinimizeChange,
+            outputs,
+            changeAdd
+    );
+
+}
+
+bool WalletModel::convertBackZpiv(
+        CAmount value,
+        std::vector<CZerocoinMint> &vMintsSelected,
+        bool fMintChange,
+        bool fMinimizeChange,
+        CZerocoinSpendReceipt &receipt,
+        CBitcoinAddress addressTo
+){
+
+    // address to must be from us.
+    if(!isMine(addressTo)){
+        receipt.SetStatus(_("To convert zPIV back to PIV the return address must be from your wallet"), ZPIV_SPEND_ERROR);
+        return false;
+    }
+
+    CWalletTx wtxNew;
+    return wallet->SpendZerocoin(
+            value,
+            wtxNew,
+            receipt,
+            vMintsSelected,
+            false, // No more mints
+            fMinimizeChange,
+            std::list<std::pair<CBitcoinAddress*, CAmount>>(),
+            &addressTo
+    );
 }
 
 OptionsModel* WalletModel::getOptionsModel()
@@ -680,6 +838,33 @@ bool WalletModel::getPubKey(const CKeyID& address, CPubKey& vchPubKeyOut) const
     return wallet->GetPubKey(address, vchPubKeyOut);
 }
 
+int64_t WalletModel::getCreationTime() const {
+    return wallet->nTimeFirstKey;
+}
+
+int64_t WalletModel::getKeyCreationTime(const CPubKey& key){
+    return pwalletMain->GetKeyCreationTime(key);
+}
+
+int64_t WalletModel::getKeyCreationTime(const CBitcoinAddress& address){
+    if(this->isMine(address)) {
+        return pwalletMain->GetKeyCreationTime(address);
+    }
+    return 0;
+}
+
+CBitcoinAddress WalletModel::getNewAddress(std::string label) const{
+    if (!wallet->IsLocked())
+        wallet->TopUpKeyPool();
+
+    // Generate a new key that is added to wallet
+    CPubKey newKey = wallet->GenerateNewKey();
+    CKeyID keyID = newKey.GetID();
+
+    pwalletMain->SetAddressBook(keyID, label, "receive");
+    return CBitcoinAddress(keyID);
+}
+
 // returns a list of COutputs from COutPoints
 void WalletModel::getOutputs(const std::vector<COutPoint>& vOutpoints, std::vector<COutput>& vOutputs)
 {
@@ -797,4 +982,12 @@ bool WalletModel::isMine(CBitcoinAddress address)
 bool WalletModel::isUsed(CBitcoinAddress address)
 {
     return wallet->IsUsed(address);
+}
+
+std::string WalletModel::resetMintZerocoin(){
+    return wallet->ResetMintZerocoin();
+}
+
+std::string WalletModel::resetSpentZerocoin(){
+    return wallet->ResetSpentZerocoin();
 }

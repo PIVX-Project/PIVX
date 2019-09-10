@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="40px" viewBox="0 0 24 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Receive off</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Receive-off" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic-receive-on" transform="translate(-1.000000, 11.000000)">
+            <polygon id="Rectangle_4413" points="0 0 26 0 26 26 0 26"></polygon>
+            <g id="Group_8987" transform="translate(2.000000, 2.000000)" fill="#938DA5">
+                <g id="Group_8986">
+                    <polygon id="Path_18953" points="18.178 10.734 16.822 9.265 12 13.716 12 0 10 0 10 13.716 5.178 9.266 3.822 10.734 11 17.361"></polygon>
+                    <polygon id="Path_18954" points="20 15 20 20 2 20 2 15 0 15 0 22 22 22 22 15"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
