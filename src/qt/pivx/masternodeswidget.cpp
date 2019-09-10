@@ -187,7 +187,7 @@ void MasterNodesWidget::onEditMNClicked(){
         if (index.sibling(index.row(), MNModel::WAS_COLLATERAL_ACCEPTED).data(Qt::DisplayRole).toBool()) {
             // Start MN
             QString strAlias = this->index.data(Qt::DisplayRole).toString();
-            if (ask(tr("Start Master Node"), tr("Are you sure you want to start masternode %1?\n").arg(strAlias))) {
+            if (ask(tr("Start Masternode"), tr("Are you sure you want to start masternode %1?\n").arg(strAlias))) {
                 if (!verifyWalletUnlocked()) return;
                 startAlias(strAlias);
             }
@@ -255,7 +255,7 @@ void MasterNodesWidget::onDeleteMNClicked(){
     QString qAliasString = index.data(Qt::DisplayRole).toString();
     std::string aliasToRemove = qAliasString.toStdString();
 
-    if (!ask(tr("Delete Master Node"), tr("You are just about to delete Master Node:\n%1\n\nAre you sure?").arg(qAliasString)))
+    if (!ask(tr("Delete Masternode"), tr("You are just about to delete Masternode:\n%1\n\nAre you sure?").arg(qAliasString)))
         return;
 
     std::string strConfFile = "masternode.conf";
@@ -346,7 +346,7 @@ void MasterNodesWidget::onDeleteMNClicked(){
 void MasterNodesWidget::onCreateMNClicked(){
     if(verifyWalletUnlocked()) {
         if(walletModel->getBalance() <= (COIN * 10000)){
-            inform(tr("No enough balance to create a master node, 10,000 PIV required."));
+            inform(tr("Not enough balance to create a masternode, 10,000 PIV required."));
             return;
         }
         showHideOp(true);
@@ -359,7 +359,7 @@ void MasterNodesWidget::onCreateMNClicked(){
                 // add mn
                 inform(dialog->returnStr);
             } else {
-                warn(tr("Error creating master node"), dialog->returnStr);
+                warn(tr("Error creating masternode"), dialog->returnStr);
             }
         }
         dialog->deleteLater();
