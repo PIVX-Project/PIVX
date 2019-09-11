@@ -3,7 +3,6 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "qt/pivx/txviewholder.h"
-#include "qt/pivx/txrow.h"
 #include "qt/pivx/qtutils.h"
 #include "transactiontablemodel.h"
 #include <QModelIndex>
@@ -11,7 +10,9 @@
 #define ADDRESS_SIZE 12
 
 QWidget* TxViewHolder::createHolder(int pos){
-    return new TxRow(isLightTheme);
+    if (!txRow) txRow = new TxRow();
+    txRow->init(isLightTheme);
+    return txRow;
 }
 
 void TxViewHolder::init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const{

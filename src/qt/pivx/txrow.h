@@ -18,9 +18,10 @@ class TxRow : public QWidget
     Q_OBJECT
 
 public:
-    explicit TxRow(bool isLightTheme, QWidget *parent = nullptr);
+    explicit TxRow(QWidget *parent = nullptr);
     ~TxRow();
 
+    void init(bool isLightTheme);
     void updateStatus(bool isLightTheme, bool isHover, bool isSelected);
 
     void setDate(QDateTime);

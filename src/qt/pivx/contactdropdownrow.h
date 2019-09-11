@@ -16,9 +16,10 @@ class ContactDropdownRow : public QWidget
     Q_OBJECT
 
 public:
-    explicit ContactDropdownRow(bool isLightTheme, bool isHover, QWidget *parent = nullptr);
+    explicit ContactDropdownRow(QWidget *parent = nullptr);
     ~ContactDropdownRow();
 
+    void init(bool isLightTheme, bool isHover);
     void update(bool isLightTheme, bool isHover, bool isSelected);
     void setData(QString address, QString label);
 

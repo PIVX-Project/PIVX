@@ -38,7 +38,8 @@ public:
     explicit MNHolder(bool _isLightTheme) : FurListRow(), isLightTheme(_isLightTheme){}
 
     MNRow* createHolder(int pos) override{
-        return new MNRow();
+        if(!cachedRow) cachedRow = new MNRow();
+        return cachedRow;
     }
 
     void init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const override{
@@ -57,6 +58,7 @@ public:
     ~MNHolder() override{}
 
     bool isLightTheme;
+    MNRow* cachedRow = nullptr;
 };
 
 #include "qt/pivx/moc_masternodeswidget.cpp"

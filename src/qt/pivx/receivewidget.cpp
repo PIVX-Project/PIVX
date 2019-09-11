@@ -27,7 +27,8 @@ public:
     explicit AddressHolder(bool _isLightTheme) : FurListRow(), isLightTheme(_isLightTheme){}
 
     MyAddressRow* createHolder(int pos) override{
-        return new MyAddressRow();
+        if (!cachedRow) cachedRow = new MyAddressRow();
+        return cachedRow;
     }
 
     void init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const override{
@@ -46,6 +47,7 @@ public:
     ~AddressHolder() override{}
 
     bool isLightTheme;
+    MyAddressRow* cachedRow = nullptr;
 };
 
 #include "qt/pivx/moc_receivewidget.cpp"

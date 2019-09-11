@@ -16,8 +16,10 @@ class AddressLabelRow : public QWidget
     Q_OBJECT
 
 public:
-    explicit AddressLabelRow(bool isLightTheme, bool isHover , QWidget *parent = nullptr);
+    explicit AddressLabelRow(QWidget *parent = nullptr);
     ~AddressLabelRow();
+
+    void init(bool isLightTheme, bool isHover);
 
     void updateState(bool isLightTheme, bool isHovered, bool isSelected);
     void updateView(QString address, QString label);

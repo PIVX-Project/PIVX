@@ -28,7 +28,9 @@ public:
     explicit ContactsHolder(bool _isLightTheme) : FurListRow(), isLightTheme(_isLightTheme){}
 
     AddressLabelRow* createHolder(int pos) override{
-        return new AddressLabelRow(isLightTheme, false);
+        if (!cachedRow) cachedRow = new AddressLabelRow();
+        cachedRow->init(isLightTheme, false);
+        return cachedRow;
     }
 
     void init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const override{
@@ -50,6 +52,7 @@ public:
     ~ContactsHolder() override{}
 
     bool isLightTheme;
+    AddressLabelRow* cachedRow = nullptr;
 };
 
 #include "qt/pivx/moc_addresseswidget.cpp"

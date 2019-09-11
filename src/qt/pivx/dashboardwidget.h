@@ -163,14 +163,14 @@ private:
     int dayStart = 1;
     bool hasZpivStakes = false;
 
-    ChartData chartData;
+    ChartData* chartData = nullptr;
 
     void initChart();
     void showHideEmptyChart(bool show, bool loading, bool forceView = false);
     bool refreshChart();
     void tryChartRefresh();
     QMap<int, std::pair<qint64, qint64>> getAmountBy();
-    ChartData loadChartData(bool withMonthNames);
+    void loadChartData(bool withMonthNames);
     void updateAxisX(const QStringList *arg = nullptr);
     void setChartShow(ChartShowType type);
     std::pair<int, int> getChartRange(QMap<int, std::pair<qint64, qint64>> amountsBy);

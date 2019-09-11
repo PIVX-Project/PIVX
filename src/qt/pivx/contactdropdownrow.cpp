@@ -5,13 +5,16 @@
 #include "qt/pivx/contactdropdownrow.h"
 #include "qt/pivx/forms/ui_contactdropdownrow.h"
 
-ContactDropdownRow::ContactDropdownRow(bool isLightTheme, bool isHover, QWidget *parent) :
+ContactDropdownRow::ContactDropdownRow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ContactDropdownRow)
 {
     ui->setupUi(this);
     ui->lblAddress->setProperty("cssClass", "text-list-contact-body1");
     ui->lblLabel->setProperty("cssClass", "text-list-contact-title1");
+}
+
+void ContactDropdownRow::init(bool isLightTheme, bool isHover) {
     update(isLightTheme, isHover, false);
 }
 

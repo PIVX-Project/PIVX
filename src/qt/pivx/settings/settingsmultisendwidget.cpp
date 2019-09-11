@@ -60,54 +60,56 @@ public:
     explicit MultiSendHolder(bool _isLightTheme) : FurListRow(), isLightTheme(_isLightTheme){}
 
     QWidget* createHolder(int pos) override{
-        QWidget *row = new QWidget();
-        QVBoxLayout *verticalLayout_2;
-        QFrame *frame_2;
-        QHBoxLayout *horizontalLayout;
-        QLabel *labelName;
-        QSpacerItem *horizontalSpacer;
-        QLabel *labelDate;
-        QLabel *lblDivisory;
+        if (!row) {
+            row = new QWidget();
+            QVBoxLayout *verticalLayout_2;
+            QFrame *frame_2;
+            QHBoxLayout *horizontalLayout;
+            QLabel *labelName;
+            QSpacerItem *horizontalSpacer;
+            QLabel *labelDate;
+            QLabel *lblDivisory;
 
-        if (row->objectName().isEmpty())
-            row->setObjectName(QStringLiteral("multiSendrow"));
-        row->resize(475, 65);
-        row->setStyleSheet(QStringLiteral(""));
-        setCssProperty(row, "container");
-        verticalLayout_2 = new QVBoxLayout(row);
-        verticalLayout_2->setSpacing(0);
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        verticalLayout_2->setContentsMargins(20, 0, 20, 0);
-        frame_2 = new QFrame(row);
-        frame_2->setObjectName(QStringLiteral("frame_2"));
-        frame_2->setStyleSheet(QStringLiteral("border:none;"));
-        frame_2->setFrameShape(QFrame::StyledPanel);
-        frame_2->setFrameShadow(QFrame::Raised);
-        horizontalLayout = new QHBoxLayout(frame_2);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, -1, 0, -1);
-        labelName = new QLabel(frame_2);
-        labelName->setObjectName(QStringLiteral("labelAddress"));
-        setCssProperty(labelName, "text-list-title1");
-        horizontalLayout->addWidget(labelName);
+            if (row->objectName().isEmpty())
+                row->setObjectName(QStringLiteral("multiSendrow"));
+            row->resize(475, 65);
+            row->setStyleSheet(QStringLiteral(""));
+            setCssProperty(row, "container");
+            verticalLayout_2 = new QVBoxLayout(row);
+            verticalLayout_2->setSpacing(0);
+            verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+            verticalLayout_2->setContentsMargins(20, 0, 20, 0);
+            frame_2 = new QFrame(row);
+            frame_2->setObjectName(QStringLiteral("frame_2"));
+            frame_2->setStyleSheet(QStringLiteral("border:none;"));
+            frame_2->setFrameShape(QFrame::StyledPanel);
+            frame_2->setFrameShadow(QFrame::Raised);
+            horizontalLayout = new QHBoxLayout(frame_2);
+            horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+            horizontalLayout->setContentsMargins(0, -1, 0, -1);
+            labelName = new QLabel(frame_2);
+            labelName->setObjectName(QStringLiteral("labelAddress"));
+            setCssProperty(labelName, "text-list-title1");
+            horizontalLayout->addWidget(labelName);
 
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-        horizontalLayout->addItem(horizontalSpacer);
+            horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+            horizontalLayout->addItem(horizontalSpacer);
 
-        labelDate = new QLabel(frame_2);
-        labelDate->setObjectName(QStringLiteral("labelPercentage"));
-        setCssProperty(labelDate, "text-list-caption-medium");
-        horizontalLayout->addWidget(labelDate);
+            labelDate = new QLabel(frame_2);
+            labelDate->setObjectName(QStringLiteral("labelPercentage"));
+            setCssProperty(labelDate, "text-list-caption-medium");
+            horizontalLayout->addWidget(labelDate);
 
-        verticalLayout_2->addWidget(frame_2);
+            verticalLayout_2->addWidget(frame_2);
 
-        lblDivisory = new QLabel(row);
-        lblDivisory->setObjectName(QStringLiteral("lblDivisory"));
-        lblDivisory->setMinimumSize(QSize(0, 1));
-        lblDivisory->setMaximumSize(QSize(16777215, 1));
-        lblDivisory->setStyleSheet(QStringLiteral("background-color:#bababa;"));
-        lblDivisory->setAlignment(Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft);
-        verticalLayout_2->addWidget(lblDivisory);
+            lblDivisory = new QLabel(row);
+            lblDivisory->setObjectName(QStringLiteral("lblDivisory"));
+            lblDivisory->setMinimumSize(QSize(0, 1));
+            lblDivisory->setMaximumSize(QSize(16777215, 1));
+            lblDivisory->setStyleSheet(QStringLiteral("background-color:#bababa;"));
+            lblDivisory->setAlignment(Qt::AlignBottom | Qt::AlignLeading | Qt::AlignLeft);
+            verticalLayout_2->addWidget(lblDivisory);
+        }
 
         return row;
     }
@@ -126,6 +128,7 @@ public:
     ~MultiSendHolder() override{}
 
     bool isLightTheme;
+    QWidget *row = nullptr;
 };
 
 
