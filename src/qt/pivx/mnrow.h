@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MYADDRESSROW_H
-#define MYADDRESSROW_H
+#ifndef MNROW_H
+#define MNROW_H
 
 #include <QWidget>
 
@@ -27,4 +27,4 @@ private:
     Ui::MNRow *ui;
 };
 
-#endif // MYADDRESSROW_H
+#endif // MNROW_H
