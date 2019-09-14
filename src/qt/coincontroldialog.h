@@ -48,6 +48,7 @@ public:
 
     void setModel(WalletModel* model);
     void updateDialogLabels();
+    void updateView();
 
     // static because also called from sendcoinsdialog
     static void updateLabels(WalletModel*, QDialog*);
@@ -71,7 +72,6 @@ private:
     QAction* unlockAction;
 
     void sortView(int, Qt::SortOrder);
-    void updateView();
 
     enum {
         COLUMN_CHECKBOX,
