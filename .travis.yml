@@ -33,10 +33,12 @@ cache:
   directories:
     - $TRAVIS_BUILD_DIR/depends/built
     - $TRAVIS_BUILD_DIR/depends/sdk-sources
+    - $TRAVIS_BUILD_DIR/cmake-build-debug
     - $HOME/.ccache
 stages:
   - lint
   - test
+  - cmake
 env:
   global:
     - MAKEJOBS=-j3
@@ -70,6 +72,9 @@ after_script:
   - echo $TRAVIS_COMMIT_RANGE
   - echo $TRAVIS_COMMIT_LOG
 jobs:
+  allow_failures:
+    - stage: cmake
+  fast_finish: true
   include:
 
     - stage: lint
@@ -207,3 +212,54 @@ jobs:
         RUN_FUNCTIONAL_TESTS=false
         GOAL="deploy"
         BITCOIN_CONFIG="--enable-gui --enable-reduce-exports --enable-werror"
+
+    - stage: cmake
+      name: 'CMake Linux'
+      language: cpp
+      compiler:
+        - gcc
+      addons:
+        apt:
+          packages:
+           - python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libssl-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-program-options-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libprotobuf-dev protobuf-compiler libqrencode-dev libgmp-dev
+      before_install:
+      install:
+      before_script:
+      script:
+        - mkdir -p $TRAVIS_BUILD_DIR/cmake-build-debug && cd $TRAVIS_BUILD_DIR/cmake-build-debug
+        - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" $TRAVIS_BUILD_DIR
+        - cmake --build $TRAVIS_BUILD_DIR/cmake-build-debug --target all -- -j 3
+
+    - stage: cmake
+      name: 'CMake macOS'
+      os: osx
+      osx_image: xcode10.2
+      language: cpp
+      compiler:
+        - clang
+      addons:
+        homebrew:
+          packages:
+            - autoconf
+            - automake
+            - berkeley-db4
+            - libtool
+            - boost
+            - miniupnpc
+            - openssl
+            - pkg-config
+            - protobuf
+            - python3
+            - qt5
+            - zmq
+            - libevent
+            - qrencode
+            - gmp
+          update: false
+      before_install:
+      install:
+      before_script:
+      script:
+        - mkdir -p $TRAVIS_BUILD_DIR/cmake-build-debug && cd $TRAVIS_BUILD_DIR/cmake-build-debug
+        - cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" $TRAVIS_BUILD_DIR
+        - cmake --build $TRAVIS_BUILD_DIR/cmake-build-debug --target all -- -j 3

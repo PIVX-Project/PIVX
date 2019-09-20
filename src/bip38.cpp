@@ -11,7 +11,6 @@
 #include "random.h"
 
 #include <openssl/aes.h>
-#include <openssl/sha.h>
 #include <secp256k1.h>
 #include <string>
 

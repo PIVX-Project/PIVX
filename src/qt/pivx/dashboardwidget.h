@@ -12,6 +12,7 @@
 #include "qt/pivx/txviewholder.h"
 #include "transactionfilterproxy.h"
 
+#include <atomic>
 #include <cstdlib>
 #include <QWidget>
 #include <QLineEdit>
@@ -102,7 +103,7 @@ public:
     void loadChart();
 
     void run(int type) override;
-    void onError(int type, QString error) override;
+    void onError(QString error, int type) override;
 
 public slots:
     void walletSynced(bool isSync);
@@ -143,6 +144,7 @@ private:
 #ifdef USE_QTCHARTS
 
     int64_t lastRefreshTime = 0;
+    std::atomic<bool> isLoading;
 
     // Chart
     TransactionFilterProxy* stakesFilter = nullptr;
@@ -163,14 +165,15 @@ private:
     int dayStart = 1;
     bool hasZpivStakes = false;
 
-    ChartData chartData;
+    ChartData* chartData = nullptr;
 
     void initChart();
     void showHideEmptyChart(bool show, bool loading, bool forceView = false);
     bool refreshChart();
     void tryChartRefresh();
+    void updateStakeFilter();
     QMap<int, std::pair<qint64, qint64>> getAmountBy();
-    ChartData loadChartData(bool withMonthNames);
+    void loadChartData(bool withMonthNames);
     void updateAxisX(const QStringList *arg = nullptr);
     void setChartShow(ChartShowType type);
     std::pair<int, int> getChartRange(QMap<int, std::pair<qint64, qint64>> amountsBy);

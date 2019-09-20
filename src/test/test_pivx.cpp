@@ -22,11 +22,15 @@
 CClientUIInterface uiInterface;
 CWallet* pwalletMain;
 
+uint256 insecure_rand_seed = GetRandHash();
+FastRandomContext insecure_rand_ctx(insecure_rand_seed);
+
 extern bool fPrintToConsole;
 extern void noui_connect();
 
 BasicTestingSetup::BasicTestingSetup()
 {
+        RandomInit();
         ECC_Start();
         SetupEnvironment();
         fPrintToDebugLog = false; // don't want to write to debug.log file
@@ -44,7 +48,7 @@ TestingSetup::TestingSetup()
         bitdb.MakeMock();
 #endif
         ClearDatadirCache();
-        pathTemp = GetTempPath() / strprintf("test_pivx_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
+        pathTemp = GetTempPath() / strprintf("test_pivx_%lu_%i", (unsigned long)GetTime(), (int)(InsecureRandRange(100000)));
         boost::filesystem::create_directories(pathTemp);
         mapArgs["-datadir"] = pathTemp.string();
         pblocktree = new CBlockTreeDB(1 << 20, true);
@@ -84,14 +88,14 @@ TestingSetup::~TestingSetup()
         boost::filesystem::remove_all(pathTemp);
 }
 
-void Shutdown(void* parg)
+[[noreturn]] void Shutdown(void* parg)
 {
-  exit(0);
+    std::exit(0);
 }
 
-void StartShutdown()
+[[noreturn]] void StartShutdown()
 {
-  exit(0);
+    std::exit(0);
 }
 
 bool ShutdownRequested()

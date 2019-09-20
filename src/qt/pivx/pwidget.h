@@ -8,7 +8,6 @@
 #include <QObject>
 #include <QWidget>
 #include <QString>
-#include <QThread>
 #include "qt/pivx/prunnable.h"
 
 class PIVXGUI;
@@ -32,7 +31,7 @@ public:
     PIVXGUI* getWindow() { return this->window; }
 
     void run(int type) override;
-    void onError(int type, QString error) override;
+    void onError(QString error, int type) override;
 
 signals:
     void message(const QString& title, const QString& body, unsigned int style, bool* ret = nullptr);
@@ -60,12 +59,12 @@ protected:
     void emitMessage(const QString& title, const QString& message, unsigned int style, bool* ret = nullptr);
 
     bool verifyWalletUnlocked();
-    bool quitWorker(bool forceTermination);
 
 private:
-    QThread* thread = nullptr;
-
     void init();
+private slots:
+    void errorString(QString, int);
+
 };
 
 #endif // PWIDGET_H

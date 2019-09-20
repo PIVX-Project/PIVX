@@ -8,7 +8,7 @@
 class Runnable {
 public:
     virtual void run(int type) = 0;
-    virtual void onError(int type, QString error) = 0;
+    virtual void onError(QString error, int type) = 0;
 };
 
 #endif //PIVX_CORE_NEW_GUI_PRUNNABLE_H

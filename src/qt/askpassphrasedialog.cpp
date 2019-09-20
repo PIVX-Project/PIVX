@@ -358,7 +358,7 @@ void AskPassphraseDialog::run(int type){
         }
     }
 }
-void AskPassphraseDialog::onError(int type, QString error){
+void AskPassphraseDialog::onError(QString error, int type){
     newpassCache = "";
 }
 

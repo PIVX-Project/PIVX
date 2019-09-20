@@ -376,10 +376,8 @@ void BitcoinApplication::createSplashScreen(const NetworkStyle* networkStyle)
 bool BitcoinApplication::createTutorialScreen()
 {
     WelcomeContentWidget* widget = new WelcomeContentWidget();
-    //widget->setOptionsModel(optionsModel);
 
     connect(widget, &WelcomeContentWidget::onLanguageSelected, [this](){
-        std::cout << "updating translations.." << std::endl;
         updateTranslation();
     });
 

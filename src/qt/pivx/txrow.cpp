@@ -8,11 +8,14 @@
 #include "guiutil.h"
 #include "qt/pivx/qtutils.h"
 
-TxRow::TxRow(bool isLightTheme, QWidget *parent) :
+TxRow::TxRow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TxRow)
 {
     ui->setupUi(this);
+}
+
+void TxRow::init(bool isLightTheme) {
     setConfirmStatus(true);
     updateStatus(isLightTheme, false, false);
 }

@@ -234,7 +234,8 @@ QT_MOC = \
   qt/bitcoinamountfield.moc \
   qt/intro.moc \
   qt/overviewpage.moc \
-  qt/rpcconsole.moc
+  qt/rpcconsole.moc \
+  qt/pivx/settings/moc_settingsconsolewidget.cpp
 
 QT_QRC_CPP = qt/qrc_pivx.cpp
 QT_QRC = qt/pivx.qrc

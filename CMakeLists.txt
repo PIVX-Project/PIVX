@@ -4,11 +4,16 @@ project(PIVX)
 set(BDB_VER "4.8.30")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/contrib/cmake")
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 ")
 include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    message(FATAL_ERROR "Native Windows CMake is not supported yet, use WSL instead")
+endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     message(STATUS "Compiling on macOS")
+    set(ENV{target} "Mac")
     list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/qt5)
     list(APPEND CMAKE_PREFIX_PATH /usr/local/opt/openssl)
     list(APPEND CMAKE_PREFIX_PATH /usr/local/Cellar/berkeley-db@4)
@@ -17,92 +22,69 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(ENV{LDFLAGS} "-L${OPENSSL_ROOT_DIR}/lib")
     set(BerkeleyDB_ROOT_DIR "/usr/local/Cellar/berkeley-db@4/${BDB_VER}/")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(ENV{target} "Linux")
     file(READ "/proc/version" _SYS_VERSION)
     string(REGEX MATCH "Microsoft" _SYSTEM_VERSION_PARSED "${_SYS_VERSION}")
     if(${_SYSTEM_VERSION_PARSED} MATCHES "Microsoft")
         message(STATUS "Compiling on WSL")
-        set(ENV{triple} x86_64-w64-mingw32)
-        set(ENV{target} Windows)
-        execute_process(
-                COMMAND make HOST=x86_64-w64-mingw32 -j16
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/depends
-        )
-        file(REMOVE ${CMAKE_BINARY_DIR}/CMakeFiles/${CMAKE_VERSION}/CMakeCXXCompiler.cmake)
-        file(REMOVE ${CMAKE_BINARY_DIR}/CMakeFiles/${CMAKE_VERSION}/CMakeCCompiler.cmake)
-        set(CMAKE_C_COMPILER /usr/bin/$ENV{triple}-gcc)
-        set(CMAKE_CXX_COMPILER /usr/bin/$ENV{triple}-g++)
-        set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/depends/$ENV{triple})
-        set(BOOST_INCLUDEDIR ${CMAKE_CURRENT_SOURCE_DIR}/depends/$ENV{triple}/include/)
-        set(BOOST_LIBRARYDIR ${CMAKE_CURRENT_SOURCE_DIR}/depends/$ENV{triple}/lib)
-        set(Boost_USE_STATIC_RUNTIME ON)
-        set(Boost_THREADAPI "win32")
+        set(ENV{DISPLAY} ":0")
+        set(ENV{LIBGL_ALWAYS_INDIRECT} 1)
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY /home/$ENV{USER}/pivx-run)
+        message(WARNING "WSL Runtime support requires VcXsrv to be installed and running")
     else()
         message(STATUS "Compiling on Linux")
-        list(APPEND CMAKE_PREFIX_PATH /usr/lib/x86_64-linux-gnu/cmake/Qt5)
-        set(Qt5core_DIR "/usr/lib/x86_64-linux-gnu/cmake/Qt5/QtCore")
-        include_directories("/usr/include")
-        include_directories("/usr/include/x86_64-linux-gnu")
-        add_definitions("-D__BYTE_ORDER -D__LITTLE_ENDIAN")
     endif()
+    list(APPEND CMAKE_PREFIX_PATH /usr/lib/x86_64-linux-gnu/cmake/Qt5)
+    set(Qt5core_DIR "/usr/lib/x86_64-linux-gnu/cmake/Qt5/QtCore")
+    add_definitions("-D__BYTE_ORDER -D__LITTLE_ENDIAN -D__GLIBC__ -DHAVE_DECL_BSWAP_16=0 -DHAVE_DECL_BSWAP_32=0 -DHAVE_DECL_BSWAP_64=0")
 endif()
 
 # Find Dependencies
 find_package(BerkeleyDB ${BDB_VER} REQUIRED)
-if (BerkeleyDB_FOUND)
+if(BerkeleyDB_FOUND)
     if(NOT ${BerkeleyDB_VERSION} MATCHES "${BDB_VER}")
         message(WARNING "BerkeleyDB version other than ${BDB_VER} found!")
         set(BDB_CONFIGURE_FLAGS "--with-incompatible-bdb")
     endif()
-    include_directories( ${BerkeleyDB_INCLUDE_DIRS} )
-    link_directories( ${BerkeleyDB_ROOT_DIR}/lib )
-endif ()
+endif()
 
 find_package(OpenSSL REQUIRED)
-if (OPENSSL_FOUND)
+if(OPENSSL_FOUND)
     message(STATUS "Found OpenSSL (${OPENSSL_VERSION}): ${OPENSSL_LIBRARIES}")
-    include_directories( ${OPENSSL_INCLUDE_DIR} )
+    if(OPENSSL_VERSION VERSION_GREATER_EQUAL 1.1)
+        message(STATUS "Found unsupported OpenSSL version!")
+        set(SSL_CONFIGURE_FLAGS "--with-unsupported-ssl")
+    endif()
 endif()
 
 find_package(LibEvent REQUIRED)
-if (LibEvent_FOUND)
-    include_directories ( ${LibEvent_INCLUDE_DIR} )
-    link_directories ( ${LibEvent_LIBRARY_DIRS} )
-endif()
 
 find_package(GMP)
-if (GMP_FOUND)
-    include_directories ( ${GMP_INCLUDE_DIR} )
-    link_directories ( ${GMP_LIBRARY_DIRS} )
+if(GMP_FOUND)
 else()
     message(WARNING "GMP not found, falling back to OpenSSL for bignum!")
     set(BIGNUM_CONFIGURE_FLAGS "--with-zerocoin-bignum=openssl")
 endif()
 
 find_package(ZMQ)
-if (ZMQ_Found)
-    include_directories ( ${ZMQ_INCLUDE_DIR} )
-    link_directories ( ${ZMQ_LIB_DIRS} )
-endif()
-
+find_package(Miniupnp)
 find_package(Boost COMPONENTS system filesystem thread program_options REQUIRED)
-include_directories( ${Boost_INCLUDE_DIRS} )
-link_directories ( ${Boost_LIBRARY_DIRS} )
 
 # run autogen.sh if missing header files from configure on Linux/Mac
-if (EXISTS	"${CMAKE_CURRENT_SOURCE_DIR}/configure")
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/configure")
 else()
     execute_process(
-            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/autogen.sh
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/autogen.sh
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 endif()
 
 # run configure if pivx_config.h doesn't exist
-if (EXISTS	"${CMAKE_CURRENT_SOURCE_DIR}/src/config/pivx-config.h")
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/config/pivx-config.h")
 else()
     execute_process(
-            COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/configure ${BDB_CONFIGURE_FLAGS} ${BIGNUM_CONFIGURE_FLAGS}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/configure ${CONFIGSITE} ${BDB_CONFIGURE_FLAGS} ${BIGNUM_CONFIGURE_FLAGS} ${SSL_CONFIGURE_FLAGS}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 endif()
 add_definitions(-DHAVE_CONFIG_H)
@@ -111,7 +93,7 @@ ExternalProject_Add (
         libunivalue
         SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/univalue
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND make
+        BUILD_COMMAND $(MAKE)
         BUILD_IN_SOURCE 1
         INSTALL_COMMAND ""
         )
@@ -120,28 +102,10 @@ ExternalProject_Add (
         libsecp256k1
         SOURCE_DIR ${CMAKE_SOURCE_DIR}/src/secp256k1
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND make
+        BUILD_COMMAND $(MAKE)
         BUILD_IN_SOURCE 1
         INSTALL_COMMAND ""
-)
-
-link_directories(
-        ${CMAKE_SOURCE_DIR}/src/univalue/.libs
-        ${CMAKE_SOURCE_DIR}/src/secp256k1/.libs
-)
-
-include_directories(
-        ${CMAKE_SOURCE_DIR}/src
-        ${CMAKE_SOURCE_DIR}/src/compat
-        ${CMAKE_SOURCE_DIR}/src/config
-        ${CMAKE_SOURCE_DIR}/src/obj
-        ${CMAKE_SOURCE_DIR}/src/leveldb
-        ${CMAKE_SOURCE_DIR}/src/leveldb/include
-        ${CMAKE_SOURCE_DIR}/src/leveldb/helpers/memenv
-        ${CMAKE_SOURCE_DIR}/src/secp256k1
-        ${CMAKE_SOURCE_DIR}/src/secp256k1/include
-        ${CMAKE_SOURCE_DIR}/src/univalue/include
-)
+        )
 
 set(libleveldb_a_headers
         ${CMAKE_CURRENT_SOURCE_DIR}/src/config/pivx-config.h
@@ -244,22 +208,27 @@ set(libleveldb_a_sources
         )
 
 set(libleveldb_cpp_flags)
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set(libleveldb_cpp_flags -DOS_WINDOWS -DLEVELDB_PLATFORM_WINDOWS -DWINVER=0x0500 -D__USE_MINGW_ANSI_STDIO=1)
-    list(APPEND libleveldb_a_sources ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/util/env_win.cc)
-    list(APPEND libleveldb_a_srouces ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/port/port_win.cc)
+if($ENV{target} MATCHES "Windows")
+        set(libleveldb_cpp_flags -DOS_WINDOWS -DLEVELDB_PLATFORM_WINDOWS -DWINVER=0x0500 -D__USE_MINGW_ANSI_STDIO=1)
+        set(libleveldb_a_sources ${libleveldb_a_sources} ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/util/env_win.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/port/port_win.cc)
 else()
     if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
         set(libleveldb_cpp_flags -DOS_MACOSX -DLEVELDB_PLATFORM_POSIX)
     else()
         set(libleveldb_cpp_flags -DOS_LINUX -DLEVELDB_PLATFORM_POSIX)
     endif()
-    list(APPEND libleveldb_a_sources ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/port/port_posix.cc)
+    set(libleveldb_a_sources ${libleveldb_a_sources} ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/port/port_posix.cc)
 endif()
 
 add_library(leveldb STATIC ${libleveldb_a_headers} ${libleveldb_a_sources})
 target_compile_definitions(leveldb PUBLIC ${libleveldb_cpp_flags} -DLEVELDB_ATOMIC_PRESENT -D__STDC_LIMIT_MACROS)
-target_compile_options(leveldb PUBLIC -I${CMAKE_CURRENT_SOURCE_DIR}/src/compat)
+target_include_directories(leveldb PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/helpers/memenv
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/compat
+        )
 
 set(libmemenv_a_sources
         ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/helpers/memenv/memenv.cc
@@ -267,11 +236,17 @@ set(libmemenv_a_sources
         )
 add_library(memenv STATIC ${libmemenv_a_sources})
 target_compile_definitions(memenv PUBLIC ${libleveldb_cpp_flags})
+target_include_directories(memenv PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/helpers/memenv
+        )
 
 set(libleveldb_sse42_a_sources ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/port/port_posix_sse.cc)
 add_library(leveldb_sse42 ${libleveldb_sse42_a_sources})
-
-link_directories ( ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb )
+target_include_directories(leveldb_sse42 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/helpers/memenv
+        )
 
 file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h)
 file(GLOB CRYPTO_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/crypto/*.h)
@@ -328,14 +303,25 @@ set(SERVER_SOURCES
         ./src/zpivchain.cpp
         )
 add_library(SERVER_A STATIC ${BitcoinHeaders} ${SERVER_SOURCES})
+if(MINIUPNP_FOUND)
+    target_compile_definitions(SERVER_A PUBLIC "-DSTATICLIB -DMINIUPNP_STATICLIB")
+endif()
+target_include_directories(SERVER_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/univalue/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/helpers/memenv
+    ${ZMQ_INCLUDE_DIR} ${LIBEVENT_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR} ${BerkeleyDB_INCLUDE_DIRS}
+    )
 
-if (ZMQ_FOUND)
+if(ZMQ_FOUND)
     set(ZMQ_SOURCES
         ./src/zmq/zmqabstractnotifier.cpp
         ./src/zmq/zmqnotificationinterface.cpp
         ./src/zmq/zmqpublishnotifier.cpp
     )
-    add_library(ZMQ_A STATIC ${BitcoinHeaders} ${ZMQ_SOURCES})
+    add_library(ZMQ_A STATIC ${BitcoinHeaders} ${ZMQ_SOURCES} ${ZMQ_LIB})
+    target_include_directories(ZMQ_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src ${ZMQ_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR})
+    target_compile_definitions(ZMQ_A PUBLIC "-DZMQ_STATIC")
 endif()
 
 set(WALLET_SOURCES
@@ -370,6 +356,13 @@ set(WALLET_SOURCES
         ./src/lightzpivthread.cpp
         )
 add_library(WALLET_A STATIC ${BitcoinHeaders} ${WALLET_SOURCES})
+target_include_directories(WALLET_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/secp256k1/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/univalue/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/include
+        ${OPENSSL_INCLUDE_DIR}
+        ${BerkeleyDB_INCLUDE_DIRS}
+        )
 
 set(BITCOIN_CRYPTO_SOURCES
         ./src/crypto/sha1.cpp
@@ -405,6 +398,7 @@ set(BITCOIN_CRYPTO_SOURCES
         ./src/crypto/sph_types.h
         )
 add_library(BITCOIN_CRYPTO_A STATIC ${BITCOIN_CRYPTO_SOURCES})
+target_include_directories(BITCOIN_CRYPTO_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src ${OPENSSL_INCLUDE_DIR})
 
 set(ZEROCOIN_SOURCES
         ./src/libzerocoin/Accumulator.h
@@ -436,6 +430,9 @@ else()
     list(APPEND ZEROCOIN_SOURCES ./src/libzerocoin/bignum_openssl.cpp)
 endif()
 add_library(ZEROCOIN_A STATIC ${ZEROCOIN_SOURCES})
+target_include_directories(ZEROCOIN_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${OPENSSL_INCLUDE_DIR}
+        )
 
 set(COMMON_SOURCES
         ./src/zpiv/accumulators.cpp
@@ -472,6 +469,13 @@ set(COMMON_SOURCES
         ./src/sporkdb.cpp
         )
 add_library(COMMON_A STATIC ${BitcoinHeaders} ${COMMON_SOURCES})
+target_include_directories(COMMON_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/secp256k1/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/univalue/include
+        ${OPENSSL_INCLUDE_DIR}
+        ${BerkeleyDB_INCLUDE_DIRS}
+        )
 
 set(UTIL_SOURCES
         ./src/allocators.cpp
@@ -491,11 +495,27 @@ set(UTIL_SOURCES
         ./src/support/cleanse.cpp
         )
 add_library(UTIL_A STATIC ${BitcoinHeaders} ${UTIL_SOURCES})
+target_include_directories(UTIL_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/univalue/include
+        ${OPENSSL_INCLUDE_DIR}
+        )
 
-set(CLI_SOURCES ./src/rpc/client.cpp)
-add_library(CLI_A STATIC ${BitcoinHeaders} ${CLI_SOURCES})
+set(CLI_A_SOURCES ./src/rpc/client.cpp)
+add_library(CLI_A STATIC ${BitcoinHeaders} ${CLI_A_SOURCES})
+target_include_directories(CLI_A PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/univalue/include
+        )
 
-add_executable(pivx-cli ${CMAKE_CURRENT_SOURCE_DIR}/src/pivx-cli.cpp)
+link_directories(
+        ${CMAKE_SOURCE_DIR}/src/univalue/.libs
+        ${CMAKE_SOURCE_DIR}/src/secp256k1/.libs
+        )
+
+set(pivx-cli_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivx-cli.cpp)
+if($ENV{target} MATCHES "Windows")
+    list(APPEND pivx-cli_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivx-cli-res.rc)
+endif()
+add_executable(pivx-cli ${pivx-cli_SOURCES})
 add_dependencies(pivx-cli libunivalue)
 target_link_libraries(pivx-cli
         CLI_A
@@ -504,8 +524,15 @@ target_link_libraries(pivx-cli
         BITCOIN_CRYPTO_A
         ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${LIBEVENT_LIB}
         )
+if($ENV{target} MATCHES "Windows")
+    target_link_libraries(pivx-cli ${WINDOWS_LDADD})
+endif()
 
-add_executable(pivx-tx ${CMAKE_CURRENT_SOURCE_DIR}/src/pivx-tx.cpp)
+set(pivx-tx_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivx-tx.cpp)
+if($ENV{target} MATCHES "Windows")
+    list(APPEND pivx-tx_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivx-tx-res.rc)
+endif()
+add_executable(pivx-tx ${pivx-tx_SOURCES})
 add_dependencies(pivx-tx libunivalue libsecp256k1)
 target_link_libraries(pivx-tx
         univalue
@@ -516,13 +543,28 @@ target_link_libraries(pivx-tx
         secp256k1
         ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES} ${LIBEVENT_LIB}
         )
+if($ENV{target} MATCHES "Windows")
+    target_link_libraries(pivx-tx ${WINDOWS_LDADD})
+endif()
 if(GMP_FOUND)
     target_link_libraries(pivx-tx ${GMP_LIBRARY})
 endif()
 
-add_executable(pivxd ${CMAKE_CURRENT_SOURCE_DIR}/src/pivxd.cpp)
+link_directories(${CMAKE_BINARY_DIR})
+
+set(pivxd_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivxd.cpp)
+if($ENV{target} MATCHES "Windows")
+    list(APPEND pivxd_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/pivxd-res.rc)
+endif()
+add_executable(pivxd ${pivxd_SOURCES} ${BitcoinHeaders})
 add_dependencies(pivxd libunivalue libsecp256k1 leveldb leveldb_sse42 memenv)
+target_include_directories(pivxd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/helpers/memenv
+        ${LIBEVENT_INCLUDE_DIR})
 target_link_libraries(pivxd
+        pthread
         SERVER_A
         COMMON_A
         univalue
@@ -530,15 +572,30 @@ target_link_libraries(pivxd
         UTIL_A
         WALLET_A
         BITCOIN_CRYPTO_A
-        leveldb leveldb_sse42 memenv secp256k1
-        ${BerkeleyDB_LIBRARIES} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${LIBEVENT_LIB} miniupnpc pthread
+        ${CMAKE_BINARY_DIR}/libleveldb.a
+        ${CMAKE_BINARY_DIR}/libleveldb_sse42.a
+        ${CMAKE_BINARY_DIR}/libmemenv.a
+        secp256k1
+        ${BerkeleyDB_LIBRARIES} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${LIBEVENT_LIB} pthread
         )
+if($ENV{target} MATCHES "Windows")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wstack-protector -fstack-protector-all -fPIE -pipe -O2 -pthread -Wl,--dynamicbase -Wl,--nxcompat -Wl,--high-entropy-va -pie --static")
+    target_link_libraries(pivxd ${WINDOWS_LDADD})
+endif()
 if(GMP_FOUND)
     target_link_libraries(pivxd ${GMP_LIBRARY})
+    target_include_directories(pivxd PUBLIC ${GMP_INCLUDE_DIR})
 endif()
 if(ZMQ_FOUND)
     target_link_libraries(pivxd ZMQ_A ${ZMQ_LIB})
-endif ()
+    target_include_directories(pivxd PUBLIC ${ZMQ_INCLUDE_DIR})
+endif()
+if(MINIUPNP_FOUND)
+    target_compile_definitions(pivxd PUBLIC "-DSTATICLIB -DMINIUPNP_STATICLIB")
+    target_link_libraries(pivxd ${MINIUPNP_LIBRARY})
+    target_include_directories(pivxd PUBLIC ${MINIUPNP_INCLUDE_DIR})
+endif()
 
+target_link_libraries(pivxd -lpthread)
 
 add_subdirectory(src/qt)

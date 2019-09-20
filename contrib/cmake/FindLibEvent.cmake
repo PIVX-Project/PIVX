@@ -4,10 +4,12 @@
 # LIBEVENT_LIB, LibEvent libraries
 # LibEvent_FOUND, If false, do not try to use libevent
 
-if(($ENV{triple}) AND (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/depends/$ENV{triple}"))
-    set(LIBEVENT_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/depends/$ENV{triple}/include")
-    set(LIBEVENT_LIB "${CMAKE_CURRENT_SOURCE_DIR}/depends/$ENV{triple}/lib/libevent.a")
-    set(LIBEVENT_PTHREAD_LIB "${CMAKE_CURRENT_SOURCE_DIR}/depends/$ENV{triple}/lib/libevent.a")
+if($ENV{target} MATCHES "Windows")
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/depends/$ENV{triple}")
+        set(LIBEVENT_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/depends/$ENV{triple}/include")
+        set(LIBEVENT_LIB "${CMAKE_CURRENT_SOURCE_DIR}/depends/$ENV{triple}/lib/libevent.a")
+        set(LIBEVENT_PTHREAD_LIB "${CMAKE_CURRENT_SOURCE_DIR}/depends/$ENV{triple}/lib/libevent.a")
+    endif()
 else()
     set(LibEvent_EXTRA_PREFIXES /usr/local /opt/local "$ENV{HOME}")
     foreach(prefix ${LibEvent_EXTRA_PREFIXES})

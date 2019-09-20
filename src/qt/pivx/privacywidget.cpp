@@ -165,9 +165,13 @@ void PrivacyWidget::loadWalletModel(){
         txModel = walletModel->getTransactionTableModel();
         // Set up transaction list
         filter = new TransactionFilterProxy();
+        filter->setDynamicSortFilter(true);
+        filter->setSortCaseSensitivity(Qt::CaseInsensitive);
+        filter->setFilterCaseSensitivity(Qt::CaseInsensitive);
+        filter->setSortRole(Qt::EditRole);
+        filter->setShowZcTxes(true);
         filter->setSourceModel(txModel);
         filter->sort(TransactionTableModel::Date, Qt::DescendingOrder);
-        filter->setShowZcTxes(true);
         txHolder->setDisplayUnit(walletModel->getOptionsModel()->getDisplayUnit());
         txHolder->setFilter(filter);
         ui->listView->setModel(filter);

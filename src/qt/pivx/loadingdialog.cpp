@@ -10,11 +10,12 @@ void Worker::process(){
     try {
         if (runnable)
             runnable->run(type);
-        emit finished();
     } catch (std::exception& e) {
-        std::cout << e.what() << std::endl;
-        emit error(QString::fromStdString(e.what()));
+        QString errorStr = QString::fromStdString(e.what());
+        runnable->onError(errorStr, type);
+        emit error(errorStr, type);
     }
+    emit finished();
 };
 
 LoadingDialog::LoadingDialog(QWidget *parent) :
@@ -45,7 +46,6 @@ void LoadingDialog::execute(Runnable *runnable, int type){
     QThread* thread = new QThread;
     Worker* worker = new Worker(runnable, type);
     worker->moveToThread(thread);
-    connect(worker, SIGNAL (error(QString)), this, SLOT (errorString(QString)));
     connect(thread, SIGNAL (started()), worker, SLOT (process()));
     connect(worker, SIGNAL (finished()), thread, SLOT (quit()));
     connect(worker, SIGNAL (finished()), worker, SLOT (deleteLater()));
