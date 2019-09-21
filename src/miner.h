@@ -7,6 +7,8 @@
 #ifndef BITCOIN_MINER_H
 #define BITCOIN_MINER_H
 
+#include "primitives/block.h"
+
 #include <stdint.h>
 
 class CBlock;
@@ -16,7 +18,11 @@ class CReserveKey;
 class CScript;
 class CWallet;
 
-struct CBlockTemplate;
+struct CBlockTemplate {
+    CBlock block;
+    std::vector<CAmount> vTxFees;
+    std::vector<int64_t> vTxSigOps;
+};
 
 /** Generate a new block, without valid proof-of-work */
 CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, bool fProofOfStake);

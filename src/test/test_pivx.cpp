@@ -7,7 +7,7 @@
 
 #include "test_pivx.h"
 
-#include "main.h"
+#include "validation.h"
 #include "random.h"
 #include "txdb.h"
 #include "guiinterface.h"

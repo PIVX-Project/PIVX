@@ -8,8 +8,8 @@
 #include "base58.h"
 #include "checkpoints.h"
 #include "clientversion.h"
+#include "consensus/validation.h"
 #include "kernel.h"
-#include "main.h"
 #include "rpc/server.h"
 #include "sync.h"
 #include "txdb.h"
@@ -18,6 +18,7 @@
 #include "zpiv/accumulatormap.h"
 #include "zpiv/accumulators.h"
 #include "wallet/wallet.h"
+#include "validation.h"
 #include "zpiv/zpivmodule.h"
 #include "zpivchain.h"
 

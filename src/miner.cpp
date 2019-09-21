@@ -8,8 +8,10 @@
 #include "miner.h"
 
 #include "amount.h"
+#include "consensus/consensus.h"
+#include "consensus/validation.h"
 #include "hash.h"
-#include "main.h"
+#include "validation.h"
 #include "masternode-sync.h"
 #include "net.h"
 #include "pow.h"
@@ -21,6 +23,7 @@
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #endif
+#include "validation.h"
 #include "validationinterface.h"
 #include "masternode-payments.h"
 #include "zpiv/accumulators.h"

@@ -5,7 +5,7 @@
 #include "zpiv/accumulators.h"
 #include "chain.h"
 #include "zpiv/deterministicmint.h"
-#include "main.h"
+#include "validation.h"
 #include "stakeinput.h"
 #include "wallet/wallet.h"
 

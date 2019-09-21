@@ -7,13 +7,13 @@
 #include "chainparams.h"
 #include "db.h"
 #include "init.h"
-#include "main.h"
 #include "masternode-budget.h"
 #include "masternode-payments.h"
 #include "masternodeconfig.h"
 #include "masternodeman.h"
 #include "rpc/server.h"
 #include "utilmoneystr.h"
+#include "validation.h"
 
 #include <univalue.h>
 

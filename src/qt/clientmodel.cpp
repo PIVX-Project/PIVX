@@ -15,13 +15,14 @@
 #include "chainparams.h"
 #include "checkpoints.h"
 #include "clientversion.h"
-#include "main.h"
+#include "validation.h"
 #include "masternode-sync.h"
 #include "masternodeman.h"
 #include "net.h"
 #include "netbase.h"
 #include "guiinterface.h"
 #include "util.h"
+#include "warnings.h"
 
 #include <stdint.h>
 

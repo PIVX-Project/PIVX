@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "blocksignature.h"
-#include "main.h"
+#include "validation.h"
 #include "zpivchain.h"
 
 bool SignBlockWithKey(CBlock& block, const CKey& key)

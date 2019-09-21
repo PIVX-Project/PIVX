@@ -7,9 +7,10 @@
 
 #include "base58.h"
 #include "core_io.h"
+#include "consensus/validation.h"
 #include "init.h"
 #include "keystore.h"
-#include "main.h"
+#include "validation.h"
 #include "net.h"
 #include "primitives/transaction.h"
 #include "zpiv/deterministicmint.h"

@@ -15,7 +15,7 @@
 #include "walletmodel.h"
 
 #include "coincontrol.h"
-#include "main.h"
+#include "validation.h"
 #include "obfuscation.h"
 #include "wallet/wallet.h"
 #include "multisigdialog.h"

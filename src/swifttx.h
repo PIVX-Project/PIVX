@@ -8,11 +8,11 @@
 
 #include "base58.h"
 #include "key.h"
-#include "main.h"
 #include "net.h"
 #include "spork.h"
 #include "sync.h"
 #include "util.h"
+#include "validation.h"
 
 /*
     At 15 signatures, 1/2 of the masternode network can be owned by

@@ -12,7 +12,7 @@
 #include "timedata.h"
 #include "wallet/wallet.h"
 #include "zpivchain.h"
-#include "main.h"
+#include "validation.h"
 
 #include <iostream>
 #include <stdint.h>

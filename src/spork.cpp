@@ -6,14 +6,13 @@
 #include "spork.h"
 #include "base58.h"
 #include "key.h"
-#include "main.h"
 #include "masternode-budget.h"
 #include "net.h"
 #include "protocol.h"
 #include "sync.h"
 #include "sporkdb.h"
 #include "util.h"
-
+#include "validation.h"
 
 class CSporkMessage;
 class CSporkManager;

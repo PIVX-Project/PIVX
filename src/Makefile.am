@@ -99,6 +99,7 @@ BITCOIN_CORE_H = \
   compat/endian.h \
   compat/sanity.h \
   compressor.h \
+  consensus/merkle.h \
   primitives/block.h \
   primitives/transaction.h \
   core_io.h \
@@ -120,18 +121,17 @@ BITCOIN_CORE_H = \
   keystore.h \
   leveldbwrapper.h \
   limitedmap.h \
-  main.h \
   masternode.h \
   masternode-payments.h \
   masternode-budget.h \
   masternode-sync.h \
   masternodeman.h \
   masternodeconfig.h \
-  merkleblock.h \
   miner.h \
   mruset.h \
   netbase.h \
   net.h \
+  net_processing.h \
   noui.h \
   pow.h \
   protocol.h \
@@ -169,11 +169,13 @@ BITCOIN_CORE_H = \
   utilstrencodings.h \
   utilmoneystr.h \
   utiltime.h \
+  validation.h \
   validationinterface.h \
   version.h \
   wallet/wallet.h \
   wallet/wallet_ismine.h \
   wallet/walletdb.h \
+  warnings.h \
   zpivchain.h \
   zpiv/accumulators.h \
   zpiv/accumulatorcheckpoints.h \
@@ -210,14 +212,14 @@ libbitcoin_server_a_SOURCES = \
   blocksignature.cpp \
   chain.cpp \
   checkpoints.cpp \
+  consensus/merkle.cpp \
   httprpc.cpp \
   httpserver.cpp \
   init.cpp \
   leveldbwrapper.cpp \
-  main.cpp \
-  merkleblock.cpp \
   miner.cpp \
   net.cpp \
+  net_processing.cpp \
   noui.cpp \
   pow.cpp \
   rest.cpp \
@@ -235,6 +237,8 @@ libbitcoin_server_a_SOURCES = \
   torcontrol.cpp \
   txdb.cpp \
   txmempool.cpp \
+  warnings.cpp \
+  validation.cpp \
   validationinterface.cpp \
   zpivchain.cpp \
   $(BITCOIN_CORE_H)

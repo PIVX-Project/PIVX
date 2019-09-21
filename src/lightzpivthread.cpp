@@ -5,7 +5,7 @@
 
 
 #include "lightzpivthread.h"
-#include "main.h"
+#include "validation.h"
 
 /****** Thread ********/
 void CLightWorker::ThreadLightZPIVSimplified() {

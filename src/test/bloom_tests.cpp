@@ -8,7 +8,7 @@
 #include "base58.h"
 #include "clientversion.h"
 #include "key.h"
-#include "merkleblock.h"
+#include "consensus/merkle.h"
 #include "serialize.h"
 #include "streams.h"
 #include "uint256.h"

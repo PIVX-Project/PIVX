@@ -4,8 +4,9 @@
 
 #include "zpivchain.h"
 #include "zpiv/zpivmodule.h"
+#include "consensus/validation.h"
 #include "invalid.h"
-#include "main.h"
+#include "validation.h"
 #include "txdb.h"
 #include "guiinterface.h"
 

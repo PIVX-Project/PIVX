@@ -12,7 +12,7 @@
 #include "amount.h"
 #include "chainparams.h"
 #include "coincontrol.h"
-#include "main.h"
+#include "validation.h"
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"
 #include "txdb.h"

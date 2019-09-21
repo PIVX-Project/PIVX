@@ -7,7 +7,7 @@
 #include "libzerocoin/Commitment.h"
 #include "libzerocoin/Coin.h"
 #include "hash.h"
-#include "main.h"
+#include "validation.h"
 #include "iostream"
 
 bool PublicCoinSpend::Verify(const libzerocoin::Accumulator& a, bool verifyParams) const {

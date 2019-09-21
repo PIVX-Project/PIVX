@@ -9,7 +9,7 @@
 
 #include "base58.h"
 #include "init.h"
-#include "main.h"
+#include "validation.h"
 #include "random.h"
 #include "sync.h"
 #include "guiinterface.h"

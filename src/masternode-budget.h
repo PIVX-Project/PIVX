@@ -9,7 +9,7 @@
 #include "base58.h"
 #include "init.h"
 #include "key.h"
-#include "main.h"
+#include "validation.h"
 #include "masternode.h"
 #include "net.h"
 #include "sync.h"

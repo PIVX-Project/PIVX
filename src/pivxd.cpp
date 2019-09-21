@@ -7,7 +7,7 @@
 
 #include "clientversion.h"
 #include "init.h"
-#include "main.h"
+#include "validation.h"
 #include "masternodeconfig.h"
 #include "noui.h"
 #include "rpc/server.h"

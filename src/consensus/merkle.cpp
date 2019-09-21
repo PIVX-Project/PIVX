@@ -4,10 +4,10 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "merkleblock.h"
+#include "merkle.h"
 
 #include "hash.h"
-#include "primitives/block.h" // for MAX_BLOCK_SIZE
+#include "consensus/consensus.h"
 #include "utilstrencodings.h"
 
 

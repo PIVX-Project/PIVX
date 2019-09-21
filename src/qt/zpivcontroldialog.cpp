@@ -6,7 +6,7 @@
 #include "ui_zpivcontroldialog.h"
 
 #include "zpiv/accumulators.h"
-#include "main.h"
+#include "validation.h"
 #include "walletmodel.h"
 
 

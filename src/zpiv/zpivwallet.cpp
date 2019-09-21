@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "zpivwallet.h"
-#include "main.h"
+#include "validation.h"
 #include "txdb.h"
 #include "wallet/walletdb.h"
 #include "init.h"

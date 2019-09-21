@@ -4,7 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 // clang-format off
-#include "main.h"
+#include "validation.h"
 #include "activemasternode.h"
 #include "masternode-sync.h"
 #include "masternode-payments.h"

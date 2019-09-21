@@ -28,7 +28,7 @@
 #include "masternodeconfig.h"
 
 #include "init.h"
-#include "main.h"
+#include "validation.h"
 #include "rpc/server.h"
 #include "guiinterface.h"
 #include "util.h"

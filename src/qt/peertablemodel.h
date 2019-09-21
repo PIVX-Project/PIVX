@@ -6,7 +6,7 @@
 #ifndef BITCOIN_QT_PEERTABLEMODEL_H
 #define BITCOIN_QT_PEERTABLEMODEL_H
 
-#include "main.h"
+#include "validation.h"
 #include "net.h"
 
 #include <QAbstractTableModel>

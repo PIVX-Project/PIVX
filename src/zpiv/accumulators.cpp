@@ -5,7 +5,7 @@
 #include "accumulators.h"
 #include "accumulatormap.h"
 #include "chainparams.h"
-#include "main.h"
+#include "validation.h"
 #include "txdb.h"
 #include "init.h"
 #include "spork.h"

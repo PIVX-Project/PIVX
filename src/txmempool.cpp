@@ -7,7 +7,8 @@
 #include "txmempool.h"
 
 #include "clientversion.h"
-#include "main.h"
+#include "consensus/validation.h"
+#include "validation.h"
 #include "streams.h"
 #include "util.h"
 #include "utilmoneystr.h"

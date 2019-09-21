@@ -7,7 +7,7 @@
 #define MASTERNODE_PAYMENTS_H
 
 #include "key.h"
-#include "main.h"
+#include "validation.h"
 #include "masternode.h"
 
 

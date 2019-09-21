@@ -4,7 +4,7 @@
 
 #include "accumulatormap.h"
 #include "accumulators.h"
-#include "main.h"
+#include "validation.h"
 #include "txdb.h"
 #include "libzerocoin/Denominations.h"
 

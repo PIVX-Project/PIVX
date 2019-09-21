@@ -4,11 +4,12 @@
 
 #include "key.h"
 #include "keystore.h"
-#include "main.h"
+#include "net_processing.h"
 #include "script/script.h"
 #include "script/script_error.h"
 #include "script/sign.h"
 #include "test_pivx.h"
+#include "validation.h"
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet_ismine.h"

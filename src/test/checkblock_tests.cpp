@@ -9,7 +9,7 @@
 
 
 #include "clientversion.h"
-#include "main.h"
+#include "validation.h"
 #include "utiltime.h"
 #include "test/test_pivx.h"
 

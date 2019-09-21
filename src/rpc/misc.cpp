@@ -8,7 +8,7 @@
 #include "base58.h"
 #include "clientversion.h"
 #include "init.h"
-#include "main.h"
+#include "validation.h"
 #include "masternode-sync.h"
 #include "net.h"
 #include "netbase.h"
@@ -16,6 +16,7 @@
 #include "spork.h"
 #include "timedata.h"
 #include "util.h"
+#include "warnings.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"

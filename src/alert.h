@@ -9,6 +9,7 @@
 
 #include "serialize.h"
 #include "sync.h"
+#include "uint256.h"
 
 #include <map>
 #include <set>
