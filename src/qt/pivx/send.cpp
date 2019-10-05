@@ -370,6 +370,11 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
         if (sendStatus.status == WalletModel::OK) {
             clearAll();
             inform(tr("Transaction sent"));
+            //Check if wallet is unlocked for staking
+            if (walletModel->getEncryptionStatus() == WalletModel::UnlockedForAnonymizationOnly) {
+                //Lock wallet after sending out a Transaction
+                walletModel->setWalletLocked(true,SecureString(),true);
+            }
             return true;
         }
     }
