@@ -78,6 +78,13 @@ class PIVX_RPCSporkTest(BitcoinTestFramework):
         assert(sporks["SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT"] == new_value)
         active = self.nodes[0].spork("active")
         assert (active["SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT"])
+        self.log.info("Stopping nodes...")
+        self.stop_nodes()
+        self.log.info("Restarting node 1...")
+        self.start_node(1, [])
+        sporks = self.nodes[1].spork("show")
+        self.printDict(sporks)
+        assert (sporks["SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT"] == new_value)
 
 
 

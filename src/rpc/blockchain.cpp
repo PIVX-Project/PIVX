@@ -769,7 +769,7 @@ UniValue gettxout(const UniValue& params, bool fHelp)
             "     \"reqSigs\" : n,          (numeric) Number of required signatures\n"
             "     \"type\" : \"pubkeyhash\", (string) The type, eg pubkeyhash\n"
             "     \"addresses\" : [          (array of string) array of pivx addresses\n"
-            "     \"pivxaddress\"   	 	(string) pivx address\n"
+            "     \"pivxaddress\"            (string) pivx address\n"
             "        ,...\n"
             "     ]\n"
             "  },\n"
@@ -1206,7 +1206,7 @@ UniValue findserial(const UniValue& params, bool fHelp)
     CBigNum bnSerial = 0;
     bnSerial.SetHex(strSerial);
     if (!bnSerial)
-	throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid serial");
+    throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid serial");
 
     uint256 txid = 0;
     bool fSuccess = zerocoinDB->ReadCoinSpend(bnSerial, txid);

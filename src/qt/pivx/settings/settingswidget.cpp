@@ -176,7 +176,7 @@ void SettingsWidget::loadClientModel(){
             settingsDisplayOptionsWidget->setClientModel(clientModel);
             settingsWalletOptionsWidget->setClientModel(clientModel);
             /* keep consistency for action triggered elsewhere */
-            connect(optionsModel, SIGNAL(hideOrphansChanged(bool)), this, SLOT(updateHideOrphans(bool)));
+            //connect(optionsModel, SIGNAL(hideOrphansChanged(bool)), this, SLOT(updateHideOrphans(bool)));
 
             // TODO: Connect show restart needed and apply changes.
         }

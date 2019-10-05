@@ -7,6 +7,8 @@
 
 #include <QWidget>
 
+class NetworkStyle;
+
 namespace Ui {
 class Splash;
 }
@@ -16,7 +18,7 @@ class Splash : public QWidget
     Q_OBJECT
 
 public:
-    explicit Splash(QWidget *parent = nullptr);
+    explicit Splash(Qt::WindowFlags f, const NetworkStyle* networkStyle);
     ~Splash();
 
 public slots:

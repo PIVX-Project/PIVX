@@ -93,7 +93,7 @@ struct ReadAlerts : public TestingSetup
                 alerts.push_back(alert);
             }
         }
-        catch (std::exception) { }
+        catch (const std::exception&) { }
     }
     ~ReadAlerts() { }
 

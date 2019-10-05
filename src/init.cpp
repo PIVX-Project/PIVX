@@ -1094,8 +1094,6 @@ bool AppInit2()
             return InitError(_("Unable to start HTTP server. See debug log for details."));
     }
 
-    int64_t nStart;
-
 // ********************************************************* Step 5: Backup wallet and verify wallet database integrity
 #ifdef ENABLE_WALLET
     if (!fDisableWallet) {
@@ -1123,7 +1121,7 @@ bool AppInit2()
                     try {
                         boost::filesystem::copy_file(sourceFile, backupFile);
                         LogPrintf("Creating backup of %s -> %s\n", sourceFile, backupFile);
-                    } catch (boost::filesystem::filesystem_error& error) {
+                    } catch (const boost::filesystem::filesystem_error& error) {
                         LogPrintf("Failed to create backup %s\n", error.what());
                     }
 #else
@@ -1159,7 +1157,7 @@ bool AppInit2()
                         try {
                             boost::filesystem::remove(file.second);
                             LogPrintf("Old backup deleted: %s\n", file.second);
-                        } catch (boost::filesystem::filesystem_error& error) {
+                        } catch (const boost::filesystem::filesystem_error& error) {
                             LogPrintf("Failed to delete backup %s\n", error.what());
                         }
                     }
@@ -1197,7 +1195,7 @@ bool AppInit2()
                     boost::filesystem::remove_all(zerocoinDir);
                     LogPrintf("-resync: folder deleted: %s\n", zerocoinDir.string().c_str());
                 }
-            } catch (boost::filesystem::filesystem_error& error) {
+            } catch (const boost::filesystem::filesystem_error& error) {
                 LogPrintf("Failed to delete blockchain folders %s\n", error.what());
             }
         }
@@ -1212,7 +1210,7 @@ bool AppInit2()
             try {
                 boost::filesystem::rename(pathDatabase, pathDatabaseBak);
                 LogPrintf("Moved old %s to %s. Retrying.\n", pathDatabase.string(), pathDatabaseBak.string());
-            } catch (boost::filesystem::filesystem_error& error) {
+            } catch (const boost::filesystem::filesystem_error& error) {
                 // failure is ok (well, not really, but it's not worse than what we started with)
             }
 
@@ -1411,7 +1409,8 @@ bool AppInit2()
     nCoinCacheSize = nTotalCache / 300; // coins in memory require around 300 bytes
 
     bool fLoaded = false;
-    while (!fLoaded) {
+    int64_t nStart = GetTimeMillis();
+    while (!fLoaded && !ShutdownRequested()) {
         bool fReset = fReindex;
         std::string strLoadError;
 
@@ -1440,13 +1439,17 @@ bool AppInit2()
                 if (fReindex)
                     pblocktree->WriteReindexing(true);
 
+                // End loop if shutdown was requested
+                if (ShutdownRequested()) break;
+
                 // PIVX: load previous sessions sporks if we have them.
                 uiInterface.InitMessage(_("Loading sporks..."));
-                LoadSporksFromDB();
+                sporkManager.LoadSporksFromDB();
 
                 uiInterface.InitMessage(_("Loading block index..."));
                 std::string strBlockIndexError = "";
                 if (!LoadBlockIndex(strBlockIndexError)) {
+                    if (ShutdownRequested()) break;
                     strLoadError = _("Error loading block database");
                     strLoadError = strprintf("%s : %s", strLoadError, strBlockIndexError);
                     break;
@@ -1576,7 +1579,7 @@ bool AppInit2()
                         break;
                     }
                 }
-            } catch (std::exception& e) {
+            } catch (const std::exception& e) {
                 if (fDebug) LogPrintf("%s\n", e.what());
                 strLoadError = _("Error opening block database");
                 fVerifyingBlocks = false;
@@ -1587,7 +1590,7 @@ bool AppInit2()
             fLoaded = true;
         } while (false);
 
-        if (!fLoaded) {
+        if (!fLoaded && !ShutdownRequested()) {
             // first suggest a reindex
             if (!fReset) {
                 bool fRet = uiInterface.ThreadSafeMessageBox(
@@ -1609,7 +1612,7 @@ bool AppInit2()
     // As LoadBlockIndex can take several minutes, it's possible the user
     // requested to kill the GUI during the last operation. If so, exit.
     // As the program has not fully started yet, Shutdown() is possibly overkill.
-    if (fRequestShutdown) {
+    if (ShutdownRequested()) {
         LogPrintf("Shutdown requested. Exiting.\n");
         return false;
     }
@@ -1936,6 +1939,11 @@ bool AppInit2()
     obfuScationPool.InitCollateralAddress();
 
     threadGroup.create_thread(boost::bind(&ThreadCheckObfuScationPool));
+
+    if (ShutdownRequested()) {
+        LogPrintf("Shutdown requested. Exiting.\n");
+        return false;
+    }
 
     // ********************************************************* Step 11: start node
 

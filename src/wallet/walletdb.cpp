@@ -103,7 +103,7 @@ void CWalletDB::LoadAutoConvertKeys(std::set<CBitcoinAddress>& setAddresses)
         std::string strType;
         try {
             ssKey >> strType;
-        } catch(...) {
+        } catch (...) {
             break;
         }
         if (strType != "automint")
@@ -777,7 +777,7 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
                 LogPrintf("%s\n", strErr);
         }
         pcursor->close();
-    } catch (boost::thread_interrupted) {
+    } catch (const boost::thread_interrupted&) {
         throw;
     } catch (...) {
         result = DB_CORRUPT;
@@ -870,7 +870,7 @@ DBErrors CWalletDB::FindWalletTx(CWallet* pwallet, std::vector<uint256>& vTxHash
             }
         }
         pcursor->close();
-    } catch (boost::thread_interrupted) {
+    } catch (const boost::thread_interrupted&) {
         throw;
     } catch (...) {
         result = DB_CORRUPT;
@@ -977,7 +977,7 @@ bool BackupWallet(const CWallet& wallet, const boost::filesystem::path& strDest,
             }
             try {
                 boost::filesystem::create_directories(pathCustom);
-            } catch(const boost::filesystem::filesystem_error& e) {
+            } catch (const boost::filesystem::filesystem_error& e) {
                 NotifyBacked(wallet, false, strprintf("%s\n", e.what()));
                 pathCustom = "";
             }
@@ -1047,7 +1047,7 @@ bool BackupWallet(const CWallet& wallet, const boost::filesystem::path& strDest,
                                     boost::filesystem::remove(entry->second);
                                     LogPrintf("Old backup deleted: %s\n", (*entry).second);
                                 }
-                            } catch (boost::filesystem::filesystem_error& error) {
+                            } catch (const boost::filesystem::filesystem_error& error) {
                                 std::string strMessage = strprintf("Failed to delete backup %s\n", error.what());
                                 LogPrint(nullptr, strMessage.data());
                                 NotifyBacked(wallet, false, strMessage);

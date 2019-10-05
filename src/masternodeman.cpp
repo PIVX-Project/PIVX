@@ -72,7 +72,7 @@ bool CMasternodeDB::Write(const CMasternodeMan& mnodemanToSave)
     // Write and commit header, data
     try {
         fileout << ssMasternodes;
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         return error("%s : Serialize or I/O error - %s", __func__, e.what());
     }
     //    FileCommit(fileout);
@@ -109,7 +109,7 @@ CMasternodeDB::ReadResult CMasternodeDB::Read(CMasternodeMan& mnodemanToLoad, bo
     try {
         filein.read((char*)&vchData[0], dataSize);
         filein >> hashIn;
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         error("%s : Deserialize or I/O error - %s", __func__, e.what());
         return HashReadError;
     }
@@ -147,7 +147,7 @@ CMasternodeDB::ReadResult CMasternodeDB::Read(CMasternodeMan& mnodemanToLoad, bo
         }
         // de-serialize data into CMasternodeMan object
         ssMasternodes >> mnodemanToLoad;
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         mnodemanToLoad.Clear();
         error("%s : Deserialize or I/O error - %s", __func__, e.what());
         return IncorrectFormat;
@@ -358,7 +358,7 @@ int CMasternodeMan::stable_size ()
         if (mn.protocolVersion < nMinProtocol) {
             continue; // Skip obsolete versions
         }
-        if (IsSporkActive (SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
+        if (sporkManager.IsSporkActive (SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
             nMasternode_Age = GetAdjustedTime() - mn.sigTime;
             if ((nMasternode_Age) < nMasternode_Min_Age) {
                 continue; // Skip masternodes younger than (default) 8000 sec (MUST be > MASTERNODE_REMOVAL_SECONDS)
@@ -607,7 +607,7 @@ int CMasternodeMan::GetMasternodeRank(const CTxIn& vin, int64_t nBlockHeight, in
             continue;                                                       // Skip obsolete versions
         }
 
-        if (IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
+        if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
             nMasternode_Age = GetAdjustedTime() - mn.sigTime;
             if ((nMasternode_Age) < nMasternode_Min_Age) {
                 if (fDebug) LogPrint("masternode","Skipping just activated Masternode. Age: %ld\n", nMasternode_Age);
@@ -856,7 +856,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
     // Light version for OLD MASSTERNODES - fake pings, no self-activation
     else if (strCommand == "dsee") { //ObfuScation Election Entry
 
-        if (IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)) return;
+        if (sporkManager.IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)) return;
 
         CTxIn vin;
         CService addr;
@@ -1061,7 +1061,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
 
     else if (strCommand == "dseep") { //ObfuScation Election Entry Ping
 
-        if (IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)) return;
+        if (sporkManager.IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)) return;
 
         CTxIn vin;
         std::vector<unsigned char> vchSig;

@@ -104,8 +104,8 @@ public:
     int64_t GetProposalEstablishmentTime() const { return nProposalEstablishmentTime; }
 
     /** Spork key and Masternode Handling **/
-    std::string SporkKey() const { return strSporkKey; }
-    std::string SporkKeyOld() const { return strSporkKeyOld; }
+    std::string SporkPubKey() const { return strSporkPubKey; }
+    std::string SporkPubKeyOld() const { return strSporkPubKeyOld; }
     int64_t NewSporkStart() const { return nEnforceNewSporkKey; }
     int64_t RejectOldSporkKey() const { return nRejectOldSporkKey; }
     std::string ObfuscationPoolDummyAddress() const { return strObfuscationPoolDummyAddress; }
@@ -193,8 +193,8 @@ protected:
     bool fHeadersFirstSyncingActive;
     int nPoolMaxTransactions;
     int nBudgetCycleBlocks;
-    std::string strSporkKey;
-    std::string strSporkKeyOld;
+    std::string strSporkPubKey;
+    std::string strSporkPubKeyOld;
     int64_t nEnforceNewSporkKey;
     int64_t nRejectOldSporkKey;
     std::string strObfuscationPoolDummyAddress;

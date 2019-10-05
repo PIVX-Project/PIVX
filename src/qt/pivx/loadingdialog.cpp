@@ -14,6 +14,10 @@ void Worker::process(){
         QString errorStr = QString::fromStdString(e.what());
         runnable->onError(errorStr, type);
         emit error(errorStr, type);
+    } catch (...) {
+        QString errorStr = QString::fromStdString("Unknown error running background task");
+        runnable->onError(errorStr, type);
+        emit error(errorStr, type);
     }
     emit finished();
 };

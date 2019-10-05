@@ -44,27 +44,15 @@ QT_TS = \
 QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
   qt/forms/askpassphrasedialog.ui \
-  qt/forms/bip38tooldialog.ui \
   qt/forms/coincontroldialog.ui \
   qt/forms/blockexplorer.ui \
   qt/forms/editaddressdialog.ui \
   qt/forms/governancepage.ui \
   qt/forms/helpmessagedialog.ui \
   qt/forms/intro.ui \
-  qt/forms/masternodelist.ui \
-  qt/forms/multisenddialog.ui \
-  qt/forms/multisigdialog.ui\
   qt/forms/openuridialog.ui \
   qt/forms/optionsdialog.ui \
-  qt/forms/overviewpage.ui \
-  qt/forms/receivecoinsdialog.ui \
-  qt/forms/privacydialog.ui \
-  qt/forms/receiverequestdialog.ui \
   qt/forms/rpcconsole.ui \
-  qt/forms/sendcoinsdialog.ui \
-  qt/forms/sendcoinsentry.ui \
-  qt/forms/signverifymessagedialog.ui \
-  qt/forms/transactiondescdialog.ui \
   qt/pivx/forms/loadingdialog.ui \
   qt/forms/zpivcontroldialog.ui \
   qt/pivx/forms/snackbar.ui \
@@ -121,10 +109,8 @@ QT_MOC_CPP = \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
   qt/moc_bantablemodel.cpp \
-  qt/moc_bip38tooldialog.cpp \
   qt/moc_bitcoinaddressvalidator.cpp \
   qt/moc_bitcoinamountfield.cpp \
-  qt/moc_bitcoingui.cpp \
   qt/pivx/moc_pivxgui.cpp \
   qt/moc_bitcoinunits.cpp \
   qt/moc_blockexplorer.cpp \
@@ -138,38 +124,24 @@ QT_MOC_CPP = \
   qt/moc_intro.cpp \
   qt/moc_macdockiconhandler.cpp \
   qt/moc_macnotificationhandler.cpp \
-  qt/moc_masternodelist.cpp \
-  qt/moc_multisenddialog.cpp \
-  qt/moc_multisigdialog.cpp\
   qt/moc_notificator.cpp \
   qt/moc_openuridialog.cpp \
   qt/moc_optionsdialog.cpp \
   qt/moc_optionsmodel.cpp \
-  qt/moc_overviewpage.cpp \
   qt/moc_peertablemodel.cpp \
   qt/moc_paymentserver.cpp \
   qt/moc_qvalidatedlineedit.cpp \
   qt/moc_qvaluecombobox.cpp \
-  qt/moc_receivecoinsdialog.cpp \
-  qt/moc_privacydialog.cpp \
   qt/moc_proposalframe.cpp \
-  qt/moc_receiverequestdialog.cpp \
   qt/moc_recentrequeststablemodel.cpp \
   qt/moc_rpcconsole.cpp \
-  qt/moc_sendcoinsdialog.cpp \
-  qt/moc_sendcoinsentry.cpp \
-  qt/moc_signverifymessagedialog.cpp \
   qt/moc_splashscreen.cpp \
   qt/moc_trafficgraphwidget.cpp \
   qt/moc_transactiondesc.cpp \
-  qt/moc_transactiondescdialog.cpp \
   qt/moc_transactionfilterproxy.cpp \
   qt/moc_transactiontablemodel.cpp \
-  qt/moc_transactionview.cpp \
   qt/moc_utilitydialog.cpp \
-  qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
-  qt/moc_walletview.cpp \
   qt/pivx/moc_loadingdialog.cpp \
   qt/moc_zpivcontroldialog.cpp \
   qt/pivx/moc_pwidget.cpp \
@@ -233,7 +205,6 @@ QT_MOC = \
   qt/pivx.moc \
   qt/bitcoinamountfield.moc \
   qt/intro.moc \
-  qt/overviewpage.moc \
   qt/rpcconsole.moc \
   qt/pivx/settings/moc_settingsconsolewidget.cpp
 
@@ -251,10 +222,8 @@ BITCOIN_QT_H = \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
   qt/bantablemodel.h \
-  qt/bip38tooldialog.h \
   qt/bitcoinaddressvalidator.h \
   qt/bitcoinamountfield.h \
-  qt/bitcoingui.h \
   qt/pivx/pivxgui.h \
   qt/bitcoinunits.h \
   qt/blockexplorer.h \
@@ -269,15 +238,11 @@ BITCOIN_QT_H = \
   qt/intro.h \
   qt/macdockiconhandler.h \
   qt/macnotificationhandler.h \
-  qt/masternodelist.h \
-  qt/multisenddialog.h \
-  qt/multisigdialog.h\
   qt/networkstyle.h \
   qt/notificator.h \
   qt/openuridialog.h \
   qt/optionsdialog.h \
   qt/optionsmodel.h \
-  qt/overviewpage.h \
   qt/paymentrequestplus.h \
   qt/paymentserver.h \
   qt/peertablemodel.h \
@@ -285,29 +250,19 @@ BITCOIN_QT_H = \
   qt/proposalframe.h \
   qt/qvalidatedlineedit.h \
   qt/qvaluecombobox.h \
-  qt/receivecoinsdialog.h \
-  qt/privacydialog.h \
-  qt/receiverequestdialog.h \
   qt/recentrequeststablemodel.h \
   qt/rpcconsole.h \
-  qt/sendcoinsdialog.h \
-  qt/sendcoinsentry.h \
-  qt/signverifymessagedialog.h \
   qt/splashscreen.h \
   qt/trafficgraphwidget.h \
   qt/transactiondesc.h \
-  qt/transactiondescdialog.h \
   qt/transactionfilterproxy.h \
   qt/transactionrecord.h \
   qt/transactiontablemodel.h \
-  qt/transactionview.h \
   qt/utilitydialog.h \
-  qt/walletframe.h \
   qt/walletmodel.h \
   qt/walletmodeltransaction.h \
   qt/pivx/prunnable.h \
   qt/pivx/loadingdialog.h \
-  qt/walletview.h \
   qt/winshutdownmonitor.h \
   qt/zpivcontroldialog.h \
   qt/pivx/pwidget.h \
@@ -633,7 +588,6 @@ BITCOIN_QT_BASE_CPP = \
   qt/bantablemodel.cpp \
   qt/bitcoinaddressvalidator.cpp \
   qt/bitcoinamountfield.cpp \
-  qt/bitcoingui.cpp \
   qt/pivx/pivxgui.cpp \
   qt/bitcoinunits.cpp \
   qt/blockexplorer.cpp \
@@ -641,7 +595,6 @@ BITCOIN_QT_BASE_CPP = \
   qt/csvmodelwriter.cpp \
   qt/guiutil.cpp \
   qt/intro.cpp \
-  qt/masternodelist.cpp \
   qt/networkstyle.cpp \
   qt/notificator.cpp \
   qt/optionsdialog.cpp \
@@ -661,37 +614,22 @@ BITCOIN_QT_WALLET_CPP = \
   qt/addressbookpage.cpp \
   qt/addresstablemodel.cpp \
   qt/askpassphrasedialog.cpp \
-  qt/bip38tooldialog.cpp \
   qt/blockexplorer.cpp \
   qt/coincontroldialog.cpp \
   qt/coincontroltreewidget.cpp \
   qt/editaddressdialog.cpp \
   qt/governancepage.cpp \
-  qt/masternodelist.cpp \
-  qt/multisenddialog.cpp \
-  qt/multisigdialog.cpp\
   qt/openuridialog.cpp \
-  qt/overviewpage.cpp \
   qt/paymentrequestplus.cpp \
   qt/paymentserver.cpp \
-  qt/receivecoinsdialog.cpp \
-  qt/privacydialog.cpp \
   qt/proposalframe.cpp \
-  qt/receiverequestdialog.cpp \
   qt/recentrequeststablemodel.cpp \
-  qt/sendcoinsdialog.cpp \
-  qt/sendcoinsentry.cpp \
-  qt/signverifymessagedialog.cpp \
   qt/transactiondesc.cpp \
-  qt/transactiondescdialog.cpp \
   qt/transactionfilterproxy.cpp \
   qt/transactionrecord.cpp \
   qt/transactiontablemodel.cpp \
-  qt/transactionview.cpp \
-  qt/walletframe.cpp \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
-  qt/walletview.cpp \
   qt/pivx/loadingdialog.cpp \
   qt/zpivcontroldialog.cpp \
   qt/pivx/pwidget.cpp \

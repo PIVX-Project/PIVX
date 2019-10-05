@@ -1548,8 +1548,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="container-splash"] {
     background-color:transparent;
-    border-image: url("://bg-splash-png") 0 0 0 0 stretch stretch;
-    border-radius: 4px;
+    background-image: url("://bg-splash-png");
 }
 
 *[cssClass="img-splash-logo"] {
@@ -1681,6 +1680,22 @@ QPushButton[cssClass="btn-chart-arrow"]:hover {
 }
 
 QPushButton[cssClass="btn-chart-arrow"]:pressed {
+    background-color:#20192e;
+}
+
+QPushButton[cssClass="btn-chart-arrow-right"] {
+    qproperty-icon: url("://ic-arrow-right-white") ;
+    qproperty-iconSize: 12px 12px;
+    background-color: transparent;
+    border:0px;
+    border-radius:2px;
+}
+
+QPushButton[cssClass="btn-chart-arrow-right"]:hover {
+    background-color: #5c4b7d;
+}
+
+QPushButton[cssClass="btn-chart-arrow-right"]:pressed {
     background-color:#20192e;
 }
 

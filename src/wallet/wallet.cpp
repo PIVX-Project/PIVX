@@ -1845,7 +1845,7 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
 
     /* Disable zPIV Staking
     //zPIV
-    if ((GetBoolArg("-zpivstake", true) || fPrecompute) && chainActive.Height() > Params().Zerocoin_Block_V2_Start() && !IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
+    if ((GetBoolArg("-zpivstake", true) || fPrecompute) && chainActive.Height() > Params().Zerocoin_Block_V2_Start() && !sporkManager.IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
         //Only update zPIV set once per update interval
         bool fUpdate = false;
         static int64_t nTimeLastUpdate = 0;
@@ -2435,7 +2435,7 @@ bool CWallet::CreateCoinStake(
             CAmount nMinFee = 0;
             if (!stakeInput->IsZPIV()) {
                 // Set output amount
-                unsigned int outputs = txNew.vout.size() - 1;
+                int outputs = txNew.vout.size() - 1;
                 CAmount nRemaining = nCredit - nMinFee;
                 if (outputs > 1) {
                     // Split the stake across the outputs
@@ -3312,7 +3312,7 @@ void CWallet::CreateAutoMintTransaction(const CAmount& nMintAmount, CCoinControl
 void CWallet::AutoZeromint()
 {
     // Don't bother Autominting if Zerocoin Protocol isn't active
-    if (GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) return;
+    if (sporkManager.IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) return;
 
     // Wait until blockchain + masternodes are fully synced and wallet is unlocked.
     if (IsInitialBlockDownload() || IsLocked()){
@@ -3727,7 +3727,7 @@ bool CMerkleTx::AcceptToMemoryPool(bool fLimitFree, bool fRejectInsaneFee, bool 
 int CMerkleTx::GetTransactionLockSignatures() const
 {
     if (fLargeWorkForkFound || fLargeWorkInvalidChainFound) return -2;
-    if (!IsSporkActive(SPORK_2_SWIFTTX)) return -3;
+    if (!sporkManager.IsSporkActive(SPORK_2_SWIFTTX)) return -3;
     if (!fEnableSwiftTX) return -1;
 
     //compile consessus vote
@@ -4031,7 +4031,7 @@ bool CWallet::MintsToInputVector(std::map<CBigNum, CZerocoinMint>& mapMintsSelec
 
                 int64_t nTime5 = GetTimeMicros();
                 LogPrint("bench", "        - CoinSpend verified in %.2fms\n", 0.001 * (nTime5 - nTime4));
-            } catch (const std::exception &) {
+            } catch (const std::exception&) {
                 receipt.SetStatus(_("CoinSpend: Accumulator witness does not verify"), ZPIV_INVALID_WITNESS);
                 return error("%s : %s", __func__, receipt.GetStatusMessage());
             }
@@ -4274,7 +4274,6 @@ bool CWallet::CreateZerocoinSpendTransaction(
             txNew.vin.clear();
             txNew.vout.clear();
 
-            //if there is an address to send to then use it, if not generate a new address to send to
             CAmount nChange = nValueSelected - nValue;
 
             if (nChange < 0) {
@@ -4282,12 +4281,20 @@ bool CWallet::CreateZerocoinSpendTransaction(
                 return false;
             }
 
-            if (nChange > 0 && !changeAddress) {
-                receipt.SetStatus(_("Need address because change is not exact"), nStatus);
+            if (nChange > 0 && !changeAddress && addressesTo.size() == 0) {
+                receipt.SetStatus(_("Need destination or change address because change is not exact"), nStatus);
                 return false;
             }
 
-            // add an outputs for each address
+            //if there are addresses to send to then use them, if not generate a new address to send to
+            CBitcoinAddress destinationAddr;
+            if (addressesTo.size() == 0) {
+                CPubKey pubkey;
+                assert(reserveKey.GetReservedKey(pubkey)); // should never fail
+                destinationAddr = CBitcoinAddress(pubkey.GetID());
+                addressesTo.push_back(std::make_pair(&destinationAddr, nValue));
+            }
+
             for (std::pair<CBitcoinAddress*,CAmount> pair : addressesTo){
                 CScript scriptZerocoinSpend = GetScriptForDestination(pair.first->Get());
                 //add output to pivx address to the transaction (the actual primary spend taking place)
@@ -4302,7 +4309,7 @@ bool CWallet::CreateZerocoinSpendTransaction(
                 // Change address
                 if(changeAddress){
                     scriptChange = GetScriptForDestination(changeAddress->Get());
-                }else{
+                } else {
                     // Reserve a new key pair from key pool
                     CPubKey vchPubKey;
                     assert(reserveKey.GetReservedKey(vchPubKey)); // should never fail
@@ -4830,7 +4837,7 @@ void ThreadPrecomputeSpends()
     try {
         pwallet->PrecomputeSpends();
         boost::this_thread::interruption_point();
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         LogPrintf("ThreadPrecomputeSpends() exception: %s \n", e.what());
     } catch (...) {
         LogPrintf("ThreadPrecomputeSpends() error \n");

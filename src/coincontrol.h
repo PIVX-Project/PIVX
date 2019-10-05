@@ -46,7 +46,7 @@ public:
 
     bool HasSelected() const
     {
-        return (setSelected.size() > 0);
+        return (!setSelected.empty());
     }
 
     bool IsSelected(const uint256& hash, unsigned int n) const

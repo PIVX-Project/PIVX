@@ -143,7 +143,7 @@ bool CoinSpend::HasValidSignature() const
             //cout << "CoinSpend::HasValidSignature() hashedpubkey is not equal to the serial!\n";
             return false;
         }
-    } catch(std::range_error &e) {
+    } catch (const std::range_error& e) {
         //std::cout << "HasValidSignature() error: " << e.what() << std::endl;
         throw InvalidSerialException("Serial longer than 256 bits");
     }

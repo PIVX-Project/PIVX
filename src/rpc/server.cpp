@@ -215,7 +215,7 @@ std::string CRPCTable::help(std::string strCommand) const
             rpcfn_type pfn = pcmd->actor;
             if (setDone.insert(pfn).second)
                 (*pfn)(params, true);
-        } catch (std::exception& e) {
+        } catch (const std::exception& e) {
             // Help text is returned in an exception
             std::string strHelp = std::string(e.what());
             if (strCommand == "") {
@@ -581,7 +581,7 @@ static UniValue JSONRPCExecOne(const UniValue& req)
         rpc_result = JSONRPCReplyObj(result, NullUniValue, jreq.id);
     } catch (const UniValue& objError) {
         rpc_result = JSONRPCReplyObj(NullUniValue, objError, jreq.id);
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         rpc_result = JSONRPCReplyObj(NullUniValue,
             JSONRPCError(RPC_PARSE_ERROR, e.what()), jreq.id);
     }
@@ -610,7 +610,7 @@ UniValue CRPCTable::execute(const std::string &strMethod, const UniValue &params
     try {
         // Execute
         return pcmd->actor(params, false);
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         throw JSONRPCError(RPC_MISC_ERROR, e.what());
     }
 

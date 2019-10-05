@@ -170,7 +170,7 @@ bool SerialNumberSignatureOfKnowledge::Verify(const CBigNum& coinSerialNumber, c
             hasher << tprime[i];
         }
         return hasher.GetHash() == hash;
-    }catch (std::range_error e){
+    } catch (const std::range_error& e) {
         return error("SoK Verify() :: sprime invalid range.");
     }
 }

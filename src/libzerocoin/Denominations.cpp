@@ -13,10 +13,10 @@ CoinDenomination IntToZerocoinDenomination(int64_t amount)
 {
     CoinDenomination denomination;
     switch (amount) {
-    case 1:		denomination = CoinDenomination::ZQ_ONE; break;
-    case 5:	denomination = CoinDenomination::ZQ_FIVE; break;
-    case 10:	denomination = CoinDenomination::ZQ_TEN; break;
-    case 50:	denomination = CoinDenomination::ZQ_FIFTY; break;
+    case 1:        denomination = CoinDenomination::ZQ_ONE; break;
+    case 5:    denomination = CoinDenomination::ZQ_FIVE; break;
+    case 10:    denomination = CoinDenomination::ZQ_TEN; break;
+    case 50:    denomination = CoinDenomination::ZQ_FIFTY; break;
     case 100: denomination = CoinDenomination::ZQ_ONE_HUNDRED; break;
     case 500: denomination = CoinDenomination::ZQ_FIVE_HUNDRED; break;
     case 1000: denomination = CoinDenomination::ZQ_ONE_THOUSAND; break;

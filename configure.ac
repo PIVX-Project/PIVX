@@ -140,7 +140,7 @@ AC_ARG_ENABLE([extended-functional-tests],
 
 AC_ARG_WITH([qtcharts],
   [AS_HELP_STRING([--with-qtcharts],
-  [enable QTCHARTS code support (default is yes if qt is enabled and qtchartview is found)])],
+  [enable qtcharts support (default is yes if qt is enabled and qtchartview is found)])],
   [use_qtcharts=$withval],
   [use_qtcharts=auto])
 
@@ -1074,11 +1074,10 @@ if test x$use_pkgconfig = xyes; then
       PKG_CHECK_MODULES([SSL], [libssl],, [AC_MSG_ERROR(openssl  not found.)])
       PKG_CHECK_MODULES([CRYPTO], [libcrypto],,[AC_MSG_ERROR(libcrypto  not found.)])
       BITCOIN_QT_CHECK([PKG_CHECK_MODULES([PROTOBUF], [protobuf], [have_protobuf=yes], [BITCOIN_QT_FAIL(libprotobuf not found)])])
-      BITCOIN_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode], [have_qrencode=yes], [have_qrencode=no])])
+      BITCOIN_QT_CHECK([PKG_CHECK_MODULES([QR], [libqrencode],,[BITCOIN_QT_FAIL(libqrencode not found)])])
       if test x$use_qtcharts != xno; then
         BITCOIN_QT_CHECK([PKG_CHECK_MODULES([CHARTS], [Qt5Charts],[have_qtcharts=yes], [have_qtcharts=no])])
       fi
-      BITCOIN_QT_CHECK([PKG_CHECK_MODULES([SVG], [Qt5Svg],,[BITCOIN_QT_FAIL(qtsvg not found)])])
 
       if test x$build_bitcoin_utils$build_bitcoind$bitcoin_enable_qt$use_tests != xnononono; then
         PKG_CHECK_MODULES([EVENT], [libevent],, [AC_MSG_ERROR(libevent not found.)])
@@ -1137,14 +1136,12 @@ else
   fi
 
   BITCOIN_QT_CHECK(AC_CHECK_LIB([protobuf] ,[main],[PROTOBUF_LIBS=-lprotobuf], BITCOIN_QT_FAIL(libprotobuf not found)))
-  BITCOIN_QT_CHECK([AC_CHECK_LIB([Qt5Svg], [main],[SVG_LIBS=-lQt5Svg], BITCOIN_QT_FAIL(svg not found))])
-  BITCOIN_QT_CHECK([AC_CHECK_LIB([Qt5Charts], [main],[CHARTS_LIBS=-lQt5Charts], BITCOIN_QT_FAIL(charts not found))])
 
-  BITCOIN_QT_CHECK([AC_CHECK_LIB([qrencode], [main],[QR_LIBS=-lqrencode], [have_qrencode=no])])
-  BITCOIN_QT_CHECK([AC_CHECK_HEADER([qrencode.h],, have_qrencode=no)])
+  BITCOIN_QT_CHECK([AC_CHECK_LIB([qrencode], [main],[QR_LIBS=-lqrencode], BITCOIN_QT_FAIL(libqrencode not found))])
+  BITCOIN_QT_CHECK([AC_CHECK_HEADER([qrencode.h],, BITCOIN_QT_FAIL(libqrencode not found))])
   if test x$use_qtcharts != xno; then
     BITCOIN_QT_CHECK([AC_CHECK_LIB([Qt5Charts], [main],[CHARTS_LIBS=-lQt5Charts], [have_qtcharts=no])])
-    BITCOIN_QT_CHECK([AC_CHECK_HEADER([qchartview.h],, have_qtcharts=no)])
+    BITCOIN_QT_CHECK([AC_CHECK_HEADER([QtCharts/qchartview.h],, have_qtcharts=no)])
   fi
 fi
 
@@ -1309,11 +1306,12 @@ if test x$bitcoin_enable_qt != xno; then
   AC_MSG_RESULT($bitcoin_enable_qt_dbus)
 
   dnl enable qtcharts support
-  AC_MSG_CHECKING([whether to build GUI with support for qtcharts codes])
+  AC_MSG_CHECKING([whether to build GUI with support for qtcharts])
   if test x$have_qtcharts = xno; then
     if test x$use_qtcharts = xyes; then
      AC_MSG_ERROR("QTCharts support requested but cannot be built. use --without-qtcharts")
     fi
+    use_qtcharts=no
     AC_MSG_RESULT(no)
   else
     if test x$use_qtcharts != xno; then
@@ -1512,7 +1510,7 @@ echo "Options used to compile and link:"
 echo "  with wallet   = $enable_wallet"
 echo "  with gui / qt = $bitcoin_enable_qt"
 if test x$bitcoin_enable_qt != xno; then
-    echo "    with QTCHARTS     = $use_qtcharts"
+    echo "    with qtcharts     = $use_qtcharts"
 fi
 echo "  with zmq      = $use_zmq"
 echo "  with bignum   = $set_bignum"
@@ -1537,8 +1535,8 @@ echo "  LDFLAGS       = $PTHREAD_CFLAGS $HARDENED_LDFLAGS $GPROF_LDFLAGS $LDFLAG
 echo "  ARFLAGS       = $ARFLAGS"
 echo "  PIC_FLAGS     = $PIC_FLAGS"
 echo "  QT_PIE_FLAGS  = $QT_PIE_FLAGS"
-echo "  SVG_LIBS      = $SVG_LIBS "
-echo "  SVG_CFLAGS    = $SVG_CFLAGS "
+echo "  SVG_LIBS      = $QT_SVG_LIBS "
+echo "  SVG_CFLAGS    = $QT_SVG_INCLUDES "
 echo "  CHARTS_LIBS   = $CHARTS_LIBS "
 echo "  CHARTS_CFLAGS = $CHARTS_CFLAGS "
 echo

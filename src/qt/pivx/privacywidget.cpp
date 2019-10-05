@@ -234,7 +234,7 @@ void PrivacyWidget::onSendClicked(){
     if (!walletModel || !walletModel->getOptionsModel())
         return;
 
-    if(GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
+    if(sporkManager.IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
         warn(tr("Zerocoin"), tr("zPIV is currently undergoing maintenance"));
         return;
     }
@@ -291,8 +291,7 @@ void PrivacyWidget::spend(CAmount value){
             selectedMints,
             mintChange,
             minimizeChange,
-            receipt,
-            walletModel->getNewAddress()
+            receipt
     )){
         inform(receipt.GetStatusMessage().data());
     }else{

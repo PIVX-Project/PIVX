@@ -12,7 +12,7 @@
 #include "ui_addressbookpage.h"
 
 #include "addresstablemodel.h"
-#include "bitcoingui.h"
+#include "qt/pivx/pivxgui.h"
 #include "csvmodelwriter.h"
 #include "editaddressdialog.h"
 #include "guiutil.h"

@@ -13,6 +13,13 @@
 #include <QListView>
 #include <QGraphicsDropShadowEffect>
 
+Qt::Modifier SHORT_KEY
+#ifdef Q_OS_MAC
+        = Qt::CTRL;
+#else
+        = Qt::ALT;
+#endif
+
 // Open dialog at the bottom
 bool openDialog(QDialog *widget, QWidget *gui){
     widget->setWindowFlags(Qt::CustomizeWindowHint);

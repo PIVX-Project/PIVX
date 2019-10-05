@@ -773,13 +773,13 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>25</width>
+                     <width>19</width>
                      <height>0</height>
                     </size>
                    </property>
                    <property name="maximumSize">
                     <size>
-                     <width>25</width>
+                     <width>19</width>
                      <height>16777215</height>
                     </size>
                    </property>
@@ -815,26 +815,69 @@
                       </property>
                      </spacer>
                     </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButtonChartArrow">
-                      <property name="minimumSize">
-                       <size>
-                        <width>20</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>20</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true"/>
-                      </property>
-                      <property name="text">
-                       <string/>
-                      </property>
+                    <item alignment="Qt::AlignVCenter">
+                     <widget class="QWidget" name="containerArrows" native="true">
+                      <layout class="QVBoxLayout" name="horizontalLayout_6" stretch="0,0">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QPushButton" name="pushButtonChartArrow">
+                         <property name="minimumSize">
+                          <size>
+                           <width>19</width>
+                           <height>19</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>19</width>
+                           <height>19</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QPushButton" name="pushButtonChartRight">
+                         <property name="minimumSize">
+                          <size>
+                           <width>19</width>
+                           <height>19</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>19</width>
+                           <height>19</height>
+                          </size>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true"/>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
                      </widget>
                     </item>
                    </layout>

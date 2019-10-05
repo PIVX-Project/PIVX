@@ -2782,7 +2782,7 @@ UniValue mintzerocoin(const UniValue& params, bool fHelp)
     }
 
     int64_t nTime = GetTimeMillis();
-    if(GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE))
+    if(sporkManager.IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE))
         throw JSONRPCError(RPC_WALLET_ERROR, "zPIV is currently disabled due to maintenance.");
 
     EnsureWalletIsUnlocked(true);
@@ -2886,7 +2886,7 @@ UniValue spendzerocoin(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    if(GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE))
+    if(sporkManager.IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE))
         throw JSONRPCError(RPC_WALLET_ERROR, "zPIV is currently disabled due to maintenance.");
 
     EnsureWalletIsUnlocked();
@@ -2950,7 +2950,7 @@ UniValue spendzerocoinmints(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    if(GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE))
+    if(sporkManager.IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE))
         throw JSONRPCError(RPC_WALLET_ERROR, "zPIV is currently disabled due to maintenance.");
 
     std::string address_str = "";
@@ -3021,9 +3021,9 @@ extern UniValue DoZpivSpend(const CAmount nAmount, bool fMintChange, bool fMinim
         if(!address.IsValid())
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
         outputs.push_back(std::pair<CBitcoinAddress*, CAmount>(&address, nAmount));
-        fSuccess = pwalletMain->SpendZerocoin(nAmount, wtx, receipt, vMintsSelected, fMintChange, fMinimizeChange, outputs);
-    } else                   // Spend to newly generated local address
-        fSuccess = pwalletMain->SpendZerocoin(nAmount, wtx, receipt, vMintsSelected, fMintChange, fMinimizeChange, outputs);
+    }
+
+    fSuccess = pwalletMain->SpendZerocoin(nAmount, wtx, receipt, vMintsSelected, fMintChange, fMinimizeChange, outputs);
 
     if (!fSuccess)
         throw JSONRPCError(RPC_WALLET_ERROR, receipt.GetStatusMessage());
@@ -3622,7 +3622,7 @@ void static SearchThread(CzPIVWallet* zwallet, int nCountStart, int nCountEnd)
             zwallet->AddToMintPool(std::make_pair(hashPubcoin, i), true);
             walletDB.WriteMintPoolPair(hashSeed, hashPubcoin, i);
         }
-    } catch (std::exception& e) {
+    } catch (const std::exception& e) {
         LogPrintf("SearchThread() exception");
     } catch (...) {
         LogPrintf("SearchThread() exception");
@@ -3739,7 +3739,7 @@ UniValue spendrawzerocoin(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    if (GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE))
+    if (sporkManager.IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE))
             throw JSONRPCError(RPC_WALLET_ERROR, "zPIV is currently disabled due to maintenance.");
 
     CBigNum serial;

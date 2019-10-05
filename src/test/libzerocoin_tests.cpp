@@ -140,7 +140,7 @@ Test_CalcParamSizes()
         if (pLen < 3072 || qLen < 320) {
             result = false;
         }
-    } catch (exception &e) {
+    } catch (const exception& e) {
         result = false;
     }
 #endif
@@ -158,7 +158,7 @@ Test_GenerateGroupParams()
 
         try {
             group = libzerocoin::deriveIntegerGroupParams(libzerocoin::calculateSeed(GetTestModulus(), "test", ZEROCOIN_DEFAULT_SECURITYLEVEL, "TEST GROUP"), pLen, qLen);
-        } catch (std::runtime_error e) {
+        } catch (const std::runtime_error& e) {
             std::cout << "Caught exception " << e.what() << std::endl;
             return false;
         }
@@ -188,7 +188,7 @@ Test_ParamGen()
     try {
         // Instantiating testParams runs the parameter generation code
         libzerocoin::ZerocoinParams testParams(GetTestModulus(),ZEROCOIN_DEFAULT_SECURITYLEVEL);
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error& e) {
         std::cout << e.what() << std::endl;
         result = false;
     }
@@ -251,7 +251,7 @@ Test_Accumulator()
             return false;
         }
 
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error& e) {
         return false;
     }
 
@@ -307,7 +307,7 @@ Test_EqualityPoK()
                 return false;
             }
 
-        } catch (std::runtime_error &e) {
+        } catch (const std::runtime_error& e) {
             return false;
         }
     }
@@ -333,7 +333,7 @@ Test_MintCoin()
 
         gCoinSize /= TESTS_COINS_TO_ACCUMULATE;
 
-    } catch (std::exception &e) {
+    } catch (const std::exception& e) {
         return false;
     }
 
@@ -379,7 +379,7 @@ bool Test_InvalidCoin()
             return false;
         }
 
-    } catch (std::runtime_error &e) {
+    } catch (const std::runtime_error& e) {
         std::cout << "Caught exception: " << e.what() << std::endl;
         return false;
     }
@@ -435,7 +435,7 @@ Test_MintAndSpend()
         gSerialNumberSize = ceil((double)serialNumber.bitSize() / 8.0);
 
         return ret;
-    } catch (std::runtime_error &e) {
+    } catch (const std::runtime_error& e) {
         std::cout << e.what() << std::endl;
         return false;
     }

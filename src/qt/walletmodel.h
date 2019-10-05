@@ -204,8 +204,7 @@ public:
             std::vector<CZerocoinMint> &vMintsSelected,
             bool fMintChange,
             bool fMinimizeChange,
-            CZerocoinSpendReceipt &receipt,
-            CBitcoinAddress addressTo
+            CZerocoinSpendReceipt &receipt
     );
 
     // Wallet encryption

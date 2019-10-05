@@ -36,7 +36,11 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     endif()
     list(APPEND CMAKE_PREFIX_PATH /usr/lib/x86_64-linux-gnu/cmake/Qt5)
     set(Qt5core_DIR "/usr/lib/x86_64-linux-gnu/cmake/Qt5/QtCore")
-    add_definitions("-D__BYTE_ORDER -D__LITTLE_ENDIAN -D__GLIBC__ -DHAVE_DECL_BSWAP_16=0 -DHAVE_DECL_BSWAP_32=0 -DHAVE_DECL_BSWAP_64=0")
+    find_path(ENDIAN_INCLUDES endian.h)
+    if(ENDIAN_INCLUDES)
+        message(STATUS "Found endian.h: ${ENDIAN_INCLUDES}")
+    endif()
+    #add_definitions("-D__BYTE_ORDER -D__LITTLE_ENDIAN -D__GLIBC__ -DHAVE_DECL_BSWAP_16=0 -DHAVE_DECL_BSWAP_32=0 -DHAVE_DECL_BSWAP_64=0")
 endif()
 
 # Find Dependencies
@@ -108,7 +112,6 @@ ExternalProject_Add (
         )
 
 set(libleveldb_a_headers
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/config/pivx-config.h
         ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/port/atomic_pointer.h
         ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/port/port_example.h
         ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/port/port_posix.h
@@ -223,11 +226,10 @@ endif()
 
 add_library(leveldb STATIC ${libleveldb_a_headers} ${libleveldb_a_sources})
 target_compile_definitions(leveldb PUBLIC ${libleveldb_cpp_flags} -DLEVELDB_ATOMIC_PRESENT -D__STDC_LIMIT_MACROS)
-target_include_directories(leveldb PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb
+target_include_directories(leveldb PUBLIC ${ENDIAN_INCLUDES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb
         ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/include
         ${CMAKE_CURRENT_SOURCE_DIR}/src/leveldb/helpers/memenv
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/compat
         )
 
 set(libmemenv_a_sources
@@ -368,6 +370,7 @@ set(BITCOIN_CRYPTO_SOURCES
         ./src/crypto/sha1.cpp
         ./src/crypto/sha256.cpp
         ./src/crypto/sha512.cpp
+        ./src/crypto/chacha20.cpp
         ./src/crypto/hmac_sha256.cpp
         ./src/crypto/rfc6979_hmac_sha256.cpp
         ./src/crypto/hmac_sha512.cpp
@@ -383,6 +386,7 @@ set(BITCOIN_CRYPTO_SOURCES
         ./src/crypto/common.h
         ./src/crypto/sha256.h
         ./src/crypto/sha512.h
+        ./src/crypto/chacha20.h
         ./src/crypto/hmac_sha256.h
         ./src/crypto/rfc6979_hmac_sha256.h
         ./src/crypto/hmac_sha512.h

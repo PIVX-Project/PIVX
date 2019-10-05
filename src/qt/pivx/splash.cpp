@@ -22,12 +22,13 @@
 
 #include <iostream>
 
-Splash::Splash(QWidget *parent) :
-    QWidget(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint),
-    ui(new Ui::Splash)
+Splash::Splash(Qt::WindowFlags f, const NetworkStyle* networkStyle) :
+    QWidget(0, f), ui(new Ui::Splash)
 {
     ui->setupUi(this);
-    setWindowTitle("PIVX Wallet");
+    QString titleText = tr("PIVX Core");
+    QString titleAddText = networkStyle->getTitleAddText();
+    setWindowTitle(titleText + " " + titleAddText);
 
     this->setStyleSheet(GUIUtil::loadStyleSheet());
     this->setAttribute( Qt::WA_TranslucentBackground, true );
@@ -40,6 +41,7 @@ Splash::Splash(QWidget *parent) :
     ui->frame->setProperty("cssClass", "container-splash");
     ui->layoutProgress->setProperty("cssClass", "bg-progress");
     ui->imgLogo->setProperty("cssClass", "img-splash-logo");
+    ui->lblVersion->setText(QString("v") + QString::fromStdString(FormatVersionFriendly()));
 
     // Resize window and move to center of desktop, disallow resizing
     QRect r(QPoint(), size());

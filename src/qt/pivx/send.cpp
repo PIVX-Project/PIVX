@@ -97,7 +97,7 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     connect(ui->btnCoinControl, SIGNAL(clicked()), this, SLOT(onCoinControlClicked()));
     connect(ui->btnChangeAddress, SIGNAL(clicked()), this, SLOT(onChangeAddressClicked()));
     connect(ui->btnUri, SIGNAL(clicked()), this, SLOT(onOpenUriClicked()));
-    connect(ui->pushButtonReset, SIGNAL(clicked()), this, SLOT(onResetCustomOptions()));
+    connect(ui->pushButtonReset, &QPushButton::clicked, [this](){ onResetCustomOptions(true); });
 
     setCssProperty(ui->coinWidget, "container-coin-type");
     setCssProperty(ui->labelLine, "container-divider");
@@ -221,7 +221,7 @@ void SendWidget::loadWalletModel() {
 }
 
 void SendWidget::clearAll(){
-    onResetCustomOptions();
+    onResetCustomOptions(false);
     if(customFeeDialog) customFeeDialog->clear();
     ui->pushButtonFee->setText(tr("Customize Fee"));
     if(walletModel) walletModel->setWalletDefaultFee();
@@ -229,10 +229,13 @@ void SendWidget::clearAll(){
     refreshAmounts();
 }
 
-void SendWidget::onResetCustomOptions(){
+void SendWidget::onResetCustomOptions(bool fRefreshAmounts){
     CoinControlDialog::coinControl->SetNull();
     ui->btnChangeAddress->setActive(false);
     ui->btnCoinControl->setActive(false);
+    if (fRefreshAmounts) {
+        refreshAmounts();
+    }
 }
 
 void SendWidget::clearEntries(){
@@ -365,7 +368,6 @@ bool SendWidget::send(QList<SendCoinsRecipient> recipients){
         processSendCoinsReturn(sendStatus);
 
         if (sendStatus.status == WalletModel::OK) {
-            CoinControlDialog::coinControl->UnSelectAll();
             clearAll();
             inform(tr("Transaction sent"));
             return true;
@@ -380,7 +382,7 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
     if (!walletModel || !walletModel->getOptionsModel())
         return false;
 
-    if(GetAdjustedTime() > GetSporkValue(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
+    if(sporkManager.IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE)) {
         emit message(tr("Spend Zerocoin"), tr("zPIV is currently undergoing maintenance."), CClientUIInterface::MSG_ERROR);
         return false;
     }
@@ -802,7 +804,7 @@ void SendWidget::onDeleteClicked(){
         focusedEntry->deleteLater();
         int entryNumber = focusedEntry->getNumber();
 
-        // Refresh amount total + rest of rows numbers.
+        // remove selected entry and update row number for the others
         QMutableListIterator<SendMultiRow*> it(entries);
         while (it.hasNext()) {
             SendMultiRow* entry = it.next();
@@ -820,6 +822,9 @@ void SendWidget::onDeleteClicked(){
         }
 
         focusedEntry = nullptr;
+
+        // Update total amounts
+        refreshAmounts();
     }
 }
 

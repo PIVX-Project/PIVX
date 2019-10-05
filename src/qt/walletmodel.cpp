@@ -358,8 +358,8 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
         CReserveKey* keyChange = transaction.getPossibleKeyChange();
 
 
-        if (recipients[0].useSwiftTX && total > GetSporkValue(SPORK_5_MAX_VALUE) * COIN) {
-            emit message(tr("Send Coins"), tr("SwiftX doesn't support sending values that high yet. Transactions are currently limited to %1 PIV.").arg(GetSporkValue(SPORK_5_MAX_VALUE)),
+        if (recipients[0].useSwiftTX && total > sporkManager.GetSporkValue(SPORK_5_MAX_VALUE) * COIN) {
+            emit message(tr("Send Coins"), tr("SwiftX doesn't support sending values that high yet. Transactions are currently limited to %1 PIV.").arg(sporkManager.GetSporkValue(SPORK_5_MAX_VALUE)),
                 CClientUIInterface::MSG_ERROR);
             return TransactionCreationFailed;
         }
@@ -367,8 +367,8 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
         bool fCreated = wallet->CreateTransaction(vecSend, *newTx, *keyChange, nFeeRequired, strFailReason, coinControl, recipients[0].inputType, recipients[0].useSwiftTX);
         transaction.setTransactionFee(nFeeRequired);
 
-        if (recipients[0].useSwiftTX && newTx->GetValueOut() > GetSporkValue(SPORK_5_MAX_VALUE) * COIN) {
-            emit message(tr("Send Coins"), tr("SwiftX doesn't support sending values that high yet. Transactions are currently limited to %1 PIV.").arg(GetSporkValue(SPORK_5_MAX_VALUE)),
+        if (recipients[0].useSwiftTX && newTx->GetValueOut() > sporkManager.GetSporkValue(SPORK_5_MAX_VALUE) * COIN) {
+            emit message(tr("Send Coins"), tr("SwiftX doesn't support sending values that high yet. Transactions are currently limited to %1 PIV.").arg(sporkManager.GetSporkValue(SPORK_5_MAX_VALUE)),
                 CClientUIInterface::MSG_ERROR);
             return TransactionCreationFailed;
         }
@@ -554,16 +554,8 @@ bool WalletModel::convertBackZpiv(
         std::vector<CZerocoinMint> &vMintsSelected,
         bool fMintChange,
         bool fMinimizeChange,
-        CZerocoinSpendReceipt &receipt,
-        CBitcoinAddress addressTo
+        CZerocoinSpendReceipt &receipt
 ){
-
-    // address to must be from us.
-    if(!isMine(addressTo)){
-        receipt.SetStatus(_("To convert zPIV back to PIV the return address must be from your wallet"), ZPIV_SPEND_ERROR);
-        return false;
-    }
-
     CWalletTx wtxNew;
     return wallet->SpendZerocoin(
             value,
@@ -573,7 +565,7 @@ bool WalletModel::convertBackZpiv(
             false, // No more mints
             fMinimizeChange,
             std::list<std::pair<CBitcoinAddress*, CAmount>>(),
-            &addressTo
+            nullptr
     );
 }
 

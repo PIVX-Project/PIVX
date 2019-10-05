@@ -113,7 +113,7 @@
         <item>
          <widget class="QLabel" name="labelAddress">
           <property name="text">
-           <string>D7VFR83SQbiezrW72hjcWJtcfip5krte2Z </string>
+           <string>Address</string>
           </property>
          </widget>
         </item>
