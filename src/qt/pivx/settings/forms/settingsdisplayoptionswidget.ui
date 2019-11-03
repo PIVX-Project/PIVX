@@ -175,7 +175,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBoxUnit">
+           <widget class="QValueComboBox" name="comboBoxUnit">
             <property name="minimumSize">
              <size>
               <width>180</width>
