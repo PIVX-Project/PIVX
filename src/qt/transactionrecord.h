@@ -156,6 +156,14 @@ public:
     /** Return transaction status
      */
     std::string statusToString();
+
+    /** Return true if the tx is a coinstake
+     */
+    bool isCoinStake() const;
+
+    /** Return true if the tx hash is null and/or if the size is 0
+     */
+    bool isNull() const;
 };
 
 #endif // BITCOIN_QT_TRANSACTIONRECORD_H

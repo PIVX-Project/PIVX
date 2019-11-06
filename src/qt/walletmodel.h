@@ -169,8 +169,6 @@ public:
     void setWalletDefaultFee(CAmount fee = DEFAULT_TRANSACTION_FEE);
 
     const CWalletTx* getTx(uint256 id);
-    bool isCoinStake(QString id);
-    bool isCoinStakeMine(QString id);
 
     // prepare transaction for getting txfee before sending coins
     SendCoinsReturn prepareTransaction(WalletModelTransaction& transaction, const CCoinControl* coinControl = NULL);
