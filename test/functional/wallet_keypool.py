@@ -15,6 +15,8 @@ class KeyPoolTest(PivxTestFramework):
         nodes = self.nodes
         addr_before_encrypting = nodes[0].getnewaddress()
         addr_before_encrypting_data = nodes[0].validateaddress(addr_before_encrypting)
+        wallet_info_old = nodes[0].getwalletinfo()
+        assert(addr_before_encrypting_data['hdchainid'] == wallet_info_old['hdchainid'])
 
         # Encrypt wallet and wait to terminate
         nodes[0].node_encrypt_wallet('test')
@@ -23,15 +25,18 @@ class KeyPoolTest(PivxTestFramework):
         # Keep creating keys
         addr = nodes[0].getnewaddress()
         addr_data = nodes[0].validateaddress(addr)
-        assert_raises_rpc_error(-12, "Keypool ran out, please call keypoolrefill first, or unlock the wallet.",
-                                nodes[0].getnewaddress)
+        wallet_info = nodes[0].getwalletinfo()
+        assert(addr_before_encrypting_data['hdchainid'] == wallet_info['hdchainid'])
+        assert(addr_data['hdchainid'] == wallet_info['hdchainid'])
+        assert_raises_rpc_error(-12, "Error: Keypool ran out, please call keypoolrefill first", nodes[0].getnewaddress)
 
         # put six (plus 2) new keys in the keypool (100% external-, +100% internal-keys, 1 in min)
         nodes[0].walletpassphrase('test', 12000)
         nodes[0].keypoolrefill(6)
         nodes[0].walletlock()
         wi = nodes[0].getwalletinfo()
-        assert_equal(wi['keypoolsize'], 7)
+        assert_equal(wi['keypoolsize_hd_internal'], 6)
+        assert_equal(wi['keypoolsize'], 6)
 
         # drain the internal keys
         nodes[0].getrawchangeaddress()
@@ -40,10 +45,9 @@ class KeyPoolTest(PivxTestFramework):
         nodes[0].getrawchangeaddress()
         nodes[0].getrawchangeaddress()
         nodes[0].getrawchangeaddress()
-        nodes[0].getrawchangeaddress()
         addr = set()
         # the next one should fail
-        assert_raises_rpc_error(-12, "Keypool ran out", nodes[0].getrawchangeaddress)
+        assert_raises_rpc_error(-12, "Error: Keypool ran out, please call keypoolrefill first", nodes[0].getrawchangeaddress)
 
         # drain the external keys
         #addr.add(nodes[0].getnewaddress())
@@ -74,7 +78,8 @@ class KeyPoolTest(PivxTestFramework):
         nodes[0].walletpassphrase('test', 100)
         nodes[0].keypoolrefill(100)
         wi = nodes[0].getwalletinfo()
-        assert_equal(wi['keypoolsize'], 101)
+        assert_equal(wi['keypoolsize_hd_internal'], 100)
+        assert_equal(wi['keypoolsize'], 100)
 
 if __name__ == '__main__':
     KeyPoolTest().main()

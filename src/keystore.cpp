@@ -87,6 +87,12 @@ bool CBasicKeyStore::HaveWatchOnly() const
     return (!setWatchOnly.empty());
 }
 
+bool CBasicKeyStore::GetHDChain(CHDChain& hdChainRet) const
+{
+    hdChainRet = hdChain;
+    return !hdChain.IsNull();
+}
+
 bool CBasicKeyStore::AddMultiSig(const CScript& dest)
 {
     LOCK(cs_KeyStore);

@@ -331,6 +331,11 @@ CScript GetScriptForDestination(const CTxDestination& dest)
     return script;
 }
 
+CScript GetScriptForRawPubKey(const CPubKey& pubKey)
+{
+    return CScript() << std::vector<unsigned char>(pubKey.begin(), pubKey.end()) << OP_CHECKSIG;
+}
+
 CScript GetScriptForStakeDelegation(const CKeyID& stakingKey, const CKeyID& spendingKey)
 {
     CScript script;

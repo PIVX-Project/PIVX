@@ -29,7 +29,15 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/thread/exceptions.hpp>
 #include <boost/thread/condition_variable.hpp> // for boost::thread_interrupted
-
+// Debugging macros
+// Uncomment the following line to enable debugging messages
+// or enable on a per file basis prior to inclusion of util.h
+//#define ENABLE_PIVX_DEBUG
+#ifdef ENABLE_PIVX_DEBUG
+#define DBG( x ) x
+#else
+#define DBG( x )
+#endif
 //PIVX only features
 
 extern bool fMasterNode;

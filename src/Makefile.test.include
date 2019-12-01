@@ -13,6 +13,7 @@ JSON_TEST_FILES = \
   test/data/sig_noncanonical.json \
   test/data/base58_encode_decode.json \
   test/data/base58_keys_invalid.json \
+  test/data/bip39_vectors.json \
   test/data/script_invalid.json \
   test/data/tx_invalid.json \
   test/data/tx_valid.json \
@@ -39,6 +40,7 @@ BITCOIN_TESTS =\
   test/base32_tests.cpp \
   test/base58_tests.cpp \
   test/base64_tests.cpp \
+  test/bip39_tests.cpp \
   test/budget_tests.cpp \
   test/checkblock_tests.cpp \
   test/Checkpoints_tests.cpp \

@@ -82,6 +82,8 @@ BITCOIN_CORE_H = \
   allocators.h \
   amount.h \
   base58.h \
+  bip39.h \
+  bip39_english.h \
   bip38.h \
   bloom.h \
   blocksignature.h \
@@ -111,6 +113,7 @@ BITCOIN_CORE_H = \
   obfuscation-relay.h \
   wallet/db.h \
   hash.h \
+  hdchain.h \
   httprpc.h \
   httpserver.h \
   init.h \
@@ -363,6 +366,7 @@ libbitcoin_common_a_SOURCES = \
   allocators.cpp \
   amount.cpp \
   base58.cpp \
+  bip39.cpp \
   bip38.cpp \
   chainparams.cpp \
   coins.cpp \
@@ -375,6 +379,7 @@ libbitcoin_common_a_SOURCES = \
   core_read.cpp \
   core_write.cpp \
   hash.cpp \
+  hdchain.cpp \
   invalid.cpp \
   key.cpp \
   keystore.cpp \

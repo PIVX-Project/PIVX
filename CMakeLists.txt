@@ -448,6 +448,7 @@ set(COMMON_SOURCES
         ./src/amount.cpp
         ./src/base58.cpp
         ./src/bip38.cpp
+        ./src/bip39.cpp
         ./src/chainparams.cpp
         ./src/coins.cpp
         ./src/compressor.cpp
@@ -459,6 +460,7 @@ set(COMMON_SOURCES
         ./src/core_read.cpp
         ./src/core_write.cpp
         ./src/hash.cpp
+        ./src/hdchain.cpp
         ./src/invalid.cpp
         ./src/key.cpp
         ./src/keystore.cpp
