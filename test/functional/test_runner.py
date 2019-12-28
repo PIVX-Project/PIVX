@@ -181,6 +181,7 @@ EXTENDED_SCRIPTS = [
     # vv Tests less than 60s vv
     #'p2p_feefilter.py',
     'feature_abortnode.py',
+    'feature_asmap.py',
     'rpc_bind.py',
     # vv Tests less than 30s vv
     #'example_test.py',
