@@ -1205,7 +1205,7 @@ static UniValue CreateColdStakeDelegation(CWallet* const pwallet, const UniValue
     PKHash* stakerPkHash = boost::get<PKHash>(&stakeAddr);
     if (!stakerPkHash)
         throw JSONRPCError(RPC_WALLET_ERROR, "Unable to get stake pubkey hash from stakingaddress");
-    CKeyID stakeKey(*stakerPkHash);
+    CKeyID stakeKey(ToKeyID(*stakerPkHash));
 
     // Get Amount
     CAmount nValue = AmountFromValue(params[1]);

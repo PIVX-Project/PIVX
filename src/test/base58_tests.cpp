@@ -116,12 +116,12 @@ public:
     bool operator()(const PKHash& id) const
     {
         uint160 exp_key(exp_payload);
-        return exp_key == id;
+        return PKHash(exp_key) == id;
     }
     bool operator()(const ScriptHash& id) const
     {
         uint160 exp_key(exp_payload);
-        return exp_key == id;
+        return ScriptHash(exp_key) == id;
     }
     bool operator()(const CNoDestination& no) const
     {

@@ -192,7 +192,7 @@ bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CValid
             return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral-pkh");
         }
         // collateral is not part of this ProRegTx, so we must verify ownership of the collateral
-        if (!CheckStringSig(pl, CKeyID(*keyForPayloadSig), state)) {
+        if (!CheckStringSig(pl, ToKeyID(*keyForPayloadSig), state)) {
             // pass the state returned by the function above
             return false;
         }

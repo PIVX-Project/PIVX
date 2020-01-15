@@ -238,7 +238,7 @@ void SettingsSignMessageWidgets::onVerifyMessage()
     const std::string& message = ui->messageIn_SM->document()->toPlainText().toStdString();
 
     std::string err_log;
-    if (!CMessageSigner::VerifyMessage(CKeyID(*pkHash), vchSig, message, err_log)) {
+    if (!CMessageSigner::VerifyMessage(ToKeyID(*pkHash), vchSig, message, err_log)) {
         ui->statusLabel_SM->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_SM->setText(QString("<nobr>") + tr("Message verification failed.") + QString("</nobr>"));
         return;

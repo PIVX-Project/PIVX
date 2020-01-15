@@ -97,7 +97,7 @@ public:
 
     void operator()(const PKHash& pkHash)
     {
-        CKeyID keyId(pkHash);
+        CKeyID keyId{ToKeyID(pkHash)};
         if (keystore.HaveKey(keyId)) {
             vKeys.emplace_back(keyId);
         }

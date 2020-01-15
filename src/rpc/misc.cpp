@@ -589,7 +589,7 @@ UniValue verifymessage(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Malformed base64 encoding");
 
     std::string strError;
-    return CMessageSigner::VerifyMessage(CKeyID(*pkHash), vchSig, strMessage, strError);
+    return CMessageSigner::VerifyMessage(ToKeyID(*pkHash), vchSig, strMessage, strError);
 }
 
 UniValue setmocktime(const JSONRPCRequest& request)
