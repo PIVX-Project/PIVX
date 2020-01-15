@@ -19,6 +19,7 @@ static const bool DEFAULT_ACCEPT_DATACARRIER = true;
 
 class CKeyID;
 class CScript;
+struct ScriptHash;
 
 /** A reference to a CScript: the Hash160 of its serialization (see script.h) */
 class CScriptID : public uint160
@@ -27,6 +28,7 @@ public:
     CScriptID() : uint160() {}
     explicit CScriptID(const CScript& in);
     explicit CScriptID(const uint160& in) : uint160(in) {}
+    explicit CScriptID(const ScriptHash& in);
 };
 
 static const unsigned int MAX_OP_RETURN_RELAY = 83;      //!< bytes (+1 for OP_RETURN, +2 for the pushdata opcodes)
@@ -65,6 +67,7 @@ struct PKHash : public uint160
     PKHash() : uint160() {}
     explicit PKHash(const uint160& hash) : uint160(hash) {}
     explicit PKHash(const CPubKey& pubkey);
+    explicit PKHash(const CKeyID& pubkey_id);
 };
 CKeyID ToKeyID(const PKHash& key_hash);
 
@@ -73,6 +76,7 @@ struct ScriptHash : public uint160
     ScriptHash() : uint160() {}
     explicit ScriptHash(const uint160& hash) : uint160(hash) {}
     explicit ScriptHash(const CScript& script);
+    explicit ScriptHash(const CScriptID& script);
 };
 
 /**
