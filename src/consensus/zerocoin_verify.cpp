@@ -14,6 +14,8 @@
 #include "spork.h"               // for sporkManager
 #include "txdb.h"                // for class CZerocoinDB
 #include "utilmoneystr.h"        // for FormatMoney
+#include "zpiv/accumulators.h"   // for CalculateAccumulatorCheckpoint
+#include "zpiv/accumulatormap.h" // for AccumulatorMap
 
 bool CheckZerocoinMint(const uint256& txHash, const CTxOut& txout, CValidationState& state, bool fCheckOnly)
 {
