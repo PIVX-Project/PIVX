@@ -463,7 +463,7 @@ void TransactionRecord::updateStatus(const CWalletTx& wtx)
     int depth = 0;
     bool isTrusted = wtx.IsTrusted(depth, fConflicted);
     const bool isOffline = (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && wtx.GetRequestCount() == 0);
-    int nBlocksToMaturity = (wtx.IsCoinBase() || wtx.IsCoinStake()) ? std::max(0, (Params().COINBASE_MATURITY() + 1) - depth) : 0;
+    int nBlocksToMaturity = (wtx.IsCoinBase() || wtx.IsCoinStake()) ? std::max(0, (Params().GetConsensus().CoinbaseMaturity() + 1) - depth) : 0;
 
     status.countsForBalance = isTrusted && !(nBlocksToMaturity > 0);
     status.cur_num_blocks = chainHeight;

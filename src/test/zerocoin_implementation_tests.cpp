@@ -5,6 +5,7 @@
 #include "libzerocoin/Denominations.h"
 #include "amount.h"
 #include "chainparams.h"
+#include "consensus/zerocoin_verify.h"
 #include "main.h"
 #include "txdb.h"
 #include "zpiv/deterministicmint.h"

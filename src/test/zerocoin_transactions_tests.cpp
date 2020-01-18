@@ -8,6 +8,7 @@
 #include "amount.h"
 #include "chainparams.h"
 #include "coincontrol.h"
+#include "consensus/zerocoin_verify.h"
 #include "main.h"
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"

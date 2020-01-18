@@ -8,6 +8,7 @@
 #include "test/test_pivx.h"
 
 #include "clientversion.h"
+#include "consensus/tx_verify.h"
 #include "key.h"
 #include "keystore.h"
 #include "main.h"

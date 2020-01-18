@@ -5,6 +5,7 @@
 #include "amount.h"
 #include "chainparams.h"
 #include "coincontrol.h"
+#include "consensus/zerocoin_verify.h"
 #include "denomination_functions.h"
 #include "main.h"
 #include "txdb.h"

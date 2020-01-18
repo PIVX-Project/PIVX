@@ -8,9 +8,11 @@
 #include "wallet/wallet.h"
 
 #include "zpiv/accumulators.h"
+#include "amount.h"
 #include "base58.h"
 #include "checkpoints.h"
 #include "coincontrol.h"
+#include "consensus/zerocoin_verify.h"  // for visibiity of CurrentPublicCoinSpendVersion()
 #include "kernel.h"
 #include "masternode-budget.h"
 #include "net.h"
@@ -3590,7 +3592,7 @@ void CWallet::AutoCombineDust()
             if (!out.fSpendable)
                 continue;
             //no coins should get this far if they dont have proper maturity, this is double checking
-            if (out.tx->IsCoinStake() && out.tx->GetDepthInMainChain() < Params().COINBASE_MATURITY() + 1)
+            if (out.tx->IsCoinStake() && out.tx->GetDepthInMainChain() < Params().GetConsensus().CoinbaseMaturity() + 1)
                 continue;
 
             // no p2cs accepted, those coins are "locked"
@@ -3685,7 +3687,7 @@ bool CWallet::MultiSend()
     for (const COutput& out : vCoins) {
 
         //need output with precise confirm count - this is how we identify which is the output to send
-        if (out.tx->GetDepthInMainChain() != Params().COINBASE_MATURITY() + 1)
+        if (out.tx->GetDepthInMainChain() != Params().GetConsensus().CoinbaseMaturity() + 1)
             continue;
 
         COutPoint outpoint(out.tx->GetHash(), out.i);
@@ -3865,7 +3867,7 @@ int CMerkleTx::GetBlocksToMaturity() const
     LOCK(cs_main);
     if (!(IsCoinBase() || IsCoinStake()))
         return 0;
-    return std::max(0, (Params().COINBASE_MATURITY() + 1) - GetDepthInMainChain());
+    return std::max(0, (Params().GetConsensus().CoinbaseMaturity() + 1) - GetDepthInMainChain());
 }
 
 

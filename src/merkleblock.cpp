@@ -6,6 +6,7 @@
 
 #include "merkleblock.h"
 
+#include "consensus/consensus.h"
 #include "hash.h"
 #include "primitives/block.h" // for MAX_BLOCK_SIZE
 #include "utilstrencodings.h"
