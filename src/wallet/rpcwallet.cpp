@@ -2729,7 +2729,6 @@ UniValue getwalletinfo(const UniValue& params, bool fHelp)
             "      }\n"
             "      ,...\n"
             "    ]\n"
-            "  \"automintaddresses\": status (boolean) the status of automint addresses (true if enabled, false if disabled)\n"
             "}\n"
 
             "\nExamples:\n" +
@@ -2777,7 +2776,6 @@ UniValue getwalletinfo(const UniValue& params, bool fHelp)
         }
         obj.push_back(Pair("hdaccounts", accounts));
     }
-    obj.push_back(Pair("automintaddresses", fEnableAutoConvert));
     return obj;
 }
 

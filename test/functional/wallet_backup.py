@@ -115,15 +115,6 @@ class WalletBackupTest(PivxTestFramework):
         for i in range(5):
             self.do_one_round()
 
-        self.log.info("Backing up")
-        tmpdir = self.options.tmpdir
-        self.nodes[0].backupwallet(tmpdir + "/node0/wallet.bak")
-        self.nodes[0].dumpwallet(tmpdir + "/node0/wallet.dump")
-        self.nodes[1].backupwallet(tmpdir + "/node1/wallet.bak")
-        self.nodes[1].dumpwallet(tmpdir + "/node1/wallet.dump")
-        self.nodes[2].backupwallet(tmpdir + "/node2/wallet.bak")
-        self.nodes[2].dumpwallet(tmpdir + "/node2/wallet.dump")
-
         self.log.info("More transactions")
         for i in range(5):
             self.do_one_round()
@@ -137,6 +128,15 @@ class WalletBackupTest(PivxTestFramework):
         balance2 = self.nodes[2].getbalance()
         balance3 = self.nodes[3].getbalance()
         total = balance0 + balance1 + balance2 + balance3
+
+        self.log.info("Backing up")
+        tmpdir = self.options.tmpdir
+        self.nodes[0].backupwallet(tmpdir + "/node0/wallet.bak")
+        self.nodes[0].dumpwallet(tmpdir + "/node0/wallet.dump")
+        self.nodes[1].backupwallet(tmpdir + "/node1/wallet.bak")
+        self.nodes[1].dumpwallet(tmpdir + "/node1/wallet.dump")
+        self.nodes[2].backupwallet(tmpdir + "/node2/wallet.bak")
+        self.nodes[2].dumpwallet(tmpdir + "/node2/wallet.dump")
 
         # At this point, there are 214 blocks (103 for setup, then 10 rounds, then 101.)
         # 114 are mature, so the sum of all wallets should be 114 * 250 = 28500.

@@ -186,16 +186,6 @@ int64_t CWallet::GetKeyCreationTime(const CBitcoinAddress& address)
     return 0;
 }
 
-CBitcoinAddress CWallet::GenerateNewAutoMintKey()
-{
-    CBitcoinAddress btcAddress;
-    CKeyID keyID = GenerateNewKey(0).GetID();
-    btcAddress.Set(keyID);
-    CWalletDB(strWalletFile).WriteAutoConvertKey(btcAddress);
-    SetAddressBook(keyID, "automint-address", "receive");
-    setAutoConvertAddresses.emplace(btcAddress);
-    return btcAddress;
-}
 void CWallet::DeriveNewChildKey(const CKeyMetadata& metadata, CKey& secretRet, uint32_t nAccountIndex, bool fInternal)
 {
     CHDChain hdChainTmp;

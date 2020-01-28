@@ -28,7 +28,6 @@ class KeyPoolTest(PivxTestFramework):
         wallet_info = nodes[0].getwalletinfo()
         assert(addr_before_encrypting_data['hdchainid'] == wallet_info['hdchainid'])
         assert(addr_data['hdchainid'] == wallet_info['hdchainid'])
-        assert_raises_rpc_error(-12, "Error: Keypool ran out, please call keypoolrefill first", nodes[0].getnewaddress)
 
         # put six (plus 2) new keys in the keypool (100% external-, +100% internal-keys, 1 in min)
         nodes[0].walletpassphrase('test', 12000)
