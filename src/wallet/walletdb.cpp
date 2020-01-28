@@ -655,15 +655,15 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
         {
             CHDChain chain;
             ssValue >> chain;
-
-            if (strType == "hdchain" && !pwallet->SetHDChain(chain, true))
-            {
-                strErr = "Error reading wallet database: SetHDChain failed";
-                return false;
+            if(strType == "hdchain"){
+                if (!pwallet->SetHDChain(chain, true))
+                {
+                    strErr = "Error reading wallet database: SetHDChain failed";
+                    return false;
+                }
             }
-            else
-            {
-                if(!pwallet->SetCryptedHDChain(chain, true))
+            else{
+                if (!pwallet->SetCryptedHDChain(chain, true))
                 {
                     strErr = "Error reading wallet database: SetHDCryptedChain failed";
                     return false;
