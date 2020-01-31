@@ -249,15 +249,17 @@ void SendWidget::clearEntries(){
     addEntry();
 }
 
-void SendWidget::addEntry(){
-    if(entries.isEmpty()){
-        createEntry();
+void SendWidget::addEntry() {
+    if (entries.isEmpty()) {
+        SendMultiRow *sendMultiRow = createEntry();
+        sendMultiRow->setFocus();
     } else {
         if (entries.length() == 1) {
             SendMultiRow *entry = entries.at(0);
             entry->hideLabels();
             entry->setNumber(1);
-        }else if(entries.length() == MAX_SEND_POPUP_ENTRIES){
+            entry->setFocus();
+        } else if (entries.length() == MAX_SEND_POPUP_ENTRIES) {
             inform(tr("Maximum amount of outputs reached"));
             return;
         }
@@ -265,6 +267,7 @@ void SendWidget::addEntry(){
         SendMultiRow *sendMultiRow = createEntry();
         sendMultiRow->setNumber(entries.length());
         sendMultiRow->hideLabels();
+        sendMultiRow->setFocus();
     }
 }
 
@@ -295,6 +298,9 @@ void SendWidget::resizeEvent(QResizeEvent *event){
     QWidget::resizeEvent(event);
 }
 
+void SendWidget::showEvent(QShowEvent *event) {
+    setFocusOnLastRecipient(); // Set focus on last recipient address when Send-window is displayed
+}
 
 void SendWidget::onSendClicked(){
 
@@ -333,6 +339,7 @@ void SendWidget::onSendClicked(){
 
     if((sendPiv) ? send(recipients) : sendZpiv(recipients)) {
         updateEntryLabels(recipients);
+        setFocusOnLastRecipient();
     }
 }
 
@@ -484,6 +491,14 @@ bool SendWidget::sendZpiv(QList<SendCoinsRecipient> recipients){
     }
 }
 
+void SendWidget::setFocusOnLastRecipient() {
+    for (SendMultiRow* entry : entries) {
+        if (entry) {
+            entry->setFocus(); // Set focus on last recipient address when Send-window is displayed
+        }
+    }
+}
+
 QString SendWidget::recipientsToString(QList<SendCoinsRecipient> recipients){
     QString s = "";
     for (SendCoinsRecipient rec : recipients){
@@ -512,7 +527,6 @@ void SendWidget::updateEntryLabels(QList<SendCoinsRecipient> recipients){
 
     }
 }
-
 
 void SendWidget::onChangeAddressClicked(){
     showHideOp(true);
@@ -761,6 +775,7 @@ void SendWidget::onDeleteClicked(){
                 it.remove();
             } else if (focusedEntry && entry->getNumber() > entryNumber){
                 entry->setNumber(entry->getNumber() - 1);
+                entry->setFocus();
             }
         }
 
@@ -768,6 +783,7 @@ void SendWidget::onDeleteClicked(){
             SendMultiRow* sendMultiRow = QMutableListIterator<SendMultiRow*>(entries).next();
             sendMultiRow->setNumber(entries.length());
             sendMultiRow->showLabels();
+            sendMultiRow->setFocus();
         }
 
         focusedEntry = nullptr;

@@ -57,6 +57,7 @@ public slots:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
 private slots:
     void onPIVSelected(bool _isPIV);
@@ -93,6 +94,7 @@ private:
     SendMultiRow* createEntry();
     bool send(QList<SendCoinsRecipient> recipients);
     bool sendZpiv(QList<SendCoinsRecipient> recipients);
+    void setFocusOnLastRecipient();
     void updateEntryLabels(QList<SendCoinsRecipient> recipients);
 
 };
