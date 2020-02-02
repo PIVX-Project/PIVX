@@ -219,7 +219,7 @@ background:transparent;
               <x>0</x>
               <y>0</y>
               <width>556</width>
-              <height>672</height>
+              <height>703</height>
              </rect>
             </property>
             <property name="autoFillBackground">
@@ -335,8 +335,8 @@ background:transparent;
                  </widget>
                 </item>
                 <item>
-                 <widget class="QWidget" name="contentOutputs" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,3,0">
+                 <widget class="QWidget" name="contentOutputsLabel" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,0,0">
                    <property name="spacing">
                     <number>0</number>
                    </property>
@@ -346,11 +346,20 @@ background:transparent;
                    <property name="rightMargin">
                     <number>12</number>
                    </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
                    <item>
                     <widget class="QLabel" name="labelSend">
+                     <property name="minimumSize">
+                      <size>
+                       <width>120</width>
+                       <height>0</height>
+                      </size>
+                     </property>
                      <property name="maximumSize">
                       <size>
-                       <width>16777215</width>
+                       <width>120</width>
                        <height>16777215</height>
                       </size>
                      </property>
@@ -360,9 +369,9 @@ background:transparent;
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="textSend">
+                    <widget class="QLabel" name="textSendLabel">
                      <property name="text">
-                      <string>D7VFR83SQbiezrW72hjcWJtcfip5krte2Z </string>
+                      <string>Name/Label</string>
                      </property>
                     </widget>
                    </item>
@@ -388,6 +397,53 @@ background:transparent;
                      </property>
                      <property name="text">
                       <string/>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QWidget" name="contentOutputsAddress" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_outputs" stretch="0,0">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>12</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>9</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="labelSendLabel">
+                     <property name="minimumSize">
+                      <size>
+                       <width>120</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>120</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="textSend">
+                     <property name="text">
+                      <string>D7VFR83SQbiezrW72hjcWJtcfip5krte2Z</string>
                      </property>
                     </widget>
                    </item>
@@ -458,7 +514,7 @@ background:transparent;
                       </size>
                      </property>
                      <property name="text">
-                      <string>Total amount</string>
+                      <string>Total amount:</string>
                      </property>
                     </widget>
                    </item>

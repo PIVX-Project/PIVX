@@ -30,7 +30,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog, QString wa
     setCssProperty(ui->labelWarning, "text-title2-dialog");
     setCssTextBodyDialog({ui->labelAmount, ui->labelSend, ui->labelInputs, ui->labelFee, ui->labelChange, ui->labelId, ui->labelSize, ui->labelStatus, ui->labelConfirmations, ui->labelDate});
     setCssProperty({ui->labelDivider1, ui->labelDivider2, ui->labelDivider3, ui->labelDivider4, ui->labelDivider5, ui->labelDivider6, ui->labelDivider7, ui->labelDivider8, ui->labelDivider9}, "container-divider");
-    setCssTextBodyDialog({ui->textAmount, ui->textSend, ui->textInputs, ui->textFee, ui->textChange, ui->textId, ui->textSize, ui->textStatus, ui->textConfirmations, ui->textDate});
+    setCssTextBodyDialog({ui->textAmount, ui->textSendLabel, ui->textInputs, ui->textFee, ui->textChange, ui->textId, ui->textSize, ui->textStatus, ui->textConfirmations, ui->textDate});
 
     setCssProperty(ui->pushCopy, "ic-copy-big");
     setCssProperty({ui->pushInputs, ui->pushOutputs}, "ic-arrow-down");
@@ -42,7 +42,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog, QString wa
     ui->contentChangeAddress->setVisible(false);
     ui->labelDivider4->setVisible(false);
 
-    setCssProperty({ui->labelOutputIndex, ui->labelTitlePrevTx}, "text-body2-dialog");
+    setCssProperty({ui->labelOutputIndex, ui->textSend, ui->labelTitlePrevTx}, "text-body2-dialog");
 
     if(isConfirmDialog){
         ui->labelTitle->setText(tr("Confirm Your Transaction"));
@@ -118,18 +118,22 @@ void TxDetailDialog::setData(WalletModel *model, const QModelIndex &index){
 
 }
 
-void TxDetailDialog::setData(WalletModel *model, WalletModelTransaction &tx){
+void TxDetailDialog::setData(WalletModel *model, WalletModelTransaction &tx) {
     this->model = model;
     this->tx = &tx;
     CAmount txFee = tx.getTransactionFee();
     CAmount totalAmount = tx.getTotalTransactionAmount() + txFee;
 
     ui->textAmount->setText(BitcoinUnits::formatWithUnit(nDisplayUnit, totalAmount, false, BitcoinUnits::separatorAlways) + " (Fee included)");
-    if(tx.getRecipients().size() == 1){
-        ui->textSend->setText(tx.getRecipients().at(0).address);
+    int nRecipients = tx.getRecipients().size();
+    if (nRecipients == 1) {
+        SendCoinsRecipient recipient = tx.getRecipients().at(0);
+        ui->textSend->setText(recipient.address);
+        ui->textSendLabel->setText(recipient.label);
         ui->pushOutputs->setVisible(false);
-    }else{
-        ui->textSend->setText(QString::number(tx.getRecipients().size()) + " recipients");
+    } else {
+        ui->textSendLabel->setText(QString::number(nRecipients) + " recipients");
+        ui->textSend->setText("");
     }
     ui->textInputs->setText(QString::number(tx.getTransaction()->vin.size()));
     ui->textFee->setText(BitcoinUnits::formatWithUnit(nDisplayUnit, txFee, false, BitcoinUnits::separatorAlways));
