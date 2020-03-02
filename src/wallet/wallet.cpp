@@ -2037,10 +2037,7 @@ bool CWallet::StakeableCoins(std::vector<COutput>* pCoins)
 {
     CAmount nBalance = GetStakingBalance(GetBoolArg("-coldstaking", true));
 
-    if (nBalance == 0) return false;
-    if (mapArgs.count("-reservebalance") && !ParseMoney(mapArgs["-reservebalance"], nReserveBalance))
-        return error("%s : invalid reserve balance amount", __func__);
-    if (nBalance <= nReserveBalance) return false;
+    if (nBalance == 0 || nBalance <= nReserveBalance) return false;
 
     const bool fIncludeCold = (sporkManager.IsSporkActive(SPORK_17_COLDSTAKING_ENFORCEMENT) &&
                                GetBoolArg("-coldstaking", true));
