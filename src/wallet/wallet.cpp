@@ -30,6 +30,7 @@ bool bSpendZeroConfChange = true;
 bool bdisableSystemnotifications = false; // Those bubbles can be annoying and slow down the UI when you get lots of trx
 bool fSendFreeTransactions = false;
 bool fPayAtLeastCustomFee = true;
+int64_t nReserveBalance = 0;
 
 /**
  * Fees smaller than this (in upiv) are considered zero fee (for transaction creation)
