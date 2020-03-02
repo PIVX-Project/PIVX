@@ -1901,7 +1901,9 @@ bool AppInit2()
             LogPrintf("  %s %s\n", mne.getTxHash(), mne.getOutputIndex());
             mnTxHash.SetHex(mne.getTxHash());
             COutPoint outpoint = COutPoint(mnTxHash, (unsigned int) std::stoul(mne.getOutputIndex().c_str()));
-            pwalletMain->LockCoin(outpoint);
+            // Add to Locked coins only if in the wallet and still unspent
+            if (pwalletMain->mapWallet.count(mnTxHash) && !pwalletMain->IsSpent(outpoint.hash, outpoint.n))
+                pwalletMain->LockCoin(outpoint);
         }
     }
 
