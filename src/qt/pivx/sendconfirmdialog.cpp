@@ -96,10 +96,11 @@ void TxDetailDialog::setData(WalletModel *model, const QModelIndex &index){
         ui->textId->setText(hash.left(20) + "..." + hash.right(20));
         ui->textId->setTextInteractionFlags(Qt::TextSelectableByMouse);
         if (tx->vout.size() == 1) {
-            ui->textSend->setText(address);
+            ui->textSendLabel->setText(address);
         } else {
-            ui->textSend->setText(QString::number(tx->vout.size()) + " recipients");
+            ui->textSendLabel->setText(QString::number(tx->vout.size()) + " recipients");
         }
+        ui->textSend->setVisible(false);
 
         ui->textInputs->setText(QString::number(tx->vin.size()));
         ui->textConfirmations->setText(QString::number(rec->status.depth));
@@ -128,12 +129,17 @@ void TxDetailDialog::setData(WalletModel *model, WalletModelTransaction &tx) {
     int nRecipients = tx.getRecipients().size();
     if (nRecipients == 1) {
         SendCoinsRecipient recipient = tx.getRecipients().at(0);
-        ui->textSend->setText(recipient.address);
-        ui->textSendLabel->setText(recipient.label);
+        if (recipient.label.isEmpty()) { // If there is no label, then do not show the blank space.
+            ui->textSendLabel->setText(recipient.address);
+            ui->textSend->setVisible(false);
+        } else {
+            ui->textSend->setText(recipient.address);
+            ui->textSendLabel->setText(recipient.label);
+        }
         ui->pushOutputs->setVisible(false);
     } else {
         ui->textSendLabel->setText(QString::number(nRecipients) + " recipients");
-        ui->textSend->setText("");
+        ui->textSend->setVisible(false);
     }
     ui->textInputs->setText(QString::number(tx.getTransaction()->vin.size()));
     ui->textFee->setText(BitcoinUnits::formatWithUnit(nDisplayUnit, txFee, false, BitcoinUnits::separatorAlways));
