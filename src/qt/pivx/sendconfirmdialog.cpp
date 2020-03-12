@@ -44,7 +44,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog, QString wa
 
     setCssProperty({ui->labelOutputIndex, ui->textSend, ui->labelTitlePrevTx}, "text-body2-dialog");
 
-    if(isConfirmDialog){
+    if (isConfirmDialog) {
         ui->labelTitle->setText(tr("Confirm Your Transaction"));
         setCssProperty(ui->btnCancel, "btn-dialog-cancel");
         ui->btnSave->setText(tr("SEND"));
@@ -70,7 +70,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog, QString wa
 
         connect(ui->btnCancel, SIGNAL(clicked()), this, SLOT(close()));
         connect(ui->btnSave, &QPushButton::clicked, [this](){acceptTx();});
-    }else{
+    } else {
         ui->labelTitle->setText(tr("Transaction Details"));
         ui->containerButtons->setVisible(false);
     }
@@ -80,7 +80,8 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool isConfirmDialog, QString wa
     connect(ui->pushOutputs, SIGNAL(clicked()), this, SLOT(onOutputsClicked()));
 }
 
-void TxDetailDialog::setData(WalletModel *model, const QModelIndex &index){
+void TxDetailDialog::setData(WalletModel *model, const QModelIndex &index)
+{
     this->model = model;
     TransactionRecord *rec = static_cast<TransactionRecord*>(index.internalPointer());
     QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
@@ -90,7 +91,7 @@ void TxDetailDialog::setData(WalletModel *model, const QModelIndex &index){
     ui->textAmount->setText(amountText);
 
     const CWalletTx* tx = model->getTx(rec->hash);
-    if(tx) {
+    if (tx) {
         this->txHash = rec->hash;
         QString hash = QString::fromStdString(tx->GetHash().GetHex());
         ui->textId->setText(hash.left(20) + "..." + hash.right(20));
@@ -119,7 +120,8 @@ void TxDetailDialog::setData(WalletModel *model, const QModelIndex &index){
 
 }
 
-void TxDetailDialog::setData(WalletModel *model, WalletModelTransaction &tx) {
+void TxDetailDialog::setData(WalletModel *model, WalletModelTransaction &tx)
+{
     this->model = model;
     this->tx = &tx;
     CAmount txFee = tx.getTransactionFee();
@@ -145,13 +147,15 @@ void TxDetailDialog::setData(WalletModel *model, WalletModelTransaction &tx) {
     ui->textFee->setText(BitcoinUnits::formatWithUnit(nDisplayUnit, txFee, false, BitcoinUnits::separatorAlways));
 }
 
-void TxDetailDialog::acceptTx(){
+void TxDetailDialog::acceptTx()
+{
     this->confirm = true;
     this->sendStatus = model->sendCoins(*this->tx);
     accept();
 }
 
-void TxDetailDialog::onInputsClicked() {
+void TxDetailDialog::onInputsClicked()
+{
     if (ui->gridInputs->isVisible()) {
         ui->gridInputs->setVisible(false);
         ui->contentInputs->layout()->setContentsMargins(0,9,12,9);
@@ -161,7 +165,7 @@ void TxDetailDialog::onInputsClicked() {
         if (!inputsLoaded) {
             inputsLoaded = true;
             const CWalletTx* tx = (this->tx) ? this->tx->getTransaction() : model->getTx(this->txHash);
-            if(tx) {
+            if (tx) {
                 ui->gridInputs->setMinimumHeight(50 + (50 * tx->vin.size()));
                 int i = 1;
                 for (const CTxIn &in : tx->vin) {
@@ -193,7 +197,7 @@ void TxDetailDialog::onOutputsClicked() {
             ui->container_outputs_base->setLayout(layoutVertical);
 
             const CWalletTx* tx = (this->tx) ? this->tx->getTransaction() : model->getTx(this->txHash);
-            if(tx) {
+            if (tx) {
                 for (const CTxOut &out : tx->vout) {
                     QFrame *frame = new QFrame(ui->container_outputs_base);
 
@@ -227,12 +231,14 @@ void TxDetailDialog::onOutputsClicked() {
     }
 }
 
-void TxDetailDialog::closeDialog(){
-    if(snackBar && snackBar->isVisible()) snackBar->hide();
+void TxDetailDialog::closeDialog()
+{
+    if (snackBar && snackBar->isVisible()) snackBar->hide();
     close();
 }
 
-TxDetailDialog::~TxDetailDialog(){
-    if(snackBar) delete snackBar;
+TxDetailDialog::~TxDetailDialog()
+{
+    if (snackBar) delete snackBar;
     delete ui;
 }
