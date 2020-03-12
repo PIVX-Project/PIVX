@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>574</width>
-    <height>680</height>
+    <width>604</width>
+    <height>698</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -218,8 +218,8 @@ background:transparent;
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>556</width>
-              <height>690</height>
+              <width>586</width>
+              <height>644</height>
              </rect>
             </property>
             <property name="autoFillBackground">
@@ -263,29 +263,36 @@ background:transparent;
                 </property>
                 <item>
                  <widget class="QWidget" name="contentID" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="0,1,0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="0,0">
                    <property name="leftMargin">
                     <number>0</number>
                    </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
                    <item>
-                    <widget class="QLabel" name="labelId">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>ID:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="textId">
-                     <property name="text">
-                      <string>492526e7fa3c810b35016...40a5df85ee227ab00b1156994</string>
-                     </property>
-                    </widget>
+                    <layout class="QVBoxLayout" name="contentID_int">
+                     <item>
+                      <widget class="QLabel" name="labelId">
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>ID</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="textId">
+                       <property name="text">
+                        <string>492526e7fa3c810b35016...40a5df85ee227ab00b1156994</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </item>
                    <item>
                     <widget class="QPushButton" name="pushCopy">
@@ -319,7 +326,7 @@ background:transparent;
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="labelDivider9">
+                 <widget class="QLabel" name="labelDividerID">
                   <property name="maximumSize">
                    <size>
                     <width>16777215</width>
@@ -336,54 +343,82 @@ background:transparent;
                 </item>
                 <item>
                  <widget class="QWidget" name="contentOutputsLabel" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,1,0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,0">
                    <property name="spacing">
-                    <number>0</number>
+                    <number>6</number>
                    </property>
                    <property name="leftMargin">
                     <number>0</number>
                    </property>
                    <property name="topMargin">
-                    <number>0</number>
+                    <number>9</number>
                    </property>
                    <property name="rightMargin">
-                    <number>12</number>
-                   </property>
-                   <property name="bottomMargin">
                     <number>0</number>
                    </property>
+                   <property name="bottomMargin">
+                    <number>9</number>
+                   </property>
                    <item>
-                    <widget class="QLabel" name="labelSend">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
+                    <layout class="QVBoxLayout" name="contentOutputsLabel_int">
+                     <property name="leftMargin">
+                      <number>0</number>
                      </property>
-                     <property name="text">
-                      <string>Sending to: </string>
+                     <property name="topMargin">
+                      <number>1</number>
                      </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QWidget" name="widget" native="true">
-                      <layout class="QVBoxLayout" name="verticalLayout_6">
-                       <item>
-                        <widget class="QLabel" name="textSendLabel">
-                         <property name="text">
-                          <string>Name/Label</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLabel" name="textSend">
-                         <property name="text">
-                          <string>D7VFR83SQbiezrW72hjcWJtcfip5krte2Z</string>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                    </widget>
+                     <property name="rightMargin">
+                      <number>6</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>1</number>
+                     </property>
+                     <item>
+                      <widget class="QLabel" name="labelSend">
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Sending to</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QWidget" name="widget" native="true">
+                       <layout class="QVBoxLayout" name="verticalLayout_6">
+                        <property name="leftMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="topMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="rightMargin">
+                         <number>0</number>
+                        </property>
+                        <property name="bottomMargin">
+                         <number>0</number>
+                        </property>
+                        <item>
+                         <widget class="QLabel" name="textSendLabel">
+                          <property name="text">
+                           <string>Name/Label</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="textSend">
+                          <property name="text">
+                           <string>D7VFR83SQbiezrW72hjcWJtcfip5krte2Z</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </widget>
+                     </item>
+                    </layout>
                    </item>
                    <item>
                     <widget class="QPushButton" name="pushOutputs">
@@ -434,7 +469,7 @@ background:transparent;
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>522</width>
+                     <width>552</width>
                      <height>48</height>
                     </rect>
                    </property>
@@ -447,7 +482,7 @@ background:transparent;
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="labelDivider8">
+                 <widget class="QLabel" name="labelDividerOutputs">
                   <property name="maximumSize">
                    <size>
                     <width>16777215</width>
@@ -463,12 +498,31 @@ background:transparent;
                  </widget>
                 </item>
                 <item>
-                 <widget class="QWidget" name="contentAmount" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1">
+                 <widget class="QWidget" name="gridAmounts" native="true">
+                  <layout class="QGridLayout" name="contentAmountInputs">
                    <property name="leftMargin">
                     <number>0</number>
                    </property>
-                   <item>
+                   <property name="topMargin">
+                    <number>9</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>9</number>
+                   </property>
+                   <property name="horizontalSpacing">
+                    <number>12</number>
+                   </property>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="textAmount">
+                     <property name="text">
+                      <string>2 PIV</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
                     <widget class="QLabel" name="labelAmount">
                      <property name="maximumSize">
                       <size>
@@ -477,46 +531,11 @@ background:transparent;
                       </size>
                      </property>
                      <property name="text">
-                      <string>Total amount:</string>
+                      <string>Total amount</string>
                      </property>
                     </widget>
                    </item>
-                   <item>
-                    <widget class="QLabel" name="textAmount">
-                     <property name="text">
-                      <string>2 PIV</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="labelDivider6">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>1</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color:#bababa;</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QWidget" name="contentInputs" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,2,0">
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>12</number>
-                   </property>
-                   <item>
+                   <item row="0" column="3">
                     <widget class="QLabel" name="labelInputs">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -531,35 +550,48 @@ background:transparent;
                       </size>
                      </property>
                      <property name="text">
-                      <string>Coin inputs:</string>
+                      <string>Coin inputs</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
-                   <item>
-                    <widget class="QLabel" name="textInputs">
-                     <property name="text">
-                      <string>1 Inputs</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="pushInputs">
-                     <property name="maximumSize">
-                      <size>
-                       <width>34</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="focusPolicy">
-                      <enum>Qt::NoFocus</enum>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true"/>
-                     </property>
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
+                   <item row="1" column="3">
+                    <layout class="QHBoxLayout" name="horizontalLayout">
+                     <item>
+                      <widget class="QLabel" name="textInputs">
+                       <property name="text">
+                        <string>1 Inputs</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="pushInputs">
+                       <property name="maximumSize">
+                        <size>
+                         <width>34</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                       <property name="focusPolicy">
+                        <enum>Qt::NoFocus</enum>
+                       </property>
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true"/>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </item>
                   </layout>
                  </widget>
@@ -578,13 +610,41 @@ background:transparent;
                     <height>90</height>
                    </size>
                   </property>
-                  <layout class="QGridLayout" name="gridLayoutInput" columnstretch="5,2" rowminimumheight="0">
+                  <property name="lineWidth">
+                   <number>0</number>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayoutInput" columnstretch="5,0">
                    <property name="sizeConstraint">
                     <enum>QLayout::SetMaximumSize</enum>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
                    </property>
                    <property name="verticalSpacing">
                     <number>0</number>
                    </property>
+                   <item row="0" column="1">
+                    <widget class="QLabel" name="labelOutputIndex">
+                     <property name="layoutDirection">
+                      <enum>Qt::LeftToRight</enum>
+                     </property>
+                     <property name="text">
+                      <string>Output Index</string>
+                     </property>
+                     <property name="textFormat">
+                      <enum>Qt::AutoText</enum>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                     <property name="margin">
+                      <number>0</number>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="0" column="0" alignment="Qt::AlignLeft">
                     <widget class="QLabel" name="labelTitlePrevTx">
                      <property name="text">
@@ -592,21 +652,11 @@ background:transparent;
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1" alignment="Qt::AlignLeft">
-                    <widget class="QLabel" name="labelOutputIndex">
-                     <property name="text">
-                      <string>Output Index</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
                   </layout>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="labelDivider1">
+                 <widget class="QLabel" name="labelDividerPrevtx">
                   <property name="maximumSize">
                    <size>
                     <width>16777215</width>
@@ -622,36 +672,88 @@ background:transparent;
                  </widget>
                 </item>
                 <item>
-                 <widget class="QWidget" name="contentFee" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="0,1">
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QLabel" name="labelFee">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
+                 <layout class="QHBoxLayout" name="contentFeeSize">
+                  <property name="topMargin">
+                   <number>9</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>9</number>
+                  </property>
+                  <item>
+                   <layout class="QVBoxLayout" name="contentFee">
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="labelFee">
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Fee</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="textFee">
+                      <property name="text">
+                       <string>0.0001 PIV</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="QWidget" name="contentSize" native="true">
+                    <layout class="QVBoxLayout" name="contentSize_layout">
+                     <property name="topMargin">
+                      <number>0</number>
                      </property>
-                     <property name="text">
-                      <string>Fee:</string>
+                     <property name="rightMargin">
+                      <number>0</number>
                      </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="textFee">
-                     <property name="text">
-                      <string>0.0001 PIV</string>
+                     <property name="bottomMargin">
+                      <number>0</number>
                      </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
+                     <item>
+                      <widget class="QLabel" name="labelSize">
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Size</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="textSize">
+                       <property name="text">
+                        <string>2 kB</string>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                 <item>
-                 <widget class="QLabel" name="labelDivider2">
+                 <widget class="QLabel" name="labelDividerFeeSize">
                   <property name="maximumSize">
                    <size>
                     <width>16777215</width>
@@ -668,9 +770,18 @@ background:transparent;
                 </item>
                 <item>
                  <widget class="QWidget" name="contentChangeAddress" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,1">
+                  <layout class="QVBoxLayout" name="contentChangeAddress_layout">
                    <property name="leftMargin">
                     <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>9</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>9</number>
                    </property>
                    <item>
                     <widget class="QLabel" name="labelChange">
@@ -681,7 +792,7 @@ background:transparent;
                       </size>
                      </property>
                      <property name="text">
-                      <string>Change address:</string>
+                      <string>Change address</string>
                      </property>
                     </widget>
                    </item>
@@ -696,7 +807,7 @@ background:transparent;
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="labelDivider4">
+                 <widget class="QLabel" name="labelDividerChange">
                   <property name="maximumSize">
                    <size>
                     <width>16777215</width>
@@ -712,12 +823,25 @@ background:transparent;
                  </widget>
                 </item>
                 <item>
-                 <widget class="QWidget" name="contentConfirmations" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,1">
+                 <widget class="QWidget" name="gridConfDateStatus" native="true">
+                  <layout class="QGridLayout" name="contentConfDateStatus">
                    <property name="leftMargin">
                     <number>0</number>
                    </property>
-                   <item>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <item row="1" column="3">
+                    <widget class="QLabel" name="textStatus">
+                     <property name="text">
+                      <string>Spendable</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
                     <widget class="QLabel" name="labelConfirmations">
                      <property name="maximumSize">
                       <size>
@@ -726,133 +850,14 @@ background:transparent;
                       </size>
                      </property>
                      <property name="text">
-                      <string>Confirmations:</string>
+                      <string>Confirmations</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
                      </property>
                     </widget>
                    </item>
-                   <item>
-                    <widget class="QLabel" name="textConfirmations">
-                     <property name="text">
-                      <string>12</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="labelDivider7">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>1</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color:#bababa;</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QWidget" name="contentSize" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,1">
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QLabel" name="labelSize">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>Size:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="textSize">
-                     <property name="text">
-                      <string>2 kB</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="labelDivider3">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>1</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color:#bababa;</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QWidget" name="contentDate" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,1">
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QLabel" name="labelDate">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>Date:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="textDate">
-                     <property name="text">
-                      <string>May 25, 2017</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="labelDivider5">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>1</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color:#bababa;</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QWidget" name="contentStatus" native="true">
-                  <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,1">
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
+                   <item row="0" column="3">
                     <widget class="QLabel" name="labelStatus">
                      <property name="maximumSize">
                       <size>
@@ -861,18 +866,66 @@ background:transparent;
                       </size>
                      </property>
                      <property name="text">
-                      <string>Status:</string>
+                      <string>Status</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
-                   <item>
-                    <widget class="QLabel" name="textStatus">
+                   <item row="1" column="1">
+                    <widget class="QLabel" name="textConfirmations">
                      <property name="text">
-                      <string>Spendable</string>
+                      <string>12</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="labelDate">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Date</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="textDate">
+                     <property name="text">
+                      <string>May 25, 2017</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
                   </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="labelDividerConfs">
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>1</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color:#bababa;</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
                  </widget>
                 </item>
                 <item>
