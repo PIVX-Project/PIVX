@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2016 The Bitcoin Core developers
+# Copyright (c) 2013-2020 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -39,15 +39,9 @@ OSX_DEPLOY_SCRIPT=$(top_srcdir)/contrib/macdeploy/macdeployqtplus
 OSX_INSTALLER_ICONS=$(top_srcdir)/src/qt/res/icons/bitcoin.icns
 OSX_PLIST=$(top_builddir)/share/qt/Info.plist #not installed
 
-DIST_DOCS = \
-  README.md \
-  $(wildcard doc/*.md) \
-  $(wildcard doc/release-notes/*.md)
-DIST_CONTRIB = $(top_srcdir)/contrib/pivx-cli.bash-completion \
-	       $(top_srcdir)/contrib/pivx-tx.bash-completion \
-	       $(top_srcdir)/contrib/pivxd.bash-completion \
-           $(top_srcdir)/contrib/init \
-           $(top_srcdir)/contrib/install_db4.sh
+DIST_CONTRIB = \
+	       $(top_srcdir)/contrib/linearize/linearize-data.py \
+	       $(top_srcdir)/contrib/linearize/linearize-hashes.py
 
 DIST_SHARE = \
            $(top_srcdir)/share/genbuild.sh \
@@ -240,7 +234,7 @@ endif
 
 dist_noinst_SCRIPTS = autogen.sh
 
-EXTRA_DIST = $(DIST_SHARE) $(DIST_CONTRIB) $(DIST_DOCS) $(DIST_CARGO) $(WINDOWS_PACKAGING) $(LINUX_PACKAGING) $(OSX_PACKAGING) $(BIN_CHECKS)
+EXTRA_DIST = $(DIST_SHARE) $(DIST_CONTRIB) $(DIST_CARGO) $(WINDOWS_PACKAGING) $(LINUX_PACKAGING) $(OSX_PACKAGING) $(BIN_CHECKS)
 
 EXTRA_DIST += \
     test/functional \
