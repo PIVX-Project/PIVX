@@ -325,7 +325,8 @@ struct CNodeState {
 };
 
 // Keeps track of the time (in microseconds) when transactions were requested last time
-limitedmap<uint256, int64_t> g_already_asked_for GUARDED_BY(cs_main)(MAX_INV_SZ);
+limitedmap<uint256, int64_t> g_already_asked_for(MAX_INV_SZ);
+limitedmap<uint256, int64_t> g_erased_object_requests(MAX_INV_SZ);
 
 /** Map maintaining per-node state. Requires cs_main. */
 std::map<NodeId, CNodeState> mapNodeState;
@@ -541,6 +542,7 @@ void EraseObjectRequest(const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     AssertLockHeld(cs_main);
     g_already_asked_for.erase(hash);
+    g_erased_object_requests.insert(std::make_pair(hash, GetTimeMillis()));
 }
 
 int64_t GetObjectRequestTime(const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
@@ -2823,6 +2825,11 @@ bool PeerLogicValidation::SendMessages(CNode* pto, std::atomic<bool>& interruptM
             // Erase this entry from tx_process_time (it may be added back for
             // processing at a later time, see below)
             tx_process_time.erase(tx_process_time.begin());
+            if (g_erased_object_requests.count(inv.hash)) {
+                state.m_tx_download.m_tx_announced.erase(inv);
+                state.m_tx_download.m_tx_in_flight.erase(inv);
+                continue;
+            }
             if (!AlreadyHave(inv)) {
                 // If this transaction was last requested more than 1 minute ago,
                 // then request.
