@@ -542,6 +542,7 @@ static void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vec
 void EraseObjectRequest(CNodeState* nodestate, const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     AssertLockHeld(cs_main);
+    LogPrint(BCLog::NET, "%s -- inv=(%s)\n", __func__, inv.ToString());
     g_already_asked_for.erase(inv.hash);
     g_erased_object_requests.insert(std::make_pair(inv.hash, GetTimeMillis()));
 
@@ -642,6 +643,8 @@ void RequestObject(CNodeState* state, const CInv& inv, int64_t nNow) EXCLUSIVE_L
     int64_t process_time = CalculateObjectGetDataTime(inv, nNow, !state->fPreferredDownload);
 
     peer_download_state.m_tx_process_time.emplace(process_time, inv);
+
+    LogPrint(BCLog::NET, "%s -- inv=(%s), nNow=%d, process_time=%d, delta=%d\n", __func__, inv.ToString(), nNow, process_time, process_time - nNow);
 }
 
 void RequestObject(NodeId nodeId, const CInv& inv, int64_t nNow) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
@@ -2842,6 +2845,7 @@ bool PeerLogicValidation::SendMessages(CNode* pto, std::atomic<bool>& interruptM
             // processing at a later time, see below)
             tx_process_time.erase(tx_process_time.begin());
             if (g_erased_object_requests.count(inv.hash)) {
+                LogPrint(BCLog::NET, "%s -- GETDATA skipping inv=(%s), peer=%d\n", __func__, inv.ToString(), pto->GetId());
                 state.m_tx_download.m_tx_announced.erase(inv);
                 state.m_tx_download.m_tx_in_flight.erase(inv);
                 continue;
@@ -2866,11 +2870,13 @@ bool PeerLogicValidation::SendMessages(CNode* pto, std::atomic<bool>& interruptM
                     // requests to outbound peers).
                     int64_t next_process_time = CalculateObjectGetDataTime(inv, nNow, !state.fPreferredDownload);
                     tx_process_time.emplace(next_process_time, inv);
+                    LogPrint(BCLog::NET, "%s -- GETDATA re-queue inv=(%s), next_process_time=%d, delta=%d, peer=%d\n", __func__, inv.ToString(), next_process_time, next_process_time - nNow, pto->GetId());
                 }
             } else {
                 // We have already seen this transaction, no need to download.
                 state.m_tx_download.m_tx_announced.erase(inv);
                 state.m_tx_download.m_tx_in_flight.erase(inv);
+                LogPrint(BCLog::NET, "%s -- GETDATA already seen inv=(%s), peer=%d\n", __func__, inv.ToString(), pto->GetId());
             }
         }
         if (!vGetData.empty())
