@@ -158,7 +158,7 @@ SettingsMultisendWidget::SettingsMultisendWidget(PWidget *parent) :
     ui->left->setContentsMargins(10,10,10,10);
 
     // Title
-    ui->labelTitle->setText("Multisend");
+    ui->labelTitle->setText("MultiSend");
     setCssTitleScreen(ui->labelTitle);
 
     ui->labelSubtitle1->setText(tr("MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other PIVX addresses after it matures."));
