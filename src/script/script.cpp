@@ -11,7 +11,9 @@
 #include <atomic>
 
 
-const char* GetOpName(opcodetype opcode)
+#include <string>
+
+std::string GetOpName(opcodetype opcode)
 {
     switch (opcode)
     {

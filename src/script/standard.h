@@ -12,7 +12,8 @@
 
 #include <boost/variant.hpp>
 
-#include <stdint.h>
+#include <string>
+
 
 static const bool DEFAULT_ACCEPT_DATACARRIER = true;
 
@@ -88,7 +89,8 @@ typedef boost::variant<CNoDestination, PKHash, ScriptHash> CTxDestination;
 /** Check whether a CTxDestination is a CNoDestination. */
 bool IsValidDestination(const CTxDestination& dest);
 
-const char* GetTxnOutputType(txnouttype t);
+/** Get the name of a txnouttype as a C string, or nullptr if unknown. */
+std::string GetTxnOutputType(txnouttype t);
 
 /**
  * Parse a scriptPubKey and identify script type for standard scripts. If

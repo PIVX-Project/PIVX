@@ -9,6 +9,8 @@
 #include "pubkey.h"
 #include "script/script.h"
 
+#include <string>
+
 typedef std::vector<unsigned char> valtype;
 
 unsigned nMaxDatacarrierBytes = MAX_OP_RETURN_RELAY;
@@ -19,7 +21,7 @@ ScriptHash::ScriptHash(const CScript& in) : uint160(Hash160(in.begin(), in.end()
 
 PKHash::PKHash(const CPubKey& pubkey) : uint160(pubkey.GetID()) {}
 
-const char* GetTxnOutputType(txnouttype t)
+std::string GetTxnOutputType(txnouttype t)
 {
     switch (t)
     {
@@ -31,7 +33,7 @@ const char* GetTxnOutputType(txnouttype t)
     case TX_COLDSTAKE: return "coldstake";
     case TX_NULL_DATA: return "nulldata";
     }
-    return NULL;
+    assert(false);
 }
 
 static bool MatchPayToPubkey(const CScript& script, valtype& pubkey)

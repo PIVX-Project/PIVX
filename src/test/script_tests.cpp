@@ -85,7 +85,7 @@ static ScriptErrorDesc script_errors[]={
     {SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS, "DISCOURAGE_UPGRADABLE_NOPS"}
 };
 
-const char *FormatScriptError(ScriptError_t err)
+static std::string FormatScriptError(ScriptError_t err)
 {
     for (unsigned int i=0; i<ARRAYLEN(script_errors); ++i)
         if (script_errors[i].err == err)
@@ -147,7 +147,7 @@ void DoTest(const CScript& scriptPubKey, const CScript& scriptSig, int flags, co
     static const CAmount amountZero = 0;
     BOOST_CHECK_MESSAGE(VerifyScript(scriptSig, scriptPubKey, flags,
             MutableTransactionSignatureChecker(&tx, 0, amountZero), tx.GetRequiredSigVersion(), &err) == expect, message);
-    BOOST_CHECK_MESSAGE(err == scriptError, std::string(FormatScriptError(err)) + " where " + std::string(FormatScriptError((ScriptError_t)scriptError)) + " expected: " + message);
+    BOOST_CHECK_MESSAGE(err == scriptError, FormatScriptError(err) + " where " + FormatScriptError((ScriptError_t)scriptError) + " expected: " + message);
 #if defined(HAVE_CONSENSUS_LIB)
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
     stream << tx2;

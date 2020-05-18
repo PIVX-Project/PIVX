@@ -190,7 +190,7 @@ enum opcodetype
     OP_INVALIDOPCODE = 0xff,
 };
 
-const char* GetOpName(opcodetype opcode);
+std::string GetOpName(opcodetype opcode);
 
 class scriptnum_error : public std::runtime_error
 {

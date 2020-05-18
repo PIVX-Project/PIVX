@@ -6,7 +6,9 @@
 
 #include "script_error.h"
 
-const char* ScriptErrorString(const ScriptError serror)
+#include <string>
+
+std::string ScriptErrorString(const ScriptError serror)
 {
     switch (serror)
     {
