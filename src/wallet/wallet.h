@@ -122,16 +122,6 @@ enum ZerocoinSpendStatus {
     ZPIV_SPEND_V1_SEC_LEVEL                         // Spend is V1 and security level is not set to 100
 };
 
-struct CompactTallyItem {
-    CBitcoinAddress address;
-    CAmount nAmount;
-    std::vector<CTxIn> vecTxIn;
-    CompactTallyItem()
-    {
-        nAmount = 0;
-    }
-};
-
 /** A key pool entry */
 class CKeyPool
 {

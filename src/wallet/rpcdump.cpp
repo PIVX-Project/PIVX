@@ -110,13 +110,8 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
     const bool fRescan = (params.size() > 2 ? params[2].get_bool() : true);
     const bool fStakingAddress = (params.size() > 3 ? params[3].get_bool() : false);
 
-    CBitcoinSecret vchSecret;
-    if (!vchSecret.SetString(strSecret))
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key encoding");
-
-    CKey key = vchSecret.GetKey();
-    if (!key.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Private key outside allowed range");
+    CKey key = DecodeSecret(strSecret);
+    if (!key.IsValid()) throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key encoding");
 
     CPubKey pubkey = key.GetPubKey();
     assert(key.VerifyPubKey(pubkey));
@@ -281,10 +276,9 @@ UniValue importwallet(const UniValue& params, bool fHelp)
         boost::split(vstr, line, boost::is_any_of(" "));
         if (vstr.size() < 2)
             continue;
-        CBitcoinSecret vchSecret;
-        if (!vchSecret.SetString(vstr[0]))
+        CKey key = DecodeSecret(vstr[0]);
+        if (!key.IsValid())
             continue;
-        CKey key = vchSecret.GetKey();
         CPubKey pubkey = key.GetPubKey();
         assert(key.VerifyPubKey(pubkey));
         CKeyID keyid = pubkey.GetID();
@@ -372,7 +366,7 @@ UniValue dumpprivkey(const UniValue& params, bool fHelp)
     CKey vchSecret;
     if (!pwalletMain->GetKey(keyID, vchSecret))
         throw JSONRPCError(RPC_WALLET_ERROR, "Private key for address " + strAddress + " is not known");
-    return CBitcoinSecret(vchSecret).ToString();
+    return EncodeSecret(vchSecret);
 }
 
 UniValue dumpwallet(const UniValue& params, bool fHelp)

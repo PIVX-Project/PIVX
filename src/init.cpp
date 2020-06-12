@@ -36,6 +36,7 @@
 #include "net.h"
 #include "policy/policy.h"
 #include "rpc/server.h"
+#include "rpc/register.h"
 #include "script/standard.h"
 #include "script/sigcache.h"
 #include "scheduler.h"
@@ -1028,14 +1029,19 @@ bool AppInit2()
 
     setvbuf(stdout, NULL, _IOLBF, 0); /// ***TODO*** do we still need this after -printtoconsole is gone?
 
+RegisterAllCoreRPCCommands(tableRPC);
     // Staking needs a CWallet instance, so make sure wallet is enabled
 #ifdef ENABLE_WALLET
     bool fDisableWallet = GetBoolArg("-disablewallet", false);
     if (fDisableWallet) {
+        RegisterWalletRPCCommands(tableRPC);
 #endif
         if (SoftSetBoolArg("-staking", false))
             LogPrintf("AppInit2 : parameter interaction: wallet functionality not enabled -> setting -staking=0\n");
 #ifdef ENABLE_WALLET
+    } else {
+        // Register wallet RPC commands
+        RegisterWalletRPCCommands(tableRPC);
     }
 #endif
 

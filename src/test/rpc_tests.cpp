@@ -37,6 +37,7 @@ UniValue CallRPC(std::string args)
     std::string strMethod = vArgs[0];
     vArgs.erase(vArgs.begin());
     UniValue params = RPCConvertValues(strMethod, vArgs);
+    BOOST_CHECK(tableRPC[strMethod]);
 
     rpcfn_type method = tableRPC[strMethod]->actor;
     try {

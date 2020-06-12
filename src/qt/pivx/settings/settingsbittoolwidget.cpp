@@ -143,15 +143,15 @@ void SettingsBitToolWidget::onEncryptKeyButtonENCClicked()
         return;
     }
 
-    CBitcoinAddress addr(ui->addressIn_ENC->text().toStdString());
-    if (!addr.IsValid()) {
+    CTxDestination dest = DecodeDestination(ui->addressIn_ENC->text().toStdString());
+    if (!IsValidDestination(dest)) {
         ui->statusLabel_ENC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_ENC->setText(tr("The entered address is invalid.") + QString(" ") + tr("Please check the address and try again."));
         return;
     }
 
-    CKeyID keyID;
-    if (!addr.GetKeyID(keyID)) {
+    CKeyID keyID = *boost::get<CKeyID>(&dest);
+    if (!keyID) {
         //ui->addressIn_ENC->setValid(false);
         ui->statusLabel_ENC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_ENC->setText(tr("The entered address does not refer to a key.") + QString(" ") + tr("Please check the address and try again."));
@@ -172,7 +172,7 @@ void SettingsBitToolWidget::onEncryptKeyButtonENCClicked()
         return;
     }
 
-    std::string encryptedKey = BIP38_Encrypt(addr.ToString(), qstrPassphrase.toStdString(), key.GetPrivKey_256(), key.IsCompressed());
+    std::string encryptedKey = BIP38_Encrypt(EncodeDestination(dest), qstrPassphrase.toStdString(), key.GetPrivKey_256(), key.IsCompressed());
     ui->encryptedKeyOut_ENC->setText(QString::fromStdString(encryptedKey));
 
     ui->statusLabel_ENC->setStyleSheet("QLabel { color: green; }");
@@ -265,8 +265,7 @@ void SettingsBitToolWidget::onDecryptClicked()
 
     key.Set(privKey.begin(), privKey.end(), fCompressed);
     CPubKey pubKey = key.GetPubKey();
-    CBitcoinAddress address(pubKey.GetID());
-    ui->lineEditDecryptResult->setText(QString::fromStdString(address.ToString()));
+    ui->lineEditDecryptResult->setText(QString::fromStdString(EncodeDestination(pubKey.GetID())));
     ui->pushButtonImport->setVisible(true);
 }
 
@@ -279,10 +278,10 @@ void SettingsBitToolWidget::importAddressFromDecKey()
         return;
     }
 
-    CBitcoinAddress address(ui->lineEditDecryptResult->text().toStdString());
+    CTxDestination dest = DecodeDestination(ui->lineEditDecryptResult->text().toStdString());
     CPubKey pubkey = key.GetPubKey();
 
-    if (!address.IsValid() || !key.IsValid() || CBitcoinAddress(pubkey.GetID()).ToString() != address.ToString()) {
+    if (!IsValidDestination(dest) || !key.IsValid() || EncodeDestination(pubkey.GetID()) != EncodeDestination(dest)) {
         ui->statusLabel_DEC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_DEC->setText(tr("Data Not Valid.") + QString(" ") + tr("Please try again."));
         return;

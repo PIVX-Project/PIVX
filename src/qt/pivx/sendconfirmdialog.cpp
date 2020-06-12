@@ -205,7 +205,7 @@ void TxDetailDialog::onOutputsClicked()
                     CTxDestination dest;
                     bool isCsAddress = out.scriptPubKey.IsPayToColdStaking();
                     if (ExtractDestination(out.scriptPubKey, dest, isCsAddress)) {
-                        std::string address = ((isCsAddress) ? CBitcoinAddress::newCSInstance(dest) : CBitcoinAddress::newInstance(dest)).ToString();
+                        std::string address = EncodeDestination(dest, isCsAddress);
                         labelRes = QString::fromStdString(address);
                         labelRes = labelRes.left(16) + "..." + labelRes.right(16);
                     } else {

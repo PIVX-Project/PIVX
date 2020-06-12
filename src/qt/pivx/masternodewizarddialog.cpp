@@ -191,8 +191,7 @@ bool MasterNodeWizardDialog::createMN()
     // create the mn key
     CKey secret;
     secret.MakeNewKey(false);
-    CBitcoinSecret mnKey = CBitcoinSecret(secret);
-    std::string mnKeyString = mnKey.ToString();
+    std::string mnKeyString = EncodeSecret(secret);
 
     // Look for a valid collateral utxo
     COutPoint collateralOut;

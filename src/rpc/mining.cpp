@@ -786,3 +786,33 @@ UniValue estimatepriority(const UniValue& params, bool fHelp)
 
     return mempool.estimatePriority(nBlocks);
 }
+
+extern UniValue logging(const UniValue& params, bool fHelp);
+
+static const CRPCCommand commands[] =
+{ //  category              name                      actor (function)         okSafeMode
+  //  --------------------- ------------------------  -----------------------  ----------
+    /* Mining */
+    {"mining",              "getblocktemplate",       &getblocktemplate,        true },
+    {"mining",              "getmininginfo",          &getmininginfo,           true },
+    {"mining",              "getnetworkhashps",       &getnetworkhashps,        true },
+    {"mining",              "prioritisetransaction",  &prioritisetransaction,   true },
+    {"mining",              "submitblock",            &submitblock,             true },
+
+    /* Coin generation */
+    {"generating",          "getgenerate",            &getgenerate,             true },
+    {"generating",          "gethashespersec",        &gethashespersec,         true },
+    {"generating",          "setgenerate",            &setgenerate,             true },
+    {"generating",          "generate",               &generate,                true },
+
+    /* Utility functions */
+    {"util",                "logging",                &logging,                 true },
+    {"util",                "estimatefee",            &estimatefee,             true },
+    {"util",                "estimatepriority",       &estimatepriority,        true },
+};
+
+void RegisterMiningRPCCommands(CRPCTable &tableRPC)
+{
+    for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commands); vcidx++)
+        tableRPC.appendCommand(commands[vcidx].name, &commands[vcidx]);
+}

@@ -675,13 +675,9 @@ UniValue signrawtransaction(const UniValue& params, bool fHelp)
         UniValue keys = params[2].get_array();
         for (unsigned int idx = 0; idx < keys.size(); idx++) {
             UniValue k = keys[idx];
-            CBitcoinSecret vchSecret;
-            bool fGood = vchSecret.SetString(k.get_str());
-            if (!fGood)
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key");
-            CKey key = vchSecret.GetKey();
+            CKey key = DecodeSecret(k.get_str());
             if (!key.IsValid())
-                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Private key outside allowed range");
+                throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid private key");
             tempKeystore.AddKey(key);
         }
     }
@@ -991,3 +987,27 @@ UniValue createrawzerocoinspend(const UniValue& params, bool fHelp)
 }
 #endif
 
+extern UniValue gettxoutsetinfo(const UniValue& params, bool fHelp);
+extern UniValue gettxout(const UniValue& params, bool fHelp);
+
+static const CRPCCommand commands[] =
+{ //  category              name                      actor (function)         okSafeMode
+  //  --------------------- ------------------------  -----------------------  ----------
+  /* Raw transactions */
+    { "rawtransactions",    "createrawtransaction",     &createrawtransaction, true  },
+    { "rawtransactions",    "decoderawtransaction",     &decoderawtransaction, true  },
+    { "rawtransactions",    "decodescript",             &decodescript,         true  },
+    { "rawtransactions",    "getrawtransaction",        &getrawtransaction,    true  },
+    { "rawtransactions",    "fundrawtransaction",       &fundrawtransaction,   false },
+    { "rawtransactions",    "sendrawtransaction",       &sendrawtransaction,   false },
+    { "rawtransactions",    "signrawtransaction",       &signrawtransaction,   false }, /* uses wallet if enabled */
+
+    { "blockchain",         "gettxout",               &gettxout,               true  },
+    { "blockchain",         "gettxoutsetinfo",        &gettxoutsetinfo,        true  },
+};
+
+void RegisterRawTransactionRPCCommands(CRPCTable &tableRPC)
+{
+    for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commands); vcidx++)
+        tableRPC.appendCommand(commands[vcidx].name, &commands[vcidx]);
+}
