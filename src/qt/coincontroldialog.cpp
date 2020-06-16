@@ -140,12 +140,6 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool _forDelegation) : QDi
     connect(ui->pushButtonDust, &QPushButton::clicked, this, &CoinControlDialog::clipboardLowOutput);
     connect(ui->pushButtonChange, &QPushButton::clicked, this, &CoinControlDialog::clipboardChange);
 
-    if (ui->pushButtonSelectAll->isChecked()) {
-        ui->pushButtonSelectAll->setText(tr("Unselect all"));
-    } else {
-        ui->pushButtonSelectAll->setText(tr("Select all"));
-    }
-
     // toggle tree/list mode
     connect(ui->radioTreeMode, &QRadioButton::toggled, this, &CoinControlDialog::radioTreeMode);
     connect(ui->radioListMode, &QRadioButton::toggled, this, &CoinControlDialog::radioListMode);
@@ -195,6 +189,8 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool _forDelegation) : QDi
     }
     if (settings.contains("nCoinControlSortColumn") && settings.contains("nCoinControlSortOrder"))
         sortView(settings.value("nCoinControlSortColumn").toInt(), ((Qt::SortOrder)settings.value("nCoinControlSortOrder").toInt()));
+
+    updateDialogLabels();
 }
 
 CoinControlDialog::~CoinControlDialog()

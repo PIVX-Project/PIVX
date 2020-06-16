@@ -287,8 +287,11 @@ void SendWidget::showEvent(QShowEvent *event)
     CAmount cachedDelegatedBalance_new = walletModel->getDelegatedBalance();
     if (cachedDelegatedBalance != cachedDelegatedBalance_new) {
         cachedDelegatedBalance = cachedDelegatedBalance_new;
-        refreshAmounts();
     }
+
+    // Check coin control (as it might have been updated elsewhere)
+    ui->btnCoinControl->setActive(CoinControlDialog::coinControl->HasSelected());
+    refreshAmounts();
 }
 
 void SendWidget::setFocusOnLastEntry()

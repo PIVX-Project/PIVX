@@ -228,6 +228,12 @@ void ColdStakingWidget::loadWalletModel()
 
 }
 
+void ColdStakingWidget::showEvent(QShowEvent *event)
+{
+    // Check coin control (as it might have been updated elsewhere)
+    ui->btnCoinControl->setActive(CoinControlDialog::coinControl->HasSelected());
+}
+
 void ColdStakingWidget::onTxArrived(const QString& hash, const bool& isCoinStake, const bool& isCSAnyType)
 {
     if (isCSAnyType) {

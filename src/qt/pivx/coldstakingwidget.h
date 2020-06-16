@@ -51,6 +51,9 @@ public:
 public Q_SLOTS:
     void walletSynced(bool sync);
 
+protected:
+    void showEvent(QShowEvent *event) override;
+
 private Q_SLOTS:
     void changeTheme(bool isLightTheme, QString &theme) override;
     void handleAddressClicked(const QModelIndex &index);
