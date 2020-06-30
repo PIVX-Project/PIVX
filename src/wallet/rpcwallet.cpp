@@ -3658,6 +3658,70 @@ UniValue mintzerocoin(const UniValue& params, bool fHelp)
     return retObj;
 }
 
+extern UniValue DoZpivSpend(const CAmount nAmount, std::vector<CZerocoinMint>& vMintsSelected, std::string address_str)
+{
+    int64_t nTimeStart = GetTimeMillis();
+    CTxDestination address{CNoDestination()}; // Optional sending address. Dummy initialization here.
+    CWalletTx wtx;
+    CZerocoinSpendReceipt receipt;
+    bool fSuccess;
+
+    std::list<std::pair<CTxDestination, CAmount>> outputs;
+    if(address_str != "") { // Spend to supplied destination address
+        bool isStaking = false;
+        address = DecodeDestination(address_str, isStaking);
+        if(!IsValidDestination(address) || isStaking)
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
+        outputs.push_back(std::pair<CTxDestination, CAmount>(address, nAmount));
+    }
+
+    EnsureWalletIsUnlocked();
+    fSuccess = pwalletMain->SpendZerocoin(nAmount, wtx, receipt, vMintsSelected, outputs, nullptr);
+
+    if (!fSuccess)
+        throw JSONRPCError(RPC_WALLET_ERROR, receipt.GetStatusMessage());
+
+    CAmount nValueIn = 0;
+    UniValue arrSpends(UniValue::VARR);
+    for (CZerocoinSpend spend : receipt.GetSpends()) {
+        UniValue obj(UniValue::VOBJ);
+        obj.push_back(Pair("denomination", spend.GetDenomination()));
+        obj.push_back(Pair("pubcoin", spend.GetPubCoin().GetHex()));
+        obj.push_back(Pair("serial", spend.GetSerial().GetHex()));
+        uint32_t nChecksum = spend.GetAccumulatorChecksum();
+        obj.push_back(Pair("acc_checksum", HexStr(BEGIN(nChecksum), END(nChecksum))));
+        arrSpends.push_back(obj);
+        nValueIn += libzerocoin::ZerocoinDenominationToAmount(spend.GetDenomination());
+    }
+
+    CAmount nValueOut = 0;
+    UniValue vout(UniValue::VARR);
+    for (unsigned int i = 0; i < wtx.vout.size(); i++) {
+        const CTxOut& txout = wtx.vout[i];
+        UniValue out(UniValue::VOBJ);
+        out.push_back(Pair("value", ValueFromAmount(txout.nValue)));
+        nValueOut += txout.nValue;
+
+        CTxDestination dest;
+        if(txout.IsZerocoinMint())
+            out.push_back(Pair("address", "zerocoinmint"));
+        else if(ExtractDestination(txout.scriptPubKey, dest))
+            out.push_back(Pair("address", EncodeDestination(dest)));
+        vout.push_back(out);
+    }
+
+    //construct JSON to return
+    UniValue ret(UniValue::VOBJ);
+    ret.push_back(Pair("txid", wtx.GetHash().ToString()));
+    ret.push_back(Pair("bytes", (int64_t)GetSerializeSize(wtx, SER_NETWORK, CTransaction::CURRENT_VERSION)));
+    ret.push_back(Pair("fee", ValueFromAmount(nValueIn - nValueOut)));
+    ret.push_back(Pair("duration_millis", (GetTimeMillis() - nTimeStart)));
+    ret.push_back(Pair("spends", arrSpends));
+    ret.push_back(Pair("outputs", vout));
+
+    return ret;
+}
+
 UniValue spendzerocoin(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() > 2 || params.size() < 1)
@@ -3786,71 +3850,99 @@ UniValue spendzerocoinmints(const UniValue& params, bool fHelp)
     return DoZpivSpend(nAmount, vMintsSelected, address_str);
 }
 
-
-extern UniValue DoZpivSpend(const CAmount nAmount, std::vector<CZerocoinMint>& vMintsSelected, std::string address_str)
+UniValue spendrawzerocoin(const UniValue& params, bool fHelp)
 {
-    int64_t nTimeStart = GetTimeMillis();
-    CTxDestination address{CNoDestination()}; // Optional sending address. Dummy initialization here.
-    CWalletTx wtx;
-    CZerocoinSpendReceipt receipt;
-    bool fSuccess;
+    if (fHelp || params.size() < 4 || params.size() > 6)
+        throw std::runtime_error(
+            "spendrawzerocoin \"serialHex\" denom \"randomnessHex\" \"priv key\" ( \"address\" \"mintTxId\" )\n"
+            "\nCreate and broadcast a TX spending the provided zericoin.\n"
 
-    std::list<std::pair<CTxDestination, CAmount>> outputs;
-    if(address_str != "") { // Spend to supplied destination address
-        bool isStaking = false;
-        address = DecodeDestination(address_str, isStaking);
-        if(!IsValidDestination(address) || isStaking)
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
-        outputs.push_back(std::pair<CTxDestination, CAmount>(address, nAmount));
+            "\nArguments:\n"
+            "1. \"serialHex\"        (string, required) A zerocoin serial number (hex)\n"
+            "2. \"randomnessHex\"    (string, required) A zerocoin randomness value (hex)\n"
+            "3. denom                (numeric, required) A zerocoin denomination (decimal)\n"
+            "4. \"priv key\"         (string, required) The private key associated with this coin (hex)\n"
+            "5. \"address\"          (string, optional) PIVX address to spend to. If not specified, "
+            "                        or empty string, spend to change address.\n"
+            "6. \"mintTxId\"         (string, optional) txid of the transaction containing the mint. If not"
+            "                        specified, or empty string, the blockchain will be scanned (could take a while)"
+
+            "\nResult:\n"
+                "\"txid\"             (string) The transaction txid in hex\n"
+
+            "\nExamples\n" +
+            HelpExampleCli("spendrawzerocoin", "\"f80892e78c30a393ef4ab4d5a9d5a2989de6ebc7b976b241948c7f489ad716a2\" \"a4fd4d7248e6a51f1d877ddd2a4965996154acc6b8de5aa6c83d4775b283b600\" 100 \"xxx\"") +
+            HelpExampleRpc("spendrawzerocoin", "\"f80892e78c30a393ef4ab4d5a9d5a2989de6ebc7b976b241948c7f489ad716a2\", \"a4fd4d7248e6a51f1d877ddd2a4965996154acc6b8de5aa6c83d4775b283b600\", 100, \"xxx\""));
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    if (sporkManager.IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE))
+            throw JSONRPCError(RPC_WALLET_ERROR, "zPIV is currently disabled due to maintenance.");
+
+    const Consensus::Params& consensus = Params().GetConsensus();
+
+    CBigNum serial;
+    serial.SetHex(params[0].get_str());
+
+    CBigNum randomness;
+    randomness.SetHex(params[1].get_str());
+
+    const int denom_int = params[2].get_int();
+    libzerocoin::CoinDenomination denom = libzerocoin::IntToZerocoinDenomination(denom_int);
+
+    std::string priv_key_str = params[3].get_str();
+    CPrivKey privkey;
+    CKey key = DecodeSecret(priv_key_str);
+    if (!key.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "privkey is not valid");
+    privkey = key.GetPrivKey();
+
+    // Create the coin associated with these secrets
+    libzerocoin::PrivateCoin coin(consensus.Zerocoin_Params(false), denom, serial, randomness);
+    coin.setPrivKey(privkey);
+    coin.setVersion(libzerocoin::PrivateCoin::CURRENT_VERSION);
+
+    // Create the mint associated with this coin
+    CZerocoinMint mint(denom, coin.getPublicCoin().getValue(), randomness, serial, false, CZerocoinMint::CURRENT_VERSION, &privkey);
+
+    std::string address_str = "";
+    if (params.size() > 4)
+        address_str = params[4].get_str();
+
+    if (params.size() > 5) {
+        // update mint txid
+        mint.SetTxHash(ParseHashV(params[5], "parameter 5"));
+    } else {
+        // If the mint tx is not provided, look for it
+        const CBigNum& mintValue = mint.GetValue();
+        bool found = false;
+        {
+            CBlockIndex* pindex = chainActive.Tip();
+            while (!found && pindex && consensus.NetworkUpgradeActive(pindex->nHeight, Consensus::UPGRADE_ZC)) {
+                LogPrintf("%s : Checking block %d...\n", __func__, pindex->nHeight);
+                CBlock block;
+                if (!ReadBlockFromDisk(block, pindex))
+                    throw JSONRPCError(RPC_INTERNAL_ERROR, "Unable to read block from disk");
+                std::list<CZerocoinMint> listMints;
+                BlockToZerocoinMintList(block, listMints, true);
+                for (const CZerocoinMint& m : listMints) {
+                    if (m.GetValue() == mintValue && m.GetDenomination() == denom) {
+                        // mint found. update txid
+                        mint.SetTxHash(m.GetTxHash());
+                        found = true;
+                        break;
+                    }
+                }
+                pindex = pindex->pprev;
+            }
+        }
+        if (!found)
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Mint tx not found");
     }
 
-    EnsureWalletIsUnlocked();
-    fSuccess = pwalletMain->SpendZerocoin(nAmount, wtx, receipt, vMintsSelected, outputs, nullptr);
-
-    if (!fSuccess)
-        throw JSONRPCError(RPC_WALLET_ERROR, receipt.GetStatusMessage());
-
-    CAmount nValueIn = 0;
-    UniValue arrSpends(UniValue::VARR);
-    for (CZerocoinSpend spend : receipt.GetSpends()) {
-        UniValue obj(UniValue::VOBJ);
-        obj.push_back(Pair("denomination", spend.GetDenomination()));
-        obj.push_back(Pair("pubcoin", spend.GetPubCoin().GetHex()));
-        obj.push_back(Pair("serial", spend.GetSerial().GetHex()));
-        uint32_t nChecksum = spend.GetAccumulatorChecksum();
-        obj.push_back(Pair("acc_checksum", HexStr(BEGIN(nChecksum), END(nChecksum))));
-        arrSpends.push_back(obj);
-        nValueIn += libzerocoin::ZerocoinDenominationToAmount(spend.GetDenomination());
-    }
-
-    CAmount nValueOut = 0;
-    UniValue vout(UniValue::VARR);
-    for (unsigned int i = 0; i < wtx.vout.size(); i++) {
-        const CTxOut& txout = wtx.vout[i];
-        UniValue out(UniValue::VOBJ);
-        out.push_back(Pair("value", ValueFromAmount(txout.nValue)));
-        nValueOut += txout.nValue;
-
-        CTxDestination dest;
-        if(txout.IsZerocoinMint())
-            out.push_back(Pair("address", "zerocoinmint"));
-        else if(ExtractDestination(txout.scriptPubKey, dest))
-            out.push_back(Pair("address", EncodeDestination(dest)));
-        vout.push_back(out);
-    }
-
-    //construct JSON to return
-    UniValue ret(UniValue::VOBJ);
-    ret.push_back(Pair("txid", wtx.GetHash().ToString()));
-    ret.push_back(Pair("bytes", (int64_t)GetSerializeSize(wtx, SER_NETWORK, CTransaction::CURRENT_VERSION)));
-    ret.push_back(Pair("fee", ValueFromAmount(nValueIn - nValueOut)));
-    ret.push_back(Pair("duration_millis", (GetTimeMillis() - nTimeStart)));
-    ret.push_back(Pair("spends", arrSpends));
-    ret.push_back(Pair("outputs", vout));
-
-    return ret;
+    std::vector<CZerocoinMint> vMintsSelected = {mint};
+    return DoZpivSpend(mint.GetDenominationAsAmount(), vMintsSelected, address_str);
 }
-
 
 UniValue resetmintzerocoin(const UniValue& params, bool fHelp)
 {
@@ -4457,97 +4549,114 @@ UniValue searchdzpiv(const UniValue& params, bool fHelp)
     return "done";
 }
 
-UniValue spendrawzerocoin(const UniValue& params, bool fHelp)
+extern UniValue dumpprivkey(const UniValue& params, bool fHelp); // in rpcdump.cpp
+extern UniValue importprivkey(const UniValue& params, bool fHelp);
+extern UniValue importaddress(const UniValue& params, bool fHelp);
+extern UniValue importpubkey(const UniValue& params, bool fHelp);
+extern UniValue dumpwallet(const UniValue& params, bool fHelp);
+extern UniValue importwallet(const UniValue& params, bool fHelp);
+extern UniValue bip38encrypt(const UniValue& params, bool fHelp);
+extern UniValue bip38decrypt(const UniValue& params, bool fHelp);
+extern UniValue createrawzerocoinspend(const UniValue& params, bool fHelp);
+extern UniValue getspentzerocoinamount(const UniValue& params, bool fHelp);
+extern UniValue getstakingstatus(const UniValue& params, bool fHelp);
+
+static const CRPCCommand commands[] =
+{       //  category              name                        actor (function)           okSafeMode
+        //  --------------------- ------------------------    -----------------------    ----------
+        //{ "rawtransactions",    "fundrawtransaction",       &fundrawtransaction,       false },
+        { "wallet",              "autocombinerewards",       &autocombinerewards,        false },
+        { "wallet",              "abandontransaction",       &abandontransaction,        false },
+        { "wallet",              "addmultisigaddress",       &addmultisigaddress,        true  },
+        { "wallet",              "backupwallet",             &backupwallet,              true  },
+        { "wallet",              "delegatestake",            &delegatestake,             false },
+        { "wallet",              "dumpprivkey",              &dumpprivkey,               true  },
+        { "wallet",              "dumpwallet",               &dumpwallet,                true  },
+        { "wallet",              "encryptwallet",            &encryptwallet,             true  },
+        { "wallet",              "getaccountaddress",        &getaccountaddress,         true  },
+        { "wallet",              "getaccount",               &getaccount,                true  },
+        { "wallet",              "getaddressesbyaccount",    &getaddressesbyaccount,     true  },
+        { "wallet",              "getbalance",               &getbalance,                false },
+        { "wallet",              "getcoldstakingbalance",    &getcoldstakingbalance,     false },
+        { "wallet",              "getdelegatedbalance",      &getdelegatedbalance,       false },
+        { "wallet",              "upgradewallet",            &upgradewallet,             true  },
+        { "wallet",              "sethdseed",                &sethdseed,                 true  },
+        { "wallet",              "getnewaddress",            &getnewaddress,             true  },
+        { "wallet",              "getnewstakingaddress",     &getnewstakingaddress,      true  },
+        { "wallet",              "getrawchangeaddress",      &getrawchangeaddress,       true  },
+        { "wallet",              "getreceivedbyaccount",     &getreceivedbyaccount,      false },
+        { "wallet",              "getreceivedbyaddress",     &getreceivedbyaddress,      false },
+        { "wallet",              "gettransaction",           &gettransaction,            false },
+        { "wallet",              "getstakesplitthreshold",   &getstakesplitthreshold,    false },
+        { "wallet",              "getunconfirmedbalance",    &getunconfirmedbalance,     false },
+        { "wallet",              "getwalletinfo",            &getwalletinfo,             false },
+        { "wallet",              "importprivkey",            &importprivkey,             true  },
+        { "wallet",              "importwallet",             &importwallet,              true  },
+        { "wallet",              "importaddress",            &importaddress,             true  },
+        { "wallet",               "importpubkey",             &importpubkey,             true  },
+        { "wallet",              "keypoolrefill",            &keypoolrefill,             true  },
+        { "wallet",              "listaccounts",             &listaccounts,              false },
+        { "wallet",              "listaddressgroupings",     &listaddressgroupings,      false },
+        { "wallet",              "listdelegators",           &listdelegators,            false },
+        { "wallet",              "liststakingaddresses",     &liststakingaddresses,      false },
+        { "wallet",              "listcoldutxos",            &listcoldutxos,             false },
+        { "wallet",              "listlockunspent",          &listlockunspent,           false },
+        { "wallet",              "listreceivedbyaccount",    &listreceivedbyaccount,     false },
+        { "wallet",              "listreceivedbyaddress",    &listreceivedbyaddress,     false },
+        { "wallet",              "listsinceblock",           &listsinceblock,            false },
+        { "wallet",              "listtransactions",         &listtransactions,          false },
+        { "wallet",              "listunspent",              &listunspent,               false },
+        { "wallet",              "lockunspent",              &lockunspent,               true  },
+        { "wallet",              "move",                     &movecmd,                   false },
+        { "wallet",              "rawdelegatestake",         &rawdelegatestake,          false },
+        { "wallet",              "sendfrom",                 &sendfrom,                  false },
+        { "wallet",              "sendmany",                 &sendmany,                  false },
+        { "wallet",              "sendtoaddress",            &sendtoaddress,             false },
+        { "wallet",              "sendtoaddressix",          &sendtoaddressix,           false },
+        { "wallet",              "setaccount",               &setaccount,                true  },
+        { "wallet",              "settxfee",                 &settxfee,                  true  },
+        { "wallet",              "setstakesplitthreshold",   &setstakesplitthreshold,    false },
+        { "wallet",              "signmessage",              &signmessage,               true  },
+        { "wallet",              "walletlock",               &walletlock,                true  },
+        { "wallet",              "walletpassphrasechange",   &walletpassphrasechange,    true  },
+        { "wallet",              "walletpassphrase",         &walletpassphrase,          true  },
+        { "wallet",              "delegatoradd",             &delegatoradd,              true  },
+        { "wallet",              "delegatorremove",          &delegatorremove,           true  },
+
+#ifdef ENABLE_WALLET
+        /* Wallet */
+        { "wallet",             "bip38encrypt",           &bip38encrypt,            true  },
+        { "wallet",             "bip38decrypt",           &bip38decrypt,            true  },
+        { "wallet",             "getaddressinfo",         &getaddressinfo,          true  },
+        { "wallet",             "getstakingstatus",       &getstakingstatus,        false },
+        { "wallet",             "multisend",              &multisend,               false },
+        { "zerocoin",           "createrawzerocoinspend", &createrawzerocoinspend,  false },
+        { "zerocoin",           "getzerocoinbalance",     &getzerocoinbalance,      false },
+        { "zerocoin",           "listmintedzerocoins",    &listmintedzerocoins,     false },
+        { "zerocoin",           "listspentzerocoins",     &listspentzerocoins,      false },
+        { "zerocoin",           "listzerocoinamounts",    &listzerocoinamounts,     false },
+        { "zerocoin",           "mintzerocoin",           &mintzerocoin,            false },
+        { "zerocoin",           "spendzerocoin",          &spendzerocoin,           false },
+        { "zerocoin",           "spendrawzerocoin",       &spendrawzerocoin,        true  },
+        { "zerocoin",           "spendzerocoinmints",     &spendzerocoinmints,      false },
+        { "zerocoin",           "resetmintzerocoin",      &resetmintzerocoin,       false },
+        { "zerocoin",           "resetspentzerocoin",     &resetspentzerocoin,      false },
+        { "zerocoin",           "getarchivedzerocoin",    &getarchivedzerocoin,     false },
+        { "zerocoin",           "importzerocoins",        &importzerocoins,         false },
+        { "zerocoin",           "exportzerocoins",        &exportzerocoins,         false },
+        { "zerocoin",           "reconsiderzerocoins",    &reconsiderzerocoins,     false },
+        { "zerocoin",           "getspentzerocoinamount", &getspentzerocoinamount,  false },
+        { "zerocoin",           "getzpivseed",            &getzpivseed,             false },
+        { "zerocoin",           "setzpivseed",            &setzpivseed,             false },
+        { "zerocoin",           "generatemintlist",       &generatemintlist,        false },
+        { "zerocoin",           "searchdzpiv",            &searchdzpiv,             false },
+        { "zerocoin",           "dzpivstate",             &dzpivstate,              false }
+
+#endif // ENABLE_WALLET
+};
+
+void RegisterWalletRPCCommands(CRPCTable &tableRPC)
 {
-    if (fHelp || params.size() < 4 || params.size() > 6)
-        throw std::runtime_error(
-            "spendrawzerocoin \"serialHex\" denom \"randomnessHex\" \"priv key\" ( \"address\" \"mintTxId\" )\n"
-            "\nCreate and broadcast a TX spending the provided zericoin.\n"
-
-            "\nArguments:\n"
-            "1. \"serialHex\"        (string, required) A zerocoin serial number (hex)\n"
-            "2. \"randomnessHex\"    (string, required) A zerocoin randomness value (hex)\n"
-            "3. denom                (numeric, required) A zerocoin denomination (decimal)\n"
-            "4. \"priv key\"         (string, required) The private key associated with this coin (hex)\n"
-            "5. \"address\"          (string, optional) PIVX address to spend to. If not specified, "
-            "                        or empty string, spend to change address.\n"
-            "6. \"mintTxId\"         (string, optional) txid of the transaction containing the mint. If not"
-            "                        specified, or empty string, the blockchain will be scanned (could take a while)"
-
-            "\nResult:\n"
-                "\"txid\"             (string) The transaction txid in hex\n"
-
-            "\nExamples\n" +
-            HelpExampleCli("spendrawzerocoin", "\"f80892e78c30a393ef4ab4d5a9d5a2989de6ebc7b976b241948c7f489ad716a2\" \"a4fd4d7248e6a51f1d877ddd2a4965996154acc6b8de5aa6c83d4775b283b600\" 100 \"xxx\"") +
-            HelpExampleRpc("spendrawzerocoin", "\"f80892e78c30a393ef4ab4d5a9d5a2989de6ebc7b976b241948c7f489ad716a2\", \"a4fd4d7248e6a51f1d877ddd2a4965996154acc6b8de5aa6c83d4775b283b600\", 100, \"xxx\""));
-
-    LOCK2(cs_main, pwalletMain->cs_wallet);
-
-    if (sporkManager.IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE))
-            throw JSONRPCError(RPC_WALLET_ERROR, "zPIV is currently disabled due to maintenance.");
-
-    const Consensus::Params& consensus = Params().GetConsensus();
-
-    CBigNum serial;
-    serial.SetHex(params[0].get_str());
-
-    CBigNum randomness;
-    randomness.SetHex(params[1].get_str());
-
-    const int denom_int = params[2].get_int();
-    libzerocoin::CoinDenomination denom = libzerocoin::IntToZerocoinDenomination(denom_int);
-
-    std::string priv_key_str = params[3].get_str();
-    CPrivKey privkey;
-    CKey key = DecodeSecret(priv_key_str);
-    if (!key.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "privkey is not valid");
-    privkey = key.GetPrivKey();
-
-    // Create the coin associated with these secrets
-    libzerocoin::PrivateCoin coin(consensus.Zerocoin_Params(false), denom, serial, randomness);
-    coin.setPrivKey(privkey);
-    coin.setVersion(libzerocoin::PrivateCoin::CURRENT_VERSION);
-
-    // Create the mint associated with this coin
-    CZerocoinMint mint(denom, coin.getPublicCoin().getValue(), randomness, serial, false, CZerocoinMint::CURRENT_VERSION, &privkey);
-
-    std::string address_str = "";
-    if (params.size() > 4)
-        address_str = params[4].get_str();
-
-    if (params.size() > 5) {
-        // update mint txid
-        mint.SetTxHash(ParseHashV(params[5], "parameter 5"));
-    } else {
-        // If the mint tx is not provided, look for it
-        const CBigNum& mintValue = mint.GetValue();
-        bool found = false;
-        {
-            CBlockIndex* pindex = chainActive.Tip();
-            while (!found && pindex && consensus.NetworkUpgradeActive(pindex->nHeight, Consensus::UPGRADE_ZC)) {
-                LogPrintf("%s : Checking block %d...\n", __func__, pindex->nHeight);
-                CBlock block;
-                if (!ReadBlockFromDisk(block, pindex))
-                    throw JSONRPCError(RPC_INTERNAL_ERROR, "Unable to read block from disk");
-                std::list<CZerocoinMint> listMints;
-                BlockToZerocoinMintList(block, listMints, true);
-                for (const CZerocoinMint& m : listMints) {
-                    if (m.GetValue() == mintValue && m.GetDenomination() == denom) {
-                        // mint found. update txid
-                        mint.SetTxHash(m.GetTxHash());
-                        found = true;
-                        break;
-                    }
-                }
-                pindex = pindex->pprev;
-            }
-        }
-        if (!found)
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "Mint tx not found");
-    }
-
-    std::vector<CZerocoinMint> vMintsSelected = {mint};
-    return DoZpivSpend(mint.GetDenominationAsAmount(), vMintsSelected, address_str);
+     for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commands); vcidx++)
+        tableRPC.appendCommand(commands[vcidx].name, &commands[vcidx]);
 }
-

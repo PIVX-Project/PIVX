@@ -987,3 +987,27 @@ UniValue createrawzerocoinspend(const UniValue& params, bool fHelp)
 }
 #endif
 
+extern UniValue gettxoutsetinfo(const UniValue& params, bool fHelp);
+extern UniValue gettxout(const UniValue& params, bool fHelp);
+
+static const CRPCCommand commands[] =
+{ //  category              name                      actor (function)         okSafeMode
+  //  --------------------- ------------------------  -----------------------  ----------
+  /* Raw transactions */
+    { "rawtransactions",    "createrawtransaction",     &createrawtransaction, true  },
+    { "rawtransactions",    "decoderawtransaction",     &decoderawtransaction, true  },
+    { "rawtransactions",    "decodescript",             &decodescript,         true  },
+    { "rawtransactions",    "getrawtransaction",        &getrawtransaction,    true  },
+    { "rawtransactions",    "fundrawtransaction",       &fundrawtransaction,   false },
+    { "rawtransactions",    "sendrawtransaction",       &sendrawtransaction,   false },
+    { "rawtransactions",    "signrawtransaction",       &signrawtransaction,   false }, /* uses wallet if enabled */
+
+    { "blockchain",         "gettxout",               &gettxout,               true  },
+    { "blockchain",         "gettxoutsetinfo",        &gettxoutsetinfo,        true  },
+};
+
+void RegisterRawTransactionRPCCommands(CRPCTable &tableRPC)
+{
+    for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commands); vcidx++)
+        tableRPC.appendCommand(commands[vcidx].name, &commands[vcidx]);
+}

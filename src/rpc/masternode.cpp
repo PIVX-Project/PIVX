@@ -910,3 +910,35 @@ UniValue relaymasternodebroadcast(const UniValue& params, bool fHelp)
 
     return strprintf("Masternode broadcast sent (service %s, vin %s)", mnb.addr.ToString(), mnb.vin.ToString());
 }
+
+extern UniValue masternodeconnect(const UniValue& params, bool fHelp);
+extern UniValue mnsync(const UniValue& params, bool fHelp);
+extern UniValue spork(const UniValue& params, bool fHelp);
+
+static const CRPCCommand commands[] =
+{ //  category              name                         actor (function)            okSafeMode
+  //  --------------------- ------------------------     -----------------------     ----------
+  /* PIVX features */
+    { "pivx",               "listmasternodes",           &listmasternodes,           true },
+    { "pivx",               "getmasternodecount",        &getmasternodecount,        true },
+    { "pivx",               "createmasternodebroadcast", &createmasternodebroadcast, true },
+    { "pivx",               "decodemasternodebroadcast", &decodemasternodebroadcast, true },
+    { "pivx",               "relaymasternodebroadcast",  &relaymasternodebroadcast,  true },
+    { "pivx",               "masternodecurrent",         &masternodecurrent,         true },
+    { "pivx",               "masternodedebug",           &masternodedebug,           true },
+    { "pivx",               "startmasternode",           &startmasternode,           true },
+    { "pivx",               "createmasternodekey",       &createmasternodekey,       true },
+    { "pivx",               "getmasternodeoutputs",      &getmasternodeoutputs,      true },
+    { "pivx",               "listmasternodeconf",        &listmasternodeconf,        true },
+    { "pivx",               "getmasternodestatus",       &getmasternodestatus,       true },
+    { "pivx",               "getmasternodewinners",      &getmasternodewinners,      true },
+    { "pivx",               "getmasternodescores",       &getmasternodescores,       true },
+    { "pivx",               "mnsync",                    &mnsync,                    true },
+    { "pivx",               "spork",                     &spork,                     true },
+};
+
+void RegisterMasternodeRPCCommands(CRPCTable &tableRPC)
+{
+    for (unsigned int vcidx = 0; vcidx < ARRAYLEN(commands); vcidx++)
+        tableRPC.appendCommand(commands[vcidx].name, &commands[vcidx]);
+}

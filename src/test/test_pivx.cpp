@@ -11,6 +11,8 @@
 #include "random.h"
 #include "txdb.h"
 #include "guiinterface.h"
+#include "rpc/server.h"
+#include "rpc/register.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -37,6 +39,9 @@ BasicTestingSetup::~BasicTestingSetup()
 
 TestingSetup::TestingSetup()
 {
+        // Ideally we'd move all the RPC tests to the functional testing framework
+        // instead of unit tests, but for now we need these here.
+        RegisterAllCoreRPCCommands(tableRPC);
         ClearDatadirCache();
         pathTemp = GetTempPath() / strprintf("test_pivx_%lu_%i", (unsigned long)GetTime(), (int)(InsecureRandRange(100000)));
         fs::create_directories(pathTemp);
