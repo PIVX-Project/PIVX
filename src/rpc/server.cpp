@@ -300,7 +300,7 @@ static const CRPCCommand vRPCCommands[] =
 
 
        /* Not shown in help */
-        
+
         { "hidden",             "waitfornewblock",        &waitfornewblock,        true  },
         { "hidden",             "waitforblock",           &waitforblock,           true  },
         { "hidden",             "waitforblockheight",     &waitforblockheight,     true  },
