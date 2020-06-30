@@ -70,7 +70,7 @@ void RPCTypeCheck(const UniValue& params,
  * Use like: RPCTypeCheckObj(object, boost::assign::map_list_of("name", str_type)("value", int_type));
  */
 void RPCTypeCheckObj(const UniValue& o,
-                  const std::map<std::string, UniValue::VType>& typesExpected, bool fAllowNull=false);
+                  const std::map<std::string, UniValue::VType>& typesExpected, bool fAllowNull=false, bool fStrict=false);
 
 /** Opaque base class for timers returned by NewTimerFunc.
  * This provides no methods at the moment, but makes sure that delete
@@ -179,6 +179,7 @@ extern std::string HelpExampleRpc(std::string methodname, std::string args);
 extern void EnsureWalletIsUnlocked(bool fAllowAnonOnly = false);
 // Ensure the wallet's existence.
 extern void EnsureWallet();
+
 extern UniValue waitfornewblock(const UniValue& params, bool fHelp);
 extern UniValue waitforblock(const UniValue& params, bool fHelp);
 extern UniValue waitforblockheight(const UniValue& params, bool fHelp);

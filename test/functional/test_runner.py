@@ -62,6 +62,7 @@ BASE_SCRIPTS= [
     # vv Tests less than 5m vv
     'wallet_zapwallettxes.py',                  # ~ 300 sec
     'p2p_time_offset.py',                       # ~ 267 sec
+    'rpc_fundrawtransaction.py',                # ~ 260 sec
     'mining_pos_coldStaking.py',                # ~ 215 sec
     'mining_pos_reorg.py',                      # ~ 212 sec
     'wallet_abandonconflict.py',                # ~ 212 sec
@@ -110,7 +111,6 @@ BASE_SCRIPTS= [
     # Don't append tests at the end to avoid merge conflicts
     # Put them in a random line within the section that fits their approximate run-time
     # 'feature_block.py',
-    # 'rpc_fundrawtransaction.py',
     # 'wallet_importmulti.py',
     # 'mempool_limit.py', # We currently don't limit our mempool_reorg
     # 'interface_zmq.py',
@@ -171,6 +171,7 @@ LEGACY_SKIP_TESTS = [
     'rpc_blockchain.py',
     'rpc_budget.py',
     'rpc_decodescript.py',
+    'rpc_fundrawtransaction.py',
     'rpc_net.py',
     'rpc_signmessage.py',
     'rpc_spork.py',

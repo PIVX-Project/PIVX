@@ -389,7 +389,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
 {
     CAmount total = 0;
     QList<SendCoinsRecipient> recipients = transaction.getRecipients();
-    std::vector<std::pair<CScript, CAmount> > vecSend;
+    std::vector<CRecipient> vecSend;
 
     if (recipients.empty()) {
         return OK;
@@ -413,7 +413,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
                 subtotal += out.amount();
                 const unsigned char* scriptStr = (const unsigned char*)out.script().data();
                 CScript scriptPubKey(scriptStr, scriptStr + out.script().size());
-                vecSend.push_back(std::pair<CScript, CAmount>(scriptPubKey, out.amount()));
+                vecSend.push_back(CRecipient{scriptPubKey, static_cast<CAmount>(out.amount()), false});
             }
             if (subtotal <= 0) {
                 return InvalidAmount;
@@ -453,7 +453,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
                 // Regular P2PK or P2PKH
                 scriptPubKey = GetScriptForDestination(out);
             }
-            vecSend.push_back(std::pair<CScript, CAmount>(scriptPubKey, rcp.amount));
+            vecSend.push_back(CRecipient{scriptPubKey, rcp.amount, false});
 
             total += rcp.amount;
         }
@@ -473,6 +473,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
 
         transaction.newPossibleKeyChange(wallet);
         CAmount nFeeRequired = 0;
+        int nChangePosInOut = -1;
         std::string strFailReason;
 
         CWalletTx* newTx = transaction.getTransaction();
@@ -489,9 +490,11 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
                                                   *newTx,
                                                   *keyChange,
                                                   nFeeRequired,
+                                                  nChangePosInOut,
                                                   strFailReason,
                                                   coinControl,
                                                   recipients[0].inputType,
+                                                  true,
                                                   recipients[0].useSwiftTX,
                                                   0,
                                                   fIncludeDelegations);

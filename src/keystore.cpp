@@ -13,18 +13,24 @@
 #include "util.h"
 
 
-bool CKeyStore::GetPubKey(const CKeyID& address, CPubKey& vchPubKeyOut) const
-{
-    CKey key;
-    if (!GetKey(address, key))
-        return false;
-    vchPubKeyOut = key.GetPubKey();
-    return true;
-}
-
 bool CKeyStore::AddKey(const CKey& key)
 {
     return AddKeyPubKey(key, key.GetPubKey());
+}
+
+bool CBasicKeyStore::GetPubKey(const CKeyID &address, CPubKey &vchPubKeyOut) const
+{
+    CKey key;
+    if (!GetKey(address, key)) {
+        WatchKeyMap::const_iterator it = mapWatchKeys.find(address);
+        if (it != mapWatchKeys.end()) {
+            vchPubKeyOut = it->second;
+            return true;
+        }
+        return false;
+    }
+    vchPubKeyOut = key.GetPubKey();
+    return true;
 }
 
 bool CBasicKeyStore::AddKeyPubKey(const CKey& key, const CPubKey& pubkey)
@@ -61,10 +67,29 @@ bool CBasicKeyStore::GetCScript(const CScriptID& hash, CScript& redeemScriptOut)
     return false;
 }
 
+static bool ExtractPubKey(const CScript &dest, CPubKey& pubKeyOut)
+{
+    //TODO: Use Solver to extract this?
+    CScript::const_iterator pc = dest.begin();
+    opcodetype opcode;
+    std::vector<unsigned char> vch;
+    if (!dest.GetOp(pc, opcode, vch) || vch.size() < 33 || vch.size() > 65)
+        return false;
+    pubKeyOut = CPubKey(vch);
+    if (!pubKeyOut.IsFullyValid())
+        return false;
+    if (!dest.GetOp(pc, opcode, vch) || opcode != OP_CHECKSIG || dest.GetOp(pc, opcode, vch))
+        return false;
+    return true;
+}
+
 bool CBasicKeyStore::AddWatchOnly(const CScript& dest)
 {
     LOCK(cs_KeyStore);
     setWatchOnly.insert(dest);
+    CPubKey pubKey;
+    if (ExtractPubKey(dest, pubKey))
+        mapWatchKeys[pubKey.GetID()] = pubKey;
     return true;
 }
 
@@ -72,6 +97,9 @@ bool CBasicKeyStore::RemoveWatchOnly(const CScript& dest)
 {
     LOCK(cs_KeyStore);
     setWatchOnly.erase(dest);
+    CPubKey pubKey;
+    if (ExtractPubKey(dest, pubKey))
+        mapWatchKeys.erase(pubKey.GetID());
     return true;
 }
 

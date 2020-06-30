@@ -17,7 +17,10 @@ class CScript;
 enum isminetype {
     ISMINE_NO = 0,
     //! Indicates that we dont know how to create a scriptSig that would solve this if we were given the appropriate private keys
-    ISMINE_WATCH_ONLY = 1,
+    ISMINE_WATCH_UNSOLVABLE = 1,
+    //! Indicates that we know how to create a scriptSig that would solve this if we were given the appropriate private keys
+    ISMINE_WATCH_SOLVABLE = 2,
+    ISMINE_WATCH_ONLY = ISMINE_WATCH_SOLVABLE | ISMINE_WATCH_UNSOLVABLE,
     ISMINE_SPENDABLE  = 4,
     //! Indicates that we have the staking key of a P2CS
     ISMINE_COLD = 8,

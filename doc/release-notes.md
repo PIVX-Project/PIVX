@@ -34,6 +34,87 @@ Notable Changes
 
 (Developers: add your notes here as part of your pull requests whenever possible)
 
+### Memory pool limiting
+
+Previous versions of PIVX Core had their mempool limited by checking a transaction's fees against the node's minimum relay fee. There was no upper bound on the size of the mempool and attackers could send a large number of transactions paying just slighly more than the default minimum relay fee to crash nodes with relatively low RAM.
+
+PIVX Core 4.2.0 will have a strict maximum size on the mempool. The default value is 300 MB and can be configured with the `-maxmempool` parameter. Whenever a transaction would cause the mempool to exceed its maximum size, the transaction that (along with in-mempool descendants) has the lowest total feerate (as a package) will be evicted and the node's effective minimum relay feerate will be increased to match this feerate plus the initial minimum relay feerate. The initial minimum relay feerate is set to 1000 satoshis per kB.
+
+PIVX Core 4.2.0 also introduces new default policy limits on the length and size of unconfirmed transaction chains that are allowed in the mempool (generally limiting the length of unconfirmed chains to 25 transactions, with a total size of 101 KB). These limits can be overridden using command line arguments ([#1645](https://github.com/PIVX-Project/PIVX/pull/1645), [#1647](https://github.com/PIVX-Project/PIVX/pull/1647)).
+
+### Benchmarking Framework
+
+PIVX Core 4.2.0 backports  the internal benchmarking framework from Bitcoin Core, which can be used to benchmark cryptographic algorithms (e.g. SHA1, SHA256, SHA512, RIPEMD160, Poly1305, ChaCha20), Base58 encoding and decoding and thread queue. More tests are needed for script validation, coin selection and coins database, cuckoo cache, p2p throughtput ([#1650](https://github.com/PIVX-Project/PIVX/pull/1650)).
+
+The binary file is compiled with pivx-core, unless configured with `--disable-bench`.<br>
+After compiling pivx-core, the benchmarks can be run with:
+```
+src/bench/bench_pivx
+```
+The output will be similar to:
+```
+#Benchmark,count,min(ns),max(ns),average(ns),min_cycles,max_cycles,average_cycles
+Base58CheckEncode,131072,7697,8065,7785,20015,20971,20242
+```
+
+
+GUI Changes
+----------
+
+### Topbar navigation
+
+- The "sync" button in the GUI topbar can be clicked to go directly to the Settings --> Information panel (where the current block number and hash is shown).
+
+- The "connections" button in the GUI topbar can be clicked to open the network monitor dialog ([#1688](https://github.com/PIVX-Project/PIVX/pull/1688)).
+
+### Removed zerocoin GUI
+
+Spending zPIV and getting zPIV balance information is no longer available in the graphical interface ([#1549](https://github.com/PIVX-Project/PIVX/pull/1549)). The feature remains accessible through the RPC interface: `getzerocoinbalance`, `listmintedzerocoins`, `listzerocoinamounts`, `spendzerocoin`, `spendzerocoinmints`.
+
+
+Functional Changes
+----------
+
+### Stake-Split threshold
+
+If the stake split is active (threshold > 0), then stake split threshold value must be greater than a minimum, set by default at 100 PIV. The minimum value can be changed using the `-minstakesplit` startup flag ([#1586](https://github.com/PIVX-Project/PIVX/pull/1586)). A value `0` is still allowed, regardless of the minimum set, and, as before, can be used to disable the stake splitting functionality.
+
+### Changed command-line options
+
+- new command `-minstakesplit` to modify the minimum allowed for  the stake split threshold ([#1586](https://github.com/PIVX-Project/PIVX/pull/1586)).
+
+- new commands `-maxmempool`, to customize  the memory pool size limit, and `-checkmempool=N`, to customize the frequency of the mempool check ([#1647](https://github.com/PIVX-Project/PIVX/pull/1647)).
+
+- new commands `-limitancestorcount=N` and `limitancestorsize=N`, to limit the number and total size of all in-mempool ancestors for a transaction ([#1647](https://github.com/PIVX-Project/PIVX/pull/1647)).
+
+- new commands `-limitdescendantcount=N` and `limitdescendantsize=N`, to limit the number and total size of all in-mempool descendants for a transaction ([#1647](https://github.com/PIVX-Project/PIVX/pull/1647)).
+
+Dependencies
+------------
+
+...
+
+
+RPC Changes
+------------
+
+### Low-level API changes
+
+- The `asm` property of each scriptSig now contains the decoded signature hash type for each signature that provides a valid defined hash type ([#1633](https://github.com/PIVX-Project/PIVX/pull/1633)).<br>
+The following items contain assembly representations of scriptSig signatures
+and are affected by this change: RPC `getrawtransaction`, RPC `decoderawtransaction`, REST `/rest/tx/` (JSON format), REST `/rest/block/` (JSON format when including extended tx details), `pivx-tx -json`
+
+### Modified input/output for existing commands
+
+- new "usage" field in the output of `getmempoolinfo`, displaying the total memory usage for the mempool ([#1645](https://github.com/PIVX-Project/PIVX/pull/1645)).
+
+- new "upgrades" field in the output of `getblockchaininfo`, showing upcoming and active network upgrades ([#1665](https://github.com/PIVX-Project/PIVX/pull/1665), [#1687](https://github.com/PIVX-Project/PIVX/pull/1687)).
+
+### Removed commands
+
+### Newly introduced commands
+
+
 *version* Change log
 ==============
 
@@ -48,41 +129,6 @@ Detailed release notes follow. This overview includes changes that affect behavi
 ### GUI
 
 ### RPC/REST
-
-New network upgrades output
----------------------------
-
-A new return field 'upgrades' was added to the `getblockchaininfo` RPC method.
-Showing the upcoming and active upgrades. Starting with PIVX v5.0.0 Purple Fenix
-network upgrade.
-
-
-Asm representations of scriptSig signatures now contain SIGHASH type decodes
-----------------------------------------------------------------------------
-
-The `asm` property of each scriptSig now contains the decoded signature hash
-type for each signature that provides a valid defined hash type.
-
-The following items contain assembly representations of scriptSig signatures
-and are affected by this change:
-
-- RPC `getrawtransaction`
-- RPC `decoderawtransaction`
-- REST `/rest/tx/` (JSON format)
-- REST `/rest/block/` (JSON format when including extended tx details)
-- `bitcoin-tx -json`
-
-For example, the `scriptSig.asm` property of a transaction input that
-previously showed an assembly representation of:
-
-    304502207fa7a6d1e0ee81132a269ad84e68d695483745cde8b541e3bf630749894e342a022100c1f7ab20e13e22fb95281a870f3dcf38d782e53023ee313d741ad0cfbc0c509001
-
-now shows as:
-
-    304502207fa7a6d1e0ee81132a269ad84e68d695483745cde8b541e3bf630749894e342a022100c1f7ab20e13e22fb95281a870f3dcf38d782e53023ee313d741ad0cfbc0c5090[ALL]
-
-Note that the output of the RPC `decodescript` did not change because it is
-configured specifically to process scriptPubKey and not scriptSig scripts.
 
 ### Wallet
 
