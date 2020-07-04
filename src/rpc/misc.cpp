@@ -705,7 +705,7 @@ UniValue getstakingstatus(const UniValue& params, bool fHelp)
         pwalletMain->StakeableCoins(&vCoins);
         obj.push_back(Pair("stakeablecoins", (int)vCoins.size()));
         obj.push_back(Pair("stakingbalance", ValueFromAmount(pwalletMain->GetStakingBalance(fColdStaking))));
-        obj.push_back(Pair("stakesplitthreshold", ValueFromAmount(pwalletMain->nStakeSplitThreshold)));
+        obj.push_back(Pair("stakesplitthreshold", (int)(pwalletMain->nStakeSplitThreshold)));
         CStakerStatus* ss = pwalletMain->pStakerStatus;
         if (ss) {
             obj.push_back(Pair("lastattempt_age", (int)(GetTime() - ss->GetLastTime())));
