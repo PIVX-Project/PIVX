@@ -529,7 +529,7 @@ CMasternode* CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight
     int nCountTenth = 0;
     uint256 nHigh;
     const uint256& hash = GetHashAtHeight(nBlockHeight - 101);
-    for (PAIRTYPE(int64_t, CTxIn) & s : vecMasternodeLastPaid) {
+    for (std::pair<int64_t, CTxIn> & s : vecMasternodeLastPaid) {
         CMasternode* pmn = Find(s.second);
         if (!pmn) break;
 
@@ -606,7 +606,7 @@ int CMasternodeMan::GetMasternodeRank(const CTxIn& vin, int64_t nBlockHeight, in
     sort(vecMasternodeScores.rbegin(), vecMasternodeScores.rend(), CompareScoreTxIn());
 
     int rank = 0;
-    for (PAIRTYPE(int64_t, CTxIn) & s : vecMasternodeScores) {
+    for (std::pair<int64_t, CTxIn> & s : vecMasternodeScores) {
         rank++;
         if (s.second.prevout == vin.prevout) {
             return rank;
@@ -645,7 +645,7 @@ std::vector<std::pair<int, CMasternode> > CMasternodeMan::GetMasternodeRanks(int
     sort(vecMasternodeScores.rbegin(), vecMasternodeScores.rend(), CompareScoreMN());
 
     int rank = 0;
-    for (PAIRTYPE(int64_t, CMasternode) & s : vecMasternodeScores) {
+    for (std::pair<int64_t, CMasternode>& s : vecMasternodeScores) {
         rank++;
         vecMasternodeRanks.emplace_back(rank, s.second);
     }

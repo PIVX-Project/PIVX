@@ -13,11 +13,11 @@
 #include "messagesigner.h"
 #include "net.h"
 #include "protocol.h"
+#include "reverse_iterate.h"
 #include "spork.h"
 #include "sync.h"
 #include "util.h"
 #include "validationinterface.h"
-#include <boost/foreach.hpp>
 
 
 std::map<uint256, CTransaction> mapTxLockReq;
@@ -225,7 +225,7 @@ int64_t CreateNewLock(CTransaction tx)
 {
     int nChainHeight = WITH_LOCK(cs_main, return chainActive.Height(); );
     int64_t nTxAge = 0;
-    BOOST_REVERSE_FOREACH (CTxIn i, tx.vin) {
+    for (CTxIn i : reverse_iterate (tx.vin)) {
         nTxAge = pcoinsTip->GetCoinDepthAtHeight(i.prevout, nChainHeight);
         if (nTxAge < 5) //1 less than the "send IX" gui requires, incase of a block propagating the network at the time
         {

@@ -82,7 +82,7 @@ UniValue listmasternodes(const JSONRPCRequest& request)
     if (nHeight < 0) return "[]";
 
     std::vector<std::pair<int, CMasternode> > vMasternodeRanks = mnodeman.GetMasternodeRanks(nHeight);
-    for (PAIRTYPE(int, CMasternode) & s : vMasternodeRanks) {
+    for (std::pair<int, CMasternode> & s : vMasternodeRanks) {
         UniValue obj(UniValue::VOBJ);
         std::string strVin = s.second.vin.prevout.ToStringShort();
         std::string strTxHash = s.second.vin.prevout.hash.ToString();

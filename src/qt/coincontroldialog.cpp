@@ -562,7 +562,7 @@ void CoinControlDialog::updateLabels()
     // nPayAmount
     CAmount nPayAmount = 0;
     bool fDust = false;
-    Q_FOREACH (const CAmount& amount, payAmounts) {
+    for (const CAmount& amount : payAmounts) {
         nPayAmount += amount;
         if (amount > 0) {
             CTxOut txout(amount, (CScript)std::vector<unsigned char>(24, 0));
@@ -777,7 +777,7 @@ void CoinControlDialog::updateView()
     std::map<QString, std::vector<COutput>> mapCoins;
     model->listCoins(mapCoins);
 
-    for (PAIRTYPE(QString, std::vector<COutput>) coins : mapCoins) {
+    for (std::pair<QString, std::vector<COutput>> coins : mapCoins) {
         CCoinControlWidgetItem* itemWalletAddress = new CCoinControlWidgetItem();
         itemWalletAddress->setCheckState(COLUMN_CHECKBOX, Qt::Unchecked);
         QString sWalletAddress = coins.first;

@@ -122,7 +122,7 @@ bool parseCommandLineSettings(std::vector<std::string>& args, const std::string&
         STATE_ESCAPE_DOUBLEQUOTED
     } state = STATE_EATING_SPACES;
     std::string curarg;
-    Q_FOREACH (char ch, strCommand) {
+    for (char ch : strCommand) {
         switch (state) {
             case STATE_ARGUMENT:      // In or after argument
             case STATE_EATING_SPACES: // Handle runs of whitespace

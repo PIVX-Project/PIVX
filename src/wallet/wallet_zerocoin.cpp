@@ -345,7 +345,7 @@ bool CWallet::CreateZerocoinMintTransaction(const CAmount nValue,
     // Sign
     int nIn = 0;
     CTransaction txNewConst(txNew);
-    for (const PAIRTYPE(const CWalletTx*, unsigned int) & coin : setCoins) {
+    for (const std::pair<const CWalletTx*, unsigned int> & coin : setCoins) {
         bool signSuccess;
         const CScript& scriptPubKey = coin.first->vout[coin.second].scriptPubKey;
         SignatureData sigdata;

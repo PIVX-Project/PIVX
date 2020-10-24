@@ -89,7 +89,7 @@ public:
         // build index map
         mapNodeRows.clear();
         int row = 0;
-        Q_FOREACH (const CNodeCombinedStats& stats, cachedNodeStats)
+        for (const CNodeCombinedStats& stats : cachedNodeStats)
             mapNodeRows.emplace(stats.nodeStats.nodeid, row++);
     }
 

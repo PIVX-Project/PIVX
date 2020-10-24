@@ -37,6 +37,7 @@
 #include "net_processing.h"
 #include "policy/policy.h"
 #include "pow.h"
+#include "reverse_iterate.h"
 #include "script/sigcache.h"
 #include "spork.h"
 #include "sporkdb.h"
@@ -52,7 +53,6 @@
 
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/thread.hpp>
-#include <boost/foreach.hpp>
 #include <atomic>
 #include <queue>
 
@@ -2193,7 +2193,7 @@ static bool ActivateBestChainStep(CValidationState& state, CBlockIndex* pindexMo
         nHeight = nTargetHeight;
 
         // Connect new blocks.
-        BOOST_REVERSE_FOREACH (CBlockIndex* pindexConnect, vpindexToConnect) {
+        for (CBlockIndex* pindexConnect : reverse_iterate (vpindexToConnect)) {
             if (!ConnectTip(state, pindexConnect, (pindexConnect == pindexMostWork) ? pblock : std::shared_ptr<const CBlock>(), fAlreadyChecked, connectTrace)) {
                 if (state.IsInvalid()) {
                     // The block violates a consensus rule.
@@ -3550,7 +3550,7 @@ bool static LoadBlockIndexDB(std::string& strError)
         vSortedByHeight.emplace_back(pindex->nHeight, pindex);
     }
     std::sort(vSortedByHeight.begin(), vSortedByHeight.end());
-    for (const PAIRTYPE(int, CBlockIndex*) & item : vSortedByHeight) {
+    for (const std::pair<int, CBlockIndex*> & item : vSortedByHeight) {
         // Stop if shutdown was requested
         if (ShutdownRequested()) return false;
 

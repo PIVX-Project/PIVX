@@ -94,7 +94,7 @@ void RPCTypeCheckObj(const UniValue& o,
                   bool fAllowNull,
                   bool fStrict)
 {
-    for (const PAIRTYPE(std::string, UniValue::VType)& t : typesExpected) {
+    for (const std::pair<std::string, UniValue::VType>& t : typesExpected) {
         const UniValue& v = find_value(o, t.first);
         if (!fAllowNull && v.isNull())
             throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Missing %s", t.first));

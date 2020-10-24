@@ -319,7 +319,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
     int nAddresses = 0;
 
     // Pre-check input data for validity
-    Q_FOREACH (const SendCoinsRecipient& rcp, recipients) {
+    for (const SendCoinsRecipient& rcp : recipients) {
         if (rcp.paymentRequest.IsInitialized()) { // PaymentRequest...
             CAmount subtotal = 0;
             const payments::PaymentDetails& details = rcp.paymentRequest.getDetails();
@@ -465,7 +465,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& tran
         QList<SendCoinsRecipient> recipients = transaction.getRecipients();
 
         // Store PaymentRequests in wtx.vOrderForm in wallet.
-        Q_FOREACH (const SendCoinsRecipient& rcp, recipients) {
+        for (const SendCoinsRecipient& rcp : recipients) {
             if (rcp.paymentRequest.IsInitialized()) {
                 std::string key("PaymentRequest");
                 std::string value;
@@ -491,7 +491,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& tran
 
     // Add addresses / update labels that we've sent to to the address book,
     // and emit coinsSent signal for each recipient
-    Q_FOREACH (const SendCoinsRecipient& rcp, transaction.getRecipients()) {
+    for (const SendCoinsRecipient& rcp : transaction.getRecipients()) {
         // Don't touch the address book when we have a payment request
         if (!rcp.paymentRequest.IsInitialized()) {
             bool isStaking = false;
@@ -927,7 +927,7 @@ void WalletModel::loadReceiveRequests(std::vector<std::string>& vReceiveRequests
 {
     LOCK(wallet->cs_wallet);
     for (auto it = wallet->NewAddressBookIterator(); it.IsValid(); it.Next()) {
-        for (const PAIRTYPE(std::string, std::string) &item2 : it.GetValue().destdata)
+        for (const std::pair<std::string, std::string> &item2 : it.GetValue().destdata)
             if (item2.first.size() > 2 && item2.first.substr(0, 2) == "rr") // receive request
                 vReceiveRequests.push_back(item2.second);
     }

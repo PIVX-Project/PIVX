@@ -48,7 +48,7 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
     setCssProperty(lblTitles, "text-title-topbar");
     QFont font;
     font.setWeight(QFont::Light);
-    Q_FOREACH (QWidget* w, lblTitles) { w->setFont(font); }
+    for (QWidget* w : lblTitles) { w->setFont(font); }
 
     // Amount information top
     ui->widgetTopAmount->setVisible(false);

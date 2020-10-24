@@ -880,7 +880,7 @@ void CWallet::MarkDirty()
 {
     {
         LOCK(cs_wallet);
-        for (PAIRTYPE(const uint256, CWalletTx) & item : mapWallet)
+        for (std::pair<const uint256, CWalletTx> & item : mapWallet)
             item.second.MarkDirty();
     }
 }
@@ -1636,7 +1636,7 @@ void CWallet::ReacceptWalletTransactions(bool fFirstLoad)
     std::map<int64_t, CWalletTx*> mapSorted;
 
     // Sort pending wallet transactions based on their initial wallet insertion order
-    for (PAIRTYPE(const uint256, CWalletTx)& item: mapWallet) {
+    for (std::pair<const uint256, CWalletTx>& item: mapWallet) {
         const uint256& wtxid = item.first;
         CWalletTx& wtx = item.second;
         assert(wtx.GetHash() == wtxid);
@@ -1648,7 +1648,7 @@ void CWallet::ReacceptWalletTransactions(bool fFirstLoad)
     }
 
     // Try to add wallet transactions to memory pool
-    for (PAIRTYPE(const int64_t, CWalletTx*)& item: mapSorted)
+    for (std::pair<const int64_t, CWalletTx*>& item: mapSorted)
     {
         CWalletTx& wtx = *(item.second);
 
@@ -1784,14 +1784,14 @@ void CWallet::ResendWalletTransactions(CConnman* connman)
         LOCK(cs_wallet);
         // Sort them in chronological order
         std::multimap<unsigned int, CWalletTx*> mapSorted;
-        for (PAIRTYPE(const uint256, CWalletTx) & item : mapWallet) {
+        for (std::pair<const uint256, CWalletTx> & item : mapWallet) {
             CWalletTx& wtx = item.second;
             // Don't rebroadcast until it's had plenty of time that
             // it should have gotten in already by now.
             if (nTimeBestReceived - (int64_t)wtx.nTimeReceived > 5 * 60)
                 mapSorted.emplace(wtx.nTimeReceived, &wtx);
         }
-        for (PAIRTYPE(const unsigned int, CWalletTx*) & item : mapSorted) {
+        for (std::pair<const unsigned int, CWalletTx*> & item : mapSorted) {
             CWalletTx& wtx = *item.second;
             wtx.RelayWalletTransaction(connman);
         }
@@ -2636,7 +2636,7 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
                 }
 
 
-                for (PAIRTYPE(const CWalletTx*, unsigned int) pcoin : setCoins) {
+                for (std::pair<const CWalletTx*, unsigned int> pcoin : setCoins) {
                     if(pcoin.first->vout[pcoin.second].scriptPubKey.IsPayToColdStaking())
                         wtxNew.fStakeDelegationVoided = true;
                     CAmount nCredit = pcoin.first->vout[pcoin.second].nValue;
@@ -2721,13 +2721,13 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
                     reservekey.ReturnKey();
 
                 // Fill vin
-                for (const PAIRTYPE(const CWalletTx*, unsigned int) & coin : setCoins)
+                for (const std::pair<const CWalletTx*, unsigned int> & coin : setCoins)
                     txNew.vin.emplace_back(coin.first->GetHash(), coin.second);
 
                 // Sign
                 int nIn = 0;
                 CTransaction txNewConst(txNew);
-                for (const PAIRTYPE(const CWalletTx*, unsigned int) & coin : setCoins) {
+                for (const std::pair<const CWalletTx*, unsigned int> & coin : setCoins) {
                     bool signSuccess;
                     const CScript& scriptPubKey = coin.first->vout[coin.second].scriptPubKey;
                     SignatureData sigdata;
@@ -3135,7 +3135,7 @@ bool CWallet::DelAddressBook(const CTxDestination& address, const CChainParams::
 
         if (fFileBacked) {
             // Delete destdata tuples associated with address
-            for (const PAIRTYPE(std::string, std::string) & item : mapAddressBook[address].destdata) {
+            for (const std::pair<std::string, std::string> &item : mapAddressBook[address].destdata) {
                 CWalletDB(strWalletFile).EraseDestData(strAddress, item.first);
             }
         }
@@ -3239,7 +3239,7 @@ std::map<CTxDestination, CAmount> CWallet::GetAddressBalances()
 
     {
         LOCK(cs_wallet);
-        for (PAIRTYPE(uint256, CWalletTx) walletEntry : mapWallet) {
+        for (std::pair<uint256, CWalletTx> walletEntry : mapWallet) {
             CWalletTx* pcoin = &walletEntry.second;
 
             if (!IsFinalTx(*pcoin) || !pcoin->IsTrusted())
@@ -3281,7 +3281,7 @@ std::set<std::set<CTxDestination> > CWallet::GetAddressGroupings()
     std::set<std::set<CTxDestination> > groupings;
     std::set<CTxDestination> grouping;
 
-    for (PAIRTYPE(uint256, CWalletTx) walletEntry : mapWallet) {
+    for (std::pair<uint256, CWalletTx> walletEntry : mapWallet) {
         CWalletTx* pcoin = &walletEntry.second;
 
         if (pcoin->vin.size() > 0) {

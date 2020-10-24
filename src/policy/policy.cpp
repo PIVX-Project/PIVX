@@ -13,8 +13,6 @@
 #include "utilstrencodings.h"
 #include "validation.h"
 
-#include <boost/foreach.hpp>
-
 bool fIsBareMultisigStd = DEFAULT_PERMIT_BAREMULTISIG;
 
 /**

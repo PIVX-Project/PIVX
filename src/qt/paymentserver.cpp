@@ -131,7 +131,7 @@ void PaymentServer::LoadRootCAs(X509_STORE* _store)
 
     int nRootCerts = 0;
     const QDateTime currentTime = QDateTime::currentDateTime();
-    Q_FOREACH (const QSslCertificate& cert, certList) {
+    for (const QSslCertificate& cert : certList) {
         if (currentTime < cert.effectiveDate() || currentTime > cert.expiryDate()) {
             ReportInvalidCertificate(cert);
             continue;
@@ -228,7 +228,7 @@ void PaymentServer::ipcParseCommandLine(int argc, char* argv[])
 bool PaymentServer::ipcSendCommandLine()
 {
     bool fResult = false;
-    Q_FOREACH (const QString& r, savedPaymentRequests) {
+    for (const QString& r : savedPaymentRequests) {
         QLocalSocket* socket = new QLocalSocket();
         socket->connectToServer(ipcServerName(), QIODevice::WriteOnly);
         if (!socket->waitForConnected(BITCOIN_IPC_CONNECT_TIMEOUT)) {
@@ -345,7 +345,7 @@ void PaymentServer::uiReady()
     initNetManager();
 
     saveURIs = false;
-    Q_FOREACH (const QString& s, savedPaymentRequests) {
+    for (const QString& s : savedPaymentRequests) {
         handleURIOrFile(s);
     }
     savedPaymentRequests.clear();
@@ -497,7 +497,7 @@ bool PaymentServer::processPaymentRequest(PaymentRequestPlus& request, SendCoins
     QList<std::pair<CScript, CAmount> > sendingTos = request.getPayTo();
     QStringList addresses;
 
-    Q_FOREACH (const PAIRTYPE(CScript, CAmount) & sendingTo, sendingTos) {
+    for (const std::pair<CScript, CAmount> & sendingTo : sendingTos) {
         // Extract and check destination addresses
         CTxDestination dest;
         if (ExtractDestination(sendingTo.first, dest)) {
@@ -649,7 +649,7 @@ void PaymentServer::reportSslErrors(QNetworkReply* reply, const QList<QSslError>
     Q_UNUSED(reply);
 
     QString errString;
-    Q_FOREACH (const QSslError& err, errs) {
+    for (const QSslError& err : errs) {
         qWarning() << "PaymentServer::reportSslErrors : " << err;
         errString += err.errorString() + "\n";
     }

@@ -35,6 +35,7 @@
 #include "netbase.h"
 #include "net_processing.h"
 #include "policy/policy.h"
+#include "reverse_iterate.h"
 #include "rpc/server.h"
 #include "script/sigcache.h"
 #include "script/standard.h"
@@ -81,7 +82,6 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/interprocess/sync/file_lock.hpp>
 #include <boost/thread.hpp>
-#include <boost/foreach.hpp>
 
 #if ENABLE_ZMQ
 #include "zmq/zmqnotificationinterface.h"
@@ -1259,7 +1259,7 @@ bool AppInit2()
                 }
                 // Loop backward through backup files and keep the N newest ones (1 <= N <= 10)
                 int counter = 0;
-                BOOST_REVERSE_FOREACH (PAIRTYPE(const std::time_t, fs::path) file, folder_set) {
+                for (std::pair<const std::time_t, fs::path> file : reverse_iterate (folder_set)) {
                     counter++;
                     if (counter > nWalletBackups) {
                         // More than nWalletBackups backups: delete oldest one(s)
