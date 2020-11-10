@@ -12,7 +12,7 @@ $(package)_sha256_hash_freebsd=230bcf17e4383fba85d3c87fe25d17737459fe561a5f4668f
 # If a mapping is not present, we assume they are identical, unless $host_os is
 # "darwin", in which case we assume x86_64-apple-darwin.
 $(package)_rust_target_x86_64-w64-mingw32=x86_64-pc-windows-gnu
-$(package)_rust_target_i686-pc-linux-gnu=i686-unknown-linux-gnu
+$(package)_rust_target_i686-w64-mingw32=i686-unknown-linux-gnu
 $(package)_rust_target_riscv64-linux-gnu=riscv64gc-unknown-linux-gnu
 $(package)_rust_target_riscv64-unknown-linux-gnu=riscv64gc-unknown-linux-gnu
 $(package)_rust_target_x86_64-linux-gnu=x86_64-unknown-linux-gnu
