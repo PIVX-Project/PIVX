@@ -1,0 +1,290 @@
+# Copyright (c) 2018-2020 The Veil developers
+# Copyright (c) 2020 The PIVX developers
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+name: Github Actions CI for PIVX
+on: [push, pull_request]
+env:
+  SOURCE_ARTIFACT: source
+jobs:
+  create-source-distribution:
+    name: Create Source Distribution
+    runs-on: ubuntu-18.04
+    env:
+      ARTIFACT_DIR: source
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    # May need qt and protobuf to configure qt and include pivx-qt.1 in distribution
+    - name: Install Required Packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libtool bsdmainutils autotools-dev autoconf pkg-config automake python3
+        sudo apt-get install -y libssl-dev libgmp-dev libevent-dev libboost-all-dev libsodium-dev cargo
+        sudo apt-get install -y libqt5gui5 libqt5core5a libqt5dbus5 libqt5svg5-dev libqt5charts5-dev qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
+        sudo apt-get install -y software-properties-common
+        sudo add-apt-repository ppa:pivx/pivx
+        sudo apt-get update
+        sudo apt-get install -y libdb4.8-dev libdb4.8++-dev
+    - name: Create Distribution Tarball
+      run: |
+        ./autogen.sh
+        ./configure --with-incompatible-bdb
+        make dist
+    - name: Download Dependencies
+      run: make -C depends download
+    - name: Create Dependencies Tarball
+      run: tar -czf depends.tar.gz depends
+    - name: Prepare Files for Artifact
+      run: |
+        mkdir -p $ARTIFACT_DIR
+        mv depends.tar.gz pivx-*.tar.gz $ARTIFACT_DIR
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ env.SOURCE_ARTIFACT }}
+        path: ${{ env.ARTIFACT_DIR }}
+  build-x86_64-linux:
+    name: Build for x86 Linux 64bit
+    needs: create-source-distribution
+    runs-on: ubuntu-18.04
+    env:
+      ARTIFACT_DIR: x86_64-linux-binaries
+      TEST_LOG_ARTIFACT_DIR: test-logs
+    steps:
+    - name: Getting Source
+      uses: actions/download-artifact@v1
+      with:
+        name: ${{ env.SOURCE_ARTIFACT }}
+    - name: Extract Archives
+      run: |
+        tar -xzf depends.tar.gz
+        tar -xzf pivx-*.tar.gz --strip-components=1
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Install Required Packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-zmq
+    - name: Build Dependencies
+      run: make -C depends -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Build PIVX 
+      run: |
+        ./configure --disable-jni --enable-tests --with-comparison-tool=no --prefix=$(realpath depends/x86_64-pc-linux-gnu)
+        make -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Prepare Files for Artifact
+      run: |
+        mkdir -p $ARTIFACT_DIR
+        strip $SOURCE_ARTIFACT/src/{pivx-cli,pivx-tx,pivxd,qt/pivx-qt}
+        mv $SOURCE_ARTIFACT/src/{pivx-cli,pivx-tx,pivxd,qt/pivx-qt} $ARTIFACT_DIR
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ env.ARTIFACT_DIR }}
+        path: ${{ env.ARTIFACT_DIR }}
+  build-win64:
+    name: Build for Win64
+    needs: create-source-distribution
+    runs-on: ubuntu-18.04
+    env:
+      ARTIFACT_DIR: win64-binaries
+    steps:
+    - name: Getting Source
+      uses: actions/download-artifact@v1
+      with:
+        name: ${{ env.SOURCE_ARTIFACT }}
+    - name: Extract Archives
+      run: |
+        tar -xzf depends.tar.gz
+        tar -xzf pivx-*.tar.gz --strip-components=1
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Install Required Packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64
+    - name: Switch MinGW GCC and G++ to POSIX Threading
+      run: |
+        sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
+        sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+    - name: Build Dependencies
+      run: make -C depends -j$(nproc) HOST=x86_64-w64-mingw32
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Build PIVX
+      run: |
+        ./configure --disable-jni --prefix=$(realpath depends/x86_64-w64-mingw32) --disable-online-rust
+        make -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Prepare Files for Artifact
+      run: |
+        mkdir -p $ARTIFACT_DIR
+        strip $SOURCE_ARTIFACT/src/{pivx-cli.exe,pivx-tx.exe,pivxd.exe,qt/pivx-qt.exe}
+        mv $SOURCE_ARTIFACT/src/{pivx-cli.exe,pivx-tx.exe,pivxd.exe,qt/pivx-qt.exe} $ARTIFACT_DIR
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ env.ARTIFACT_DIR }}
+        path: ${{ env.ARTIFACT_DIR }}
+  build-osx64:
+    name: Build for MacOSX
+    needs: create-source-distribution
+    runs-on: ubuntu-18.04
+    env:
+      ARTIFACT_DIR: macosx-binaries
+    steps:
+    - name: Getting Source
+      uses: actions/download-artifact@v1
+      with:
+        name: ${{ env.SOURCE_ARTIFACT }}
+    - name: Extract Archives
+      run: |
+        tar -xzf depends.tar.gz
+        tar -xzf pivx-*.tar.gz --strip-components=1
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Install Required Packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-setuptools libcap-dev zlib1g-dev cmake
+    - name: Get macOS SDK
+      run: |
+        mkdir -p depends/sdk-sources
+        mkdir -p depends/SDKs
+        curl https://bitcoincore.org/depends-sources/sdks/MacOSX10.11.sdk.tar.gz -o depends/sdk-sources/MacOSX10.11.sdk.tar.gz
+        tar -C depends/SDKs -xf depends/sdk-sources/MacOSX10.11.sdk.tar.gz
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Build Dependencies
+      run: make -C depends HOST=x86_64-apple-darwin14 -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Build PIVX
+      run: |
+        ./configure --disable-jni --prefix=$(realpath depends/x86_64-apple-darwin14) --disable-online-rust
+        make -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Prepare Files for Artifact
+      run: |
+        mkdir -p $ARTIFACT_DIR
+        mv $SOURCE_ARTIFACT/src/{pivx-cli,pivx-tx,pivxd,qt/pivx-qt} $ARTIFACT_DIR
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ env.ARTIFACT_DIR }}
+        path: ${{ env.ARTIFACT_DIR }}
+  build-aarch64-linux:
+    name: Build for ARM Linux 64bit
+    needs: create-source-distribution
+    runs-on: ubuntu-18.04
+    env:
+      ARTIFACT_DIR: aarch64-linux-binaries
+    steps:
+    - name: Getting Source
+      uses: actions/download-artifact@v1
+      with:
+        name: ${{ env.SOURCE_ARTIFACT }}
+    - name: Extract Archives
+      run: |
+        tar -xzf depends.tar.gz
+        tar -xzf pivx-*.tar.gz --strip-components=1
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Install Required Packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-zmq libcap-dev cmake g++-aarch64-linux-gnu
+    - name: Build Dependencies
+      run: make -C depends HOST=aarch64-linux-gnu -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Build PIVX
+      run: |
+        ./configure --disable-jni --prefix=$(realpath depends/aarch64-linux-gnu) --disable-online-rust
+        make -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Prepare Files for Artifact
+      run: |
+        mkdir -p $ARTIFACT_DIR
+        mv $SOURCE_ARTIFACT/src/{pivx-cli,pivx-tx,pivxd,qt/pivx-qt} $ARTIFACT_DIR
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ env.ARTIFACT_DIR }}
+        path: ${{ env.ARTIFACT_DIR }}
+  build-arm-linux-gnueabihf:
+    name: Build for ARM Linux 32bit
+    needs: create-source-distribution
+    runs-on: ubuntu-18.04
+    env:
+      ARTIFACT_DIR: arm32-binaries
+    steps:
+    - name: Getting Source
+      uses: actions/download-artifact@v1
+      with:
+        name: ${{ env.SOURCE_ARTIFACT }}
+    - name: Extract Archives
+      run: |
+        tar -xzf depends.tar.gz
+        tar -xzf pivx-*.tar.gz --strip-components=1
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Install Required Packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++-arm-linux-gnueabihf libgmp-dev
+    - name: Build Dependencies
+      run: make -C depends -j$(nproc) HOST=arm-linux-gnueabihf
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Build PIVX
+      run: |
+        ./configure --disable-jni --prefix=$(realpath depends/arm-linux-gnueabihf) --enable-glibc-back-compat --enable-reduce-exports LDFLAGS=-static-libstdc++ --disable-online-rust
+        make -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Prepare Files for Artifact
+      run: |
+        mkdir -p $ARTIFACT_DIR
+        mv $SOURCE_ARTIFACT/src/{pivx-cli,pivx-tx,pivxd,qt/pivx-qt} $ARTIFACT_DIR
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ env.ARTIFACT_DIR }}
+        path: ${{ env.ARTIFACT_DIR }}
+  build-i686-linux32:
+    name: Build for x86 Linux 32bit
+    needs: create-source-distribution
+    runs-on: ubuntu-18.04
+    env:
+      ARTIFACT_DIR: i686-linux32-binaries
+    steps:
+    - name: Getting Source
+      uses: actions/download-artifact@v1
+      with:
+        name: ${{ env.SOURCE_ARTIFACT }}
+    - name: Extract Archives
+      run: |
+        tar -xzf depends.tar.gz
+        tar -xzf pivx-*.tar.gz --strip-components=1
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Install Required Packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libtool bsdmainutils autotools-dev autoconf pkg-config automake python3 python3-zmq
+        sudo apt-get install -y libssl-dev libgmp-dev libevent-dev libboost-all-dev libsodium-dev cargo
+        sudo apt-get install -y libqt5gui5 libqt5core5a libqt5dbus5 libqt5svg5-dev libqt5charts5-dev qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
+        sudo apt-get install -y software-properties-common
+        sudo add-apt-repository ppa:pivx/pivx
+        sudo apt-get update
+        sudo apt-get install -y libdb4.8-dev libdb4.8++-dev
+    - name: Build Dependencies
+      run: make -C depends -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Build PIVX
+      run: |
+        ./configure --disable-jni --prefix=$(realpath depends/i686-pc-linux-gnu)
+        make -j$(nproc)
+      working-directory: ${{ env.SOURCE_ARTIFACT }}
+    - name: Prepare Files for Artifact
+      run: |
+        mkdir -p $ARTIFACT_DIR
+        strip $SOURCE_ARTIFACT/src/{pivx-cli,pivx-tx,pivxd,qt/pivx-qt}
+        mv $SOURCE_ARTIFACT/src/{pivx-cli,pivx-tx,pivxd,qt/pivx-qt} $ARTIFACT_DIR
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: ${{ env.ARTIFACT_DIR }}
+        path: ${{ env.ARTIFACT_DIR }}
+
