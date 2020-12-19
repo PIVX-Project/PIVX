@@ -4148,18 +4148,18 @@ static const CRPCCommand commands[] =
     { "wallet",             "multisend",                &multisend,                false },
 
     /** Sapling functions */
-    { "wallet",             "getnewshieldaddress",         &getnewshieldaddress,          true  },
-    { "wallet",             "listshieldaddresses",         &listshieldaddresses,          false },
+    { "wallet",             "getnewshieldaddress",           &getnewshieldaddress,            true  },
+    { "wallet",             "listshieldaddresses",           &listshieldaddresses,            false },
     { "wallet",             "exportsaplingkey",              &exportsaplingkey,               true  },
     { "wallet",             "importsaplingkey",              &importsaplingkey,               true  },
     { "wallet",             "importsaplingviewingkey",       &importsaplingviewingkey,        true  },
     { "wallet",             "exportsaplingviewingkey",       &exportsaplingviewingkey,        true  },
-    { "wallet",             "getshieldbalance",            &getshieldbalance,             false },
-    { "wallet",             "listshieldunspent",           &listshieldunspent,            false },
-    { "wallet",             "rawshieldsendmany",           &rawshieldsendmany,            false },
-    { "wallet",             "shieldsendmany",              &shieldsendmany,               false },
-    { "wallet",             "listreceivedbyshieldaddress", &listreceivedbyshieldaddress,  false },
-    { "wallet",             "viewshieldtransaction",       &viewshieldtransaction,        false },
+    { "wallet",             "getshieldbalance",              &getshieldbalance,               false },
+    { "wallet",             "listshieldunspent",             &listshieldunspent,              false },
+    { "wallet",             "rawshieldsendmany",             &rawshieldsendmany,              false },
+    { "wallet",             "shieldsendmany",                &shieldsendmany,                 false },
+    { "wallet",             "listreceivedbyshieldaddress",   &listreceivedbyshieldaddress,    false },
+    { "wallet",             "viewshieldtransaction",         &viewshieldtransaction,          false },
     { "wallet",             "getsaplingnotescount",          &getsaplingnotescount,           false },
 
     /** Label functions (to replace non-balance account functions) */
