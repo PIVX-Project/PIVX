@@ -106,8 +106,8 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     result.pushKV("difficulty", GetDifficulty(blockindex));
     result.pushKV("chainwork", blockindex->nChainWork.GetHex());
     result.pushKV("acc_checkpoint", blockindex->nAccumulatorCheckpoint.GetHex());
-    // Sapling shielded pool value
-    result.pushKV("shielded_pool_value", ValuePoolDesc(blockindex->nChainSaplingValue, blockindex->nSaplingValue));
+    // Sapling shield pool value
+    result.pushKV("shield_pool_value", ValuePoolDesc(blockindex->nChainSaplingValue, blockindex->nSaplingValue));
     if (blockindex->pprev)
         result.pushKV("previousblockhash", blockindex->pprev->GetBlockHash().GetHex());
     CBlockIndex *pnext = chainActive.Next(blockindex);
@@ -594,7 +594,7 @@ UniValue getblockheader(const JSONRPCRequest& request)
             "  \"mediantime\" : ttt,    (numeric) The median block time in seconds since epoch (Jan 1 1970 GMT)\n"
             "  \"nonce\" : n,           (numeric) The nonce\n"
             "  \"bits\" : \"1d00ffff\", (string) The bits\n"
-            "  \"shielded_pool_value\": (object) Block shielded pool value\n"
+            "  \"shield_pool_value\": (object) Block shield pool value\n"
             "  {\n"
             "     \"chainValue\":        (numeric) Total value held by the Sapling circuit up to and including this block\n"
             "     \"valueDelta\":        (numeric) Change in value held by the Sapling circuit over this block\n"
@@ -650,8 +650,8 @@ UniValue getsupplyinfo(const JSONRPCRequest& request)
             "{\n"
             "  \"updateheight\" : n,       (numeric) The chain height when the transparent supply was updated\n"
             "  \"transparentsupply\" : n   (numeric) The sum of all spendable transaction outputs at height updateheight\n"
-            "  \"shieldedsupply\": n       (numeric) Chain tip shielded pool value\n"
-            "  \"totalsupply\": n          (numeric) The sum of transparentsupply and shieldedsupply\n"
+            "  \"shieldsupply\": n       (numeric) Chain tip shield pool value\n"
+            "  \"totalsupply\": n          (numeric) The sum of transparentsupply and shieldsupply\n"
             "}\n"
 
             "\nExamples:\n" +
@@ -669,9 +669,9 @@ UniValue getsupplyinfo(const JSONRPCRequest& request)
     const CAmount tSupply = MoneySupply.Get();
     ret.pushKV("updateheight", MoneySupply.GetCacheHeight());
     ret.pushKV("transparentsupply", ValueFromAmount(tSupply));
-    Optional<CAmount> shieldedPoolValue = WITH_LOCK(cs_main, return (chainActive.Tip() ? chainActive.Tip()->nChainSaplingValue : nullopt); );
-    ret.pushKV("shieldedsupply", ValuePoolDesc(shieldedPoolValue, nullopt)["chainValue"]);
-    const CAmount totalSupply = tSupply + (shieldedPoolValue ? *shieldedPoolValue : 0);
+    Optional<CAmount> shieldPoolValue = WITH_LOCK(cs_main, return (chainActive.Tip() ? chainActive.Tip()->nChainSaplingValue : nullopt); );
+    ret.pushKV("shieldsupply", ValuePoolDesc(shieldPoolValue, nullopt)["chainValue"]);
+    const CAmount totalSupply = tSupply + (shieldPoolValue ? *shieldPoolValue : 0);
     ret.pushKV("totalsupply", ValueFromAmount(totalSupply));
 
     return ret;
@@ -980,7 +980,7 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
             "  \"difficulty\": xxxxxx,     (numeric) the current difficulty\n"
             "  \"verificationprogress\": xxxx, (numeric) estimate of verification progress [0..1]\n"
             "  \"chainwork\": \"xxxx\"     (string) total amount of work in active chain, in hexadecimal\n"
-            "  \"shielded_pool_value\": (object) Chain tip shielded pool value\n"
+            "  \"shield_pool_value\": (object) Chain tip shield pool value\n"
             "  \"initial_block_downloading\" (boolean) whether the node is in initial block downloading state or not"
             "  {\n"
             "     \"chainValue\":        (numeric) Total value held by the Sapling circuit up to and including the chain tip\n"
@@ -1020,8 +1020,8 @@ UniValue getblockchaininfo(const JSONRPCRequest& request)
     obj.pushKV("difficulty", (double)GetDifficulty());
     obj.pushKV("verificationprogress", Checkpoints::GuessVerificationProgress(pChainTip));
     obj.pushKV("chainwork", pChainTip ? pChainTip->nChainWork.GetHex() : "");
-    // Sapling shielded pool value
-    obj.pushKV("shielded_pool_value", ValuePoolDesc(pChainTip->nChainSaplingValue, pChainTip->nSaplingValue));
+    // Sapling shield pool value
+    obj.pushKV("shield_pool_value", ValuePoolDesc(pChainTip->nChainSaplingValue, pChainTip->nSaplingValue));
     obj.pushKV("initial_block_downloading", IsInitialBlockDownload());
     UniValue softforks(UniValue::VARR);
     softforks.push_back(SoftForkDesc("bip65", 5, pChainTip));

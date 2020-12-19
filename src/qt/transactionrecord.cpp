@@ -164,7 +164,7 @@ bool TransactionRecord::decomposeCreditTransaction(const CWallet* wallet, const 
 
     if (wtx.hasSaplingData()) {
         auto sspkm = wallet->GetSaplingScriptPubKeyMan();
-        for (int i = 0; i < (int) wtx.sapData->vShieldedOutput.size(); ++i) {
+        for (int i = 0; i < (int) wtx.sapData->vShieldOutput.size(); ++i) {
             SaplingOutPoint out(sub.hash, i);
             auto opAddr = sspkm->GetOutPointAddress(wtx, out);
             if (opAddr) {
@@ -174,7 +174,7 @@ bool TransactionRecord::decomposeCreditTransaction(const CWallet* wallet, const 
                 }
 
                 sub.address = (opAddr) ? KeyIO::EncodePaymentAddress(*opAddr) : "";
-                sub.type = TransactionRecord::RecvWithShieldedAddress;
+                sub.type = TransactionRecord::RecvWithShieldAddress;
                 sub.credit = sspkm->GetOutPointValue(wtx, out);
                 sub.memo = sspkm->GetOutPointMemo(wtx, out);
                 sub.idx = i;
@@ -202,13 +202,13 @@ bool TransactionRecord::decomposeSendToSelfTransaction(const CWalletTx& wtx, con
             sub.address = EncodeDestination(address);
         }
     } else {
-        // we know that all of the inputs and outputs are mine and that have shielded data.
+        // we know that all of the inputs and outputs are mine and that have shield data.
         // Let's see if only have transparent inputs, so we know that this is a
         // transparent -> shield transaction
-        if (wtx.sapData->vShieldedSpend.empty()) {
-            sub.type = TransactionRecord::SendToSelfShieldedAddress;
-            sub.shieldedCredit = wtx.GetCredit(ISMINE_SPENDABLE_SHIELDED);
-            nChange += wtx.GetShieldedChange();
+        if (wtx.sapData->vShieldSpend.empty()) {
+            sub.type = TransactionRecord::SendToSelfShieldAddress;
+            sub.shieldCredit = wtx.GetCredit(ISMINE_SPENDABLE_SHIELD);
+            nChange += wtx.GetShieldChange();
 
             const auto& sspkm = wallet->GetSaplingScriptPubKeyMan();
             SaplingOutPoint out(sub.hash, 0);
@@ -218,7 +218,7 @@ bool TransactionRecord::decomposeSendToSelfTransaction(const CWalletTx& wtx, con
             }
             sub.memo = sspkm->GetOutPointMemo(wtx, out);
         } else {
-            // we know that the inputs are shielded now, let's see if
+            // we know that the inputs are shield now, let's see if
             // if we have transparent outputs. if we have then we are converting back coins,
             // from shield to transparent
             if (!wtx.vout.empty()) {
@@ -229,7 +229,7 @@ bool TransactionRecord::decomposeSendToSelfTransaction(const CWalletTx& wtx, con
                     sub.address = EncodeDestination(address);
                 }
                 // little hack to show the correct amount
-                sub.shieldedCredit = wtx.GetCredit(ISMINE_SPENDABLE_TRANSPARENT);
+                sub.shieldCredit = wtx.GetCredit(ISMINE_SPENDABLE_TRANSPARENT);
             } else {
                 // we know that the outputs are only shield, this is purely a change address tx.
                 // show only the fee.
@@ -245,17 +245,17 @@ bool TransactionRecord::decomposeSendToSelfTransaction(const CWalletTx& wtx, con
     return true;
 }
 
-bool TransactionRecord::decomposeShieldedDebitTransaction(const CWallet* wallet, const CWalletTx& wtx, CAmount nTxFee,
+bool TransactionRecord::decomposeShieldDebitTransaction(const CWallet* wallet, const CWalletTx& wtx, CAmount nTxFee,
                                                           bool involvesWatchAddress, QList<TransactionRecord>& parts)
 {
     // Return early if there are no outputs.
-    if (wtx.sapData->vShieldedOutput.empty()) {
+    if (wtx.sapData->vShieldOutput.empty()) {
         return false;
     }
 
     TransactionRecord sub(wtx.GetHash(), wtx.GetTxTime(), wtx.GetTotalSize());
     auto sspkm = wallet->GetSaplingScriptPubKeyMan();
-    for (int i = 0; i < (int) wtx.sapData->vShieldedOutput.size(); ++i) {
+    for (int i = 0; i < (int) wtx.sapData->vShieldOutput.size(); ++i) {
         SaplingOutPoint out(sub.hash, i);
         auto opAddr = sspkm->GetOutPointAddress(wtx, out);
         // skip change
@@ -264,7 +264,7 @@ bool TransactionRecord::decomposeShieldedDebitTransaction(const CWallet* wallet,
         }
         sub.idx = i;
         sub.involvesWatchAddress = involvesWatchAddress;
-        sub.type = TransactionRecord::SendToShielded;
+        sub.type = TransactionRecord::SendToShield;
         sub.address = KeyIO::EncodePaymentAddress(*opAddr);
         sub.memo = sspkm->GetOutPointMemo(wtx, out);
         CAmount nValue = sspkm->GetOutPointValue(wtx, out);
@@ -287,13 +287,13 @@ bool TransactionRecord::decomposeDebitTransaction(const CWallet* wallet, const C
                                                   QList<TransactionRecord>& parts)
 {
     // Return early if there are no outputs.
-    if (wtx.vout.empty() && wtx.sapData->vShieldedOutput.empty()) {
+    if (wtx.vout.empty() && wtx.sapData->vShieldOutput.empty()) {
         return false;
     }
 
-    // GetValueOut is the sum of transparent outs and negative sapValueBalance (shielded outs minus shielded spends).
-    // Therefore to get the sum of the whole outputs of the tx, must re-add the shielded inputs spent to it
-    CAmount nTxFee = nDebit - (wtx.GetValueOut() + wtx.GetDebit(ISMINE_SPENDABLE_SHIELDED | ISMINE_WATCH_ONLY_SHIELDED));
+    // GetValueOut is the sum of transparent outs and negative sapValueBalance (shield outs minus shield spends).
+    // Therefore to get the sum of the whole outputs of the tx, must re-add the shield inputs spent to it
+    CAmount nTxFee = nDebit - (wtx.GetValueOut() + wtx.GetDebit(ISMINE_SPENDABLE_SHIELD | ISMINE_WATCH_ONLY_SHIELD));
     unsigned int txSize = wtx.GetTotalSize();
     const uint256& txHash = wtx.GetHash();
     const int64_t txTime = wtx.GetTxTime();
@@ -342,32 +342,32 @@ bool TransactionRecord::decomposeDebitTransaction(const CWallet* wallet, const C
         parts.append(sub);
     }
 
-    // Decompose shielded debit
-    return decomposeShieldedDebitTransaction(wallet, wtx, nTxFee, involvesWatchAddress, parts);
+    // Decompose shield debit
+    return decomposeShieldDebitTransaction(wallet, wtx, nTxFee, involvesWatchAddress, parts);
 }
 
-// Check whether all the shielded inputs and outputs are from and send to this wallet
+// Check whether all the shield inputs and outputs are from and send to this wallet
 std::pair<bool, bool> areInputsAndOutputsFromAndToMe(const CWalletTx& wtx, SaplingScriptPubKeyMan* sspkm, bool& involvesWatchAddress)
 {
-    // Check if all the shielded spends are from me
-    bool allShieldedSpendsFromMe = true;
-    for (const auto& spend : wtx.sapData->vShieldedSpend) {
+    // Check if all the shield spends are from me
+    bool allShieldSpendsFromMe = true;
+    for (const auto& spend : wtx.sapData->vShieldSpend) {
         if (!sspkm->IsSaplingNullifierFromMe(spend.nullifier)) {
-            allShieldedSpendsFromMe = false;
+            allShieldSpendsFromMe = false;
             break;
         }
     }
 
-    // Check if all the shielded outputs are to me
-    bool allShieldedOutToMe = true;
-    for (int i = 0; i < (int) wtx.sapData->vShieldedOutput.size(); ++i) {
+    // Check if all the shield outputs are to me
+    bool allShieldOutToMe = true;
+    for (int i = 0; i < (int) wtx.sapData->vShieldOutput.size(); ++i) {
         SaplingOutPoint op(wtx.GetHash(), i);
         isminetype mine = sspkm->IsMine(wtx, op);
-        if (mine & ISMINE_WATCH_ONLY_SHIELDED) involvesWatchAddress = true;
-        if (mine != ISMINE_SPENDABLE_SHIELDED) allShieldedOutToMe = false;
+        if (mine & ISMINE_WATCH_ONLY_SHIELD) involvesWatchAddress = true;
+        if (mine != ISMINE_SPENDABLE_SHIELD) allShieldOutToMe = false;
     }
 
-    return std::make_pair(allShieldedSpendsFromMe, allShieldedOutToMe);
+    return std::make_pair(allShieldSpendsFromMe, allShieldOutToMe);
 }
 
 /*
@@ -425,13 +425,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet* 
         if (fAllToMe > mine) fAllToMe = mine;
     }
 
-    // Check whether all the shielded spends/outputs are from or to me.
-    bool allShieldedSpendsFromMe, allShieldedOutToMe = true;
-    std::tie(allShieldedSpendsFromMe, allShieldedOutToMe) =
+    // Check whether all the shield spends/outputs are from or to me.
+    bool allShieldSpendsFromMe, allShieldOutToMe = true;
+    std::tie(allShieldSpendsFromMe, allShieldOutToMe) =
             areInputsAndOutputsFromAndToMe(wtx, sspkm, involvesWatchAddress);
 
     // Check if this tx is purely a payment to self.
-    if (fAllFromMe && fAllToMe && allShieldedOutToMe && allShieldedSpendsFromMe) {
+    if (fAllFromMe && fAllToMe && allShieldOutToMe && allShieldSpendsFromMe) {
         // Single record for sendToSelf.
         if (decomposeSendToSelfTransaction(wtx, nCredit, nDebit, involvesWatchAddress, parts, wallet)) {
             return parts;

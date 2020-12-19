@@ -13,30 +13,30 @@
 struct TxValues
 {
     CAmount transInTotal{0};
-    CAmount shieldedInTotal{0};
+    CAmount shieldInTotal{0};
     CAmount transOutTotal{0};
-    CAmount shieldedOutTotal{0};
+    CAmount shieldOutTotal{0};
     CAmount target{0};
 };
 
-OperationResult SaplingOperation::checkTxValues(TxValues& txValues, bool isFromtAddress, bool isFromShielded)
+OperationResult SaplingOperation::checkTxValues(TxValues& txValues, bool isFromtAddress, bool isFromShield)
 {
-    assert(!isFromtAddress || txValues.shieldedInTotal == 0);
-    assert(!isFromShielded || txValues.transInTotal == 0);
+    assert(!isFromtAddress || txValues.shieldInTotal == 0);
+    assert(!isFromShield || txValues.transInTotal == 0);
 
     if (isFromtAddress && (txValues.transInTotal < txValues.target)) {
         return errorOut(strprintf("Insufficient transparent funds, have %s, need %s",
                                   FormatMoney(txValues.transInTotal), FormatMoney(txValues.target)));
     }
 
-    if (isFromShielded && (txValues.shieldedInTotal < txValues.target)) {
-        return errorOut(strprintf("Insufficient shielded funds, have %s, need %s",
-                                  FormatMoney(txValues.shieldedInTotal), FormatMoney(txValues.target)));
+    if (isFromShield && (txValues.shieldInTotal < txValues.target)) {
+        return errorOut(strprintf("Insufficient shield funds, have %s, need %s",
+                                  FormatMoney(txValues.shieldInTotal), FormatMoney(txValues.target)));
     }
     return OperationResult(true);
 }
 
-OperationResult loadKeysFromShieldedFrom(const libzcash::SaplingPaymentAddress &addr,
+OperationResult loadKeysFromShieldFrom(const libzcash::SaplingPaymentAddress &addr,
                                          libzcash::SaplingExpandedSpendingKey& expskOut,
                                          uint256& ovkOut)
 {
@@ -57,16 +57,16 @@ TxValues calculateTarget(const std::vector<SendManyRecipient>& recipients, const
         if (t.IsTransparent())
             txValues.transOutTotal += t.transparentRecipient->nValue;
         else
-            txValues.shieldedOutTotal += t.shieldedRecipient->amount;
+            txValues.shieldOutTotal += t.shieldRecipient->amount;
     }
-    txValues.target = txValues.shieldedOutTotal + txValues.transOutTotal + fee;
+    txValues.target = txValues.shieldOutTotal + txValues.transOutTotal + fee;
     return txValues;
 }
 
 OperationResult SaplingOperation::build()
 {
     bool isFromtAddress = false;
-    bool isFromShielded = false;
+    bool isFromShield = false;
 
     if (coinControl) {
         // if coin control was selected it overrides any other defined configuration
@@ -78,36 +78,36 @@ OperationResult SaplingOperation::build()
             if (coin.outPoint.isTransparent) {
                 isFromtAddress = true;
             } else {
-                isFromShielded = true;
+                isFromShield = true;
             }
         }
     } else {
         // Regular flow
         isFromtAddress = fromAddress.isFromTAddress();
-        isFromShielded = fromAddress.isFromSapAddress();
+        isFromShield = fromAddress.isFromSapAddress();
 
-        if (!isFromtAddress && !isFromShielded) {
+        if (!isFromtAddress && !isFromShield) {
             isFromtAddress = selectFromtaddrs;
-            isFromShielded = selectFromShield;
+            isFromShield = selectFromShield;
         }
     }
 
     // It needs to have a from.
-    if (!isFromtAddress && !isFromShielded) {
+    if (!isFromtAddress && !isFromShield) {
         return errorOut("From address parameter missing");
     }
 
     // Cannot be from both
-    if (isFromtAddress && isFromShielded) {
-        return errorOut("From address type cannot be shielded and transparent");
+    if (isFromtAddress && isFromShield) {
+        return errorOut("From address type cannot be shield and transparent");
     }
 
     if (recipients.empty()) {
         return errorOut("No recipients");
     }
 
-    if (isFromShielded && mindepth == 0) {
-        return errorOut("Minconf cannot be zero when sending from shielded address");
+    if (isFromShield && mindepth == 0) {
+        return errorOut("Minconf cannot be zero when sending from shield address");
     }
 
     CAmount nFeeRet = (fee > 0 ? fee : minRelayTxFee.GetFeePerK());
@@ -117,7 +117,7 @@ OperationResult SaplingOperation::build()
         TxValues txValues = calculateTarget(recipients, nFeeRet);
         OperationResult result(false);
         uint256 ovk;
-        if (isFromShielded) {
+        if (isFromShield) {
             // Load and select notes to spend, then return the ovk of the first note input of the transaction
             if (!(result = loadUnspentNotes(txValues, ovk))) {
                 return result;
@@ -134,9 +134,9 @@ OperationResult SaplingOperation::build()
             if (t.IsTransparent()) {
                 txBuilder.AddTransparentOutput(*t.transparentRecipient);
             } else {
-                const auto& address = t.shieldedRecipient->address;
-                const CAmount& amount = t.shieldedRecipient->amount;
-                const std::string& memo = t.shieldedRecipient->memo;
+                const auto& address = t.shieldRecipient->address;
+                const CAmount& amount = t.shieldRecipient->amount;
+                const std::string& memo = t.shieldRecipient->memo;
                 assert(IsValidPaymentAddress(address));
                 std::array<unsigned char, ZC_MEMO_SIZE> vMemo = {};
                 if (!(result = GetMemoFromString(memo, vMemo)))
@@ -146,13 +146,13 @@ OperationResult SaplingOperation::build()
         }
 
         // If from address is a taddr, select UTXOs to spend
-        // note: when spending coinbase utxos, you can only specify a single shielded addr as the change must go somewhere
-        // and if there are multiple shielded addrs, we don't know where to send it.
+        // note: when spending coinbase utxos, you can only specify a single shield addr as the change must go somewhere
+        // and if there are multiple shield addrs, we don't know where to send it.
         if (isFromtAddress && !(result = loadUtxos(txValues))) {
             return result;
         }
 
-        const auto& retCalc = checkTxValues(txValues, isFromtAddress, isFromShielded);
+        const auto& retCalc = checkTxValues(txValues, isFromtAddress, isFromShield);
         if (!retCalc) return retCalc;
 
         // Set change address if we are using transparent funds
@@ -180,22 +180,22 @@ OperationResult SaplingOperation::build()
         finalTx = *opTx;
 
         // Now check fee
-        bool isShielded = finalTx.IsShieldedTx();
-        const CAmount& nFeeNeeded = isShielded ? GetShieldedTxMinFee(finalTx) :
+        bool isShield = finalTx.IsShieldTx();
+        const CAmount& nFeeNeeded = isShield ? GetShieldTxMinFee(finalTx) :
                                                  GetMinRelayFee(finalTx.GetTotalSize(), false);
         if (nFeeNeeded <= nFeeRet) {
             // Check that the fee is not too high.
-            CAmount nMaxFee = nFeeNeeded * (isShielded ? 100 : 10000);
+            CAmount nMaxFee = nFeeNeeded * (isShield ? 100 : 10000);
             if (nFeeRet > nMaxFee) {
                 return errorOut(strprintf("The transaction fee is too high: %s > %s", FormatMoney(nFeeRet), FormatMoney(100 * nFeeNeeded)));
             }
             // Done, enough fee included
             LogPrint(BCLog::SAPLING, "%s: spending %s to send %s with fee %s (min required %s)\n", __func__ , FormatMoney(txValues.target),
-                    FormatMoney(txValues.shieldedOutTotal + txValues.transOutTotal), FormatMoney(nFeeRet), FormatMoney(nFeeNeeded));
+                    FormatMoney(txValues.shieldOutTotal + txValues.transOutTotal), FormatMoney(nFeeRet), FormatMoney(nFeeNeeded));
             LogPrint(BCLog::SAPLING, "%s: transparent input: %s (to choose from)\n", __func__ , FormatMoney(txValues.transInTotal));
-            LogPrint(BCLog::SAPLING, "%s: private input: %s (to choose from)\n", __func__ , FormatMoney(txValues.shieldedInTotal));
+            LogPrint(BCLog::SAPLING, "%s: private input: %s (to choose from)\n", __func__ , FormatMoney(txValues.shieldInTotal));
             LogPrint(BCLog::SAPLING, "%s: transparent output: %s\n", __func__ , FormatMoney(txValues.transOutTotal));
-            LogPrint(BCLog::SAPLING, "%s: private output: %s\n", __func__ , FormatMoney(txValues.shieldedOutTotal));
+            LogPrint(BCLog::SAPLING, "%s: private output: %s\n", __func__ , FormatMoney(txValues.shieldOutTotal));
             break;
         }
         if (fee > 0 && nFeeNeeded > fee) {
@@ -389,7 +389,7 @@ static CacheCheckResult CheckCachedNote(const SaplingNoteEntry& t, const libzcas
 
 OperationResult SaplingOperation::loadUnspentNotes(TxValues& txValues, uint256& ovk)
 {
-    shieldedInputs.clear();
+    shieldInputs.clear();
     auto sspkm = pwalletMain->GetSaplingScriptPubKeyMan();
     // if we already have selected the notes, let's directly set them.
     bool hasCoinControl = coinControl && coinControl->HasSelected();
@@ -404,26 +404,26 @@ OperationResult SaplingOperation::loadUnspentNotes(TxValues& txValues, uint256& 
             vSaplingOutpoints.emplace_back(outpoint.outPoint.hash, outpoint.outPoint.n);
         }
 
-        sspkm->GetNotes(vSaplingOutpoints, shieldedInputs);
+        sspkm->GetNotes(vSaplingOutpoints, shieldInputs);
 
-        if (shieldedInputs.empty()) {
+        if (shieldInputs.empty()) {
             return errorOut("Insufficient funds, no available notes to spend");
         }
     } else {
         // If we don't have coinControl then let's find the notes
-        sspkm->GetFilteredNotes(shieldedInputs, fromAddress.fromSapAddr, mindepth);
-        if (shieldedInputs.empty()) {
+        sspkm->GetFilteredNotes(shieldInputs, fromAddress.fromSapAddr, mindepth);
+        if (shieldInputs.empty()) {
             // Just to notify the user properly, check if the wallet has notes with less than the min depth
-            std::vector<SaplingNoteEntry> _shieldedInputs;
-            sspkm->GetFilteredNotes(_shieldedInputs, fromAddress.fromSapAddr, 0);
-            return errorOut(_shieldedInputs.empty() ?
+            std::vector<SaplingNoteEntry> _shieldInputs;
+            sspkm->GetFilteredNotes(_shieldInputs, fromAddress.fromSapAddr, 0);
+            return errorOut(_shieldInputs.empty() ?
                     "Insufficient funds, no available notes to spend" :
-                    "Insufficient funds, shielded PIV need at least 5 confirmations");
+                    "Insufficient funds, shield PIV need at least 5 confirmations");
         }
     }
 
     // sort in descending order, so big notes appear first
-    std::sort(shieldedInputs.begin(), shieldedInputs.end(),
+    std::sort(shieldInputs.begin(), shieldInputs.end(),
               [](const SaplingNoteEntry& i, const SaplingNoteEntry& j) -> bool {
                   return i.note.value() > j.note.value();
               });
@@ -432,14 +432,14 @@ OperationResult SaplingOperation::loadUnspentNotes(TxValues& txValues, uint256& 
     std::vector<SaplingOutPoint> ops;
     std::vector<libzcash::SaplingNote> notes;
     std::vector<libzcash::SaplingExpandedSpendingKey> spendingKeys;
-    txValues.shieldedInTotal = 0;
-    CAmount dustThreshold = GetShieldedDustThreshold(minRelayTxFee);
+    txValues.shieldInTotal = 0;
+    CAmount dustThreshold = GetShieldDustThreshold(minRelayTxFee);
     CAmount dustChange = -1;
-    for (const auto& t : shieldedInputs) {
+    for (const auto& t : shieldInputs) {
         // Get the spending key for the address.
         libzcash::SaplingExpandedSpendingKey expsk;
         uint256 ovkIn;
-        auto resLoadKeys = loadKeysFromShieldedFrom(t.address, expsk, ovkIn);
+        auto resLoadKeys = loadKeysFromShieldFrom(t.address, expsk, ovkIn);
         if (!resLoadKeys) return resLoadKeys;
 
         // If the noteData is not properly cached, for whatever reason,
@@ -463,11 +463,11 @@ OperationResult SaplingOperation::loadUnspentNotes(TxValues& txValues, uint256& 
         spendingKeys.emplace_back(expsk);
         ops.emplace_back(t.op);
         notes.emplace_back(t.note);
-        txValues.shieldedInTotal += t.note.value();
-        if (!hasCoinControl && txValues.shieldedInTotal >= txValues.target) {
+        txValues.shieldInTotal += t.note.value();
+        if (!hasCoinControl && txValues.shieldInTotal >= txValues.target) {
             // coin control selection by pass this check, uses all the selected notes.
             // Select another note if there is change less than the dust threshold.
-            dustChange = txValues.shieldedInTotal - txValues.target;
+            dustChange = txValues.shieldInTotal - txValues.target;
             if (dustChange == 0 || dustChange >= dustThreshold) {
                 break;
             }
@@ -475,9 +475,9 @@ OperationResult SaplingOperation::loadUnspentNotes(TxValues& txValues, uint256& 
     }
 
     // Not enough funds
-    if (txValues.shieldedInTotal < txValues.target) {
-                return errorOut(strprintf("Insufficient shielded funds, have %s, need %s",
-                                  FormatMoney(txValues.shieldedInTotal), FormatMoney(txValues.target)));
+    if (txValues.shieldInTotal < txValues.target) {
+                return errorOut(strprintf("Insufficient shield funds, have %s, need %s",
+                                  FormatMoney(txValues.shieldInTotal), FormatMoney(txValues.target)));
     }
 
     // Fetch Sapling anchor and witnesses
@@ -531,11 +531,11 @@ OperationResult CheckTransactionSize(std::vector<SendManyRecipient>& recipients,
             nTransparentOuts++;
             continue;
         }
-        if (IsValidPaymentAddress(t.shieldedRecipient->address)) {
-            mtx.sapData->vShieldedOutput.emplace_back();
+        if (IsValidPaymentAddress(t.shieldRecipient->address)) {
+            mtx.sapData->vShieldOutput.emplace_back();
         } else {
-            return errorOut(strprintf("invalid recipient shielded address %s",
-                    KeyIO::EncodePaymentAddress(t.shieldedRecipient->address)));
+            return errorOut(strprintf("invalid recipient shield address %s",
+                    KeyIO::EncodePaymentAddress(t.shieldRecipient->address)));
         }
     }
     CTransaction tx(mtx);

@@ -62,7 +62,7 @@ public:
     QString ownerAddress;
 
     // Quick flag to not have to check the address type more than once.
-    bool isShieldedAddr{false};
+    bool isShieldAddr{false};
 
     // Amount
     CAmount amount;
@@ -164,8 +164,8 @@ public:
 
     interfaces::WalletBalances GetWalletBalances() { return m_cached_balances; };
 
-    CAmount getBalance(const CCoinControl* coinControl = nullptr, bool fIncludeDelegated = true, bool fUnlockedOnly = false, bool fIncludeShielded = true) const;
-    CAmount getUnlockedBalance(const CCoinControl* coinControl = nullptr, bool fIncludeDelegated = true, bool fIncludeShielded = true) const;
+    CAmount getBalance(const CCoinControl* coinControl = nullptr, bool fIncludeDelegated = true, bool fUnlockedOnly = false, bool fIncludeShield = true) const;
+    CAmount getUnlockedBalance(const CCoinControl* coinControl = nullptr, bool fIncludeDelegated = true, bool fIncludeShield = true) const;
     CAmount getLockedBalance() const;
     bool haveWatchOnly() const;
     CAmount getDelegatedBalance() const;
@@ -182,11 +182,11 @@ public:
     // Check address for validity and type (whether cold staking address or not)
     bool validateAddress(const QString& address, bool fStaking);
     // Check address for validity and type (whether cold staking address or not),
-    // plus return isShielded = true if the parsed address is a valid shielded address.
-    bool validateAddress(const QString& address, bool fStaking, bool& isShielded);
+    // plus return isShield = true if the parsed address is a valid shield address.
+    bool validateAddress(const QString& address, bool fStaking, bool& isShield);
 
-    // Return the address from where the shielded spend is taking the funds from (if possible)
-    Optional<QString> getShieldedAddressFromSpendDesc(const CWalletTx* wtx, int index);
+    // Return the address from where the shield spend is taking the funds from (if possible)
+    Optional<QString> getShieldAddressFromSpendDesc(const CWalletTx* wtx, int index);
 
     // Return status record for SendCoins, contains error id + information
     struct SendCoinsReturn {
@@ -212,8 +212,8 @@ public:
     // Send coins to a list of recipients
     SendCoinsReturn sendCoins(WalletModelTransaction& transaction);
 
-    // Prepare shielded transaction.
-    OperationResult PrepareShieldedTransaction(WalletModelTransaction* modelTransaction,
+    // Prepare shield transaction.
+    OperationResult PrepareShieldTransaction(WalletModelTransaction* modelTransaction,
                                                             bool fromTransparent,
                                                             const CCoinControl* coinControl = nullptr);
 
@@ -271,8 +271,8 @@ public:
      */
     PairResult getNewStakingAddress(Destination& ret, std::string label = "") const;
 
-    //! Return a new shielded address.
-    PairResult getNewShieldedAddress(QString& shieldedAddrRet, std::string strLabel = "");
+    //! Return a new shield address.
+    PairResult getNewShieldAddress(QString& shieldAddrRet, std::string strLabel = "");
 
     bool whitelistAddressFromColdStaking(const QString &addressStr);
     bool blacklistAddressFromColdStaking(const QString &address);
@@ -282,7 +282,7 @@ public:
 
     bool isMine(const CWDestination& address);
     bool isMine(const QString& addressStr);
-    bool IsShieldedDestination(const CWDestination& address);
+    bool IsShieldDestination(const CWDestination& address);
     bool isUsed(CTxDestination address);
     bool getMNCollateralCandidate(COutPoint& outPoint);
     bool isSpent(const COutPoint& outpoint) const;

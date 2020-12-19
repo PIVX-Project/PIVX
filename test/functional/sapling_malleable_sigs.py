@@ -31,12 +31,12 @@ class MalleableSigsTest(PivxTestFramework):
         node.generate(2)
         assert_equal(node.getblockcount(), 202)
 
-        z_addr = node.getnewshieldedaddress()
+        z_addr = node.getnewshieldaddress()
         shield_to = [{"address": z_addr, "amount": Decimal('10')}]
 
         # Create rawtx shielding 10 PIV
         self.log.info("Shielding 10 PIV...")
-        rawtx = node.rawshieldedsendmany("from_transparent", shield_to)["hex"]
+        rawtx = node.rawshieldsendmany("from_transparent", shield_to)["hex"]
         self.log.info("Raw tx created")
 
         # Creating malleated tx

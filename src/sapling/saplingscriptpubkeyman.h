@@ -57,7 +57,7 @@ public:
     Optional<CAmount> amount{nullopt};
 
     /**
-     * Cached shielded address
+     * Cached shield address
      * It will be loaded the first time that the note is decrypted (when the tx is added to the wallet)
      */
      Optional<libzcash::SaplingPaymentAddress> address{nullopt};
@@ -245,7 +245,7 @@ public:
             const std::vector<unsigned char> &vchCryptedSecret);
     //! Returns true if the wallet contains the spending key
     bool HaveSpendingKeyForPaymentAddress(const libzcash::SaplingPaymentAddress &zaddr) const;
-    //! Returns true if the wallet contains the spending and viewing key for the shielded address
+    //! Returns true if the wallet contains the spending and viewing key for the shield address
     bool PaymentAddressBelongsToWallet(const libzcash::SaplingPaymentAddress &zaddr) const;
 
     //! Adds spending key to the store, without saving it to disk (used by LoadWallet)
@@ -262,7 +262,7 @@ public:
             const libzcash::SaplingIncomingViewingKey &ivk);
     bool AddSaplingSpendingKey(const libzcash::SaplingExtendedSpendingKey &sk);
 
-    //! Return the full viewing key for the shielded address
+    //! Return the full viewing key for the shield address
     Optional<libzcash::SaplingExtendedFullViewingKey> GetViewingKeyForPaymentAddress(
             const libzcash::SaplingPaymentAddress &addr) const;
 
@@ -298,7 +298,7 @@ public:
                           bool ignoreLocked=true) const;
 
 
-    //! Return the address from where the shielded spend is taking the funds from (if possible)
+    //! Return the address from where the shield spend is taking the funds from (if possible)
     Optional<libzcash::SaplingPaymentAddress> GetAddressFromInputIfPossible(const CWalletTx* wtx, int index) const;
 
     //! Whether the nullifier is from this wallet
@@ -318,20 +318,20 @@ public:
             libzcash::SaplingNotePlaintext,
             libzcash::SaplingPaymentAddress>> TryToRecoverNote(const CWalletTx& tx, const SaplingOutPoint& op);
 
-    //! Return true if the wallet can decrypt & spend the shielded output.
+    //! Return true if the wallet can decrypt & spend the shield output.
     isminetype IsMine(const CWalletTx& wtx, const SaplingOutPoint& op) const;
-    //! Return the shielded address of a specific outpoint of wallet transaction
+    //! Return the shield address of a specific outpoint of wallet transaction
     Optional<libzcash::SaplingPaymentAddress> GetOutPointAddress(const CWalletTx& tx, const SaplingOutPoint& op) const;
-    //! Return the shielded value of a specific outpoint of wallet transaction
+    //! Return the shield value of a specific outpoint of wallet transaction
     CAmount GetOutPointValue(const CWalletTx& tx, const SaplingOutPoint& op) const;
     //! Return the memo value of a specific outpoint of wallet transaction
     Optional<std::string> GetOutPointMemo(const CWalletTx& tx, const SaplingOutPoint& op) const;
-    //! Return the shielded credit of the tx
+    //! Return the shield credit of the tx
     CAmount GetCredit(const CWalletTx& tx, const isminefilter& filter, const bool fUnspent = false) const;
-    //! Return the shielded debit of the tx.
+    //! Return the shield debit of the tx.
     CAmount GetDebit(const CTransaction& tx, const isminefilter& filter) const;
-    //! Return the shielded change of the tx
-    CAmount GetShieldedChange(const CWalletTx& wtx) const;
+    //! Return the shield change of the tx
+    CAmount GetShieldChange(const CWalletTx& wtx) const;
 
     //! Check whether an specific output is change or not.
     bool IsNoteSaplingChange(const SaplingOutPoint& op, libzcash::SaplingPaymentAddress address) const;

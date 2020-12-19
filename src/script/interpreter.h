@@ -91,7 +91,7 @@ bool CheckSignatureEncoding(const std::vector<unsigned char> &vchSig, unsigned i
 
 struct PrecomputedTransactionData
 {
-    uint256 hashPrevouts, hashSequence, hashOutputs, hashShieldedSpends, hashShieldedOutputs;
+    uint256 hashPrevouts, hashSequence, hashOutputs, hashShieldSpends, hashShieldOutputs;
 
     PrecomputedTransactionData(const CTransaction& tx);
 };

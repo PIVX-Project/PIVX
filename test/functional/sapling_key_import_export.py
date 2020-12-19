@@ -21,8 +21,8 @@ class SaplingkeyImportExportTest (PivxTestFramework):
         [alice, bob, charlie, david, miner] = self.nodes
 
         # the sender loses 'amount' plus fee; to_addr receives exactly 'amount'
-        def shielded_send(from_node, from_addr, to_addr, amount):
-            txid = from_node.shieldedsendmany(from_addr,
+        def shield_send(from_node, from_addr, to_addr, amount):
+            txid = from_node.shieldsendmany(from_addr,
                                         [{"address": to_addr, "amount": Decimal(amount)}], 1)
             self.sync_all()
             miner.generate(1)
@@ -31,7 +31,7 @@ class SaplingkeyImportExportTest (PivxTestFramework):
 
         def verify_utxos(node, amts, shield_addr):
             amts.sort(reverse=True)
-            txs = node.listreceivedbyshieldedaddress(shield_addr)
+            txs = node.listreceivedbyshieldaddress(shield_addr)
             txs.sort(key=lambda x: x["amount"], reverse=True)
 
             try:
@@ -46,7 +46,7 @@ class SaplingkeyImportExportTest (PivxTestFramework):
                 raise
 
         def get_private_balance(node):
-            return node.getshieldedbalance()
+            return node.getshieldbalance()
 
         # Seed Alice with some funds
         alice.generate(10)
@@ -56,11 +56,11 @@ class SaplingkeyImportExportTest (PivxTestFramework):
         fromAddress = alice.listunspent()[0]['address']
         amountTo = 10 * 250 - 1
         # Shield Alice's coinbase funds to her shield_addr
-        alice_addr = alice.getnewshieldedaddress()
-        txid = shielded_send(alice, fromAddress, alice_addr, amountTo)
+        alice_addr = alice.getnewshieldaddress()
+        txid = shield_send(alice, fromAddress, alice_addr, amountTo)
 
         # Now get a pristine address for receiving transfers:
-        bob_addr = bob.getnewshieldedaddress()
+        bob_addr = bob.getnewshieldaddress()
         verify_utxos(bob, [], bob_addr)
         # TODO: Verify that charlie doesn't have funds in addr
         # verify_utxos(charlie, [])
@@ -75,14 +75,14 @@ class SaplingkeyImportExportTest (PivxTestFramework):
 
         self.log.info("Sending pre-export txns...")
         for amount in amounts[0:2]:
-            shielded_send(alice, alice_addr, bob_addr, amount)
+            shield_send(alice, alice_addr, bob_addr, amount)
 
         self.log.info("Exporting privkey from bob...")
         bob_privkey = bob.exportsaplingkey(bob_addr)
 
         self.log.info("Sending post-export txns...")
         for amount in amounts[2:4]:
-            shielded_send(alice, alice_addr, bob_addr, amount)
+            shield_send(alice, alice_addr, bob_addr, amount)
 
         verify_utxos(bob, amounts[:4], bob_addr)
         # verify_utxos(charlie, [])
@@ -103,7 +103,7 @@ class SaplingkeyImportExportTest (PivxTestFramework):
 
         self.log.info("Sending post-import txns...")
         for amount in amounts[4:]:
-            shielded_send(alice, alice_addr, bob_addr, amount)
+            shield_send(alice, alice_addr, bob_addr, amount)
 
         verify_utxos(bob, amounts, bob_addr)
         verify_utxos(charlie, amounts, ipk_addr["address"])
@@ -116,19 +116,19 @@ class SaplingkeyImportExportTest (PivxTestFramework):
         # At generated shield_addr, receive PIV, and send PIV back out. bob -> alice
         for amount in amounts[:2]:
             print("Sending amount from bob to alice: ", amount)
-            txid = shielded_send(bob, bob_addr, alice_addr, amount)
-            bob_fee += Decimal(bob.viewshieldedtransaction(txid)['fee'])
+            txid = shield_send(bob, bob_addr, alice_addr, amount)
+            bob_fee += Decimal(bob.viewshieldtransaction(txid)['fee'])
 
         bob_balance = sum(amounts[2:]) - bob_fee
 
-        assert_equal(bob.getshieldedbalance(bob_addr), bob_balance)
+        assert_equal(bob.getshieldbalance(bob_addr), bob_balance)
 
         # importsaplingkey onto new node "david" (blockchain rescan, default or True?)
         d_ipk_addr = david.importsaplingkey(bob_privkey)
 
         # Check if amt bob spent is deducted for charlie and david
-        assert_equal(charlie.getshieldedbalance(ipk_addr["address"]), bob_balance)
-        assert_equal(david.getshieldedbalance(d_ipk_addr["address"]), bob_balance)
+        assert_equal(charlie.getshieldbalance(ipk_addr["address"]), bob_balance)
+        assert_equal(david.getshieldbalance(d_ipk_addr["address"]), bob_balance)
 
 if __name__ == '__main__':
     SaplingkeyImportExportTest().main()

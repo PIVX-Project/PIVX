@@ -66,7 +66,7 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)
     TxToUniv(tx, uint256(), entry);
 
     // Sapling
-    if (pwalletMain && tx.IsShieldedTx()) {
+    if (pwalletMain && tx.IsShieldTx()) {
         // Add information that only this wallet knows about the transaction if is possible
         if (pwalletMain->HasSaplingSPKM()) {
             std::vector<libzcash::SaplingPaymentAddress> addresses =
@@ -75,7 +75,7 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry)
             for (const auto& addr : addresses) {
                 addrs.push_back(KeyIO::EncodePaymentAddress(addr));
             }
-            entry.pushKV("shielded_addresses", addrs);
+            entry.pushKV("shield_addresses", addrs);
         }
     }
 
@@ -155,7 +155,7 @@ UniValue getrawtransaction(const JSONRPCRequest& request)
             "     }\n"
             "     ,...\n"
             "  ],\n"
-            "  \"shielded_addresses\"      (json array of string) the shielded addresses involved in this transaction if possible (only for shielded transactions and the tx owner/viewer)\n"
+            "  \"shield_addresses\"      (json array of string) the shield addresses involved in this transaction if possible (only for shield transactions and the tx owner/viewer)\n"
             "  \"extraPayloadSize\" : n    (numeric) Size of extra payload. Only present if it's a special TX\n"
             "  \"extraPayload\" : \"hex\"  (string) Hex encoded extra payload data. Only present if it's a special TX\n"
             "  \"blockhash\" : \"hash\",   (string) the block hash\n"

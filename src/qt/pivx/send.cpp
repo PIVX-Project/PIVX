@@ -76,7 +76,7 @@ SendWidget::SendWidget(PIVXGUI* parent) :
 
     // Shield coins
     ui->btnShieldCoins->setTitleClassAndText("btn-title-grey", tr("Shield Coins"));
-    ui->btnShieldCoins->setSubTitleClassAndText("text-subtitle", tr("Convert all transparent coins into shielded coins"));
+    ui->btnShieldCoins->setSubTitleClassAndText("text-subtitle", tr("Convert all transparent coins into shield coins"));
 
     connect(ui->pushButtonFee, &QPushButton::clicked, this, &SendWidget::onChangeCustomFeeClicked);
     connect(ui->btnCoinControl, &OptionButton::clicked, this, &SendWidget::onCoinControlClicked);
@@ -157,10 +157,10 @@ void SendWidget::refreshAmounts()
     } else {
         // Wallet's unlocked balance.
         totalAmount = isTransparent ? (walletModel->getUnlockedBalance(nullptr, fDelegationsChecked, false) - total)
-                                    : (walletModel->GetWalletBalances().shielded_balance - total);
+                                    : (walletModel->GetWalletBalances().shield_balance - total);
         ui->labelTitleTotalRemaining->setText(tr("Unlocked remaining"));
     }
-    QString type = isTransparent ? "transparent" : "shielded";
+    QString type = isTransparent ? "transparent" : "shield";
     ui->labelAmountRemaining->setText(
             GUIUtil::formatBalance(
                     totalAmount,
@@ -353,20 +353,20 @@ void SendWidget::onSendClicked()
         return;
 
     QList<SendCoinsRecipient> recipients;
-    bool hasShieldedOutput = false;
+    bool hasShieldOutput = false;
 
     for (SendMultiRow* entry : entries) {
         // TODO: Check UTXO splitter here..
         // Validate send..
         if (entry && entry->validate()) {
             auto recipient = entry->getValue();
-            bool isShielded = recipient.isShieldedAddr;
-            if (!hasShieldedOutput) hasShieldedOutput = isShielded;
-            if (!recipient.message.isEmpty() && !isShielded) {
+            bool isShield = recipient.isShieldAddr;
+            if (!hasShieldOutput) hasShieldOutput = isShield;
+            if (!recipient.message.isEmpty() && !isShield) {
                 // memo set for transparent address
                 if (!ask(tr("Warning!"),
                          tr("Cannot send memo to address\n%1\n\n"
-                            "Encrypted memo messages are available only for shielded recipients.\n\n"
+                            "Encrypted memo messages are available only for shield recipients.\n\n"
                             "Do you wish to proceed without memo?\n").arg(recipient.address))) {
                     return;
                 } else {
@@ -386,22 +386,22 @@ void SendWidget::onSendClicked()
         return;
     }
 
-    ProcessSend(recipients, hasShieldedOutput);
+    ProcessSend(recipients, hasShieldOutput);
 }
 
-void SendWidget::ProcessSend(QList<SendCoinsRecipient>& recipients, bool hasShieldedOutput,
+void SendWidget::ProcessSend(QList<SendCoinsRecipient>& recipients, bool hasShieldOutput,
                              const std::function<bool(QList<SendCoinsRecipient>&)>& func)
 {
     // First check SPORK_20 (before unlock)
-    bool isShieldedTx = hasShieldedOutput || !isTransparent;
-    if (isShieldedTx) {
+    bool isShieldTx = hasShieldOutput || !isTransparent;
+    if (isShieldTx) {
         if (!walletModel->isSaplingEnforced()) {
-            inform(tr("Cannot perform shielded operations, v5 upgrade isn't being enforced yet!"));
+            inform(tr("Cannot perform shield operations, v5 upgrade isn't being enforced yet!"));
             return;
         }
 
         if (walletModel->isSaplingInMaintenance()) {
-            inform(tr("Sapling Protocol temporarily in maintenance. Shielded transactions disabled (SPORK 20)"));
+            inform(tr("Sapling Protocol temporarily in maintenance. Shield transactions disabled (SPORK 20)"));
             return;
         }
     }
@@ -422,7 +422,7 @@ void SendWidget::ProcessSend(QList<SendCoinsRecipient>& recipients, bool hasShie
         return;
     }
     ptrModelTx = new WalletModelTransaction(recipients);
-    ptrModelTx->useV2 = isShieldedTx;
+    ptrModelTx->useV2 = isShieldTx;
 
     // Prepare tx
     window->showHide(true);
@@ -450,10 +450,10 @@ void SendWidget::ProcessSend(QList<SendCoinsRecipient>& recipients, bool hasShie
     processingResult = false;
 }
 
-OperationResult SendWidget::prepareShielded(WalletModelTransaction* currentTransaction, bool fromTransparent)
+OperationResult SendWidget::prepareShield(WalletModelTransaction* currentTransaction, bool fromTransparent)
 {
     bool hasCoinsOrNotesSelected = coinControlDialog && coinControlDialog->coinControl && coinControlDialog->coinControl->HasSelected();
-    return walletModel->PrepareShieldedTransaction(currentTransaction,
+    return walletModel->PrepareShieldTransaction(currentTransaction,
                                                    fromTransparent,
                                                    hasCoinsOrNotesSelected ? coinControlDialog->coinControl : nullptr);
 }
@@ -534,7 +534,7 @@ void SendWidget::run(int type)
             isProcessing = true;
             OperationResult result(false);
             if ((result = ptrModelTx->useV2 ?
-                        prepareShielded(ptrModelTx, isTransparent) :
+                        prepareShield(ptrModelTx, isTransparent) :
                         prepareTransparent(ptrModelTx)
                         )) {
                 processingResult = true;
@@ -669,12 +669,12 @@ void SendWidget::onCoinControlClicked()
 void SendWidget::onShieldCoinsClicked()
 {
     if (!walletModel->isSaplingEnforced()) {
-        inform(tr("Cannot perform shielded operations, v5 upgrade isn't being enforced yet!"));
+        inform(tr("Cannot perform shield operations, v5 upgrade isn't being enforced yet!"));
         return;
     }
 
     auto balances = walletModel->GetWalletBalances();
-    CAmount availableBalance = balances.balance - balances.shielded_balance - walletModel->getLockedBalance();
+    CAmount availableBalance = balances.balance - balances.shield_balance - walletModel->getLockedBalance();
     if (walletModel && availableBalance > 0) {
 
         // Calculate the required fee first. TODO future: Unify this code with the code in coincontroldialog into the model.
@@ -687,19 +687,19 @@ void SendWidget::onShieldCoinsClicked()
         }
         nBytesInputs += OUTPUTDESCRIPTION_SIZE;
         nBytesInputs += (BINDINGSIG_SIZE + 8);
-        // (plus at least 2 bytes for shielded in/outs len sizes)
+        // (plus at least 2 bytes for shield in/outs len sizes)
         nBytesInputs += 2;
         // ExtraPayload size for special txes. For now 1 byte for nullopt.
         nBytesInputs += 1;
         // nVersion, nType, nLockTime and vin/vout len sizes
         nBytesInputs += 10;
-        CAmount nPayFee = GetMinRelayFee(nBytesInputs, false) * DEFAULT_SHIELDEDTXFEE_K;
+        CAmount nPayFee = GetMinRelayFee(nBytesInputs, false) * DEFAULT_SHIELDTXFEE_K;
 
         // load recipient
         QList<SendCoinsRecipient> recipients;
         SendCoinsRecipient recipient;
         recipient.amount = availableBalance - nPayFee;
-        recipient.isShieldedAddr = true;
+        recipient.isShieldAddr = true;
         recipients.append(recipient); // address is added later on, when the wallet is unlocked
 
         // Ask if the user want to do it
@@ -715,7 +715,7 @@ void SendWidget::onShieldCoinsClicked()
         // Process spending
         ProcessSend(recipients, true, [this](QList<SendCoinsRecipient>& recipients) {
             QString strAddress;
-            auto res = walletModel->getNewShieldedAddress(strAddress, "");
+            auto res = walletModel->getNewShieldAddress(strAddress, "");
             // Check for generation errors
             if (!res.result) {
                 inform(tr("Error generating address to shield PIVs"));
@@ -737,7 +737,7 @@ void SendWidget::setCoinControlPayAmounts()
     QMutableListIterator<SendMultiRow*> it(entries);
     while (it.hasNext()) {
         const auto& entry = it.next();
-        coinControlDialog->addPayAmount(entry->getAmountValue(), entry->getValue().isShieldedAddr);
+        coinControlDialog->addPayAmount(entry->getAmountValue(), entry->getValue().isShieldAddr);
     }
 }
 
@@ -761,7 +761,7 @@ void SendWidget::onPIVSelected(bool _isTransparent)
 
     if (!isTransparent && !walletModel->isSaplingEnforced()) {
         ui->pushLeft->setChecked(true);
-        inform(tr("Cannot perform shielded operations, v5 upgrade isn't being enforced yet!"));
+        inform(tr("Cannot perform shield operations, v5 upgrade isn't being enforced yet!"));
         return;
     }
 
@@ -779,7 +779,7 @@ void SendWidget::onContactsClicked(SendMultiRow* entry)
     }
 
     int contactsSize = walletModel->getAddressTableModel()->sizeSend() +
-                        walletModel->getAddressTableModel()->sizeShieldedSend();
+                        walletModel->getAddressTableModel()->sizeShieldSend();
     if (contactsSize == 0) {
         inform(tr("No contacts available, you can go to the contacts screen and add some there!"));
         return;
@@ -794,7 +794,7 @@ void SendWidget::onContactsClicked(SendMultiRow* entry)
                     height,
                     this
         );
-        menuContacts->setWalletModel(walletModel, {AddressTableModel::Send, AddressTableModel::ShieldedSend});
+        menuContacts->setWalletModel(walletModel, {AddressTableModel::Send, AddressTableModel::ShieldSend});
         connect(menuContacts, &ContactsDropdown::contactSelected, [this](QString address, QString label) {
             if (focusedEntry) {
                 if (label != "(no label)")

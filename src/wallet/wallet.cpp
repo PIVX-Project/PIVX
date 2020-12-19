@@ -162,7 +162,7 @@ PairResult CWallet::getNewAddress(CTxDestination& ret, const std::string address
 
 int64_t CWallet::GetKeyCreationTime(const CWDestination& dest)
 {
-    auto shieldDest = Standard::GetShieldedDestination(dest);
+    auto shieldDest = Standard::GetShieldDestination(dest);
     auto transpDest = Standard::GetTransparentDestination(dest);
     return shieldDest ? GetKeyCreationTime(*shieldDest) : transpDest ? GetKeyCreationTime(*transpDest) : 0;
 }
@@ -765,7 +765,7 @@ void CWallet::AddToSpends(const uint256& wtxid)
         AddToSpends(txin.prevout, wtxid);
 
     if (CanSupportFeature(FEATURE_SAPLING) && thisTx.sapData) {
-        for (const SpendDescription &spend : thisTx.sapData->vShieldedSpend) {
+        for (const SpendDescription &spend : thisTx.sapData->vShieldSpend) {
             GetSaplingScriptPubKeyMan()->AddToSaplingSpends(spend.nullifier, wtxid);
         }
     }
@@ -1037,11 +1037,11 @@ bool CWallet::FindNotesDataAndAddMissingIVKToKeystore(const CTransaction& tx, Op
 
 void CWallet::AddExternalNotesDataToTx(CWalletTx& wtx) const
 {
-    if (HasSaplingSPKM() && wtx.IsShieldedTx()) {
+    if (HasSaplingSPKM() && wtx.IsShieldTx()) {
         const uint256& txId = wtx.GetHash();
         // Add the external outputs.
         SaplingOutPoint op {txId, 0};
-        for (unsigned int i = 0; i < wtx.sapData->vShieldedOutput.size(); i++) {
+        for (unsigned int i = 0; i < wtx.sapData->vShieldOutput.size(); i++) {
             op.n = i;
             if (wtx.mapSaplingNoteData.count(op)) continue;     // internal output
             auto recovered = GetSaplingScriptPubKeyMan()->TryToRecoverNote(wtx, op);
@@ -1108,7 +1108,7 @@ bool CWallet::AddToWalletIfInvolvingMe(const CTransaction& tx, const uint256& bl
             }
 
             CWalletTx wtx(this, tx);
-            if (wtx.IsShieldedTx()) {
+            if (wtx.IsShieldTx()) {
                 if (saplingNoteData && !saplingNoteData->empty()) {
                     wtx.SetSaplingNoteData(*saplingNoteData);
                 }
@@ -1264,8 +1264,8 @@ void CWallet::MarkAffectedTransactionsDirty(const CTransaction& tx)
     }
 
     // Sapling
-    if (HasSaplingSPKM() && tx.IsShieldedTx()) {
-        for (const SpendDescription &spend : tx.sapData->vShieldedSpend) {
+    if (HasSaplingSPKM() && tx.IsShieldTx()) {
+        for (const SpendDescription &spend : tx.sapData->vShieldSpend) {
             uint256 nullifier = spend.nullifier;
             if (m_sspk_man->mapSaplingNullifiersToNotes.count(nullifier) &&
                 mapWallet.count(m_sspk_man->mapSaplingNullifiersToNotes[nullifier].hash)) {
@@ -1405,7 +1405,7 @@ bool CWalletTx::IsAmountCached(AmountType type, const isminefilter& filter) cons
 //! filter decides which addresses will count towards the debit
 CAmount CWalletTx::GetDebit(const isminefilter& filter) const
 {
-    if (vin.empty() && (sapData && sapData->vShieldedSpend.empty())) {
+    if (vin.empty() && (sapData && sapData->vShieldSpend.empty())) {
         return 0;
     }
 
@@ -1422,8 +1422,8 @@ CAmount CWalletTx::GetDebit(const isminefilter& filter) const
     if (filter & ISMINE_SPENDABLE_DELEGATED) {
         debit += GetCachableAmount(DEBIT, ISMINE_SPENDABLE_DELEGATED);
     }
-    if (filter & ISMINE_SPENDABLE_SHIELDED) {
-        debit += GetCachableAmount(DEBIT, ISMINE_SPENDABLE_SHIELDED);
+    if (filter & ISMINE_SPENDABLE_SHIELD) {
+        debit += GetCachableAmount(DEBIT, ISMINE_SPENDABLE_SHIELD);
     }
 
     return debit;
@@ -1455,8 +1455,8 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter, bool recalculate) const
     if (filter & ISMINE_SPENDABLE_DELEGATED) {
         credit += GetCachableAmount(CREDIT, ISMINE_SPENDABLE_DELEGATED, recalculate);
     }
-    if (filter & ISMINE_SPENDABLE_SHIELDED) {
-        credit += GetCachableAmount(CREDIT, ISMINE_SPENDABLE_SHIELDED, recalculate);
+    if (filter & ISMINE_SPENDABLE_SHIELD) {
+        credit += GetCachableAmount(CREDIT, ISMINE_SPENDABLE_SHIELD, recalculate);
     }
     return credit;
 }
@@ -1478,7 +1478,7 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const isminefilter& filter
 
     // Avoid caching ismine for NO or ALL cases (could remove this check and simplify in the future).
     bool allow_cache = filter == ISMINE_SPENDABLE || filter == ISMINE_WATCH_ONLY ||
-            filter == ISMINE_SPENDABLE_SHIELDED || filter == ISMINE_WATCH_ONLY_SHIELDED;
+            filter == ISMINE_SPENDABLE_SHIELD || filter == ISMINE_WATCH_ONLY_SHIELD;
 
     // Must wait until coinbase/coinstake is safely deep enough in the chain before valuing it
     if (GetBlocksToMaturity() > 0)
@@ -1489,8 +1489,8 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const isminefilter& filter
     }
 
     CAmount nCredit = 0;
-    // If the filter is only for shielded amounts, do not calculate the regular outputs
-    if (filter != ISMINE_SPENDABLE_SHIELDED && filter != ISMINE_WATCH_ONLY_SHIELDED) {
+    // If the filter is only for shield amounts, do not calculate the regular outputs
+    if (filter != ISMINE_SPENDABLE_SHIELD && filter != ISMINE_WATCH_ONLY_SHIELD) {
 
         const uint256& hashTx = GetHash();
         for (unsigned int i = 0; i < vout.size(); i++) {
@@ -1505,8 +1505,8 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache, const isminefilter& filter
     }
 
     if (pwallet->HasSaplingSPKM()) {
-        // Can calculate the shielded available balance.
-        if (filter & ISMINE_SPENDABLE_SHIELDED || filter & ISMINE_WATCH_ONLY_SHIELDED) {
+        // Can calculate the shield available balance.
+        if (filter & ISMINE_SPENDABLE_SHIELD || filter & ISMINE_WATCH_ONLY_SHIELD) {
             nCredit += pwallet->GetSaplingScriptPubKeyMan()->GetCredit(*this, filter, true);
         }
     }
@@ -1593,7 +1593,7 @@ void CWalletTx::GetAmounts(std::list<COutputEntry>& listReceived,
 
     if (isFromMyTaddr) {// debit>0 means we signed/sent this transaction
         CAmount nValueOut = GetValueOut(); // transasparent outputs plus the negative Sapling valueBalance
-        CAmount nValueIn = GetShieldedValueIn();
+        CAmount nValueIn = GetShieldValueIn();
         nFee = nDebit - nValueOut + nValueIn;
 
         // If we sent utxos from this transaction, create output for value taken from (negative valueBalance)
@@ -1915,14 +1915,14 @@ CAmount CWallet::loopTxsBalance(std::function<void(const uint256&, const CWallet
     return nTotal;
 }
 
-CAmount CWallet::GetAvailableBalance(bool fIncludeDelegated, bool fIncludeShielded) const
+CAmount CWallet::GetAvailableBalance(bool fIncludeDelegated, bool fIncludeShield) const
 {
     isminefilter filter;
-    if (fIncludeDelegated && fIncludeShielded) {
+    if (fIncludeDelegated && fIncludeShield) {
         filter = ISMINE_SPENDABLE_ALL;
     } else if (fIncludeDelegated) {
         filter = ISMINE_SPENDABLE_TRANSPARENT;
-    } else if (fIncludeShielded) {
+    } else if (fIncludeShield) {
         filter = ISMINE_SPENDABLE_NO_DELEGATED;
     } else {
         filter = ISMINE_SPENDABLE;
@@ -2074,15 +2074,15 @@ CAmount CWallet::GetLegacyBalance(const isminefilter& filter, int minDepth) cons
 }
 
 // Sapling
-CAmount CWallet::GetAvailableShieldedBalance(bool fUseCache) const
+CAmount CWallet::GetAvailableShieldBalance(bool fUseCache) const
 {
-    isminefilter filter = ISMINE_SPENDABLE_SHIELDED;
+    isminefilter filter = ISMINE_SPENDABLE_SHIELD;
     return GetAvailableBalance(filter, fUseCache);
 };
 
-CAmount CWallet::GetUnconfirmedShieldedBalance() const
+CAmount CWallet::GetUnconfirmedShieldBalance() const
 {
-    return GetUnconfirmedBalance(ISMINE_SPENDABLE_SHIELDED);
+    return GetUnconfirmedBalance(ISMINE_SPENDABLE_SHIELD);
 };
 
 void CWallet::GetAvailableP2CSCoins(std::vector<COutput>& vCoins) const {
@@ -3464,7 +3464,7 @@ std::set<CTxDestination> CWallet::GetLabelAddresses(const std::string& label) co
     LOCK(cs_wallet);
     std::set<CTxDestination> result;
     for (const auto& item : mapAddressBook) {
-        if (item.second.isShielded()) continue;
+        if (item.second.isShield()) continue;
         const auto& address = boost::get<CTxDestination>(item.first);
         const std::string& strName = item.second.name;
         if (strName == label)
@@ -4383,8 +4383,8 @@ bool CWallet::IsFromMe(const CTransaction& tx) const
         return true;
     }
 
-    if (tx.IsShieldedTx()) {
-        for (const SpendDescription& spend : tx.sapData->vShieldedSpend) {
+    if (tx.IsShieldTx()) {
+        for (const SpendDescription& spend : tx.sapData->vShieldSpend) {
             if (m_sspk_man->IsSaplingNullifierFromMe(spend.nullifier)) {
                 return true;
             }
@@ -4403,8 +4403,8 @@ CAmount CWallet::GetDebit(const CTransaction& tx, const isminefilter& filter) co
             throw std::runtime_error("CWallet::GetDebit() : value out of range");
     }
 
-    // Shielded debit
-    if (filter & ISMINE_SPENDABLE_SHIELDED || filter & ISMINE_WATCH_ONLY_SHIELDED) {
+    // Shield debit
+    if (filter & ISMINE_SPENDABLE_SHIELD || filter & ISMINE_WATCH_ONLY_SHIELD) {
         if (tx.hasSaplingData()) {
             nDebit += m_sspk_man->GetDebit(tx, filter);
         }
@@ -4420,8 +4420,8 @@ CAmount CWallet::GetCredit(const CWalletTx& tx, const isminefilter& filter) cons
         nCredit += GetCredit(tx.vout[i], filter);
     }
 
-    // Shielded credit
-    if (filter & ISMINE_SPENDABLE_SHIELDED || filter & ISMINE_WATCH_ONLY_SHIELDED) {
+    // Shield credit
+    if (filter & ISMINE_SPENDABLE_SHIELD || filter & ISMINE_WATCH_ONLY_SHIELD) {
         if (tx.hasSaplingData()) {
             nCredit += m_sspk_man->GetCredit(tx, filter, false);
         }
@@ -4464,11 +4464,11 @@ int CWallet::GetVersion()
 
 libzcash::SaplingPaymentAddress CWallet::GenerateNewSaplingZKey(std::string label) {
     if (!m_sspk_man->IsEnabled()) {
-        throw std::runtime_error("Cannot generate shielded addresses. Start with -upgradewallet in order to upgrade a non-HD wallet to HD and Sapling features");
+        throw std::runtime_error("Cannot generate shield addresses. Start with -upgradewallet in order to upgrade a non-HD wallet to HD and Sapling features");
     }
 
     auto address = m_sspk_man->GenerateNewSaplingZKey();
-    SetAddressBook(address, label, AddressBook::AddressBookPurpose::SHIELDED_RECEIVE);
+    SetAddressBook(address, label, AddressBook::AddressBookPurpose::SHIELD_RECEIVE);
     return address;
 }
 
@@ -4534,8 +4534,8 @@ void CWalletTx::Init(const CWallet* pwalletIn)
     fChangeCached = false;
     nChangeCached = 0;
     fStakeDelegationVoided = false;
-    fShieldedChangeCached = false;
-    nShieldedChangeCached = 0;
+    fShieldChangeCached = false;
+    nShieldChangeCached = 0;
     nOrderPos = -1;
 }
 
@@ -4600,8 +4600,8 @@ void CWalletTx::MarkDirty()
     m_amounts[AVAILABLE_CREDIT].Reset();
     nChangeCached = 0;
     fChangeCached = false;
-    nShieldedChangeCached = 0;
-    fShieldedChangeCached = false;
+    nShieldChangeCached = 0;
+    fShieldChangeCached = false;
     fStakeDelegationVoided = false;
 }
 
@@ -4615,7 +4615,7 @@ void CWalletTx::SetSaplingNoteData(mapSaplingNoteData_t &noteData)
 {
     mapSaplingNoteData.clear();
     for (const std::pair<SaplingOutPoint, SaplingNoteData> nd : noteData) {
-        if (nd.first.n < sapData->vShieldedOutput.size()) {
+        if (nd.first.n < sapData->vShieldOutput.size()) {
             mapSaplingNoteData[nd.first] = nd.second;
         } else {
             throw std::logic_error("CWalletTx::SetSaplingNoteData(): Invalid note");
@@ -4633,7 +4633,7 @@ Optional<std::pair<
         return nullopt;
     }
 
-    auto output = this->sapData->vShieldedOutput[op.n];
+    auto output = this->sapData->vShieldOutput[op.n];
     auto nd = this->mapSaplingNoteData.at(op);
 
     auto maybe_pt = libzcash::SaplingNotePlaintext::decrypt(
@@ -4656,7 +4656,7 @@ Optional<std::pair<
         libzcash::SaplingPaymentAddress>> CWalletTx::RecoverSaplingNote(
         SaplingOutPoint op, std::set<uint256>& ovks) const
 {
-    auto output = this->sapData->vShieldedOutput[op.n];
+    auto output = this->sapData->vShieldOutput[op.n];
 
     for (auto ovk : ovks) {
         auto outPt = libzcash::SaplingOutgoingPlaintext::decrypt(
@@ -4699,14 +4699,14 @@ CAmount CWalletTx::GetChange() const
     return nChangeCached;
 }
 
-CAmount CWalletTx::GetShieldedChange() const
+CAmount CWalletTx::GetShieldChange() const
 {
-    if (fShieldedChangeCached) {
-        return nShieldedChangeCached;
+    if (fShieldChangeCached) {
+        return nShieldChangeCached;
     }
-    nShieldedChangeCached = pwallet->GetSaplingScriptPubKeyMan()->GetShieldedChange(*this);
-    fShieldedChangeCached = true;
-    return nShieldedChangeCached;
+    nShieldChangeCached = pwallet->GetSaplingScriptPubKeyMan()->GetShieldChange(*this);
+    fShieldChangeCached = true;
+    return nShieldChangeCached;
 }
 
 bool CWalletTx::IsFromMe(const isminefilter& filter) const
@@ -4714,9 +4714,9 @@ bool CWalletTx::IsFromMe(const isminefilter& filter) const
     return (GetDebit(filter) > 0);
 }
 
-CAmount CWalletTx::GetShieldedAvailableCredit(bool fUseCache) const
+CAmount CWalletTx::GetShieldAvailableCredit(bool fUseCache) const
 {
-    return GetAvailableCredit(fUseCache, ISMINE_SPENDABLE_SHIELDED);
+    return GetAvailableCredit(fUseCache, ISMINE_SPENDABLE_SHIELD);
 }
 
 const CTxDestination* CAddressBookIterator::GetCTxDestKey()
@@ -4724,7 +4724,7 @@ const CTxDestination* CAddressBookIterator::GetCTxDestKey()
     return boost::get<CTxDestination>(&it->first);
 }
 
-const libzcash::SaplingPaymentAddress* CAddressBookIterator::GetShieldedDestKey()
+const libzcash::SaplingPaymentAddress* CAddressBookIterator::GetShieldDestKey()
 {
     return boost::get<libzcash::SaplingPaymentAddress>(&it->first);
 }

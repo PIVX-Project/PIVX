@@ -23,7 +23,7 @@ def timed(f):
   elapsed = time.time() - start
   return ret, elapsed
 
-MAX_SHIELDED_BLOCKSIZE = 750000
+MAX_SHIELD_BLOCKSIZE = 750000
 
 class SaplingFillBlockTest(PivxTestFramework):
 
@@ -67,14 +67,14 @@ class SaplingFillBlockTest(PivxTestFramework):
         _, elapsed = timed(lambda: self.sync_all())
         bsize = alice.getblock(bhash, True)["size"]
         self.log.info("Peers synced in %d seconds. Block size: %d" % (elapsed, bsize))
-        # Only shielded txes in mempool. Block size must be below
-        # MAX_SHIELDED_BLOCKSIZE + 513 (header + coinbase + coinstake)
-        assert_greater_than(MAX_SHIELDED_BLOCKSIZE + 513, bsize)
+        # Only shield txes in mempool. Block size must be below
+        # MAX_SHIELD_BLOCKSIZE + 513 (header + coinbase + coinstake)
+        assert_greater_than(MAX_SHIELD_BLOCKSIZE + 513, bsize)
 
-    def send_shielded(self, node, n_txes, from_address, shield_to):
+    def send_shield(self, node, n_txes, from_address, shield_to):
         txids = []
         for i in range(n_txes):
-            txids.append(node.shieldedsendmany(from_address, shield_to))
+            txids.append(node.shieldsendmany(from_address, shield_to))
             if (i + 1) % 200 == 0:
                 self.log.info("...%d Transactions created..." % (i + 1))
         return txids
@@ -89,7 +89,7 @@ class SaplingFillBlockTest(PivxTestFramework):
         sync_blocks(self.nodes)
         assert_equal(self.nodes[0].getblockchaininfo()['upgrades']['v5 shield']['status'], 'active')
 
-        ## -- First check that the miner never produces blocks with more than 750kB of shielded txes
+        ## -- First check that the miner never produces blocks with more than 750kB of shield txes
 
         # Split 10 utxos (of 250 PIV each) in 1000 new utxos of ~2.5 PIV each (to alice)
         UTXOS_TO_SPLIT = 10
@@ -104,9 +104,9 @@ class SaplingFillBlockTest(PivxTestFramework):
 
         # Now alice shields the new utxos individually (fixed 0.2 PIV fee --> ~2.3 PIV notes)
         self.log.info("Shielding utxos...")
-        alice_z_addr = alice.getnewshieldedaddress()
+        alice_z_addr = alice.getnewshieldaddress()
         shield_to = [{"address": alice_z_addr, "amount": new_utxos[0]["amount"] - Decimal("0.2")}]
-        txids = self.send_shielded(alice, UTXOS_TO_SHIELD, "from_transparent", shield_to)
+        txids = self.send_shield(alice, UTXOS_TO_SHIELD, "from_transparent", shield_to)
 
         # Check mempool
         self.check_mempool(miner, txids)

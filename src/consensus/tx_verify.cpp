@@ -59,11 +59,11 @@ unsigned int GetP2SHSigOpCount(const CTransaction& tx, const CCoinsViewCache& in
 bool CheckTransaction(const CTransaction& tx, bool fZerocoinActive, bool fRejectBadUTXO, CValidationState& state, bool fFakeSerialAttack, bool fColdStakingActive, bool fSaplingActive)
 {
     // Basic checks that don't depend on any context
-    // Transactions containing empty `vin` must have non-empty `vShieldedSpend`.
-    if (tx.vin.empty() && (tx.sapData && tx.sapData->vShieldedSpend.empty()))
+    // Transactions containing empty `vin` must have non-empty `vShieldSpend`.
+    if (tx.vin.empty() && (tx.sapData && tx.sapData->vShieldSpend.empty()))
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vin-empty");
-    // Transactions containing empty `vout` must have non-empty `vShieldedOutput`.
-    if (tx.vout.empty() && (tx.sapData && tx.sapData->vShieldedOutput.empty()))
+    // Transactions containing empty `vout` must have non-empty `vShieldOutput`.
+    if (tx.vout.empty() && (tx.sapData && tx.sapData->vShieldOutput.empty()))
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vout-empty");
 
     // Version check
@@ -78,7 +78,7 @@ bool CheckTransaction(const CTransaction& tx, bool fZerocoinActive, bool fReject
     // Size limits
     static_assert(MAX_BLOCK_SIZE_CURRENT >= MAX_TX_SIZE_AFTER_SAPLING, "Max block size must be bigger than max TX size");    // sanity
     static_assert(MAX_TX_SIZE_AFTER_SAPLING > MAX_ZEROCOIN_TX_SIZE, "New max TX size must be bigger than old max TX size");  // sanity
-    const unsigned int nMaxSize = tx.IsShieldedTx() ? MAX_TX_SIZE_AFTER_SAPLING : MAX_ZEROCOIN_TX_SIZE;
+    const unsigned int nMaxSize = tx.IsShieldTx() ? MAX_TX_SIZE_AFTER_SAPLING : MAX_ZEROCOIN_TX_SIZE;
     if (tx.GetTotalSize() > nMaxSize) {
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-oversize");
     }

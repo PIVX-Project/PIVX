@@ -235,7 +235,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             if (tx.IsCoinBase() || tx.IsCoinStake() || !IsFinalTx(tx, nHeight)){
                 continue;
             }
-            if(sporkManager.IsSporkActive(SPORK_20_SAPLING_MAINTENANCE) && tx.IsShieldedTx()){
+            if(sporkManager.IsSporkActive(SPORK_20_SAPLING_MAINTENANCE) && tx.IsShieldTx()){
                 continue;
             }
 
@@ -303,8 +303,8 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
         int nBlockSigOps = 100;
         bool fSortedByFee = (nBlockPrioritySize <= 0);
 
-        // Keep track of block space used for shielded txes
-        unsigned int nSizeShielded = 0;
+        // Keep track of block space used for shield txes
+        unsigned int nSizeShield = 0;
 
         TxPriorityCompare comparer(fSortedByFee);
         std::make_heap(vecPriority.begin(), vecPriority.end(), comparer);
@@ -324,8 +324,8 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             if (nBlockSize + nTxSize >= nBlockMaxSize)
                 continue;
 
-            const bool isShielded = tx.IsShieldedTx();
-            if (isShielded && nSizeShielded + nTxSize > MAX_BLOCK_SHIELDED_TXES_SIZE)
+            const bool isShield = tx.IsShieldTx();
+            if (isShield && nSizeShield + nTxSize > MAX_BLOCK_SHIELD_TXES_SIZE)
                 continue;
 
             // Legacy limits on sigOps:
@@ -379,7 +379,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             ++nBlockTx;
             nBlockSigOps += nTxSigOps;
             nFees += nTxFees;
-            if (isShielded) nSizeShielded += nTxSize;
+            if (isShield) nSizeShield += nTxSize;
 
             if (fPrintPriority) {
                 LogPrintf("priority %.1f fee %s txid %s\n",
@@ -419,8 +419,8 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
 
             // Update the Sapling commitment tree.
             for (const auto &tx : pblock->vtx) {
-                if (tx->IsShieldedTx()) {
-                    for (const OutputDescription &odesc : tx->sapData->vShieldedOutput) {
+                if (tx->IsShieldTx()) {
+                    for (const OutputDescription &odesc : tx->sapData->vShieldOutput) {
                         sapling_tree.append(odesc.cmu);
                     }
                 }

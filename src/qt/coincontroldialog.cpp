@@ -491,7 +491,7 @@ void CoinControlDialog::updateLabels()
 
     ui->labelTitle->setText(fSelectTransparent ?
             "Select PIV Outputs to Spend" :
-            "Select Shielded PIV to Spend");
+            "Select Shield PIV to Spend");
 
     // nPayAmount (!todo fix dust)
     CAmount nPayAmount = 0;
@@ -534,21 +534,21 @@ void CoinControlDialog::updateLabels()
     // calculation
     const int P2CS_OUT_SIZE = 61;
     if (nQuantity > 0) {
-        bool isShieldedTx = !fSelectTransparent;
+        bool isShieldTx = !fSelectTransparent;
         // Bytes: nBytesInputs + (sum of nBytesOutputs)
         // always assume +1 (p2pkh) output for change here
         nBytes = nBytesInputs + (fSelectTransparent ? CTXOUT_REGULAR_SIZE : OUTPUTDESCRIPTION_SIZE);
         for (const auto& a : payAmounts) {
-            bool shieldedOut = a.second;
-            isShieldedTx |= shieldedOut;
-            nBytes += (shieldedOut ? OUTPUTDESCRIPTION_SIZE
+            bool shieldOut = a.second;
+            isShieldTx |= shieldOut;
+            nBytes += (shieldOut ? OUTPUTDESCRIPTION_SIZE
                                    : (forDelegation ? P2CS_OUT_SIZE : CTXOUT_REGULAR_SIZE));
         }
 
-        // Shielded txes must include binding sig and valueBalance
-        if (isShieldedTx) {
+        // Shield txes must include binding sig and valueBalance
+        if (isShieldTx) {
             nBytes += (BINDINGSIG_SIZE + 8);
-            // (plus at least 2 bytes for shielded in/outs len sizes)
+            // (plus at least 2 bytes for shield in/outs len sizes)
             nBytes += 2;
         }
 
@@ -558,15 +558,15 @@ void CoinControlDialog::updateLabels()
         // nVersion, nType, nLockTime and vin/vout len sizes
         nBytes += 10;
 
-        // Fee (default K fixed for shielded fee for now)
-        nPayFee = GetMinRelayFee(nBytes, false) * (isShieldedTx ? DEFAULT_SHIELDEDTXFEE_K : 1);
+        // Fee (default K fixed for shield fee for now)
+        nPayFee = GetMinRelayFee(nBytes, false) * (isShieldTx ? DEFAULT_SHIELDTXFEE_K : 1);
 
         if (nPayAmount > 0) {
             nChange = nAmount - nPayFee - nPayAmount;
 
             // Never create dust outputs; if we would, just add the dust to the fee.
             CAmount dustThreshold = fSelectTransparent ? GetDustThreshold(minRelayTxFee) :
-                                                         GetShieldedDustThreshold(minRelayTxFee);
+                                                         GetShieldDustThreshold(minRelayTxFee);
             if (nChange > 0 && nChange < dustThreshold) {
                 nPayFee += nChange;
                 nChange = 0;
@@ -822,9 +822,9 @@ void CoinControlDialog::clearPayAmounts()
     payAmounts.clear();
 }
 
-void CoinControlDialog::addPayAmount(const CAmount& amount, bool isShieldedRecipient)
+void CoinControlDialog::addPayAmount(const CAmount& amount, bool isShieldRecipient)
 {
-    payAmounts.emplace_back(amount, isShieldedRecipient);
+    payAmounts.emplace_back(amount, isShieldRecipient);
 }
 
 void CoinControlDialog::updatePushButtonSelectAll(bool checked)

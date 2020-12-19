@@ -136,15 +136,15 @@ void ReceiveWidget::refreshView(const QModelIndex& tl, const QModelIndex& br)
 {
     const QModelIndex& index = tl.sibling(tl.row(), AddressTableModel::Address);
     const QString& typeRole = index.data(AddressTableModel::TypeRole).toString();
-    if (shieldedMode && typeRole != AddressTableModel::ShieldedReceive) return;
-    if (!shieldedMode && typeRole != AddressTableModel::Receive) return;
+    if (shieldMode && typeRole != AddressTableModel::ShieldReceive) return;
+    if (!shieldMode && typeRole != AddressTableModel::Receive) return;
     return refreshView(index.data(Qt::DisplayRole).toString());
 }
 
 void ReceiveWidget::refreshView(QString refreshAddress)
 {
     try {
-        QString latestAddress = (refreshAddress.isEmpty()) ? this->addressTableModel->getAddressToShow(shieldedMode) : refreshAddress;
+        QString latestAddress = (refreshAddress.isEmpty()) ? this->addressTableModel->getAddressToShow(shieldMode) : refreshAddress;
 
         if (latestAddress.isEmpty()) {
             // Check for generation errors
@@ -155,7 +155,7 @@ void ReceiveWidget::refreshView(QString refreshAddress)
 
         QString addressToShow = latestAddress;
         int64_t time = walletModel->getKeyCreationTime(latestAddress.toStdString());
-        if (shieldedMode) {
+        if (shieldMode) {
             addressToShow = addressToShow.left(20) + "..." + addressToShow.right(19);
         }
 
@@ -247,12 +247,12 @@ void ReceiveWidget::onNewAddressClicked()
 
         QString strAddress;
         PairResult r(false);
-        if (!shieldedMode) {
+        if (!shieldMode) {
             Destination address;
             r = walletModel->getNewAddress(address, "");
             strAddress = QString::fromStdString(address.ToString());
         } else {
-            r = walletModel->getNewShieldedAddress(strAddress, "");
+            r = walletModel->getNewShieldAddress(strAddress, "");
         }
 
         // Check validity
@@ -343,9 +343,9 @@ void ReceiveWidget::sortAddresses()
 
 void ReceiveWidget::onTransparentSelected(bool transparentSelected)
 {
-    shieldedMode = !transparentSelected;
+    shieldMode = !transparentSelected;
     refreshView();
-    this->filter->setType(shieldedMode ? AddressTableModel::ShieldedReceive : AddressTableModel::Receive);
+    this->filter->setType(shieldMode ? AddressTableModel::ShieldReceive : AddressTableModel::Receive);
 };
 
 void ReceiveWidget::changeTheme(bool isLightTheme, QString& theme)

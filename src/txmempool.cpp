@@ -29,7 +29,7 @@ CTxMemPoolEntry::CTxMemPoolEntry(const CTransactionRef& _tx, const CAmount& _nFe
     nModSize = _tx->CalculateModifiedSize(nTxSize);
     nUsageSize = _tx->DynamicMemoryUsage();
     hasZerocoins = _tx->ContainsZerocoins();
-    m_isShielded = _tx->IsShieldedTx();
+    m_isShield = _tx->IsShieldTx();
 
     nCountWithDescendants = 1;
     nSizeWithDescendants = nTxSize;
@@ -405,8 +405,8 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry,
     }
 
     // Save spent nullifiers
-    if (tx.IsShieldedTx()) {
-        for (const SpendDescription& sd : tx.sapData->vShieldedSpend) {
+    if (tx.IsShieldTx()) {
+        for (const SpendDescription& sd : tx.sapData->vShieldSpend) {
             mapSaplingNullifiers[sd.nullifier] = newit->GetSharedTx();
         }
     }
@@ -425,8 +425,8 @@ void CTxMemPool::removeUnchecked(txiter it)
     for (const CTxIn& txin : tx.vin)
         mapNextTx.erase(txin.prevout);
     // Remove spent nullifiers
-    if (tx.IsShieldedTx()) {
-        for (const SpendDescription& sd : tx.sapData->vShieldedSpend) {
+    if (tx.IsShieldTx()) {
+        for (const SpendDescription& sd : tx.sapData->vShieldSpend) {
             mapSaplingNullifiers.erase(sd.nullifier);
         }
     }
@@ -547,8 +547,8 @@ void CTxMemPool::removeWithAnchor(const uint256& invalidRoot)
     std::list<CTransaction> transactionsToRemove;
     for (indexed_transaction_set::const_iterator it = mapTx.begin(); it != mapTx.end(); it++) {
         const CTransaction& tx = it->GetTx();
-        if (!tx.IsShieldedTx()) continue;
-        for (const auto& sd : tx.sapData->vShieldedSpend) {
+        if (!tx.IsShieldTx()) continue;
+        for (const auto& sd : tx.sapData->vShieldSpend) {
             if (sd.anchor == invalidRoot) {
                 transactionsToRemove.emplace_back(tx);
                 break;
@@ -576,8 +576,8 @@ void CTxMemPool::removeConflicts(const CTransaction& tx, std::list<CTransactionR
         }
     }
     // Remove txes with conflicting nullifier
-    if (tx.IsShieldedTx()) {
-        for (const SpendDescription& sd : tx.sapData->vShieldedSpend) {
+    if (tx.IsShieldTx()) {
+        for (const SpendDescription& sd : tx.sapData->vShieldSpend) {
             const auto& it = mapSaplingNullifiers.find(sd.nullifier);
             if (it != mapSaplingNullifiers.end()) {
                 const CTransaction& txConflict = *it->second;
@@ -688,8 +688,8 @@ void CTxMemPool::check(const CCoinsViewCache* pcoins) const
             i++;
         }
         // sapling txes
-        if (tx.IsShieldedTx()) {
-            for (const SpendDescription& sd : tx.sapData->vShieldedSpend) {
+        if (tx.IsShieldTx()) {
+            for (const SpendDescription& sd : tx.sapData->vShieldSpend) {
                 SaplingMerkleTree tree;
                 assert(pcoins->GetSaplingAnchorAt(sd.anchor, tree));
                 assert(!pcoins->GetNullifier(sd.nullifier));

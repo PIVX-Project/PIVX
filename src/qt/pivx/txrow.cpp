@@ -84,7 +84,7 @@ void TxRow::setType(bool isLightTheme, int type, bool isConfirmed)
         case TransactionRecord::RecvWithAddress:
         case TransactionRecord::RecvFromOther:
         case TransactionRecord::RecvFromZerocoinSpend:
-        case TransactionRecord::RecvWithShieldedAddress:
+        case TransactionRecord::RecvWithShieldAddress:
             path = "://ic-transaction-received";
             css = "text-list-amount-receive";
             break;
@@ -93,7 +93,7 @@ void TxRow::setType(bool isLightTheme, int type, bool isConfirmed)
         case TransactionRecord::ZerocoinSpend:
         case TransactionRecord::ZerocoinSpend_Change_zPiv:
         case TransactionRecord::ZerocoinSpend_FromMe:
-        case TransactionRecord::SendToShielded:
+        case TransactionRecord::SendToShield:
             path = "://ic-transaction-sent";
             css = "text-list-amount-send";
             break;
@@ -124,7 +124,7 @@ void TxRow::setType(bool isLightTheme, int type, bool isConfirmed)
             path = "://ic-transaction-cs-contract";
             css = "text-list-amount-send";
             break;
-        case TransactionRecord::SendToSelfShieldedAddress:
+        case TransactionRecord::SendToSelfShieldAddress:
         case TransactionRecord::SendToSelfShieldToTransparent:
             path = "://ic-transaction-mint";
             css = "text-list-amount-unconfirmed";

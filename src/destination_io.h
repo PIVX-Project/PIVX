@@ -7,7 +7,7 @@
 
 #include "script/standard.h"
 
-// Regular + shielded addresses variant.
+// Regular + shield addresses variant.
 typedef boost::variant<CTxDestination, libzcash::SaplingPaymentAddress> CWDestination;
 
 namespace Standard {
@@ -16,12 +16,12 @@ namespace Standard {
 
     CWDestination DecodeDestination(const std::string& strAddress);
     CWDestination DecodeDestination(const std::string& strAddress, bool& isStaking);
-    CWDestination DecodeDestination(const std::string& strAddress, bool& isStaking, bool& isShielded);
+    CWDestination DecodeDestination(const std::string& strAddress, bool& isStaking, bool& isShield);
 
     bool IsValidDestination(const CWDestination& dest);
 
     // boost::get wrapper
-    const libzcash::SaplingPaymentAddress* GetShieldedDestination(const CWDestination& dest);
+    const libzcash::SaplingPaymentAddress* GetShieldDestination(const CWDestination& dest);
     const CTxDestination * GetTransparentDestination(const CWDestination& dest);
 
 } // End Standard namespace

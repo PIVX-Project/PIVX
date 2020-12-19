@@ -40,7 +40,7 @@ public:
         row->updateState(isLightTheme, isHovered, isSelected);
 
         QString address = index.data(Qt::DisplayRole).toString();
-        if (index.data(AddressTableModel::TypeRole).toString() == AddressTableModel::ShieldedSend) {
+        if (index.data(AddressTableModel::TypeRole).toString() == AddressTableModel::ShieldSend) {
             address = address.left(26) + "..." + address.right(26);
         }
         QModelIndex sibling = index.sibling(index.row(), AddressTableModel::Label);
@@ -162,7 +162,7 @@ void AddressesWidget::loadWalletModel()
     if (walletModel) {
         addressTablemodel = walletModel->getAddressTableModel();
         this->filter = new AddressFilterProxyModel(
-                QStringList({AddressTableModel::Send, AddressTableModel::ColdStakingSend, AddressTableModel::ShieldedSend}),
+                QStringList({AddressTableModel::Send, AddressTableModel::ColdStakingSend, AddressTableModel::ShieldSend}),
                 this);
         this->filter->setSourceModel(addressTablemodel);
         this->filter->sort(sortType, sortOrder);
@@ -208,9 +208,9 @@ void AddressesWidget::onStoreContactClicked()
             return;
         }
 
-        bool isShielded = walletModel->IsShieldedDestination(pivAdd);
+        bool isShield = walletModel->IsShieldDestination(pivAdd);
         if (walletModel->updateAddressBookLabels(pivAdd, label.toUtf8().constData(),
-                         isShielded ? AddressBook::AddressBookPurpose::SHIELDED_SEND :
+                         isShield ? AddressBook::AddressBookPurpose::SHIELD_SEND :
                          isStakingAddress ? AddressBook::AddressBookPurpose::COLD_STAKING_SEND : AddressBook::AddressBookPurpose::SEND)
                 ) {
             ui->lineEditAddress->setText("");

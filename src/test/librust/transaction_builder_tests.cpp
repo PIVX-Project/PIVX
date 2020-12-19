@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(TransparentToSapling)
     auto pk = *ivk.address(d);
 
     // Create a shielding transaction from transparent to Sapling
-    // 0.5 t-PIV in, 0.4 shielded-PIV out, 0.1 t-PIV fee
+    // 0.5 t-PIV in, 0.4 shield-PIV out, 0.1 t-PIV fee
     auto builder = TransactionBuilder(consensusParams, 1, &keystore);
     builder.AddTransparentInput(COutPoint(uint256S("1234"), 0), scriptPubKey, 50000000);
     builder.AddSaplingOutput(fvk_from.ovk, pk, 40000000, {});
@@ -42,8 +42,8 @@ BOOST_AUTO_TEST_CASE(TransparentToSapling)
 
     BOOST_CHECK_EQUAL(tx.vin.size(), 1);
     BOOST_CHECK_EQUAL(tx.vout.size(), 0);
-    BOOST_CHECK_EQUAL(tx.sapData->vShieldedSpend.size(), 0);
-    BOOST_CHECK_EQUAL(tx.sapData->vShieldedOutput.size(), 1);
+    BOOST_CHECK_EQUAL(tx.sapData->vShieldSpend.size(), 0);
+    BOOST_CHECK_EQUAL(tx.sapData->vShieldOutput.size(), 1);
     BOOST_CHECK_EQUAL(tx.sapData->valueBalance, -40000000);
 
     CValidationState state;
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(SaplingToSapling) {
     auto pa = sk.default_address();
 
     // Create a Sapling-only transaction
-    // --- 0.4 shielded-PIV in, 0.25 shielded-PIV out, 0.1 shielded-PIV fee, 0.05 shielded-PIV change (added to fee)
+    // --- 0.4 shield-PIV in, 0.25 shield-PIV out, 0.1 shield-PIV fee, 0.05 shield-PIV change (added to fee)
     auto testNote = GetTestSaplingNote(pa, 40000000);
     auto builder = TransactionBuilder(consensusParams, 2);
     builder.AddSaplingSpend(expsk, testNote.note, testNote.tree.root(), testNote.tree.witness());
@@ -78,17 +78,17 @@ BOOST_AUTO_TEST_CASE(SaplingToSapling) {
 
     BOOST_CHECK_EQUAL(tx.vin.size(), 0);
     BOOST_CHECK_EQUAL(tx.vout.size(), 0);
-    BOOST_CHECK_EQUAL(tx.sapData->vShieldedSpend.size(), 1);
+    BOOST_CHECK_EQUAL(tx.sapData->vShieldSpend.size(), 1);
 
     // since the change is below the dust threshold, it is added to the fee
-    BOOST_CHECK_EQUAL(tx.sapData->vShieldedOutput.size(), 1);
+    BOOST_CHECK_EQUAL(tx.sapData->vShieldOutput.size(), 1);
     BOOST_CHECK_EQUAL(tx.sapData->valueBalance, 15000000);
 
     CValidationState state;
     BOOST_CHECK(SaplingValidation::ContextualCheckTransaction(tx, state, Params(), 3, true, false));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "");
 
-    // --- Now try with 1 shielded-PIV in, 0.5 shielded-PIV out, 0.1 shielded-PIV fee, 0.4 shielded-PIV change
+    // --- Now try with 1 shield-PIV in, 0.5 shield-PIV out, 0.1 shield-PIV fee, 0.4 shield-PIV change
     auto testNote2 = GetTestSaplingNote(pa, 100000000);
     auto builder2 = TransactionBuilder(consensusParams, 2);
     builder2.AddSaplingSpend(expsk, testNote2.note, testNote2.tree.root(), testNote2.tree.witness());
@@ -97,8 +97,8 @@ BOOST_AUTO_TEST_CASE(SaplingToSapling) {
     auto tx2 = builder2.Build().GetTxOrThrow();
     BOOST_CHECK_EQUAL(tx2.vin.size(), 0);
     BOOST_CHECK_EQUAL(tx2.vout.size(), 0);
-    BOOST_CHECK_EQUAL(tx2.sapData->vShieldedSpend.size(), 1);
-    BOOST_CHECK_EQUAL(tx2.sapData->vShieldedOutput.size(), 2);
+    BOOST_CHECK_EQUAL(tx2.sapData->vShieldSpend.size(), 1);
+    BOOST_CHECK_EQUAL(tx2.sapData->vShieldOutput.size(), 2);
     BOOST_CHECK_EQUAL(tx2.sapData->valueBalance, 10000000);
     BOOST_CHECK(SaplingValidation::ContextualCheckTransaction(tx2, state, Params(), 3, true, false));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "");
@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE(FailsWithNegativeChange)
     auto testNote = GetTestSaplingNote(pa, 59990000);
 
     // Fail if there is only a Sapling output
-    // 0.5 shielded-PIV out, 0.1 t-PIV fee
+    // 0.5 shield-PIV out, 0.1 t-PIV fee
     auto builder = TransactionBuilder(consensusParams, 1);
     builder.AddSaplingOutput(fvk.ovk, pa, 50000000, {});
     builder.SetFee(10000000);
@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(FailsWithNegativeChange)
     BOOST_CHECK_EQUAL("Change cannot be negative", builder.Build().GetError());
 
     // Fails if there is insufficient input
-    // 0.5 t-PIV out, 0.1 t-PIV fee, 0.59999 shielded-PIV in
+    // 0.5 t-PIV out, 0.1 t-PIV fee, 0.59999 shield-PIV in
     builder.AddSaplingSpend(expsk, testNote.note, testNote.tree.root(), testNote.tree.witness());
     BOOST_CHECK_EQUAL("Change cannot be negative", builder.Build().GetError());
 
@@ -226,8 +226,8 @@ BOOST_AUTO_TEST_CASE(ChangeOutput)
 
         BOOST_CHECK_EQUAL(tx.vin.size(), 1);
         BOOST_CHECK_EQUAL(tx.vout.size(), 0);
-        BOOST_CHECK_EQUAL(tx.sapData->vShieldedSpend.size(), 1);
-        BOOST_CHECK_EQUAL(tx.sapData->vShieldedOutput.size(), 1);
+        BOOST_CHECK_EQUAL(tx.sapData->vShieldSpend.size(), 1);
+        BOOST_CHECK_EQUAL(tx.sapData->vShieldOutput.size(), 1);
         BOOST_CHECK_EQUAL(tx.sapData->valueBalance, -15000000);
     }
 
@@ -241,8 +241,8 @@ BOOST_AUTO_TEST_CASE(ChangeOutput)
 
         BOOST_CHECK_EQUAL(tx.vin.size(), 1);
         BOOST_CHECK_EQUAL(tx.vout.size(), 0);
-        BOOST_CHECK_EQUAL(tx.sapData->vShieldedSpend.size(), 0);
-        BOOST_CHECK_EQUAL(tx.sapData->vShieldedOutput.size(), 1);
+        BOOST_CHECK_EQUAL(tx.sapData->vShieldSpend.size(), 0);
+        BOOST_CHECK_EQUAL(tx.sapData->vShieldOutput.size(), 1);
         BOOST_CHECK_EQUAL(tx.sapData->valueBalance, -15000000);
     }
 
@@ -256,8 +256,8 @@ BOOST_AUTO_TEST_CASE(ChangeOutput)
 
         BOOST_CHECK_EQUAL(tx.vin.size(), 1);
         BOOST_CHECK_EQUAL(tx.vout.size(), 1);
-        BOOST_CHECK_EQUAL(tx.sapData->vShieldedSpend.size(), 0);
-        BOOST_CHECK_EQUAL(tx.sapData->vShieldedOutput.size(), 0);
+        BOOST_CHECK_EQUAL(tx.sapData->vShieldSpend.size(), 0);
+        BOOST_CHECK_EQUAL(tx.sapData->vShieldOutput.size(), 0);
         BOOST_CHECK_EQUAL(tx.sapData->valueBalance, 0);
         BOOST_CHECK_EQUAL(tx.vout[0].nValue, 15000000);
     }
@@ -289,8 +289,8 @@ BOOST_AUTO_TEST_CASE(SetFee)
 
         BOOST_CHECK_EQUAL(tx.vin.size(), 0);
         BOOST_CHECK_EQUAL(tx.vout.size(), 0);
-        BOOST_CHECK_EQUAL(tx.sapData->vShieldedSpend.size(), 1);
-        BOOST_CHECK_EQUAL(tx.sapData->vShieldedOutput.size(), 2);
+        BOOST_CHECK_EQUAL(tx.sapData->vShieldSpend.size(), 1);
+        BOOST_CHECK_EQUAL(tx.sapData->vShieldOutput.size(), 2);
         BOOST_CHECK_EQUAL(tx.sapData->valueBalance, COIN);
     }
 

@@ -309,7 +309,7 @@ CBlockPolicyEstimator::CBlockPolicyEstimator(const CFeeRate& _minRelayFee)
 
 void CBlockPolicyEstimator::processTransaction(const CTxMemPoolEntry& entry, bool fCurrentEstimate)
 {
-    if(entry.HasZerocoins() || entry.IsShielded()) {
+    if(entry.HasZerocoins() || entry.IsShield()) {
         // Zerocoin spends/mints had fixed feerate. Skip them for the estimates.
         return;
     }
@@ -349,7 +349,7 @@ void CBlockPolicyEstimator::processTransaction(const CTxMemPoolEntry& entry, boo
 
 void CBlockPolicyEstimator::processBlockTx(unsigned int nBlockHeight, const CTxMemPoolEntry& entry)
 {
-    if(entry.HasZerocoins() || entry.IsShielded()) {
+    if(entry.HasZerocoins() || entry.IsShield()) {
         // Zerocoin spends/mints had fixed feerate. Skip them for the estimates.
         return;
     }

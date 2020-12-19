@@ -7,10 +7,10 @@
 #include "utilstrencodings.h"
 #include "utilmoneystr.h"
 
-static UniValue TxShieldedSpendsToJSON(const CTransaction& tx) {
+static UniValue TxShieldSpendsToJSON(const CTransaction& tx) {
     UniValue vdesc(UniValue::VARR);
     if (tx.sapData) {
-        for (const SpendDescription& spendDesc : tx.sapData->vShieldedSpend) {
+        for (const SpendDescription& spendDesc : tx.sapData->vShieldSpend) {
             UniValue obj(UniValue::VOBJ);
             obj.pushKV("cv", spendDesc.cv.GetHex());
             obj.pushKV("anchor", spendDesc.anchor.GetHex());
@@ -24,10 +24,10 @@ static UniValue TxShieldedSpendsToJSON(const CTransaction& tx) {
     return vdesc;
 }
 
-static UniValue TxShieldedOutputsToJSON(const CTransaction& tx) {
+static UniValue TxShieldOutputsToJSON(const CTransaction& tx) {
     UniValue vdesc(UniValue::VARR);
     if (tx.sapData) {
-        for (const OutputDescription& outputDesc : tx.sapData->vShieldedOutput) {
+        for (const OutputDescription& outputDesc : tx.sapData->vShieldOutput) {
             UniValue obj(UniValue::VOBJ);
             obj.pushKV("cv", outputDesc.cv.GetHex());
             obj.pushKV("cmu", outputDesc.cmu.GetHex());
@@ -42,13 +42,13 @@ static UniValue TxShieldedOutputsToJSON(const CTransaction& tx) {
 }
 
 void TxSaplingToJSON(const CTransaction& tx, UniValue& entry) {
-    if (tx.IsShieldedTx()) {
+    if (tx.IsShieldTx()) {
         entry.pushKV("valueBalance", FormatMoney(tx.sapData->valueBalance));
         entry.pushKV("valueBalanceSat", tx.sapData->valueBalance);
-        UniValue vspenddesc = TxShieldedSpendsToJSON(tx);
-        entry.pushKV("vShieldedSpend", vspenddesc);
-        UniValue voutputdesc = TxShieldedOutputsToJSON(tx);
-        entry.pushKV("vShieldedOutput", voutputdesc);
+        UniValue vspenddesc = TxShieldSpendsToJSON(tx);
+        entry.pushKV("vShieldSpend", vspenddesc);
+        UniValue voutputdesc = TxShieldOutputsToJSON(tx);
+        entry.pushKV("vShieldOutput", voutputdesc);
         if (tx.sapData->hasBindingSig()) {
             entry.pushKV("bindingSig", HexStr(tx.sapData->bindingSig.begin(), tx.sapData->bindingSig.end()));
         }

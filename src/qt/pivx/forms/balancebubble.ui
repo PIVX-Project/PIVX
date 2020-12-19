@@ -95,7 +95,7 @@ background-color:transparent
          <string notr="true"/>
         </property>
         <property name="text">
-         <string>Shielded</string>
+         <string>Shield</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -103,7 +103,7 @@ background-color:transparent
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="textShielded">
+       <widget class="QLabel" name="textShield">
         <property name="styleSheet">
          <string notr="true"/>
         </property>

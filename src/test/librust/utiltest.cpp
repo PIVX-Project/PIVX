@@ -57,7 +57,7 @@ TestSaplingNote GetTestSaplingNote(const libzcash::SaplingPaymentAddress& pa, CA
 CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
                                  CBasicKeyStore& keyStoreFrom,
                                  std::vector<TransparentInput> vIn,
-                                 std::vector<ShieldedDestination> vDest,
+                                 std::vector<ShieldDestination> vDest,
                                  const CWallet* pwalletIn)
 {
     auto builder = TransactionBuilder(consensusParams, 1, &keyStoreFrom);
@@ -68,7 +68,7 @@ CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
         builder.AddTransparentInput(in.outPoint, in.scriptPubKey, in.amount);
     }
 
-    // To shielded addrs
+    // To shield addrs
     for (const auto& dest : vDest) {
         auto fvk = dest.sk.expsk.full_viewing_key();
         auto pa = dest.sk.DefaultAddress();
@@ -80,11 +80,11 @@ CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
     return wtx;
 }
 
-// Two dummy input (to trick coinbase check), one or many shielded outputs
+// Two dummy input (to trick coinbase check), one or many shield outputs
 CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
                                  CBasicKeyStore& keyStoreFrom,
                                  CAmount inputAmount,
-                                 std::vector<ShieldedDestination> vDest,
+                                 std::vector<ShieldDestination> vDest,
                                  bool genNewKey,
                                  const CWallet* pwalletIn) {
     // From taddr
@@ -97,14 +97,14 @@ CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
     return GetValidSaplingReceive(consensusParams, keyStoreFrom, vIn, vDest, pwalletIn);
 }
 
-// Single input, single shielded output
+// Single input, single shield output
 CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
                                  CBasicKeyStore& keyStore,
                                  const libzcash::SaplingExtendedSpendingKey &sk,
                                  CAmount value,
                                  bool genNewKey,
                                  const CWallet* pwalletIn) {
-    std::vector<ShieldedDestination> vDest;
+    std::vector<ShieldDestination> vDest;
     vDest.push_back({sk, value});
     return GetValidSaplingReceive(
             consensusParams,

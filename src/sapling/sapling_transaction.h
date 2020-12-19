@@ -37,7 +37,7 @@ namespace libzcash {
 }
 
 /**
- * A shielded input to a transaction. It contains data that describes a Spend transfer.
+ * A shield input to a transaction. It contains data that describes a Spend transfer.
  */
 class SpendDescription
 {
@@ -84,7 +84,7 @@ public:
 };
 
 /**
- * A shielded output to a transaction. It contains data that describes an Output transfer.
+ * A shield output to a transaction. It contains data that describes an Output transfer.
  */
 class OutputDescription
 {
@@ -134,8 +134,8 @@ public:
     typedef std::array<unsigned char, BINDINGSIG_SIZE> binding_sig_t;
 
     CAmount valueBalance{0};
-    std::vector<SpendDescription> vShieldedSpend;
-    std::vector<OutputDescription> vShieldedOutput;
+    std::vector<SpendDescription> vShieldSpend;
+    std::vector<OutputDescription> vShieldOutput;
     binding_sig_t bindingSig = {{0}};
 
     ADD_SERIALIZE_METHODS;
@@ -144,13 +144,13 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action)
     {
         READWRITE(*const_cast<CAmount*>(&valueBalance));
-        READWRITE(*const_cast<std::vector<SpendDescription>*>(&vShieldedSpend));
-        READWRITE(*const_cast<std::vector<OutputDescription>*>(&vShieldedOutput));
+        READWRITE(*const_cast<std::vector<SpendDescription>*>(&vShieldSpend));
+        READWRITE(*const_cast<std::vector<OutputDescription>*>(&vShieldOutput));
         READWRITE(*const_cast<binding_sig_t*>(&bindingSig));
     }
 
-    explicit SaplingTxData() : valueBalance(0), vShieldedSpend(), vShieldedOutput() { }
-    explicit SaplingTxData(const SaplingTxData& from) : valueBalance(from.valueBalance), vShieldedSpend(from.vShieldedSpend), vShieldedOutput(from.vShieldedOutput), bindingSig(from.bindingSig) {}
+    explicit SaplingTxData() : valueBalance(0), vShieldSpend(), vShieldOutput() { }
+    explicit SaplingTxData(const SaplingTxData& from) : valueBalance(from.valueBalance), vShieldSpend(from.vShieldSpend), vShieldOutput(from.vShieldOutput), bindingSig(from.bindingSig) {}
 
     bool hasBindingSig() const
     {

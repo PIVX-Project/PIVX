@@ -121,15 +121,15 @@ class PIVX_ColdStakingTest(PivxTestFramework):
         # check that it cannot stake
         sleep(1)
         assert_equal(self.nodes[1].getstakingstatus()["stakeablecoins"], 0)
-        # create shielded balance for node 0
+        # create shield balance for node 0
         self.log.info("Shielding some coins for node0...")
-        self.nodes[0].shieldedsendmany("from_transparent", [{"address": self.nodes[0].getnewshieldedaddress(),
+        self.nodes[0].shieldsendmany("from_transparent", [{"address": self.nodes[0].getnewshieldaddress(),
                                                              "amount": Decimal('250.00')}], 1)
         self.sync_all()
         for i in range(6):
             self.mocktime = self.generate_pow(0, self.mocktime)
         sync_blocks(self.nodes)
-        assert_equal(self.nodes[0].getshieldedbalance(), 250)
+        assert_equal(self.nodes[0].getshieldbalance(), 250)
 
         # 3) nodes[0] generates a owner address
         #    nodes[1] generates a cold-staking address.
@@ -186,12 +186,12 @@ class PIVX_ColdStakingTest(PivxTestFramework):
             assert(res != None and res["txid"] != None and res["txid"] != "")
             assert_equal(res["owner_address"], owner_address)
             assert_equal(res["staker_address"], staker_address)
-        # delegate  the shielded balance
+        # delegate  the shield balance
         res = self.nodes[0].delegatestake(staker_address, INPUT_VALUE, owner_address, False, False, True)
         assert (res != None and res["txid"] != None and res["txid"] != "")
         assert_equal(res["owner_address"], owner_address)
         assert_equal(res["staker_address"], staker_address)
-        fee = self.nodes[0].viewshieldedtransaction(res["txid"])['fee']
+        fee = self.nodes[0].viewshieldtransaction(res["txid"])['fee']
         # sync and mine 2 blocks
         sync_mempools(self.nodes)
         self.mocktime = self.generate_pos(2, self.mocktime)
@@ -201,8 +201,8 @@ class PIVX_ColdStakingTest(PivxTestFramework):
         self.expected_balance = NUM_OF_INPUTS * INPUT_VALUE
         self.expected_immature_balance = 0
         self.checkBalances()
-        # also shielded balance of node 0 (250 - 249 - fee)
-        assert_equal(self.nodes[0].getshieldedbalance(), round(Decimal(1)-Decimal(fee), 8))
+        # also shield balance of node 0 (250 - 249 - fee)
+        assert_equal(self.nodes[0].getshieldbalance(), round(Decimal(1)-Decimal(fee), 8))
 
         # 6) check that the owner (nodes[0]) can spend the coins.
         # -------------------------------------------------------

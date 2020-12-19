@@ -182,7 +182,7 @@ public:
         saplingNullifier = GetRandHash();
         SpendDescription sd;
         sd.nullifier = saplingNullifier;
-        mutableTx.sapData->vShieldedSpend.push_back(sd);
+        mutableTx.sapData->vShieldSpend.push_back(sd);
         tx = CTransaction(mutableTx);
     }
 };

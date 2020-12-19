@@ -18,12 +18,12 @@
 class CCoinControl;
 struct TxValues;
 
-struct ShieldedRecipient
+struct ShieldRecipient
 {
     const libzcash::SaplingPaymentAddress address;
     const CAmount amount;
     const std::string memo;
-    ShieldedRecipient(const libzcash::SaplingPaymentAddress& _address, const CAmount& _amount, const std::string& _memo) :
+    ShieldRecipient(const libzcash::SaplingPaymentAddress& _address, const CAmount& _amount, const std::string& _memo) :
         address(_address),
         amount(_amount),
         memo(_memo)
@@ -32,7 +32,7 @@ struct ShieldedRecipient
 
 struct SendManyRecipient
 {
-    const Optional<ShieldedRecipient> shieldedRecipient{nullopt};
+    const Optional<ShieldRecipient> shieldRecipient{nullopt};
     const Optional<CTxOut> transparentRecipient{nullopt};
 
     bool IsTransparent() const { return transparentRecipient != nullopt; }
@@ -40,9 +40,9 @@ struct SendManyRecipient
     // Prevent default empty initialization
     SendManyRecipient() = delete;
 
-    // Shielded recipient
+    // Shield recipient
     SendManyRecipient(const libzcash::SaplingPaymentAddress& address, const CAmount& amount, const std::string& memo):
-        shieldedRecipient(ShieldedRecipient(address, amount, memo))
+        shieldRecipient(ShieldRecipient(address, amount, memo))
     {}
 
     // Transparent recipient: P2PKH
@@ -95,7 +95,7 @@ public:
     void clearTx() { txBuilder.Clear(); }
     // In case of no addressFrom filter selected, it will accept any utxo in the wallet as input.
     SaplingOperation* setSelectTransparentCoins(const bool select, const bool _fIncludeDelegated = false);
-    SaplingOperation* setSelectShieldedCoins(const bool select) { selectFromShield = select; return this; };
+    SaplingOperation* setSelectShieldCoins(const bool select) { selectFromShield = select; return this; };
     SaplingOperation* setRecipients(std::vector<SendManyRecipient>& vec) { recipients = std::move(vec); return this; };
     SaplingOperation* setFee(CAmount _fee) { fee = _fee; return this; }
     SaplingOperation* setMinDepth(int _mindepth) { assert(_mindepth >= 0); mindepth = _mindepth; return this; }
@@ -115,7 +115,7 @@ private:
     const CCoinControl* coinControl{nullptr};
     std::vector<SendManyRecipient> recipients;
     std::vector<COutput> transInputs;
-    std::vector<SaplingNoteEntry> shieldedInputs;
+    std::vector<SaplingNoteEntry> shieldInputs;
     int mindepth{5}; // Min default depth 5.
     CAmount fee{0};  // User selected fee.
 
@@ -129,7 +129,7 @@ private:
     OperationResult loadUtxos(TxValues& values);
     OperationResult loadUtxos(TxValues& txValues, const std::vector<COutput>& selectedUTXO, const CAmount selectedUTXOAmount);
     OperationResult loadUnspentNotes(TxValues& txValues, uint256& ovk);
-    OperationResult checkTxValues(TxValues& txValues, bool isFromtAddress, bool isFromShielded);
+    OperationResult checkTxValues(TxValues& txValues, bool isFromtAddress, bool isFromShield);
 };
 
 OperationResult GetMemoFromString(const std::string& s, std::array<unsigned char, ZC_MEMO_SIZE>& memoRet);

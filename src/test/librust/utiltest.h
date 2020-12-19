@@ -17,7 +17,7 @@ struct TestSaplingNote {
     SaplingMerkleTree tree;
 };
 
-struct ShieldedDestination {
+struct ShieldDestination {
     const libzcash::SaplingExtendedSpendingKey &sk;
     CAmount amount;
 };
@@ -48,26 +48,26 @@ TestSaplingNote GetTestSaplingNote(const libzcash::SaplingPaymentAddress& pa, CA
 
 
 /**
- * One or many inputs from keyStoreFrom, one or many shielded outputs to pwalletIn (if not nullptr).
+ * One or many inputs from keyStoreFrom, one or many shield outputs to pwalletIn (if not nullptr).
  */
 CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
                                  CBasicKeyStore& keyStoreFrom,
                                  std::vector<TransparentInput> vIn,
-                                 std::vector<ShieldedDestination> vDest,
+                                 std::vector<ShieldDestination> vDest,
                                  const CWallet* pwalletIn = nullptr);
 
 /**
- * Single dummy input, one or many shielded outputs.
+ * Single dummy input, one or many shield outputs.
  */
 CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
                                  CBasicKeyStore& keyStoreFrom,
                                  CAmount inputAmount,
-                                 std::vector<ShieldedDestination> vDest,
+                                 std::vector<ShieldDestination> vDest,
                                  bool genNewKey = false,
                                  const CWallet* pwalletIn = nullptr);
 
 /**
- * Single dummy input, single shielded output to sk default address.
+ * Single dummy input, single shield output to sk default address.
  */
 CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
                                  CBasicKeyStore& keyStore,

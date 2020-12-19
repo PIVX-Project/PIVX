@@ -74,8 +74,8 @@ private:
     void onTransparentSelected(bool transparentSelected);
 
     bool isShowingDialog = false;
-    // Whether the main section is presenting a shielded address or a regular one
-    bool shieldedMode = false;
+    // Whether the main section is presenting a shield address or a regular one
+    bool shieldMode = false;
 
 };
 

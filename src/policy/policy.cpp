@@ -45,9 +45,9 @@ bool IsDust(const CTxOut& txout, const CFeeRate& dustRelayFee)
     return (txout.nValue < GetDustThreshold(txout, dustRelayFee));
 }
 
-CAmount GetShieldedDustThreshold(const CFeeRate& dustRelayFee)
+CAmount GetShieldDustThreshold(const CFeeRate& dustRelayFee)
 {
-    unsigned int K = DEFAULT_SHIELDEDTXFEE_K;   // Fixed (1000) for now
+    unsigned int K = DEFAULT_SHIELDTXFEE_K;   // Fixed (1000) for now
     return 3 * K * dustRelayFee.GetFee(SPENDDESCRIPTION_SIZE +
                                        CTXOUT_REGULAR_SIZE +
                                        BINDINGSIG_SIZE);
@@ -134,7 +134,7 @@ bool IsStandardTx(const CTransaction& tx, int nBlockHeight, std::string& reason)
     // computing signature hashes is O(ninputs*txsize). Limiting transactions
     // to MAX_STANDARD_TX_SIZE mitigates CPU exhaustion attacks.
     unsigned int sz = tx.GetTotalSize();
-    unsigned int nMaxSize = tx.IsShieldedTx() ? MAX_TX_SIZE_AFTER_SAPLING :
+    unsigned int nMaxSize = tx.IsShieldTx() ? MAX_TX_SIZE_AFTER_SAPLING :
             tx.ContainsZerocoins() ? MAX_ZEROCOIN_TX_SIZE : MAX_STANDARD_TX_SIZE;
     if (sz >= nMaxSize) {
         reason = "tx-size";

@@ -67,11 +67,11 @@ UniValue getinfo(const JSONRPCRequest& request)
             "  \"proxy\": \"host:port\",       (string, optional) the proxy used by the server\n"
             "  \"difficulty\": xxxxxx,         (numeric) the current difficulty\n"
             "  \"testnet\": true|false,        (boolean) if the server is using testnet or not\n"
-            "  \"moneysupply\": n              (numeric) The sum of transparentsupply and shieldedsupply\n"
+            "  \"moneysupply\": n              (numeric) The sum of transparentsupply and shieldsupply\n"
             "  \"transparentsupply\" : n       (numeric) The sum of the value of all unspent outputs when the chainstate was\n"
             "                                            last flushed to disk (use getsupplyinfo to know the update-height, or\n"
             "                                            to trigger the money supply update/recalculation)"
-            "  \"shieldedsupply\": n           (numeric) Chain tip shielded pool value\n"
+            "  \"shieldsupply\": n           (numeric) Chain tip shield pool value\n"
             "  \"keypoololdest\": xxxxxx,      (numeric) the timestamp (seconds since GMT epoch) of the oldest pre-generated key in the key pool\n"
             "  \"keypoolsize\": xxxx,          (numeric) how many new keys are pre-generated\n"
             "  \"unlocked_until\": ttt,        (numeric) the timestamp in seconds since epoch (midnight Jan 1 1970 GMT) that the wallet is unlocked for transfers, or 0 if the wallet is locked\n"
@@ -133,7 +133,7 @@ UniValue getinfo(const JSONRPCRequest& request)
     UniValue supply_info = getsupplyinfo(JSONRPCRequest());
     obj.pushKV("moneysupply", supply_info["totalsupply"]);
     obj.pushKV("transparentsupply", supply_info["transparentsupply"]);
-    obj.pushKV("shieldedsupply", supply_info["shieldedsupply"]);
+    obj.pushKV("shieldsupply", supply_info["shieldsupply"]);
 
 #ifdef ENABLE_WALLET
     if (pwalletMain) {

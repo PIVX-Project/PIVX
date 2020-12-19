@@ -28,7 +28,7 @@ void TxViewHolder::init(QWidget* holder, const QModelIndex &index, bool isHovere
     QModelIndex indexType = rIndex.sibling(rIndex.row(),TransactionTableModel::Type);
     QString label = indexType.data(Qt::DisplayRole).toString();
 
-    bool hasDoubleAmount = type == TransactionRecord::SendToSelfShieldedAddress || type == TransactionRecord::SendToSelfShieldToTransparent;
+    bool hasDoubleAmount = type == TransactionRecord::SendToSelfShieldAddress || type == TransactionRecord::SendToSelfShieldToTransparent;
     txRow->showHideSecondAmount(hasDoubleAmount);
 
     if (type != TransactionRecord::ZerocoinMint &&
@@ -53,9 +53,9 @@ void TxViewHolder::init(QWidget* holder, const QModelIndex &index, bool isHovere
     txRow->setLabel(label);
     QString amountText = BitcoinUnits::formatWithUnit(nDisplayUnit, amountTop, true, BitcoinUnits::separatorAlways);
     if (hasDoubleAmount) {
-        qint64 amountBottom = rIndex.data(TransactionTableModel::ShieldedCreditAmountRole).toLongLong();
+        qint64 amountBottom = rIndex.data(TransactionTableModel::ShieldCreditAmountRole).toLongLong();
         QString amountBottomText = BitcoinUnits::formatWithUnit(nDisplayUnit, amountBottom, true, BitcoinUnits::separatorAlways);
-        txRow->setAmount(amountBottomText + (type == TransactionRecord::SendToSelfShieldedAddress ? " shielded" : ""),
+        txRow->setAmount(amountBottomText + (type == TransactionRecord::SendToSelfShieldAddress ? " shield" : ""),
                          amountText + " fee");
     } else {
         txRow->setAmount(amountText, "");

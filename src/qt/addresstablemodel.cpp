@@ -28,8 +28,8 @@ const QString AddressTableModel::Delegator = "D";
 const QString AddressTableModel::Delegable = "E";
 const QString AddressTableModel::ColdStaking = "C";
 const QString AddressTableModel::ColdStakingSend = "T";
-const QString AddressTableModel::ShieldedReceive = "U";
-const QString AddressTableModel::ShieldedSend = "V";
+const QString AddressTableModel::ShieldReceive = "U";
+const QString AddressTableModel::ShieldSend = "V";
 
 struct AddressTableEntry {
     enum Type {
@@ -40,8 +40,8 @@ struct AddressTableEntry {
         Delegable,
         ColdStaking,
         ColdStakingSend,
-        ShieldedReceive,
-        ShieldedSend,
+        ShieldReceive,
+        ShieldSend,
         Hidden /* QSortFilterProxyModel will filter these out */
     };
 
@@ -88,10 +88,10 @@ static AddressTableEntry::Type translateTransactionType(const QString& strPurpos
         addressType = AddressTableEntry::ColdStaking;
     else if (strPurpose == QString::fromStdString(AddressBook::AddressBookPurpose::COLD_STAKING_SEND))
         addressType = AddressTableEntry::ColdStakingSend;
-    else if (strPurpose == QString::fromStdString(AddressBook::AddressBookPurpose::SHIELDED_RECEIVE))
-        addressType = AddressTableEntry::ShieldedReceive;
-    else if (strPurpose == QString::fromStdString(AddressBook::AddressBookPurpose::SHIELDED_SEND))
-        addressType = AddressTableEntry::ShieldedSend;
+    else if (strPurpose == QString::fromStdString(AddressBook::AddressBookPurpose::SHIELD_RECEIVE))
+        addressType = AddressTableEntry::ShieldReceive;
+    else if (strPurpose == QString::fromStdString(AddressBook::AddressBookPurpose::SHIELD_SEND))
+        addressType = AddressTableEntry::ShieldSend;
     else if (strPurpose == "unknown" || strPurpose == "") // if purpose not set, guess
         addressType = (isMine ? AddressTableEntry::Receiving : AddressTableEntry::Sending);
     return addressType;
@@ -112,10 +112,10 @@ static QString translateTypeToString(AddressTableEntry::Type type)
             return QObject::tr("Cold Staking");
         case AddressTableEntry::ColdStakingSend:
             return QObject::tr("Cold Staking Contact");
-        case AddressTableEntry::ShieldedReceive:
-            return QObject::tr("Receiving Shielded");
-        case AddressTableEntry::ShieldedSend:
-            return QObject::tr("Contact Shielded");
+        case AddressTableEntry::ShieldReceive:
+            return QObject::tr("Receiving Shield");
+        case AddressTableEntry::ShieldSend:
+            return QObject::tr("Contact Shield");
         case AddressTableEntry::Hidden:
             return QObject::tr("Hidden");
         default:
@@ -133,7 +133,7 @@ public:
     int recvNum = 0;
     int dellNum = 0;
     int coldSendNum = 0;
-    int shieldedSendNum = 0;
+    int shieldSendNum = 0;
     AddressTableModel* parent;
 
     AddressTablePriv(CWallet* wallet, AddressTableModel* parent) : wallet(wallet), parent(parent) {}
@@ -153,7 +153,7 @@ public:
                 bool fMine = IsMine(*wallet, dest);
                 QString addressStr = QString::fromStdString(Standard::EncodeDestination(dest, addrType));
                 uint creationTime = 0;
-                if (addrBookData.isReceivePurpose() || addrBookData.isShieldedReceivePurpose()) {
+                if (addrBookData.isReceivePurpose() || addrBookData.isShieldReceivePurpose()) {
                     creationTime = static_cast<uint>(wallet->GetKeyCreationTime(dest));
                 }
 
@@ -177,7 +177,7 @@ public:
         std::sort(cachedAddressTable.begin(), cachedAddressTable.end(), AddressTableEntryLessThan());
     }
 
-    // add shielded addresses num if needed..
+    // add shield addresses num if needed..
     void updatePurposeCachedCounted(std::string purpose, bool add)
     {
         int *var = nullptr;
@@ -189,8 +189,8 @@ public:
             var = &coldSendNum;
         } else if (purpose == AddressBook::AddressBookPurpose::DELEGABLE || purpose == AddressBook::AddressBookPurpose::DELEGATOR) {
             var = &dellNum;
-        } else if (purpose == AddressBook::AddressBookPurpose::SHIELDED_SEND) {
-            var = &shieldedSendNum;
+        } else if (purpose == AddressBook::AddressBookPurpose::SHIELD_SEND) {
+            var = &shieldSendNum;
         } else {
             return;
         }
@@ -221,7 +221,7 @@ public:
 
             std::string stdPurpose = purpose.toStdString();
             if (stdPurpose == AddressBook::AddressBookPurpose::RECEIVE ||
-                stdPurpose == AddressBook::AddressBookPurpose::SHIELDED_RECEIVE) {
+                stdPurpose == AddressBook::AddressBookPurpose::SHIELD_RECEIVE) {
                 creationTime = static_cast<uint>(wallet->GetKeyCreationTime(Standard::DecodeDestination(address.toStdString())));
             }
 
@@ -294,7 +294,7 @@ public:
     int sizeRecv() { return recvNum; }
     int sizeDell() { return dellNum; }
     int SizeColdSend() { return coldSendNum; }
-    int sizeShieldedSend() { return shieldedSendNum; }
+    int sizeShieldSend() { return shieldSendNum; }
 
     AddressTableEntry* index(int idx)
     {
@@ -334,7 +334,7 @@ int AddressTableModel::sizeSend() const { return priv->sizeSend(); }
 int AddressTableModel::sizeRecv() const { return priv->sizeRecv(); }
 int AddressTableModel::sizeDell() const { return priv->sizeDell(); }
 int AddressTableModel::sizeColdSend() const { return priv->SizeColdSend(); }
-int AddressTableModel::sizeShieldedSend() const { return priv->sizeShieldedSend(); }
+int AddressTableModel::sizeShieldSend() const { return priv->sizeShieldSend(); }
 
 QVariant AddressTableModel::data(const QModelIndex& index, int role) const
 {
@@ -378,10 +378,10 @@ QVariant AddressTableModel::data(const QModelIndex& index, int role) const
                 return ColdStaking;
             case AddressTableEntry::ColdStakingSend:
                 return ColdStakingSend;
-            case AddressTableEntry::ShieldedReceive:
-                return ShieldedReceive;
-            case AddressTableEntry::ShieldedSend:
-                return ShieldedSend;
+            case AddressTableEntry::ShieldReceive:
+                return ShieldReceive;
+            case AddressTableEntry::ShieldSend:
+                return ShieldSend;
             default:
                 break;
         }
@@ -600,14 +600,14 @@ bool AddressTableModel::isWhitelisted(const std::string& address) const
  * Return an unused address
  * @return
  */
-QString AddressTableModel::getAddressToShow(bool isShielded) const
+QString AddressTableModel::getAddressToShow(bool isShield) const
 {
     LOCK(wallet->cs_wallet);
 
     for (auto it = wallet->NewAddressBookIterator(); it.IsValid(); it.Next()) {
         const auto addrData = it.GetValue();
 
-        if (!isShielded) {
+        if (!isShield) {
             if (addrData.purpose == AddressBook::AddressBookPurpose::RECEIVE) {
                 const auto &address = *it.GetCTxDestKey();
                 if (IsValidDestination(address) && IsMine(*wallet, address) && !wallet->IsUsed(address)) {
@@ -615,9 +615,9 @@ QString AddressTableModel::getAddressToShow(bool isShielded) const
                 }
             }
         } else {
-            // todo: add shielded address support to IsUsed
-            if (addrData.purpose == AddressBook::AddressBookPurpose::SHIELDED_RECEIVE) {
-                const auto &address = *it.GetShieldedDestKey();
+            // todo: add shield address support to IsUsed
+            if (addrData.purpose == AddressBook::AddressBookPurpose::SHIELD_RECEIVE) {
+                const auto &address = *it.GetShieldDestKey();
                 if (IsValidPaymentAddress(address) && IsMine(*wallet, address)) {
                     return QString::fromStdString(KeyIO::EncodePaymentAddress(address));
                 }
@@ -628,14 +628,14 @@ QString AddressTableModel::getAddressToShow(bool isShielded) const
     // For some reason we don't have any address in our address book, let's create one
     PairResult res(false);
     QString addressStr;
-    if (!isShielded) {
+    if (!isShield) {
         Destination newAddress;
         res = walletModel->getNewAddress(newAddress, "Default");
         if (res.result) {
             addressStr = QString::fromStdString(newAddress.ToString());
         }
     } else {
-        res = walletModel->getNewShieldedAddress(addressStr, "default shielded");
+        res = walletModel->getNewShieldAddress(addressStr, "default shield");
     }
     return addressStr;
 }

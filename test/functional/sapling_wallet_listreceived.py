@@ -37,28 +37,28 @@ class ListReceivedTest (PivxTestFramework):
         height = 214
         self.generate_and_sync(height+1)
         taddr = self.nodes[1].getnewaddress()
-        shield_addr1 = self.nodes[1].getnewshieldedaddress()
-        shield_addrExt = self.nodes[3].getnewshieldedaddress()
+        shield_addr1 = self.nodes[1].getnewshieldaddress()
+        shield_addrExt = self.nodes[3].getnewshieldaddress()
 
         self.nodes[0].sendtoaddress(taddr, 6.0) # node_1 in taddr with 6 PIV.
         self.generate_and_sync(height+2)
 
         # Try to send with an oversized memo
         assert_raises_rpc_error(-4, "Memo size of 513 is too big, maximum allowed is 512",
-                                self.nodes[1].shieldedsendmany, taddr,
+                                self.nodes[1].shieldsendmany, taddr,
                                 [{'address': shield_addr1, 'amount': 2, 'memo': too_big_memo_str}])
         # Fixed fee
         fee = 0.5
 
         # Send 1 PIV to shield addr1
-        txid = self.nodes[1].shieldedsendmany(taddr, [ # node_1 with 6 PIV sending them all (fee is 0.1 PIV)
+        txid = self.nodes[1].shieldsendmany(taddr, [ # node_1 with 6 PIV sending them all (fee is 0.1 PIV)
             {'address': shield_addr1, 'amount': 2, 'memo': my_memo_str},
             {'address': shield_addrExt, 'amount': 3},
         ], 1, fee)
         self.sync_all()
 
         # Decrypted transaction details should be correct
-        pt = self.nodes[1].viewshieldedtransaction(txid)
+        pt = self.nodes[1].viewshieldtransaction(txid)
         assert_equal(pt['txid'], txid)
         assert_equal(len(pt['spends']), 0)
         assert_equal(len(pt['outputs']), 2)
@@ -82,13 +82,13 @@ class ListReceivedTest (PivxTestFramework):
                 found[1] = True
         assert_equal(found, [True] * 2)
 
-        r = self.nodes[1].listreceivedbyshieldedaddress(shield_addr1)
+        r = self.nodes[1].listreceivedbyshieldaddress(shield_addr1)
         assert_true(0 == len(r), "Should have received no confirmed note")
         c = self.nodes[1].getsaplingnotescount()
         assert_true(0 == c, "Count of confirmed notes should be 0")
 
         # No confirmation required, one note should be present
-        r = self.nodes[1].listreceivedbyshieldedaddress(shield_addr1, 0)
+        r = self.nodes[1].listreceivedbyshieldaddress(shield_addr1, 0)
         assert_true(1 == len(r), "Should have received one (unconfirmed) note")
         assert_equal(txid, r[0]['txid'])
         assert_equal(2, r[0]['amount'])
@@ -112,7 +112,7 @@ class ListReceivedTest (PivxTestFramework):
         r[0]['blockheight'] = height + 3
 
         # Require one confirmation, note should be present
-        r2 = self.nodes[1].listreceivedbyshieldedaddress(shield_addr1)
+        r2 = self.nodes[1].listreceivedbyshieldaddress(shield_addr1)
         # As time will be different (tx was included in a block), need to remove it from the dict
         assert_true(r[0]['blocktime'] != r2[0]['blocktime'])
         del r[0]['blocktime']
@@ -121,14 +121,14 @@ class ListReceivedTest (PivxTestFramework):
         assert_equal(r, r2)
 
         # Get the note nullifier
-        lsu = self.nodes[1].listshieldedunspent();
+        lsu = self.nodes[1].listshieldunspent();
         assert_equal(len(lsu), 1)
         nullifier = lsu[0]["nullifier"]
 
         # Generate some change by sending part of shield_addr1 to shield_addr2
         txidPrev = txid
-        shield_addr2 = self.nodes[1].getnewshieldedaddress()
-        txid = self.nodes[1].shieldedsendmany(shield_addr1, # shield_addr1 has 2 PIV, send 0.6 PIV + 0.5 PIV fee
+        shield_addr2 = self.nodes[1].getnewshieldaddress()
+        txid = self.nodes[1].shieldsendmany(shield_addr1, # shield_addr1 has 2 PIV, send 0.6 PIV + 0.5 PIV fee
                                                [{'address': shield_addr2, 'amount': 0.6, "memo": non_ascii_memo_str}],
                                                1, fee) # change 0.9
         self.sync_all()
@@ -136,10 +136,10 @@ class ListReceivedTest (PivxTestFramework):
 
         # Verify the spent nullifier
         tx_json = self.nodes[1].getrawtransaction(txid, True)
-        assert_equal(nullifier, tx_json["vShieldedSpend"][0]["nullifier"])
+        assert_equal(nullifier, tx_json["vShieldSpend"][0]["nullifier"])
 
         # Decrypted transaction details should be correct
-        pt = self.nodes[1].viewshieldedtransaction(txid)
+        pt = self.nodes[1].viewshieldtransaction(txid)
         assert_equal(pt['txid'], txid)
         assert_equal(len(pt['spends']), 1)
         assert_equal(len(pt['outputs']), 2)
@@ -171,7 +171,7 @@ class ListReceivedTest (PivxTestFramework):
         assert_equal(found, [True] * 2)
 
         # shield_addr1 should have a note with change
-        r = self.nodes[1].listreceivedbyshieldedaddress(shield_addr1, 0)
+        r = self.nodes[1].listreceivedbyshieldaddress(shield_addr1, 0)
         r = sorted(r, key = lambda received: received['amount'])
         assert_true(2 == len(r), "shield_addr1 Should have received 2 notes")
 
@@ -186,7 +186,7 @@ class ListReceivedTest (PivxTestFramework):
         assert_equal(my_memo_hex, r[1]['memo'])
 
         # shield_addr2 should not have change
-        r = self.nodes[1].listreceivedbyshieldedaddress(shield_addr2, 0)
+        r = self.nodes[1].listreceivedbyshieldaddress(shield_addr2, 0)
         r = sorted(r, key = lambda received: received['amount'])
         assert_true(1 == len(r), "shield_addr2 Should have received 1 notes")
         assert_equal(txid, r[0]['txid'])

@@ -88,7 +88,7 @@ public:
 };
 
 /** An outpoint - a combination of a transaction hash and an index n into its sapling
- * output description (vShieldedOutput) */
+ * output description (vShieldOutput) */
 class SaplingOutPoint : public BaseOutPoint
 {
 public:
@@ -302,8 +302,8 @@ public:
     bool hasSaplingData() const
     {
         return sapData != nullopt &&
-            (!sapData->vShieldedOutput.empty() ||
-            !sapData->vShieldedSpend.empty() ||
+            (!sapData->vShieldOutput.empty() ||
+            !sapData->vShieldSpend.empty() ||
             sapData->valueBalance != 0 ||
             sapData->hasBindingSig());
     };
@@ -313,7 +313,7 @@ public:
         return nVersion >= TxVersion::SAPLING;
     }
 
-    bool IsShieldedTx() const
+    bool IsShieldTx() const
     {
         return isSaplingVersion() && hasSaplingData();
     }
@@ -336,9 +336,9 @@ public:
 
     /*
      * Context for the two methods below:
-     * We can think of the Sapling shielded part of the transaction as an input
-     * or output according to whether valueBalance - the sum of shielded input
-     * values minus the sum of shielded output values - is positive or negative.
+     * We can think of the Sapling shield part of the transaction as an input
+     * or output according to whether valueBalance - the sum of shield input
+     * values minus the sum of shield output values - is positive or negative.
      */
 
     // Return sum of txouts.
@@ -347,7 +347,7 @@ public:
     // inputs must be known to compute value in.
 
     // Return sum of (positive valueBalance or zero) and JoinSplit vpub_new
-    CAmount GetShieldedValueIn() const;
+    CAmount GetShieldValueIn() const;
 
     // Compute priority, given priority of inputs and (optionally) tx size
     double ComputePriority(double dPriorityInputs, unsigned int nTxSize=0) const;

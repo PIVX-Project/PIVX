@@ -16,25 +16,25 @@
 
 namespace SaplingValidation {
 
-// Verifies that Shielded txs are properly formed and performs content-independent checks
+// Verifies that Shield txs are properly formed and performs content-independent checks
 bool CheckTransaction(const CTransaction& tx, CValidationState& state, CAmount& nValueOut, bool fIsSaplingActive)
 {
     bool hasSaplingData = tx.hasSaplingData();
 
-    // v1 must not have shielded data.
+    // v1 must not have shield data.
     if (!tx.isSaplingVersion() && hasSaplingData) {
         return state.DoS(100, error("%s: Not Sapling version with Sapling data", __func__ ),
                          REJECT_INVALID, "bad-txns-form-not-sapling");
     }
 
-    // if the tx has no shielded data, return true. No check needed.
+    // if the tx has no shield data, return true. No check needed.
     if (!hasSaplingData) {
         return true;
     }
 
     // From here, all of the checks are done in v3+ transactions.
 
-    // if the tx has shielded data, cannot be a coinstake, coinbase, zcspend and zcmint
+    // if the tx has shield data, cannot be a coinstake, coinbase, zcspend and zcmint
     if (tx.IsCoinStake() || tx.IsCoinBase() || tx.HasZerocoinSpendInputs() || tx.HasZerocoinMintOutputs())
         return state.DoS(100, error("%s: Sapling version with invalid data", __func__),
                          REJECT_INVALID, "bad-txns-invalid-sapling");
@@ -57,7 +57,7 @@ bool CheckTransactionWithoutProofVerification(const CTransaction& tx, CValidatio
     assert(tx.isSaplingVersion());
 
     // Check for non-zero valueBalance when there are no Sapling inputs or outputs
-    if (tx.sapData->vShieldedSpend.empty() && tx.sapData->vShieldedOutput.empty() && tx.sapData->valueBalance != 0) {
+    if (tx.sapData->vShieldSpend.empty() && tx.sapData->vShieldOutput.empty() && tx.sapData->valueBalance != 0) {
         return state.DoS(100, error("%s: tx.sapData->valueBalance has no sources or sinks", __func__ ),
                          REJECT_INVALID, "bad-txns-valuebalance-nonzero");
     }
@@ -80,7 +80,7 @@ bool CheckTransactionWithoutProofVerification(const CTransaction& tx, CValidatio
 
     // Ensure input values do not exceed consensus.nMaxMoneyOut
     // We have not resolved the txin values at this stage,
-    // but we do know what the shielded tx claim to add
+    // but we do know what the shield tx claim to add
     // to the value pool.
 
     // NB: positive valueBalance "adds" money to the transparent value pool, just as inputs do
@@ -92,7 +92,7 @@ bool CheckTransactionWithoutProofVerification(const CTransaction& tx, CValidatio
     // Check for duplicate sapling nullifiers in this transaction
     {
         std::set<uint256> vSaplingNullifiers;
-        for (const SpendDescription& spend_desc : tx.sapData->vShieldedSpend) {
+        for (const SpendDescription& spend_desc : tx.sapData->vShieldSpend) {
             if (vSaplingNullifiers.count(spend_desc.nullifier))
                 return state.DoS(100, error("%s: duplicate nullifiers", __func__ ),
                                  REJECT_INVALID, "bad-spend-description-nullifiers-duplicate");
@@ -150,17 +150,17 @@ bool ContextualCheckTransaction(
                 REJECT_INVALID, "bad-tx-sapling-version-too-low");
     }
 
-    bool hasShieldedData = tx.hasSaplingData();
-    // A coinbase/coinstake transaction cannot have output descriptions nor shielded spends
+    bool hasShieldData = tx.hasSaplingData();
+    // A coinbase/coinstake transaction cannot have output descriptions nor shield spends
     if (tx.IsCoinBase() || tx.IsCoinStake()) {
-        if (hasShieldedData)
+        if (hasShieldData)
             return state.DoS(
                     dosLevelPotentiallyRelaxing,
                     error("%s: coinbase/coinstake has output/spend descriptions", __func__ ),
-                    REJECT_INVALID, "bad-cs-has-shielded-data");
+                    REJECT_INVALID, "bad-cs-has-shield-data");
     }
 
-    if (hasShieldedData) {
+    if (hasShieldData) {
         uint256 dataToBeSigned;
         // Empty output script.
         CScript scriptCode;
@@ -176,7 +176,7 @@ bool ContextualCheckTransaction(
         // Sapling verification process
         auto ctx = librustzcash_sapling_verification_ctx_init();
 
-        for (const SpendDescription &spend : tx.sapData->vShieldedSpend) {
+        for (const SpendDescription &spend : tx.sapData->vShieldSpend) {
             if (!librustzcash_sapling_check_spend(
                     ctx,
                     spend.cv.begin(),
@@ -194,7 +194,7 @@ bool ContextualCheckTransaction(
             }
         }
 
-        for (const OutputDescription &output : tx.sapData->vShieldedOutput) {
+        for (const OutputDescription &output : tx.sapData->vShieldOutput) {
             if (!librustzcash_sapling_check_output(
                     ctx,
                     output.cv.begin(),

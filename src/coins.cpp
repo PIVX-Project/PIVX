@@ -337,7 +337,7 @@ CAmount CCoinsViewCache::GetValueIn(const CTransaction& tx) const
         nResult += AccessCoin(tx.vin[i].prevout).out.nValue;
 
     // Sapling
-    nResult += tx.GetShieldedValueIn();
+    nResult += tx.GetShieldValueIn();
 
     return nResult;
 }
@@ -361,11 +361,11 @@ double CCoinsViewCache::GetPriority(const CTransaction& tx, int nHeight, CAmount
         return 0.0;
 
 
-    // Shielded transfers do not reveal any information about the value or age of a note, so we
+    // Shield transfers do not reveal any information about the value or age of a note, so we
     // cannot apply the priority algorithm used for transparent utxos.  Instead, we just
-    // use the maximum priority for all (partially or fully) shielded transactions.
-    // (Note that coinbase/coinstakes transactions cannot contain Sapling shielded Spends or Outputs.)
-    if (tx.IsShieldedTx()) {
+    // use the maximum priority for all (partially or fully) shield transactions.
+    // (Note that coinbase/coinstakes transactions cannot contain Sapling shield Spends or Outputs.)
+    if (tx.IsShieldTx()) {
         return INF_PRIORITY;
     }
 
@@ -565,7 +565,7 @@ void CCoinsViewCache::PopAnchor(const uint256 &newrt) {
 
 void CCoinsViewCache::SetNullifiers(const CTransaction& tx, bool spent) {
     if (tx.sapData) {
-        for (const SpendDescription& spendDescription : tx.sapData->vShieldedSpend) {
+        for (const SpendDescription& spendDescription : tx.sapData->vShieldSpend) {
             std::pair<CNullifiersMap::iterator, bool> ret = cacheSaplingNullifiers.insert(
                     std::make_pair(spendDescription.nullifier, CNullifiersCacheEntry()));
             ret.first->second.entered = spent;
@@ -580,10 +580,10 @@ uint256 CCoinsViewCache::GetBestAnchor() const {
     return hashSaplingAnchor;
 }
 
-bool CCoinsViewCache::HaveShieldedRequirements(const CTransaction& tx) const
+bool CCoinsViewCache::HaveShieldRequirements(const CTransaction& tx) const
 {
-    if (tx.IsShieldedTx()) {
-        for (const SpendDescription &spendDescription : tx.sapData->vShieldedSpend) {
+    if (tx.IsShieldTx()) {
+        for (const SpendDescription &spendDescription : tx.sapData->vShieldSpend) {
             if (GetNullifier(spendDescription.nullifier)) // Prevent double spends
                 return false;
 
