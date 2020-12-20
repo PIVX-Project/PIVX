@@ -107,9 +107,9 @@ private:
     bool isTransparent = true;
     void resizeMenu();
     SendMultiRow* createEntry();
-    void ProcessSend(QList<SendCoinsRecipient>& recipients, bool hasShieldedOutput,
+    void ProcessSend(QList<SendCoinsRecipient>& recipients, bool hasShieldOutput,
                      const std::function<bool(QList<SendCoinsRecipient>&)>& func = nullptr);
-    OperationResult prepareShielded(WalletModelTransaction* tx, bool fromTransparent);
+    OperationResult prepareShield(WalletModelTransaction* tx, bool fromTransparent);
     OperationResult prepareTransparent(WalletModelTransaction* tx);
     bool sendFinalStep();
     void setFocusOnLastEntry();

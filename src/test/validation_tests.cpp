@@ -73,8 +73,8 @@ void test_simple_sapling_invalidity(CMutableTransaction& tx)
         CMutableTransaction newTx(tx);
         CValidationState state;
 
-        newTx.sapData->vShieldedSpend.emplace_back();
-        newTx.sapData->vShieldedSpend[0].nullifier = GetRandHash();
+        newTx.sapData->vShieldSpend.emplace_back();
+        newTx.sapData->vShieldSpend[0].nullifier = GetRandHash();
 
         BOOST_CHECK(!CheckTransaction(newTx, false, false, state, false));
         BOOST_CHECK(state.GetRejectReason() == "bad-txns-vout-empty");
@@ -84,18 +84,18 @@ void test_simple_sapling_invalidity(CMutableTransaction& tx)
         CMutableTransaction newTx(tx);
         CValidationState state;
 
-        newTx.sapData->vShieldedSpend.emplace_back();
-        newTx.sapData->vShieldedSpend[0].nullifier = GetRandHash();
+        newTx.sapData->vShieldSpend.emplace_back();
+        newTx.sapData->vShieldSpend[0].nullifier = GetRandHash();
 
-        newTx.sapData->vShieldedOutput.emplace_back();
+        newTx.sapData->vShieldOutput.emplace_back();
 
-        newTx.sapData->vShieldedSpend.emplace_back();
-        newTx.sapData->vShieldedSpend[1].nullifier = newTx.sapData->vShieldedSpend[0].nullifier;
+        newTx.sapData->vShieldSpend.emplace_back();
+        newTx.sapData->vShieldSpend[1].nullifier = newTx.sapData->vShieldSpend[0].nullifier;
 
         BOOST_CHECK(!SaplingValidation::CheckTransactionWithoutProofVerification(newTx, state, nDummyValueOut));
         BOOST_CHECK(state.GetRejectReason() == "bad-spend-description-nullifiers-duplicate");
 
-        newTx.sapData->vShieldedSpend[1].nullifier = GetRandHash();
+        newTx.sapData->vShieldSpend[1].nullifier = GetRandHash();
 
         BOOST_CHECK(SaplingValidation::CheckTransactionWithoutProofVerification(newTx, state, nDummyValueOut));
     }
@@ -111,7 +111,7 @@ void test_simple_sapling_invalidity(CMutableTransaction& tx)
         vout.nValue = 2;
         newTx.vout.emplace_back(vout);
 
-        newTx.sapData->vShieldedSpend.emplace_back();
+        newTx.sapData->vShieldSpend.emplace_back();
 
         BOOST_CHECK(!CheckTransaction(newTx, false, false, state, false, false, true));
         BOOST_CHECK(state.GetRejectReason() == "bad-txns-invalid-sapling");
@@ -130,14 +130,14 @@ void test_simple_sapling_invalidity(CMutableTransaction& tx)
         vout.nValue = 2;
         newTx.vout.emplace_back(vout);
 
-        newTx.sapData->vShieldedSpend.emplace_back();
+        newTx.sapData->vShieldSpend.emplace_back();
 
         BOOST_CHECK(!CheckTransaction(newTx, false, false, state, false, false, true));
         BOOST_CHECK(state.GetRejectReason() == "bad-txns-invalid-sapling");
     }
 }
 
-BOOST_AUTO_TEST_CASE(test_simple_shielded_invalid)
+BOOST_AUTO_TEST_CASE(test_simple_shield_invalid)
 {
     // Switch to regtest parameters so we can activate Sapling
     SelectParams(CBaseChainParams::REGTEST);

@@ -24,8 +24,8 @@ class SaplingSupplyTest(PivxTestFramework):
 
     def check_shield_supply(self, z_supply):
         self.log.info("Checking supply...")
-        assert_equal(self.nodes[0].getsupplyinfo()['shieldedsupply'], z_supply)
-        self.log.info("OK. Shielded supply is %.8f" % z_supply)
+        assert_equal(self.nodes[0].getsupplyinfo()['shieldsupply'], z_supply)
+        self.log.info("OK. Shield supply is %.8f" % z_supply)
 
     def run_test(self):
         fee = 1
@@ -33,20 +33,20 @@ class SaplingSupplyTest(PivxTestFramework):
         self.log.info("Generating 101 blocks...")
         self.generate_and_sync(101)
 
-        # Check the shielded supply 0
+        # Check the shield supply 0
         z_supply = 0
         self.check_shield_supply(z_supply)
 
         # Send 200 PIV to shield addr1
         self.log.info("Shielding 200 PIV...")
-        z_addr1 = self.nodes[0].getnewshieldedaddress()
-        txid = self.nodes[0].shieldedsendmany(
+        z_addr1 = self.nodes[0].getnewshieldaddress()
+        txid = self.nodes[0].shieldsendmany(
             "from_transparent", [{'address': z_addr1, 'amount': 200,
-                                  'memo': "first shielded coin!"}], 1, fee)
+                                  'memo': "first shield coin!"}], 1, fee)
         self.sync_all()
 
         # Decrypted transaction details should be correct
-        pt = self.nodes[0].viewshieldedtransaction(txid)
+        pt = self.nodes[0].viewshieldtransaction(txid)
         assert_equal(pt['txid'], txid)
         assert_equal(len(pt['spends']), 0)
         assert_equal(len(pt['outputs']), 1)
@@ -54,11 +54,11 @@ class SaplingSupplyTest(PivxTestFramework):
         assert_equal(out['output'], 0)
         assert_equal(out['address'], z_addr1)
         assert_equal(out['outgoing'], False)
-        assert_equal(out['memoStr'], "first shielded coin!")
+        assert_equal(out['memoStr'], "first shield coin!")
         assert_equal(out['value'], Decimal('200'))
         assert_equal(out['valueSat'], 20000000000)
 
-        # Check the shielded supply
+        # Check the shield supply
         self.generate_and_sync(5)
         z_supply += 200
         self.check_shield_supply(z_supply)
@@ -66,17 +66,17 @@ class SaplingSupplyTest(PivxTestFramework):
         # Deshield 100 coins
         self.log.info("Deshielding 100 PIV...")
         t_addr1 = self.nodes[0].getnewaddress()
-        txid = self.nodes[0].shieldedsendmany(
-            "from_shielded", [{'address': t_addr1, 'amount': 100}], 1, fee)
+        txid = self.nodes[0].shieldsendmany(
+            "from_shield", [{'address': t_addr1, 'amount': 100}], 1, fee)
         self.sync_all()
 
         # Decrypted transaction details should be correct
-        pt = self.nodes[0].viewshieldedtransaction(txid)
+        pt = self.nodes[0].viewshieldtransaction(txid)
         assert_equal(pt['txid'], txid)
         assert_equal(len(pt['spends']), 1)
         assert_equal(len(pt['outputs']), 1)
 
-        # Check the shielded supply
+        # Check the shield supply
         self.generate_and_sync(1)
         z_supply -= (100 + fee)
         self.check_shield_supply(z_supply)

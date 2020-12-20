@@ -310,7 +310,7 @@ public:
     void SetNullifiers(const CTransaction& tx, bool spent);
 
     //! Check whether all sapling spend requirements (anchors/nullifiers) are satisfied
-    bool HaveShieldedRequirements(const CTransaction& tx) const;
+    bool HaveShieldRequirements(const CTransaction& tx) const;
 
     // Standard CCoinsView methods
     bool GetCoin(const COutPoint& outpoint, Coin& coin) const override;

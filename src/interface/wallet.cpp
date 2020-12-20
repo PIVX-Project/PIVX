@@ -21,8 +21,8 @@ namespace interfaces {
         }
         result.delegate_balance = m_wallet.GetDelegatedBalance();
         result.coldstaked_balance = m_wallet.GetColdStakingBalance();
-        result.shielded_balance = m_wallet.GetAvailableShieldedBalance();
-        result.unconfirmed_shielded_balance = m_wallet.GetUnconfirmedShieldedBalance();
+        result.shield_balance = m_wallet.GetAvailableShieldBalance();
+        result.unconfirmed_shield_balance = m_wallet.GetUnconfirmedShieldBalance();
         return result;
     }
 

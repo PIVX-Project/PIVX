@@ -231,7 +231,7 @@ public:
     explicit CAddressBookIterator(std::map<CWDestination, AddressBook::CAddressBookData>& _map) : map(_map), it(_map.begin()), itEnd(_map.end()) {}
     const CWDestination* GetDestKey();
     const CTxDestination* GetCTxDestKey();
-    const libzcash::SaplingPaymentAddress* GetShieldedDestKey();
+    const libzcash::SaplingPaymentAddress* GetShieldDestKey();
     AddressBook::CAddressBookData GetValue() { return it->second; }
 
     bool IsValid() { return it != itEnd; }
@@ -598,7 +598,7 @@ public:
     void ResendWalletTransactions(CConnman* connman);
 
     CAmount loopTxsBalance(std::function<void(const uint256&, const CWalletTx&, CAmount&)>method) const;
-    CAmount GetAvailableBalance(bool fIncludeDelegated = true, bool fIncludeShielded = true) const;
+    CAmount GetAvailableBalance(bool fIncludeDelegated = true, bool fIncludeShield = true) const;
     CAmount GetAvailableBalance(isminefilter& filter, bool useCache = false, int minDepth = 1) const;
     CAmount GetColdStakingBalance() const;  // delegated coins for which we have the staking key
     CAmount GetImmatureColdStakingBalance() const;
@@ -658,9 +658,9 @@ public:
     bool MultiSend();
     void AutoCombineDust(CConnman* connman);
 
-    // Shielded balances
-    CAmount GetAvailableShieldedBalance(bool fUseCache = true) const;
-    CAmount GetUnconfirmedShieldedBalance() const;
+    // Shield balances
+    CAmount GetAvailableShieldBalance(bool fUseCache = true) const;
+    CAmount GetUnconfirmedShieldBalance() const;
 
     static CFeeRate minTxFee;
     /**
@@ -942,8 +942,8 @@ public:
     mutable bool fStakeDelegationVoided;
     mutable bool fChangeCached;
     mutable CAmount nChangeCached;
-    mutable bool fShieldedChangeCached;
-    mutable CAmount nShieldedChangeCached;
+    mutable bool fShieldChangeCached;
+    mutable CAmount nShieldChangeCached;
 
     CWalletTx();
     CWalletTx(const CWallet* pwalletIn);
@@ -1028,9 +1028,9 @@ public:
     CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache = true) const;
     CAmount GetChange() const;
 
-    // Shielded credit/debit/change
-    CAmount GetShieldedChange() const;
-    CAmount GetShieldedAvailableCredit(bool fUseCache = true) const;
+    // Shield credit/debit/change
+    CAmount GetShieldChange() const;
+    CAmount GetShieldAvailableCredit(bool fUseCache = true) const;
 
     // Cold staking contracts credit/debit
     CAmount GetColdStakingCredit(bool fUseCache = true) const;

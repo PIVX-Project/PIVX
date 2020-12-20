@@ -22,9 +22,9 @@ class WalletChangeAddressesTest(PivxTestFramework):
         self.nodes[0].generate(110)
 
         # Obtain some transparent funds
-        midAddr = self.nodes[0].getnewshieldedaddress()
+        midAddr = self.nodes[0].getnewshieldaddress()
         # Shield almost all the balance
-        txid = self.nodes[0].shieldedsendmany(get_coinstake_address(self.nodes[0]), [{"address": midAddr, "amount": Decimal(2400)}])
+        txid = self.nodes[0].shieldsendmany(get_coinstake_address(self.nodes[0]), [{"address": midAddr, "amount": Decimal(2400)}])
 
         self.sync_all()
         self.nodes[1].generate(1)
@@ -32,19 +32,19 @@ class WalletChangeAddressesTest(PivxTestFramework):
         taddrSource = self.nodes[0].getnewaddress()
         for _ in range(6):
             recipients = [{"address": taddrSource, "amount": Decimal('3')}]
-            txid = self.nodes[0].shieldedsendmany(midAddr, recipients, 1)
+            txid = self.nodes[0].shieldsendmany(midAddr, recipients, 1)
             self.sync_all()
             self.nodes[1].generate(1)
             self.sync_all()
 
-        def check_change_taddr_reuse(target, isTargetShielded):
+        def check_change_taddr_reuse(target, isTargetShield):
             recipients = [{"address": target, "amount": Decimal('1')}]
 
             # Send funds to recipient address twice
-            txid1 = self.nodes[0].shieldedsendmany(taddrSource, recipients, 1)
+            txid1 = self.nodes[0].shieldsendmany(taddrSource, recipients, 1)
             self.nodes[1].generate(1)
             self.sync_all()
-            txid2 = self.nodes[0].shieldedsendmany(taddrSource, recipients, 1)
+            txid2 = self.nodes[0].shieldsendmany(taddrSource, recipients, 1)
             self.nodes[1].generate(1)
             self.sync_all()
 
@@ -63,13 +63,13 @@ class WalletChangeAddressesTest(PivxTestFramework):
                     assert(tx1OutAddrs != tx2OutAddrs)
 
         taddr = self.nodes[0].getnewaddress()
-        saplingAddr = self.nodes[0].getnewshieldedaddress()
+        saplingAddr = self.nodes[0].getnewshieldaddress()
 
         print()
-        print('Checking shieldedsendmany(taddr->Sapling)')
+        print('Checking shieldsendmany(taddr->Sapling)')
         check_change_taddr_reuse(saplingAddr, True)
         print()
-        print('Checking shieldedsendmany(taddr->taddr)')
+        print('Checking shieldsendmany(taddr->taddr)')
         check_change_taddr_reuse(taddr, False)
 
 if __name__ == '__main__':

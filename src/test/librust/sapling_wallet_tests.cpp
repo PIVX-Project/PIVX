@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE(SetSaplingNoteAddrsInCWalletTx) {
     RegtestDeactivateSapling();
 }
 
-// Cannot add note data for an index which does not exist in tx.vShieldedOutput
+// Cannot add note data for an index which does not exist in tx.vShieldOutput
 BOOST_AUTO_TEST_CASE(SetInvalidSaplingNoteDataInCWalletTx) {
     CWalletTx wtx;
     BOOST_CHECK_EQUAL(0, wtx.mapSaplingNoteData.size());
@@ -245,10 +245,10 @@ BOOST_AUTO_TEST_CASE(GetConflictedSaplingNotes) {
 
     // Decrypt output note B
     auto maybe_pt = libzcash::SaplingNotePlaintext::decrypt(
-            wtx.sapData->vShieldedOutput[0].encCiphertext,
+            wtx.sapData->vShieldOutput[0].encCiphertext,
             ivk,
-            wtx.sapData->vShieldedOutput[0].ephemeralKey,
-            wtx.sapData->vShieldedOutput[0].cmu);
+            wtx.sapData->vShieldOutput[0].ephemeralKey,
+            wtx.sapData->vShieldOutput[0].cmu);
     BOOST_CHECK(static_cast<bool>(maybe_pt) == true);
     auto maybe_note = maybe_pt.get().note(ivk);
     BOOST_CHECK(static_cast<bool>(maybe_note) == true);
@@ -536,10 +536,10 @@ BOOST_AUTO_TEST_CASE(SpentSaplingNoteIsFromMe) {
 
     // Decrypt note B
     auto maybe_pt = libzcash::SaplingNotePlaintext::decrypt(
-            wtx.sapData->vShieldedOutput[0].encCiphertext,
+            wtx.sapData->vShieldOutput[0].encCiphertext,
             ivk,
-            wtx.sapData->vShieldedOutput[0].ephemeralKey,
-            wtx.sapData->vShieldedOutput[0].cmu);
+            wtx.sapData->vShieldOutput[0].ephemeralKey,
+            wtx.sapData->vShieldOutput[0].cmu);
     BOOST_CHECK_EQUAL(static_cast<bool>(maybe_pt), true);
     auto maybe_note = maybe_pt.get().note(ivk);
     BOOST_CHECK_EQUAL(static_cast<bool>(maybe_note), true);
@@ -564,8 +564,8 @@ BOOST_AUTO_TEST_CASE(SpentSaplingNoteIsFromMe) {
     auto tx2 = builder2.Build().GetTxOrThrow();
     BOOST_CHECK_EQUAL(tx2.vin.size(), 0);
     BOOST_CHECK_EQUAL(tx2.vout.size(), 0);
-    BOOST_CHECK_EQUAL(tx2.sapData->vShieldedSpend.size(), 1);
-    BOOST_CHECK_EQUAL(tx2.sapData->vShieldedOutput.size(), 1);   // 0.025 dust change added to the fee
+    BOOST_CHECK_EQUAL(tx2.sapData->vShieldSpend.size(), 1);
+    BOOST_CHECK_EQUAL(tx2.sapData->vShieldOutput.size(), 1);   // 0.025 dust change added to the fee
     BOOST_CHECK_EQUAL(tx2.sapData->valueBalance, 12500000);      // 0.025 dust change added to the fee
 
     CWalletTx wtx2 {&wallet, tx2};
@@ -1059,8 +1059,8 @@ BOOST_AUTO_TEST_CASE(MarkAffectedSaplingTransactionsDirty) {
 
     BOOST_CHECK_EQUAL(tx1.vin.size(), 1);
     BOOST_CHECK_EQUAL(tx1.vout.size(), 0);
-    BOOST_CHECK_EQUAL(tx1.sapData->vShieldedSpend.size(), 0);
-    BOOST_CHECK_EQUAL(tx1.sapData->vShieldedOutput.size(), 1);
+    BOOST_CHECK_EQUAL(tx1.sapData->vShieldSpend.size(), 0);
+    BOOST_CHECK_EQUAL(tx1.sapData->vShieldOutput.size(), 1);
     BOOST_CHECK_EQUAL(tx1.sapData->valueBalance, -40000000);
 
     CWalletTx wtx {&wallet, tx1};
@@ -1096,7 +1096,7 @@ BOOST_AUTO_TEST_CASE(MarkAffectedSaplingTransactionsDirty) {
 
     // Prepare to spend the note that was just created
     auto maybe_pt = libzcash::SaplingNotePlaintext::decrypt(
-            tx1.sapData->vShieldedOutput[0].encCiphertext, ivk, tx1.sapData->vShieldedOutput[0].ephemeralKey, tx1.sapData->vShieldedOutput[0].cmu);
+            tx1.sapData->vShieldOutput[0].encCiphertext, ivk, tx1.sapData->vShieldOutput[0].ephemeralKey, tx1.sapData->vShieldOutput[0].cmu);
     BOOST_CHECK(static_cast<bool>(maybe_pt));
     auto maybe_note = maybe_pt.get().note(ivk);
     BOOST_CHECK(static_cast<bool>(maybe_note));
@@ -1114,8 +1114,8 @@ BOOST_AUTO_TEST_CASE(MarkAffectedSaplingTransactionsDirty) {
 
     BOOST_CHECK_EQUAL(tx2.vin.size(), 0);
     BOOST_CHECK_EQUAL(tx2.vout.size(), 0);
-    BOOST_CHECK_EQUAL(tx2.sapData->vShieldedSpend.size(), 1);
-    BOOST_CHECK_EQUAL(tx2.sapData->vShieldedOutput.size(), 1); // 0.05 dust change added to the fee
+    BOOST_CHECK_EQUAL(tx2.sapData->vShieldSpend.size(), 1);
+    BOOST_CHECK_EQUAL(tx2.sapData->vShieldOutput.size(), 1); // 0.05 dust change added to the fee
     BOOST_CHECK_EQUAL(tx2.sapData->valueBalance, 15000000);    // 0.05 dust change added to the fee
 
     CWalletTx wtx2 {&wallet, tx2};
@@ -1139,6 +1139,6 @@ BOOST_AUTO_TEST_CASE(MarkAffectedSaplingTransactionsDirty) {
     RegtestDeactivateSapling();
 }
 
-// TODO: Back port WriteWitnessCache & SetBestChainIgnoresTxsWithoutShieldedData test cases.
+// TODO: Back port WriteWitnessCache & SetBestChainIgnoresTxsWithoutShieldData test cases.
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -89,24 +89,24 @@ BOOST_AUTO_TEST_CASE(rpc_wallet_getbalance)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    BOOST_CHECK_THROW(CallRPC("getshieldedbalance too many args"), std::runtime_error);
-    BOOST_CHECK_THROW(CallRPC("getshieldedbalance invalidaddress"), std::runtime_error);
-    BOOST_CHECK_THROW(CallRPC("getshieldedbalance tmC6YZnCUhm19dEXxh3Jb7srdBJxDawaCab"), std::runtime_error);
-    BOOST_CHECK_NO_THROW(CallRPC("getshieldedbalance ptestsapling1h0w73csah2aq0a32h42kr7tq4htlt5wfn4ejxfnm56f6ehjvek7k4e244g6v8v3pgylmz5ea8jh"));
-    BOOST_CHECK_THROW(CallRPC("getshieldedbalance ptestsapling1h0w73csah2aq0a32h42kr7tq4htlt5wfn4ejxfnm56f6ehjvek7k4e244g6v8v3pgylmz5ea8jh -1"), std::runtime_error);
-    BOOST_CHECK_NO_THROW(CallRPC("getshieldedbalance ptestsapling1nrn6exksuqtpld9gu6fwdz4hwg54h2x37gutdds89pfyg6mtjf63km45a8eare5qla45cj75vs8 0"));
-    BOOST_CHECK_THROW(CallRPC("getshieldedbalance tnRZ8bPq2pff3xBWhTJhNkVUkm2uhzksDeW5PvEa7aFKGT9Qi3YgTALZfjaY4jU3HLVKBtHdSXxoPoLA3naMPcHBcY88FcF 1"), std::runtime_error);
-    BOOST_CHECK_NO_THROW(CallRPC("getshieldedbalance *"));
-    BOOST_CHECK_NO_THROW(CallRPC("getshieldedbalance * 6"));
-    BOOST_CHECK_THROW(CallRPC("getshieldedbalance * -1"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("getshieldbalance too many args"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("getshieldbalance invalidaddress"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("getshieldbalance tmC6YZnCUhm19dEXxh3Jb7srdBJxDawaCab"), std::runtime_error);
+    BOOST_CHECK_NO_THROW(CallRPC("getshieldbalance ptestsapling1h0w73csah2aq0a32h42kr7tq4htlt5wfn4ejxfnm56f6ehjvek7k4e244g6v8v3pgylmz5ea8jh"));
+    BOOST_CHECK_THROW(CallRPC("getshieldbalance ptestsapling1h0w73csah2aq0a32h42kr7tq4htlt5wfn4ejxfnm56f6ehjvek7k4e244g6v8v3pgylmz5ea8jh -1"), std::runtime_error);
+    BOOST_CHECK_NO_THROW(CallRPC("getshieldbalance ptestsapling1nrn6exksuqtpld9gu6fwdz4hwg54h2x37gutdds89pfyg6mtjf63km45a8eare5qla45cj75vs8 0"));
+    BOOST_CHECK_THROW(CallRPC("getshieldbalance tnRZ8bPq2pff3xBWhTJhNkVUkm2uhzksDeW5PvEa7aFKGT9Qi3YgTALZfjaY4jU3HLVKBtHdSXxoPoLA3naMPcHBcY88FcF 1"), std::runtime_error);
+    BOOST_CHECK_NO_THROW(CallRPC("getshieldbalance *"));
+    BOOST_CHECK_NO_THROW(CallRPC("getshieldbalance * 6"));
+    BOOST_CHECK_THROW(CallRPC("getshieldbalance * -1"), std::runtime_error);
 
-    BOOST_CHECK_THROW(CallRPC("listreceivedbyshieldedaddress too many args"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listreceivedbyshieldaddress too many args"), std::runtime_error);
     // negative minconf not allowed
-    BOOST_CHECK_THROW(CallRPC("listreceivedbyshieldedaddress yBYhwgzufrZ6F5VVuK9nEChENArq934mqC -1"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listreceivedbyshieldaddress yBYhwgzufrZ6F5VVuK9nEChENArq934mqC -1"), std::runtime_error);
     // invalid zaddr, taddr not allowed
-    BOOST_CHECK_THROW(CallRPC("listreceivedbyshieldedaddress yBYhwgzufrZ6F5VVuK9nEChENArq934mqC 0"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listreceivedbyshieldaddress yBYhwgzufrZ6F5VVuK9nEChENArq934mqC 0"), std::runtime_error);
     // don't have the spending key
-    BOOST_CHECK_THROW(CallRPC("listreceivedbyshieldedaddress ptestsapling1nrn6exksuqtpld9gu6fwdz4hwg54h2x37gutdds89pfyg6mtjf63km45a8eare5qla45cj75vs8 1"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listreceivedbyshieldaddress ptestsapling1nrn6exksuqtpld9gu6fwdz4hwg54h2x37gutdds89pfyg6mtjf63km45a8eare5qla45cj75vs8 1"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(rpc_wallet_sapling_importkey_paymentaddress) {
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE(rpc_wallet_sapling_importexport)
     }
 
     // Verify we can list the keys imported
-    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldedaddresses"));
+    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldaddresses"));
     UniValue arr = retValue.get_array();
     BOOST_CHECK((int) arr.size() == n1);
 
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE(rpc_wallet_sapling_importexport)
     BOOST_CHECK((int) saplingAddrs.size() == numAddrs);
 
     // Ask wallet to list addresses
-    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldedaddresses"));
+    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldaddresses"));
     arr = retValue.get_array();
     BOOST_CHECK((int) arr.size() == numAddrs);
 
@@ -230,7 +230,7 @@ void CheckHaveAddr(const libzcash::PaymentAddress& addr) {
     BOOST_CHECK(pwalletMain->HaveSpendingKeyForPaymentAddress(*addr_of_type));
 }
 
-BOOST_AUTO_TEST_CASE(rpc_wallet_getnewshieldedaddress) {
+BOOST_AUTO_TEST_CASE(rpc_wallet_getnewshieldaddress) {
     UniValue addr;
     {
         LOCK(pwalletMain->cs_wallet);
@@ -239,57 +239,57 @@ BOOST_AUTO_TEST_CASE(rpc_wallet_getnewshieldedaddress) {
     }
 
     // No parameter defaults to sapling address
-    addr = CallRPC("getnewshieldedaddress");
+    addr = CallRPC("getnewshieldaddress");
     CheckHaveAddr(KeyIO::DecodePaymentAddress(addr.get_str()));
     // Too many arguments will throw with the help
-    BOOST_CHECK_THROW(CallRPC("getnewshieldedaddress many args"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("getnewshieldaddress many args"), std::runtime_error);
 }
 
-BOOST_AUTO_TEST_CASE(rpc_shieldedsendmany_parameters)
+BOOST_AUTO_TEST_CASE(rpc_shieldsendmany_parameters)
 {
     SelectParams(CBaseChainParams::TESTNET);
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    BOOST_CHECK_THROW(CallRPC("shieldedsendmany"), std::runtime_error);
-    BOOST_CHECK_THROW(CallRPC("shieldedsendmany toofewargs"), std::runtime_error);
-    BOOST_CHECK_THROW(CallRPC("shieldedsendmany just too many args here"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("shieldsendmany"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("shieldsendmany toofewargs"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("shieldsendmany just too many args here"), std::runtime_error);
 
     // bad from address
-    BOOST_CHECK_THROW(CallRPC("shieldedsendmany "
+    BOOST_CHECK_THROW(CallRPC("shieldsendmany "
                               "INVALIDyBYhwgzufrZ6F5VVuK9nEChENArq934mqC []"), std::runtime_error);
     // empty amounts
-    BOOST_CHECK_THROW(CallRPC("shieldedsendmany "
+    BOOST_CHECK_THROW(CallRPC("shieldsendmany "
                               "yBYhwgzufrZ6F5VVuK9nEChENArq934mqC []"), std::runtime_error);
 
     // don't have the spending key for this address
-    BOOST_CHECK_THROW(CallRPC("shieldedsendmany "
+    BOOST_CHECK_THROW(CallRPC("shieldsendmany "
                               "ptestsapling1wpurflqllgkcs48m46yu9ktlfe3ahndely20dpaanqq3lw9l5xw7yfehst68yclvlpz7x8cltxe"
                               "UkJ1oSfbhTJhm72WiZizvkZz5aH1 []"), std::runtime_error);
 
     // duplicate address
-    BOOST_CHECK_THROW(CallRPC("shieldedsendmany "
+    BOOST_CHECK_THROW(CallRPC("shieldsendmany "
                               "yBYhwgzufrZ6F5VVuK9nEChENArq934mqC "
                               "[{\"address\":\"yAJ4bGeDFcEtx24kbr413fBLpWQcdR5F2z\", \"amount\":50.0},"
                               " {\"address\":\"yAJ4bGeDFcEtx24kbr413fBLpWQcdR5F2z\", \"amount\":12.0} ]"
     ), std::runtime_error);
 
     // invalid fee amount, cannot be negative
-    BOOST_CHECK_THROW(CallRPC("shieldedsendmany "
+    BOOST_CHECK_THROW(CallRPC("shieldsendmany "
                               "yBYhwgzufrZ6F5VVuK9nEChENArq934mqC "
                               "[{\"address\":\"yAJ4bGeDFcEtx24kbr413fBLpWQcdR5F2z\", \"amount\":50.0}] "
                               "1 -0.0001"
     ), std::runtime_error);
 
     // invalid fee amount, bigger than MAX_MONEY
-    BOOST_CHECK_THROW(CallRPC("shieldedsendmany "
+    BOOST_CHECK_THROW(CallRPC("shieldsendmany "
                               "yBYhwgzufrZ6F5VVuK9nEChENArq934mqC "
                               "[{\"address\":\"yAJ4bGeDFcEtx24kbr413fBLpWQcdR5F2z\", \"amount\":50.0}] "
                               "1 21000001"
     ), std::runtime_error);
 
     // fee amount is bigger than sum of outputs
-    BOOST_CHECK_THROW(CallRPC("shieldedsendmany "
+    BOOST_CHECK_THROW(CallRPC("shieldsendmany "
                               "yBYhwgzufrZ6F5VVuK9nEChENArq934mqC "
                               "[{\"address\":\"yAJ4bGeDFcEtx24kbr413fBLpWQcdR5F2z\", \"amount\":50.0}] "
                               "1 50.00000001"
@@ -302,7 +302,7 @@ BOOST_AUTO_TEST_CASE(rpc_shieldedsendmany_parameters)
     pwalletMain->SetupSPKM(false);
     auto pa = pwalletMain->GenerateNewSaplingZKey();
     std::string zaddr1 = KeyIO::EncodePaymentAddress(pa);
-    BOOST_CHECK_THROW(CallRPC(std::string("shieldedsendmany yBYhwgzufrZ6F5VVuK9nEChENArq934mqC ")
+    BOOST_CHECK_THROW(CallRPC(std::string("shieldsendmany yBYhwgzufrZ6F5VVuK9nEChENArq934mqC ")
                               + "[{\"address\":\"" + zaddr1 + "\", \"amount\":123.456}]"), std::runtime_error);
 }
 
@@ -340,7 +340,7 @@ BOOST_AUTO_TEST_CASE(saplingOperationTests) {
         operation.setFromAddress(zaddr1);
         auto res = operation.setRecipients(recipients)->setMinDepth(0)->buildAndSend(ret);
         BOOST_CHECK(!res);
-        BOOST_CHECK(res.getError().find("Minconf cannot be zero when sending from shielded address") != std::string::npos);
+        BOOST_CHECK(res.getError().find("Minconf cannot be zero when sending from shield address") != std::string::npos);
     }
 
     // there are no unspent notes to spend
@@ -385,7 +385,7 @@ BOOST_AUTO_TEST_CASE(saplingOperationTests) {
 }
 
 
-BOOST_AUTO_TEST_CASE(rpc_shieldedsendmany_taddr_to_sapling)
+BOOST_AUTO_TEST_CASE(rpc_shieldsendmany_taddr_to_sapling)
 {
     SelectParams(CBaseChainParams::REGTEST);
     RegtestActivateSapling();
@@ -427,7 +427,7 @@ BOOST_AUTO_TEST_CASE(rpc_shieldedsendmany_taddr_to_sapling)
     wtx.SetMerkleBranch(blockHash, 0);
     pwalletMain->LoadToWallet(wtx);
 
-    // Context that shieldedsendmany requires
+    // Context that shieldsendmany requires
     auto builder = TransactionBuilder(consensusParams, nextBlockHeight, pwalletMain);
 
     std::vector<SendManyRecipient> recipients = { SendManyRecipient(zaddr1, 1 * COIN, "ABCD") };
@@ -451,22 +451,22 @@ BOOST_AUTO_TEST_CASE(rpc_shieldedsendmany_taddr_to_sapling)
     CDataStream ss(ParseHex(hexTx), SER_NETWORK, PROTOCOL_VERSION);
     CTransaction tx;
     ss >> tx;
-    BOOST_ASSERT(!tx.sapData->vShieldedOutput.empty());
+    BOOST_ASSERT(!tx.sapData->vShieldOutput.empty());
 
     // We shouldn't be able to decrypt with the empty ovk
     BOOST_CHECK(!libzcash::AttemptSaplingOutDecryption(
-            tx.sapData->vShieldedOutput[0].outCiphertext,
+            tx.sapData->vShieldOutput[0].outCiphertext,
             uint256(),
-            tx.sapData->vShieldedOutput[0].cv,
-            tx.sapData->vShieldedOutput[0].cmu,
-            tx.sapData->vShieldedOutput[0].ephemeralKey));
+            tx.sapData->vShieldOutput[0].cv,
+            tx.sapData->vShieldOutput[0].cmu,
+            tx.sapData->vShieldOutput[0].ephemeralKey));
 
     BOOST_CHECK(libzcash::AttemptSaplingOutDecryption(
-            tx.sapData->vShieldedOutput[0].outCiphertext,
+            tx.sapData->vShieldOutput[0].outCiphertext,
             pwalletMain->GetSaplingScriptPubKeyMan()->getCommonOVK(),
-            tx.sapData->vShieldedOutput[0].cv,
-            tx.sapData->vShieldedOutput[0].cmu,
-            tx.sapData->vShieldedOutput[0].ephemeralKey));
+            tx.sapData->vShieldOutput[0].cv,
+            tx.sapData->vShieldOutput[0].cmu,
+            tx.sapData->vShieldOutput[0].ephemeralKey));
 
     // Tear down
     chainActive.SetTip(nullptr);
@@ -494,11 +494,11 @@ BOOST_AUTO_TEST_CASE(rpc_wallet_encrypted_wallet_sapzkeys)
 
     // create keys
     for (int i = 0; i < n; i++) {
-        CallRPC("getnewshieldedaddress");
+        CallRPC("getnewshieldaddress");
     }
 
     // Verify we can list the keys imported
-    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldedaddresses"));
+    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldaddresses"));
     UniValue arr = retValue.get_array();
     BOOST_CHECK((int) arr.size() == n);
 
@@ -515,22 +515,22 @@ BOOST_AUTO_TEST_CASE(rpc_wallet_encrypted_wallet_sapzkeys)
     BOOST_CHECK(pwalletMain->EncryptWallet(strWalletPass));
 
     // Verify we can still list the keys imported
-    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldedaddresses"));
+    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldaddresses"));
     arr = retValue.get_array();
     BOOST_CHECK((int) arr.size() == n);
 
     // Try to add a new key, but we can't as the wallet is locked
-    BOOST_CHECK_THROW(CallRPC("getnewshieldedaddress"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("getnewshieldaddress"), std::runtime_error);
 
     // We can't call RPC walletpassphrase as that invokes RPCRunLater which breaks tests.
     // So we manually unlock.
     BOOST_CHECK(pwalletMain->Unlock(strWalletPass));
 
     // Now add a key
-    BOOST_CHECK_NO_THROW(CallRPC("getnewshieldedaddress"));
+    BOOST_CHECK_NO_THROW(CallRPC("getnewshieldaddress"));
 
     // Verify the key has been added
-    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldedaddresses"));
+    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldaddresses"));
     arr = retValue.get_array();
     BOOST_CHECK((int) arr.size() == n+1);
 
@@ -538,7 +538,7 @@ BOOST_AUTO_TEST_CASE(rpc_wallet_encrypted_wallet_sapzkeys)
     // but there are tests for this in gtest.
 }
 
-BOOST_AUTO_TEST_CASE(rpc_listshieldedunspent_parameters)
+BOOST_AUTO_TEST_CASE(rpc_listshieldunspent_parameters)
 {
     SelectParams(CBaseChainParams::TESTNET);
 
@@ -548,43 +548,43 @@ BOOST_AUTO_TEST_CASE(rpc_listshieldedunspent_parameters)
     UniValue retValue;
 
     // too many args
-    BOOST_CHECK_THROW(CallRPC("listshieldedunspent 1 2 3 4 5"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listshieldunspent 1 2 3 4 5"), std::runtime_error);
 
     // minconf must be >= 0
-    BOOST_CHECK_THROW(CallRPC("listshieldedunspent -1"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listshieldunspent -1"), std::runtime_error);
 
     // maxconf must be > minconf
-    BOOST_CHECK_THROW(CallRPC("listshieldedunspent 2 1"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listshieldunspent 2 1"), std::runtime_error);
 
     // maxconf must not be out of range
-    BOOST_CHECK_THROW(CallRPC("listshieldedunspent 1 9999999999"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listshieldunspent 1 9999999999"), std::runtime_error);
 
     // must be an array of addresses
-    BOOST_CHECK_THROW(CallRPC("listshieldedunspent 1 999 false ptestsapling1wpurflqllgkcs48m46yu9ktlfe3ahndely20dpaanqq3lw9l5xw7yfehst68yclvlpz7x8cltxe"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listshieldunspent 1 999 false ptestsapling1wpurflqllgkcs48m46yu9ktlfe3ahndely20dpaanqq3lw9l5xw7yfehst68yclvlpz7x8cltxe"), std::runtime_error);
 
     // address must be string
-    BOOST_CHECK_THROW(CallRPC("listshieldedunspent 1 999 false [123456]"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listshieldunspent 1 999 false [123456]"), std::runtime_error);
 
     // no spending key
-    BOOST_CHECK_THROW(CallRPC("listshieldedunspent 1 999 false [\"ptestsapling1wpurflqllgkcs48m46yu9ktlfe3ahndely20dpaanqq3lw9l5xw7yfehst68yclvlpz7x8cltxe\"]"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listshieldunspent 1 999 false [\"ptestsapling1wpurflqllgkcs48m46yu9ktlfe3ahndely20dpaanqq3lw9l5xw7yfehst68yclvlpz7x8cltxe\"]"), std::runtime_error);
 
     // allow watch only
-    BOOST_CHECK_NO_THROW(CallRPC("listshieldedunspent 1 999 true [\"ptestsapling1wpurflqllgkcs48m46yu9ktlfe3ahndely20dpaanqq3lw9l5xw7yfehst68yclvlpz7x8cltxe\"]"));
+    BOOST_CHECK_NO_THROW(CallRPC("listshieldunspent 1 999 true [\"ptestsapling1wpurflqllgkcs48m46yu9ktlfe3ahndely20dpaanqq3lw9l5xw7yfehst68yclvlpz7x8cltxe\"]"));
 
     // wrong network, mainnet instead of testnet
-    BOOST_CHECK_THROW(CallRPC("listshieldedunspent 1 999 true [\"ps1qenk9kapr0crx7lmdl4yclx78spc36wh7d5hm9hglp85f43k9dupyf0c5836h42wq2ejv0ef2v3\"]"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listshieldunspent 1 999 true [\"ps1qenk9kapr0crx7lmdl4yclx78spc36wh7d5hm9hglp85f43k9dupyf0c5836h42wq2ejv0ef2v3\"]"), std::runtime_error);
 
-    // create shielded address so we have the spending key
-    BOOST_CHECK_NO_THROW(retValue = CallRPC("getnewshieldedaddress"));
+    // create shield address so we have the spending key
+    BOOST_CHECK_NO_THROW(retValue = CallRPC("getnewshieldaddress"));
     std::string myzaddr = retValue.get_str();
 
     // return empty array for this address
-    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldedunspent 1 999 false [\"" + myzaddr + "\"]"));
+    BOOST_CHECK_NO_THROW(retValue = CallRPC("listshieldunspent 1 999 false [\"" + myzaddr + "\"]"));
     UniValue arr = retValue.get_array();
     BOOST_CHECK_EQUAL(0, arr.size());
 
     // duplicate address error
-    BOOST_CHECK_THROW(CallRPC("listshieldedunspent 1 999 false [\"" + myzaddr + "\", \"" + myzaddr + "\"]"), std::runtime_error);
+    BOOST_CHECK_THROW(CallRPC("listshieldunspent 1 999 false [\"" + myzaddr + "\", \"" + myzaddr + "\"]"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

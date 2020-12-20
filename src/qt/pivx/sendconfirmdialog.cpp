@@ -83,7 +83,7 @@ TxDetailDialog::TxDetailDialog(QWidget *parent, bool _isConfirmDialog, const QSt
 
 void TxDetailDialog::setInputsType(const CWalletTx* _tx)
 {
-    if (_tx->sapData && _tx->sapData->vShieldedSpend.empty()) {
+    if (_tx->sapData && _tx->sapData->vShieldSpend.empty()) {
         ui->labelTitlePrevTx->setText(tr("Previous Transaction"));
         ui->labelOutputIndex->setText(tr("Output Index"));
     } else {
@@ -108,27 +108,27 @@ void TxDetailDialog::setData(WalletModel *_model, const QModelIndex &index)
         QString hash = QString::fromStdString(_tx->GetHash().GetHex());
         ui->textId->setText(hash.left(20) + "..." + hash.right(20));
         ui->textId->setTextInteractionFlags(Qt::TextSelectableByMouse);
-        // future: subdivide shielded and transparent by type and
+        // future: subdivide shield and transparent by type and
         // do not show send xxx recipients for txes with a single output + change (show the address directly).
-        if (_tx->vout.size() == 1 || (_tx->sapData && _tx->sapData->vShieldedOutput.size() == 1)) {
+        if (_tx->vout.size() == 1 || (_tx->sapData && _tx->sapData->vShieldOutput.size() == 1)) {
             ui->textSendLabel->setText((address.size() < 40) ? address : address.left(20) + "..." + address.right(20));
         } else {
             ui->textSendLabel->setText(QString::number(_tx->vout.size() +
-                (_tx->sapData ? _tx->sapData->vShieldedOutput.size() : 0)) + " recipients");
+                (_tx->sapData ? _tx->sapData->vShieldOutput.size() : 0)) + " recipients");
         }
         ui->textSend->setVisible(false);
-        isShieldedToShieldedRecv = rec->type == TransactionRecord::Type::RecvWithShieldedAddress;
+        isShieldToShieldRecv = rec->type == TransactionRecord::Type::RecvWithShieldAddress;
 
         // Do not show inputs button if there is no data to show
-        QString shieldedInputsExtraMsg = "";
-        if (isShieldedToShieldedRecv) {
+        QString shieldInputsExtraMsg = "";
+        if (isShieldToShieldRecv) {
             ui->pushInputs->setVisible(false);
-            shieldedInputsExtraMsg = " shielded";
+            shieldInputsExtraMsg = " shield";
         }
 
         setInputsType(_tx);
-        int inputsSize = (_tx->sapData && !_tx->sapData->vShieldedSpend.empty()) ? _tx->sapData->vShieldedSpend.size() : _tx->vin.size();
-        ui->textInputs->setText(QString::number(inputsSize) + shieldedInputsExtraMsg);
+        int inputsSize = (_tx->sapData && !_tx->sapData->vShieldSpend.empty()) ? _tx->sapData->vShieldSpend.size() : _tx->vin.size();
+        ui->textInputs->setText(QString::number(inputsSize) + shieldInputsExtraMsg);
         ui->textConfirmations->setText(QString::number(rec->status.depth));
         ui->textDate->setText(GUIUtil::dateTimeStrWithSeconds(date));
         ui->textStatus->setText(QString::fromStdString(rec->statusToString()));
@@ -196,7 +196,7 @@ void TxDetailDialog::setData(WalletModel *_model, WalletModelTransaction* _tx)
         if (recipient.isP2CS) {
             ui->labelSend->setText(tr("Delegating to"));
         }
-        if (recipient.isShieldedAddr) {
+        if (recipient.isShieldAddr) {
             ui->labelSend->setText(tr("Shielding to"));
         }
         if (recipient.label.isEmpty()) { // If there is no label, then do not show the blank space.
@@ -226,7 +226,7 @@ void TxDetailDialog::setData(WalletModel *_model, WalletModelTransaction* _tx)
         ui->labelDividerMemo->setVisible(false);
     }
 
-    int inputsSize = (walletTx->sapData && !walletTx->sapData->vShieldedSpend.empty()) ? walletTx->sapData->vShieldedSpend.size() : walletTx->vin.size();
+    int inputsSize = (walletTx->sapData && !walletTx->sapData->vShieldSpend.empty()) ? walletTx->sapData->vShieldSpend.size() : walletTx->vin.size();
     ui->textInputs->setText(QString::number(inputsSize));
     ui->textFee->setText(BitcoinUnits::formatWithUnit(nDisplayUnit, txFee, false, BitcoinUnits::separatorAlways));
 }
@@ -256,13 +256,13 @@ void TxDetailDialog::onInputsClicked()
     if (ui->gridInputs->isVisible()) {
         ui->gridInputs->setVisible(false);
     } else {
-        bool showGrid = !isShieldedToShieldedRecv;
+        bool showGrid = !isShieldToShieldRecv;
         if (!inputsLoaded) {
             inputsLoaded = true;
             if (showGrid) {
                 const CWalletTx* walletTx = (this->tx) ? this->tx->getTransaction() : model->getTx(this->txHash);
                 if (walletTx) {
-                    if (walletTx->sapData && walletTx->sapData->vShieldedSpend.empty()) {
+                    if (walletTx->sapData && walletTx->sapData->vShieldSpend.empty()) {
                         // transparent inputs
                         ui->gridInputs->setMinimumHeight(50 + (50 * walletTx->vin.size()));
                         int i = 1;
@@ -274,10 +274,10 @@ void TxDetailDialog::onInputsClicked()
                             i++;
                         }
                     } else {
-                        ui->gridInputs->setMinimumHeight(50 + (50 * walletTx->sapData->vShieldedSpend.size()));
+                        ui->gridInputs->setMinimumHeight(50 + (50 * walletTx->sapData->vShieldSpend.size()));
                         bool fInfoAvailable = false;
-                        for (int i = 0; i < (int) walletTx->sapData->vShieldedSpend.size(); ++i) {
-                            Optional<QString> opAddr = model->getShieldedAddressFromSpendDesc(walletTx, i);
+                        for (int i = 0; i < (int) walletTx->sapData->vShieldSpend.size(); ++i) {
+                            Optional<QString> opAddr = model->getShieldAddressFromSpendDesc(walletTx, i);
                             if (opAddr) {
                                 QString addr = *opAddr;
                                 loadInputs(addr.left(18) + "..." + addr.right(18),
@@ -327,7 +327,7 @@ void TxDetailDialog::onOutputsClicked()
                 const QList<SendCoinsRecipient>& recipients = tx->getRecipients();
                 for (int i = 0; i < recipients.size(); ++i) {
                     const auto& recipient = recipients[i];
-                    int charsSize = recipient.isShieldedAddr ? 18 : 16;
+                    int charsSize = recipient.isShieldAddr ? 18 : 16;
                     QString labelRes = recipient.address.left(charsSize) + "..." + recipient.address.right(charsSize);
                     appendOutput(layoutGrid, i, labelRes, recipient.amount, nDisplayUnit);
                 }
@@ -353,9 +353,9 @@ void TxDetailDialog::onOutputsClicked()
                     i++;
                 }
 
-                // shielded recipients
+                // shield recipients
                 if (walletTx->sapData) {
-                    for (int j = 0; j < (int) walletTx->sapData->vShieldedOutput.size(); ++j) {
+                    for (int j = 0; j < (int) walletTx->sapData->vShieldOutput.size(); ++j) {
                         const SaplingOutPoint op(walletTx->GetHash(), j);
                         // TODO: This only works for txs that are stored, not for when this is a confirmation dialog..
                         if (walletTx->mapSaplingNoteData.find(op) == walletTx->mapSaplingNoteData.end()) {

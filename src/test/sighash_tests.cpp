@@ -102,8 +102,8 @@ void static RandomTransaction(CMutableTransaction &tx, bool fSingle) {
     }
     tx.vin.clear();
     tx.vout.clear();
-    tx.sapData->vShieldedSpend.clear();
-    tx.sapData->vShieldedOutput.clear();
+    tx.sapData->vShieldSpend.clear();
+    tx.sapData->vShieldOutput.clear();
     tx.nLockTime = (InsecureRandBool()) ? InsecureRand32() : 0;
     int ins = (InsecureRandBits(2)) + 1;
     int outs = fSingle ? ins : (InsecureRandBits(2)) + 1;
@@ -123,19 +123,19 @@ void static RandomTransaction(CMutableTransaction &tx, bool fSingle) {
     }
 
     if (tx.nVersion == 2) {
-        int shielded_spends = (InsecureRandBits(2)) + 1;
-        int shielded_outs = (InsecureRandBits(2)) + 1;
+        int shield_spends = (InsecureRandBits(2)) + 1;
+        int shield_outs = (InsecureRandBits(2)) + 1;
         tx.sapData->valueBalance = InsecureRandRange(100000000);;
-        for (int spend = 0; spend < shielded_spends; spend++) {
+        for (int spend = 0; spend < shield_spends; spend++) {
             SpendDescription sdesc;
             sdesc.cv = GetRandHash();
             sdesc.anchor = GetRandHash();
             sdesc.nullifier = GetRandHash();
             sdesc.rk = GetRandHash();
             randombytes_buf(sdesc.zkproof.begin(), sdesc.zkproof.size());
-            tx.sapData->vShieldedSpend.push_back(sdesc);
+            tx.sapData->vShieldSpend.push_back(sdesc);
         }
-        for (int out = 0; out < shielded_outs; out++) {
+        for (int out = 0; out < shield_outs; out++) {
             OutputDescription odesc;
             odesc.cv = GetRandHash();
             odesc.cmu = GetRandHash();
@@ -143,7 +143,7 @@ void static RandomTransaction(CMutableTransaction &tx, bool fSingle) {
             randombytes_buf(odesc.encCiphertext.begin(), odesc.encCiphertext.size());
             randombytes_buf(odesc.outCiphertext.begin(), odesc.outCiphertext.size());
             randombytes_buf(odesc.zkproof.begin(), odesc.zkproof.size());
-            tx.sapData->vShieldedOutput.push_back(odesc);
+            tx.sapData->vShieldOutput.push_back(odesc);
         }
     }
 }

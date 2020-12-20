@@ -182,7 +182,7 @@
                    <enum>Qt::NoFocus</enum>
                   </property>
                   <property name="text">
-                   <string>Shielded</string>
+                   <string>Shield</string>
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
@@ -201,7 +201,7 @@
              <item alignment="Qt::AlignHCenter|Qt::AlignTop">
               <widget class="QLabel" name="labelSubtitle2">
                <property name="text">
-                <string>Accept transparent or shielded PIV</string>
+                <string>Accept transparent or shield PIV</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

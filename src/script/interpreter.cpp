@@ -1095,9 +1095,9 @@ const unsigned char PIVX_SEQUENCE_HASH_PERSONALIZATION[crypto_generichash_blake2
         {'P','I','V','X','S','e','q','u','e','n','c','H','a','s','h'};
 const unsigned char PIVX_OUTPUTS_HASH_PERSONALIZATION[crypto_generichash_blake2b_PERSONALBYTES] =
         {'P','I','V','X','O','u','t','p','u','t','s','H','a','s','h'};
-const unsigned char PIVX_SHIELDED_SPENDS_HASH_PERSONALIZATION[crypto_generichash_blake2b_PERSONALBYTES] =
+const unsigned char PIVX_SHIELD_SPENDS_HASH_PERSONALIZATION[crypto_generichash_blake2b_PERSONALBYTES] =
         {'P','I','V','X','S','S','p','e','n','d','s','H','a','s','h'};
-const unsigned char PIVX_SHIELDED_OUTPUTS_HASH_PERSONALIZATION[crypto_generichash_blake2b_PERSONALBYTES] =
+const unsigned char PIVX_SHIELD_OUTPUTS_HASH_PERSONALIZATION[crypto_generichash_blake2b_PERSONALBYTES] =
         {'P','I','V','X','S','O','u','t','p','u','t','H','a','s','h'};
 
 
@@ -1126,11 +1126,11 @@ uint256 GetOutputsHash(const CTransaction& txTo) {
     return ss.GetHash();
 }
 
-uint256 GetShieldedSpendsHash(const CTransaction& txTo) {
+uint256 GetShieldSpendsHash(const CTransaction& txTo) {
     assert(txTo.sapData);
-    CBLAKE2bWriter ss(SER_GETHASH, 0, PIVX_SHIELDED_SPENDS_HASH_PERSONALIZATION);
+    CBLAKE2bWriter ss(SER_GETHASH, 0, PIVX_SHIELD_SPENDS_HASH_PERSONALIZATION);
     auto sapData = txTo.sapData;
-    for (const auto& n : sapData->vShieldedSpend) {
+    for (const auto& n : sapData->vShieldSpend) {
         ss << n.cv;
         ss << n.anchor;
         ss << n.nullifier;
@@ -1140,11 +1140,11 @@ uint256 GetShieldedSpendsHash(const CTransaction& txTo) {
     return ss.GetHash();
 }
 
-uint256 GetShieldedOutputsHash(const CTransaction& txTo) {
+uint256 GetShieldOutputsHash(const CTransaction& txTo) {
     assert(txTo.sapData);
-    CBLAKE2bWriter ss(SER_GETHASH, 0, PIVX_SHIELDED_OUTPUTS_HASH_PERSONALIZATION);
+    CBLAKE2bWriter ss(SER_GETHASH, 0, PIVX_SHIELD_OUTPUTS_HASH_PERSONALIZATION);
     auto sapData = txTo.sapData;
-    for (const auto& n : sapData->vShieldedOutput) {
+    for (const auto& n : sapData->vShieldOutput) {
         ss << n;
     }
     return ss.GetHash();
@@ -1158,8 +1158,8 @@ PrecomputedTransactionData::PrecomputedTransactionData(const CTransaction& txTo)
     hashSequence = GetSequenceHash(txTo);
     hashOutputs = GetOutputsHash(txTo);
     if (txTo.sapData) {
-        hashShieldedSpends = GetShieldedSpendsHash(txTo);
-        hashShieldedOutputs = GetShieldedOutputsHash(txTo);
+        hashShieldSpends = GetShieldSpendsHash(txTo);
+        hashShieldOutputs = GetShieldOutputsHash(txTo);
     }
 }
 
@@ -1179,8 +1179,8 @@ uint256 SignatureHash(const CScript& scriptCode, const CTransaction& txTo, unsig
         uint256 hashPrevouts;
         uint256 hashSequence;
         uint256 hashOutputs;
-        uint256 hashShieldedSpends;
-        uint256 hashShieldedOutputs;
+        uint256 hashShieldSpends;
+        uint256 hashShieldOutputs;
         bool hasSapData = false;
 
         if (!(nHashType & SIGHASH_ANYONECANPAY)) {
@@ -1200,13 +1200,13 @@ uint256 SignatureHash(const CScript& scriptCode, const CTransaction& txTo, unsig
         }
 
         if (txTo.sapData) {
-            if (!txTo.sapData->vShieldedSpend.empty()) {
-                hashShieldedSpends = cache ? cache->hashShieldedSpends : GetShieldedSpendsHash(txTo);
+            if (!txTo.sapData->vShieldSpend.empty()) {
+                hashShieldSpends = cache ? cache->hashShieldSpends : GetShieldSpendsHash(txTo);
                 hasSapData = true;
             }
 
-            if (!txTo.sapData->vShieldedOutput.empty()) {
-                hashShieldedOutputs = cache ? cache->hashShieldedOutputs : GetShieldedOutputsHash(txTo);
+            if (!txTo.sapData->vShieldOutput.empty()) {
+                hashShieldOutputs = cache ? cache->hashShieldOutputs : GetShieldOutputsHash(txTo);
                 hasSapData = true;
             }
         }
@@ -1230,9 +1230,9 @@ uint256 SignatureHash(const CScript& scriptCode, const CTransaction& txTo, unsig
 
         if (hasSapData) {
             // Spend descriptions
-            ss << hashShieldedSpends;
+            ss << hashShieldSpends;
             // Output descriptions
-            ss << hashShieldedOutputs;
+            ss << hashShieldOutputs;
             // Sapling value balance
             ss << txTo.sapData->valueBalance;
         }

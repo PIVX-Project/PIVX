@@ -51,8 +51,8 @@ private:
     WalletModel::SendCoinsReturn sendStatus;
     WalletModelTransaction* tx{nullptr};
     uint256 txHash;
-    // Shielded tx with not inputs data
-    bool isShieldedToShieldedRecv{false};
+    // Shield tx with not inputs data
+    bool isShieldToShieldRecv{false};
 
     bool inputsLoaded = false;
     bool outputsLoaded = false;

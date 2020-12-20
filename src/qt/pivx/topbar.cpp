@@ -76,7 +76,7 @@ TopBar::TopBar(PIVXGUI* _mainWindow, QWidget *parent) :
 
     // Amount information top
     ui->widgetTopAmount->setVisible(false);
-    setCssProperty({ui->labelAmountTopPiv, ui->labelAmountTopShieldedPiv}, "amount-small-topbar");
+    setCssProperty({ui->labelAmountTopPiv, ui->labelAmountTopShieldPiv}, "amount-small-topbar");
     setCssProperty({ui->labelAmountPiv}, "amount-topbar");
     setCssProperty({ui->labelPendingPiv, ui->labelImmaturePiv}, "amount-small-topbar");
 
@@ -352,7 +352,7 @@ void TopBar::onBtnBalanceInfoClicked()
     } else balanceBubble = new BalanceBubble(this);
 
     const auto& balances = walletModel->GetWalletBalances();
-    balanceBubble->updateValues(balances.balance - balances.shielded_balance, balances.shielded_balance, nDisplayUnit);
+    balanceBubble->updateValues(balances.balance - balances.shield_balance, balances.shield_balance, nDisplayUnit);
     QPoint pos = this->pos();
     pos.setX(pos.x() + (ui->labelTitle1->width()) + 60);
     pos.setY(pos.y() + 20);
@@ -689,16 +689,16 @@ void TopBar::updateBalances(const interfaces::WalletBalances& newBalance)
 
     // PIV Total
     QString totalPiv = GUIUtil::formatBalance(newBalance.balance, nDisplayUnit);
-    QString totalTransparent = GUIUtil::formatBalance(newBalance.balance - newBalance.shielded_balance);
-    QString totalShielded = GUIUtil::formatBalance(newBalance.shielded_balance);
+    QString totalTransparent = GUIUtil::formatBalance(newBalance.balance - newBalance.shield_balance);
+    QString totalShield = GUIUtil::formatBalance(newBalance.shield_balance);
 
     // PIV
     // Top
     ui->labelAmountTopPiv->setText(totalTransparent);
-    ui->labelAmountTopShieldedPiv->setText(totalShielded);
+    ui->labelAmountTopShieldPiv->setText(totalShield);
     // Expanded
     ui->labelAmountPiv->setText(totalPiv);
-    ui->labelPendingPiv->setText(GUIUtil::formatBalance(newBalance.unconfirmed_balance + newBalance.unconfirmed_shielded_balance, nDisplayUnit));
+    ui->labelPendingPiv->setText(GUIUtil::formatBalance(newBalance.unconfirmed_balance + newBalance.unconfirmed_shield_balance, nDisplayUnit));
     ui->labelImmaturePiv->setText(GUIUtil::formatBalance(newBalance.immature_balance, nDisplayUnit));
 }
 

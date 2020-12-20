@@ -22,7 +22,7 @@ public:
     virtual void showEvent(QShowEvent *event) override;
     virtual void hideEvent(QHideEvent *event) override;
 
-    void updateValues(int64_t nTransparentBalance, int64_t nShieldedBalance, int unit);
+    void updateValues(int64_t nTransparentBalance, int64_t nShieldBalance, int unit);
 
 public Q_SLOTS:
     void hideTimeout();

@@ -258,8 +258,8 @@ void LimitMempoolSize(CTxMemPool& pool, size_t limit, unsigned long age) {
 
 CAmount GetMinRelayFee(const CTransaction& tx, const CTxMemPool& pool, unsigned int nBytes, bool fAllowFree)
 {
-    if (tx.IsShieldedTx()) {
-        return GetShieldedTxMinFee(tx);
+    if (tx.IsShieldTx()) {
+        return GetShieldTxMinFee(tx);
     }
     uint256 hash = tx.GetHash();
     double dPriorityDelta = 0;
@@ -289,10 +289,10 @@ CAmount GetMinRelayFee(unsigned int nBytes, bool fAllowFree)
     return nMinFee;
 }
 
-CAmount GetShieldedTxMinFee(const CTransaction& tx)
+CAmount GetShieldTxMinFee(const CTransaction& tx)
 {
-    assert (tx.IsShieldedTx());
-    unsigned int K = DEFAULT_SHIELDEDTXFEE_K;   // Fixed (1000) for now
+    assert (tx.IsShieldTx());
+    unsigned int K = DEFAULT_SHIELDTXFEE_K;   // Fixed (1000) for now
     CAmount nMinFee = ::minRelayTxFee.GetFee(tx.GetTotalSize()) * K;
     if (!Params().GetConsensus().MoneyRange(nMinFee))
         nMinFee = Params().GetConsensus().nMaxMoneyOut;
@@ -322,8 +322,8 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
     if (sporkManager.IsSporkActive(SPORK_16_ZEROCOIN_MAINTENANCE_MODE) && hasTxZerocoins)
         return state.DoS(10, error("%s : Zerocoin transactions are temporarily disabled for maintenance",
                 __func__), REJECT_INVALID, "bad-tx-zerocoin-maintenance");
-    if (sporkManager.IsSporkActive(SPORK_20_SAPLING_MAINTENANCE) && tx.IsShieldedTx())
-        return state.DoS(10, error("%s : Shielded transactions are temporarily disabled for maintenance",
+    if (sporkManager.IsSporkActive(SPORK_20_SAPLING_MAINTENANCE) && tx.IsShieldTx())
+        return state.DoS(10, error("%s : Shield transactions are temporarily disabled for maintenance",
                 __func__), REJECT_INVALID, "bad-tx-sapling-maintenance");
 
     const CChainParams& params = Params();
@@ -388,8 +388,8 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
     }
 
     // Check sapling nullifiers
-    if (tx.IsShieldedTx()) {
-        for (const auto& sd : tx.sapData->vShieldedSpend) {
+    if (tx.IsShieldTx()) {
+        for (const auto& sd : tx.sapData->vShieldSpend) {
             if (pool.nullifierExists(sd.nullifier))
                 return state.Invalid(false, REJECT_INVALID, "bad-txns-nullifier-double-spent");
         }
@@ -444,9 +444,9 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
                         __func__, tx.GetHash().GetHex()), REJECT_INVALID, "bad-zc-spend-mint");
 
             // Sapling: are the sapling spends' requirements met in tx(valid anchors/nullifiers)?
-            if (!view.HaveShieldedRequirements(tx))
-                return state.Invalid(error("AcceptToMemoryPool: shielded requirements not met"),
-                                     REJECT_DUPLICATE, "bad-txns-shielded-requirements-not-met");
+            if (!view.HaveShieldRequirements(tx))
+                return state.Invalid(error("AcceptToMemoryPool: shield requirements not met"),
+                                     REJECT_DUPLICATE, "bad-txns-shield-requirements-not-met");
 
             // Bring the best block into scope
             view.GetBestBlock();
@@ -534,7 +534,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, const C
         }
 
         if (fRejectAbsurdFee) {
-            const CAmount nMaxFee = tx.IsShieldedTx() ? GetShieldedTxMinFee(tx) * 100 :
+            const CAmount nMaxFee = tx.IsShieldTx() ? GetShieldTxMinFee(tx) * 100 :
                                                         GetMinRelayFee(nSize, false) * 10000;
             if (nFees > nMaxFee)
                 return state.Invalid(false, REJECT_HIGHFEE, "absurdly-high-fee",
@@ -1072,7 +1072,7 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
         return state.Invalid(false, 0, "", "Inputs unavailable");
 
     // are the Sapling's requirements met?
-    if (!inputs.HaveShieldedRequirements(tx))
+    if (!inputs.HaveShieldRequirements(tx))
         return state.Invalid(error("CheckInputs(): %s Sapling requirements not met", tx.GetHash().ToString()));
 
     const Consensus::Params& consensus = ::Params().GetConsensus();
@@ -1097,7 +1097,7 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
     }
 
     // Sapling
-    nValueIn += tx.GetShieldedValueIn();
+    nValueIn += tx.GetShieldValueIn();
 
     if (!tx.IsCoinStake()) {
         if (nValueIn < tx.GetValueOut())
@@ -1480,7 +1480,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
             REJECT_INVALID, "PoW-ended");
 
     // Sapling
-    // Reject a block that results in a negative shielded value pool balance.
+    // Reject a block that results in a negative shield value pool balance.
     // Description under ZIP209 turnstile violation.
 
     // If we've reached ConnectBlock, we have all transactions of
@@ -1490,8 +1490,8 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     // conditionally.
     if (pindex->nChainSaplingValue) {
         if (*pindex->nChainSaplingValue < 0) {
-            return state.DoS(100, error("%s: turnstile violation in Sapling shielded value pool: val: %d", __func__, *pindex->nChainSaplingValue),
-                             REJECT_INVALID, "turnstile-violation-sapling-shielded-pool");
+            return state.DoS(100, error("%s: turnstile violation in Sapling shield value pool: val: %d", __func__, *pindex->nChainSaplingValue),
+                             REJECT_INVALID, "turnstile-violation-sapling-shield-pool");
         }
     }
 
@@ -1546,8 +1546,8 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         if (!fInitialBlockDownload) {
             if (fZerocoinMaintenance && tx.ContainsZerocoins())
                 return state.DoS(100, error("%s : zerocoin transactions are currently in maintenance mode", __func__));
-            if (fSaplingMaintenance && tx.IsShieldedTx())
-                return state.DoS(100, error("%s : shielded transactions are currently in maintenance mode", __func__));
+            if (fSaplingMaintenance && tx.IsShieldTx())
+                return state.DoS(100, error("%s : shield transactions are currently in maintenance mode", __func__));
         }
 
         // If v5 is active, bye bye zerocoin
@@ -1620,7 +1620,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                     REJECT_INVALID, "bad-txns-inputs-missingorspent");
 
             // Sapling: are the sapling spends' requirements met in tx(valid anchors/nullifiers)?
-            if (!view.HaveShieldedRequirements(tx))
+            if (!view.HaveShieldRequirements(tx))
                 return state.DoS(100, error("%s: spends requirements not met", __func__),
                                  REJECT_INVALID, "bad-txns-sapling-requirements-not-met");
 
@@ -1668,8 +1668,8 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         UpdateCoins(tx, view, i == 0 ? undoDummy : blockundo.vtxundo.back(), pindex->nHeight);
 
         // Sapling update tree
-        if (tx.IsShieldedTx() && !tx.sapData->vShieldedOutput.empty()) {
-            for(const OutputDescription &outputDescription : tx.sapData->vShieldedOutput) {
+        if (tx.IsShieldTx() && !tx.sapData->vShieldOutput.empty()) {
+            for(const OutputDescription &outputDescription : tx.sapData->vShieldOutput) {
                 sapling_tree.append(outputDescription.cmu);
             }
         }
@@ -2483,7 +2483,7 @@ bool ReceivedBlockTransactions(const CBlock& block, CValidationState& state, CBl
     // Sapling
     CAmount saplingValue = 0;
     for (const auto& tx : block.vtx) {
-        if (tx->IsShieldedTx()) {
+        if (tx->IsShieldTx()) {
             // Negative valueBalance "takes" money from the transparent value pool
             // and adds it to the Sapling value pool. Positive valueBalance "gives"
             // money to the transparent value pool, removing from the Sapling value
@@ -2662,14 +2662,14 @@ bool CheckColdStakeFreeOutput(const CTransaction& tx, const int nHeight)
     return true;
 }
 
-// cumulative size of all shielded txes inside a block
-static unsigned int GetTotalShieldedTxSize(const CBlock& block)
+// cumulative size of all shield txes inside a block
+static unsigned int GetTotalShieldTxSize(const CBlock& block)
 {
-    unsigned int nSizeShielded = 0;
+    unsigned int nSizeShield = 0;
     for (const auto& tx : block.vtx) {
-        if (tx->IsShieldedTx()) nSizeShielded += tx->GetTotalSize();
+        if (tx->IsShieldTx()) nSizeShield += tx->GetTotalSize();
     }
-    return nSizeShielded;
+    return nSizeShield;
 }
 
 bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig)
@@ -2709,9 +2709,9 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
     if (block.vtx.empty() || block.vtx.size() > nMaxBlockSize || nBlockSize > nMaxBlockSize)
         return state.DoS(100, false, REJECT_INVALID, "bad-blk-length", false, "size limits failed");
 
-    // Check shielded txes limits (no need to check if the block size is already under 750kB)
-    if (nBlockSize > MAX_BLOCK_SHIELDED_TXES_SIZE && GetTotalShieldedTxSize(block) > MAX_BLOCK_SHIELDED_TXES_SIZE)
-        return state.DoS(100, false, REJECT_INVALID, "bad-blk-shielded-size", false, "shielded size limits failed");
+    // Check shield txes limits (no need to check if the block size is already under 750kB)
+    if (nBlockSize > MAX_BLOCK_SHIELD_TXES_SIZE && GetTotalShieldTxSize(block) > MAX_BLOCK_SHIELD_TXES_SIZE)
+        return state.DoS(100, false, REJECT_INVALID, "bad-blk-shield-size", false, "shield size limits failed");
 
     // First transaction must be coinbase, the rest must not be
     if (block.vtx.empty() || !block.vtx[0]->IsCoinBase())

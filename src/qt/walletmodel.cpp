@@ -111,7 +111,7 @@ bool WalletModel::upgradeWallet(std::string& upgradeError)
     return wallet->Upgrade(upgradeError, prev_version);
 }
 
-CAmount WalletModel::getBalance(const CCoinControl* coinControl, bool fIncludeDelegated, bool fUnlockedOnly, bool fIncludeShielded) const
+CAmount WalletModel::getBalance(const CCoinControl* coinControl, bool fIncludeDelegated, bool fUnlockedOnly, bool fIncludeShield) const
 {
     if (coinControl) {
         CAmount nBalance = 0;
@@ -128,12 +128,12 @@ CAmount WalletModel::getBalance(const CCoinControl* coinControl, bool fIncludeDe
         return nBalance;
     }
 
-    return wallet->GetAvailableBalance(fIncludeDelegated, fIncludeShielded) - (fUnlockedOnly ? wallet->GetLockedCoins() : CAmount(0));
+    return wallet->GetAvailableBalance(fIncludeDelegated, fIncludeShield) - (fUnlockedOnly ? wallet->GetLockedCoins() : CAmount(0));
 }
 
-CAmount WalletModel::getUnlockedBalance(const CCoinControl* coinControl, bool fIncludeDelegated, bool fIncludeShielded) const
+CAmount WalletModel::getUnlockedBalance(const CCoinControl* coinControl, bool fIncludeDelegated, bool fIncludeShield) const
 {
-    return getBalance(coinControl, fIncludeDelegated, true, fIncludeShielded);
+    return getBalance(coinControl, fIncludeDelegated, true, fIncludeShield);
 }
 
 CAmount WalletModel::getMinColdStakingAmount() const
@@ -300,7 +300,7 @@ void WalletModel::updateWatchOnlyFlag(bool fHaveWatchonly)
 
 bool WalletModel::validateAddress(const QString& address)
 {
-    // Only regular base58 addresses and shielded addresses accepted here
+    // Only regular base58 addresses and shield addresses accepted here
     bool isStaking = false;
     CWDestination dest = Standard::DecodeDestination(address.toStdString(), isStaking);
     const auto regDest = boost::get<CTxDestination>(&dest);
@@ -313,12 +313,12 @@ bool WalletModel::validateAddress(const QString& address, bool fStaking)
     return IsValidDestinationString(address.toStdString(), fStaking);
 }
 
-bool WalletModel::validateAddress(const QString& address, bool fStaking, bool& isShielded)
+bool WalletModel::validateAddress(const QString& address, bool fStaking, bool& isShield)
 {
     bool isStaking = false;
     CWDestination dest = Standard::DecodeDestination(address.toStdString(), isStaking);
-    if (IsShieldedDestination(dest)) {
-        isShielded = true;
+    if (IsShieldDestination(dest)) {
+        isShield = true;
         return true;
     }
     return Standard::IsValidDestination(dest) && (isStaking == fStaking);
@@ -514,9 +514,9 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& tran
         // Don't touch the address book when we have a payment request
         if (!rcp.paymentRequest.IsInitialized()) {
             bool isStaking = false;
-            bool isShielded = false;
-            auto address = Standard::DecodeDestination(rcp.address.toStdString(), isStaking, isShielded);
-            std::string purpose = isShielded ? AddressBook::AddressBookPurpose::SHIELDED_SEND :
+            bool isShield = false;
+            auto address = Standard::DecodeDestination(rcp.address.toStdString(), isStaking, isShield);
+            std::string purpose = isShield ? AddressBook::AddressBookPurpose::SHIELD_SEND :
                                   isStaking ? AddressBook::AddressBookPurpose::COLD_STAKING_SEND : AddressBook::AddressBookPurpose::SEND;
             std::string strLabel = rcp.label.toStdString();
             updateAddressBookLabels(address, strLabel, purpose);
@@ -528,7 +528,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& tran
     return SendCoinsReturn(OK);
 }
 
-OperationResult WalletModel::PrepareShieldedTransaction(WalletModelTransaction* modelTransaction,
+OperationResult WalletModel::PrepareShieldTransaction(WalletModelTransaction* modelTransaction,
                                                         bool fromTransparent,
                                                         const CCoinControl* coinControl)
 {
@@ -540,12 +540,12 @@ OperationResult WalletModel::PrepareShieldedTransaction(WalletModelTransaction* 
         return errorOut("Error, cannot send transaction. Sapling is not activated");
     }
 
-    // Load shieldedAddrRecipients.
+    // Load shieldAddrRecipients.
     std::vector<SendManyRecipient> recipients;
     for (const auto& recipient : modelTransaction->getRecipients()) {
-        if (recipient.isShieldedAddr) {
+        if (recipient.isShieldAddr) {
             auto pa = KeyIO::DecodeSaplingPaymentAddress(recipient.address.toStdString());
-            if (!pa) return errorOut("Error, invalid shielded address");
+            if (!pa) return errorOut("Error, invalid shield address");
             recipients.emplace_back(*pa, recipient.amount, recipient.message.toStdString());
         } else {
             auto dest = DecodeDestination(recipient.address.toStdString());
@@ -564,7 +564,7 @@ OperationResult WalletModel::PrepareShieldedTransaction(WalletModelTransaction* 
     auto operationResult = operation.setRecipients(recipients)
              ->setTransparentKeyChange(modelTransaction->getPossibleKeyChange())
              ->setSelectTransparentCoins(fromTransparent)
-             ->setSelectShieldedCoins(!fromTransparent)
+             ->setSelectShieldCoins(!fromTransparent)
              ->setCoinControl(coinControl)
              ->setMinDepth(fromTransparent ? 1 : 5)
              ->build();
@@ -870,9 +870,9 @@ PairResult WalletModel::getNewStakingAddress(Destination& ret,std::string label)
     return res;
 }
 
-PairResult WalletModel::getNewShieldedAddress(QString& shieldedAddrRet, std::string strLabel)
+PairResult WalletModel::getNewShieldAddress(QString& shieldAddrRet, std::string strLabel)
 {
-    shieldedAddrRet = QString::fromStdString(
+    shieldAddrRet = QString::fromStdString(
             KeyIO::EncodePaymentAddress(wallet->GenerateNewSaplingZKey(strLabel)));
     return PairResult(true);
 }
@@ -1073,7 +1073,7 @@ bool WalletModel::isMine(const QString& addressStr)
     return IsMine(*wallet, DecodeDestination(addressStr.toStdString()));
 }
 
-bool WalletModel::IsShieldedDestination(const CWDestination& address)
+bool WalletModel::IsShieldDestination(const CWDestination& address)
 {
     return boost::get<libzcash::SaplingPaymentAddress>(&address);
 }
@@ -1083,7 +1083,7 @@ bool WalletModel::isUsed(CTxDestination address)
     return wallet->IsUsed(address);
 }
 
-Optional<QString> WalletModel::getShieldedAddressFromSpendDesc(const CWalletTx* wtx, int index)
+Optional<QString> WalletModel::getShieldAddressFromSpendDesc(const CWalletTx* wtx, int index)
 {
     Optional<libzcash::SaplingPaymentAddress> opAddr = wallet->GetSaplingScriptPubKeyMan()->GetAddressFromInputIfPossible(wtx, index);
     return opAddr ? Optional<QString>(QString::fromStdString(KeyIO::EncodePaymentAddress(*opAddr))) : nullopt;

@@ -180,7 +180,7 @@ padding-top:2px;
                   <enum>Qt::NoFocus</enum>
                  </property>
                  <property name="text">
-                  <string>Shielded</string>
+                  <string>Shield</string>
                  </property>
                  <property name="checkable">
                   <bool>true</bool>

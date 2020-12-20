@@ -19,7 +19,7 @@ BalanceBubble::BalanceBubble(QWidget *parent) :
     ui->setupUi(this);
 
     ui->frame->setProperty("cssClass", "container-popup");
-    setCssProperty({ui->textTransparent, ui->textShielded}, "amount-small-popup");
+    setCssProperty({ui->textTransparent, ui->textShield}, "amount-small-popup");
 
     std::initializer_list<QWidget*> lblTitles = {ui->lblFirst, ui->lblSecond};
     setCssProperty(lblTitles, "text-title-topbar");
@@ -28,10 +28,10 @@ BalanceBubble::BalanceBubble(QWidget *parent) :
     for (QWidget* w : lblTitles) { w->setFont(font); }
 }
 
-void BalanceBubble::updateValues(int64_t nTransparentBalance, int64_t nShieldedBalance, int unit){
+void BalanceBubble::updateValues(int64_t nTransparentBalance, int64_t nShieldBalance, int unit){
 
     ui->textTransparent->setText(BitcoinUnits::formatWithUnit(unit, nTransparentBalance, false, BitcoinUnits::separatorAlways));
-    ui->textShielded->setText(BitcoinUnits::formatWithUnit(unit, nShieldedBalance, false, BitcoinUnits::separatorAlways));
+    ui->textShield->setText(BitcoinUnits::formatWithUnit(unit, nShieldBalance, false, BitcoinUnits::separatorAlways));
 }
 
 void BalanceBubble::showEvent(QShowEvent *event)

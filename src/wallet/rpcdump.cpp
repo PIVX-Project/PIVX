@@ -341,7 +341,7 @@ UniValue importwallet(const JSONRPCRequest& request)
                 auto addResult = pwalletMain->GetSaplingScriptPubKeyMan()->AddSpendingKeyToWallet(
                         Params().GetConsensus(), saplingSpendingKey, nTime);
                 if (addResult == KeyAlreadyExists) {
-                    LogPrint(BCLog::SAPLING, "Skipping import of shielded addr (key already present)\n");
+                    LogPrint(BCLog::SAPLING, "Skipping import of shield addr (key already present)\n");
                 } else if (addResult == KeyNotAdded) {
                     // Something went wrong
                     fGood = false;
@@ -561,7 +561,7 @@ UniValue dumpwallet(const JSONRPCRequest& request)
             CKeyMetadata keyMeta = pwalletMain->GetSaplingScriptPubKeyMan()->mapSaplingZKeyMetadata[ivk];
             std::string strTime = EncodeDumpTime(keyMeta.nCreateTime);
             // Keys imported with importsaplingkey do not have key origin metadata
-            file << strprintf("%s %s # shielded_addr=%s%s\n",
+            file << strprintf("%s %s # shield_addr=%s%s\n",
                     KeyIO::EncodeSpendingKey(extsk),
                     strTime,
                     KeyIO::EncodePaymentAddress(addr),
@@ -877,11 +877,11 @@ UniValue exportsaplingviewingkey(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-                "exportsaplingviewingkey \"shielded_addr\"\n"
-                "\nReveals the viewing key corresponding to 'shielded addr'.\n"
+                "exportsaplingviewingkey \"shield_addr\"\n"
+                "\nReveals the viewing key corresponding to 'shield addr'.\n"
                 "Then the importsaplingviewingkey can be used with this output\n"
                 "\nArguments:\n"
-                "1. \"shielded_addr\"   (string, required) The shielded addr for the viewing key\n"
+                "1. \"shield_addr\"   (string, required) The shield addr for the viewing key\n"
                 "\nResult:\n"
                 "\"vkey\"                  (string) The viewing key\n"
                 "\nExamples:\n"
@@ -897,14 +897,14 @@ UniValue exportsaplingviewingkey(const JSONRPCRequest& request)
     std::string strAddress = request.params[0].get_str();
     auto address = KeyIO::DecodePaymentAddress(strAddress);
     if (!IsValidPaymentAddress(address)) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid shielded addr");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid shield addr");
     }
     const libzcash::SaplingPaymentAddress &sapAddr = *boost::get<libzcash::SaplingPaymentAddress>(&address);
     auto vk = pwalletMain->GetSaplingScriptPubKeyMan()->GetViewingKeyForPaymentAddress(sapAddr);
     if (vk) {
         return KeyIO::EncodeViewingKey(vk.get());
     } else {
-        throw JSONRPCError(RPC_WALLET_ERROR, "Wallet does not hold private key or viewing key for this shielded addr");
+        throw JSONRPCError(RPC_WALLET_ERROR, "Wallet does not hold private key or viewing key for this shield addr");
     }
 }
 
@@ -912,11 +912,11 @@ UniValue exportsaplingkey(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 1)
         throw std::runtime_error(
-                "exportsaplingkey \"shielded addr\"\n"
-                "\nReveals the key corresponding to the 'shielded addr'.\n"
+                "exportsaplingkey \"shield addr\"\n"
+                "\nReveals the key corresponding to the 'shield addr'.\n"
                 "Then the importsaplingkey can be used with this output\n"
                 "\nArguments:\n"
-                "1. \"addr\"   (string, required) The shielded addr for the private key\n"
+                "1. \"addr\"   (string, required) The shield addr for the private key\n"
                 "\nResult:\n"
                 "\"key\"                  (string) The private key\n"
                 "\nExamples:\n"
@@ -934,14 +934,14 @@ UniValue exportsaplingkey(const JSONRPCRequest& request)
 
     auto address = KeyIO::DecodePaymentAddress(strAddress);
     if (!IsValidPaymentAddress(address)) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid shielded addr");
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid shield addr");
     }
     libzcash::SaplingPaymentAddress addr = *boost::get<libzcash::SaplingPaymentAddress>(&address);
 
     // Sapling support
     Optional<libzcash::SaplingExtendedSpendingKey> sk = pwalletMain->GetSaplingScriptPubKeyMan()->GetSpendingKeyForPaymentAddress(addr);
     if (!sk) {
-        throw JSONRPCError(RPC_WALLET_ERROR, "Wallet does not hold private key for this shielded addr");
+        throw JSONRPCError(RPC_WALLET_ERROR, "Wallet does not hold private key for this shield addr");
     }
     return KeyIO::EncodeSpendingKey(libzcash::SpendingKey(sk.get()));
 }

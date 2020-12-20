@@ -261,7 +261,7 @@ TransactionBuilderResult TransactionBuilder::ProveAndSign()
                 return TransactionBuilderResult("Failed to create output description");
             }
 
-            mtx.sapData->vShieldedOutput.push_back(odesc.get());
+            mtx.sapData->vShieldOutput.push_back(odesc.get());
         }
 
         // Create Sapling SpendDescriptions
@@ -298,7 +298,7 @@ TransactionBuilderResult TransactionBuilder::ProveAndSign()
 
             sdesc.anchor = spend.anchor;
             sdesc.nullifier = *nf;
-            mtx.sapData->vShieldedSpend.push_back(sdesc);
+            mtx.sapData->vShieldSpend.push_back(sdesc);
         }
 
         //
@@ -321,7 +321,7 @@ TransactionBuilderResult TransactionBuilder::ProveAndSign()
                     spends[i].expsk.ask.begin(),
                     spends[i].alpha.begin(),
                     dataToBeSigned.begin(),
-                    mtx.sapData->vShieldedSpend[i].spendAuthSig.data());
+                    mtx.sapData->vShieldSpend[i].spendAuthSig.data());
         }
 
         librustzcash_sapling_binding_sig(
@@ -358,11 +358,11 @@ TransactionBuilderResult TransactionBuilder::AddDummySignatures()
     if (!spends.empty() || !outputs.empty()) {
         // Add Dummy Sapling OutputDescriptions
         for (unsigned int i = 0; i < outputs.size(); i++) {
-            mtx.sapData->vShieldedOutput.push_back(DUMMY_SHIELD_OUT);
+            mtx.sapData->vShieldOutput.push_back(DUMMY_SHIELD_OUT);
         }
         // Add Dummy Sapling SpendDescriptions
         for (unsigned int i = 0; i < spends.size(); i++) {
-            mtx.sapData->vShieldedSpend.push_back(DUMMY_SHIELD_SPEND);
+            mtx.sapData->vShieldSpend.push_back(DUMMY_SHIELD_SPEND);
         }
         // Add Dummy Binding sig
         mtx.sapData->bindingSig = DUMMY_SHIELD_BINDSIG;
@@ -386,10 +386,10 @@ TransactionBuilderResult TransactionBuilder::AddDummySignatures()
 void TransactionBuilder::ClearProofsAndSignatures()
 {
     // Clear Sapling output descriptions
-    mtx.sapData->vShieldedOutput.clear();
+    mtx.sapData->vShieldOutput.clear();
 
     // Clear Sapling spend descriptions
-    mtx.sapData->vShieldedSpend.clear();
+    mtx.sapData->vShieldSpend.clear();
 
     // Clear Binding sig
     mtx.sapData->bindingSig = {{0}};
@@ -427,7 +427,7 @@ TransactionBuilderResult TransactionBuilder::Build(bool fDummySig)
     if (change > 0) {
         // If we get here and the change is dust, add it to the fee
         CAmount dustThreshold = (spends.empty() && outputs.empty()) ? GetDustThreshold(minRelayTxFee) :
-                                GetShieldedDustThreshold(minRelayTxFee);
+                                GetShieldDustThreshold(minRelayTxFee);
         if (change > dustThreshold) {
             // Send change to the specified change address. If no change address
             // was set, send change to the first Sapling address given as input

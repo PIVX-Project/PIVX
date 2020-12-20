@@ -93,11 +93,11 @@ public:
         P2CSDelegationSentOwner, // Spendable P2CS delegated utxo. (coin-owner)
         P2CSUnlockOwner, // Coin-owner spent the delegated utxo
         P2CSUnlockStaker, // Staker watching the owner spent the delegated utxo
-        SendToShielded, // Shielded send
-        RecvWithShieldedAddress, // Shielded receive
-        SendToSelfShieldedAddress, // Shielded send to self
+        SendToShield, // Shield send
+        RecvWithShieldAddress, // Shield receive
+        SendToSelfShieldAddress, // Shield send to self
         SendToSelfShieldToTransparent, // Unshield coins to self
-        SendToSelfShieldToShieldChangeAddress // Changing coins from one shielded address to another inside the wallet.
+        SendToSelfShieldToShieldChangeAddress // Changing coins from one shield address to another inside the wallet.
     };
 
     /** Number of confirmation recommended for accepting a transaction */
@@ -145,7 +145,7 @@ public:
                                                       const CAmount& nDebit, bool involvesWatchAddress,
                                                       QList<TransactionRecord>& parts);
 
-    static bool decomposeShieldedDebitTransaction(const CWallet* wallet, const CWalletTx& wtx, CAmount nTxFee,
+    static bool decomposeShieldDebitTransaction(const CWallet* wallet, const CWalletTx& wtx, CAmount nTxFee,
                                                   bool involvesWatchAddress, QList<TransactionRecord>& parts);
 
     static std::string getValueOrReturnEmpty(const std::map<std::string, std::string>& mapValue, const std::string& key);
@@ -162,7 +162,7 @@ public:
     CAmount debit;
     CAmount credit;
     unsigned int size;
-    Optional<CAmount> shieldedCredit{nullopt};
+    Optional<CAmount> shieldCredit{nullopt};
     Optional<std::string> memo{nullopt};
     /**@}*/
 

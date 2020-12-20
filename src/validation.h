@@ -110,8 +110,8 @@ static const unsigned int AVG_ADDRESS_BROADCAST_INTERVAL = 30;
 /** Average delay between trickled inventory broadcasts in seconds.
  *  Blocks, whitelisted receivers, and a random 25% of transactions bypass this. */
 static const unsigned int AVG_INVENTORY_BROADCAST_INTERVAL = 5;
-/** Default multiplier used in the computation for shielded txes min fee */
-static const unsigned int DEFAULT_SHIELDEDTXFEE_K = 1000;
+/** Default multiplier used in the computation for shield txes min fee */
+static const unsigned int DEFAULT_SHIELDTXFEE_K = 1000;
 
 /** Enable bloom filter */
  static const bool DEFAULT_PEERBLOOMFILTERS = true;
@@ -225,9 +225,9 @@ std::string FormatStateMessage(const CValidationState &state);
 CAmount GetMinRelayFee(const CTransaction& tx, const CTxMemPool& pool, unsigned int nBytes, bool fAllowFree);
 CAmount GetMinRelayFee(unsigned int nBytes, bool fAllowFree);
 /**
- * Return the minimum fee for a shielded tx.
+ * Return the minimum fee for a shield tx.
  */
-CAmount GetShieldedTxMinFee(const CTransaction& tx);
+CAmount GetShieldTxMinFee(const CTransaction& tx);
 
 /**
  * Check transaction inputs, and make sure any

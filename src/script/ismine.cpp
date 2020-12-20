@@ -41,9 +41,9 @@ isminetype IsMine(const CKeyStore& keystore, const libzcash::SaplingPaymentAddre
     if (keystore.GetSaplingIncomingViewingKey(pa, ivk) &&
         keystore.GetSaplingFullViewingKey(ivk, exfvk) &&
         keystore.HaveSaplingSpendingKey(exfvk)) {
-        return ISMINE_SPENDABLE_SHIELDED;
+        return ISMINE_SPENDABLE_SHIELD;
     } else if (!ivk.IsNull()) {
-        return ISMINE_WATCH_ONLY_SHIELDED;
+        return ISMINE_WATCH_ONLY_SHIELD;
     } else {
         return ISMINE_NO;
     }

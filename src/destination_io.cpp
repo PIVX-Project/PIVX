@@ -24,19 +24,19 @@ namespace Standard {
 
     CWDestination DecodeDestination(const std::string& strAddress, bool& isStaking)
     {
-        bool isShielded = false;
-        return DecodeDestination(strAddress, isStaking, isShielded);
+        bool isShield = false;
+        return DecodeDestination(strAddress, isStaking, isShield);
     }
 
-    // agregar isShielded
-    CWDestination DecodeDestination(const std::string& strAddress, bool& isStaking, bool& isShielded)
+    // agregar isShield
+    CWDestination DecodeDestination(const std::string& strAddress, bool& isStaking, bool& isShield)
     {
         CWDestination dest;
         CTxDestination regDest = ::DecodeDestination(strAddress, isStaking);
         if (!IsValidDestination(regDest)) {
             const auto sapDest = KeyIO::DecodeSaplingPaymentAddress(strAddress);
             if (sapDest) {
-                isShielded = true;
+                isShield = true;
                 return *sapDest;
             }
         }
@@ -46,7 +46,7 @@ namespace Standard {
 
     bool IsValidDestination(const CWDestination& address)
     {
-        // Only regular base58 addresses and shielded addresses accepted here for now
+        // Only regular base58 addresses and shield addresses accepted here for now
         const libzcash::SaplingPaymentAddress *dest1 = boost::get<libzcash::SaplingPaymentAddress>(&address);
         if (dest1) return true;
 
@@ -54,7 +54,7 @@ namespace Standard {
         return dest && ::IsValidDestination(*dest);
     }
 
-    const libzcash::SaplingPaymentAddress* GetShieldedDestination(const CWDestination& dest)
+    const libzcash::SaplingPaymentAddress* GetShieldDestination(const CWDestination& dest)
     {
         return boost::get<libzcash::SaplingPaymentAddress>(&dest);
     }

@@ -37,12 +37,12 @@ class WalletAnchorForkTest(PivxTestFramework):
 
         # At this point in time, commitment tree is the empty root
 
-        # Node 0 creates a shielded transaction
+        # Node 0 creates a shield transaction
         mytaddr0 = get_coinstake_address(self.nodes[0])
-        myzaddr0 = self.nodes[0].getnewshieldedaddress()
+        myzaddr0 = self.nodes[0].getnewshieldaddress()
         recipients = []
         recipients.append({"address":myzaddr0, "amount": Decimal('10.0') - Decimal('0.0001')})
-        txid = self.nodes[0].shieldedsendmany(mytaddr0, recipients)
+        txid = self.nodes[0].shieldsendmany(mytaddr0, recipients)
 
         # Sync up mempools and mine the transaction.  All nodes have the same anchor.
         self.sync_all()
@@ -69,17 +69,17 @@ class WalletAnchorForkTest(PivxTestFramework):
         assert_equal(self.nodes[1].getblockcount(), self.nodes[2].getblockcount())
         assert(self.nodes[2].getblockcount() != self.nodes[0].getblockcount())
 
-        # Partition A, node 0 creates a shielded transaction
+        # Partition A, node 0 creates a shield transaction
         recipients = []
         recipients.append({"address":myzaddr0, "amount": Decimal('10.0') - Decimal('0.0001')})
-        txid = self.nodes[0].shieldedsendmany(mytaddr0, recipients)
+        txid = self.nodes[0].shieldsendmany(mytaddr0, recipients)
         rawhex = self.nodes[0].getrawtransaction(txid)
 
         # Partition A, node 0 mines a block with the transaction
         self.nodes[0].generate(1)
         self.sync_all([self.nodes[1:3]])
 
-        # Partition B, node 1 mines the same shielded transaction
+        # Partition B, node 1 mines the same shield transaction
         txid2 = self.nodes[1].sendrawtransaction(rawhex)
         assert_equal(txid, txid2)
         self.nodes[1].generate(1)

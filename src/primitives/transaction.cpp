@@ -257,7 +257,7 @@ CAmount CTransaction::GetValueOut() const
     return nValueOut;
 }
 
-CAmount CTransaction::GetShieldedValueIn() const
+CAmount CTransaction::GetShieldValueIn() const
 {
     CAmount nValue = 0;
 
@@ -326,10 +326,10 @@ std::string CTransaction::ToString() const
        << ", vin.size=" << vin.size()
        << ", vout.size=" << vout.size()
        << ", nLockTime=" << nLockTime;
-    if (IsShieldedTx()) {
+    if (IsShieldTx()) {
         ss << ", valueBalance=" << sapData->valueBalance
-           << ", vShieldedSpend.size=" << sapData->vShieldedSpend.size()
-           << ", vShieldedOutput.size=" << sapData->vShieldedOutput.size();
+           << ", vShieldSpend.size=" << sapData->vShieldSpend.size()
+           << ", vShieldOutput.size=" << sapData->vShieldOutput.size();
     }
     if (IsSpecialTx()) {
         ss << ", extraPayload.size=" << extraPayload->size();
