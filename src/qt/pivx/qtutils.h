@@ -40,7 +40,7 @@ bool openDialogWithOpaqueBackground(QDialog* widget, PIVXGUI* gui, double posX =
 bool openDialogWithOpaqueBackground(QDialog* widget, PIVXGUI* gui, Qt::WindowType windowFlags, double posX = 3);
 bool openDialogWithOpaqueBackgroundFullScreen(QDialog* widget, PIVXGUI* gui);
 
-//  
+//
 QPixmap encodeToQr(QString str, QString& errorStr, QColor qrColor = Qt::black);
 
 // Helpers
