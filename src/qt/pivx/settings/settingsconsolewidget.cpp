@@ -290,7 +290,6 @@ SettingsConsoleWidget::SettingsConsoleWidget(PIVXGUI* _window, QWidget *parent) 
     RPCSetTimerInterfaceIfUnset(rpcTimerInterface);
 
     startExecutor();
-    QString theme;
     updateTextColors(isLightTheme());
     clear();
 }
@@ -351,7 +350,6 @@ bool SettingsConsoleWidget::eventFilter(QObject* obj, QEvent* event)
                     return true;
                 }
                 if (mod == Qt::ControlModifier && key == Qt::Key_L) {
-                    QString theme;
                     updateTextColors(isLightTheme());
                     clear(false);
                 }
