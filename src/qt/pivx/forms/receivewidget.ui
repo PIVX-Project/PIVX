@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>819</width>
+    <width>954</width>
     <height>629</height>
    </rect>
   </property>
@@ -511,6 +511,35 @@
             <number>5</number>
            </property>
            <item>
+            <widget class="QLabel" name="labelFilter">
+             <property name="text">
+              <string>Filter:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEditFilter">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="contextMenuPolicy">
+              <enum>Qt::DefaultContextMenu</enum>
+             </property>
+             <property name="acceptDrops">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="horizontalSpacer_3">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -556,6 +585,10 @@
             </widget>
            </item>
           </layout>
+          <zorder>comboBoxSort</zorder>
+          <zorder>comboBoxSortOrder</zorder>
+          <zorder>lineEditFilter</zorder>
+          <zorder>labelFilter</zorder>
          </widget>
         </item>
         <item>

@@ -91,6 +91,12 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
     ui->container_right->addItem(spacer);
     ui->listViewAddress->setVisible(false);
 
+    // My Address search filter
+    setCssSubtitleScreen(ui->labelFilter);
+
+    initCssEditLine(ui->lineEditFilter, true);
+    ui->lineEditFilter->setStyleSheet("font: 12px;");
+
     // Sort Controls
     SortEdit* lineEdit = new SortEdit(ui->comboBoxSort);
     connect(lineEdit, &SortEdit::Mouse_Pressed, [this](){ui->comboBoxSort->showPopup();});
@@ -108,6 +114,7 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
     connect(ui->listViewAddress, &QListView::clicked, this, &ReceiveWidget::handleAddressClicked);
     connect(ui->btnRequest, &OptionButton::clicked, this, &ReceiveWidget::onRequestClicked);
     connect(ui->btnMyAddresses, &OptionButton::clicked, this, &ReceiveWidget::onMyAddressesClicked);
+    connect(ui->lineEditFilter, &QLineEdit::textChanged, [this](){filterChanged(ui->lineEditFilter->text());});
 
     ui->pushLeft->setChecked(true);
     connect(ui->pushLeft, &QPushButton::clicked, [this](){onTransparentSelected(true);});
@@ -334,6 +341,11 @@ void ReceiveWidget::onSortOrderChanged(int idx)
 {
     sortOrder = (Qt::SortOrder) ui->comboBoxSortOrder->itemData(idx).toInt();
     sortAddresses();
+}
+
+void ReceiveWidget::filterChanged(const QString& str)
+{
+    this->filter->setFilterRegExp(str);
 }
 
 void ReceiveWidget::sortAddresses()
