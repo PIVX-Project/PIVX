@@ -84,6 +84,15 @@ void SettingsWalletOptionsWidget::setSpinBoxStakeSplitThreshold(double val)
     ui->spinBoxStakeSplitThreshold->setValue(val);
 }
 
+void SettingsWalletOptionsWidget::showEvent(QShowEvent *event)
+{
+    PWidget::showEvent(event);
+    if (clientModel) {
+        OptionsModel *optionsModel = clientModel->getOptionsModel();
+        optionsModel->refreshDataView();
+    }
+}
+
 SettingsWalletOptionsWidget::~SettingsWalletOptionsWidget(){
     delete ui;
 }
