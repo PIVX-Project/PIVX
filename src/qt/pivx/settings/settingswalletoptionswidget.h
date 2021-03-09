@@ -31,7 +31,7 @@ public Q_SLOTS:
     void onResetClicked();
 
 private:
-    void showEvent(QShowEvent *event);
+    void showEvent(QShowEvent *event) override;
     Ui::SettingsWalletOptionsWidget *ui;
 };
 
