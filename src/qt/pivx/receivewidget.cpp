@@ -92,10 +92,8 @@ ReceiveWidget::ReceiveWidget(PIVXGUI* parent) :
     ui->listViewAddress->setVisible(false);
 
     // My Address search filter
-    setCssSubtitleScreen(ui->labelFilter);
-
     initCssEditLine(ui->lineEditFilter, true);
-    ui->lineEditFilter->setStyleSheet("font: 12px;");
+    ui->lineEditFilter->setStyleSheet("font: 14px;");
 
     // Sort Controls
     SortEdit* lineEdit = new SortEdit(ui->comboBoxSort);

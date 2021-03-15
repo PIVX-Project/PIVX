@@ -511,13 +511,6 @@
             <number>5</number>
            </property>
            <item>
-            <widget class="QLabel" name="labelFilter">
-             <property name="text">
-              <string>Filter:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QLineEdit" name="lineEditFilter">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -537,6 +530,9 @@
              <property name="acceptDrops">
               <bool>false</bool>
              </property>
+             <property name="placeholderText">
+              <string>Filter</string>
+             </property>
             </widget>
            </item>
            <item>
@@ -544,9 +540,12 @@
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Preferred</enum>
+             </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>40</width>
+               <width>20</width>
                <height>20</height>
               </size>
              </property>
@@ -588,7 +587,6 @@
           <zorder>comboBoxSort</zorder>
           <zorder>comboBoxSortOrder</zorder>
           <zorder>lineEditFilter</zorder>
-          <zorder>labelFilter</zorder>
          </widget>
         </item>
         <item>
