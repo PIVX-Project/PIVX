@@ -530,6 +530,9 @@
              <property name="acceptDrops">
               <bool>false</bool>
              </property>
+             <property name="maxLength">
+              <number>40</number>
+             </property>
              <property name="placeholderText">
               <string>Filter</string>
              </property>
