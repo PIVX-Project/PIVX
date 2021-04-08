@@ -1,6 +1,3 @@
-# SBE
-Fast Secured Decentralize and Peer to Peer Transactions - Core wallet.
-
 SOMBE Core
 =====================================
 
