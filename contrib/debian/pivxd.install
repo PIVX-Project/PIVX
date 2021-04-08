@@ -1,3 +1,0 @@
-usr/local/bin/pivxd usr/bin
-usr/local/bin/pivx-cli usr/bin
-debian/examples/pivx.conf etc/pivx

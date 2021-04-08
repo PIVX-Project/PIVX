@@ -1,8 +1,0 @@
-/usr/bin/pivx-cli		--	gen_context(system_u:object_r:pivx_exec_t,s0)
-/usr/sbin/pivxd		--	gen_context(system_u:object_r:pivx_exec_t,s0)
-/usr/lib(64)?/pivx/pivxd		--	gen_context(system_u:object_r:pivx_exec_t,s0)
-
-/etc/pivx(/.*)?		gen_context(system_u:object_r:pivx_conf_t,s0)
-/var/lib/pivx(/.*)?		gen_context(system_u:object_r:pivx_var_lib_t,s0)
-
-(/var)?/run/pivxd(/.*)?   gen_context(system_u:object_r:pivx_var_run_t,s0)

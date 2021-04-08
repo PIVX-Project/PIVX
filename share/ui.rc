@@ -1,5 +1,0 @@
-bitcoin               ICON    "pixmaps/pivx.ico"
-
-#include "wx/msw/wx.rc"
-
-favicon               ICON    "pixmaps/favicon.ico"
