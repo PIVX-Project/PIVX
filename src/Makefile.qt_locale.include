@@ -1,0 +1,14 @@
+QT_TS = \
+  qt/locale/Sombe_de.ts \
+  qt/locale/Sombe_en.ts \
+  qt/locale/Sombe_en_US.ts \
+  qt/locale/Sombe_es.ts \
+  qt/locale/Sombe_fr_FR.ts \
+  qt/locale/Sombe_hr_HR.ts \
+  qt/locale/Sombe_it.ts \
+  qt/locale/Sombe_ko_KR.ts \
+  qt/locale/Sombe_nl.ts \
+  qt/locale/Sombe_pl.ts \
+  qt/locale/Sombe_ru.ts \
+  qt/locale/Sombe_tr.ts \
+  qt/locale/Sombe_zh_CN.ts

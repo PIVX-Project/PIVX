@@ -1,0 +1,81 @@
+policy_module(Sombe, 1.100.1)
+
+########################################
+#
+# Declarations
+#
+
+type Sombe_t;
+type Sombe_exec_t;
+init_daemon_domain(Sombe_t, Sombe_exec_t)
+
+permissive Sombe_t;
+
+type Sombe_initrc_exec_t;
+init_script_file(Sombe_initrc_exec_t)
+
+type Sombe_conf_t;
+files_type(Sombe_conf_t)
+
+type Sombe_var_lib_t;
+files_type(Sombe_var_lib_t)
+
+type Sombe_var_run_t;
+files_type(Sombe_var_run_t)
+
+type Sombe_port_t;
+corenet_port(Sombe_port_t)
+
+########################################
+#
+# Sombe local policy
+#
+allow Sombe_t self:process { fork };
+
+allow Sombe_t self:fifo_file rw_fifo_file_perms;
+allow Sombe_t self:unix_stream_socket create_stream_socket_perms;
+
+manage_dirs_pattern(Sombe_t, Sombe_conf_t, Sombe_conf_t)
+manage_files_pattern(Sombe_t, Sombe_conf_t, Sombe_conf_t)
+
+manage_dirs_pattern(Sombe_t, Sombe_var_lib_t, Sombe_var_lib_t)
+manage_files_pattern(Sombe_t, Sombe_var_lib_t, Sombe_var_lib_t)
+files_var_lib_filetrans(Sombe_t, Sombe_var_lib_t, { dir file })
+
+manage_dirs_pattern(Sombe_t, Sombe_var_run_t, Sombe_var_run_t)
+manage_files_pattern(Sombe_t, Sombe_var_run_t, Sombe_var_run_t)
+
+sysnet_dns_name_resolve(Sombe_t)
+corenet_all_recvfrom_unlabeled(Sombe_t)
+
+allow Sombe_t self:tcp_socket create_stream_socket_perms;
+corenet_tcp_sendrecv_generic_if(Sombe_t)
+corenet_tcp_sendrecv_generic_node(Sombe_t)
+corenet_tcp_sendrecv_all_ports(Sombe_t)
+corenet_tcp_bind_generic_node(Sombe_t)
+
+gen_require(`
+    type Sombe_port_t;
+')
+allow Sombe_t Sombe_port_t:tcp_socket name_bind;
+
+gen_require(`
+    type Sombe_port_t;
+')
+allow Sombe_t Sombe_port_t:tcp_socket name_connect;
+
+domain_use_interactive_fds(Sombe_t)
+
+files_read_etc_files(Sombe_t)
+
+miscfiles_read_localization(Sombe_t)
+
+sysnet_dns_name_resolve(Sombe_t)
+
+allow Sombe_t Sombe_exec_t:file execute_no_trans;
+allow Sombe_t self:process setsched;
+corecmd_exec_ls(Sombe_t)
+corenet_tcp_connect_http_port(Sombe_t)
+dev_read_urand(Sombe_t)
+fs_getattr_xattr_fs(Sombe_t)
+kernel_read_system_state(Sombe_t)

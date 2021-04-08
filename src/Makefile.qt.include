@@ -1,0 +1,715 @@
+# Copyright (c) 2013-2016 The Bitcoin Core developers
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+bin_PROGRAMS += qt/Sombe-qt
+EXTRA_LIBRARIES += qt/libbitcoinqt.a
+
+# Sombe qt core #
+include Makefile.qt_locale.include
+
+QT_FORMS_UI = \
+  qt/forms/addressbookpage.ui \
+  qt/forms/askpassphrasedialog.ui \
+  qt/forms/coincontroldialog.ui \
+  qt/forms/editaddressdialog.ui \
+  qt/forms/helpmessagedialog.ui \
+  qt/forms/intro.ui \
+  qt/forms/openuridialog.ui \
+  qt/forms/optionsdialog.ui \
+  qt/forms/rpcconsole.ui \
+  qt/Sombe/forms/loadingdialog.ui \
+  qt/Sombe/forms/snackbar.ui \
+  qt/Sombe/forms/navmenuwidget.ui \
+  qt/Sombe/forms/lockunlock.ui \
+  qt/Sombe/forms/expandablebutton.ui \
+  qt/Sombe/forms/receivedialog.ui \
+  qt/Sombe/forms/topbar.ui \
+  qt/Sombe/forms/txrow.ui \
+  qt/Sombe/forms/dashboardwidget.ui \
+  qt/Sombe/forms/addresslabelrow.ui \
+  qt/Sombe/forms/contactdropdownrow.ui \
+  qt/Sombe/forms/mninfodialog.ui \
+  qt/Sombe/forms/optionbutton.ui \
+  qt/Sombe/forms/masternodewizarddialog.ui \
+  qt/Sombe/forms/mnrow.ui \
+  qt/Sombe/forms/masternodeswidget.ui \
+  qt/Sombe/forms/myaddressrow.ui \
+  qt/Sombe/forms/csrow.ui \
+  qt/Sombe/forms/sendchangeaddressdialog.ui \
+  qt/Sombe/forms/sendconfirmdialog.ui \
+  qt/Sombe/forms/sendcustomfeedialog.ui \
+  qt/Sombe/forms/sendchangeaddressdialog.ui \
+  qt/Sombe/forms/sendmultirow.ui \
+  qt/Sombe/forms/send.ui \
+  qt/Sombe/forms/addnewaddressdialog.ui \
+  qt/Sombe/forms/addnewcontactdialog.ui \
+  qt/Sombe/forms/requestdialog.ui \
+  qt/Sombe/forms/receivewidget.ui \
+  qt/Sombe/forms/tooltipmenu.ui \
+  qt/Sombe/forms/addresseswidget.ui \
+  qt/Sombe/forms/defaultdialog.ui \
+  qt/Sombe/forms/coldstakingwidget.ui \
+  qt/Sombe/settings/forms/settingsbackupwallet.ui \
+  qt/Sombe/settings/forms/settingsexportcsv.ui \
+  qt/Sombe/settings/forms/settingsbittoolwidget.ui \
+  qt/Sombe/settings/forms/settingsconsolewidget.ui \
+  qt/Sombe/settings/forms/settingsdisplayoptionswidget.ui \
+  qt/Sombe/settings/forms/settingsfaqwidget.ui \
+  qt/Sombe/settings/forms/settingsinformationwidget.ui \
+  qt/Sombe/settings/forms/settingsmainoptionswidget.ui \
+  qt/Sombe/settings/forms/settingsmultisenddialog.ui \
+  qt/Sombe/settings/forms/settingsmultisendwidget.ui \
+  qt/Sombe/settings/forms/settingssignmessagewidgets.ui \
+  qt/Sombe/settings/forms/settingswalletoptionswidget.ui \
+  qt/Sombe/settings/forms/settingswalletrepairwidget.ui \
+  qt/Sombe/settings/forms/settingswidget.ui \
+  qt/Sombe/forms/welcomecontentwidget.ui \
+  qt/Sombe/forms/splash.ui
+
+QT_MOC_CPP = \
+  qt/moc_addressbookpage.cpp \
+  qt/moc_addresstablemodel.cpp \
+  qt/moc_askpassphrasedialog.cpp \
+  qt/moc_bantablemodel.cpp \
+  qt/moc_bitcoinaddressvalidator.cpp \
+  qt/Sombe/moc_Sombegui.cpp \
+  qt/moc_bitcoinunits.cpp \
+  qt/moc_clientmodel.cpp \
+  qt/moc_coincontroldialog.cpp \
+  qt/moc_coincontroltreewidget.cpp \
+  qt/moc_csvmodelwriter.cpp \
+  qt/moc_editaddressdialog.cpp \
+  qt/moc_guiutil.cpp \
+  qt/moc_intro.cpp \
+  qt/moc_macdockiconhandler.cpp \
+  qt/moc_macnotificationhandler.cpp \
+  qt/moc_notificator.cpp \
+  qt/moc_openuridialog.cpp \
+  qt/moc_optionsdialog.cpp \
+  qt/moc_optionsmodel.cpp \
+  qt/moc_peertablemodel.cpp \
+  qt/moc_paymentserver.cpp \
+  qt/moc_qvalidatedlineedit.cpp \
+  qt/moc_qvaluecombobox.cpp \
+  qt/moc_recentrequeststablemodel.cpp \
+  qt/moc_rpcconsole.cpp \
+  qt/moc_trafficgraphwidget.cpp \
+  qt/moc_transactiondesc.cpp \
+  qt/moc_transactionfilterproxy.cpp \
+  qt/moc_transactiontablemodel.cpp \
+  qt/moc_utilitydialog.cpp \
+  qt/moc_walletmodel.cpp \
+  qt/Sombe/moc_loadingdialog.cpp \
+  qt/Sombe/moc_pwidget.cpp \
+  qt/Sombe/moc_focuseddialog.cpp \
+  qt/Sombe/moc_snackbar.cpp \
+  qt/Sombe/moc_navmenuwidget.cpp \
+  qt/Sombe/moc_lockunlock.cpp \
+  qt/Sombe/moc_expandablebutton.cpp \
+  qt/Sombe/moc_furabstractlistitemdelegate.cpp \
+  qt/Sombe/moc_receivedialog.cpp \
+  qt/Sombe/moc_pfborderimage.cpp \
+  qt/Sombe/moc_topbar.cpp \
+  qt/Sombe/moc_txrow.cpp \
+  qt/Sombe/moc_dashboardwidget.cpp \
+  qt/Sombe/moc_addresslabelrow.cpp \
+  qt/Sombe/moc_contactdropdownrow.cpp \
+  qt/Sombe/moc_mninfodialog.cpp \
+  qt/Sombe/moc_optionbutton.cpp \
+  qt/Sombe/moc_coldstakingmodel.cpp \
+  qt/Sombe/moc_mnmodel.cpp \
+  qt/Sombe/moc_masternodewizarddialog.cpp \
+  qt/Sombe/moc_mnrow.cpp \
+  qt/Sombe/moc_masternodeswidget.cpp \
+  qt/Sombe/moc_myaddressrow.cpp \
+  qt/Sombe/moc_csrow.cpp \
+  qt/Sombe/moc_contactsdropdown.cpp \
+  qt/Sombe/moc_sendchangeaddressdialog.cpp \
+  qt/Sombe/moc_sendconfirmdialog.cpp \
+  qt/Sombe/moc_sendcustomfeedialog.cpp \
+  qt/Sombe/moc_sendchangeaddressdialog.cpp \
+  qt/Sombe/moc_sendmultirow.cpp \
+  qt/Sombe/moc_send.cpp \
+  qt/Sombe/moc_addnewaddressdialog.cpp \
+  qt/Sombe/moc_addnewcontactdialog.cpp \
+  qt/Sombe/moc_requestdialog.cpp \
+  qt/Sombe/moc_receivewidget.cpp \
+  qt/Sombe/moc_tooltipmenu.cpp \
+  qt/Sombe/moc_addresseswidget.cpp \
+  qt/Sombe/moc_defaultdialog.cpp \
+  qt/Sombe/moc_coldstakingwidget.cpp \
+  qt/Sombe/settings/moc_settingsbackupwallet.cpp \
+  qt/Sombe/settings/moc_settingsexportcsv.cpp \
+  qt/Sombe/settings/moc_settingsbittoolwidget.cpp \
+  qt/Sombe/settings/moc_settingsconsolewidget.cpp \
+  qt/Sombe/settings/moc_settingsdisplayoptionswidget.cpp \
+  qt/Sombe/settings/moc_settingsfaqwidget.cpp \
+  qt/Sombe/settings/moc_settingsinformationwidget.cpp \
+  qt/Sombe/settings/moc_settingsmainoptionswidget.cpp \
+  qt/Sombe/settings/moc_settingsmultisenddialog.cpp \
+  qt/Sombe/settings/moc_settingsmultisendwidget.cpp \
+  qt/Sombe/settings/moc_settingssignmessagewidgets.cpp \
+  qt/Sombe/settings/moc_settingswalletoptionswidget.cpp \
+  qt/Sombe/settings/moc_settingswalletrepairwidget.cpp \
+  qt/Sombe/settings/moc_settingswidget.cpp \
+  qt/Sombe/moc_welcomecontentwidget.cpp \
+  qt/Sombe/moc_splash.cpp
+
+BITCOIN_MM = \
+  qt/macdockiconhandler.mm \
+  qt/macnotificationhandler.mm
+
+QT_MOC = \
+  qt/Sombe.moc \
+  qt/intro.moc \
+  qt/rpcconsole.moc \
+  qt/Sombe/settings/moc_settingsconsolewidget.cpp
+
+QT_QRC_CPP = qt/qrc_Sombe.cpp
+QT_QRC = qt/Sombe.qrc
+QT_QRC_LOCALE_CPP = qt/qrc_Sombe_locale.cpp
+QT_QRC_LOCALE = qt/Sombe_locale.qrc
+
+PROTOBUF_CC = qt/paymentrequest.pb.cc
+PROTOBUF_H = qt/paymentrequest.pb.h
+PROTOBUF_PROTO = qt/paymentrequest.proto
+
+BITCOIN_QT_H = \
+  qt/addressbookpage.h \
+  qt/addresstablemodel.h \
+  qt/askpassphrasedialog.h \
+  qt/bantablemodel.h \
+  qt/bitcoinaddressvalidator.h \
+  qt/Sombe/Sombegui.h \
+  qt/bitcoinunits.h \
+  qt/clientmodel.h \
+  qt/coincontroldialog.h \
+  qt/coincontroltreewidget.h \
+  qt/csvmodelwriter.h \
+  qt/editaddressdialog.h \
+  qt/guiconstants.h \
+  qt/guiutil.h \
+  qt/intro.h \
+  qt/macdockiconhandler.h \
+  qt/macnotificationhandler.h \
+  qt/networkstyle.h \
+  qt/notificator.h \
+  qt/openuridialog.h \
+  qt/optionsdialog.h \
+  qt/optionsmodel.h \
+  qt/paymentrequestplus.h \
+  qt/paymentserver.h \
+  qt/peertablemodel.h \
+  qt/platformstyle.h \
+  qt/qvalidatedlineedit.h \
+  qt/qvaluecombobox.h \
+  qt/recentrequeststablemodel.h \
+  qt/rpcconsole.h \
+  qt/trafficgraphwidget.h \
+  qt/transactiondesc.h \
+  qt/transactionfilterproxy.h \
+  qt/transactionrecord.h \
+  qt/transactiontablemodel.h \
+  qt/utilitydialog.h \
+  qt/walletmodel.h \
+  qt/walletmodeltransaction.h \
+  qt/Sombe/prunnable.h \
+  qt/Sombe/pfborderimage.h \
+  qt/Sombe/loadingdialog.h \
+  qt/winshutdownmonitor.h \
+  qt/Sombe/pwidget.h \
+  qt/Sombe/focuseddialog.h \
+  qt/Sombe/guitransactionsutils.h \
+  qt/Sombe/snackbar.h \
+  qt/Sombe/navmenuwidget.h \
+  qt/Sombe/lockunlock.h \
+  qt/Sombe/receivedialog.h \
+  qt/Sombe/furlistrow.h \
+  qt/Sombe/furabstractlistitemdelegate.h \
+  qt/Sombe/txviewholder.h \
+  qt/Sombe/qtutils.h \
+  qt/Sombe/expandablebutton.h \
+  qt/Sombe/topbar.h \
+  qt/Sombe/txrow.h \
+  qt/Sombe/addressholder.h \
+  qt/Sombe/addressfilterproxymodel.h \
+  qt/Sombe/dashboardwidget.h \
+  qt/Sombe/addresslabelrow.h \
+  qt/Sombe/contactdropdownrow.h \
+  qt/Sombe/mninfodialog.h \
+  qt/Sombe/optionbutton.h \
+  qt/Sombe/coldstakingmodel.h \
+  qt/Sombe/mnmodel.h \
+  qt/Sombe/masternodewizarddialog.h \
+  qt/Sombe/mnrow.h \
+  qt/Sombe/masternodeswidget.h \
+  qt/Sombe/myaddressrow.h \
+  qt/Sombe/csrow.h \
+  qt/Sombe/contactsdropdown.h \
+  qt/Sombe/sendchangeaddressdialog.h \
+  qt/Sombe/sendconfirmdialog.h \
+  qt/Sombe/sendcustomfeedialog.h \
+  qt/Sombe/sendchangeaddressdialog.h \
+  qt/Sombe/sendmultirow.h \
+  qt/Sombe/send.h \
+  qt/Sombe/addnewaddressdialog.h \
+  qt/Sombe/addnewcontactdialog.h \
+  qt/Sombe/requestdialog.h \
+  qt/Sombe/receivewidget.h \
+  qt/Sombe/tooltipmenu.h \
+  qt/Sombe/addresseswidget.h \
+  qt/Sombe/defaultdialog.h \
+  qt/Sombe/coldstakingwidget.h \
+  qt/Sombe/settings/settingsbackupwallet.h \
+  qt/Sombe/settings/settingsexportcsv.h \
+  qt/Sombe/settings/settingsbittoolwidget.h \
+  qt/Sombe/settings/settingsconsolewidget.h \
+  qt/Sombe/settings/settingsdisplayoptionswidget.h \
+  qt/Sombe/settings/settingsfaqwidget.h \
+  qt/Sombe/settings/settingsinformationwidget.h \
+  qt/Sombe/settings/settingsmainoptionswidget.h \
+  qt/Sombe/settings/settingsmultisenddialog.h \
+  qt/Sombe/settings/settingsmultisendwidget.h \
+  qt/Sombe/settings/settingssignmessagewidgets.h \
+  qt/Sombe/settings/settingswalletoptionswidget.h \
+  qt/Sombe/settings/settingswalletrepairwidget.h \
+  qt/Sombe/settings/settingswidget.h \
+  qt/Sombe/welcomecontentwidget.h \
+  qt/Sombe/splash.h
+
+RES_ICONS = \
+  qt/res/icons/bitcoin.ico \
+  qt/res/icons/bitcoin.png \
+  qt/res/icons/bitcoin_testnet.ico \
+  qt/res/icons/bitcoin_testnet.png \
+  qt/res/icons/bitcoin_regtest.png \
+  qt/res/icons/lock_closed.png \
+  qt/res/icons/lock_open.png \
+  qt/res/icons/ic-transaction-received.png \
+  qt/res/icons/ic-transaction-mint.png \
+  qt/res/icons/ic-transaction-sent.png \
+  qt/res/icons/ic-transaction-staked.png \
+  qt/Sombe/res/img/bg-dashboard-banner.png \
+  qt/Sombe/res/img/bg-multi-number-dark.png \
+  qt/Sombe/res/img/ic-check-locked.png \
+  qt/Sombe/res/img/ic-nav-address.png \
+  qt/Sombe/res/img/ic-update.png \
+  qt/Sombe/res/img/bg-multi-number.png \
+  qt/Sombe/res/img/ic-check-mint-off.png \
+  qt/Sombe/res/img/ic-nav-cold-staking.png \
+  qt/Sombe/res/img/ic-nav-cold-staking-active.png \
+  qt/Sombe/res/img/ic-nav-dashboard-active.png \
+  qt/Sombe/res/img/ic-wallet-status-locked.png \
+  qt/Sombe/res/img/bg-splash.png \
+  qt/Sombe/res/img/bg-splash.png \
+  qt/Sombe/res/img/ic-check-mint.png \
+  qt/Sombe/res/img/ic-nav-dashboard-hover.png \
+  qt/Sombe/res/img/ic-wallet-status-staking.png \
+  qt/Sombe/res/img/ic-check-peers-off.png \
+  qt/Sombe/res/img/ic-nav-dashboard.png \
+  qt/Sombe/res/img/ic-wallet-status-unlocked.png \
+  qt/Sombe/res/img/ic-check-peers.png \
+  qt/Sombe/res/img/ic-nav-master-active.png \
+  qt/Sombe/res/img/ic-watch-password-white.png \
+  qt/Sombe/res/img/bg-welcome-container.jpg \
+  qt/Sombe/res/img/bg-welcome-container.png \
+  qt/Sombe/res/img/bg-welcome-container.png \
+  qt/Sombe/res/img/bg-welcome-container@2x.png \
+  qt/Sombe/res/img/bg-welcome-container@3x.png \
+  qt/Sombe/res/img/ic-check-staking-off.png \
+  qt/Sombe/res/img/ic-nav-master-hover.png \
+  qt/Sombe/res/img/ic-watch-password.png \
+  qt/Sombe/res/img/bg-welcome.jpg \
+  qt/Sombe/res/img/bg-welcome.png \
+  qt/Sombe/res/img/bg-welcome@2x.jpg \
+  qt/Sombe/res/img/bg-welcome@3x.jpg \
+  qt/Sombe/res/img/bg-welcome.png \
+  qt/Sombe/res/img/ic-check-staking.png \
+  qt/Sombe/res/img/ic-nav-master.png \
+  qt/Sombe/res/img/img-dashboard-banner.jpg \
+  qt/Sombe/res/img/btn-radio-active.png \
+  qt/Sombe/res/img/ic-check-sync-off.png \
+  qt/Sombe/res/img/img-empty-contacts.png \
+  qt/Sombe/res/img/btn-radio-off.png \
+  qt/Sombe/res/img/ic-check-sync.png \
+  qt/Sombe/res/img/img-empty-dark-contacts.png \
+  qt/Sombe/res/img/ic-contact-arrow-down.png \
+  qt/Sombe/res/img/ic-contact-arrow-down-white.png \
+  qt/Sombe/res/img/ic-check-sync.png \
+  qt/Sombe/res/img/ic-check-faq.png \
+  qt/Sombe/res/img/img-empty-dark-error.png \
+  qt/Sombe/res/img/ic-add-label.png \
+  qt/Sombe/res/img/ic-pending.png \
+  qt/Sombe/res/img/ic-check-theme-dark.png \
+  qt/Sombe/res/img/ic-nav-receive-active.png \
+  qt/Sombe/res/img/img-empty-dark-masternode.png \
+  qt/Sombe/res/img/ic-add-liliac.png \
+  qt/Sombe/res/img/ic-check-theme-light.png \
+  qt/Sombe/res/img/ic-nav-receive-hover.png \
+  qt/Sombe/res/img/img-empty-dark-multisend.png \
+  qt/Sombe/res/img/ic-add-purple.png \
+  qt/Sombe/res/img/ic-check-white.png \
+  qt/Sombe/res/img/ic-nav-receive.png \
+  qt/Sombe/res/img/img-empty-dark-peers.png \
+  qt/Sombe/res/img/ic-add.png \
+  qt/Sombe/res/img/ic-check.png \
+  qt/Sombe/res/img/ic-nav-send-active.png \
+  qt/Sombe/res/img/img-empty-dark-staking-off.png \
+  qt/Sombe/res/img/img-empty-dark-staking-on.png \
+  qt/Sombe/res/img/ic-address-book-grey.png \
+  qt/Sombe/res/img/ic-chevron-left.png \
+  qt/Sombe/res/img/ic-nav-send-hover.png \
+  qt/Sombe/res/img/img-empty-dark-transactions.png \
+  qt/Sombe/res/img/ic-address-book-white.png \
+  qt/Sombe/res/img/ic-chevron-right.png \
+  qt/Sombe/res/img/ic-nav-send.png \
+  qt/Sombe/res/img/img-empty-error.png \
+  qt/Sombe/res/img/ic-address-book.png \
+  qt/Sombe/res/img/ic-clear-liliac.png \
+  qt/Sombe/res/img/ic-nav-settings-active.png \
+  qt/Sombe/res/img/img-empty-masternode.png \
+  qt/Sombe/res/img/ic-address-send-white.png \
+  qt/Sombe/res/img/ic-clear-purple.png \
+  qt/Sombe/res/img/ic-nav-settings-hover.png \
+  qt/Sombe/res/img/img-empty-multisend.png \
+  qt/Sombe/res/img/ic-address-send.png \
+  qt/Sombe/res/img/ic-close-white.png \
+  qt/Sombe/res/img/ic-nav-settings.png \
+  qt/Sombe/res/img/img-empty-peers.png \
+  qt/Sombe/res/img/ic-arrow-drop-down-white.png \
+  qt/Sombe/res/img/ic-close.png \
+  qt/Sombe/res/img/ic-radio-liliac-on.png \
+  qt/Sombe/res/img/img-empty-staking-off.png \
+  qt/Sombe/res/img/ic-arrow-drop-down.png \
+  qt/Sombe/res/img/ic-coin-SBE.png \
+  qt/Sombe/res/img/ic-receive-off.png \
+  qt/Sombe/res/img/img-empty-staking-on.png \
+  qt/Sombe/res/img/ic-arrow-drop-up-white.png \
+  qt/Sombe/res/img/ic-receive-on.png \
+  qt/Sombe/res/img/img-empty-transactions.png \
+  qt/Sombe/res/img/ic-arrow-drop-up.png \
+  qt/Sombe/res/img/ic-received.png \
+  qt/Sombe/res/img/img-logo-Sombe.png \
+  qt/Sombe/res/img/ic-arrow-drop-white-down.png \
+  qt/Sombe/res/img/ic-combo-box.png \
+  qt/Sombe/res/img/ic-send.png \
+  qt/Sombe/res/img/img-logo-Sombe@2x.png \
+  qt/Sombe/res/img/ic-arrow-purple-down.png \
+  qt/Sombe/res/img/ic-connect.png \
+  qt/Sombe/res/img/ic-submenu-lock.png \
+  qt/Sombe/res/img/img-logo-Sombe@3x.png \
+  qt/Sombe/res/img/img-logo-Sombe.png \
+  qt/Sombe/res/img/ic-arrow-right-white.png \
+  qt/Sombe/res/img/ic-arrow-left-white.png \
+  qt/Sombe/res/img/ic-arrow-left.png \
+  qt/Sombe/res/img/ic-copy-liliac.png \
+  qt/Sombe/res/img/ic-submenu-staking.png \
+  qt/Sombe/res/img/img-nav-logo-Sombe.png \
+  qt/Sombe/res/img/ic-arrow-right.png \
+  qt/Sombe/res/img/ic-copy.png \
+  qt/Sombe/res/img/ic-copy-big.png \
+  qt/Sombe/res/img/ic-copy-big-white.png \
+  qt/Sombe/res/img/ic-submenu-unlock.png \
+  qt/Sombe/res/img/img-nav-logo.png \
+  qt/Sombe/res/img/ic-arrow-white-left.png \
+  qt/Sombe/res/img/ic-exit.png \
+  qt/Sombe/res/img/ic-switch-liliac-on.png \
+  qt/Sombe/res/img/img-nav-logo.png \
+  qt/Sombe/res/img/ic-arrow-white-right.png \
+  qt/Sombe/res/img/ic-expand.png \
+  qt/Sombe/res/img/ic-switch-off.png \
+  qt/Sombe/res/img/img-qr-test-big.png \
+  qt/Sombe/res/img/ic-check-active.png \
+  qt/Sombe/res/img/ic-folder.png \
+  qt/Sombe/res/img/ic-switch-on.png \
+  qt/Sombe/res/img/img-qr-test.png \
+  qt/Sombe/res/img/ic-check-box.png \
+  qt/Sombe/res/img/ic-check-box-dark-active.png \
+  qt/Sombe/res/img/ic-check-box-indeterminate.png \
+  qt/Sombe/res/img/ic-check-box-liliac-indeterminate.png \
+  qt/Sombe/res/img/ic-label-liliac.png \
+  qt/Sombe/res/img/ic-transaction-warning.png \
+  qt/Sombe/res/img/ic-transaction-mint.png \
+  qt/Sombe/res/img/ic-transaction-mint-inactive.png \
+  qt/Sombe/res/img/ic-check-cold-staking.png \
+  qt/Sombe/res/img/ic-check-cold-staking-off.png \
+  qt/Sombe/res/img/ic-check-cold-staking-enabled.png \
+  qt/Sombe/res/img/dark/ic-transaction-cs-contract.png \
+  qt/Sombe/res/img/dark/ic-transaction-cs-contract-inactive.png \
+  qt/Sombe/res/img/img-qr.png \
+  qt/Sombe/res/img/ic-check-connect-off.png \
+  qt/Sombe/res/img/ic-check-tor-off.png \
+  qt/Sombe/res/img/ic-check-tor.png \
+  qt/Sombe/res/img/ic-label.png \
+  qt/Sombe/res/img/ic-transaction-received.png \
+  qt/Sombe/res/img/dark/ic-transaction-received.png \
+  qt/Sombe/res/img/dark/ic-transaction-warning.png \
+  qt/Sombe/res/img/dark/ic-transaction-mint.png \
+  qt/Sombe/res/img/dark/ic-transaction-mint-inactive.png \
+  qt/Sombe/res/img/ic-transaction-received-inactive.png \
+  qt/Sombe/res/img/dark/ic-transaction-received-inactive.png \
+  qt/Sombe/res/img/img-welcome-step1.png \
+  qt/Sombe/res/img/ic-check-connect.png \
+  qt/Sombe/res/img/ic-menu-hover.png \
+  qt/Sombe/res/img/ic-transaction-sent.png \
+  qt/Sombe/res/img/ic-transaction-sent-inactive.png \
+  qt/Sombe/res/img/dark/ic-transaction-sent.png \
+  qt/Sombe/res/img/dark/ic-transaction-sent-inactive.png \
+  qt/Sombe/res/img/img-welcome-step2.png \
+  qt/Sombe/res/img/ic-check-dark.png \
+  qt/Sombe/res/img/ic-mint.png \
+  qt/Sombe/res/img/ic-transaction-staked.png \
+  qt/Sombe/res/img/ic-transaction-staked-inactive.png \
+  qt/Sombe/res/img/dark/ic-transaction-staked.png \
+  qt/Sombe/res/img/dark/ic-transaction-staked-inactive.png \
+  qt/Sombe/res/img/img-welcome-step3.png \
+  qt/Sombe/res/img/ic-check-liliac-on.png \
+  qt/Sombe/res/img/ic-nav-address-active.png \
+  qt/Sombe/res/img/ic-unlock-staking.png \
+  qt/Sombe/res/img/img-welcome-step4.png \
+  qt/Sombe/res/img/ic-check-locked-off.png \
+  qt/Sombe/res/img/ic-nav-address-hover.png \
+  qt/Sombe/res/img/ic-update-liliac.png \
+  qt/Sombe/res/img/ic-arrow-drop-down-purple.png \
+  qt/Sombe/res/img/ic-arrow-drop-up-purple.png \
+  qt/Sombe/res/img/ic-check-liliac-indeterminate.png \
+  qt/Sombe/res/img/ic-check-box-liliac-indeterminate.png \
+  qt/Sombe/res/img/ic-transaction-stake-delegated.png \
+  qt/Sombe/res/img/ic-transaction-stake-delegated-inactive.png \
+  qt/Sombe/res/img/ic-transaction-stake-hot.png \
+  qt/Sombe/res/img/ic-transaction-stake-hot-inactive.png \
+  qt/Sombe/res/img/dark/ic-transaction-stake-hot.png \
+  qt/Sombe/res/img/dark/ic-transaction-stake-hot-inactive.png \
+  qt/Sombe/res/img/dark/ic-transaction-stake-delegated.png \
+  qt/Sombe/res/img/dark/ic-transaction-stake-delegated-inactive.png \
+  qt/Sombe/res/img/ic-transaction-cs-contract.png \
+  qt/Sombe/res/img/ic-transaction-cs-contract-inactive.png \
+  qt/Sombe/res/img/ic-check-box-indeterminate.png \
+  qt/Sombe/res/img/ani-loading-dark.gif \
+  qt/Sombe/res/img/ani-loading.gif
+
+
+
+BITCOIN_QT_BASE_CPP = \
+  qt/bantablemodel.cpp \
+  qt/bitcoinaddressvalidator.cpp \
+  qt/Sombe/Sombegui.cpp \
+  qt/bitcoinunits.cpp \
+  qt/clientmodel.cpp \
+  qt/csvmodelwriter.cpp \
+  qt/guiutil.cpp \
+  qt/intro.cpp \
+  qt/networkstyle.cpp \
+  qt/notificator.cpp \
+  qt/optionsdialog.cpp \
+  qt/optionsmodel.cpp \
+  qt/peertablemodel.cpp \
+  qt/platformstyle.cpp \
+  qt/qvalidatedlineedit.cpp \
+  qt/qvaluecombobox.cpp \
+  qt/rpcconsole.cpp \
+  qt/trafficgraphwidget.cpp \
+  qt/utilitydialog.cpp
+
+BITCOIN_QT_WINDOWS_CPP = qt/winshutdownmonitor.cpp
+
+BITCOIN_QT_WALLET_CPP = \
+  qt/addressbookpage.cpp \
+  qt/addresstablemodel.cpp \
+  qt/askpassphrasedialog.cpp \
+  qt/coincontroldialog.cpp \
+  qt/coincontroltreewidget.cpp \
+  qt/editaddressdialog.cpp \
+  qt/openuridialog.cpp \
+  qt/paymentrequestplus.cpp \
+  qt/paymentserver.cpp \
+  qt/recentrequeststablemodel.cpp \
+  qt/transactiondesc.cpp \
+  qt/transactionfilterproxy.cpp \
+  qt/transactionrecord.cpp \
+  qt/transactiontablemodel.cpp \
+  qt/walletmodel.cpp \
+  qt/walletmodeltransaction.cpp \
+  qt/Sombe/loadingdialog.cpp \
+  qt/Sombe/pwidget.cpp \
+  qt/Sombe/focuseddialog.cpp \
+  qt/Sombe/guitransactionsutils.cpp \
+  qt/Sombe/snackbar.cpp \
+  qt/Sombe/navmenuwidget.cpp \
+  qt/Sombe/lockunlock.cpp \
+  qt/Sombe/receivedialog.cpp \
+  qt/Sombe/furabstractlistitemdelegate.cpp \
+  qt/Sombe/txviewholder.cpp \
+  qt/Sombe/qtutils.cpp \
+  qt/Sombe/expandablebutton.cpp \
+  qt/Sombe/topbar.cpp \
+  qt/Sombe/txrow.cpp \
+  qt/Sombe/addressholder.cpp \
+  qt/Sombe/addressfilterproxymodel.cpp \
+  qt/Sombe/dashboardwidget.cpp \
+  qt/Sombe/addresslabelrow.cpp \
+  qt/Sombe/contactdropdownrow.cpp \
+  qt/Sombe/contactsdropdown.cpp \
+  qt/Sombe/optionbutton.cpp \
+  qt/Sombe/mninfodialog.cpp \
+  qt/Sombe/coldstakingmodel.cpp \
+  qt/Sombe/mnmodel.cpp \
+  qt/Sombe/masternodewizarddialog.cpp \
+  qt/Sombe/mnrow.cpp \
+  qt/Sombe/masternodeswidget.cpp \
+  qt/Sombe/myaddressrow.cpp \
+  qt/Sombe/csrow.cpp \
+  qt/Sombe/sendchangeaddressdialog.cpp \
+  qt/Sombe/sendconfirmdialog.cpp \
+  qt/Sombe/sendcustomfeedialog.cpp \
+  qt/Sombe/sendchangeaddressdialog.cpp \
+  qt/Sombe/sendmultirow.cpp \
+  qt/Sombe/send.cpp \
+  qt/Sombe/addnewaddressdialog.cpp \
+  qt/Sombe/addnewcontactdialog.cpp \
+  qt/Sombe/requestdialog.cpp \
+  qt/Sombe/receivewidget.cpp \
+  qt/Sombe/tooltipmenu.cpp \
+  qt/Sombe/addresseswidget.cpp \
+  qt/Sombe/defaultdialog.cpp \
+  qt/Sombe/coldstakingwidget.cpp \
+  qt/Sombe/settings/settingsbackupwallet.cpp \
+  qt/Sombe/settings/settingsexportcsv.cpp \
+  qt/Sombe/settings/settingsbittoolwidget.cpp \
+  qt/Sombe/settings/settingsconsolewidget.cpp \
+  qt/Sombe/settings/settingsdisplayoptionswidget.cpp \
+  qt/Sombe/settings/settingsfaqwidget.cpp \
+  qt/Sombe/settings/settingsinformationwidget.cpp \
+  qt/Sombe/settings/settingsmainoptionswidget.cpp \
+  qt/Sombe/settings/settingsmultisenddialog.cpp \
+  qt/Sombe/settings/settingsmultisendwidget.cpp \
+  qt/Sombe/settings/settingssignmessagewidgets.cpp \
+  qt/Sombe/settings/settingswalletoptionswidget.cpp \
+  qt/Sombe/settings/settingswalletrepairwidget.cpp \
+  qt/Sombe/settings/settingswidget.cpp \
+  qt/Sombe/welcomecontentwidget.cpp \
+  qt/Sombe/splash.cpp
+
+
+BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP)
+if TARGET_WINDOWS
+BITCOIN_QT_CPP += $(BITCOIN_QT_WINDOWS_CPP)
+endif
+if ENABLE_WALLET
+BITCOIN_QT_CPP += $(BITCOIN_QT_WALLET_CPP)
+endif
+
+RES_IMAGES = \
+  qt/res/images/about.png
+
+RES_CSS = \
+  qt/res/css/default.css \
+  qt/Sombe/res/css/style_dark.css \
+  qt/Sombe/res/css/style_light.css
+
+BITCOIN_RC = qt/res/Sombe-qt-res.rc
+
+BITCOIN_QT_INCLUDES = -I$(builddir)/qt -I$(srcdir)/qt -I$(srcdir)/qt/forms \
+  -I$(builddir)/qt/forms -DQT_NO_KEYWORDS
+
+qt_libbitcoinqt_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
+  $(QT_INCLUDES) $(QT_DBUS_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS) $(SVG_CFLAGS) $(CHARTS_CFLAGS)
+qt_libbitcoinqt_a_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
+qt_libbitcoinqt_a_OBJCXXFLAGS = $(AM_OBJCXXFLAGS) $(QT_PIE_FLAGS)
+
+qt_libbitcoinqt_a_SOURCES = $(BITCOIN_QT_CPP) $(BITCOIN_QT_H) $(QT_FORMS_UI) \
+  $(QT_QRC) $(QT_QRC_LOCALE) $(QT_TS) $(PROTOBUF_PROTO) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS)
+
+nodist_qt_libbitcoinqt_a_SOURCES = $(QT_MOC_CPP) $(QT_MOC) $(PROTOBUF_CC) \
+  $(PROTOBUF_H) $(QT_QRC_CPP) $(QT_QRC_LOCALE_CPP)
+
+# forms/foo.h -> forms/ui_foo.h
+QT_FORMS_H=$(join $(dir $(QT_FORMS_UI)),$(addprefix ui_, $(notdir $(QT_FORMS_UI:.ui=.h))))
+
+# Most files will depend on the forms and moc files as includes. Generate them
+# before anything else.
+$(QT_MOC): $(QT_FORMS_H)
+$(qt_libbitcoinqt_a_OBJECTS) $(qt_Sombe_qt_OBJECTS) : | $(QT_MOC)
+
+#Generating these with a half-written protobuf header leads to wacky results.
+#This makes sure it's done.
+$(QT_MOC): $(PROTOBUF_H)
+$(QT_MOC_CPP): $(PROTOBUF_H)
+
+# Sombe-qt binary #
+qt_Sombe_qt_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(BITCOIN_QT_INCLUDES) \
+  $(QT_INCLUDES) $(PROTOBUF_CFLAGS) $(QR_CFLAGS) $(SVG_CFLAGS) $(CHARTS_CFLAGS)
+qt_Sombe_qt_CXXFLAGS = $(AM_CXXFLAGS) $(QT_PIE_FLAGS)
+
+qt_Sombe_qt_SOURCES = qt/Sombe.cpp
+if TARGET_DARWIN
+  qt_Sombe_qt_SOURCES += $(BITCOIN_MM)
+endif
+if TARGET_WINDOWS
+  qt_Sombe_qt_SOURCES += $(BITCOIN_RC)
+endif
+qt_Sombe_qt_LDADD = qt/libbitcoinqt.a $(LIBBITCOIN_SERVER)
+if ENABLE_WALLET
+qt_Sombe_qt_LDADD += $(LIBBITCOIN_UTIL) $(LIBBITCOIN_WALLET)
+endif
+if ENABLE_ZMQ
+qt_Sombe_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+endif
+qt_Sombe_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) \
+  $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(SVG_LIBS) $(CHARTS_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
+  $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+qt_Sombe_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+qt_Sombe_qt_LIBTOOLFLAGS = $(AM_LIBTOOLFLAGS) --tag CXX
+
+#locale/foo.ts -> locale/foo.qm
+QT_QM=$(QT_TS:.ts=.qm)
+
+SECONDARY: $(QT_QM)
+
+$(srcdir)/qt/Sombestrings.cpp: $(libbitcoin_server_a_SOURCES) $(libbitcoin_wallet_a_SOURCES) $(libbitcoin_common_a_SOURCES) $(libbitcoin_zmq_a_SOURCES) $(libbitcoin_util_a_SOURCES)
+	@test -n $(XGETTEXT) || echo "xgettext is required for updating translations"
+	$(AM_V_GEN) cd $(srcdir); XGETTEXT=$(XGETTEXT) PACKAGE_NAME="$(PACKAGE_NAME)" $(PYTHON) ../share/qt/extract_strings_qt.py $^
+
+translate: $(srcdir)/qt/Sombestrings.cpp $(QT_FORMS_UI) $(QT_FORMS_UI) $(BITCOIN_QT_BASE_CPP) qt/Sombe.cpp $(BITCOIN_QT_WINDOWS_CPP) $(BITCOIN_QT_WALLET_CPP) $(BITCOIN_QT_H) $(BITCOIN_MM)
+	@test -n $(LUPDATE) || echo "lupdate is required for updating translations"
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LUPDATE) $^ -locations relative -no-obsolete -ts $(srcdir)/qt/locale/Sombe_en.ts
+
+$(QT_QRC_LOCALE_CPP): $(QT_QRC_LOCALE) $(QT_QM)
+	@test -f $(RCC)
+	@cp -f $< $(@D)/temp_$(<F)
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name Sombe_locale $(@D)/temp_$(<F) | \
+	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
+	@rm $(@D)/temp_$(<F)
+
+$(QT_QRC_CPP): $(QT_QRC) $(QT_FORMS_H) $(RES_ICONS) $(RES_IMAGES) $(RES_CSS) $(PROTOBUF_H)
+	@test -f $(RCC)
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(RCC) -name Sombe $< | \
+	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
+
+CLEAN_QT = $(nodist_qt_libbitcoinqt_a_SOURCES) $(QT_QM) $(QT_FORMS_H) qt/*.gcda qt/*.gcno qt/temp_Sombe_locale.qrc
+
+CLEANFILES += $(CLEAN_QT)
+
+Sombe_qt_clean: FORCE
+	rm -f $(CLEAN_QT) $(qt_libbitcoinqt_a_OBJECTS) $(qt_Sombe_qt_OBJECTS) qt/Sombe-qt$(EXEEXT) $(LIBBITCOINQT)
+
+Sombe_qt : qt/Sombe-qt$(EXEEXT)
+
+ui_%.h: %.ui
+	@test -f $(UIC)
+	@$(MKDIR_P) $(@D)
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(UIC) -o $@ $< || (echo "Error creating $@"; false)
+
+%.moc: %.cpp
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(MOC) $(DEFAULT_INCLUDES) $(QT_INCLUDES) $(MOC_DEFS) $< | \
+	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
+
+moc_%.cpp: %.h
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(MOC) $(DEFAULT_INCLUDES) $(QT_INCLUDES) $(MOC_DEFS) $< | \
+	  $(SED) -e '/^\*\*.*Created:/d' -e '/^\*\*.*by:/d' > $@
+
+%.qm: %.ts
+	@test -f $(LRELEASE)
+	@$(MKDIR_P) $(@D)
+	$(AM_V_GEN) QT_SELECT=$(QT_SELECT) $(LRELEASE) -silent $< -qm $@

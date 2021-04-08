@@ -1,0 +1,2901 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: qtbase-everywhere-src
+Source: https://download.qt.io/archive/qt/*/submodules/
+Files-Excluded: bin/licheck*
+                examples/xml/htmlinfo
+                src/3rdparty/gradle/gradle/wrapper/gradle-wrapper.jar
+                src/3rdparty/iaccessible2
+                src/3rdparty/sqlite
+                src/3rdparty/wintab
+                tests/auto/corelib/serialization/qtextstream/rfc3261.txt
+                tests/auto/corelib/text/qbytearray/rfc3252.txt
+                tests/auto/network/access/qftp/rfc3252.txt
+                tests/auto/network/access/qnetworkreply/bigfile
+                tests/auto/network/access/qnetworkreply/resource
+                tests/auto/network/access/qnetworkreply/rfc3252.txt
+                tests/manual/network_stresstest/qtest
+                tests/testserver/apache2/testdata/www/htdocs/rfcs/rfc2616.html
+# Removed non-free files:
+# * RFCs (see QTBUG-30544 and QTBUG-30545)
+# * htmlinfo example which contains non-free websites snapshots
+# * src/3rdparty/gradle — built .jar file without source code
+# * src/3rdparty/iaccessible2 — not preferred form of modification
+# * src/3rdparty/sqlite — not preferred form of modification
+# * src/3rdparty/wintab — license does not permit modification
+
+# Manual rules for The Qt Company copyrights
+
+Files: *
+Copyright: 2016-2020 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: qmake/*
+       src/corelib/debug_script.py
+       src/tools/*
+       tests/*
+       util/*
+Copyright: 2016-2020 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: doc/src/snippets/*
+       examples/*
+       qmake/doc/snippets/*
+       src/*/doc/snippets/*
+       src/winmain/qtmain_win.cpp
+       src/winmain/qtmain_winrt.cpp
+       tests/manual/qtabbar/main.cpp
+       tests/manual/rhi/*
+       tests/manual/touchGraphicsItem/main.cpp
+       tests/manual/wasm/*
+       tests/manual/widgets/widgets/defaultUpMenuBar/main.cpp
+Copyright: 2016-2019 The Qt Company Ltd.
+License: BSD-3-clause
+
+Files: *.qdoc
+Copyright: 2016-2019 The Qt Company Ltd.
+License: GFDL-NIV-1.3
+
+# Debian packaging copyright
+
+Files: debian/*
+Copyright: 2007-2013 Fathi Boudra <fabo@debian.org>
+           2007-2013 Sune Vuorela <debian@pusling.com>
+           2008-2012 Modestas Vainius <modax@debian.org>
+           2007-2009 Ana Beatriz Guerrero Lopez <ana@debian.org>
+           2005-2007 Brian Nelson <pyro@debian.org>
+           2012-2013 Zoltán Balogh <zoltan.balogh@canonical.com>
+           2012-2013 Timo Jyrinki <timo.jyrinki@canonical.com>
+           2013-2020 Dmitry Shachnev <mitya57@debian.org>
+           2018 Simon Quigley <tsimonq2@ubuntu.com>
+License: LGPL-3 or GPL-2+
+
+# Auto-generated rules for non-3rdparty code
+# Use debian/scripts/update-copyright in cleaned source tree root to update it.
+## BEGIN AUTO GENERATED BLOCK
+
+## BSD-3-clause
+
+Files: examples/network/multistreamclient/chatconsumer.cpp
+       examples/network/multistreamclient/chatconsumer.h
+       examples/network/multistreamclient/client.cpp
+       examples/network/multistreamclient/client.h
+       examples/network/multistreamclient/consumer.h
+       examples/network/multistreamclient/main.cpp
+       examples/network/multistreamclient/movieconsumer.cpp
+       examples/network/multistreamclient/movieconsumer.h
+       examples/network/multistreamclient/timeconsumer.cpp
+       examples/network/multistreamclient/timeconsumer.h
+       examples/network/multistreamserver/chatprovider.cpp
+       examples/network/multistreamserver/chatprovider.h
+       examples/network/multistreamserver/main.cpp
+       examples/network/multistreamserver/movieprovider.cpp
+       examples/network/multistreamserver/movieprovider.h
+       examples/network/multistreamserver/provider.h
+       examples/network/multistreamserver/server.cpp
+       examples/network/multistreamserver/server.h
+       examples/network/multistreamserver/timeprovider.cpp
+       examples/network/multistreamserver/timeprovider.h
+       examples/network/shared/sctpchannels.h
+       src/network/doc/snippets/code/src_network_socket_qsctpsocket.cpp
+Copyright: 2015-2016 Alex Trotsenko <alex1973tr@gmail.com>
+License: BSD-3-clause
+
+Files: src/corelib/doc/snippets/qmetaobject-revision/main.cpp
+       src/corelib/doc/snippets/qmetaobject-revision/window.cpp
+       src/corelib/doc/snippets/qmetaobject-revision/window.h
+Copyright: 2016 BlackBerry Limited (formerly Research In Motion)
+License: BSD-3-clause
+
+Files: src/corelib/doc/snippets/code/src_corelib_tools_qcommandlineoption.cpp
+       src/corelib/doc/snippets/code/src_corelib_tools_qcommandlineparser.cpp
+       src/corelib/doc/snippets/code/src_corelib_tools_qcommandlineparser_main.cpp
+Copyright: 2016 David Faure <faure@kde.org>
+License: BSD-3-clause
+
+Files: src/corelib/doc/snippets/code/src_corelib_tools_qregularexpression.cpp
+Copyright: 2016 Giuseppe D'Angelo <dangelog@gmail.com>
+License: BSD-3-clause
+
+Files: examples/corelib/serialization/cbordump/main.cpp
+       examples/corelib/serialization/convert/cborconverter.cpp
+       examples/corelib/serialization/convert/cborconverter.h
+       examples/corelib/serialization/convert/converter.h
+       examples/corelib/serialization/convert/datastreamconverter.cpp
+       examples/corelib/serialization/convert/datastreamconverter.h
+       examples/corelib/serialization/convert/jsonconverter.cpp
+       examples/corelib/serialization/convert/jsonconverter.h
+       examples/corelib/serialization/convert/main.cpp
+       examples/corelib/serialization/convert/nullconverter.cpp
+       examples/corelib/serialization/convert/nullconverter.h
+       examples/corelib/serialization/convert/textconverter.cpp
+       examples/corelib/serialization/convert/textconverter.h
+       examples/corelib/serialization/convert/xmlconverter.cpp
+       examples/corelib/serialization/convert/xmlconverter.h
+Copyright: 2018 Intel Corporation
+License: BSD-3-clause
+
+Files: examples/network/network-chat/connection.cpp
+       examples/network/network-chat/peermanager.cpp
+       src/corelib/doc/snippets/code/src_corelib_global_qrandom.cpp
+Copyright: 2018 Intel Corporation
+           2016-2018 The Qt Company Ltd.
+License: BSD-3-clause
+
+Files: src/corelib/doc/snippets/code/src_corelib_io_qstorageinfo.cpp
+Copyright: 2014 Ivan Komissarov <ABBAPOH@gmail.com>
+License: BSD-3-clause
+
+Files: examples/widgets/itemviews/storageview/main.cpp
+       examples/widgets/itemviews/storageview/storagemodel.cpp
+       examples/widgets/itemviews/storageview/storagemodel.h
+Copyright: 2016 Ivan Komissarov <ABBAPOH@gmail.com>
+           2016 The Qt Company Ltd.
+License: BSD-3-clause
+
+Files: examples/network/dnslookup/dnslookup.cpp
+       examples/network/dnslookup/dnslookup.h
+       src/network/doc/snippets/code/src_network_kernel_qdnslookup.cpp
+Copyright: 2016 Jeremy Lainé <jeremy.laine@m4x.org>
+License: BSD-3-clause
+
+Files: src/corelib/doc/snippets/qversionnumber/main.cpp
+Copyright: 2016 Keith Gardner <kreios4004@gmail.com>
+           2016 The Qt Company Ltd.
+License: BSD-3-clause
+
+Files: tests/auto/cmake/mockplugins/mock1plugin/qmock1plugin.h
+       tests/auto/cmake/mockplugins/mock2plugin/qmock2plugin.h
+       tests/auto/cmake/mockplugins/mock3plugin/qmock3plugin.h
+       tests/auto/cmake/mockplugins/mock4plugin/qmock4plugin.h
+       tests/auto/cmake/mockplugins/mock5plugin/qmock5plugin.h
+       tests/auto/cmake/mockplugins/mock6plugin/qmock6plugin.h
+       tests/auto/cmake/mockplugins/mockplugins1/qmockplugin.h
+       tests/auto/cmake/mockplugins/mockplugins3/qmockauxplugin.h
+       tests/auto/cmake/test_import_plugins/main.cpp
+Copyright: 2018 Kitware, Inc.
+License: BSD-3-clause
+
+Files: examples/widgets/itemviews/flattreeview/main.cpp
+       src/corelib/doc/snippets/code/src_corelib_tools_qscopeguard.cpp
+       src/corelib/doc/snippets/code/src_corelib_tools_qstringiterator.cpp
+       src/corelib/doc/snippets/code/src_gui_itemviews_qidentityproxymodel.cpp
+       src/openglextensions/qopenglextensions.cpp
+       src/openglextensions/qopenglextensions.h
+       util/glgen/qopenglextensions.cpp.header
+       util/glgen/qopenglextensions.h.header
+Copyright: 2016-2018 Klarälvdalens Datakonsult AB, a KDAB Group company
+License: BSD-3-clause
+
+Files: examples/widgets/tools/regularexpression/regularexpressiondialog.cpp
+       examples/widgets/tools/regularexpression/regularexpressiondialog.h
+Copyright: 2016 Klarälvdalens Datakonsult AB, a KDAB Group company
+           2016 Samuel Gaist <samuel.gaist@edeltech.ch>
+           2016 The Qt Company Ltd.
+License: BSD-3-clause
+
+Files: src/corelib/doc/snippets/code/src_corelib_kernel_qmath.cpp
+Copyright: 2016 Laszlo Papp <lpapp@kde.org>
+License: BSD-3-clause
+
+Files: src/corelib/doc/snippets/code/src_corelib_thread_qthread.cpp
+Copyright: 2016 Olivier Goffart <ogoffart@woboq.com>
+License: BSD-3-clause
+
+Files: examples/widgets/widgets/mousebuttons/buttontester.cpp
+       examples/widgets/widgets/mousebuttons/buttontester.h
+       examples/widgets/widgets/mousebuttons/main.cpp
+Copyright: 2016 Rick Stockton <rickstockton@reno-computerhelp.com>
+           2016 The Qt Company Ltd.
+License: BSD-3-clause
+
+Files: src/corelib/doc/snippets/qmessageauthenticationcode/main.cpp
+Copyright: 2016 Ruslan Nigmatullin <euroelessar@yandex.ru>
+License: BSD-3-clause
+
+Files: src/corelib/doc/snippets/code/src_corelib_kernel_qabstractnativeeventfilter.h
+       src/corelib/doc/snippets/code/src_corelib_kernel_qabstractnativeeventfilter.mm
+       src/gui/doc/snippets/qfileopenevent/Info.plist
+       src/gui/doc/snippets/qfileopenevent/main.cpp
+       src/gui/doc/snippets/qimagewriter/main.cpp
+Copyright: 2015-2018 Samuel Gaist <samuel.gaist@edeltech.ch>
+License: BSD-3-clause
+
+Files: src/corelib/doc/snippets/qbytearraylist/main.cpp
+Copyright: 2014 by Southwest Research Institute (R)
+License: BSD-3-clause
+
+## Expat
+
+Files: util/x86simdgen/generate.pl
+Copyright: 2018 Intel Corporation
+License: Expat
+
+## GFDL-NIV-1.3
+
+Files: src/corelib/global/qglobalstatic.qdoc
+Copyright: 2016 Intel Corporation
+License: GFDL-NIV-1.3
+
+Files: src/testlib/doc/src/qttestlib-manual.qdoc
+Copyright: 2016 Intel Corporation
+           2019 The Qt Company Ltd.
+License: GFDL-NIV-1.3
+
+Files: src/corelib/text/qstringiterator.qdoc
+       src/corelib/tools/qscopeguard.qdoc
+Copyright: 2014-2018 Klarälvdalens Datakonsult AB, a KDAB Group company
+License: GFDL-NIV-1.3
+
+Files: examples/widgets/doc/mousebuttons.qdoc
+Copyright: 2016 Rick Stockton <rickstockton@reno-computerhelp.com>
+           2016 The Qt Company Ltd.
+License: GFDL-NIV-1.3
+
+## GPL-3
+
+Files: src/corelib/time/qcalendar.cpp
+       src/plugins/platforms/wasm/main.cpp
+       src/plugins/platforms/wasm/qtloader.js
+       src/plugins/platforms/wasm/qwasmbackingstore.cpp
+       src/plugins/platforms/wasm/qwasmbackingstore.h
+       src/plugins/platforms/wasm/qwasmclipboard.cpp
+       src/plugins/platforms/wasm/qwasmclipboard.h
+       src/plugins/platforms/wasm/qwasmcompositor.cpp
+       src/plugins/platforms/wasm/qwasmcompositor.h
+       src/plugins/platforms/wasm/qwasmcursor.cpp
+       src/plugins/platforms/wasm/qwasmcursor.h
+       src/plugins/platforms/wasm/qwasmeventdispatcher.cpp
+       src/plugins/platforms/wasm/qwasmeventdispatcher.h
+       src/plugins/platforms/wasm/qwasmeventtranslator.cpp
+       src/plugins/platforms/wasm/qwasmeventtranslator.h
+       src/plugins/platforms/wasm/qwasmfontdatabase.cpp
+       src/plugins/platforms/wasm/qwasmfontdatabase.h
+       src/plugins/platforms/wasm/qwasmintegration.cpp
+       src/plugins/platforms/wasm/qwasmintegration.h
+       src/plugins/platforms/wasm/qwasmoffscreensurface.cpp
+       src/plugins/platforms/wasm/qwasmoffscreensurface.h
+       src/plugins/platforms/wasm/qwasmopenglcontext.cpp
+       src/plugins/platforms/wasm/qwasmopenglcontext.h
+       src/plugins/platforms/wasm/qwasmscreen.cpp
+       src/plugins/platforms/wasm/qwasmscreen.h
+       src/plugins/platforms/wasm/qwasmservices.cpp
+       src/plugins/platforms/wasm/qwasmservices.h
+       src/plugins/platforms/wasm/qwasmstylepixmaps_p.h
+       src/plugins/platforms/wasm/qwasmtheme.cpp
+       src/plugins/platforms/wasm/qwasmtheme.h
+       src/plugins/platforms/wasm/qwasmwindow.cpp
+       src/plugins/platforms/wasm/qwasmwindow.h
+       tests/testserver/apache2/apache2.sh
+       tests/testserver/common/ssl.sh
+       tests/testserver/common/startup.sh
+       tests/testserver/cyrus/cyrus.sh
+       tests/testserver/danted/danted.sh
+       tests/testserver/ftp-proxy/ftp-proxy.sh
+       tests/testserver/iptables/iptables.sh
+       tests/testserver/squid/squid.sh
+       tests/testserver/vsftpd/vsftpd.sh
+Copyright: 2018-2019 The Qt Company Ltd.
+License: GPL-3
+
+## GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/network/socket/qsctpsocket/tst_qsctpsocket.cpp
+Copyright: 2016 Alex Trotsenko <alex1973tr@gmail.com>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/cmake/test_add_binary_resources_delayed_file/main.cpp
+Copyright: 2015 André Klitzing <aklitzing@gmail.com>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/io/qfileselector/tst_qfileselector.cpp
+       tests/auto/network/access/spdy/tst_spdy.cpp
+       tests/manual/qnetworkconfiguration/main.cpp
+       tests/manual/qsslsocket/main.cpp
+Copyright: 2013-2014 BlackBerry Limited (formerly Research In Motion)
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/manual/qnetworkreply/main.cpp
+Copyright: 2014 BlackBerry Limited (formerly Research In Motion)
+           2016 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: src/tools/androidtestrunner/main.cpp
+Copyright: 2019 BogDan Vatra <bogdan@kde.org>
+           2016 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/manual/xembed-raster/gtk-embedder.py
+       tests/manual/xembed-widgets/gtk-embedder.py
+Copyright: 2013 Canonical, Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/io/qlockfile/qlockfiletesthelper/qlockfile_test_helper.cpp
+       tests/auto/corelib/io/qlockfile/tst_qlockfile.cpp
+       tests/auto/corelib/io/qsavefile/tst_qsavefile.cpp
+       tests/auto/corelib/mimetypes/qmimedatabase/test.qml
+       tests/auto/corelib/tools/qcommandlineparser/testhelper/qcommandlineparser_test_helper.cpp
+       tests/auto/corelib/tools/qcommandlineparser/tst_qcommandlineparser.cpp
+       tests/benchmarks/corelib/io/qtextstream/main.cpp
+       tests/benchmarks/corelib/thread/qthreadpool/tst_qthreadpool.cpp
+Copyright: 2012-2014 David Faure <faure@kde.org>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/text/qregularexpression/tst_qregularexpression.cpp
+Copyright: 2015 Giuseppe D'Angelo <dangelog@gmail.com>
+           2015 Klarälvdalens Datakonsult AB, a KDAB Group company
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/tools/rcc/tst_rcc.cpp
+Copyright: 2012 Giuseppe D'Angelo <dangelog@gmail.com>
+           2016 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/network/ssl/qsslellipticcurve/tst_qsslellipticcurve.cpp
+Copyright: 2014 Governikus GmbH & Co. KG.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/network/access/hpack/tst_hpack.cpp
+       tests/auto/network/ssl/qsslsocket/tst_qsslsocket.cpp
+Copyright: 2014 Governikus GmbH & Co. KG.
+           2016 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/text/qbytedatabuffer/tst_qbytedatabuffer.cpp
+       tests/benchmarks/network/access/qnetworkreply_from_cache/tst_qnetworkreply_from_cache.cpp
+Copyright: 2012 Hewlett-Packard Development Company, L.P.
+License: GPL-3 with Qt-1.0 exception
+
+Files: src/tools/moc/cbordevice.h
+       tests/auto/corelib/global/qglobal/qglobal.c
+       tests/auto/corelib/global/qrandomgenerator/tst_qrandomgenerator.cpp
+       tests/auto/corelib/io/qipaddress/tst_qipaddress.cpp
+       tests/auto/corelib/io/qprocess-noapplication/tst_qprocessnoapplication.cpp
+       tests/auto/corelib/io/qprocess/testProcessHang/main.cpp
+       tests/auto/corelib/io/qurlquery/tst_qurlquery.cpp
+       tests/auto/corelib/kernel/qdeadlinetimer/tst_qdeadlinetimer.cpp
+       tests/auto/corelib/plugin/qplugin/invalidplugin/main.cpp
+       tests/auto/corelib/plugin/qpluginloader/fakeplugin.cpp
+       tests/auto/corelib/plugin/qpluginloader/machtest/generate-bad.pl
+       tests/auto/corelib/plugin/qpluginloader/machtest/ppcconverter.pl
+       tests/auto/corelib/plugin/qpluginloader/staticplugin/main.cpp
+       tests/auto/corelib/thread/qatomicinteger/tst_qatomicinteger.cpp
+       tests/auto/corelib/tools/qsharedpointer/nontracked.cpp
+       tests/auto/corelib/tools/qsharedpointer/nontracked.h
+       tests/auto/dbus/qdbusconnection_delayed/tst_qdbusconnection_delayed.cpp
+       tests/auto/dbus/qdbusconnection_no_app/tst_qdbusconnection_no_app.cpp
+       tests/auto/dbus/qdbusconnection_spyhook/tst_qdbusconnection_spyhook.cpp
+       tests/auto/network/kernel/qnetworkdatagram/tst_qnetworkdatagram.cpp
+       tests/auto/other/compiler/othersource.cpp
+       tests/auto/other/qprocess_and_guieventloop/tst_qprocess_and_guieventloop.cpp
+       tests/auto/other/qprocess_and_guieventloop/write-read-write/main.cpp
+       tests/auto/tools/moc/forward-declared-param.h
+       tests/auto/tools/qdbusxml2cpp/tst_qdbusxml2cpp.cpp
+       tests/benchmarks/corelib/tools/qcryptographichash/main.cpp
+       tests/manual/qdesktopservices/tst_qdesktopservices.cpp
+       tests/manual/qstorageinfo/main.cpp
+       tests/manual/qstorageinfo/printvolumes.cpp
+       tests/manual/qsysinfo/main.cpp
+       util/includemocs/includemocs.pl
+Copyright: 2016-2018 Intel Corporation
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/network/kernel/qdnslookup/tst_qdnslookup.cpp
+Copyright: 2016 Intel Corporation
+           2012 Jeremy Lainé <jeremy.laine@m4x.org>
+License: GPL-3 with Qt-1.0 exception
+
+Files: src/tools/moc/generator.cpp
+       tests/auto/corelib/kernel/qvariant/tst_qvariant.cpp
+Copyright: 2016-2018 Intel Corporation
+           2013-2016 Olivier Goffart <ogoffart@woboq.com>
+           2016 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: configure
+       configure.bat
+       qmake/generators/makefiledeps.cpp
+       qmake/generators/unix/unixmake2.cpp
+       qmake/main.cpp
+       src/tools/moc/main.cpp
+       src/tools/rcc/main.cpp
+       src/tools/rcc/rcc.cpp
+       src/tools/rcc/rcc.h
+       tests/auto/corelib/codecs/qtextcodec/tst_qtextcodec.cpp
+       tests/auto/corelib/codecs/utf8/tst_utf8.cpp
+       tests/auto/corelib/codecs/utf8/utf8data.cpp
+       tests/auto/corelib/global/qgetputenv/tst_qgetputenv.cpp
+       tests/auto/corelib/global/qnumeric/tst_qnumeric.cpp
+       tests/auto/corelib/io/qdebug/tst_qdebug.cpp
+       tests/auto/corelib/io/qdir/tst_qdir.cpp
+       tests/auto/corelib/io/qfile/tst_qfile.cpp
+       tests/auto/corelib/io/qprocess/tst_qprocess.cpp
+       tests/auto/corelib/io/qresourceengine/tst_qresourceengine.cpp
+       tests/auto/corelib/io/qtemporaryfile/tst_qtemporaryfile.cpp
+       tests/auto/corelib/io/qurl/tst_qurl.cpp
+       tests/auto/corelib/io/qurlinternal/tst_qurlinternal.cpp
+       tests/auto/corelib/kernel/qcoreapplication/tst_qcoreapplication.cpp
+       tests/auto/corelib/kernel/qcoreapplication/tst_qcoreapplication.h
+       tests/auto/corelib/kernel/qtimer/tst_qtimer.cpp
+       tests/auto/corelib/plugin/qplugin/tst_qplugin.cpp
+       tests/auto/corelib/plugin/qpluginloader/tst_qpluginloader.cpp
+       tests/auto/corelib/text/qbytearray/tst_qbytearray.cpp
+       tests/auto/corelib/text/qstring/tst_qstring.cpp
+       tests/auto/corelib/text/qstringref/tst_qstringref.cpp
+       tests/auto/corelib/thread/qatomicint/tst_qatomicint.cpp
+       tests/auto/corelib/thread/qatomicpointer/tst_qatomicpointer.cpp
+       tests/auto/corelib/thread/qmutex/tst_qmutex.cpp
+       tests/auto/corelib/thread/qthreadpool/tst_qthreadpool.cpp
+       tests/auto/corelib/time/qdate/tst_qdate.cpp
+       tests/auto/corelib/time/qdatetime/tst_qdatetime.cpp
+       tests/auto/corelib/tools/qsharedpointer/forwarddeclared.cpp
+       tests/auto/corelib/tools/qsharedpointer/forwarddeclared.h
+       tests/auto/corelib/tools/qsharedpointer/tst_qsharedpointer.cpp
+       tests/auto/dbus/qdbusabstractadaptor/qmyserver/qmyserver.cpp
+       tests/auto/dbus/qdbusabstractadaptor/tst_qdbusabstractadaptor.cpp
+       tests/auto/dbus/qdbusabstractinterface/qpinger/qpinger.cpp
+       tests/auto/dbus/qdbusabstractinterface/tst_qdbusabstractinterface.cpp
+       tests/auto/dbus/qdbusconnection/tst_qdbusconnection.cpp
+       tests/auto/dbus/qdbusconnection/tst_qdbusconnection.h
+       tests/auto/dbus/qdbusinterface/qmyserver/qmyserver.cpp
+       tests/auto/dbus/qdbusmarshall/tst_qdbusmarshall.cpp
+       tests/auto/dbus/qdbuspendingcall/tst_qdbuspendingcall.cpp
+       tests/auto/dbus/qdbusservicewatcher/tst_qdbusservicewatcher.cpp
+       tests/auto/dbus/qdbustype/tst_qdbustype.cpp
+       tests/auto/network/kernel/qhostaddress/tst_qhostaddress.cpp
+       tests/auto/network/kernel/qhostinfo/tst_qhostinfo.cpp
+       tests/auto/network/kernel/qnetworkinterface/tst_qnetworkinterface.cpp
+       tests/auto/network/socket/platformsocketengine/tst_platformsocketengine.cpp
+       tests/auto/network/socket/qlocalsocket/tst_qlocalsocket.cpp
+       tests/auto/network/socket/qtcpsocket/tst_qtcpsocket.cpp
+       tests/auto/network/socket/qudpsocket/tst_qudpsocket.cpp
+       tests/auto/other/compiler/tst_compiler.cpp
+       tests/auto/testlib/selftests/tst_selftests.cpp
+       tests/benchmarks/corelib/text/qbytearray/main.cpp
+       tests/benchmarks/corelib/tools/qhash/main.cpp
+Copyright: 2016-2019 Intel Corporation
+           2016-2019 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/global/qglobalstatic/tst_qglobalstatic.cpp
+Copyright: 2016 Intel Corporation
+           2016 Thiago Macieira <thiago@kde.org>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/io/qstorageinfo/tst_qstorageinfo.cpp
+Copyright: 2014 Ivan Komissarov <ABBAPOH@gmail.com>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/network/kernel/qdnslookup_appless/tst_qdnslookup_appless.cpp
+       tests/auto/network/ssl/qasn1element/tst_qasn1element.cpp
+Copyright: 2012-2014 Jeremy Lainé <jeremy.laine@m4x.org>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/gui/painting/qpagelayout/tst_qpagelayout.cpp
+       tests/auto/printsupport/kernel/qprintdevice/tst_qprintdevice.cpp
+       tests/manual/qprintdevice_dump/main.cpp
+Copyright: 2014 John Layt <jlayt@kde.org>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/manual/qtbug-52641/main.cpp
+Copyright: 2016 Kai Pastor
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/tools/qversionnumber/tst_qversionnumber.cpp
+Copyright: 2014 Keith Gardner <kreios4004@gmail.com>
+           2016 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/cmake/test(needsquoting)dirname/mywidget.cpp
+       tests/auto/cmake/test(needsquoting)dirname/mywidget.h
+       tests/auto/cmake/test_QTBUG-63422/mywidget.cpp
+       tests/auto/cmake/test_QTBUG-63422/mywidget.h
+       tests/auto/cmake/test_add_big_resource/myobject.cpp
+       tests/auto/cmake/test_add_big_resource/myobject.h
+       tests/auto/cmake/test_add_resource_options/myobject.cpp
+       tests/auto/cmake/test_add_resource_options/myobject.h
+       tests/auto/cmake/test_add_resources_delayed_file/main.cpp
+       tests/auto/cmake/test_concurrent_module/main.cpp
+       tests/auto/cmake/test_dbus_module/mydbusobject.cpp
+       tests/auto/cmake/test_dbus_module/mydbusobject.h
+       tests/auto/cmake/test_dependent_modules/mywidget.cpp
+       tests/auto/cmake/test_dependent_modules/mywidget.h
+       tests/auto/cmake/test_egl_lib/main.cpp
+       tests/auto/cmake/test_interface/main.cpp
+       tests/auto/cmake/test_interface/mainwindow.cpp
+       tests/auto/cmake/test_interface/mainwindow.h
+       tests/auto/cmake/test_interface_link_libraries/main.cpp
+       tests/auto/cmake/test_interface_link_libraries/somelib.cpp
+       tests/auto/cmake/test_interface_link_libraries/somelib.h
+       tests/auto/cmake/test_json_plugin_includes/plugin.cpp
+       tests/auto/cmake/test_json_plugin_includes/plugin.h
+       tests/auto/cmake/test_moc_macro_target/interface/myinterface.h
+       tests/auto/cmake/test_moc_macro_target/main_gen_test.cpp
+       tests/auto/cmake/test_moc_macro_target/main_wrap_test.cpp
+       tests/auto/cmake/test_moc_macro_target/mywrapobject.h
+       tests/auto/cmake/test_multiple_find_package/main.cpp
+       tests/auto/cmake/test_opengl_lib/main.cpp
+       tests/auto/cmake/test_openglextensions_module/main.cpp
+       tests/auto/cmake/test_platform_defs_include/main.cpp
+       tests/auto/cmake/test_private_includes/main.cpp
+       tests/auto/cmake/test_qtmainwin_library/myobject.cpp
+       tests/auto/cmake/test_qtmainwin_library/myobject.h
+       tests/auto/cmake/test_testlib_definitions/main.cpp
+       tests/auto/cmake/test_use_modules_function/three.cpp
+       tests/auto/cmake/test_use_modules_function/two.cpp
+       tests/auto/cmake/test_wrap_cpp_and_resources/myobject.cpp
+       tests/auto/cmake/test_wrap_cpp_and_resources/myobject.h
+       tests/auto/cmake/test_wrap_cpp_options/myobject.cpp
+       tests/auto/cmake/test_wrap_cpp_options/myobject.h
+       tests/auto/corelib/global/qhooks/tst_qhooks.cpp
+       tests/auto/corelib/itemmodels/qidentityproxymodel/tst_qidentityproxymodel.cpp
+       tests/auto/corelib/itemmodels/qsortfilterproxymodel_recursive/tst_qsortfilterproxymodel_recursive.cpp
+       tests/auto/corelib/kernel/qsignalblocker/tst_qsignalblocker.cpp
+       tests/auto/corelib/text/qlatin1string/tst_qlatin1string.cpp
+       tests/auto/corelib/text/qstringiterator/tst_qstringiterator.cpp
+       tests/auto/corelib/text/qstringview/tst_qstringview.cpp
+       tests/auto/corelib/tools/containerapisymmetry/tst_containerapisymmetry.cpp
+       tests/auto/corelib/tools/qpair/tst_qpair.cpp
+       tests/auto/corelib/tools/qscopeguard/tst_qscopeguard.cpp
+       tests/auto/gui/util/qshadergenerator/tst_qshadergenerator.cpp
+       tests/auto/gui/util/qshadergraph/tst_qshadergraph.cpp
+       tests/auto/gui/util/qshadergraphloader/tst_qshadergraphloader.cpp
+       tests/auto/gui/util/qshadernodes/tst_qshadernodes.cpp
+       tests/auto/gui/util/qshadernodesloader/tst_qshadernodesloader.cpp
+       tests/auto/testlib/selftests/deleteLater/tst_deleteLater.cpp
+       tests/auto/testlib/selftests/deleteLater_noApp/tst_deleteLater_noApp.cpp
+       tests/auto/tools/moc/cxx11-explicit-override-control.h
+       tests/auto/tools/moc/cxx11-final-classes.h
+       tests/auto/tools/moc/single-quote-digit-separator-n3781.h
+       tests/auto/tools/qdbuscpp2xml/test1.h
+       tests/auto/tools/qdbuscpp2xml/tst_qdbuscpp2xml.cpp
+       tests/auto/widgets/kernel/qwidgetmetatype/tst_qwidgetmetatype.cpp
+       tests/benchmarks/corelib/time/qtimezone/main.cpp
+       tests/benchmarks/gui/painting/qcolor/tst_qcolor.cpp
+       tests/manual/cocoa/menus/main.cpp
+       tests/manual/qmetatype/declare_metatype_noninline.cpp
+       tests/manual/qmetatype/declare_metatype_noninline.h
+       tests/manual/qmetatype/tst_qmetatype.cpp
+       tests/manual/widgets/itemviews/qconcatenatetablesproxymodel/main.cpp
+       tests/manual/widgets/itemviews/tableview-span-navigation/main.cpp
+       util/glgen/codegenerator.cpp
+       util/glgen/codegenerator.h
+       util/glgen/legacyspecparser.cpp
+       util/glgen/legacyspecparser.h
+       util/glgen/main.cpp
+       util/glgen/qopenglversionfunctions.cpp.header
+       util/glgen/qopenglversionfunctions.h.header
+       util/glgen/qopenglversionfunctions__VERSION__.cpp.header
+       util/glgen/qopenglversionfunctions__VERSION__.h.header
+       util/glgen/qopenglversionfunctionsfactory.cpp.header
+       util/glgen/qopenglversionfunctionsfactory_p.h.header
+       util/glgen/specparser.h
+       util/glgen/xmlspecparser.cpp
+       util/glgen/xmlspecparser.h
+Copyright: 2011-2018 Klarälvdalens Datakonsult AB, a KDAB Group company
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/text/qstringapisymmetry/tst_qstringapisymmetry.cpp
+Copyright: 2015 Klarälvdalens Datakonsult AB, a KDAB Group company
+           2019 Mail.ru Group.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/gui/util/qregularexpressionvalidator/tst_qregularexpressionvalidator.cpp
+       tests/auto/widgets/widgets/qframe/tst_qframe.cpp
+Copyright: 2012-2014 Klarälvdalens Datakonsult AB, a KDAB Group company
+           2016 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/kernel/qmath/tst_qmath.cpp
+Copyright: 2013 Laszlo Papp <lpapp@kde.org>
+           2016 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/network/ssl/qssldiffiehellmanparameters/tst_qssldiffiehellmanparameters.cpp
+Copyright: 2015 Mikkel Krautz <mikkel@krautz.dk>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/kernel/qmetaenum/tst_qmetaenum.cpp
+       tests/auto/tools/moc/cxx11-enums.h
+       tests/auto/tools/moc/cxx17-namespaces.h
+       tests/auto/tools/moc/dollars.h
+       tests/benchmarks/corelib/thread/qreadwritelock/tst_qreadwritelock.cpp
+Copyright: 2011-2016 Olivier Goffart <ogoffart@woboq.com>
+License: GPL-3 with Qt-1.0 exception
+
+Files: src/tools/moc/moc.cpp
+       src/tools/moc/preprocessor.cpp
+       src/tools/moc/symbols.h
+       tests/auto/corelib/global/qlogging/tst_qlogging.cpp
+       tests/auto/corelib/kernel/qmetamethod/tst_qmetamethod.cpp
+       tests/auto/corelib/kernel/qmetaproperty/tst_qmetaproperty.cpp
+       tests/auto/corelib/kernel/qobject/tst_qobject.cpp
+       tests/auto/tools/moc/tst_moc.cpp
+Copyright: 2013-2016 Olivier Goffart <ogoffart@woboq.com>
+           2016-2020 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/time/qdatetime/tst_qdatetime_mac.mm
+Copyright: 2014 Petroules Corporation.
+           2016 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: util/edid/qedidvendortable.py
+Copyright: 2017 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/benchmarks/corelib/kernel/qcoreapplication/main.cpp
+       tests/benchmarks/corelib/tools/qstack/main.cpp
+       tests/benchmarks/gui/text/qtextdocument/main.cpp
+Copyright: 2011-2016 Robin Burchell <robin.burchell@viroteck.net>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/benchmarks/corelib/tools/qalgorithms/tst_qalgorithms.cpp
+Copyright: 2012 Robin Burchell <robin.burchell@viroteck.net>
+           2016 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/tools/qmessageauthenticationcode/tst_qmessageauthenticationcode.cpp
+Copyright: 2013 Ruslan Nigmatullin <euroelessar@yandex.ru>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/testlib/selftests/tuplediagnostics/tst_tuplediagnostics.cpp
+Copyright: 2017 Samuel Gaist <samuel.gaist@edeltech.ch>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/text/qbytearray/tst_qbytearray_mac.mm
+Copyright: 2014 Samuel Gaist <samuel.gaist@edeltech.ch>
+           2016 The Qt Company Ltd.
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/cmake/test_QFINDTESTDATA/tests/main.cpp
+       tests/auto/cmake/test_private_targets/main.cpp
+       tests/auto/other/qabstractitemmodelutils/dynamictreemodel.cpp
+       tests/auto/other/qabstractitemmodelutils/dynamictreemodel.h
+Copyright: 2009-2016 Stephen Kelly <steveire@gmail.com>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/widgets/itemviews/qheaderview/tst_qheaderview.cpp
+Copyright: 2016 The Qt Company Ltd.
+           2012 Thorbjørn Lund Martsum <tmartsum@gmail.com>
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/auto/corelib/global/qfloat16/tst_qfloat16.cpp
+       tests/auto/corelib/text/qbytearraylist/tst_qbytearraylist.cpp
+Copyright: 2016-2019 The Qt Company Ltd.
+           2014-2016 by Southwest Research Institute (R)
+License: GPL-3 with Qt-1.0 exception
+
+Files: tests/benchmarks/widgets/itemviews/qheaderview/qheaderviewbench.cpp
+       tests/manual/corelib/tools/qhash/main.cpp
+       tests/manual/corelib/tools/qlist/main.cpp
+       tests/manual/corelib/tools/qmap/main.cpp
+       tests/manual/corelib/tools/qset/main.cpp
+       tests/manual/corelib/tools/qvarlengtharray/main.cpp
+       tests/manual/corelib/tools/qvector/main.cpp
+       tests/manual/dialogs/messageboxpanel.cpp
+       tests/manual/dialogs/messageboxpanel.h
+       tests/manual/widgets/itemviews/autoResizePrecision/tablehorz/testtable1.cpp
+       tests/manual/widgets/itemviews/autoResizePrecision/tablevert/testtable2.cpp
+       tests/manual/widgets/itemviews/autoResizePrecision/treeview/testtree.cpp
+       tests/manual/widgets/itemviews/delegate/example.cpp
+       tests/manual/widgets/itemviews/qheaderview/qheaderviewtest1.cpp
+       tests/manual/widgets/itemviews/qtreewidget/main.cpp
+       tests/manual/widgets/kernel/layoutreplace/main.cpp
+       tests/manual/widgets/kernel/qtooltip/main.cpp
+       tests/manual/widgets/kernel/sizeonhide/main.cpp
+       tests/manual/widgets/qgraphicsview/rubberband/rubberbandtest.cpp
+Copyright: 2012-2013 Thorbjørn Lund Martsum <tmartsum@gmail.com>
+License: GPL-3 with Qt-1.0 exception
+
+## LGPL-3 or GPL-2
+
+Files: src/corelib/text/qcollator_macx.cpp
+       src/corelib/text/qcollator_posix.cpp
+       src/corelib/text/qcollator_win.cpp
+Copyright: 2013 Aleix Pol Gonzalez <aleixpol@kde.org>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/text/qcollator.cpp
+       src/corelib/text/qcollator.h
+       src/corelib/text/qcollator_icu.cpp
+       src/corelib/text/qcollator_p.h
+Copyright: 2013 Aleix Pol Gonzalez <aleixpol@kde.org>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/network/socket/qsctpserver.cpp
+       src/network/socket/qsctpserver.h
+       src/network/socket/qsctpserver_p.h
+       src/network/socket/qsctpsocket.cpp
+       src/network/socket/qsctpsocket.h
+       src/network/socket/qsctpsocket_p.h
+Copyright: 2016 Alex Trotsenko <alex1973tr@gmail.com>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/tools/qringbuffer.cpp
+       src/network/socket/qtcpserver_p.h
+Copyright: 2015-2016 Alex Trotsenko <alex1973tr@gmail.com>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/3rdparty/libjpeg/import_from_libjpeg_tarball.sh
+       src/3rdparty/libpng/import_from_libpng_tarball.sh
+       src/3rdparty/zlib/import_from_zlib_tarball.sh
+Copyright: 2017 André Klitzing
+License: LGPL-3 or GPL-2
+
+Files: mkspecs/common/qnx/qplatformdefs.h
+       mkspecs/qnx-armle-v7-qcc/qplatformdefs.h
+       mkspecs/qnx-x86-qcc/qplatformdefs.h
+       src/corelib/io/qfileselector.h
+       src/corelib/io/qfileselector_p.h
+       src/corelib/kernel/qppsattribute.cpp
+       src/corelib/kernel/qppsattribute_p.h
+       src/corelib/kernel/qppsattributeprivate_p.h
+       src/corelib/kernel/qppsobject.cpp
+       src/corelib/kernel/qppsobject_p.h
+       src/corelib/kernel/qppsobjectprivate_p.h
+       src/network/access/qabstractprotocolhandler.cpp
+       src/network/access/qabstractprotocolhandler_p.h
+       src/network/access/qspdyprotocolhandler_p.h
+       src/plugins/platforms/qnx/main.cpp
+       src/plugins/platforms/qnx/main.h
+       src/plugins/platforms/qnx/qqnxabstractcover.h
+       src/plugins/platforms/qnx/qqnxabstractnavigator.cpp
+       src/plugins/platforms/qnx/qqnxabstractnavigator.h
+       src/plugins/platforms/qnx/qqnxabstractvirtualkeyboard.cpp
+       src/plugins/platforms/qnx/qqnxabstractvirtualkeyboard.h
+       src/plugins/platforms/qnx/qqnxbuffer.cpp
+       src/plugins/platforms/qnx/qqnxbuffer.h
+       src/plugins/platforms/qnx/qqnxbuttoneventnotifier.cpp
+       src/plugins/platforms/qnx/qqnxbuttoneventnotifier.h
+       src/plugins/platforms/qnx/qqnxclipboard.cpp
+       src/plugins/platforms/qnx/qqnxclipboard.h
+       src/plugins/platforms/qnx/qqnxcursor.cpp
+       src/plugins/platforms/qnx/qqnxcursor.h
+       src/plugins/platforms/qnx/qqnxeglwindow.cpp
+       src/plugins/platforms/qnx/qqnxeglwindow.h
+       src/plugins/platforms/qnx/qqnxglcontext.cpp
+       src/plugins/platforms/qnx/qqnxglcontext.h
+       src/plugins/platforms/qnx/qqnxglobal.cpp
+       src/plugins/platforms/qnx/qqnxglobal.h
+       src/plugins/platforms/qnx/qqnxinputcontext_imf.cpp
+       src/plugins/platforms/qnx/qqnxinputcontext_imf.h
+       src/plugins/platforms/qnx/qqnxinputcontext_noimf.cpp
+       src/plugins/platforms/qnx/qqnxinputcontext_noimf.h
+       src/plugins/platforms/qnx/qqnxintegration.cpp
+       src/plugins/platforms/qnx/qqnxintegration.h
+       src/plugins/platforms/qnx/qqnxkeytranslator.h
+       src/plugins/platforms/qnx/qqnxlgmon.cpp
+       src/plugins/platforms/qnx/qqnxlgmon.h
+       src/plugins/platforms/qnx/qqnxnativeinterface.cpp
+       src/plugins/platforms/qnx/qqnxnativeinterface.h
+       src/plugins/platforms/qnx/qqnxnavigatoreventhandler.cpp
+       src/plugins/platforms/qnx/qqnxnavigatoreventhandler.h
+       src/plugins/platforms/qnx/qqnxnavigatoreventnotifier.cpp
+       src/plugins/platforms/qnx/qqnxnavigatoreventnotifier.h
+       src/plugins/platforms/qnx/qqnxnavigatorpps.cpp
+       src/plugins/platforms/qnx/qqnxnavigatorpps.h
+       src/plugins/platforms/qnx/qqnxrasterbackingstore.cpp
+       src/plugins/platforms/qnx/qqnxrasterbackingstore.h
+       src/plugins/platforms/qnx/qqnxrasterwindow.cpp
+       src/plugins/platforms/qnx/qqnxrasterwindow.h
+       src/plugins/platforms/qnx/qqnxscreen.cpp
+       src/plugins/platforms/qnx/qqnxscreen.h
+       src/plugins/platforms/qnx/qqnxscreeneventfilter.h
+       src/plugins/platforms/qnx/qqnxscreeneventhandler.cpp
+       src/plugins/platforms/qnx/qqnxscreeneventhandler.h
+       src/plugins/platforms/qnx/qqnxservices.cpp
+       src/plugins/platforms/qnx/qqnxservices.h
+       src/plugins/platforms/qnx/qqnxvirtualkeyboardpps.cpp
+       src/plugins/platforms/qnx/qqnxvirtualkeyboardpps.h
+       src/plugins/platforms/qnx/qqnxwindow.cpp
+       src/plugins/platforms/qnx/qqnxwindow.h
+Copyright: 2011-2014 BlackBerry Limited (formerly Research In Motion)
+License: LGPL-3 or GPL-2
+
+Files: src/network/ssl/qsslcontext_openssl11.cpp
+Copyright: 2014 BlackBerry Limited (formerly Research In Motion)
+           2014 Governikus GmbH & Co. KG.
+           2016 Richard J. Moore <rich@kde.org>
+           2017 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/network/ssl/qsslcontext_openssl.cpp
+       src/network/ssl/qsslcontext_opensslpre11.cpp
+Copyright: 2014 BlackBerry Limited (formerly Research In Motion)
+           2014 Governikus GmbH & Co. KG.
+           2017 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/io/qfileselector.cpp
+Copyright: 2013 BlackBerry Limited (formerly Research In Motion)
+           2016 Intel Corporation
+License: LGPL-3 or GPL-2
+
+Files: src/widgets/styles/qpixmapstyle.cpp
+       src/widgets/styles/qpixmapstyle_p.h
+Copyright: 2014 BlackBerry Limited (formerly Research In Motion)
+           2015 Klarälvdalens Datakonsult AB, a KDAB Group company
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/plugins/platforms/qnx/qqnxscreeneventthread.cpp
+       src/plugins/platforms/qnx/qqnxscreeneventthread.h
+Copyright: 2011-2012 BlackBerry Limited (formerly Research In Motion)
+           2017 QNX Software Systems. All rights reserved.
+License: LGPL-3 or GPL-2
+
+Files: src/network/ssl/qsslsocket_openssl11_symbols_p.h
+       src/network/ssl/qsslsocket_openssl_symbols.cpp
+Copyright: 2014 BlackBerry Limited (formerly Research In Motion)
+           2016 Richard J. Moore <rich@kde.org>
+           2017 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/network/access/qhttpnetworkconnectionchannel.cpp
+       src/network/access/qhttpprotocolhandler.cpp
+       src/network/access/qhttpprotocolhandler_p.h
+       src/network/access/qspdyprotocolhandler.cpp
+       src/network/ssl/qsslconfiguration.cpp
+       src/network/ssl/qsslconfiguration.h
+       src/network/ssl/qsslconfiguration_p.h
+       src/network/ssl/qsslcontext_openssl_p.h
+       src/network/ssl/qsslsocket.cpp
+       src/network/ssl/qsslsocket_openssl_symbols_p.h
+       src/network/ssl/qsslsocket_opensslpre11_symbols_p.h
+Copyright: 2014 BlackBerry Limited (formerly Research In Motion)
+           2016-2017 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/android/jar/src/org/qtproject/qt5/android/EditContextView.java
+       src/android/jar/src/org/qtproject/qt5/android/ExtractStyle.java
+       src/android/jar/src/org/qtproject/qt5/android/QtMessageDialogHelper.java
+       src/android/jar/src/org/qtproject/qt5/android/QtThread.java
+       src/plugins/platforms/android/androidjniclipboard.cpp
+       src/plugins/platforms/android/androidjniclipboard.h
+       src/plugins/platforms/android/androidjniinput.h
+       src/plugins/platforms/android/androidjnimenu.cpp
+       src/plugins/platforms/android/androidjnimenu.h
+       src/plugins/platforms/android/androidplatformplugin.cpp
+       src/plugins/platforms/android/androidsurfaceclient.h
+       src/plugins/platforms/android/extract.cpp
+       src/plugins/platforms/android/main.cpp
+       src/plugins/platforms/android/qandroidassetsfileenginehandler.cpp
+       src/plugins/platforms/android/qandroidassetsfileenginehandler.h
+       src/plugins/platforms/android/qandroideventdispatcher.cpp
+       src/plugins/platforms/android/qandroideventdispatcher.h
+       src/plugins/platforms/android/qandroidplatformclipboard.cpp
+       src/plugins/platforms/android/qandroidplatformclipboard.h
+       src/plugins/platforms/android/qandroidplatformdialoghelpers.h
+       src/plugins/platforms/android/qandroidplatformfontdatabase.cpp
+       src/plugins/platforms/android/qandroidplatformfontdatabase.h
+       src/plugins/platforms/android/qandroidplatformintegration.cpp
+       src/plugins/platforms/android/qandroidplatformintegration.h
+       src/plugins/platforms/android/qandroidplatformmenu.cpp
+       src/plugins/platforms/android/qandroidplatformmenu.h
+       src/plugins/platforms/android/qandroidplatformmenubar.cpp
+       src/plugins/platforms/android/qandroidplatformmenubar.h
+       src/plugins/platforms/android/qandroidplatformmenuitem.cpp
+       src/plugins/platforms/android/qandroidplatformmenuitem.h
+       src/plugins/platforms/android/qandroidplatformservices.cpp
+       src/plugins/platforms/android/qandroidplatformservices.h
+       src/plugins/platforms/android/qandroidplatformtheme.cpp
+       src/plugins/platforms/android/qandroidplatformtheme.h
+       src/plugins/styles/android/qandroidstyle.cpp
+       src/plugins/styles/android/qandroidstyle_p.h
+Copyright: 2012-2019 BogDan Vatra <bogdan@kde.org>
+License: LGPL-3 or GPL-2
+
+Files: src/android/jar/src/org/qtproject/qt5/android/EditPopupMenu.java
+       src/plugins/platforms/android/androidjniinput.cpp
+       src/plugins/platforms/android/qandroidinputcontext.h
+Copyright: 2012-2018 BogDan Vatra <bogdan@kde.org>
+           2016 Olivier Goffart <ogoffart@woboq.com>
+License: LGPL-3 or GPL-2
+
+Files: src/android/jar/src/org/qtproject/qt5/android/QtActivityDelegate.java
+       src/plugins/platforms/android/qandroidinputcontext.cpp
+Copyright: 2012-2017 BogDan Vatra <bogdan@kde.org>
+           2016 Olivier Goffart <ogoffart@woboq.com>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/android/jar/src/org/qtproject/qt5/android/QtEditText.java
+       src/android/jar/src/org/qtproject/qt5/android/QtInputConnection.java
+       src/android/jar/src/org/qtproject/qt5/android/QtLayout.java
+       src/android/jar/src/org/qtproject/qt5/android/QtNative.java
+       src/android/jar/src/org/qtproject/qt5/android/QtNativeLibrariesDir.java
+       src/android/jar/src/org/qtproject/qt5/android/QtServiceDelegate.java
+       src/android/jar/src/org/qtproject/qt5/android/QtSurface.java
+       src/plugins/platforms/android/androidjnimain.cpp
+       src/plugins/platforms/android/androidjnimain.h
+       src/plugins/platforms/android/qandroidplatformbackingstore.cpp
+       src/plugins/platforms/android/qandroidplatformbackingstore.h
+       src/plugins/platforms/android/qandroidplatformdialoghelpers.cpp
+       src/plugins/platforms/android/qandroidplatformopenglcontext.cpp
+       src/plugins/platforms/android/qandroidplatformopenglcontext.h
+       src/plugins/platforms/android/qandroidplatformopenglwindow.cpp
+       src/plugins/platforms/android/qandroidplatformopenglwindow.h
+       src/plugins/platforms/android/qandroidplatformscreen.cpp
+       src/plugins/platforms/android/qandroidplatformscreen.h
+       src/plugins/platforms/android/qandroidplatformwindow.cpp
+       src/plugins/platforms/android/qandroidplatformwindow.h
+Copyright: 2012-2016 BogDan Vatra <bogdan@kde.org>
+           2016-2018 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/testlib/qteamcitylogger.cpp
+       src/testlib/qteamcitylogger_p.h
+Copyright: 2016 Borgar Ovsthus
+License: LGPL-3 or GPL-2
+
+Files: mkspecs/common/android/qplatformdefs.h
+       src/corelib/kernel/qsharedmemory_android.cpp
+       src/corelib/kernel/qsystemsemaphore_android.cpp
+       src/network/kernel/qdnslookup_android.cpp
+Copyright: 2012 Collabora Ltd, author <robin.burchell@collabora.co.uk>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/io/qlockfile.h
+       src/corelib/io/qlockfile_p.h
+       src/corelib/io/qsavefile.cpp
+       src/corelib/io/qsavefile.h
+       src/corelib/io/qsavefile_p.h
+Copyright: 2012-2013 David Faure <faure@kde.org>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/io/qlockfile.cpp
+       src/corelib/io/qlockfile_unix.cpp
+       src/corelib/io/qlockfile_win.cpp
+Copyright: 2013 David Faure <faure@kde.org>
+           2017 Intel Corporation
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/tools/qcommandlineoption.cpp
+       src/corelib/tools/qcommandlineparser.cpp
+Copyright: 2013 David Faure <faure@kde.org>
+           2013 Laszlo Papp <lpapp@kde.org>
+License: LGPL-3 or GPL-2
+
+Files: src/platformsupport/themes/genericunix/dbusmenu/qdbusmenubar.cpp
+       src/platformsupport/themes/genericunix/dbusmenu/qdbusmenubar_p.h
+       src/platformsupport/themes/genericunix/dbusmenu/qdbusmenuregistrarproxy.cpp
+       src/platformsupport/themes/genericunix/dbusmenu/qdbusmenuregistrarproxy_p.h
+Copyright: 2016 Dmitry Shachnev <mitya57@gmail.com>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/time/qtimezoneprivate_android.cpp
+Copyright: 2014 Drew Parsons <dparsons@emerall.com>
+           2019 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/tools/qhash.cpp
+Copyright: 2012 Giuseppe D'Angelo <dangelog@gmail.com>
+           2016 Intel Corporation
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/text/qregularexpression.h
+Copyright: 2012 Giuseppe D'Angelo <dangelog@gmail.com>
+           2012 Klarälvdalens Datakonsult AB, a KDAB Group company
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/text/qregularexpression.cpp
+Copyright: 2016 Giuseppe D'Angelo <dangelog@gmail.com>
+           2016 Klarälvdalens Datakonsult AB, a KDAB Group company
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/network/ssl/qsslellipticcurve.cpp
+       src/network/ssl/qsslellipticcurve.h
+       src/network/ssl/qsslellipticcurve_dummy.cpp
+       src/network/ssl/qsslpresharedkeyauthenticator.cpp
+       src/network/ssl/qsslpresharedkeyauthenticator.h
+       src/network/ssl/qsslpresharedkeyauthenticator_p.h
+Copyright: 2014 Governikus GmbH & Co. KG.
+License: LGPL-3 or GPL-2
+
+Files: src/network/ssl/qsslellipticcurve_openssl.cpp
+Copyright: 2014 Governikus GmbH & Co. KG.
+           2016 Richard J. Moore <rich@kde.org>
+License: LGPL-3 or GPL-2
+
+Files: src/network/ssl/qsslsocket_openssl11.cpp
+Copyright: 2014 Governikus GmbH & Co. KG.
+           2016 Richard J. Moore <rich@kde.org>
+           2017 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/network/ssl/qsslsocket_openssl.cpp
+       src/network/ssl/qsslsocket_opensslpre11.cpp
+Copyright: 2014 Governikus GmbH & Co. KG.
+           2017 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: mkspecs/common/integrity/qplatformdefs.h
+       mkspecs/integrity-armv7-imx6/qplatformdefs.h
+       mkspecs/integrity-armv7/qplatformdefs.h
+       mkspecs/integrity-armv8-rcar/qplatformdefs.h
+       mkspecs/integrity-x86/qplatformdefs.h
+       src/platformsupport/input/integrityhid/qintegrityhidmanager.cpp
+       src/platformsupport/input/integrityhid/qintegrityhidmanager.h
+       src/plugins/platforms/integrity/qintegrityhidmanager.cpp
+       src/plugins/platforms/integrity/qintegrityhidmanager.h
+Copyright: 2015 Green Hills Software
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/text/qstring_mips_dsp_asm.S
+       src/gui/image/qimage_mips_dspr2.cpp
+       src/gui/image/qimage_mips_dspr2_asm.S
+       src/gui/painting/qdrawhelper_mips_dsp.cpp
+       src/gui/painting/qdrawhelper_mips_dsp_asm.S
+       src/gui/painting/qdrawhelper_mips_dsp_p.h
+       src/gui/painting/qdrawhelper_mips_dspr2_asm.S
+       src/gui/painting/qt_mips_asm_dsp_p.h
+Copyright: 2013 Imagination Technologies Limited, www.imgtec.com
+License: LGPL-3 or GPL-2
+
+Files: config.tests/avx512/avx512.cpp
+       config.tests/x86_simd/main.cpp
+       mkspecs/features/data/unix/findclasslist.pl
+       src/corelib/global/minimum-linux.S
+       src/corelib/global/minimum-linux_p.h
+       src/corelib/global/qglobalstatic.h
+       src/corelib/global/qrandom.cpp
+       src/corelib/global/qrandom.h
+       src/corelib/global/qrandom_p.h
+       src/corelib/global/qversiontagging.cpp
+       src/corelib/global/qversiontagging.h
+       src/corelib/io/forkfd_qt.cpp
+       src/corelib/io/qipaddress.cpp
+       src/corelib/io/qipaddress_p.h
+       src/corelib/io/qurlquery.cpp
+       src/corelib/io/qurlquery.h
+       src/corelib/io/qurlrecode.cpp
+       src/corelib/kernel/qdeadlinetimer.cpp
+       src/corelib/kernel/qdeadlinetimer.h
+       src/corelib/plugin/qmachparser.cpp
+       src/corelib/plugin/qmachparser_p.h
+       src/corelib/plugin/qplugin_p.h
+       src/corelib/serialization/qcborarray.cpp
+       src/corelib/serialization/qcborarray.h
+       src/corelib/serialization/qcborcommon.h
+       src/corelib/serialization/qcbordiagnostic.cpp
+       src/corelib/serialization/qcbormap.cpp
+       src/corelib/serialization/qcbormap.h
+       src/corelib/serialization/qcborstream.cpp
+       src/corelib/serialization/qcborstream.h
+       src/corelib/serialization/qcborvalue.cpp
+       src/corelib/serialization/qcborvalue.h
+       src/corelib/serialization/qcborvalue_p.h
+       src/corelib/serialization/qjsoncbor.cpp
+       src/corelib/text/qstring_compat.cpp
+       src/corelib/text/qstringalgorithms_p.h
+       src/corelib/thread/qfutex_p.h
+       src/corelib/tools/qvector_msvc.cpp
+       src/dbus/dbus_minimal_p.h
+       src/network/kernel/qnetworkdatagram.cpp
+       src/network/kernel/qnetworkdatagram.h
+       src/network/kernel/qnetworkdatagram_p.h
+       src/network/kernel/qnetworkinterface_linux.cpp
+       src/opengl/qtopenglglobal.h
+       src/printsupport/kernel/qtprintsupportglobal.h
+       src/testlib/qbenchmarkperfevents.cpp
+       src/testlib/qbenchmarkperfevents_p.h
+       src/testlib/qcsvbenchmarklogger.cpp
+       src/testlib/qcsvbenchmarklogger_p.h
+       src/xml/qtxmlglobal.h
+       tests/auto/corelib/serialization/qcborstreamreader/tst_qcborstreamreader.cpp
+       tests/auto/corelib/serialization/qcborstreamwriter/tst_qcborstreamwriter.cpp
+       tests/auto/corelib/serialization/qcborvalue/tst_qcborvalue.cpp
+       tests/auto/corelib/serialization/qcborvalue_json/tst_qcborvalue_json.cpp
+Copyright: 2015-2019 Intel Corporation
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/io/qstorageinfo_unix.cpp
+Copyright: 2016 Intel Corporation
+           2014 Ivan Komissarov <ABBAPOH@gmail.com>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/tools/qversionnumber.cpp
+       src/corelib/tools/qversionnumber.h
+Copyright: 2016 Intel Corporation
+           2014 Keith Gardner <kreios4004@gmail.com>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/text/qstring.cpp
+       src/corelib/text/qstring.h
+Copyright: 2016-2018 Intel Corporation
+           2019 Mail.ru Group.
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/global/qlogging.cpp
+       src/corelib/kernel/qmetatype.h
+       src/corelib/kernel/qobject.cpp
+       src/corelib/kernel/qvariant.cpp
+       src/corelib/thread/qmutex.cpp
+       src/corelib/thread/qmutex_p.h
+       src/corelib/thread/qreadwritelock.cpp
+Copyright: 2016-2018 Intel Corporation
+           2012-2016 Olivier Goffart <ogoffart@woboq.com>
+           2016-2019 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/io/qfilesystemengine_unix.cpp
+Copyright: 2018 Intel Corporation
+           2013 Samuel Gaist <samuel.gaist@edeltech.ch>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: bin/syncqt.pl
+       config.tests/arch/arch.cpp
+       src/corelib/codecs/qtextcodec.cpp
+       src/corelib/codecs/qutfcodec.cpp
+       src/corelib/codecs/qutfcodec_p.h
+       src/corelib/global/archdetect.cpp
+       src/corelib/global/qcompilerdetection.h
+       src/corelib/global/qendian.cpp
+       src/corelib/global/qendian.h
+       src/corelib/global/qglobal.cpp
+       src/corelib/global/qglobal.h
+       src/corelib/global/qglobal_p.h
+       src/corelib/global/qlibraryinfo.cpp
+       src/corelib/global/qnumeric_p.h
+       src/corelib/global/qprocessordetection.h
+       src/corelib/global/qsysinfo.h
+       src/corelib/global/qsystemdetection.h
+       src/corelib/global/qtypeinfo.h
+       src/corelib/io/qdebug.cpp
+       src/corelib/io/qdebug.h
+       src/corelib/io/qfile.cpp
+       src/corelib/io/qfile.h
+       src/corelib/io/qfsfileengine.cpp
+       src/corelib/io/qprocess.cpp
+       src/corelib/io/qprocess_p.h
+       src/corelib/io/qprocess_unix.cpp
+       src/corelib/io/qprocess_win.cpp
+       src/corelib/io/qresource.cpp
+       src/corelib/io/qstandardpaths.cpp
+       src/corelib/io/qtemporarydir.cpp
+       src/corelib/io/qtemporaryfile.cpp
+       src/corelib/io/qurl.cpp
+       src/corelib/io/qurl.h
+       src/corelib/io/qurl_p.h
+       src/corelib/io/qurlidna.cpp
+       src/corelib/kernel/qcore_unix.cpp
+       src/corelib/kernel/qcore_unix_p.h
+       src/corelib/kernel/qcoreapplication.cpp
+       src/corelib/kernel/qcoreevent.cpp
+       src/corelib/kernel/qelapsedtimer_unix.cpp
+       src/corelib/kernel/qeventdispatcher_unix.cpp
+       src/corelib/kernel/qeventdispatcher_win.cpp
+       src/corelib/kernel/qobjectdefs.h
+       src/corelib/kernel/qtimer.cpp
+       src/corelib/kernel/qtimerinfo_unix.cpp
+       src/corelib/kernel/qvariant_p.h
+       src/corelib/plugin/qfactoryloader.cpp
+       src/corelib/plugin/qlibrary.cpp
+       src/corelib/plugin/qlibrary_p.h
+       src/corelib/plugin/qlibrary_unix.cpp
+       src/corelib/plugin/qplugin.h
+       src/corelib/plugin/qpluginloader.cpp
+       src/corelib/serialization/qjson_p.h
+       src/corelib/serialization/qjsonparser.cpp
+       src/corelib/serialization/qjsonwriter.cpp
+       src/corelib/serialization/qtextstream.cpp
+       src/corelib/serialization/qtextstream_p.h
+       src/corelib/text/qbytearray.cpp
+       src/corelib/text/qbytearray.h
+       src/corelib/text/qlocale.cpp
+       src/corelib/text/qlocale_p.h
+       src/corelib/text/qlocale_tools.cpp
+       src/corelib/text/qlocale_win.cpp
+       src/corelib/text/qstringlist.h
+       src/corelib/text/qstringliteral.h
+       src/corelib/thread/qatomic.cpp
+       src/corelib/thread/qatomic.h
+       src/corelib/thread/qatomic_msvc.h
+       src/corelib/thread/qmutex_linux.cpp
+       src/corelib/thread/qsemaphore.cpp
+       src/corelib/thread/qthread.cpp
+       src/corelib/thread/qthread_p.h
+       src/corelib/thread/qthread_unix.cpp
+       src/corelib/thread/qwaitcondition_unix.cpp
+       src/corelib/time/qdatetime.cpp
+       src/corelib/time/qdatetime.h
+       src/corelib/time/qdatetime_p.h
+       src/corelib/tools/qarraydata.cpp
+       src/corelib/tools/qbitarray.cpp
+       src/corelib/tools/qlist.cpp
+       src/corelib/tools/qsharedpointer.cpp
+       src/corelib/tools/qsharedpointer_impl.h
+       src/corelib/tools/qsimd.cpp
+       src/corelib/tools/qsimd_p.h
+       src/dbus/qdbus_symbols.cpp
+       src/dbus/qdbus_symbols_p.h
+       src/dbus/qdbusabstractadaptor.cpp
+       src/dbus/qdbusabstractinterface.cpp
+       src/dbus/qdbusabstractinterface_p.h
+       src/dbus/qdbusconnection.cpp
+       src/dbus/qdbusconnection.h
+       src/dbus/qdbusconnection_p.h
+       src/dbus/qdbusconnectionmanager_p.h
+       src/dbus/qdbusintegrator.cpp
+       src/dbus/qdbusintegrator_p.h
+       src/dbus/qdbusinternalfilters.cpp
+       src/dbus/qdbusmessage.cpp
+       src/dbus/qdbusmetaobject.cpp
+       src/dbus/qdbuspendingcall.cpp
+       src/dbus/qdbuspendingcall_p.h
+       src/dbus/qdbuspendingreply.cpp
+       src/dbus/qdbusserver.cpp
+       src/dbus/qdbusserver.h
+       src/dbus/qdbusthreaddebug_p.h
+       src/dbus/qdbusutil_p.h
+       src/gui/kernel/qguiapplication.cpp
+       src/gui/painting/qdrawhelper.cpp
+       src/gui/painting/qdrawhelper_avx2.cpp
+       src/gui/painting/qdrawhelper_sse2.cpp
+       src/gui/painting/qdrawhelper_ssse3.cpp
+       src/network/kernel/qhostaddress.cpp
+       src/network/kernel/qhostaddress.h
+       src/network/kernel/qnetworkinterface.cpp
+       src/network/kernel/qnetworkinterface_unix.cpp
+       src/network/kernel/qnetworkinterface_unix_p.h
+       src/network/kernel/qnetworkinterface_win.cpp
+       src/network/kernel/qnetworkproxy_libproxy.cpp
+       src/network/socket/qabstractsocket.cpp
+       src/network/socket/qabstractsocketengine_p.h
+       src/network/socket/qnativesocketengine.cpp
+       src/network/socket/qnativesocketengine_p.h
+       src/network/socket/qnativesocketengine_unix.cpp
+       src/network/socket/qnativesocketengine_win.cpp
+       src/network/socket/qudpsocket.cpp
+       src/testlib/qbenchmarkmetric.cpp
+       src/testlib/qbenchmarkmetric.h
+       src/testlib/qtest.h
+       src/testlib/qtestcase.cpp
+       src/widgets/kernel/qwidget.cpp
+Copyright: 2015-2020 Intel Corporation
+           2016-2020 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/text/qbytearraylist.h
+Copyright: 2016 Intel Corporation
+           2016 The Qt Company Ltd.
+           2014 by Southwest Research Institute (R)
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/thread/qatomic_cxx11.h
+       src/corelib/thread/qbasicatomic.h
+       src/corelib/thread/qgenericatomic.h
+Copyright: 2016-2018 Intel Corporation
+           2011 Thiago Macieira <thiago@kde.org>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/global/qfloat16tables.cpp
+       util/qfloat16-tables/gen_qfloat16_tables.cpp
+Copyright: 2019 Intel Corporation
+           2016 by Southwest Research Institute (R)
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/io/qstorageinfo.cpp
+       src/corelib/io/qstorageinfo.h
+       src/corelib/io/qstorageinfo_mac.cpp
+       src/corelib/io/qstorageinfo_p.h
+       src/corelib/io/qstorageinfo_stub.cpp
+       src/corelib/io/qstorageinfo_win.cpp
+Copyright: 2014 Ivan Komissarov <ABBAPOH@gmail.com>
+License: LGPL-3 or GPL-2
+
+Files: src/widgets/widgets/qkeysequenceedit.cpp
+       src/widgets/widgets/qkeysequenceedit.h
+       src/widgets/widgets/qkeysequenceedit_p.h
+Copyright: 2013 Ivan Komissarov <ABBAPOH@gmail.com>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/network/kernel/qdnslookup.cpp
+       src/network/kernel/qdnslookup.h
+       src/network/kernel/qdnslookup_p.h
+       src/network/kernel/qdnslookup_unix.cpp
+       src/network/kernel/qdnslookup_win.cpp
+       src/network/ssl/qasn1element.cpp
+       src/network/ssl/qasn1element_p.h
+       src/network/ssl/qsslkey_mac.cpp
+       src/network/ssl/qsslkey_qt.cpp
+       src/network/ssl/qsslsocket_mac.cpp
+       src/network/ssl/qsslsocket_mac_p.h
+       src/network/ssl/qsslsocket_qt.cpp
+Copyright: 2012-2014 Jeremy Lainé <jeremy.laine@m4x.org>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/time/qtimezone.cpp
+       src/corelib/time/qtimezone.h
+       src/corelib/time/qtimezoneprivate.cpp
+       src/corelib/time/qtimezoneprivate_icu.cpp
+       src/corelib/time/qtimezoneprivate_p.h
+       src/corelib/time/qtimezoneprivate_tz.cpp
+       src/corelib/time/qtimezoneprivate_win.cpp
+       src/gui/painting/qpagelayout.cpp
+       src/gui/painting/qpagelayout.h
+       src/gui/painting/qpagesize.cpp
+       src/gui/painting/qpagesize.h
+       src/plugins/platforms/cocoa/qcocoaprintdevice.h
+       src/plugins/platforms/cocoa/qcocoaprintdevice.mm
+       src/plugins/printsupport/cups/qppdprintdevice.cpp
+       src/plugins/printsupport/cups/qppdprintdevice.h
+       src/printsupport/kernel/qplatformprintdevice.cpp
+       src/printsupport/kernel/qprint_p.h
+       src/printsupport/kernel/qprintdevice.cpp
+       src/printsupport/kernel/qprintdevice_p.h
+Copyright: 2013-2014 John Layt <jlayt@kde.org>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/time/qtimezoneprivate_data_p.h
+       src/corelib/time/qtimezoneprivate_mac.mm
+       src/plugins/printsupport/cups/qcupsprintersupport.cpp
+       src/plugins/printsupport/cups/qcupsprintersupport_p.h
+       src/plugins/printsupport/windows/qwindowsprintdevice.cpp
+       src/plugins/printsupport/windows/qwindowsprintdevice.h
+       src/printsupport/kernel/qplatformprintdevice.h
+Copyright: 2013-2014 John Layt <jlayt@kde.org>
+           2016-2019 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/platformsupport/input/evdevtouch/qevdevtouchfilter_p.h
+Copyright: 2016 Jolla Ltd, author: <gunnar.sletta@jollamobile.com>
+License: LGPL-3 or GPL-2
+
+Files: src/platformsupport/input/evdevtouch/qevdevtouchhandler.cpp
+       src/platformsupport/input/evdevtouch/qevdevtouchhandler_p.h
+Copyright: 2016 Jolla Ltd, author: <gunnar.sletta@jollamobile.com>
+           2016-2019 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: mkspecs/haiku-g++/qplatformdefs.h
+       src/3rdparty/pcre2/import_from_pcre2_tarball.sh
+       src/corelib/global/qhooks.cpp
+       src/corelib/global/qhooks_p.h
+       src/corelib/global/qmemory_p.h
+       src/corelib/global/qtrace_p.h
+       src/corelib/global/qtypetraits.h
+       src/corelib/io/qstandardpaths_haiku.cpp
+       src/corelib/itemmodels/qconcatenatetablesproxymodel.cpp
+       src/corelib/itemmodels/qconcatenatetablesproxymodel.h
+       src/corelib/itemmodels/qidentityproxymodel.cpp
+       src/corelib/itemmodels/qidentityproxymodel.h
+       src/corelib/text/qstringalgorithms.h
+       src/corelib/text/qstringview.cpp
+       src/corelib/thread/qlocking_p.h
+       src/corelib/tools/qcontainertools_impl.h
+       src/corelib/tools/qscopeguard.h
+       src/gui/opengl/qopengldebug.cpp
+       src/gui/opengl/qopengldebug.h
+       src/gui/opengl/qopenglfunctions_1_0.cpp
+       src/gui/opengl/qopenglfunctions_1_1.cpp
+       src/gui/opengl/qopenglfunctions_1_2.cpp
+       src/gui/opengl/qopenglfunctions_1_3.cpp
+       src/gui/opengl/qopenglfunctions_1_4.cpp
+       src/gui/opengl/qopenglfunctions_1_5.cpp
+       src/gui/opengl/qopenglfunctions_2_0.cpp
+       src/gui/opengl/qopenglfunctions_2_1.cpp
+       src/gui/opengl/qopenglfunctions_3_0.cpp
+       src/gui/opengl/qopenglfunctions_3_1.cpp
+       src/gui/opengl/qopenglfunctions_3_2_compatibility.cpp
+       src/gui/opengl/qopenglfunctions_3_2_core.cpp
+       src/gui/opengl/qopenglfunctions_3_3_compatibility.cpp
+       src/gui/opengl/qopenglfunctions_3_3_core.cpp
+       src/gui/opengl/qopenglfunctions_4_0_compatibility.cpp
+       src/gui/opengl/qopenglfunctions_4_0_core.cpp
+       src/gui/opengl/qopenglfunctions_4_1_compatibility.cpp
+       src/gui/opengl/qopenglfunctions_4_1_core.cpp
+       src/gui/opengl/qopenglfunctions_4_2_compatibility.cpp
+       src/gui/opengl/qopenglfunctions_4_2_core.cpp
+       src/gui/opengl/qopenglfunctions_4_3_compatibility.cpp
+       src/gui/opengl/qopenglfunctions_4_3_core.cpp
+       src/gui/opengl/qopenglfunctions_4_4_compatibility.cpp
+       src/gui/opengl/qopenglfunctions_4_4_core.cpp
+       src/gui/opengl/qopenglfunctions_4_5_compatibility.cpp
+       src/gui/opengl/qopenglfunctions_4_5_core.cpp
+       src/gui/opengl/qopenglfunctions_es2.cpp
+       src/gui/opengl/qopenglfunctions_es2.h
+       src/gui/opengl/qopenglpixeltransferoptions.cpp
+       src/gui/opengl/qopenglpixeltransferoptions.h
+       src/gui/opengl/qopenglqueryhelper_p.h
+       src/gui/opengl/qopengltexture.cpp
+       src/gui/opengl/qopengltexture.h
+       src/gui/opengl/qopengltexture_p.h
+       src/gui/opengl/qopengltexturehelper.cpp
+       src/gui/opengl/qopengltexturehelper_p.h
+       src/gui/opengl/qopengltimerquery.cpp
+       src/gui/opengl/qopengltimerquery.h
+       src/gui/opengl/qopenglversionfunctionsfactory.cpp
+       src/gui/opengl/qopenglversionfunctionsfactory_p.h
+       src/gui/opengl/qopenglvertexarrayobject.cpp
+       src/gui/opengl/qopenglvertexarrayobject.h
+       src/gui/opengl/qopenglvertexarrayobject_p.h
+       src/gui/util/qshaderformat.cpp
+       src/gui/util/qshaderformat_p.h
+       src/gui/util/qshadergenerator.cpp
+       src/gui/util/qshadergenerator_p.h
+       src/gui/util/qshadergraph.cpp
+       src/gui/util/qshadergraph_p.h
+       src/gui/util/qshadergraphloader.cpp
+       src/gui/util/qshadergraphloader_p.h
+       src/gui/util/qshaderlanguage.cpp
+       src/gui/util/qshaderlanguage_p.h
+       src/gui/util/qshadernode.cpp
+       src/gui/util/qshadernode_p.h
+       src/gui/util/qshadernodeport.cpp
+       src/gui/util/qshadernodeport_p.h
+       src/gui/util/qshadernodesloader.cpp
+       src/gui/util/qshadernodesloader_p.h
+       src/platformsupport/input/shared/devicehandlerlist_p.h
+       src/platformsupport/input/shared/qevdevutil.cpp
+       src/platformsupport/input/shared/qevdevutil_p.h
+       src/plugins/platforms/android/qandroidplatformfiledialoghelper.cpp
+       src/plugins/platforms/android/qandroidplatformfiledialoghelper.h
+       src/plugins/platforms/haiku/main.cpp
+       src/plugins/platforms/haiku/main.h
+       src/plugins/platforms/haiku/qhaikuapplication.cpp
+       src/plugins/platforms/haiku/qhaikuapplication.h
+       src/plugins/platforms/haiku/qhaikubuffer.cpp
+       src/plugins/platforms/haiku/qhaikubuffer.h
+       src/plugins/platforms/haiku/qhaikuclipboard.cpp
+       src/plugins/platforms/haiku/qhaikuclipboard.h
+       src/plugins/platforms/haiku/qhaikucursor.cpp
+       src/plugins/platforms/haiku/qhaikucursor.h
+       src/plugins/platforms/haiku/qhaikuintegration.cpp
+       src/plugins/platforms/haiku/qhaikuintegration.h
+       src/plugins/platforms/haiku/qhaikukeymapper.cpp
+       src/plugins/platforms/haiku/qhaikukeymapper.h
+       src/plugins/platforms/haiku/qhaikurasterbackingstore.cpp
+       src/plugins/platforms/haiku/qhaikurasterbackingstore.h
+       src/plugins/platforms/haiku/qhaikurasterwindow.cpp
+       src/plugins/platforms/haiku/qhaikurasterwindow.h
+       src/plugins/platforms/haiku/qhaikuscreen.cpp
+       src/plugins/platforms/haiku/qhaikuscreen.h
+       src/plugins/platforms/haiku/qhaikuservices.cpp
+       src/plugins/platforms/haiku/qhaikuservices.h
+       src/plugins/platforms/haiku/qhaikuutils.cpp
+       src/plugins/platforms/haiku/qhaikuutils.h
+       src/plugins/platforms/haiku/qhaikuwindow.cpp
+       src/plugins/platforms/haiku/qhaikuwindow.h
+       src/tools/tracegen/etw.cpp
+       src/tools/tracegen/etw.h
+       src/tools/tracegen/helpers.cpp
+       src/tools/tracegen/helpers.h
+       src/tools/tracegen/lttng.cpp
+       src/tools/tracegen/lttng.h
+       src/tools/tracegen/panic.cpp
+       src/tools/tracegen/panic.h
+       src/tools/tracegen/provider.cpp
+       src/tools/tracegen/provider.h
+       src/tools/tracegen/qtheaders.cpp
+       src/tools/tracegen/qtheaders.h
+       src/tools/tracegen/tracegen.cpp
+       tests/auto/corelib/itemmodels/qconcatenatetablesproxymodel/tst_qconcatenatetablesproxymodel.cpp
+Copyright: 2011-2019 Klarälvdalens Datakonsult AB, a KDAB Group company
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/kernel/qsharedmemory_posix.cpp
+       src/corelib/kernel/qsystemsemaphore_posix.cpp
+Copyright: 2015 Klarälvdalens Datakonsult AB, a KDAB Group company
+           2015 Konstantin Ritt <ritt.ks@gmail.com>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/text/qstringview.h
+Copyright: 2017 Klarälvdalens Datakonsult AB, a KDAB Group company
+           2019 Mail.ru Group.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/mimetypes/qmimedatabase.cpp
+       src/corelib/mimetypes/qmimedatabase.h
+       src/corelib/mimetypes/qmimedatabase_p.h
+       src/corelib/mimetypes/qmimeprovider.cpp
+       src/corelib/mimetypes/qmimeprovider_p.h
+       src/corelib/mimetypes/qmimetype.cpp
+       src/corelib/mimetypes/qmimetype.h
+       src/corelib/plugin/quuid.cpp
+       src/corelib/text/qstringiterator_p.h
+       src/corelib/thread/qthread.h
+       src/corelib/tools/qhash.h
+       src/corelib/tools/qhashfunctions.h
+       src/gui/kernel/qplatformmenu.h
+       src/gui/kernel/qplatformsystemtrayicon.cpp
+       src/gui/kernel/qplatformsystemtrayicon.h
+       src/gui/opengl/qopenglfunctions_1_0.h
+       src/gui/opengl/qopenglfunctions_1_1.h
+       src/gui/opengl/qopenglfunctions_1_2.h
+       src/gui/opengl/qopenglfunctions_1_3.h
+       src/gui/opengl/qopenglfunctions_1_4.h
+       src/gui/opengl/qopenglfunctions_1_5.h
+       src/gui/opengl/qopenglfunctions_2_0.h
+       src/gui/opengl/qopenglfunctions_2_1.h
+       src/gui/opengl/qopenglfunctions_3_0.h
+       src/gui/opengl/qopenglfunctions_3_1.h
+       src/gui/opengl/qopenglfunctions_3_2_compatibility.h
+       src/gui/opengl/qopenglfunctions_3_2_core.h
+       src/gui/opengl/qopenglfunctions_3_3_compatibility.h
+       src/gui/opengl/qopenglfunctions_3_3_core.h
+       src/gui/opengl/qopenglfunctions_4_0_compatibility.h
+       src/gui/opengl/qopenglfunctions_4_0_core.h
+       src/gui/opengl/qopenglfunctions_4_1_compatibility.h
+       src/gui/opengl/qopenglfunctions_4_1_core.h
+       src/gui/opengl/qopenglfunctions_4_2_compatibility.h
+       src/gui/opengl/qopenglfunctions_4_2_core.h
+       src/gui/opengl/qopenglfunctions_4_3_compatibility.h
+       src/gui/opengl/qopenglfunctions_4_3_core.h
+       src/gui/opengl/qopenglfunctions_4_4_compatibility.h
+       src/gui/opengl/qopenglfunctions_4_4_core.h
+       src/gui/opengl/qopenglfunctions_4_5_compatibility.h
+       src/gui/opengl/qopenglfunctions_4_5_core.h
+       src/gui/opengl/qopenglversionfunctions.cpp
+       src/gui/opengl/qopenglversionfunctions.h
+       src/gui/util/qvalidator.cpp
+       src/gui/util/qvalidator.h
+       src/plugins/platforms/cocoa/qcocoamenu.h
+       src/plugins/platforms/cocoa/qcocoamenu.mm
+       src/plugins/platforms/cocoa/qcocoamenubar.h
+       src/plugins/platforms/cocoa/qcocoamenubar.mm
+       src/plugins/platforms/cocoa/qcocoamenuitem.h
+       src/plugins/platforms/cocoa/qcocoamenuitem.mm
+       src/plugins/platforms/cocoa/qcocoasystemtrayicon.h
+       src/plugins/platforms/cocoa/qcocoasystemtrayicon.mm
+       src/testlib/qabstractitemmodeltester.cpp
+Copyright: 2012-2017 Klarälvdalens Datakonsult AB, a KDAB Group company
+           2016-2018 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/gui/text/qharfbuzzng.cpp
+       src/gui/text/qharfbuzzng_p.h
+Copyright: 2013 Konstantin Ritt <ritt.ks@gmail.com>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/platformheaders/waylandfunctions/qwaylandwindowfunctions.h
+Copyright: 2016 LG Electronics Ltd, author: mikko.levonmaa@lge.com
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/tools/qcommandlineoption.h
+       src/corelib/tools/qcommandlineparser.h
+Copyright: 2013 Laszlo Papp <lpapp@kde.org>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/kernel/qmath.cpp
+Copyright: 2013 Laszlo Papp <lpapp@kde.org>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/itemmodels/qtransposeproxymodel.cpp
+       src/corelib/itemmodels/qtransposeproxymodel.h
+       src/corelib/itemmodels/qtransposeproxymodel_p.h
+       tests/auto/corelib/itemmodels/qtransposeproxymodel/tst_qtransposeproxymodel.cpp
+Copyright: 2018 Luca Beldi <v.ronin@yahoo.it>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/text/qstringmatcher.cpp
+       src/corelib/text/qstringmatcher.h
+Copyright: 2019 Mail.ru Group.
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/platformsupport/themes/genericunix/dbustray/qdbustraytypes.cpp
+       src/platformsupport/themes/genericunix/dbustray/qdbustraytypes_p.h
+Copyright: 2009 Marco Martin <notmart@gmail.com>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/gui/kernel/qplatformmenu.cpp
+Copyright: 2014 Martin Graesslin <mgraesslin@kde.org>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/network/ssl/qssldiffiehellmanparameters.cpp
+       src/network/ssl/qssldiffiehellmanparameters.h
+       src/network/ssl/qssldiffiehellmanparameters_dummy.cpp
+       src/network/ssl/qssldiffiehellmanparameters_p.h
+Copyright: 2015 Mikkel Krautz <mikkel@krautz.dk>
+License: LGPL-3 or GPL-2
+
+Files: src/network/ssl/qssldiffiehellmanparameters_openssl.cpp
+Copyright: 2015 Mikkel Krautz <mikkel@krautz.dk>
+           2016 Richard J. Moore <rich@kde.org>
+License: LGPL-3 or GPL-2
+
+Files: src/plugins/generic/bsdkeyboard/main.cpp
+       src/plugins/generic/bsdkeyboard/qbsdkeyboard.cpp
+       src/plugins/generic/bsdkeyboard/qbsdkeyboard.h
+       src/plugins/generic/bsdmouse/main.cpp
+       src/plugins/generic/bsdmouse/qbsdmouse.cpp
+       src/plugins/generic/bsdmouse/qbsdmouse.h
+Copyright: 2015-2016 Oleksandr Tymoshenko <gonzo@bluezbox.com>
+License: LGPL-3 or GPL-2
+
+Files: src/plugins/generic/bsdkeyboard/qbsdkeyboard_defaultmap.h
+       src/plugins/platforms/bsdfb/main.cpp
+       src/plugins/platforms/bsdfb/qbsdfbintegration.cpp
+       src/plugins/platforms/bsdfb/qbsdfbscreen.cpp
+       src/plugins/platforms/bsdfb/qbsdfbscreen.h
+Copyright: 2015-2016 Oleksandr Tymoshenko <gonzo@bluezbox.com>
+           2017 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/android/jar/src/org/qtproject/qt5/android/CursorHandle.java
+Copyright: 2016 Olivier Goffart <ogoffart@woboq.com>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/kernel/qmetaobject.cpp
+       src/corelib/kernel/qmetaobject.h
+       src/corelib/kernel/qmetaobject_p.h
+       src/corelib/kernel/qobject.h
+       src/corelib/kernel/qobject_p.h
+       src/corelib/kernel/qobjectdefs_impl.h
+       src/corelib/thread/qmutex_unix.cpp
+       src/corelib/thread/qreadwritelock_p.h
+       src/gui/image/qicon.cpp
+       src/widgets/widgets/qdockarealayout.cpp
+       src/widgets/widgets/qmainwindowlayout.cpp
+Copyright: 2013-2016 Olivier Goffart <ogoffart@woboq.com>
+           2016-2019 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_egldevice/qeglfskmsegldevice.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_egldevice/qeglfskmsegldevice.h
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_egldevice/qeglfskmsegldevicescreen.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_egldevice/qeglfskmsegldevicescreen.h
+Copyright: 2016 Pelagicore AG
+License: LGPL-3 or GPL-2
+
+Files: src/platformsupport/kmsconvenience/qkmsdevice.cpp
+       src/platformsupport/kmsconvenience/qkmsdevice_p.h
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms/qeglfskmsgbmcursor.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms/qeglfskmsgbmdevice.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms/qeglfskmsgbmdevice.h
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms/qeglfskmsgbmintegration.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms/qeglfskmsgbmintegration.h
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms/qeglfskmsgbmscreen.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms/qeglfskmsgbmscreen.h
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms/qeglfskmsgbmwindow.h
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_support/qeglfskmsintegration.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_support/qeglfskmsintegration.h
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_support/qeglfskmsscreen.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_support/qeglfskmsscreen.h
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_vsp2/qeglfskmsvsp2device.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_vsp2/qeglfskmsvsp2device.h
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_vsp2/qeglfskmsvsp2integration.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_vsp2/qeglfskmsvsp2integration.h
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_vsp2/qeglfskmsvsp2screen.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_vsp2/qeglfskmsvsp2screen.h
+Copyright: 2016 Pelagicore AG
+           2015-2017 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+           2016-2017 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/plugins/platforms/eglfs/deviceintegration/eglfs_kms/qeglfskmsgbmmain.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_egldevice/qeglfskmsegldeviceintegration.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_egldevice/qeglfskmsegldeviceintegration.h
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_support/qeglfskmsdevice.cpp
+       src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_support/qeglfskmsdevice.h
+Copyright: 2016 Pelagicore AG
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/kernel/qcore_foundation.mm
+Copyright: 2014 Petroules Corporation.
+           2014 Samuel Gaist <samuel.gaist@edeltech.ch>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/kernel/qcore_mac_objc.mm
+Copyright: 2014 Petroules Corporation.
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/platformsupport/edid/qedidparser.cpp
+       src/platformsupport/edid/qedidparser_p.h
+       src/platformsupport/edid/qedidvendortable_p.h
+Copyright: 2017 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+License: LGPL-3 or GPL-2
+
+Files: examples/widgets/qnx/foreignwindows/collector.cpp
+       examples/widgets/qnx/foreignwindows/collector.h
+       examples/widgets/qnx/foreignwindows/main.cpp
+       mkspecs/qnx-aarch64le-qcc/qplatformdefs.h
+       mkspecs/qnx-x86-64-qcc/qplatformdefs.h
+       src/plugins/platforms/qnx/qqnxforeignwindow.cpp
+       src/plugins/platforms/qnx/qqnxforeignwindow.h
+       src/plugins/platforms/qnx/qqnxscreentraits.h
+Copyright: 2016-2018 QNX Software Systems. All rights reserved.
+License: LGPL-3 or GPL-2
+
+Files: src/plugins/platformthemes/xdgdesktopportal/main.cpp
+       src/plugins/platformthemes/xdgdesktopportal/qxdgdesktopportalfiledialog.cpp
+       src/plugins/platformthemes/xdgdesktopportal/qxdgdesktopportalfiledialog_p.h
+Copyright: 2017-2018 Red Hat, Inc
+License: LGPL-3 or GPL-2
+
+Files: src/network/ssl/qsslcertificateextension.cpp
+       src/network/ssl/qsslcertificateextension.h
+       src/network/ssl/qsslcertificateextension_p.h
+Copyright: 2011 Richard J. Moore <rich@kde.org>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/tools/qcryptographichash.cpp
+       src/corelib/tools/qcryptographichash.h
+       src/network/ssl/qocspresponse.cpp
+       src/network/ssl/qocspresponse.h
+       src/network/ssl/qocspresponse_p.h
+       src/network/ssl/qsslcertificate_openssl.cpp
+       src/network/ssl/qsslkey_openssl.cpp
+Copyright: 2011-2016 Richard J. Moore <rich@kde.org>
+           2016-2019 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/plugins/generic/tuiotouch/main.cpp
+       src/plugins/generic/tuiotouch/qoscbundle.cpp
+       src/plugins/generic/tuiotouch/qoscbundle_p.h
+       src/plugins/generic/tuiotouch/qoscmessage.cpp
+       src/plugins/generic/tuiotouch/qoscmessage_p.h
+       src/plugins/generic/tuiotouch/qtuio_p.h
+       src/plugins/generic/tuiotouch/qtuiocursor_p.h
+       src/plugins/generic/tuiotouch/qtuiohandler.cpp
+       src/plugins/generic/tuiotouch/qtuiohandler_p.h
+Copyright: 2014 Robin Burchell <robin.burchell@viroteck.net>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/tools/qmessageauthenticationcode.cpp
+       src/corelib/tools/qmessageauthenticationcode.h
+Copyright: 2013 Ruslan Nigmatullin <euroelessar@yandex.ru>
+License: LGPL-3 or GPL-2
+
+Files: src/gui/kernel/qplatformsessionmanager.cpp
+       src/gui/kernel/qplatformsessionmanager.h
+Copyright: 2013 Samuel Gaist <samuel.gaist@edeltech.ch>
+           2013 Teo Mrnjavac <teo@kde.org>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/kernel/qcoreapplication_win.cpp
+       src/gui/image/qpnghandler.cpp
+       src/gui/kernel/qsessionmanager_p.h
+       src/platformsupport/eventdispatchers/qwindowsguieventdispatcher.cpp
+       src/plugins/platforms/windows/qtwindowsglobal.h
+       src/plugins/platforms/windows/qwindowscontext.cpp
+       src/plugins/platforms/windows/qwindowsintegration.cpp
+       src/plugins/platforms/windows/qwindowsintegration.h
+       src/plugins/platforms/windows/qwindowssessionmanager.cpp
+       src/plugins/platforms/windows/qwindowssessionmanager.h
+       src/widgets/itemviews/qlistview.cpp
+Copyright: 2013 Samuel Gaist <samuel.gaist@edeltech.ch>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/plugins/platforms/xcb/qxcbsessionmanager.cpp
+       src/plugins/platforms/xcb/qxcbsessionmanager.h
+Copyright: 2013 Teo Mrnjavac <teo@kde.org>
+           2016 The Qt Company Ltd.
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/thread/qatomic_bootstrap.h
+Copyright: 2016 The Qt Company Ltd.
+           2011 Thiago Macieira <thiago@kde.org>
+License: LGPL-3 or GPL-2
+
+Files: src/corelib/global/qfloat16.cpp
+       src/corelib/global/qfloat16.h
+       src/corelib/text/qbytearraylist.cpp
+Copyright: 2016-2019 The Qt Company Ltd.
+           2014-2016 by Southwest Research Institute (R)
+License: LGPL-3 or GPL-2
+
+Files: src/network/ssl/qsslsocket_mac_shared.cpp
+Copyright: 2016 The Qt Company Ltd.
+           2015 ownCloud Inc
+License: LGPL-3 or GPL-2
+
+Files: src/plugins/platforms/android/androidcontentfileengine.cpp
+       src/plugins/platforms/android/androidcontentfileengine.h
+Copyright: 2019 Volker Krause <vkrause@kde.org>
+License: LGPL-3 or GPL-2
+
+## LGPL-3 or GPL-2+
+
+Files: src/gui/rhi/cs_tdr_p.h
+       src/gui/rhi/qrhi.cpp
+       src/gui/rhi/qrhi_p.h
+       src/gui/rhi/qrhi_p_p.h
+       src/gui/rhi/qrhid3d11.cpp
+       src/gui/rhi/qrhid3d11_p.h
+       src/gui/rhi/qrhid3d11_p_p.h
+       src/gui/rhi/qrhigles2.cpp
+       src/gui/rhi/qrhigles2_p.h
+       src/gui/rhi/qrhigles2_p_p.h
+       src/gui/rhi/qrhimetal.mm
+       src/gui/rhi/qrhimetal_p.h
+       src/gui/rhi/qrhimetal_p_p.h
+       src/gui/rhi/qrhinull.cpp
+       src/gui/rhi/qrhinull_p.h
+       src/gui/rhi/qrhinull_p_p.h
+       src/gui/rhi/qrhiprofiler.cpp
+       src/gui/rhi/qrhiprofiler_p.h
+       src/gui/rhi/qrhiprofiler_p_p.h
+       src/gui/rhi/qrhivulkan.cpp
+       src/gui/rhi/qrhivulkan_p.h
+       src/gui/rhi/qrhivulkan_p_p.h
+       src/gui/rhi/qrhivulkanext_p.h
+       src/gui/rhi/qshader.cpp
+       src/gui/rhi/qshader_p.h
+       src/gui/rhi/qshader_p_p.h
+       src/gui/rhi/qshaderdescription.cpp
+       src/gui/rhi/qshaderdescription_p.h
+       src/gui/rhi/qshaderdescription_p_p.h
+Copyright: 2018-2019 The Qt Company Ltd.
+License: LGPL-3 or GPL-2+
+
+## END AUTO GENERATED BLOCK
+
+# Manual rules for some files with non-standard licenses
+
+Files: src/corelib/io/qurltlds_p.h
+Copyright: 2007 Jo Hermans <jo.hermans@gmail.com>
+           2007-2019 https://github.com/publicsuffix/list contributors
+License: MPL-2.0 or GPL-2+ or LGPL-2.1+
+
+Files: tests/auto/corelib/serialization/qxmlstream/XML-Test-Suite/*
+Copyright: 1994-2002 World Wide Web Consortium
+                     (Massachusetts Institute of Technology,
+                     Institut National de Recherche en Informatique et en Automatique,
+                     Keio University)
+           1998 Sun Microsystems, Inc.
+           1999-2001 OASIS
+           1997 Fuji Xerox Information Systems Co.,Ltd.
+           2000-2003 IBM Corp.
+License: W3C
+ Copyright 1994-2002 World Wide Web Consortium, (Massachusetts
+ Institute of Technology, Institut National de Recherche en
+ Informatique et en Automatique, Keio University). All Rights
+ Reserved. http://www.w3.org/Consortium/Legal/
+ .
+ This W3C work (including software, documents, or other related items)
+ is being provided by the copyright holders under the following
+ license. By obtaining, using and/or copying this work, you (the
+ licensee) agree that you have read, understood, and will comply with
+ the following terms and conditions:
+ .
+ Permission to use, copy, modify, and distribute this software and its
+ documentation, with or without modification, for any purpose and
+ without fee or royalty is hereby granted, provided that you include
+ the following on ALL copies of the software and documentation or
+ portions thereof, including modifications, that you make:
+ .
+ 1. The full text of this NOTICE in a location viewable to users of
+    the redistributed or derivative work.
+ .
+ 2. Any pre-existing intellectual property disclaimers, notices, or
+    terms and conditions. If none exist, a short notice of the
+    following form (hypertext is preferred, text is permitted) should
+    be used within the body of any redistributed or derivative code:
+    "Copyright [$date-of-software] World Wide Web Consortium,
+    (Massachusetts Institute of Technology, Institut National de
+    Recherche en Informatique et en Automatique, Keio University). All
+    Rights Reserved. http://www.w3.org/Consortium/Legal/"
+ .
+ 3. Notice of any changes or modifications to the W3C files, including
+    the date changes were made. (We recommend you provide URIs to the
+    location from which the code is derived.)
+ .
+ THIS SOFTWARE AND DOCUMENTATION IS PROVIDED "AS IS," AND COPYRIGHT
+ HOLDERS MAKE NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED,
+ INCLUDING BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY OR FITNESS
+ FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF THE SOFTWARE OR
+ DOCUMENTATION WILL NOT INFRINGE ANY THIRD PARTY PATENTS, COPYRIGHTS,
+ TRADEMARKS OR OTHER RIGHTS.
+ .
+ COPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL
+ OR CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THE SOFTWARE OR
+ DOCUMENTATION.
+ .
+ The name and trademarks of copyright holders may NOT be used in
+ advertising or publicity pertaining to the software without specific,
+ written prior permission. Title to copyright in this software and any
+ associated documentation will at all times remain with copyright
+ holders.
+
+Files: src/corelib/text/qlocale_data_p.h
+       src/corelib/text/qunicodetables.cpp
+       tests/auto/corelib/text/qchar/data/NormalizationTest.txt
+       tests/auto/corelib/text/qtextboundaryfinder/data/*.txt
+       util/unicode/data/*.txt
+Copyright: 1991-2017 Unicode, Inc.
+License: Unicode
+ Permission is hereby granted, free of charge, to any person obtaining a
+ copy of the Unicode data files and any associated documentation (the "Data
+ Files") or Unicode software and any associated documentation (the "Software")
+ to deal in the Data Files or Software without restriction, including without
+ limitation the rights to use, copy, modify, merge, publish, distribute,
+ and/or sell copies of the Data Files or Software, and to permit persons to
+ whom the Data Files or Software are furnished to do so, provided that (a)
+ the above copyright notice(s) and this permission notice appear with all
+ copies of the Data Files or Software, (b) both the above copyright
+ notice(s) and this permission notice appear in associated documentation,
+ and (c) there is clear notice in each modified Data File or in the
+ Software as well as in the documentation associated with the Data File(s)
+ or Software that the data or software has been modified.
+ .
+ THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+ KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF
+ THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS
+ INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT
+ OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+ OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ PERFORMANCE OF THE DATA FILES OR SOFTWARE.
+ .
+ Except as contained in this notice, the name of a copyright holder
+ shall not be used in advertising or otherwise to promote the sale,
+ use or other dealings in these Data Files or Software without prior
+ written authorization of the copyright holder.
+
+# Manual rules for 3rdparty copyrights
+
+Files: src/testlib/3rdparty/callgrind_p.h
+       src/testlib/3rdparty/valgrind_p.h
+Copyright: 2003-2017 Josef Weidendorfer
+           2000-2017 Julian Seward
+License: Hybrid-BSD
+
+Files: src/3rdparty/xcb/include/xcb/xcb_bitops.h
+       src/3rdparty/xcb/include/xcb/xcb_event.h
+       src/3rdparty/xcb/include/xcb/xcb_icccm.h
+       src/3rdparty/xcb/include/xcb/xcb_image.h
+       src/3rdparty/xcb/include/xcb/xcb_pixel.h
+       src/3rdparty/xcb/include/xcb/xcb_renderutil.h
+       src/3rdparty/xcb/xcb-util/event.c
+       src/3rdparty/xcb/xcb-util/xcb_aux.c
+       src/3rdparty/xcb/xcb-util-image/xcb_image.c
+       src/3rdparty/xcb/xcb-util-keysyms/keysyms.c
+       src/3rdparty/xcb/xcb-util-renderutil/util.c
+       src/3rdparty/xcb/xcb-util-wm/icccm.c
+Copyright: 2000 Keith Packard
+           2006-2008 Jamey Sharp <jamey@minilop.net>
+           2007-2008 Vincent Torri <vtorri@univ-evry.fr>
+           2007-2008 Bart Massey <bart@cs.pdx.edu>
+           2008-2009 Julien Danjou <julien@danjou.info>
+           2008 Arnaud Fontaine <arnau@debian.org>
+           2008 Ian Osgood <iano@quirkster.com>
+           2008 Josh Triplett <josh@freedesktop.org>
+           2008 Ulrich Eckhardt <doomster@knuut.de>
+License: Expat
+
+Files: src/3rdparty/angle/*
+Copyright: 2002-2017 The ANGLE Project Authors.
+License: BSD-3-clause
+
+Files: src/3rdparty/angle/include/EGL/*
+       src/3rdparty/angle/include/GLES2/*
+       src/3rdparty/angle/include/GLES3/*
+       src/3rdparty/angle/include/KHR/*
+Copyright: 2007-2017 The Khronos Group Inc.
+License: Expat
+
+Files: src/3rdparty/angle/src/common/third_party/base/anglebase/containers/mru_cache.h
+       src/3rdparty/angle/src/common/third_party/base/anglebase/numerics/*
+       src/3rdparty/angle/src/common/third_party/base/anglebase/sha1.*
+       src/3rdparty/angle/src/third_party/trace_event/trace_event.h
+Copyright: 2011-2014 The Chromium Authors.
+License: BSD-3-clause
+
+Files: src/3rdparty/angle/src/third_party/compiler/*
+       src/3rdparty/angle/src/third_party/systeminfo/*
+Copyright: 2009-2012 Apple Inc.
+License: BSD-2-clause
+
+Files: src/3rdparty/angle/src/third_party/libXNVCtrl/*
+Copyright: 2008-2010 NVIDIA, Corporation
+License: Expat
+
+Files: src/3rdparty/angle/src/common/third_party/smhasher/*
+Copyright: 2011 Google, Inc.
+License: Expat
+
+Files: src/3rdparty/double-conversion/*
+Copyright: 2006-2012 the V8 project authors
+License: BSD-3-clause
+
+Files: src/3rdparty/easing/*
+Copyright: 2001 Robert Penner
+License: BSD-3-clause
+
+Files: src/3rdparty/forkfd/*
+Copyright: 2016-2019 Intel Corporation
+           2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+License: Expat
+
+Files: src/3rdparty/harfbuzz/*
+Copyright: 1998-2005 David Turner
+           1998-2004 Werner Lemberg
+           2000-2007 Red Hat, Inc
+           2006 Behdad Esfahbod
+           2015 The Qt Company Ltd.
+License: Harfbuzz
+
+Files: src/3rdparty/harfbuzz-ng/*
+Copyright: 2010-2017 Google, Inc.
+           2012-2015 Mozilla Foundation
+           2011 Codethink Limited
+           2008-2010 Nokia Corporation and/or its subsidiary(-ies)
+           2009 Keith Stribley
+           2009 Martin Hosken and SIL International
+           2007 Chris Wilson
+           2006 Behdad Esfahbod
+           1998-2005 David Turner
+           1998-2004 Werner Lemberg
+           2004-2010 Red Hat, Inc.
+           2015 The Qt Company Ltd.
+           2015 Konstantin Ritt
+           2016 Igalia S.L.
+License: Harfbuzz
+
+License: Harfbuzz
+ Permission is hereby granted, without written agreement and without
+ license or royalty fees, to use, copy, modify, and distribute this
+ software and its documentation for any purpose, provided that the
+ above copyright notice and the following two paragraphs appear in
+ all copies of this software.
+ .
+ IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE TO ANY PARTY FOR
+ DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN
+ IF THE COPYRIGHT HOLDER HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+ DAMAGE.
+ .
+ THE COPYRIGHT HOLDER SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING,
+ BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS
+ ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO
+ PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+Files: src/3rdparty/freetype/*
+Copyright: 1996-2019 David Turner, Robert Wilhelm, and Werner Lemberg
+           1996-2019 Just van Rossum
+           2002-2019 Roberto Alameda
+           2003 Huw D M Davies for Codeweavers
+           2003-2019 Masatake YAMATO, Redhat K.K.
+           2004-2019 Albert Chin-A-Young
+           2004-2019 Suzuki Toshiya
+           2007 Dmitry Timoshkov for Codeweavers
+           2007-2019 Rahul Bhalerao <rahul.bhalerao@redhat.com>
+           2007-2019 Derek Clegg, Michael Toftdal
+           2009-2018 Oran Agra, Mickey Gabel
+           2010-2019 Joel Klinghed
+License: GPL-2+ or FTL
+
+Files: src/3rdparty/freetype/src/pcf/*
+Copyright: 2000-2014 Francesco Zappa Nardelli
+License: Expat
+
+Files: src/3rdparty/freetype/src/pcf/pcfutil.c
+Copyright: 1990-1998 The Open Group
+License: Expat
+
+Files: src/3rdparty/freetype/src/bdf/*
+Copyright: 2001-2014 Francesco Zappa Nardelli
+           2000 Computing Research Labs, New Mexico State University
+License: Expat
+
+Files: src/3rdparty/freetype/src/tools/ftrandom/ftrandom.c
+       src/3rdparty/freebsd/strtoull.c
+       src/3rdparty/freebsd/strtoll.c
+Copyright: 1992-1993 The Regents of the University of California
+           2011 The FreeBSD Foundation
+           2005, 2007, 2008, 2013 George Williams
+License: BSD-3-clause
+
+Files: src/3rdparty/icc/sRGB2014.icc
+Copyright: 2015 International Color Consortium
+License: ICC
+ This profile is made available by the International Color Consortium, and may
+ be copied, distributed, embedded, made, used, and sold without restriction.
+ Altered versions of this profile shall have the original identification and
+ copyright information removed and shall not be misrepresented as the original
+ profile.
+
+Files: src/3rdparty/libjpeg/*
+Copyright: 2009-2019 D. R. Commander
+           2011-2016 Siarhei Siamashka
+           2015-2016, 2018 Matthieu Darbois
+           2015 Intel Corporation
+           2015 Google, Inc.
+           2013-2014 MIPS Technologies, Inc.
+           2013 Linaro Limited
+           2009-2011 Nokia Corporation and/or its subsidiary(-ies)
+           2009 Pierre Ossman for Cendio AB
+           1999-2006 MIYASAKA Masaru
+           1991-2016 Thomas G. Lane, Guido Vollbeding
+           2019 Arm Limited
+License: libjpeg and BSD-3-clause and Zlib
+
+Files: src/3rdparty/libpng/*
+Copyright: 1995-2019 The PNG Reference Library Authors.
+           2018-2019 Cosmin Truta
+           2000-2018 Glenn Randers-Pehrson
+           1996-1997 Andreas Dilger
+           1995-1996 Guy Eric Schalnat, Group 42, Inc.
+License: libpng
+ The software is supplied "as is", without warranty of any kind,
+ express or implied, including, without limitation, the warranties
+ of merchantability, fitness for a particular purpose, title, and
+ non-infringement.  In no event shall the Copyright owners, or
+ anyone distributing the software, be liable for any damages or
+ other liability, whether in contract, tort or otherwise, arising
+ from, out of, or in connection with the software, or the use or
+ other dealings in the software, even if advised of the possibility
+ of such damage.
+ .
+ Permission is hereby granted to use, copy, modify, and distribute
+ this software, or portions hereof, for any purpose, without fee,
+ subject to the following restrictions:
+ .
+ 1. The origin of this software must not be misrepresented; you
+    must not claim that you wrote the original software.  If you
+    use this software in a product, an acknowledgment in the product
+    documentation would be appreciated, but is not required.
+ .
+ 2. Altered source versions must be plainly marked as such, and must
+    not be misrepresented as being the original software.
+ .
+ 3. This Copyright notice may not be removed or altered from any
+    source or altered source distribution.
+
+Files: src/3rdparty/md4/* src/3rdparty/md5/*
+Copyright: -
+License: public-domain
+ placed in the public domain
+
+Files: src/3rdparty/android/extract.h
+Copyright: 2005 The Android Open Source Project
+License: Apache-2.0
+
+Files: src/3rdparty/pcre2/src/*
+Copyright: 1997-2019 University of Cambridge
+           2009-2019 Zoltan Herczeg
+License: BSD-3-clause
+
+Files: src/3rdparty/pcre2/src/sljit/*
+Copyright: 2013 Tilera Corporation (jiwang@tilera.com)
+           2009-2018 Zoltan Herczeg (hzmester@freemail.hu)
+License: BSD-2-clause
+
+Files: src/3rdparty/pixman/*
+Copyright: 2009 Nokia Corporation
+License: Expat
+
+Files: src/3rdparty/rfc6234/*
+Copyright: 2011 IETF Trust
+License: BSD-3-clause
+
+Files: src/3rdparty/sha1/sha1.cpp
+Copyright: Dominik Reichl <dominik.reichl@t-online.de>
+           2016 The Qt Company Ltd
+License: LGPL-3 or GPL-2
+
+Files: src/3rdparty/sha3/*
+Copyright: Guido Bertoni, Joan Daemen, Michaël Peeters and Gilles Van Assche
+License: CC0-1.0
+
+Files: src/3rdparty/sha3/brg_endian.h
+Copyright: 1998-2013, Brian Gladman, Worcester, UK
+License: brg-endian
+ The redistribution and use of this software (with or without changes)
+ is allowed without the payment of fees or royalties provided that:
+ .
+  1. source code distributions include the above copyright notice, this
+     list of conditions and the following disclaimer;
+ .
+  2. binary distributions include the above copyright notice, this list
+     of conditions and the following disclaimer in their documentation;
+ .
+  3. the name of the copyright holder is not used to endorse products
+     built using this software without specific written permission.
+ .
+ DISCLAIMER
+ .
+ This software is provided 'as is' with no explicit or implied warranties
+ in respect of its properties, including, but not limited to, correctness
+ and/or fitness for purpose.
+
+Files: src/3rdparty/tinycbor/*
+Copyright: 2016-2019 Intel Corporation
+License: Expat
+
+Files: src/3rdparty/wasm/DejaVuSans.ttf
+       src/3rdparty/wasm/DejaVuSansMono.ttf
+Copyright: 2003 Bitstream, Inc.
+           2006 Tavmjong Bah
+           American Mathematical Society
+License: Bitstream
+
+Files: src/3rdparty/wasm/Vera.ttf
+Copyright: 2003 Bitstream, Inc.
+License: Bitstream
+
+Files: src/3rdparty/freetype/src/gzip/*
+       src/3rdparty/zlib/src/*
+Copyright: 1995-2017 Jean-loup Gailly
+           1995-2017 Mark Adler
+License: Zlib
+
+Files: src/3rdparty/md4c/*
+Copyright: 2016-2019 Martin Mitáš
+License: Expat
+
+Files: src/3rdparty/VulkanMemoryAllocator/*
+Copyright: 2017-2018 Advanced Micro Devices, Inc.
+License: Expat
+
+# License texts
+
+License: LGPL-2.1+
+ This library is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as
+ published by the Free Software Foundation; either version 2.1 of the
+ License, or (at your option) any later version.
+ .
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ On Debian systems, the complete text of the GNU Lesser General Public
+ License version 2.1 can be found in /usr/share/common-licenses/LGPL-2.1.
+
+License: LGPL-3
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License version 3
+ as published by the Free Software Foundation.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+ .
+ On Debian systems, the complete text of the GNU Lesser General Public
+ License version 3 can be found in /usr/share/common-licenses/LGPL-3.
+
+License: GPL-3
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 3 as
+ published by the Free Software Foundation.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the complete text of the GNU General Public License
+ version 3 can be found in /usr/share/common-licenses/GPL-3.
+
+License: GPL-3 with Qt-1.0 exception
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 3 as
+ published by the Free Software Foundation.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the complete text of the GNU General Public License
+ version 3 can be found in /usr/share/common-licenses/GPL-3.
+ .
+ The Qt Company GPL Exception 1.0
+ Exception 1:
+ .
+ As a special exception you may create a larger work which contains the
+ output of this application and distribute that work under terms of your
+ choice, so long as the work is not otherwise derived from or based on
+ this application and so long as the work does not in itself generate
+ output that contains the output from this application in its original
+ or modified form.
+ .
+ Exception 2:
+ .
+ As a special exception, you have permission to combine this application
+ with Plugins licensed under the terms of your choice, to produce an
+ executable, and to copy and distribute the resulting executable under
+ the terms of your choice. However, the executable must be accompanied
+ by a prominent notice offering all users of the executable the entire
+ source code to this application, excluding the source code of the
+ independent modules, but including any changes you have made to this
+ application, under the terms of this license.
+
+License: BSD-2-clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ .
+ THIS SOFTWARE IS PROVIDED BY APPLE, INC. ``AS IS'' AND ANY
+ EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE, INC. OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+License: BSD-3-clause
+ You may use this file under the terms of the BSD license as follows:
+ .
+ "Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are
+ met:
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in
+     the documentation and/or other materials provided with the
+     distribution.
+   * Neither the name of The Qt Company Ltd nor the names of its
+     contributors may be used to endorse or promote products derived
+     from this software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+
+License: Hybrid-BSD
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ .
+ 2. The origin of this software must not be misrepresented; you must
+    not claim that you wrote the original software.  If you use this
+    software in a product, an acknowledgment in the product
+    documentation would be appreciated but is not required.
+ .
+ 3. Altered source versions must be plainly marked as such, and must
+    not be misrepresented as being the original software.
+ .
+ 4. The name of the author may not be used to endorse or promote
+    products derived from this software without specific prior written
+    permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
+ OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+ DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+License: Expat
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ "Software"), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+License: GPL-2
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as
+ published by the Free Software Foundation.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the complete text of the GNU General Public
+ License version 2 can be found in /usr/share/common-licenses/GPL-2.
+
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program;  if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+ MA 02110-1301, USA.
+ .
+ On Debian GNU/Linux systems, the complete text of the GNU General
+ Public License version 2 can be found in
+ `/usr/share/common-licenses/GPL-2'.
+
+License: FTL
+                    The FreeType Project LICENSE
+                    ----------------------------
+ .
+                            2000-Feb-08
+ .
+                       Copyright 1996-2000 by
+          David Turner, Robert Wilhelm, and Werner Lemberg
+ .
+ .
+ .
+ Introduction
+ ============
+ .
+  The FreeType  Project is distributed in  several archive packages;
+  some of them may contain, in addition to the FreeType font engine,
+  various tools and  contributions which rely on, or  relate to, the
+  FreeType Project.
+ .
+  This  license applies  to all  files found  in such  packages, and
+  which do not  fall under their own explicit  license.  The license
+  affects  thus  the  FreeType   font  engine,  the  test  programs,
+  documentation and makefiles, at the very least.
+ .
+  This  license   was  inspired  by  the  BSD,   Artistic,  and  IJG
+  (Independent JPEG  Group) licenses, which  all encourage inclusion
+  and  use of  free  software in  commercial  and freeware  products
+  alike.  As a consequence, its main points are that:
+ .
+    o We don't promise that this software works. However, we will be
+      interested in any kind of bug reports. (`as is' distribution)
+ .
+    o You can  use this software for whatever you  want, in parts or
+      full form, without having to pay us. (`royalty-free' usage)
+ .
+    o You may not pretend that  you wrote this software.  If you use
+      it, or  only parts of it,  in a program,  you must acknowledge
+      somewhere  in  your  documentation  that  you  have  used  the
+      FreeType code. (`credits')
+ .
+  We  specifically  permit  and  encourage  the  inclusion  of  this
+  software, with  or without modifications,  in commercial products.
+  We  disclaim  all warranties  covering  The  FreeType Project  and
+  assume no liability related to The FreeType Project.
+ .
+ .
+ Legal Terms
+ ===========
+ .
+ 0. Definitions
+ --------------
+ .
+  Throughout this license,  the terms `package', `FreeType Project',
+  and  `FreeType  archive' refer  to  the  set  of files  originally
+  distributed  by the  authors  (David Turner,  Robert Wilhelm,  and
+  Werner Lemberg) as the `FreeType Project', be they named as alpha,
+  beta or final release.
+ .
+  `You' refers to  the licensee, or person using  the project, where
+  `using' is a generic term including compiling the project's source
+  code as  well as linking it  to form a  `program' or `executable'.
+  This  program is  referred to  as  `a program  using the  FreeType
+  engine'.
+ .
+  This  license applies  to all  files distributed  in  the original
+  FreeType  Project,   including  all  source   code,  binaries  and
+  documentation,  unless  otherwise  stated   in  the  file  in  its
+  original, unmodified form as  distributed in the original archive.
+  If you are  unsure whether or not a particular  file is covered by
+  this license, you must contact us to verify this.
+ .
+  The FreeType  Project is copyright (C) 1996-2000  by David Turner,
+  Robert Wilhelm, and Werner Lemberg.  All rights reserved except as
+  specified below.
+ .
+ 1. No Warranty
+ --------------
+ .
+  THE FREETYPE PROJECT  IS PROVIDED `AS IS' WITHOUT  WARRANTY OF ANY
+  KIND, EITHER  EXPRESS OR IMPLIED,  INCLUDING, BUT NOT  LIMITED TO,
+  WARRANTIES  OF  MERCHANTABILITY   AND  FITNESS  FOR  A  PARTICULAR
+  PURPOSE.  IN NO EVENT WILL ANY OF THE AUTHORS OR COPYRIGHT HOLDERS
+  BE LIABLE  FOR ANY DAMAGES CAUSED  BY THE USE OR  THE INABILITY TO
+  USE, OF THE FREETYPE PROJECT.
+ .
+ 2. Redistribution
+ -----------------
+ .
+  This  license  grants  a  worldwide, royalty-free,  perpetual  and
+  irrevocable right  and license to use,  execute, perform, compile,
+  display,  copy,   create  derivative  works   of,  distribute  and
+  sublicense the  FreeType Project (in  both source and  object code
+  forms)  and  derivative works  thereof  for  any  purpose; and  to
+  authorize others  to exercise  some or all  of the  rights granted
+  herein, subject to the following conditions:
+ .
+    o Redistribution  of source code  must retain this  license file
+      (`LICENSE.TXT') unaltered; any additions, deletions or changes
+      to   the  original   files  must   be  clearly   indicated  in
+      accompanying  documentation.   The  copyright notices  of  the
+      unaltered, original  files must be preserved in  all copies of
+      source files.
+ .
+    o Redistribution in binary form must provide a  disclaimer  that
+      states  that  the software is based in part of the work of the
+      FreeType Team,  in  the  distribution  documentation.  We also
+      encourage you to put an URL to the FreeType web page  in  your
+      documentation, though this isn't mandatory.
+ .
+  These conditions  apply to any  software derived from or  based on
+  the FreeType Project,  not just the unmodified files.   If you use
+  our work, you  must acknowledge us.  However, no  fee need be paid
+  to us.
+ .
+ 3. Advertising
+ --------------
+ .
+  Neither the  FreeType authors and  contributors nor you  shall use
+  the name of the  other for commercial, advertising, or promotional
+  purposes without specific prior written permission.
+ .
+  We suggest,  but do not require, that  you use one or  more of the
+  following phrases to refer  to this software in your documentation
+  or advertising  materials: `FreeType Project',  `FreeType Engine',
+  `FreeType library', or `FreeType Distribution'.
+ .
+  As  you have  not signed  this license,  you are  not  required to
+  accept  it.   However,  as  the FreeType  Project  is  copyrighted
+  material, only  this license, or  another one contracted  with the
+  authors, grants you  the right to use, distribute,  and modify it.
+  Therefore,  by  using,  distributing,  or modifying  the  FreeType
+  Project, you indicate that you understand and accept all the terms
+  of this license.
+ .
+ 4. Contacts
+ -----------
+ .
+  There are two mailing lists related to FreeType:
+ .
+    o freetype@freetype.org
+ .
+      Discusses general use and applications of FreeType, as well as
+      future and  wanted additions to the  library and distribution.
+      If  you are looking  for support,  start in  this list  if you
+      haven't found anything to help you in the documentation.
+ .
+    o devel@freetype.org
+ .
+      Discusses bugs,  as well  as engine internals,  design issues,
+      specific licenses, porting, etc.
+ .
+    o http://www.freetype.org
+ .
+      Holds the current  FreeType web page, which will  allow you to
+      download  our  latest  development  version  and  read  online
+      documentation.
+ .
+  You can also contact us individually at:
+ .
+    David Turner      <david.turner@freetype.org>
+    Robert Wilhelm    <robert.wilhelm@freetype.org>
+    Werner Lemberg    <werner.lemberg@freetype.org>
+
+License: GFDL-NIV-1.3
+ Permission is granted to copy, distribute and/or modify this document
+ under the terms of the GNU Free Documentation License, Version 1.3
+ or any later version published by the Free Software Foundation;
+ with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+ .
+ On Debian systems, the complete text of the GNU Free Documentation
+ License version 1.3 can be found in /usr/share/common-licenses/GFDL-1.3.
+
+License: Apache-2.0
+  Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ .
+     http://www.apache.org/licenses/LICENSE-2.0
+ .
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ .
+ On Debian systems, the complete text of the Apache License 2.0 can
+ be found in "/usr/share/common-licenses/Apache-2.0"
+
+License: libjpeg
+ The authors make NO WARRANTY or representation, either express or implied,
+ with respect to this software, its quality, accuracy, merchantability, or
+ fitness for a particular purpose.  This software is provided "AS IS", and you,
+ its user, assume the entire risk as to its quality and accuracy.
+ .
+ This software is copyright (C) 1991-2016, Thomas G. Lane, Guido Vollbeding.
+ All Rights Reserved except as specified below.
+ .
+ Permission is hereby granted to use, copy, modify, and distribute this
+ software (or portions thereof) for any purpose, without fee, subject to these
+ conditions:
+ .
+ (1) If any part of the source code for this software is distributed, then this
+ README file must be included, with this copyright and no-warranty notice
+ unaltered; and any additions, deletions, or changes to the original files
+ must be clearly indicated in accompanying documentation.
+ .
+ (2) If only executable code is distributed, then the accompanying
+ documentation must state that "this software is based in part on the work of
+ the Independent JPEG Group".
+ .
+ (3) Permission for use of this software is granted only if the user accepts
+ full responsibility for any undesirable consequences; the authors accept
+ NO LIABILITY for damages of any kind.
+ .
+ These conditions apply to any software derived from or based on the IJG code,
+ not just to the unmodified library.  If you use our work, you ought to
+ acknowledge us.
+ .
+ Permission is NOT granted for the use of any IJG author's name or company name
+ in advertising or publicity relating to this software or products derived from
+ it.  This software may be referred to only as "the Independent JPEG Group's
+ software".
+ .
+ We specifically permit and encourage the use of this software as the basis of
+ commercial products, provided that all warranty or liability claims are
+ assumed by the product vendor.
+ .
+ The IJG distribution formerly included code to read and write GIF files.
+ To avoid entanglement with the Unisys LZW patent (now expired), GIF reading
+ support has been removed altogether, and the GIF writer has been simplified
+ to produce "uncompressed GIFs".  This technique does not use the LZW
+ algorithm; the resulting GIF files are larger than usual, but are readable
+ by all standard GIF decoders.
+ .
+ We are required to state that
+    "The Graphics Interchange Format(c) is the Copyright property of
+    CompuServe Incorporated.  GIF(sm) is a Service Mark property of
+    CompuServe Incorporated."
+
+License: CC0-1.0
+ CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE LEGAL
+ SERVICES. DISTRIBUTION OF THIS DOCUMENT DOES NOT CREATE AN ATTORNEY-CLIENT
+ RELATIONSHIP. CREATIVE COMMONS PROVIDES THIS INFORMATION ON AN "AS-IS" BASIS.
+ CREATIVE COMMONS MAKES NO WARRANTIES REGARDING THE USE OF THIS DOCUMENT OR
+ THE INFORMATION OR WORKS PROVIDED HEREUNDER, AND DISCLAIMS LIABILITY FOR
+ DAMAGES RESULTING FROM THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS
+ PROVIDED HEREUNDER.
+ .
+ Statement of Purpose
+ .
+ The laws of most jurisdictions throughout the world automatically confer
+ exclusive Copyright and Related Rights (defined below) upon the creator and
+ subsequent owner(s) (each and all, an "owner") of an original work of
+ authorship and/or a database (each, a "Work").
+ .
+ Certain owners wish to permanently relinquish those rights to a Work for the
+ purpose of contributing to a commons of creative, cultural and scientific
+ works ("Commons") that the public can reliably and without fear of later
+ claims of infringement build upon, modify, incorporate in other works, reuse
+ and redistribute as freely as possible in any form whatsoever and for any
+ purposes, including without limitation commercial purposes. These owners may
+ contribute to the Commons to promote the ideal of a free culture and the
+ further production of creative, cultural and scientific works, or to gain
+ reputation or greater distribution for their Work in part through the use and
+ efforts of others.
+ .
+ For these and/or other purposes and motivations, and without any expectation
+ of additional consideration or compensation, the person associating CC0 with
+ a Work (the "Affirmer"), to the extent that he or she is an owner of
+ Copyright and Related Rights in the Work, voluntarily elects to apply CC0 to
+ the Work and publicly distribute the Work under its terms, with knowledge of
+ his or her Copyright and Related Rights in the Work and the meaning and
+ intended legal effect of CC0 on those rights.
+ .
+ 1. Copyright and Related Rights. A Work made available under CC0 may be
+ protected by copyright and related or neighboring rights ("Copyright and
+ Related Rights"). Copyright and Related Rights include, but are not limited
+ to, the following:
+ .
+ i.   the right to reproduce, adapt, distribute, perform, display, communicate,
+      and translate a Work;
+ ii.  moral rights retained by the original author(s) and/or performer(s);
+ iii. publicity and privacy rights pertaining to a person's image or likeness
+      depicted in a Work;
+ iv.  rights protecting against unfair competition in regards to a Work,
+      subject to the limitations in paragraph 4(a), below;
+ v.   rights protecting the extraction, dissemination, use and reuse of data
+      in a Work;
+ vi.  database rights (such as those arising under Directive 96/9/EC of the
+      European Parliament and of the Council of 11 March 1996 on the legal
+      protection of databases, and under any national implementation thereof,
+      including any amended or successor version of such directive); and
+ vii. other similar, equivalent or corresponding rights throughout the world
+      based on applicable law or treaty, and any national implementations
+      thereof.
+ .
+ 2. Waiver. To the greatest extent permitted by, but not in contravention of,
+ applicable law, Affirmer hereby overtly, fully, permanently, irrevocably and
+ unconditionally waives, abandons, and surrenders all of Affirmer's Copyright
+ and Related Rights and associated claims and causes of action, whether now
+ known or unknown (including existing as well as future claims and causes of
+ action), in the Work (i) in all territories worldwide, (ii) for the maximum
+ duration provided by applicable law or treaty (including future time
+ extensions), (iii) in any current or future medium and for any number of
+ copies, and (iv) for any purpose whatsoever, including without limitation
+ commercial, advertising or promotional purposes (the "Waiver"). Affirmer
+ makes the Waiver for the benefit of each member of the public at large and to
+ the detriment of Affirmer's heirs and successors, fully intending that such
+ Waiver shall not be subject to revocation, rescission, cancellation,
+ termination, or any other legal or equitable action to disrupt the quiet
+ enjoyment of the Work by the public as contemplated by Affirmer's express
+ Statement of Purpose.
+ .
+ 3. Public License Fallback. Should any part of the Waiver for any reason be
+ judged legally invalid or ineffective under applicable law, then the Waiver
+ shall be preserved to the maximum extent permitted taking into account
+ Affirmer's express Statement of Purpose. In addition, to the extent the
+ Waiver is so judged Affirmer hereby grants to each affected person a
+ royalty-free, non transferable, non sublicensable, non exclusive, irrevocable
+ and unconditional license to exercise Affirmer's Copyright and Related Rights
+ in the Work (i) in all territories worldwide, (ii) for the maximum duration
+ provided by applicable law or treaty (including future time extensions),
+ (iii) in any current or future medium and for any number of copies, and (iv)
+ for any purpose whatsoever, including without limitation commercial,
+ advertising or promotional purposes (the "License"). The License shall be
+ deemed effective as of the date CC0 was applied by Affirmer to the Work.
+ Should any part of the License for any reason be judged legally invalid or
+ ineffective under applicable law, such partial invalidity or ineffectiveness
+ shall not invalidate the remainder of the License, and in such case Affirmer
+ hereby affirms that he or she will not (i) exercise any of his or her
+ remaining Copyright and Related Rights in the Work or (ii) assert any
+ associated claims and causes of action with respect to the Work, in either
+ case contrary to Affirmer's express Statement of Purpose.
+ .
+ 4. Limitations and Disclaimers.
+ .
+ a. No trademark or patent rights held by Affirmer are waived, abandoned,
+    surrendered, licensed or otherwise affected by this document.
+ b. Affirmer offers the Work as-is and makes no representations or warranties
+    of any kind concerning the Work, express, implied, statutory or otherwise,
+    including without limitation warranties of title, merchantability, fitness
+    for a particular purpose, non infringement, or the absence of latent or
+    other defects, accuracy, or the present or absence of errors, whether or
+    not discoverable, all to the greatest extent permissible under applicable
+    law.
+ c. Affirmer disclaims responsibility for clearing rights of other persons
+    that may apply to the Work or any use thereof, including without limitation
+    any person's Copyright and Related Rights in the Work. Further, Affirmer
+    disclaims responsibility for obtaining any necessary consents, permissions
+    or other rights required for any use of the Work.
+ d. Affirmer understands and acknowledges that Creative Commons is not a
+    party to this document and has no duty or obligation with respect to this
+    CC0 or use of the Work.
+
+License: Bitstream
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of the fonts accompanying this license ("Fonts") and associated
+ documentation files (the "Font Software"), to reproduce and distribute the
+ Font Software, including without limitation the rights to use, copy, merge,
+ publish, distribute, and/or sell copies of the Font Software, and to permit
+ persons to whom the Font Software is furnished to do so, subject to the
+ following conditions:
+ .
+ The above copyright and trademark notices and this permission notice shall
+ be included in all copies of one or more of the Font Software typefaces.
+ .
+ The Font Software may be modified, altered, or added to, and in particular
+ the designs of glyphs or characters in the Fonts may be modified and
+ additional glyphs or characters may be added to the Fonts, only if the fonts
+ are renamed to names not containing either the words "Bitstream" or the word
+ "Vera".
+ .
+ This License becomes null and void to the extent applicable to Fonts or Font
+ Software that has been modified and is distributed under the "Bitstream
+ Vera" names.
+ .
+ The Font Software may be sold as part of a larger software package but no
+ copy of one or more of the Font Software typefaces may be sold by itself.
+ .
+ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF COPYRIGHT, PATENT,
+ TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL BITSTREAM OR THE GNOME
+ FOUNDATION BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, INCLUDING
+ ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
+ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+ THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM OTHER DEALINGS IN THE
+ FONT SOFTWARE.
+ .
+ Except as contained in this notice, the names of Gnome, the Gnome
+ Foundation, and Bitstream Inc., shall not be used in advertising or
+ otherwise to promote the sale, use or other dealings in this Font Software
+ without prior written authorization from the Gnome Foundation or Bitstream
+ Inc., respectively. For further information, contact: fonts at gnome dot
+ org.
+
+License: Zlib
+ This software is provided 'as-is', without any express or implied
+ warranty.  In no event will the authors be held liable for any damages
+ arising from the use of this software.
+ .
+ Permission is granted to anyone to use this software for any purpose,
+ including commercial applications, and to alter it and redistribute it
+ freely, subject to the following restrictions:
+ .
+ 1. The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
+    appreciated but is not required.
+ 2. Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+ 3. This notice may not be removed or altered from any source distribution.
+
+License: MPL-2.0
+ The contents of this file are subject to the Mozilla Public License Version
+ 2.0 (the "License"); you may not use this file except in compliance with
+ the License.
+ .
+ Software distributed under the License is distributed on an "AS IS" basis,
+ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ for the specific language governing rights and limitations under the
+ License.
+ .
+ On Debian systems, the complete text of the Mozilla Public License Version
+ 2.0 can be found in /usr/share/common-licenses/MPL-2.0.

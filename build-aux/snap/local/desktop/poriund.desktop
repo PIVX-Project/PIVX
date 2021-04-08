@@ -1,0 +1,15 @@
+# http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.0.html
+
+[Desktop Entry]
+Encoding=UTF-8
+Name=Sombe Coin Daemon SNAP
+Comment=main
+GenericName=Sombe Digital Currency Daemon Client main network
+Exec=Sombe-core.daemon %u
+Terminal=true
+Type=Application
+Icon=${SNAP}/share/pixmaps/Sombe.png
+MimeType=x-scheme-handler/bpr;
+Categories=X-Office;X-Finance;
+Keywords=internet;Sombe;zbpr;core;wallet;daemon;main;snap;launchpad;crypto;digital;currency;coin;token;zerocoin;
+Version=1.0

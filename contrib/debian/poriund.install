@@ -1,0 +1,3 @@
+usr/local/bin/Sombed usr/bin
+usr/local/bin/Sombe-cli usr/bin
+debian/examples/Sombe.conf etc/Sombe

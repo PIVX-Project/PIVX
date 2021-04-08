@@ -1,0 +1,6 @@
+usr/local/bin/Sombe-qt usr/bin
+share/pixmaps/Sombe32.xpm usr/share/pixmaps
+share/pixmaps/Sombe16.xpm usr/share/pixmaps
+share/pixmaps/Sombe128.png usr/share/pixmaps
+debian/Sombe-qt.desktop usr/share/applications
+debian/Sombe-qt.protocol usr/share/kde4/services/

@@ -1,0 +1,15 @@
+# http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-1.0.html
+
+[Desktop Entry]
+Encoding=UTF-8
+Name=Sombe Coin
+Comment=Sombe Coin QT main network
+GenericName=Sombe Digital Currency QT client main network
+Exec=Sombe-core.qt %u
+Terminal=false
+Type=Application
+Icon=${SNAP}/share/pixmaps/Sombe.png
+MimeType=x-scheme-handler/Sombe;
+Categories=X-Office;X-Finance;
+Keywords=internet;Sombe;zbpr;bpr;core;wallet;qt;main;snap;launchpad;crypto;digital;currency;coin;token;zerocoin;
+Version=1.0
