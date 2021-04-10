@@ -28,8 +28,8 @@ Drag Sombe-Qt to your applications folder, and then run Sombe-Qt.
 
 * See the documentation at the [Sombe Wiki](https://github.com/Sombe-Project/Sombe/wiki)
 for help and more information.
-* Ask for help on [BitcoinTalk](https://bitcointalk.org/index.php?topic=5194579) or on the [Sombe Forum](http://Sombe.org/forum).
-* Join our Discord server [Discord Server](https://)
+* Ask for help on [BitcoinTalk](https://#) or on the [Sombe Forum](http://Sombe.org).
+* Join our Discord server [Discord Server](https://#)
 
 Building
 ---------------------
@@ -49,15 +49,10 @@ The Sombe repo's [root README](/README.md) contains relevant information on the 
 - [Multiwallet Qt Development](multiwallet-qt.md)
 - [Release Notes](release-notes.md)
 - [Release Process](release-process.md)
-- [Source Code Documentation (External Link)](https://www.fuzzbawls.pw/Sombe/doxygen/)
 - [Translation Process](translation_process.md)
 - [Unit Tests](unit-tests.md)
 - [Unauthenticated REST Interface](REST-interface.md)
 - [Dnsseed Policy](dnsseed-policy.md)
-
-### Resources
-* Discuss on the [BitcoinTalk](https://bitcointalk.org/index.php?topic=5194579) or the [Sombe](http:Sombe.org/forum) forum.
-* Join the [Sombe Discord](https://discord.gg/m4pmQpa).
 
 ### Miscellaneous
 - [Assets Attribution](assets-attribution.md)
