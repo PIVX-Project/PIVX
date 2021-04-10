@@ -3,7 +3,7 @@ Sombe
 
 Setup
 ---------------------
-[Sombe](http://Sombe.org/wallet) is the original Sombe client and it builds the backbone of the network. However, it downloads and stores the entire history of Sombe transactions; depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more. Thankfully you only have to do this once.
+[Sombe](https://github.com/sombeProject/SBE/releases/tag/v1.3.3) is the original Sombe client and it builds the backbone of the network. However, it downloads and stores the entire history of Sombe transactions; depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more. Thankfully you only have to do this once.
 
 Running
 ---------------------
@@ -28,7 +28,7 @@ Drag Sombe-Qt to your applications folder, and then run Sombe-Qt.
 
 * See the documentation at the [Sombe Wiki](https://github.com/Sombe-Project/Sombe/wiki)
 for help and more information.
-* Ask for help on [BitcoinTalk](https://) or on the [Sombe Forum](http://Sombe.org/forum).
+* Ask for help on [BitcoinTalk](https://bitcointalk.org/index.php?topic=5194579) or on the [Sombe Forum](http://Sombe.org/forum).
 * Join our Discord server [Discord Server](https://)
 
 Building
@@ -56,8 +56,8 @@ The Sombe repo's [root README](/README.md) contains relevant information on the 
 - [Dnsseed Policy](dnsseed-policy.md)
 
 ### Resources
-* Discuss on the [BitcoinTalk](https://bitcointalk.org/index.php?topic=1262920.0) or the [Sombe](http://forum.Sombe.org/) forum.
-* Join the [Sombe Discord](https://discord.Sombe.org).
+* Discuss on the [BitcoinTalk](https://bitcointalk.org/index.php?topic=5194579) or the [Sombe](http:Sombe.org/forum) forum.
+* Join the [Sombe Discord](https://discord.gg/m4pmQpa).
 
 ### Miscellaneous
 - [Assets Attribution](assets-attribution.md)
