@@ -123,20 +123,20 @@ std::vector<unsigned char> ParseHex(const std::string& str)
     return ParseHex(str.c_str());
 }
 
-std::string EncodeBase64(const unsigned char* pch, size_t len)
+std::string EncodeBase64(Span<const unsigned char> input)
 {
     static const char *pbase64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     std::string str;
-    str.reserve(((len + 2) / 3) * 4);
-    ConvertBits<8, 6, true>([&](int v) { str += pbase64[v]; }, pch, pch + len);
+    str.reserve(((input.size() + 2) / 3) * 4);
+    ConvertBits<8, 6, true>([&](int v) { str += pbase64[v]; }, input.begin(), input.end());
     while (str.size() % 4) str += '=';
     return str;
 }
 
 std::string EncodeBase64(const std::string& str)
 {
-    return EncodeBase64((const unsigned char*)str.c_str(), str.size());
+    return EncodeBase64(MakeUCharSpan(str));
 }
 
 std::vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid)
