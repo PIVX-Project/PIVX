@@ -401,19 +401,6 @@ struct CombinerAll {
     }
 };
 
-/**
- * Interface for message handling
- */
-class NetEventsInterface
-{
-public:
-    virtual bool ProcessMessages(CNode* pnode, std::atomic<bool>& interrupt) = 0;
-    virtual bool SendMessages(CNode* pnode, std::atomic<bool>& interrupt) = 0;
-    virtual void InitializeNode(CNode* pnode) = 0;
-    virtual void FinalizeNode(NodeId id, bool& update_connection_time) = 0;
-};
-
-
 enum {
     LOCAL_NONE,   // unknown
     LOCAL_IF,     // address a local interface listens on
@@ -808,6 +795,18 @@ class CExplicitNetCleanup
 {
 public:
     static void callCleanup();
+};
+
+/**
+ * Interface for message handling
+ */
+class NetEventsInterface
+{
+public:
+    virtual bool ProcessMessages(CNode* pnode, std::atomic<bool>& interrupt) = 0;
+    virtual bool SendMessages(CNode* pnode, std::atomic<bool>& interrupt) EXCLUSIVE_LOCKS_REQUIRED(pnode->cs_sendProcessing) = 0;
+    virtual void InitializeNode(CNode* pnode) = 0;
+    virtual void FinalizeNode(NodeId id, bool& update_connection_time) = 0;
 };
 
 /** Return a timestamp in the future (in microseconds) for exponentially distributed events. */

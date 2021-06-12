@@ -56,7 +56,7 @@ public:
     * @param[in]   interrupt       Interrupt condition for processing threads
     * @return                      True if there is more work to be done
     */
-    bool SendMessages(CNode* pto, std::atomic<bool>& interrupt) override;
+    bool SendMessages(CNode* pto, std::atomic<bool>& interrupt) override EXCLUSIVE_LOCKS_REQUIRED(pto->cs_sendProcessing);
 };
 
 struct CNodeStateStats {
