@@ -623,7 +623,7 @@ public:
     std::multimap<int64_t, CInv> mapAskFor;
     std::set<uint256> setAskFor;
     std::vector<uint256> vBlockRequested;
-    int64_t nNextInvSend;
+    std::chrono::microseconds nNextInvSend{0};
     // Used for BIP35 mempool sending, also protected by cs_inventory
     bool fSendMempool;
 

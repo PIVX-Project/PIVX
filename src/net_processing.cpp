@@ -2132,6 +2132,8 @@ bool PeerLogicValidation::SendMessages(CNode* pto, std::atomic<bool>& interruptM
 
         // Address refresh broadcast
         int64_t nNow = GetTimeMicros();
+        auto current_time = GetTime<std::chrono::microseconds>();
+
         if (!IsInitialBlockDownload() && pto->nNextLocalAddrSend < nNow) {
             AdvertiseLocal(pto);
             pto->nNextLocalAddrSend = PoissonNextSend(nNow, AVG_LOCAL_ADDRESS_BROADCAST_INTERVAL);
@@ -2214,10 +2216,10 @@ bool PeerLogicValidation::SendMessages(CNode* pto, std::atomic<bool>& interruptM
 
             // Check whether periodic send should happen
             bool fSendTrickle = pto->fWhitelisted;
-            if (pto->nNextInvSend < nNow) {
+            if (pto->nNextInvSend < current_time) {
                 fSendTrickle = true;
                 // Use half the delay for outbound peers, as there is less privacy concern for them.
-                pto->nNextInvSend = PoissonNextSend(nNow, INVENTORY_BROADCAST_INTERVAL >> !pto->fInbound);
+                pto->nNextInvSend = PoissonNextSend(current_time, std::chrono::seconds{INVENTORY_BROADCAST_INTERVAL >> !pto->fInbound});
             }
 
             // Time to send but the peer has requested we not relay transactions.
@@ -2301,6 +2303,7 @@ bool PeerLogicValidation::SendMessages(CNode* pto, std::atomic<bool>& interruptM
             connman->PushMessage(pto, msgMaker.Make(NetMsgType::INV, vInv));
 
         // Detect whether we're stalling
+        current_time = GetTime<std::chrono::microseconds>();
         nNow = GetTimeMicros();
         if (state.nStallingSince && state.nStallingSince < nNow - 1000000 * BLOCK_STALLING_TIMEOUT) {
             // Stalling only triggers when the block download window cannot move. During normal steady state,
