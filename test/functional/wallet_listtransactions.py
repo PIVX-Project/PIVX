@@ -23,6 +23,8 @@ def txFromHex(hexstring):
 class ListTransactionsTest(PivxTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
+        # whitelist all peers to speed up tx relay / mempool sync
+        self.extra_args = [["-whitelist=127.0.0.1"]] * self.num_nodes
         self.enable_mocktime()
 
     def run_test(self):
