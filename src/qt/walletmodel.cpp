@@ -120,6 +120,11 @@ bool WalletModel::upgradeWallet(std::string& upgradeError)
     return wallet->Upgrade(upgradeError, prev_version);
 }
 
+QString WalletModel::getWalletPath()
+{
+    return QString::fromStdString(GetDataDir().string() + QDir::separator().toLatin1() + wallet->GetName());
+}
+
 CAmount WalletModel::getBalance(const CCoinControl* coinControl, bool fIncludeDelegated, bool fUnlockedOnly, bool fIncludeShielded) const
 {
     if (coinControl) {
