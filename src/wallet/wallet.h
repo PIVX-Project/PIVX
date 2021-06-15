@@ -593,6 +593,14 @@ private:
     //! the maximum wallet format version: memory-only variable that specifies to what version this wallet may be upgraded
     int nWalletMaxVersion;
 
+    /**
+     * Wallet filename from wallet=<path> command line or config option.
+     * Used in debug logs and to send RPCs to the right wallet instance when
+     * more than one wallet is loaded.
+     */
+    std::string m_name;
+
+    /** Internal database handle. */
     std::unique_ptr<CWalletDBWrapper> dbw;
 
     /**
@@ -737,19 +745,10 @@ public:
 
     /** Get a name for this wallet for logging/debugging purposes.
      */
-    std::string GetName() const
-    {
-        if (dbw) {
-            return dbw->GetName();
-        } else {
-            return "dummy";
-        }
-    }
+    const std::string& GetName() const { return m_name; }
 
-    // Create wallet with dummy database handle
-    CWallet();
-    // Create wallet with passed-in database handle
-    CWallet(std::unique_ptr<CWalletDBWrapper> dbw_in);
+    /** Construct wallet with specified name and database implementation. */
+    CWallet(std::string name, std::unique_ptr<CWalletDBWrapper> dbw_in);
     ~CWallet();
     void SetNull();
 
@@ -1168,7 +1167,7 @@ public:
     bool AbandonTransaction(const uint256& hashTx);
 
     /* Initializes the wallet, returns a new CWallet instance or a null pointer in case of an error */
-    static CWallet* CreateWalletFromFile(const std::string& walletFile);
+    static CWallet* CreateWalletFromFile(const std::string& name, const fs::path& path);
 
     /**
      * Wallet post-init setup

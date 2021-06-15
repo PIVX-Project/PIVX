@@ -9,6 +9,7 @@
 #include "sapling/address.h"
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"
+#include "wallet/walletutil.h"
 #include "util/system.h"
 #include <boost/test/unit_test.hpp>
 
@@ -32,7 +33,7 @@ BOOST_FIXTURE_TEST_SUITE(wallet_zkeys_tests, WalletTestingSetup)
 BOOST_AUTO_TEST_CASE(StoreAndLoadSaplingZkeys) {
     SelectParams(CBaseChainParams::MAIN);
 
-    CWallet wallet;
+    CWallet wallet("dummy", CWalletDBWrapper::CreateDummy());
     LOCK(wallet.cs_wallet);
     // wallet should be empty
     std::set<libzcash::SaplingPaymentAddress> addrs;
@@ -135,42 +136,45 @@ BOOST_AUTO_TEST_CASE(StoreAndLoadSaplingZkeys) {
 BOOST_AUTO_TEST_CASE(WriteCryptedSaplingZkeyDirectToDb) {
     SelectParams(CBaseChainParams::TESTNET);
 
-    BOOST_CHECK(!pwalletMain->HasSaplingSPKM());
-    assert(pwalletMain->SetupSPKM(true));
+    fs::path path = fs::absolute("testWallet1", GetWalletDir());
+    CWallet testWallet("testWallet1", CWalletDBWrapper::Create(path));
+    bool fFirstRun;
+    BOOST_CHECK_EQUAL(testWallet.LoadWallet(fFirstRun), DB_LOAD_OK);
+    BOOST_CHECK(!testWallet.HasSaplingSPKM());
+    assert(testWallet.SetupSPKM(true));
 
     // wallet should be empty
     std::set<libzcash::SaplingPaymentAddress> addrs;
-    pwalletMain->GetSaplingPaymentAddresses(addrs);
+    testWallet.GetSaplingPaymentAddresses(addrs);
     BOOST_CHECK_EQUAL(0, addrs.size());
 
     // Add random key to the wallet
-    auto address = pwalletMain->GenerateNewSaplingZKey();
+    auto address = testWallet.GenerateNewSaplingZKey();
 
     // wallet should have one key
-    pwalletMain->GetSaplingPaymentAddresses(addrs);
+    testWallet.GetSaplingPaymentAddresses(addrs);
     BOOST_CHECK_EQUAL(1, addrs.size());
 
     // encrypt wallet
     SecureString strWalletPass;
     strWalletPass.reserve(100);
     strWalletPass = "hello";
-    BOOST_CHECK(pwalletMain->EncryptWallet(strWalletPass));
+    BOOST_CHECK(testWallet.EncryptWallet(strWalletPass));
 
     // adding a new key will fail as the wallet is locked
-    BOOST_CHECK_THROW(pwalletMain->GenerateNewSaplingZKey(), std::runtime_error);
+    BOOST_CHECK_THROW(testWallet.GenerateNewSaplingZKey(), std::runtime_error);
 
     // unlock wallet and then add
-    pwalletMain->Unlock(strWalletPass);
-    libzcash::SaplingPaymentAddress address2 = pwalletMain->GenerateNewSaplingZKey();
+    testWallet.Unlock(strWalletPass);
+    libzcash::SaplingPaymentAddress address2 = testWallet.GenerateNewSaplingZKey();
 
     // Create a new wallet from the existing wallet path
-    bool fFirstRun;
-    std::unique_ptr<CWalletDBWrapper> dbw(new CWalletDBWrapper(&bitdb, pwalletMain->GetDBHandle().GetName()));
-    CWallet wallet2(std::move(dbw));
+    fFirstRun = false;
+    CWallet wallet2("testWallet1", CWalletDBWrapper::Create(path));
     BOOST_CHECK_EQUAL(DB_LOAD_OK, wallet2.LoadWallet(fFirstRun));
 
     // Confirm it's not the same as the other wallet
-    BOOST_CHECK(pwalletMain.get() != &wallet2);
+    BOOST_CHECK(&testWallet != &wallet2);
     BOOST_CHECK(wallet2.HasSaplingSPKM());
 
     // wallet should have two keys
