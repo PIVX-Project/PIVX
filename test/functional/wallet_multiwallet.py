@@ -71,7 +71,7 @@ class MultiWalletTest(PivxTestFramework):
         self.assert_start_raises_init_error(0, ['-upgradewallet=1', '-wallet=w1', '-wallet=w2'], "Error: -upgradewallet is only allowed with a single wallet file")
 
         # !TODO: backport bitcoin#12220
-        '''
+
         # if wallets/ doesn't exist, datadir should be the default wallet dir
         wallet_dir2 = data_dir('walletdir')
         os.rename(wallet_dir(), wallet_dir2)
@@ -92,7 +92,7 @@ class MultiWalletTest(PivxTestFramework):
         os.mkdir(competing_wallet_dir)
         self.restart_node(0, ['-walletdir='+competing_wallet_dir])
         self.assert_start_raises_init_error(1, ['-walletdir='+competing_wallet_dir], 'Error initializing wallet database environment')
-        '''
+
         self.restart_node(0, self.extra_args[0])
 
         w1 = wallet("w1")
