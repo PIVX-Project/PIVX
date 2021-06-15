@@ -77,6 +77,8 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
+#include <boost/interprocess/sync/file_lock.hpp>
+
 const char * const PIVX_CONF_FILENAME = "pivx.conf";
 const char * const PIVX_PID_FILENAME = "pivx.pid";
 const char * const PIVX_MASTERNODE_CONF_FILENAME = "masternode.conf";
@@ -101,6 +103,27 @@ bool CheckDiskSpace(const fs::path& dir, uint64_t additional_bytes)
 
     uint64_t free_bytes_available = fs::space(dir).available;
     return free_bytes_available >= min_disk_space + additional_bytes;
+}
+
+bool LockDirectory(const fs::path& directory, const std::string& lockfile_name, bool probe_only)
+{
+    fs::path pathLockFile = directory / lockfile_name;
+    FILE* file = fsbridge::fopen(pathLockFile, "a"); // empty lock file; created if it doesn't exist.
+    if (file) fclose(file);
+
+    try {
+        static std::map<std::string, boost::interprocess::file_lock> locks;
+        boost::interprocess::file_lock& lock = locks.emplace(pathLockFile.string(), pathLockFile.string().c_str()).first->second;
+        if (!lock.try_lock()) {
+            return false;
+        }
+        if (probe_only) {
+            lock.unlock();
+        }
+    } catch (const boost::interprocess::interprocess_exception& e) {
+        return error("Error while attempting to lock directory %s: %s", directory.string(), e.what());
+    }
+    return true;
 }
 
 /**
