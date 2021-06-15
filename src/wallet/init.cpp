@@ -166,24 +166,10 @@ bool WalletVerify()
     std::set<fs::path> wallet_paths;
 
     for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
-        // Do some checking on wallet path. It should be either a:
-        //
-        // 1. Path where a directory can be created.
-        // 2. Path to an existing directory.
-        // 3. Path to a symlink to a directory.
-        // 4. For backwards compatibility, the name of a data file in -walletdir.
-        fs::path wallet_path = fs::absolute(walletFile, GetWalletDir());
-        fs::file_type path_type = fs::symlink_status(wallet_path).type();
-        if (!(path_type == fs::file_not_found || path_type == fs::directory_file ||
-              (path_type == fs::symlink_file && fs::is_directory(wallet_path)) ||
-              (path_type == fs::regular_file && fs::path(walletFile).filename() == walletFile))) {
-            return UIError(strprintf(
-                  _("Invalid -wallet path '%s'. -wallet path should point to a directory where wallet.dat and "
-                  "database/log.?????????? files can be stored, a location where such a directory could be created "
-                  "or (for backwards compatibility) the name of an existing data file in -walletdir (%s)"),
-                walletFile, GetWalletDir()));
-        }
+        auto opRes = VerifyWalletPath(walletFile);
+        if (!opRes) return UIError(opRes.getError());
 
+        fs::path wallet_path = fs::absolute(walletFile, GetWalletDir());
         if (!wallet_paths.insert(wallet_path).second) {
             return UIError(strprintf(_("Error loading wallet %s. Duplicate %s filename specified."), walletFile, "-wallet"));
         }

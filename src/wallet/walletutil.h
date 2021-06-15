@@ -6,8 +6,11 @@
 #define BITCOIN_WALLET_UTIL_H
 
 #include "fs.h"
+#include "operationresult.h"
 
 //! Get the path of the wallet directory.
 fs::path GetWalletDir();
+//! Verify the wallet db's path
+OperationResult VerifyWalletPath(const std::string& walletFile);
 
 #endif // BITCOIN_WALLET_UTIL_H
