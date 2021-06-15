@@ -65,8 +65,6 @@ static const CAmount nHighTransactionFeeWarning = 0.1 * COIN;
 static const CAmount DEFAULT_TRANSACTION_MAXFEE = 1 * COIN;
 //! -maxtxfee will warn if called with a higher fee than this amount (in satoshis)
 static const CAmount nHighTransactionMaxFeeWarning = 100 * nHighTransactionFeeWarning;
-//! -custombackupthreshold default
-static const int DEFAULT_CUSTOMBACKUPTHRESHOLD = 1;
 //! -minstakesplit default
 static const CAmount DEFAULT_MIN_STAKE_SPLIT_THRESHOLD = 100 * COIN;
 //! Default for -spendzeroconfchange
@@ -1177,6 +1175,11 @@ public:
      * Gives the wallet a chance to register repetitive tasks and complete post-init tasks
      */
     void postInitProcess(CScheduler& scheduler);
+
+    /**
+     * Creates a wallet backup in strDest path
+     */
+    bool BackupWallet(const std::string& strDest);
 
     /**
      * Blocks until the wallet state is up-to-date to /at least/ the current

@@ -232,7 +232,6 @@ private:
 };
 
 void NotifyBacked(const CWallet& wallet, bool fSuccess, std::string strMessage);
-bool BackupWallet(const CWallet& wallet, const fs::path& strDest);
 // If wallet is null, the NotifyBacked signal will not be broadcasted.
 // todo: move NotifyBacked() signal to the caller side and/or decouple it from here in another function
 bool AttemptBackupWallet(const CWallet* wallet, const fs::path& pathSrc, const fs::path& pathDest);

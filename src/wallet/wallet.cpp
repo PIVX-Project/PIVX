@@ -4307,6 +4307,11 @@ void CWallet::postInitProcess(CScheduler& scheduler)
     }
 }
 
+bool CWallet::BackupWallet(const std::string& strDest)
+{
+    return dbw->Backup(strDest);
+}
+
 CKeyPool::CKeyPool()
 {
     nTime = GetTime();

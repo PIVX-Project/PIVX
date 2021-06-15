@@ -730,8 +730,8 @@ bool WalletModel::changePassphrase(const SecureString& oldPass, const SecureStri
 
 bool WalletModel::backupWallet(const QString& filename)
 {
-    //attempt regular backup
-    if (!BackupWallet(*wallet, filename.toLocal8Bit().data())) {
+    // Attempt regular backup
+    if (!wallet->BackupWallet(filename.toLocal8Bit().data())) {
         return error("ERROR: Failed to backup wallet!");
     }
 

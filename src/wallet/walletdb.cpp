@@ -936,64 +936,6 @@ bool AutoBackupWallet(const CWallet& wallet, std::string& strBackupWarning, std:
     return cleanWalletBackups(folder_set, nWalletBackups, strBackupWarning);
 }
 
-void MultiBackup(const CWallet& wallet, fs::path pathCustom, fs::path pathWithFile, const fs::path& pathSrc)
-{
-    int nThreshold = gArgs.GetArg("-custombackupthreshold", DEFAULT_CUSTOMBACKUPTHRESHOLD);
-    if (nThreshold > 0) {
-        std::string strBackupWarning;
-        pathCustom.make_preferred();
-        folder_set_t folderSet = buildBackupsMapSortedByLastWrite(wallet.GetDBHandle().GetName(), pathCustom);
-        if (!cleanWalletBackups(folderSet, nThreshold, strBackupWarning)) {
-            NotifyBacked(wallet, false, strBackupWarning);
-        }
-
-        // TODO: add seconds to avoid naming conflicts
-        for (const auto& entry : folderSet) {
-            if(entry.second == pathWithFile) {
-                pathWithFile += "(1)";
-            }
-        }
-    }
-    AttemptBackupWallet(&wallet, pathSrc.string(), pathWithFile.string());
-}
-
-bool BackupWallet(const CWallet& wallet, const fs::path& strDest)
-{
-    const auto& pathsPair = GetBackupPath(wallet);
-    fs::path pathCustom = pathsPair.first;
-    fs::path pathWithFile = pathsPair.second;
-
-    std::string strFile = wallet.GetDBHandle().GetName();
-    while (true) {
-        {
-            LOCK(bitdb.cs_db);
-            if (!bitdb.mapFileUseCount.count(strFile) || bitdb.mapFileUseCount[strFile] == 0) {
-                // Flush log data to the dat file
-                bitdb.CloseDb(strFile);
-                bitdb.CheckpointLSN(strFile);
-                bitdb.mapFileUseCount.erase(strFile);
-
-                // Copy wallet file
-                fs::path pathDest(strDest);
-                fs::path pathSrc = GetWalletDir() / strFile;
-                if (is_directory(pathDest)) {
-                    if(!exists(pathDest)) create_directory(pathDest);
-                    pathDest /= strFile;
-                }
-                bool defaultPath = AttemptBackupWallet(&wallet, pathSrc.string(), pathDest.string());
-
-                if(defaultPath && !pathCustom.empty()) {
-                    MultiBackup(wallet, pathCustom, pathWithFile, pathSrc);
-                }
-
-                return defaultPath;
-            }
-        }
-        MilliSleep(100);
-    }
-    return false;
-}
-
 bool AttemptBackupWallet(const CWallet* wallet, const fs::path& pathSrc, const fs::path& pathDest)
 {
     bool retStatus;
