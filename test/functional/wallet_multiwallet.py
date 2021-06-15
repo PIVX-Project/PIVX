@@ -32,7 +32,7 @@ class MultiWalletTest(PivxTestFramework):
         self.stop_nodes()
 
         # !TODO: backport bitcoin#12220
-        #self.assert_start_raises_init_error(0, ['-walletdir=wallets'], 'Error: Specified -walletdir "wallets" does not exist')
+        self.assert_start_raises_init_error(0, ['-walletdir=wallets'], 'Error: Specified -walletdir "wallets" does not exist')
         #self.assert_start_raises_init_error(0, ['-walletdir=wallets'], 'Error: Specified -walletdir "wallets" is a relative path', cwd=data_dir())
         #self.assert_start_raises_init_error(0, ['-walletdir=debug.log'], 'Error: Specified -walletdir "debug.log" is not a directory', cwd=data_dir())
 
@@ -40,21 +40,23 @@ class MultiWalletTest(PivxTestFramework):
         self.assert_start_raises_init_error(0, ['-wallet=w1', '-wallet=w1'], 'Error loading wallet w1. Duplicate -wallet filename specified.')
 
         # should not initialize if wallet file is a directory
-        os.mkdir(os.path.join(self.options.tmpdir, 'node0', 'regtest', 'w11'))
-        #os.mkdir(wallet_dir('w11'))
+        os.mkdir(wallet_dir('w11'))
         self.assert_start_raises_init_error(0, ['-wallet=w11'], 'Error loading wallet w11. -wallet filename must be a regular file.')
 
         #should not initialize if one wallet is a copy of another
-        #shutil.copyfile(wallet_dir('w2'), wallet_dir('w22')) # !TODO: backport bitcoin#11970
-        shutil.copyfile(os.path.join(self.options.tmpdir, 'node0', 'regtest', 'w2'),
-                        os.path.join(self.options.tmpdir, 'node0', 'regtest', 'w22'))
+        shutil.copyfile(wallet_dir('w2'), wallet_dir('w22')) # !TODO: backport bitcoin#11970
         self.assert_start_raises_init_error(0, ['-wallet=w2', '-wallet=w22'], 'duplicates fileid')
 
         # should not initialize if wallet file is a symlink
-        os.symlink(os.path.join(self.options.tmpdir, 'node0', 'regtest', 'w1'),
-                   os.path.join(self.options.tmpdir, 'node0', 'regtest', 'w12'))
-        # os.symlink(wallet_dir('w1'), wallet_dir('w12')) # !TODO: backport bitcoin#11970
+        os.symlink(wallet_dir('w1'), wallet_dir('w12')) # !TODO: backport bitcoin#11970
         self.assert_start_raises_init_error(0, ['-wallet=w12'], 'Error loading wallet w12. -wallet filename must be a regular file.')
+
+        # should not initialize if the specified walletdir does not exist
+        self.assert_start_raises_init_error(0, ['-walletdir=bad'], 'Error: Specified -walletdir "bad" does not exist')
+        # should not initialize if the specified walletdir is not a directory
+        not_a_dir = wallet_dir('notadir')
+        open(not_a_dir, 'a', encoding="utf8").close()
+        self.assert_start_raises_init_error(0, ['-walletdir='+not_a_dir], 'Error: Specified -walletdir "' + not_a_dir + '" is not a directory')
 
         self.log.info("Do not allow -zapwallettxes with multiwallet")
         self.assert_start_raises_init_error(0, ['-zapwallettxes', '-wallet=w1', '-wallet=w2'], "Error: -zapwallettxes is only allowed with a single wallet file")

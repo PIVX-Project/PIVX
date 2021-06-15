@@ -148,6 +148,15 @@ bool WalletVerify()
         return true;
     }
 
+    if (gArgs.IsArgSet("-walletdir") && !fs::is_directory(GetWalletDir())) {
+        if (fs::exists(fs::system_complete(gArgs.GetArg("-walletdir", "")))) {
+            return UIError(strprintf(_("Specified -walletdir \"%s\" is not a directory"), gArgs.GetArg("-walletdir", "").c_str()));
+        }
+        return UIError(strprintf(_("Specified -walletdir \"%s\" does not exist"), gArgs.GetArg("-walletdir", "").c_str()));
+    }
+
+    LogPrintf("Using wallet directory %s\n", GetWalletDir().string());
+
     uiInterface.InitMessage(_("Verifying wallet(s)..."));
 
     // Keep track of each wallet absolute path to detect duplicates.

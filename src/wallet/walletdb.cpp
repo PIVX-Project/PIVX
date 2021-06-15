@@ -18,6 +18,7 @@
 #include "util/system.h"
 #include "utiltime.h"
 #include "wallet/wallet.h"
+#include "wallet/walletutil.h"
 
 #include <atomic>
 #include <string>
@@ -974,7 +975,7 @@ bool BackupWallet(const CWallet& wallet, const fs::path& strDest)
 
                 // Copy wallet file
                 fs::path pathDest(strDest);
-                fs::path pathSrc = GetDataDir() / strFile;
+                fs::path pathSrc = GetWalletDir() / strFile;
                 if (is_directory(pathDest)) {
                     if(!exists(pathDest)) create_directory(pathDest);
                     pathDest /= strFile;
