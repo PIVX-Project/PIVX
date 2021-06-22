@@ -737,10 +737,8 @@ public:
     /** Get database handle used by this wallet. Ideally this function would
      * not be necessary.
      */
-    CWalletDBWrapper& GetDBHandle() const
-    {
-        return *dbw;
-    }
+    CWalletDBWrapper* GetDBHandlePtr() const { return dbw.get(); }
+    CWalletDBWrapper& GetDBHandle() const { return *dbw; }
 
     /** Get a name for this wallet for logging/debugging purposes.
      */

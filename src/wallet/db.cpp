@@ -796,3 +796,9 @@ void CWalletDBWrapper::Flush(bool shutdown)
         env->Flush(shutdown);
     }
 }
+
+void CWalletDBWrapper::CloseAndReset()
+{
+    env->Close();
+    env->Reset();
+}
