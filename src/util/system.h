@@ -89,6 +89,12 @@ void AllocateFileRange(FILE* file, unsigned int offset, unsigned int length);
 bool CheckDiskSpace(const fs::path& dir, uint64_t additional_bytes = 0);
 bool RenameOver(fs::path src, fs::path dest);
 bool LockDirectory(const fs::path& directory, const std::string& lockfile_name, bool probe_only=false);
+
+/** Release all directory locks. This is used for unit testing only, at runtime
+ * the global destructor will take care of the locks.
+ */
+void ReleaseDirectoryLocks();
+
 bool TryCreateDirectories(const fs::path& p);
 fs::path GetDefaultDataDir();
 // The blocks directory is always net specific.
