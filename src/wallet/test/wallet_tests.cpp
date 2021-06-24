@@ -568,7 +568,7 @@ BOOST_AUTO_TEST_CASE(cached_balances_tests)
     CAmount nCredit = 20 * COIN;
 
     // Setup wallet
-    CWallet wallet("testWallet1", CWalletDBWrapper::Create(fs::absolute("testWallet1", GetWalletDir())));
+    CWallet wallet("testWallet1", CWalletDBWrapper::CreateMock());
     bool fFirstRun;
     BOOST_CHECK_EQUAL(wallet.LoadWallet(fFirstRun), DB_LOAD_OK);
     LOCK2(cs_main, wallet.cs_wallet);
