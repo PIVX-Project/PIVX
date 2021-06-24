@@ -692,8 +692,10 @@ void CDBEnv::Flush(bool fShutdown)
             if (mapFileUseCount.empty()) {
                 dbenv->log_archive(&listp, DB_ARCH_REMOVE);
                 Close();
-                if (!fMockDb)
+                if (!fMockDb) {
                     fs::remove_all(fs::path(strPath) / "database");
+                }
+                g_dbenvs.erase(strPath);
             }
         }
     }
