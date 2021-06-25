@@ -4,10 +4,10 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test various command line arguments and configuration file parameters."""
 
-import os
-
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import get_datadir_path
+
+import os
 
 class ConfArgsTest(PivxTestFramework):
     def set_test_params(self):

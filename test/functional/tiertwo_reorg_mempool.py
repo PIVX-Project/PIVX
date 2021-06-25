@@ -2,7 +2,6 @@
 # Copyright (c) 2021 The PIVX Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
 """
 Test deterministic masternodes conflicts and reorgs.
 - Check that in-mempool reuse of mn unique-properties is invalid
@@ -10,11 +9,10 @@ Test deterministic masternodes conflicts and reorgs.
 - Check deterministic list consensus after reorg
 """
 
-import random
-
-from test_framework.test_framework import PivxTestFramework
+from decimal import Decimal
 
 from test_framework.messages import COutPoint
+from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than,
@@ -25,7 +23,7 @@ from test_framework.util import (
     get_collateral_vout,
 )
 
-from decimal import Decimal
+import random
 import time
 
 class TiertwoReorgMempoolTest(PivxTestFramework):

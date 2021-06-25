@@ -14,6 +14,7 @@
   transactions are still available, but that the unconfirmed transaction has
   been zapped.
 """
+
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,

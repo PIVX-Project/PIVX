@@ -5,7 +5,7 @@
 """Test the invalidateblock RPC."""
 
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
+from test_framework.util import assert_equal, connect_nodes, wait_until
 
 class InvalidateTest(PivxTestFramework):
     def set_test_params(self):

@@ -4,10 +4,14 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test fee estimation code."""
 
-from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
+from decimal import Decimal
+
+from test_framework.messages import CTransaction, CTxIn, CTxOut, COutPoint, ToHex, COIN
 from test_framework.script import CScript, OP_1, OP_DROP, OP_2, OP_HASH160, OP_EQUAL, hash160, OP_TRUE
-from test_framework.mininode import CTransaction, CTxIn, CTxOut, COutPoint, ToHex, COIN
+from test_framework.test_framework import PivxTestFramework
+from test_framework.util import connect_nodes, satoshi_round
+
+import random
 
 # Use as minTxFee
 MIN_FEE = Decimal("0.00001")

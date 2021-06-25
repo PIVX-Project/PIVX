@@ -2,14 +2,11 @@
 # Copyright (c) 2020 The PIVX developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
-'''
+"""
 Tests importprivkey and importaddress with staking keys/addresses.
 Node0 generates staking addresses and sends delegations to them.
 Node1 imports and rescans. The test checks that cold utxos and staking balance is updated.
-'''
-
-from time import sleep
+"""
 
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (

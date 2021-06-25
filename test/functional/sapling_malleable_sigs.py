@@ -4,11 +4,11 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php .
 
-from test_framework.test_framework import PivxTestFramework
+from decimal import Decimal
+from io import BytesIO
 
-from test_framework.messages import (
-    CTransaction,
-)
+from test_framework.messages import CTransaction
+from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
@@ -16,8 +16,6 @@ from test_framework.util import (
     hex_str_to_bytes,
 )
 
-from decimal import Decimal
-from io import BytesIO
 
 class MalleableSigsTest(PivxTestFramework):
 

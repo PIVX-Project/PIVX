@@ -4,8 +4,10 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Dummy Socks5 server for testing."""
 
-import socket, threading, queue
 import logging
+import queue
+import socket
+import threading
 
 logger = logging.getLogger("TestFramework.socks5")
 

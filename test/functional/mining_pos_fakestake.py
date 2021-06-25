@@ -2,7 +2,6 @@
 # Copyright (c) 2019-2020 The PIVX developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
 """
 Covers various scenarios of PoS blocks where the coinstake input is already spent
 (either in a previous block, in a "future" block, or in the same block being staked).

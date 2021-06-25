@@ -4,7 +4,6 @@
 # file COPYING or https://www.opensource.org/licenses/mit-license.php .
 
 from test_framework.test_framework import PivxTestFramework
-
 from test_framework.util import (
     assert_greater_than,
     assert_greater_than_or_equal,

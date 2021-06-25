@@ -5,7 +5,7 @@
 """Test RPC commands for signing and verifying messages."""
 
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import assert_equal
+# from test_framework.util import assert_equal
 
 class SignMessagesTest(PivxTestFramework):
     def set_test_params(self):

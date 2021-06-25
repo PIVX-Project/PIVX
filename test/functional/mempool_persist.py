@@ -28,16 +28,13 @@ Test is as follows:
   - Restart node0 with -persistmempool=true. Verify that it has 5
     transactions in its mempool. This tests that -persistmempool=false
     does not overwrite a previously valid mempool stored on disk.
-
 """
 
 from decimal import Decimal
-import os
 
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
-    assert_equal,
-    wait_until,
+    assert_equal
 )
 
 class MempoolPersistTest(PivxTestFramework):

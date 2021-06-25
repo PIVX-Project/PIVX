@@ -2,17 +2,6 @@
 # Copyright (c) 2020 The PIVX developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php.
-
-from test_framework.test_framework import PivxTier2TestFramework
-from test_framework.messages import COutPoint
-from test_framework.util import (
-    assert_equal,
-    assert_true,
-    satoshi_round,
-)
-
-import time
-
 """
 Test checking:
  1) Masternodes setup/creation.
@@ -21,6 +10,16 @@ Test checking:
  4) Proposal and vote broadcast.
  5) Proposal and vote sync.
 """
+
+from test_framework.messages import COutPoint
+from test_framework.test_framework import PivxTier2TestFramework
+from test_framework.util import (
+    assert_equal,
+    assert_true,
+    satoshi_round,
+)
+
+import time
 
 class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
 

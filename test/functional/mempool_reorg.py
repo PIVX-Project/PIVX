@@ -9,8 +9,11 @@ that spend (directly or indirectly) coinbase transactions.
 """
 
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
-import time
+from test_framework.util import (
+    assert_equal,
+    assert_raises_rpc_error,
+    create_tx
+)
 
 # Create one-input, one-output, no-fee transaction:
 class MempoolCoinbaseTest(PivxTestFramework):

@@ -23,18 +23,18 @@
        * submit block to node
        * if node crashed on/after submitting:
          - restart until recovery succeeds
-         - check that utxo matches node3 using gettxoutsetinfo"""
+         - check that utxo matches node3 using gettxoutsetinfo
+"""
+
+from test_framework.messages import COIN, COutPoint, CTransaction, CTxIn, CTxOut, ToHex
+from test_framework.test_framework import PivxTestFramework
+from test_framework.util import assert_equal, create_confirmed_utxos, hex_str_to_bytes
 
 import errno
 import http.client
 import random
 import sys
 import time
-
-from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
-from test_framework.script import *
-from test_framework.mininode import *
 
 HTTP_DISCONNECT_ERRORS = [http.client.CannotSendRequest]
 try:

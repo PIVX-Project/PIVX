@@ -4,11 +4,10 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the dumpwallet RPC."""
 
-import os
-
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (assert_equal, assert_raises_rpc_error)
 
+import os
 
 def read_dump(file_name, addrs, hd_master_addr_old):
     """

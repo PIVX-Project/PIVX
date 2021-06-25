@@ -4,8 +4,16 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Utilities for manipulating blocks and transactions."""
 
-from test_framework.mininode import *
-from test_framework.script import CScript, CScriptNum, CScriptOp, OP_TRUE, OP_CHECKSIG, OP_1
+from .messages import (
+    CBlock,
+    COIN,
+    COutPoint,
+    CTransaction,
+    CTxIn,
+    CTxOut,
+    NullOutPoint
+)
+from .script import CScript, CScriptNum, CScriptOp, OP_TRUE, OP_CHECKSIG, OP_1
 
 
 # Create a block (with regtest difficulty)

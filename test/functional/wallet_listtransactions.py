@@ -3,10 +3,11 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the listtransactions API."""
+
 from decimal import Decimal
 from io import BytesIO
 
-from test_framework.mininode import CTransaction
+from test_framework.messages import CTransaction
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_array_result,

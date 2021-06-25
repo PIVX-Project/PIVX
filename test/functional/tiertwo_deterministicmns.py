@@ -2,21 +2,14 @@
 # Copyright (c) 2021 The PIVX Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
-#
-# Test deterministic masternodes
-#
+"""Test deterministic masternodes"""
 
 from decimal import Decimal
 from random import randrange, getrandbits
-import time
 
-from test_framework.test_framework import PivxTestFramework
-from test_framework.blocktools import (
-    create_block,
-    create_coinbase,
-)
+from test_framework.blocktools import create_block, create_coinbase
 from test_framework.messages import CTxOut, COIN
+from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_greater_than,
     assert_equal,
@@ -29,6 +22,7 @@ from test_framework.util import (
     spend_mn_collateral,
 )
 
+import time
 
 class DIP3Test(PivxTestFramework):
 

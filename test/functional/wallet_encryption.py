@@ -4,8 +4,6 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test Wallet encryption"""
 
-import time
-
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,
@@ -13,6 +11,8 @@ from test_framework.util import (
     assert_greater_than,
     assert_greater_than_or_equal,
 )
+
+import time
 
 class WalletEncryptionTest(PivxTestFramework):
     def set_test_params(self):

@@ -4,9 +4,10 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the wallet accounts properly when there is a double-spend conflict."""
 
+from decimal import Decimal
+
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
-import time
+from test_framework.util import assert_equal, connect_nodes, disconnect_nodes, find_output
 
 class TxnMallTest(PivxTestFramework):
     def set_test_params(self):

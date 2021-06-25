@@ -11,7 +11,6 @@
 
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import assert_equal
-import time
 
 class ReindexTest(PivxTestFramework):
 
@@ -36,6 +35,7 @@ class ReindexTest(PivxTestFramework):
         self.reindex(True)
         self.reindex(False)
         self.reindex(True)
+
 
 if __name__ == '__main__':
     ReindexTest().main()

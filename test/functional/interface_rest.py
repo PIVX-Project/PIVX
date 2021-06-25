@@ -4,13 +4,16 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the REST API."""
 
-from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
-from struct import *
-from io import BytesIO
 from codecs import encode
+from decimal import Decimal
+from io import BytesIO
+from struct import unpack, pack
+
+from test_framework.test_framework import PivxTestFramework
+from test_framework.util import assert_equal, assert_greater_than, connect_nodes, hex_str_to_bytes
 
 import http.client
+import json
 import urllib.parse
 
 def deser_uint256(f):

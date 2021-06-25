@@ -3,18 +3,22 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the ZMQ notification interface."""
+
+from io import BytesIO
+
+from test_framework.messages import CTransaction
+from test_framework.test_framework import PivxTestFramework, SkipTest
+from test_framework.util import (
+    assert_equal,
+    bytes_to_hex_str,
+    hash256
+)
+
 import configparser
 import os
 import struct
 import time
 
-from test_framework.test_framework import PivxTestFramework, SkipTest
-from test_framework.mininode import CTransaction
-from test_framework.util import (assert_equal,
-                                 bytes_to_hex_str,
-                                 hash256,
-                                )
-from io import BytesIO
 
 class ZMQSubscriber:
     def __init__(self, socket, topic):

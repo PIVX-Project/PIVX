@@ -12,11 +12,15 @@ into sending us something it shouldn't.
 
 Also test that nodes that send unsupported service bits to bitcoind are disconnected
 and don't receive a VERACK. Unsupported service bits are currently 1 << 5 and
-1 << 7 (until August 1st 2018)."""
+1 << 7 (until August 1st 2018).
+"""
 
-from test_framework.mininode import *
+from test_framework.messages import NODE_NETWORK, msg_getaddr, msg_ping, msg_verack
+from test_framework.mininode import mininode_lock, P2PInterface
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
+from test_framework.util import wait_until
+
+import time
 
 banscore = 10
 

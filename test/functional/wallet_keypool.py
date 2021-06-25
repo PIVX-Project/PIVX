@@ -5,7 +5,9 @@
 """Test the wallet keypool and interaction with wallet encryption/locking."""
 
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
+from test_framework.util import assert_equal, assert_raises_rpc_error
+
+import time
 
 class KeyPoolTest(PivxTestFramework):
     def set_test_params(self):

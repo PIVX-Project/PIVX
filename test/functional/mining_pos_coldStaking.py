@@ -2,8 +2,8 @@
 # Copyright (c) 2019-2020 The PIVX developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-# -*- coding: utf-8 -*-
 
+from decimal import Decimal
 from io import BytesIO
 from time import sleep
 
@@ -17,8 +17,6 @@ from test_framework.util import (
     bytes_to_hex_str,
     set_node_times,
 )
-
-from decimal import Decimal
 
 # filter utxos based on first 5 bytes of scriptPubKey
 def getDelegatedUtxos(utxos):

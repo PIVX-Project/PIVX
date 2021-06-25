@@ -8,12 +8,14 @@ Test that the CHECKLOCKTIMEVERIFY soft-fork activates at (regtest) block height
 1351.
 """
 
-from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
-from test_framework.mininode import *
-from test_framework.blocktools import create_coinbase, create_block
-from test_framework.script import CScript, OP_1NEGATE, OP_CHECKLOCKTIMEVERIFY, OP_DROP, CScriptNum
 from io import BytesIO
+
+from test_framework.blocktools import create_coinbase, create_block
+from test_framework.messages import CTransaction, msg_block, ToHex
+from test_framework.mininode import mininode_lock, P2PInterface
+from test_framework.script import CScript, OP_1NEGATE, OP_CHECKLOCKTIMEVERIFY, OP_DROP, CScriptNum
+from test_framework.test_framework import PivxTestFramework
+from test_framework.util import assert_equal, hex_str_to_bytes, wait_until
 
 CLTV_HEIGHT = 750
 

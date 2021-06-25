@@ -2,13 +2,7 @@
 # Copyright (c) 2014-2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
-from test_framework.mininode import *
-from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
-from test_framework.blocktools import create_block, create_coinbase
-
-'''
+"""
 SendHeadersTest -- test behavior of headers messages to announce blocks.
 
 Setup:
@@ -78,7 +72,24 @@ d. Announce 49 headers that don't connect.
    Expect: getheaders message each time.
 e. Announce one more that doesn't connect.
    Expect: disconnect.
-'''
+"""
+
+from test_framework.blocktools import create_block, create_coinbase
+from test_framework.messages import (
+    CBlockHeader,
+    CInv,
+    msg_block,
+    msg_getblocks,
+    msg_getheaders,
+    msg_getdata,
+    msg_headers,
+    msg_inv,
+    msg_sendheaders
+)
+from test_framework.mininode import mininode_lock, NetworkThread, P2PInterface
+from test_framework.test_framework import PivxTestFramework
+from test_framework.util import assert_equal, wait_until, connect_nodes, p2p_port
+
 
 direct_fetch_response_time = 0.05
 

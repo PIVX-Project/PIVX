@@ -13,7 +13,9 @@ CBlock, CTransaction, CBlockHeader, CTxIn, CTxOut, etc....:
 msg_block, msg_tx, msg_headers, etc.:
     data structures that represent network messages
 
-ser_*, deser_*: functions that handle serialization/deserialization."""
+ser_*, deser_*: functions that handle serialization/deserialization.
+"""
+
 from codecs import encode
 import copy
 import hashlib
@@ -23,8 +25,8 @@ import socket
 import struct
 import time
 
-from test_framework.siphash import siphash256
-from test_framework.util import hex_str_to_bytes, bytes_to_hex_str
+from .siphash import siphash256
+from .util import hex_str_to_bytes, bytes_to_hex_str
 
 MIN_VERSION_SUPPORTED = 60001
 MY_VERSION = 70922

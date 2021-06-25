@@ -14,11 +14,20 @@ added in the future, they should try to follow the same convention and not
 make assumptions about execution order.
 """
 
-from test_framework.blocktools import send_to_witness
-from test_framework.test_framework import PivxTestFramework
+from decimal import Decimal
+
 from test_framework import blocktools
-from test_framework.mininode import CTransaction
-from test_framework.util import *
+from test_framework.blocktools import send_to_witness
+from test_framework.messages import CTransaction
+from test_framework.test_framework import PivxTestFramework
+from test_framework.util import (
+    assert_equal,
+    assert_greater_than,
+    assert_raises_rpc_error,
+    bytes_to_hex_str,
+    connect_nodes,
+    hex_str_to_bytes
+)
 
 import io
 
