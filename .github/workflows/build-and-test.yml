@@ -40,17 +40,17 @@ jobs:
         run: |
           git checkout -qf -B master refs/remotes/origin/master
           git checkout -qf $GITHUB_SHA
-          contrib/devtools/git-subtree-check.sh src/secp256k1
-          contrib/devtools/git-subtree-check.sh src/univalue
-          contrib/devtools/git-subtree-check.sh src/leveldb
-          contrib/devtools/git-subtree-check.sh src/crc32c
-          contrib/devtools/check-doc.py
-          contrib/devtools/logprint-scanner.py
+          test/lint/git-subtree-check.sh src/secp256k1
+          test/lint/git-subtree-check.sh src/univalue
+          test/lint/git-subtree-check.sh src/leveldb
+          test/lint/git-subtree-check.sh src/crc32c
+          test/lint/check-doc.py
+          test/lint/logprint-scanner.py
 
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             COMMIT_RANGE="${{ github.base_ref }}..HEAD"
-            contrib/devtools/lint-whitespace.sh
-            contrib/devtools/commit-script-check.sh $COMMIT_RANGE
+            test/lint/lint-whitespace.sh
+            test/lint/commit-script-check.sh $COMMIT_RANGE
             test/lint/lint-qt.sh
           fi
 
