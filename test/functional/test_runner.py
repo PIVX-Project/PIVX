@@ -314,7 +314,7 @@ def main():
         if tests:
             # Individual tests have been specified. Run specified tests that exist
             # in the ALL_SCRIPTS list. Accept the name with or without .py extension.
-            tests = [re.sub("\.py$", "", t) + ".py" for t in tests]
+            tests = [re.sub(r"\.py$", "", t) + ".py" for t in tests]
             test_list = []
             for t in tests:
                 if t in ALL_SCRIPTS:
@@ -338,7 +338,7 @@ def main():
 
     # Remove the test cases that the user has explicitly asked to exclude.
     if args.exclude:
-        tests_excl = [re.sub("\.py$", "", t) + ".py" for t in args.exclude.split(',')]
+        tests_excl = [re.sub(r"\.py$", "", t) + ".py" for t in args.exclude.split(',')]
         for exclude_test in tests_excl:
             if exclude_test in test_list:
                 test_list.remove(exclude_test)
