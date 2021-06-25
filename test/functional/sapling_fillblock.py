@@ -87,7 +87,7 @@ class SaplingFillBlockTest(PivxTestFramework):
         self.sync_blocks()
         assert_equal(self.nodes[0].getblockchaininfo()['upgrades']['v5 shield']['status'], 'active')
 
-        ## -- First check that the miner never produces blocks with more than 750kB of shielded txes
+        # -- First check that the miner never produces blocks with more than 750kB of shielded txes
 
         # Split 10 utxos (of 250 PIV each) in 1000 new utxos of ~2.5 PIV each (to alice)
         UTXOS_TO_SPLIT = 10

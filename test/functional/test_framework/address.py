@@ -7,7 +7,7 @@
 from .script import hash256, hash160, sha256, CScript, OP_0
 from .util import hex_str_to_bytes
 
-## --- Base58Check encoding
+# --- Base58Check encoding
 __b58chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 __b58base = len(__b58chars)
 b58chars = __b58chars

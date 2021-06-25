@@ -575,7 +575,7 @@ class PivxTestFramework():
             clean_cache_subdir(ddir)
 
         def generate_pow_cache():
-            ### POW Cache ###
+            # POW Cache
             # Create a 200-block-long chain; each of the 4 first nodes
             # gets 25 mature blocks and 25 immature.
             # Note: To preserve compatibility with older versions of
@@ -636,9 +636,7 @@ class PivxTestFramework():
         for i in range(self.num_nodes):
             initialize_datadir(self.options.tmpdir, i)
 
-
-    ### PIVX Specific TestFramework ###
-    ###################################
+    # PIVX Specific TestFramework
     def init_dummy_key(self):
         self.DUMMY_KEY = CECKey()
         self.DUMMY_KEY.set_secretbytes(hash256(pack('<I', 0xffff)))
@@ -1181,11 +1179,7 @@ class PivxTestFramework():
         # return the collateral outpoint
         return COutPoint(collateralTxId, collateralTxId_n)
 
-
-### ----------------------
-### ----- DMN setup ------
-### ----------------------
-
+    # ----- DMN setup ------
     def connect_to_all(self, nodePos):
         for i in range(self.num_nodes):
             if i != nodePos and self.nodes[i] is not None:
@@ -1345,7 +1339,7 @@ class PivxTestFramework():
         assert_equal(pl["payoutAddress"], dmn.payee)
 
 
-### ------------------------------------------------------
+# ------------------------------------------------------
 
 class SkipTest(Exception):
     """This exception is raised to skip a test"""
