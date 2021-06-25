@@ -128,7 +128,7 @@ class ListReceivedTest (PivxTestFramework):
         assert_equal(r, r2)
 
         # Get the note nullifier
-        lsu = self.nodes[1].listshieldunspent();
+        lsu = self.nodes[1].listshieldunspent()
         assert_equal(len(lsu), 1)
         nullifier = lsu[0]["nullifier"]
 
