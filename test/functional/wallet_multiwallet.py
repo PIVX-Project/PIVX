@@ -25,8 +25,9 @@ class MultiWalletTest(PivxTestFramework):
     def run_test(self):
         node = self.nodes[0]
 
-        data_dir = lambda *p: os.path.join(node.datadir, 'regtest', *p)
-        wallet_dir = lambda *p: data_dir('wallets', *p)
+        # !TODO: backport bitcoin#12220
+        #data_dir = lambda *p: os.path.join(node.datadir, 'regtest', *p)
+        #wallet_dir = lambda *p: data_dir('wallets', *p)
         wallet = lambda name: node.get_wallet_rpc(name)
 
         assert_equal(set(node.listwallets()), {"w1", "w2", "w3", "w"})

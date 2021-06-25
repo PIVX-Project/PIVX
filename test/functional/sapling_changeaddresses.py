@@ -25,7 +25,7 @@ class WalletChangeAddressesTest(PivxTestFramework):
         # Obtain some transparent funds
         midAddr = self.nodes[0].getnewshieldaddress()
         # Shield almost all the balance
-        txid = self.nodes[0].shieldsendmany(get_coinstake_address(self.nodes[0]), [{"address": midAddr, "amount": Decimal(2400)}])
+        self.nodes[0].shieldsendmany(get_coinstake_address(self.nodes[0]), [{"address": midAddr, "amount": Decimal(2400)}])
 
         self.sync_all()
         self.nodes[1].generate(1)
@@ -33,7 +33,7 @@ class WalletChangeAddressesTest(PivxTestFramework):
         taddrSource = self.nodes[0].getnewaddress()
         for _ in range(6):
             recipients = [{"address": taddrSource, "amount": Decimal('3')}]
-            txid = self.nodes[0].shieldsendmany(midAddr, recipients, 1)
+            self.nodes[0].shieldsendmany(midAddr, recipients, 1)
             self.sync_all()
             self.nodes[1].generate(1)
             self.sync_all()

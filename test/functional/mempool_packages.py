@@ -85,7 +85,7 @@ class MempoolPackagesTest(PivxTestFramework):
         # Adding one more transaction on to the chain should fail.
         try:
             self.chain_transaction(self.nodes[0],txid, vout, value, fee, 1)
-        except JSONRPCException as e:
+        except JSONRPCException:
             self.log.info("too-long-ancestor-chain successfully rejected")
 
         # Check that prioritising a tx before it's added to the mempool works

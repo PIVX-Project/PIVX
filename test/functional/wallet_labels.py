@@ -44,13 +44,9 @@ class WalletlabelsTest(PivxTestFramework):
             linked_addresses.add(address_group[0][0])
 
         # send 50 from each address to a third address not in this wallet
-        # There's some fee that will come back to us when the miner reward
-        # matures.
         node.settxfee(0)
         common_address = "y9B3dwrBGGs3yVkyEHm68Yn36Wp2Rt7Vtd"
-        txid = node.sendmany("", {common_address: 100}, 1)
-        tx_details = node.gettransaction(txid)
-        fee = -tx_details['details'][0]['fee']
+        node.sendmany("", {common_address: 100}, 1)
         # there should be 1 address group, with the previously
         # unlinked addresses now linked (they both have 0 balance)
         #address_groups = node.listaddressgroupings()
