@@ -69,7 +69,7 @@ def create_coinbase(height, pubkey = None):
     coinbase.vin = [CTxIn(NullOutPoint, script_BIP34_coinbase_height(height), 0xffffffff)]
     coinbaseoutput = CTxOut()
     coinbaseoutput.nValue = cbase_value(height)
-    if (pubkey != None):
+    if (pubkey is not None):
         coinbaseoutput.scriptPubKey = CScript([pubkey, OP_CHECKSIG])
     else:
         coinbaseoutput.scriptPubKey = CScript([OP_TRUE])

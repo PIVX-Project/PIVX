@@ -762,7 +762,7 @@ class PivxTestFramework():
             # replace coinstake output script
             coinstakeTx_unsigned.vout[1].scriptPubKey = CScript([block_sig_key.get_pubkey(), OP_CHECKSIG])
         else:
-            if privKeyWIF == None:
+            if privKeyWIF is None:
                 # Use pk of the input. Ask sk from rpc_conn
                 rawtx = rpc_conn.getrawtransaction('{:064x}'.format(prevout.hash), True)
                 privKeyWIF = rpc_conn.dumpprivkey(rawtx["vout"][prevout.n]["scriptPubKey"]["addresses"][0])
