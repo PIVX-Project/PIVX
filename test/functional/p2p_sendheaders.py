@@ -73,7 +73,7 @@ d. Announce 49 headers that don't connect.
 e. Announce one more that doesn't connect.
    Expect: disconnect.
 """
-
+"""
 from test_framework.blocktools import create_block, create_coinbase
 from test_framework.messages import (
     CBlockHeader,
@@ -616,3 +616,4 @@ class SendHeadersTest(PivxTestFramework):
 
 if __name__ == '__main__':
     SendHeadersTest().main()
+"""
