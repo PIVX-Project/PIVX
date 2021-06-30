@@ -27,7 +27,7 @@ from test_framework.messages import msg_ping
 from test_framework.mininode import P2PInterface
 from test_framework.test_framework import PivxTestFramework
 
-class TestNode(P2PInterface):
+class TestP2PConn(P2PInterface):
     def on_version(self, message):
         # Don't send a verack in response
         pass
@@ -39,9 +39,9 @@ class TimeoutsTest(PivxTestFramework):
 
     def run_test(self):
         # Setup the p2p connections
-        no_verack_node = self.nodes[0].add_p2p_connection(TestNode())
-        no_version_node = self.nodes[0].add_p2p_connection(TestNode(), send_version=False)
-        no_send_node = self.nodes[0].add_p2p_connection(TestNode(), send_version=False)
+        no_verack_node = self.nodes[0].add_p2p_connection(TestP2PConn())
+        no_version_node = self.nodes[0].add_p2p_connection(TestP2PConn(), send_version=False)
+        no_send_node = self.nodes[0].add_p2p_connection(TestP2PConn(), send_version=False)
 
         sleep(1)
 
