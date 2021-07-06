@@ -62,8 +62,6 @@ class NetTest(PivxTestFramework):
         wait_until(lambda: (self.nodes[0].getnettotals()['totalbytessent'] >= net_totals_after['totalbytessent'] + 32 * 2), timeout=1)
         wait_until(lambda: (self.nodes[0].getnettotals()['totalbytesrecv'] >= net_totals_after['totalbytesrecv'] + 32 * 2), timeout=1)
 
-        peer_info_after_ping = self.nodes[0].getpeerinfo()
-
     def _test_getnetworkinginfo(self):
         assert_equal(self.nodes[0].getnetworkinfo()['connections'], 2)
 

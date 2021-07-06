@@ -5,7 +5,10 @@
 """Test resurrection of mined transactions when the blockchain is re-organized."""
 
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
+from test_framework.util import (
+    assert_equal,
+    create_tx
+)
 
 # Create one-input, one-output, no-fee transaction:
 class MempoolCoinbaseTest(PivxTestFramework):

@@ -3,8 +3,7 @@
 # Copyright (c) 2020 The PIVX developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
-# Test descendant package tracking code
+"""Test descendant package tracking code"""
 
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
@@ -86,7 +85,7 @@ class MempoolPackagesTest(PivxTestFramework):
         # Adding one more transaction on to the chain should fail.
         try:
             self.chain_transaction(self.nodes[0],txid, vout, value, fee, 1)
-        except JSONRPCException as e:
+        except JSONRPCException:
             self.log.info("too-long-ancestor-chain successfully rejected")
 
         # Check that prioritising a tx before it's added to the mempool works

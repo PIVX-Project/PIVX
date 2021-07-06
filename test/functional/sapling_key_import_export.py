@@ -5,9 +5,10 @@
 # file COPYING or https://www.opensource.org/licenses/mit-license.php .
 
 from decimal import Decimal
-from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
 from functools import reduce
+
+from test_framework.test_framework import PivxTestFramework
+from test_framework.util import assert_equal, assert_greater_than
 
 class SaplingkeyImportExportTest (PivxTestFramework):
 

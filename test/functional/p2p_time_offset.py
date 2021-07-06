@@ -3,14 +3,14 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-import time
-
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes,
     set_node_times,
 )
+
+import time
 
 def connect_nodes_bi(nodes, a, b):
     connect_nodes(nodes[a], b)

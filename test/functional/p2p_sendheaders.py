@@ -2,13 +2,7 @@
 # Copyright (c) 2014-2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
-from test_framework.mininode import *
-from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
-from test_framework.blocktools import create_block, create_coinbase
-
-'''
+"""
 SendHeadersTest -- test behavior of headers messages to announce blocks.
 
 Setup:
@@ -78,7 +72,24 @@ d. Announce 49 headers that don't connect.
    Expect: getheaders message each time.
 e. Announce one more that doesn't connect.
    Expect: disconnect.
-'''
+"""
+"""
+from test_framework.blocktools import create_block, create_coinbase
+from test_framework.messages import (
+    CBlockHeader,
+    CInv,
+    msg_block,
+    msg_getblocks,
+    msg_getheaders,
+    msg_getdata,
+    msg_headers,
+    msg_inv,
+    msg_sendheaders
+)
+from test_framework.mininode import mininode_lock, NetworkThread, P2PInterface
+from test_framework.test_framework import PivxTestFramework
+from test_framework.util import assert_equal, wait_until, connect_nodes, p2p_port
+
 
 direct_fetch_response_time = 0.05
 
@@ -147,8 +158,8 @@ class BaseNode(SingleNodeConnCB):
     # right header or the right inv
     # inv and headers should be lists of block hashes
     def check_last_announcement(self, headers=None, inv=None):
-        expect_headers = headers if headers != None else []
-        expect_inv = inv if inv != None else []
+        expect_headers = headers if headers is not None else []
+        expect_inv = inv if inv is not None else []
         test_function = lambda: self.block_announced
         assert(wait_until(test_function, timeout=60))
         with mininode_lock:
@@ -156,13 +167,13 @@ class BaseNode(SingleNodeConnCB):
 
             success = True
             compare_inv = []
-            if self.last_inv != None:
+            if self.last_inv is not None:
                 compare_inv = [x.hash for x in self.last_inv.inv]
             if compare_inv != expect_inv:
                 success = False
 
             hash_headers = []
-            if self.last_headers != None:
+            if self.last_headers is not None:
                 # treat headers as a list of block hashes
                 hash_headers = [ x.sha256 for x in self.last_headers.headers ]
             if hash_headers != expect_headers:
@@ -174,12 +185,12 @@ class BaseNode(SingleNodeConnCB):
 
     # Syncing helpers
     def wait_for_block(self, blockhash, timeout=60):
-        test_function = lambda: self.last_block != None and self.last_block.sha256 == blockhash
+        test_function = lambda: self.last_block is not None and self.last_block.sha256 == blockhash
         assert(wait_until(test_function, timeout=timeout))
         return
 
     def wait_for_getheaders(self, timeout=60):
-        test_function = lambda: self.last_getheaders != None
+        test_function = lambda: self.last_getheaders is not None
         assert(wait_until(test_function, timeout=timeout))
         return
 
@@ -187,7 +198,7 @@ class BaseNode(SingleNodeConnCB):
         if hash_list == []:
             return
 
-        test_function = lambda: self.last_getdata != None and [x.hash for x in self.last_getdata.inv] == hash_list
+        test_function = lambda: self.last_getdata is not None and [x.hash for x in self.last_getdata.inv] == hash_list
         assert(wait_until(test_function, timeout=timeout))
         return
 
@@ -605,3 +616,4 @@ class SendHeadersTest(PivxTestFramework):
 
 if __name__ == '__main__':
     SendHeadersTest().main()
+"""

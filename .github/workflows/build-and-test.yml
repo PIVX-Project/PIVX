@@ -19,16 +19,16 @@ jobs:
       - name: Initialize Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.5
+          python-version: 3.6
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install codespell==1.13.0
-          pip install flake8==3.5.0
+          pip install flake8==3.8.3
           pip install vulture==0.29
 
-          curl -s "https://storage.googleapis.com/shellcheck/shellcheck-${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar --xz -xf - --directory /tmp/
+          curl -sL "https://github.com/koalaman/shellcheck/releases/download/${SHELLCHECK_VERSION}/shellcheck-${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar --xz -xf - --directory /tmp/
           export PATH="/tmp/shellcheck-${SHELLCHECK_VERSION}:${PATH}"
           echo $PATH
 
@@ -40,18 +40,17 @@ jobs:
         run: |
           git checkout -qf -B master refs/remotes/origin/master
           git checkout -qf $GITHUB_SHA
-          contrib/devtools/git-subtree-check.sh src/secp256k1
-          contrib/devtools/git-subtree-check.sh src/univalue
-          contrib/devtools/git-subtree-check.sh src/leveldb
-          contrib/devtools/git-subtree-check.sh src/crc32c
-          contrib/devtools/check-doc.py
-          contrib/devtools/logprint-scanner.py
+          test/lint/git-subtree-check.sh src/secp256k1
+          test/lint/git-subtree-check.sh src/univalue
+          test/lint/git-subtree-check.sh src/leveldb
+          test/lint/git-subtree-check.sh src/crc32c
+          test/lint/check-doc.py
+          test/lint/logprint-scanner.py
+          test/lint/lint-all.sh
 
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             COMMIT_RANGE="${{ github.base_ref }}..HEAD"
-            contrib/devtools/lint-whitespace.sh
-            contrib/devtools/commit-script-check.sh $COMMIT_RANGE
-            test/lint/lint-qt.sh
+            test/lint/commit-script-check.sh $COMMIT_RANGE
           fi
 
   cmake:

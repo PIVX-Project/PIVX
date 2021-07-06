@@ -3,8 +3,10 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test pivx-cli"""
+
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import assert_equal, assert_raises_process_error, get_auth_cookie
+from test_framework.util import assert_equal, get_auth_cookie
+
 import time
 
 class TestBitcoinCli(PivxTestFramework):

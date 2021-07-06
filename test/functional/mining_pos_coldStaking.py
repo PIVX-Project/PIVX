@@ -2,8 +2,8 @@
 # Copyright (c) 2019-2020 The PIVX developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-# -*- coding: utf-8 -*-
 
+from decimal import Decimal
 from io import BytesIO
 from time import sleep
 
@@ -17,8 +17,6 @@ from test_framework.util import (
     bytes_to_hex_str,
     set_node_times,
 )
-
-from decimal import Decimal
 
 # filter utxos based on first 5 bytes of scriptPubKey
 def getDelegatedUtxos(utxos):
@@ -157,12 +155,12 @@ class PIVX_ColdStakingTest(PivxTestFramework):
         self.log.info("Now creating %d real stake-delegation txes..." % NUM_OF_INPUTS)
         for i in range(NUM_OF_INPUTS-1):
             res = self.nodes[0].delegatestake(staker_address, INPUT_VALUE, owner_address)
-            assert(res != None and res["txid"] != None and res["txid"] != "")
+            assert(res is not None and res["txid"] is not None and res["txid"] != "")
             assert_equal(res["owner_address"], owner_address)
             assert_equal(res["staker_address"], staker_address)
         # delegate  the shielded balance
         res = self.nodes[0].delegatestake(staker_address, INPUT_VALUE, owner_address, False, False, True)
-        assert (res != None and res["txid"] != None and res["txid"] != "")
+        assert (res is not None and res["txid"] is not None and res["txid"] != "")
         assert_equal(res["owner_address"], owner_address)
         assert_equal(res["staker_address"], staker_address)
         fee = self.nodes[0].viewshieldtransaction(res["txid"])['fee']
@@ -187,7 +185,7 @@ class PIVX_ColdStakingTest(PivxTestFramework):
         assert_equal(len(delegated_utxos), len(self.nodes[0].listcoldutxos()))
         u = delegated_utxos[0]
         txhash = self.spendUTXOwithNode(u, 0)
-        assert(txhash != None)
+        assert(txhash is not None)
         self.log.info("Good. Owner was able to spend - tx: %s" % str(txhash))
         self.sync_mempools()
         self.mocktime = self.generate_pos(2, self.mocktime)
@@ -336,7 +334,7 @@ class PIVX_ColdStakingTest(PivxTestFramework):
         # remove one utxo to spend later
         final_spend = delegated_utxos.pop()
         txhash = self.spendUTXOsWithNode(delegated_utxos, 0)
-        assert(txhash != None)
+        assert(txhash is not None)
         self.log.info("Good. Owner was able to void the stake delegations - tx: %s" % str(txhash))
         self.sync_blocks()
         self.mocktime = self.generate_pos(2, self.mocktime)
@@ -346,7 +344,7 @@ class PIVX_ColdStakingTest(PivxTestFramework):
         self.setColdStakingEnforcement(False)
         assert (not self.isColdStakingEnforced())
         txhash = self.spendUTXOsWithNode([final_spend], 0)
-        assert(txhash != None)
+        assert(txhash is not None)
         self.log.info("Good. Owner was able to void a stake delegation (with SPORK 17 disabled) - tx: %s" % str(txhash))
         self.sync_mempools()
         self.mocktime = self.generate_pos(2, self.mocktime)
@@ -383,7 +381,7 @@ class PIVX_ColdStakingTest(PivxTestFramework):
         self.checkBalances()
         delegated_utxos = getDelegatedUtxos(self.nodes[0].listunspent())
         txhash = self.spendUTXOsWithNode(delegated_utxos, 0)
-        assert (txhash != None)
+        assert (txhash is not None)
         self.log.info("Good. Owner was able to spend the cold staked coins - tx: %s" % str(txhash))
         self.sync_mempools()
         self.mocktime = self.generate_pos(2, self.mocktime)

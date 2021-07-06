@@ -170,18 +170,18 @@ class PivxTestFramework():
             time.sleep(5)
             self.run_test()
             success = TestStatus.PASSED
-        except JSONRPCException as e:
+        except JSONRPCException:
             self.log.exception("JSONRPC error")
         except SkipTest as e:
             self.log.warning("Test Skipped: %s" % e.message)
             success = TestStatus.SKIPPED
-        except AssertionError as e:
+        except AssertionError:
             self.log.exception("Assertion failed")
-        except KeyError as e:
+        except KeyError:
             self.log.exception("Key error")
-        except Exception as e:
+        except Exception:
             self.log.exception("Unexpected exception caught during testing")
-        except KeyboardInterrupt as e:
+        except KeyboardInterrupt:
             self.log.warning("Exiting after keyboard interrupt")
 
         if success == TestStatus.FAILED and self.options.pdbonfailure:
@@ -575,7 +575,7 @@ class PivxTestFramework():
             clean_cache_subdir(ddir)
 
         def generate_pow_cache():
-            ### POW Cache ###
+            # POW Cache
             # Create a 200-block-long chain; each of the 4 first nodes
             # gets 25 mature blocks and 25 immature.
             # Note: To preserve compatibility with older versions of
@@ -636,9 +636,7 @@ class PivxTestFramework():
         for i in range(self.num_nodes):
             initialize_datadir(self.options.tmpdir, i)
 
-
-    ### PIVX Specific TestFramework ###
-    ###################################
+    # PIVX Specific TestFramework
     def init_dummy_key(self):
         self.DUMMY_KEY = CECKey()
         self.DUMMY_KEY.set_secretbytes(hash256(pack('<I', 0xffff)))
@@ -762,7 +760,7 @@ class PivxTestFramework():
             # replace coinstake output script
             coinstakeTx_unsigned.vout[1].scriptPubKey = CScript([block_sig_key.get_pubkey(), OP_CHECKSIG])
         else:
-            if privKeyWIF == None:
+            if privKeyWIF is None:
                 # Use pk of the input. Ask sk from rpc_conn
                 rawtx = rpc_conn.getrawtransaction('{:064x}'.format(prevout.hash), True)
                 privKeyWIF = rpc_conn.dumpprivkey(rawtx["vout"][prevout.n]["scriptPubKey"]["addresses"][0])
@@ -1181,11 +1179,7 @@ class PivxTestFramework():
         # return the collateral outpoint
         return COutPoint(collateralTxId, collateralTxId_n)
 
-
-### ----------------------
-### ----- DMN setup ------
-### ----------------------
-
+    # ----- DMN setup ------
     def connect_to_all(self, nodePos):
         for i in range(self.num_nodes):
             if i != nodePos and self.nodes[i] is not None:
@@ -1345,7 +1339,7 @@ class PivxTestFramework():
         assert_equal(pl["payoutAddress"], dmn.payee)
 
 
-### ------------------------------------------------------
+# ------------------------------------------------------
 
 class SkipTest(Exception):
     """This exception is raised to skip a test"""

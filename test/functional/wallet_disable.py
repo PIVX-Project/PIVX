@@ -9,7 +9,7 @@
 """
 
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
+from test_framework.util import assert_raises_rpc_error
 
 class DisableWalletTest (PivxTestFramework):
     def set_test_params(self):

@@ -4,8 +4,16 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Utilities for manipulating blocks and transactions."""
 
-from test_framework.mininode import *
-from test_framework.script import CScript, CScriptNum, CScriptOp, OP_TRUE, OP_CHECKSIG, OP_1
+from .messages import (
+    CBlock,
+    COIN,
+    COutPoint,
+    CTransaction,
+    CTxIn,
+    CTxOut,
+    NullOutPoint
+)
+from .script import CScript, CScriptNum, CScriptOp, OP_TRUE, OP_CHECKSIG, OP_1
 
 
 # Create a block (with regtest difficulty)
@@ -61,7 +69,7 @@ def create_coinbase(height, pubkey = None):
     coinbase.vin = [CTxIn(NullOutPoint, script_BIP34_coinbase_height(height), 0xffffffff)]
     coinbaseoutput = CTxOut()
     coinbaseoutput.nValue = cbase_value(height)
-    if (pubkey != None):
+    if (pubkey is not None):
         coinbaseoutput.scriptPubKey = CScript([pubkey, OP_CHECKSIG])
     else:
         coinbaseoutput.scriptPubKey = CScript([OP_TRUE])
@@ -101,7 +109,7 @@ def get_legacy_sigopcount_tx(tx, fAccurate=True):
         count += CScript(j.scriptSig).GetSigOpCount(fAccurate)
     return count
 
-### PIVX specific blocktools ###
+# PIVX specific blocktools
 def create_coinbase_pos(height):
     coinbase = CTransaction()
     coinbase.vin = [CTxIn(NullOutPoint, script_BIP34_coinbase_height(height), 0xffffffff)]

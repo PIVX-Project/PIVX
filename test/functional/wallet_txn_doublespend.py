@@ -4,9 +4,10 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the wallet accounts properly when there is a double-spend conflict."""
 
+from decimal import Decimal
+
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
-import time
+from test_framework.util import assert_equal, connect_nodes, disconnect_nodes, find_output
 
 class TxnMallTest(PivxTestFramework):
     def set_test_params(self):
@@ -77,7 +78,8 @@ class TxnMallTest(PivxTestFramework):
         # Node0's balance should be starting balance, plus 50BTC for another
         # matured block, minus 40, minus 20, and minus transaction fees:
         expected = starting_balance + fund_foo_tx["fee"] + fund_bar_tx["fee"]
-        if self.options.mine_block: expected += 250
+        if self.options.mine_block:
+            expected += 250
         expected += tx1["amount"] + tx1["fee"]
         expected += tx2["amount"] + tx2["fee"]
         assert_equal(self.nodes[0].getbalance(), expected)

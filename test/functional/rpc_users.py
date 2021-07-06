@@ -4,6 +4,8 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test multiple RPC users."""
 
+from random import SystemRandom
+
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,
@@ -11,14 +13,13 @@ from test_framework.util import (
     str_to_b64str,
 )
 
-import os
-import http.client
-import urllib.parse
-import subprocess
-from random import SystemRandom
-import string
 import configparser
+import http.client
+import os
+import string
+import subprocess
 import sys
+import urllib.parse
 
 def call_with_auth(node, user, password):
     url = urllib.parse.urlparse(node.url)

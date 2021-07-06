@@ -11,15 +11,12 @@
 - 5) Dry out the pre-HD keypool.
 - 6) Generate new addresses and verify HD path correctness.
 """
+
+from test_framework.test_framework import PivxTestFramework
+from test_framework.util import assert_equal
+
 import os
 import shutil
-from test_framework.test_framework import PivxTestFramework
-from test_framework.util import (
-    assert_equal,
-    assert_raises_rpc_error,
-    wait_until,
-    initialize_datadir,
-)
 
 def read_dump(file_name, addrs):
     """

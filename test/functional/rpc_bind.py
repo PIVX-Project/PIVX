@@ -4,12 +4,19 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test running bitcoind with the -rpcbind and -rpcallowip options."""
 
+from test_framework.netutil import addr_to_hex, all_interfaces, get_bind_addrs
+from test_framework.test_framework import PivxTestFramework, SkipTest
+from test_framework.util import (
+    assert_equal,
+    assert_raises_rpc_error,
+    get_datadir_path,
+    get_rpc_proxy,
+    rpc_port,
+    rpc_url
+)
+
 import socket
 import sys
-
-from test_framework.test_framework import PivxTestFramework, SkipTest
-from test_framework.util import *
-from test_framework.netutil import *
 
 class RPCBindTest(PivxTestFramework):
     def set_test_params(self):

@@ -4,8 +4,13 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test longpolling with getblocktemplate."""
 
+from decimal import Decimal
+
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
+from test_framework.util import (
+    get_rpc_proxy,
+    random_transaction
+)
 
 import threading
 

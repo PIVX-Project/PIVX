@@ -12,7 +12,9 @@ found in the mini-node branch of http://github.com/jgarzik/pynode.
 P2PConnection: A low-level connection object to a node's P2P interface
 P2PInterface: A high-level interface object for communicating to a node over P2P
 P2PDataStore: A p2p interface class that keeps a store of transactions and blocks
-              and can respond correctly to getdata and getheaders messages"""
+              and can respond correctly to getdata and getheaders messages
+"""
+
 import asyncio
 from collections import defaultdict
 from io import BytesIO
@@ -21,8 +23,36 @@ import struct
 import sys
 import threading
 
-from test_framework.messages import *
-from test_framework.util import wait_until
+from .messages import (
+    msg_addr,
+    msg_block,
+    msg_blocktxn,
+    msg_cmpctblock,
+    msg_feefilter,
+    msg_getaddr,
+    msg_getblocks,
+    msg_getblocktxn,
+    msg_getdata,
+    msg_getheaders,
+    msg_headers,
+    msg_inv,
+    msg_mempool,
+    msg_ping,
+    msg_pong,
+    msg_reject,
+    msg_sendcmpct,
+    msg_sendheaders,
+    msg_tx,
+    msg_verack,
+    msg_version,
+    sha256,
+    MIN_VERSION_SUPPORTED,
+    MSG_BLOCK,
+    MSG_TYPE_MASK,
+    MSG_TX,
+    NODE_NETWORK,
+)
+from .util import wait_until
 
 logger = logging.getLogger("TestFramework.mininode")
 

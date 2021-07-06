@@ -4,9 +4,10 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test processing of feefilter messages."""
 
-from test_framework.mininode import *
+from test_framework.messages import msg_feefilter
+from test_framework.mininode import mininode_lock, P2PInterface
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
+
 import time
 
 
@@ -22,7 +23,7 @@ def allInvsMatch(invsExpected, testnode):
         time.sleep(1)
     return False
 
-class TestNode(P2PInterface):
+class TestP2PConn(P2PInterface):
     def __init__(self):
         super().__init__()
         self.txinvs = []

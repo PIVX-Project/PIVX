@@ -12,12 +12,13 @@ Test the following RPCs:
    - getrawtransaction
 """
 
+from decimal import Decimal
+
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
-    connect_nodes,
-    Decimal,
+    connect_nodes
 )
 
 

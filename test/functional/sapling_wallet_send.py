@@ -4,12 +4,13 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php .
 
+from decimal import Decimal
+
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,
 )
 
-from decimal import Decimal
 
 class SaplingWalletSend(PivxTestFramework):
 

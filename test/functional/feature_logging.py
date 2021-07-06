@@ -3,12 +3,12 @@
 # Copyright (c) 2020 The PIVX developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
 """Test debug logging."""
+
+from test_framework.test_framework import PivxTestFramework
 
 import os
 
-from test_framework.test_framework import PivxTestFramework
 
 class LoggingTest(PivxTestFramework):
     def set_test_params(self):

@@ -4,10 +4,11 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the wallet accounts properly when there are cloned transactions with malleated scriptsigs."""
 
-import io
-from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
 from test_framework.messages import CTransaction, COIN
+from test_framework.test_framework import PivxTestFramework
+from test_framework.util import assert_equal, connect_nodes, disconnect_nodes
+
+import io
 
 
 class TxnMallTest(PivxTestFramework):
@@ -87,7 +88,8 @@ class TxnMallTest(PivxTestFramework):
         # Node0's balance should be starting balance, plus 50BTC for another
         # matured block, minus tx1 and tx2 amounts, and minus transaction fees:
         expected = starting_balance + node0_tx1["fee"] + node0_tx2["fee"]
-        if self.options.mine_block: expected += 250
+        if self.options.mine_block:
+            expected += 250
         expected += tx1["amount"] + tx1["fee"]
         expected += tx2["amount"] + tx2["fee"]
         assert_equal(self.nodes[0].getbalance(), expected)

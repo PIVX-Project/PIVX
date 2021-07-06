@@ -2,13 +2,12 @@
 # Copyright (c) 2018 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Test the blocksdir option.
-"""
+"""Test the blocksdir option."""
 
 from test_framework.test_framework import PivxTestFramework, initialize_datadir
 
-import shutil
 import os
+import shutil
 
 class BlocksdirTest(PivxTestFramework):
     def set_test_params(self):

@@ -13,7 +13,9 @@ CBlock, CTransaction, CBlockHeader, CTxIn, CTxOut, etc....:
 msg_block, msg_tx, msg_headers, etc.:
     data structures that represent network messages
 
-ser_*, deser_*: functions that handle serialization/deserialization."""
+ser_*, deser_*: functions that handle serialization/deserialization.
+"""
+
 from codecs import encode
 import copy
 import hashlib
@@ -23,8 +25,8 @@ import socket
 import struct
 import time
 
-from test_framework.siphash import siphash256
-from test_framework.util import hex_str_to_bytes, bytes_to_hex_str
+from .siphash import siphash256
+from .util import hex_str_to_bytes, bytes_to_hex_str
 
 MIN_VERSION_SUPPORTED = 60001
 MY_VERSION = 70922
@@ -638,7 +640,7 @@ class CBlock(CBlockHeader):
         self.low_s = low_s
 
     def re_sign_block(self):
-        if self.sig_key == None:
+        if self.sig_key is None:
             raise Exception("Unable to re-sign block. Key Not present, use 'sign_block' first.")
         return self.sign_block(self.sig_key, self.low_s)
 
@@ -737,7 +739,7 @@ class HeaderAndShortIDs():
         self.prefilled_txn = []
         self.use_witness = False
 
-        if p2pheaders_and_shortids != None:
+        if p2pheaders_and_shortids is not None:
             self.header = p2pheaders_and_shortids.header
             self.nonce = p2pheaders_and_shortids.nonce
             self.shortids = p2pheaders_and_shortids.shortids
@@ -794,7 +796,7 @@ class BlockTransactionsRequest():
 
     def __init__(self, blockhash=0, indexes = None):
         self.blockhash = blockhash
-        self.indexes = indexes if indexes != None else []
+        self.indexes = indexes if indexes is not None else []
 
     def deserialize(self, f):
         self.blockhash = deser_uint256(f)
@@ -834,7 +836,7 @@ class BlockTransactions():
 
     def __init__(self, blockhash=0, transactions = None):
         self.blockhash = blockhash
-        self.transactions = transactions if transactions != None else []
+        self.transactions = transactions if transactions is not None else []
 
     def deserialize(self, f):
         self.blockhash = deser_uint256(f)
@@ -1023,7 +1025,7 @@ class msg_getdata():
     command = b"getdata"
 
     def __init__(self, inv=None):
-        self.inv = inv if inv != None else []
+        self.inv = inv if inv is not None else []
 
     def deserialize(self, f):
         self.inv = deser_vector(f, CInv)

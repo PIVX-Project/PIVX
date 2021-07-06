@@ -2,16 +2,6 @@
 # Copyright (c) 2020 The PIVX developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php.
-
-from test_framework.test_framework import PivxTier2TestFramework
-from test_framework.util import (
-    connect_nodes_clique,
-    disconnect_nodes,
-    wait_until,
-)
-
-import time
-
 """
 Test checking:
  1) Masternode setup/creation.
@@ -22,6 +12,15 @@ Test checking:
  6) Masternode removal.
  7) Masternode collateral spent removal.
 """
+
+from test_framework.test_framework import PivxTier2TestFramework
+from test_framework.util import (
+    connect_nodes_clique,
+    disconnect_nodes,
+    wait_until,
+)
+
+import time
 
 class MasternodeActivationTest(PivxTier2TestFramework):
 
