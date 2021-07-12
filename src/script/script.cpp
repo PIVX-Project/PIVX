@@ -217,6 +217,14 @@ bool CScript::IsPayToPublicKeyHash() const
             (*this)[24] == OP_CHECKSIG);
 }
 
+bool CScript::IsPayToWitnessPubkeyHash() const
+{
+    // Extra-fast test for pay-to-witness-pubkey-hash CScripts:
+    return (this->size() == 22 &&
+            (*this)[0] == OP_0 &&
+            (*this)[1] == 0x14);
+}
+
 bool CScript::IsPayToScriptHash() const
 {
     // Extra-fast test for pay-to-script-hash CScripts:

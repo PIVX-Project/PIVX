@@ -23,6 +23,7 @@
 
 #include <string>
 #include <vector>
+#include <uint256.h>
 
 /**
  * Encode a byte sequence as a base58-encoded string.

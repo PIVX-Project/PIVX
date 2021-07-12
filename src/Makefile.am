@@ -195,6 +195,9 @@ BITCOIN_CORE_H = \
   hash.h \
   httprpc.h \
   httpserver.h \
+  index/addressindex.h \
+  index/spentindex.h \
+  index/timestampindex.h \
   indirectmap.h \
   init.h \
   interfaces/handler.h \

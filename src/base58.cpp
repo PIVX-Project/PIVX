@@ -7,7 +7,8 @@
 
 #include "hash.h"
 #include "util/string.h"
-
+#include "script/script.h"
+#include <script/standard.h>
 #include "uint256.h"
 
 #include <algorithm>
