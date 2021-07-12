@@ -25,7 +25,6 @@
 #include "sapling/address.h"
 #include "guiinterface.h"
 #include "util/system.h"
-#include "util/memory.h"
 #include "utilstrencodings.h"
 #include "validationinterface.h"
 #include "script/ismine.h"
@@ -494,8 +493,8 @@ public:
     CAmount GetAvailableCredit(bool fUseCache = true, const isminefilter& filter=ISMINE_SPENDABLE) const;
     // Return sum of locked coins
     CAmount GetLockedCredit() const;
-    CAmount GetImmatureWatchOnlyCredit(const bool& fUseCache = true) const;
-    CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache = true) const;
+    CAmount GetImmatureWatchOnlyCredit(const bool fUseCache = true) const;
+    CAmount GetAvailableWatchOnlyCredit(const bool fUseCache = true) const;
     CAmount GetChange() const;
 
     // Shielded credit/debit/change
@@ -588,8 +587,8 @@ private:
     bool fDecryptionThoroughlyChecked{false};
 
     //! Key manager //
-    std::unique_ptr<ScriptPubKeyMan> m_spk_man = MakeUnique<ScriptPubKeyMan>(this);
-    std::unique_ptr<SaplingScriptPubKeyMan> m_sspk_man = MakeUnique<SaplingScriptPubKeyMan>(this);
+    std::unique_ptr<ScriptPubKeyMan> m_spk_man = std::make_unique<ScriptPubKeyMan>(this);
+    std::unique_ptr<SaplingScriptPubKeyMan> m_sspk_man = std::make_unique<SaplingScriptPubKeyMan>(this);
 
     //! the current wallet version: clients below this version are not able to load the wallet
     int nWalletVersion;
@@ -642,7 +641,7 @@ private:
     /* Used by TransactionAddedToMemorypool/BlockConnected/Disconnected */
     void SyncTransaction(const CTransactionRef& tx, const CWalletTx::Confirmation& confirm);
 
-    bool IsKeyUsed(const CPubKey& vchPubKey);
+    bool IsKeyUsed(const CPubKey& vchPubKey) const;
 
     struct OutputAvailabilityResult
     {
@@ -1009,7 +1008,7 @@ public:
     /**
      * Upgrade wallet to HD and Sapling if needed. Does nothing if not.
      */
-    bool Upgrade(std::string& error, const int& prevVersion);
+    bool Upgrade(std::string& error, const int prevVersion);
     bool ActivateSaplingWallet(bool memOnly = false);
 
     int64_t RescanFromTime(int64_t startTime, const WalletRescanReserver& reserver, bool update);
@@ -1099,7 +1098,7 @@ public:
     size_t KeypoolCountExternalKeys();
     bool TopUpKeyPool(unsigned int kpSize = 0);
     void KeepKey(int64_t nIndex);
-    void ReturnKey(int64_t nIndex, const bool& internal = false, const bool& staking = false);
+    void ReturnKey(int64_t nIndex, const bool internal = false, const bool staking = false);
     bool GetKeyFromPool(CPubKey& key, const uint8_t& type = HDChain::ChangeType::EXTERNAL);
     int64_t GetOldestKeyPoolTime();
 
@@ -1207,7 +1206,7 @@ public:
     boost::signals2::signal<void(bool fHaveWatchOnly)> NotifyWatchonlyChanged;
 
     /** notify wallet file backed up */
-    boost::signals2::signal<void (const bool& fSuccess, const std::string& filename)> NotifyWalletBacked;
+    boost::signals2::signal<void (const bool fSuccess, const std::string& filename)> NotifyWalletBacked;
 
     /** notify stake-split threshold changed */
     boost::signals2::signal<void (const CAmount stakeSplitThreshold)> NotifySSTChanged;
