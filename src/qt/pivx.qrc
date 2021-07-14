@@ -62,6 +62,7 @@
         <file alias="ic-arrow-white-right">pivx/res/img/ic-arrow-white-right.svg</file>
         <file alias="ic-check-active">pivx/res/img/ic-check-active.svg</file>
         <file alias="ic-check-box">pivx/res/img/ic-check-box.svg</file>
+        <file alias="ic-check-box-light">pivx/res/img/ic-check-box-light.svg</file>
         <file alias="ic-check-box-liliac-indeterminate">pivx/res/img/ic-check-box-liliac-indeterminate.svg</file>
         <file alias="ic-check-connect-off">pivx/res/img/ic-check-connect-off.svg</file>
         <file alias="ic-check-connect">pivx/res/img/ic-check-connect.svg</file>

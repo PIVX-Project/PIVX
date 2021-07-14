@@ -488,7 +488,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
                 // Regular P2PK or P2PKH
                 scriptPubKey = GetScriptForDestination(out);
             }
-            vecSend.emplace_back(scriptPubKey, rcp.amount, false);
+            vecSend.emplace_back(scriptPubKey, rcp.amount, rcp.fSubtractFee);
 
             total += rcp.amount;
         }
@@ -598,9 +598,9 @@ OperationResult WalletModel::PrepareShieldedTransaction(WalletModelTransaction* 
                                                         const CCoinControl* coinControl)
 {
     // Load shieldedAddrRecipients.
-    bool fSubtractFeeFromAmount{false};
     std::vector<SendManyRecipient> recipients;
     for (const auto& recipient : modelTransaction->getRecipients()) {
+        bool fSubtractFeeFromAmount = recipient.fSubtractFee;
         if (recipient.isShieldedAddr) {
             auto pa = KeyIO::DecodeSaplingPaymentAddress(recipient.address.toStdString());
             if (!pa) return errorOut("Error, invalid shielded address");

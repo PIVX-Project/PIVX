@@ -71,6 +71,9 @@ public:
     // Quick flag to not have to check the address type more than once.
     bool isShieldedAddr{false};
 
+    // Whether to subtract the tx fee from this recipient
+    bool fSubtractFee{false};
+
     // Amount
     CAmount amount{0};
     // If from a payment request, this is used for storing the memo

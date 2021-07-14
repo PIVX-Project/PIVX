@@ -348,6 +348,16 @@ padding:0px;</string>
           <number>0</number>
          </property>
          <item>
+          <widget class="QCheckBox" name="checkboxSubtractFeeFromAmount">
+           <property name="toolTip">
+            <string>The fee will be deducted from the amount being sent. The recipient will receive less PIV than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</string>
+           </property>
+           <property name="text">
+            <string>Subtract fee from amount</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>

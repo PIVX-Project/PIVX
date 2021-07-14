@@ -39,6 +39,7 @@ public:
     void setDeleteBtnVisible(bool visible);
     void setEditBtnVisible(bool visible);
     void setLastBtnVisible(bool visible);
+    void setLastBtnCheckable(bool checkable, bool isChecked);
 
 Q_SIGNALS:
     void onDeleteClicked();

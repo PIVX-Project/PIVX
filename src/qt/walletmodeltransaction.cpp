@@ -43,6 +43,15 @@ void WalletModelTransaction::setTransactionFee(const CAmount& newFee)
     fee = newFee;
 }
 
+unsigned int WalletModelTransaction::subtractFeeFromRecipents() const
+{
+    unsigned int count = 0;
+    for (const SendCoinsRecipient& rcp : recipients) {
+        if (rcp.fSubtractFee) count++;
+    }
+    return count;
+}
+
 CAmount WalletModelTransaction::getTotalTransactionAmount()
 {
     CAmount totalTransactionAmount = 0;

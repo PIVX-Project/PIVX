@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style type="text/css">
+            .cls-1{fill:#807b8a;fill-rule:evenodd;opacity:.997}.cls-2{fill:none}
+        </style>
+    </defs>
+    <g id="check_box" transform="translate(-420 -576)">
+        <path id="checkbox" d="M22.556 5.444v17.112H5.444V5.444zm0-2.444H5.444A2.452 2.452 0 0 0 3 5.444v17.112A2.452 2.452 0 0 0 5.444 25h17.112A2.452 2.452 0 0 0 25 22.556V5.444A2.452 2.452 0 0 0 22.556 3z" class="cls-1" transform="translate(418 574)"/>
+        <path id="Rectangle_4539" d="M0 0h24v24H0z" class="cls-2" data-name="Rectangle 4539" transform="translate(420 576)"/>
+    </g>
+</svg>

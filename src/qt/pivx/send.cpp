@@ -863,14 +863,19 @@ void SendWidget::onMenuClicked(SendMultiRow* entry)
         this->menu = new TooltipMenu(window, this);
         this->menu->setCopyBtnText(tr("Add Memo"));
         this->menu->setEditBtnText(tr("Save contact"));
-        this->menu->setMinimumSize(this->menu->width() + 30,this->menu->height());
+        this->menu->setLastBtnVisible(true);
+        this->menu->setLastBtnText(tr("Subtract fee"));
+        this->menu->setMinimumHeight(157);
+        this->menu->setMinimumSize(this->menu->width() + 30, this->menu->height());
         connect(this->menu, &TooltipMenu::message, this, &AddressesWidget::message);
         connect(this->menu, &TooltipMenu::onEditClicked, this, &SendWidget::onContactMultiClicked);
         connect(this->menu, &TooltipMenu::onDeleteClicked, this, &SendWidget::onDeleteClicked);
         connect(this->menu, &TooltipMenu::onCopyClicked, this, &SendWidget::onEntryMemoClicked);
+        connect(this->menu, &TooltipMenu::onLastClicked, this, &SendWidget::onSubtractFeeFromAmountChecked);
     } else {
         this->menu->hide();
     }
+    this->menu->setLastBtnCheckable(true, entry->getSubtractFeeFromAmount());
     menu->move(pos);
     menu->show();
 }
@@ -929,6 +934,13 @@ void SendWidget::onEntryMemoClicked()
     if (focusedEntry) {
         focusedEntry->launchMemoDialog();
         menu->setCopyBtnText(tr("Memo"));
+    }
+}
+
+void SendWidget::onSubtractFeeFromAmountChecked()
+{
+    if (focusedEntry) {
+        focusedEntry->toggleSubtractFeeFromAmount();
     }
 }
 

@@ -81,6 +81,7 @@ private Q_SLOTS:
     void onContactMultiClicked();
     void onDeleteClicked();
     void onEntryMemoClicked();
+    void onSubtractFeeFromAmountChecked();
     void onResetCustomOptions(bool fRefreshAmounts);
     void onResetSettings();
 

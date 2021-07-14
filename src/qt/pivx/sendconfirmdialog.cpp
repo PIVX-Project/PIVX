@@ -183,16 +183,20 @@ void TxDetailDialog::setData(WalletModel *_model, WalletModelTransaction* _tx)
     this->model = _model;
     this->tx = _tx;
     CAmount txFee = tx->getTransactionFee();
-    CAmount totalAmount = tx->getTotalTransactionAmount() + txFee;
 
     // inputs label
     CTransactionRef walletTx = tx->getTransaction();
     setInputsType(walletTx);
 
+    CAmount totalAmount = tx->getTotalTransactionAmount();
+    if (tx->subtractFeeFromRecipents() == 0) totalAmount += txFee;
+
     ui->textAmount->setText(BitcoinUnits::formatWithUnit(nDisplayUnit, totalAmount, false, BitcoinUnits::separatorAlways) + " (Fee included)");
-    int nRecipients = tx->getRecipients().size();
+
+    const QList<SendCoinsRecipient>& recipients = tx->getRecipients();
+    int nRecipients = recipients.size();
     if (nRecipients == 1) {
-        const SendCoinsRecipient& recipient = tx->getRecipients().at(0);
+        const SendCoinsRecipient& recipient = recipients.at(0);
         if (recipient.isP2CS) {
             ui->labelSend->setText(tr("Delegating to"));
         }
@@ -325,11 +329,14 @@ void TxDetailDialog::onOutputsClicked()
             // If the there is a model tx, then this is a confirmation dialog
             if (tx) {
                 const QList<SendCoinsRecipient>& recipients = tx->getRecipients();
+                unsigned int sffa = tx->subtractFeeFromRecipents();
+                CAmount rcp_fee = (sffa > 0) ? (tx->getTransactionFee() / sffa) : 0;
                 for (int i = 0; i < recipients.size(); ++i) {
                     const auto& recipient = recipients[i];
+                    CAmount rcp_amt = recipient.amount - (recipient.fSubtractFee ? rcp_fee : 0);
                     int charsSize = recipient.isShieldedAddr ? 18 : 16;
                     QString labelRes = recipient.address.left(charsSize) + "..." + recipient.address.right(charsSize);
-                    appendOutput(layoutGrid, i, labelRes, recipient.amount, nDisplayUnit);
+                    appendOutput(layoutGrid, i, labelRes, rcp_amt, nDisplayUnit);
                 }
             } else {
                 // Tx detail dialog

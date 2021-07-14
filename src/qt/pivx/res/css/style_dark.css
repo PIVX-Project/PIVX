@@ -2049,7 +2049,7 @@ QCheckBox {
     color:#FFFFFF;
 }
 
-QCheckBox:checked  {
+QCheckBox:checked {
     spacing: 5px;
     font-size:18px;
     color:#b088ff;
@@ -2082,6 +2082,32 @@ QCheckBox[cssClass="btn-watch-password"]::indicator:unchecked {
 
 QCheckBox[cssClass="btn-watch-password"]::indicator:checked {
     image: url("://ic-watch-password-white");
+}
+
+QCheckBox[cssClass="combo-light"] {
+    spacing: 5px;
+    font-size:18px;
+    color: #807b8a;
+}
+
+QCheckBox[cssClass="combo-light"]:checked {
+    spacing: 5px;
+    font-size:18px;
+    color:#b088ff;
+}
+
+QCheckBox[cssClass="combo-light"]::indicator:unchecked {
+    image: url("://ic-check-box-light");
+}
+
+QCheckBox[cssClass="combo-light"]:hover {
+    spacing: 5px;
+    font-size:18px;
+    color: #bababa;
+}
+
+QCheckBox[cssClass="combo-light"]::indicator:unchecked:hover {
+    image: url("://ic-check-box");
 }
 
 /*HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
@@ -3066,6 +3092,11 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 *[cssClass="btn-list-menu"]:hover{
     color: #5c4b7d;
+}
+
+*[cssClass="btn-list-menu"]:checked{
+    font-size:16px;
+    color:#b088ff;
 }
 
 

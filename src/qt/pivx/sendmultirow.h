@@ -50,11 +50,13 @@ public:
     void setAmount(const QString& amount);
     void setAddressAndLabelOrDescription(const QString& address, const QString& message);
     void setFocus();
+    void toggleSubtractFeeFromAmount();
 
     QRect getEditLineRect();
     int getEditHeight();
     int getEditWidth();
     int getMenuBtnWidth();
+    bool getSubtractFeeFromAmount() const;
 
     // Return true if memo was set and false if it was cleared.
     bool launchMemoDialog();

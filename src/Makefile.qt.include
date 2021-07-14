@@ -420,6 +420,7 @@ RES_ICONS = \
   qt/pivx/res/img/ic-switch-on.svg \
   qt/pivx/res/img/img-qr-test.png \
   qt/pivx/res/img/ic-check-box.svg \
+  qt/pivx/res/img/ic-check-box-light.svg \
   qt/pivx/res/img/ic-check-box-dark-active.svg \
   qt/pivx/res/img/ic-check-box-indeterminate.svg \
   qt/pivx/res/img/ic-check-box-liliac-indeterminate.svg \

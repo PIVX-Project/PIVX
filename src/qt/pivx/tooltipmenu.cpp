@@ -40,6 +40,12 @@ void TooltipMenu::setLastBtnText(QString btnText, int minHeight){
     ui->btnLast->setMinimumHeight(minHeight);
 }
 
+void TooltipMenu::setLastBtnCheckable(bool checkable, bool isChecked)
+{
+    ui->btnLast->setCheckable(checkable);
+    ui->btnLast->setChecked(isChecked);
+}
+
 void TooltipMenu::setCopyBtnVisible(bool visible){
     ui->btnCopy->setVisible(visible);
 }
