@@ -226,23 +226,19 @@ bool CScript::IsPayToScriptHash() const
             (*this)[22] == OP_EQUAL);
 }
 
-// contextual flag to guard the new rules for P2CS.
-// can be removed once v5.2 enforcement is activated.
-std::atomic<bool> g_newP2CSRules{false};
-
 // P2CS script: either with or without last output free
 bool CScript::IsPayToColdStaking() const
 {
     return (this->size() == 51 &&
-            (!g_newP2CSRules || (*this)[0] == OP_DUP) &&
-            (!g_newP2CSRules || (*this)[1] == OP_HASH160) &&
+            (*this)[0] == OP_DUP &&
+            (*this)[1] == OP_HASH160 &&
             (*this)[2] == OP_ROT &&
-            (!g_newP2CSRules || (*this)[3] == OP_IF) &&
+            (*this)[3] == OP_IF &&
             ((*this)[4] == OP_CHECKCOLDSTAKEVERIFY || (*this)[4] == OP_CHECKCOLDSTAKEVERIFY_LOF) &&
             (*this)[5] == 0x14 &&
-            (!g_newP2CSRules || (*this)[26] == OP_ELSE) &&
+            (*this)[26] == OP_ELSE &&
             (*this)[27] == 0x14 &&
-            (!g_newP2CSRules || (*this)[48] == OP_ENDIF) &&
+            (*this)[48] == OP_ENDIF &&
             (*this)[49] == OP_EQUALVERIFY &&
             (*this)[50] == OP_CHECKSIG);
 }
