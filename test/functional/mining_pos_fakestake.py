@@ -44,6 +44,7 @@ At the beginning nodes[0] mines 50 blocks (201-250) to reach PoS activation.
 """
 
 from io import BytesIO
+import time
 from time import sleep
 
 from test_framework.authproxy import JSONRPCException
@@ -59,13 +60,10 @@ from test_framework.util import (
 class FakeStakeTest(PivxTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
-        # nodes[0] moves the chain and checks the spam blocks, nodes[1] sends them
-
-    def setup_chain(self):
-        # Start with PoW cache: 200 blocks
-        self.log.info("Initializing test directory " + self.options.tmpdir)
-        self._initialize_chain()
+        # whitelist all peers to speed up tx relay / mempool sync
+        self.extra_args = [["-whitelist=127.0.0.1"]] * self.num_nodes
         self.enable_mocktime()
+        # nodes[0] moves the chain and checks the spam blocks, nodes[1] sends them
 
     def log_title(self):
         title = "*** Starting %s ***" % self.__class__.__name__
@@ -76,17 +74,16 @@ class FakeStakeTest(PivxTestFramework):
                       "3) Stake on a fork chain with coinstake input spent (later) in main chain\n"
         self.log.info("\n\n%s\n%s\n%s\n", title, underline, description)
 
-
     def run_test(self):
         # init custom fields
-        self.mocktime -= (131 * 60)
+        self.mocktime = int(time.time())
+        set_node_times(self.nodes, self.mocktime)
         self.recipient_0 = self.nodes[0].getnewaddress()
         self.recipient_1 = self.nodes[1].getnewaddress()
         self.init_dummy_key()
 
         # start test
         self.log_title()
-        set_node_times(self.nodes, self.mocktime)
 
         # nodes[0] mines 50 blocks (201-250) to reach PoS activation
         self.log.info("Mining 50 blocks to reach PoS phase...")
@@ -131,7 +128,7 @@ class FakeStakeTest(PivxTestFramework):
         assert_equal(self.nodes[1].getblockcount(), 255)
         txid = self.spend_utxos(1, self.utxos_to_spend, self.recipient_0)[0]
         self.log.info("'utxos_to_spend' spent on txid=(%s...) on block 256" % txid[:16])
-        self.sync_all()
+        self.sync_mempools()
 
         # nodes[0] mines 5 more blocks (256-260) to include the spends
         self.log.info("Mining 5 blocks to include the spends...")

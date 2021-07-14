@@ -15,6 +15,8 @@ bench_bench_pivx_SOURCES = \
   bench/base58.cpp \
   bench/checkblock.cpp \
   bench/checkqueue.cpp \
+  bench/data.h \
+  bench/data.cpp \
   bench/chacha20.cpp \
   bench/crypto_hash.cpp \
   bench/lockedpool.cpp \
@@ -55,7 +57,7 @@ CLEAN_BITCOIN_BENCH = bench/*.gcda bench/*.gcno $(GENERATED_TEST_FILES)
 
 CLEANFILES += $(CLEAN_BITCOIN_BENCH)
 
-bench/checkblock.cpp: bench/data/block2680960.raw.h
+bench/data.cpp: bench/data/block2680960.raw.h
 
 bitcoin_bench: $(BENCH_BINARY)
 
@@ -68,7 +70,7 @@ bitcoin_bench_clean : FORCE
 %.raw.h: %.raw
 	@$(MKDIR_P) $(@D)
 	@{ \
-	 echo "static unsigned const char $(*F)[] = {" && \
+	 echo "static unsigned const char $(*F)_raw[] = {" && \
 	 $(HEXDUMP) -v -e '8/1 "0x%02x, "' -e '"\n"' $< | $(SED) -e 's/0x  ,//g' && \
 	 echo "};"; \
 	} > "$@.new" && mv -f "$@.new" "$@"

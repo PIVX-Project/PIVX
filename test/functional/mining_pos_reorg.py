@@ -18,7 +18,7 @@ class ReorgStakeTest(PivxTestFramework):
 
     def set_test_params(self):
         self.num_nodes = 3
-        self.extra_args = [['-nuparams=PoS:201', '-nuparams=PoS_v2:201']] * self.num_nodes
+        self.extra_args = [['-nuparams=PoS:201', '-nuparams=PoS_v2:201', "-whitelist=127.0.0.1"]] * self.num_nodes
 
     def setup_chain(self):
         self.log.info("Initializing test directory " + self.options.tmpdir)
