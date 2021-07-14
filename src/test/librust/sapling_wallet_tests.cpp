@@ -74,7 +74,7 @@ BOOST_FIXTURE_TEST_SUITE(sapling_wallet_tests, WalletRegTestingSetup)
 BOOST_AUTO_TEST_CASE(SetSaplingNoteAddrsInCWalletTx) {
     auto consensusParams = Params().GetConsensus();
 
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     LOCK(wallet.cs_wallet);
     setupWallet(wallet);
 
@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE(FindMySaplingNotes)
 {
     auto consensusParams = Params().GetConsensus();
 
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     LOCK(wallet.cs_wallet);
     wallet.SetupSPKM(false);
 
@@ -179,7 +179,7 @@ BOOST_AUTO_TEST_CASE(GetConflictedSaplingNotes)
 {
     auto consensusParams = Params().GetConsensus();
 
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     LOCK2(cs_main, wallet.cs_wallet);
     setupWallet(wallet);
 
@@ -299,7 +299,7 @@ BOOST_AUTO_TEST_CASE(SaplingNullifierIsSpent)
 {
     auto consensusParams = Params().GetConsensus();
 
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     LOCK2(cs_main, wallet.cs_wallet);
     setupWallet(wallet);
 
@@ -358,7 +358,7 @@ BOOST_AUTO_TEST_CASE(NavigateFromSaplingNullifierToNote)
 {
     auto consensusParams = Params().GetConsensus();
 
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     LOCK2(cs_main, wallet.cs_wallet);
     setupWallet(wallet);
 
@@ -454,7 +454,7 @@ BOOST_AUTO_TEST_CASE(SpentSaplingNoteIsFromMe)
 {
     auto consensusParams = Params().GetConsensus();
 
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     LOCK2(cs_main, wallet.cs_wallet);
     setupWallet(wallet);
 
@@ -599,7 +599,7 @@ BOOST_AUTO_TEST_CASE(CachedWitnessesEmptyChain)
 {
     auto consensusParams = Params().GetConsensus();
 
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     {
         LOCK(wallet.cs_wallet);
         setupWallet(wallet);
@@ -640,7 +640,7 @@ BOOST_AUTO_TEST_CASE(CachedWitnessesChainTip)
     auto consensusParams = Params().GetConsensus();
 
     libzcash::SaplingExtendedSpendingKey sk = GetTestMasterSaplingSpendingKey();
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     {
         LOCK(wallet.cs_wallet);
         setupWallet(wallet);
@@ -719,7 +719,7 @@ BOOST_AUTO_TEST_CASE(CachedWitnessesDecrementFirst)
 {
     auto consensusParams = Params().GetConsensus();
     libzcash::SaplingExtendedSpendingKey sk = GetTestMasterSaplingSpendingKey();
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     {
         LOCK(wallet.cs_wallet);
         setupWallet(wallet);
@@ -788,7 +788,7 @@ BOOST_AUTO_TEST_CASE(CachedWitnessesCleanIndex)
     auto consensusParams = Params().GetConsensus();
 
     libzcash::SaplingExtendedSpendingKey sk = GetTestMasterSaplingSpendingKey();
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     {
         LOCK(wallet.cs_wallet);
         setupWallet(wallet);
@@ -865,7 +865,7 @@ BOOST_AUTO_TEST_CASE(ClearNoteWitnessCache)
     auto consensusParams = Params().GetConsensus();
 
     libzcash::SaplingExtendedSpendingKey sk = GetTestMasterSaplingSpendingKey();
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     {
         LOCK(wallet.cs_wallet);
         setupWallet(wallet);
@@ -913,7 +913,7 @@ BOOST_AUTO_TEST_CASE(UpdatedSaplingNoteData)
 {
     auto consensusParams = Params().GetConsensus();
 
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     // Need to lock cs_main for now due the lock ordering. future: revamp all of this function to only lock where is needed.
     LOCK2(cs_main, wallet.cs_wallet);
     setupWallet(wallet);
@@ -1024,7 +1024,7 @@ BOOST_AUTO_TEST_CASE(MarkAffectedSaplingTransactionsDirty)
 {
     auto consensusParams = Params().GetConsensus();
 
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     LOCK2(cs_main, wallet.cs_wallet);
     setupWallet(wallet);
 
@@ -1134,7 +1134,7 @@ BOOST_AUTO_TEST_CASE(GetNotes)
 {
     auto consensusParams = Params().GetConsensus();
 
-    CWallet& wallet = *pwalletMain;
+    CWallet& wallet = m_wallet;
     libzcash::SaplingPaymentAddress pk;
     uint256 blockHash;
     std::vector<SaplingOutPoint> saplingOutpoints;

@@ -267,6 +267,7 @@ set(WALLET_SOURCES
         ./src/legacy/stakemodifier.cpp
         ./src/wallet/wallet.cpp
         ./src/wallet/walletdb.cpp
+        ./src/wallet/walletutil.cpp
         ./src/zpiv/zpivmodule.cpp
         ./src/zpiv/zpos.cpp
         ./src/stakeinput.cpp

@@ -11,8 +11,11 @@
 #include "init.h"
 #include "masternodeconfig.h"
 #include "noui.h"
-#include "rpc/server.h"
 #include "util/system.h"
+
+#ifdef ENABLE_WALLET
+#include "wallet/walletutil.h"
+#endif
 
 #include <stdio.h>
 
