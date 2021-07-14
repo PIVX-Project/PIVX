@@ -266,10 +266,10 @@ public:
     // actually immutable; deserialization and assignment are implemented,
     // and bypass the constness. This is safe, as they update the entire
     // structure, including the hash.
-    const int16_t nVersion;
-    const int16_t nType;
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
+    const int16_t nVersion;
+    const int16_t nType;
     const uint32_t nLockTime;
     Optional<SaplingTxData> sapData{SaplingTxData()}; // Future: Don't initialize it by default
     Optional<std::vector<uint8_t>> extraPayload{nullopt};     // only available for special transaction types
@@ -403,10 +403,10 @@ private:
 /** A mutable version of CTransaction. */
 struct CMutableTransaction
 {
-    int16_t nVersion;
-    int16_t nType;
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
+    int16_t nVersion;
+    int16_t nType;
     uint32_t nLockTime;
     Optional<SaplingTxData> sapData{SaplingTxData()}; // Future: Don't initialize it by default
     Optional<std::vector<uint8_t>> extraPayload{nullopt};
