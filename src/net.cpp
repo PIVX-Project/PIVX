@@ -371,6 +371,7 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char* pszDest, bool fCo
         uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
         CNode* pnode = new CNode(id, nLocalServices, GetBestHeight(), hSocket, addrConnect, CalculateKeyedNetGroup(addrConnect), nonce, pszDest ? pszDest : "", false);
         pnode->nServicesExpected = ServiceFlags(addrConnect.nServices & nRelevantServices);
+        pnode->fWhitelisted = IsWhitelistedRange(addrConnect);
         pnode->AddRef();
 
         // We're making a new connection, harvest entropy from the time (and our peer count)
@@ -2332,7 +2333,6 @@ CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn
     fGetAddr = false;
     nNextLocalAddrSend = 0;
     nNextAddrSend = 0;
-    nNextInvSend = 0;
     fRelayTxes = false;
     pfilter = new CBloomFilter();
     timeLastMempoolReq = 0;
