@@ -201,7 +201,7 @@ void SettingsSignMessageWidgets::onSignMessageButtonSMClicked()
     ui->statusLabel_SM->setStyleSheet("QLabel { color: green; }");
     ui->statusLabel_SM->setText(QString("<nobr>") + tr("Message signed.") + QString("</nobr>"));
 
-    ui->signatureOut_SM->setText(QString::fromStdString(EncodeBase64(&vchSig[0], vchSig.size())));
+    ui->signatureOut_SM->setText(QString::fromStdString(EncodeBase64(vchSig)));
 }
 
 void SettingsSignMessageWidgets::onVerifyMessage()

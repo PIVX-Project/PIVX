@@ -11,6 +11,7 @@
 #define BITCOIN_UTILSTRENCODINGS_H
 
 #include "support/allocators/secure.h"
+#include "span.h"
 #include <algorithm>
 #include <stdint.h>
 #include <string>
@@ -54,7 +55,7 @@ signed char HexDigit(char c);
 bool IsHex(const std::string& str);
 std::vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid = NULL);
 std::string DecodeBase64(const std::string& str);
-std::string EncodeBase64(const unsigned char* pch, size_t len);
+std::string EncodeBase64(Span<const unsigned char> input);
 std::string EncodeBase64(const std::string& str);
 std::vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid = NULL);
 std::string DecodeBase32(const std::string& str);
