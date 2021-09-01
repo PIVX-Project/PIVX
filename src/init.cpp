@@ -41,6 +41,7 @@
 #include "policy/policy.h"
 #include "rpc/register.h"
 #include "rpc/server.h"
+#include "sapling/sodium_sanity.h"
 #include "script/sigcache.h"
 #include "script/standard.h"
 #include "scheduler.h"
@@ -781,6 +782,8 @@ bool InitSanityCheck(void)
         return false;
     }
 
+    libsodium_sanity_test();
+
     return true;
 }
 
@@ -1203,6 +1206,11 @@ static bool LockDataDirectory(bool probeOnly)
 bool AppInitSanityChecks()
 {
     // ********************************************************* Step 4: sanity checks
+
+    // Initialize libsodium
+    if (init_and_check_sodium() == -1) {
+        return false;
+    }
 
     // Initialize elliptic curve code
     RandomInit();
