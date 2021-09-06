@@ -18,7 +18,6 @@
 #include "wallet.h"
 #include "validation.h"
 
-#include <secp256k1.h>
 #include <stdint.h>
 
 #include <boost/algorithm/string.hpp>
@@ -187,7 +186,7 @@ static void ImportScript(CWallet* const pwallet, const CScript& script, const st
         throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
 
     if (isRedeemScript) {
-        if (!pwallet->HaveCScript(script) && !pwallet->AddCScript(script))
+        if (!pwallet->HaveCScript(CScriptID(script)) && !pwallet->AddCScript(script))
             throw JSONRPCError(RPC_WALLET_ERROR, "Error adding p2sh redeemScript to wallet");
         ImportAddress(pwallet, ScriptHash(script), strLabel,  "receive");
     }
@@ -736,7 +735,7 @@ static UniValue processImport(CWallet* const pwallet, const UniValue& data, cons
                 throw JSONRPCError(RPC_WALLET_ERROR, "Error adding address to wallet");
             }
 
-            if (!pwallet->HaveCScript(redeemScript) && !pwallet->AddCScript(redeemScript)) {
+            if (!pwallet->HaveCScript(CScriptID(redeemScript)) && !pwallet->AddCScript(redeemScript)) {
                 throw JSONRPCError(RPC_WALLET_ERROR, "Error adding p2sh redeemScript to wallet");
             }
 

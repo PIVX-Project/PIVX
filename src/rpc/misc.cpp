@@ -248,7 +248,7 @@ public:
         UniValue obj(UniValue::VOBJ);
         obj.pushKV("isscript", true);
         CScript subscript;
-        if (pwallet && pwallet->GetCScript(scriptID, subscript)) {
+        if (pwallet && pwallet->GetCScript(CScriptID(scriptID), subscript)) {
             std::vector<CTxDestination> addresses;
             txnouttype whichType;
             int nRequired;

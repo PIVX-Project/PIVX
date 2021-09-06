@@ -97,7 +97,8 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
         }
         return true;
     case TX_SCRIPTHASH:
-        if (creator.KeyStore().GetCScript(uint160(vSolutions[0]), scriptRet)) {
+        h160 = uint160(vSolutions[0]);
+        if (creator.KeyStore().GetCScript(CScriptID{h160}, scriptRet)) {
             ret.emplace_back(scriptRet.begin(), scriptRet.end());
             return true;
         }

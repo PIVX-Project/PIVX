@@ -95,17 +95,20 @@ public:
         }
     }
 
-    void operator()(const CKeyID& keyId)
+    void operator()(const PKHash& pkHash)
     {
-        if (keystore.HaveKey(keyId))
-            vKeys.push_back(keyId);
+        CKeyID keyId(pkHash);
+        if (keystore.HaveKey(keyId)) {
+            vKeys.emplace_back(keyId);
+        }
     }
 
-    void operator()(const CScriptID& scriptId)
+    void operator()(const ScriptHash& scriptHash)
     {
         CScript script;
-        if (keystore.GetCScript(scriptId, script))
+        if (keystore.GetCScript(CScriptID(scriptHash), script)) {
             Process(script);
+        }
     }
 
     void operator()(const CNoDestination& none) {}
