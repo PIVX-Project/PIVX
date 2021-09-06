@@ -275,10 +275,11 @@ void ScriptPubKeyMan::MarkReserveKeysAsUsed(int64_t keypool_id)
         CKeyPool keypool;
         if (batch.ReadPool(index, keypool)) {
             const CKeyID& keyid = keypool.vchPubKey.GetID();
+            PKHash pkHash(keypool.vchPubKey);
             m_pool_key_to_index.erase(keyid);
             // add missing receive addresses to the AddressBook
-            if (!internal && !wallet->HasAddressBook(keyid)) {
-                wallet->SetAddressBook(keyid, "", staking ? AddressBook::AddressBookPurpose::COLD_STAKING
+            if (!internal && !wallet->HasAddressBook(pkHash)) {
+                wallet->SetAddressBook(pkHash, "", staking ? AddressBook::AddressBookPurpose::COLD_STAKING
                                                           : AddressBook::AddressBookPurpose::RECEIVE);
             }
         }

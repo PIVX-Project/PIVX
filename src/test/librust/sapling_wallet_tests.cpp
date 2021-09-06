@@ -1041,7 +1041,7 @@ BOOST_AUTO_TEST_CASE(MarkAffectedSaplingTransactionsDirty)
     // Set up transparent address
     CBasicKeyStore keystore;
     CKey tsk = AddTestCKeyToKeyStore(keystore);
-    auto scriptPubKey = GetScriptForDestination(tsk.GetPubKey().GetID());
+    auto scriptPubKey = GetScriptForDestination(PKHash(tsk.GetPubKey()));
 
     // Generate shielding tx from transparent to Sapling
     // 0.5 t-PIV in, 0.4 z-PIV out, 0.1 t-PIV fee
@@ -1153,7 +1153,7 @@ BOOST_AUTO_TEST_CASE(GetNotes)
         // Set up transparent address
         CBasicKeyStore keystore;
         CKey tsk = AddTestCKeyToKeyStore(keystore);
-        auto scriptPubKey = GetScriptForDestination(tsk.GetPubKey().GetID());
+        auto scriptPubKey = GetScriptForDestination(PKHash(tsk.GetPubKey()));
 
         // Generate shielding tx from transparent to Sapling (five 1 PIV notes)
         auto builder = TransactionBuilder(consensusParams, &keystore);

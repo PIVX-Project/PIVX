@@ -482,7 +482,7 @@ UniValue decodescript(const JSONRPCRequest& request)
     }
     ScriptPubKeyToUniv(script, r, false);
 
-    r.pushKV("p2sh", EncodeDestination(CScriptID(script)));
+    r.pushKV("p2sh", EncodeDestination(ScriptHash(script)));
     return r;
 }
 

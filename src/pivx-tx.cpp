@@ -266,7 +266,7 @@ static void MutateTxAddOutPubKey(CMutableTransaction& tx, const std::string& str
     }
     if (bScriptHash) {
         // Get the ID for the script, and then construct a P2SH destination for it.
-        scriptPubKey = GetScriptForDestination(CScriptID(scriptPubKey));
+        scriptPubKey = GetScriptForDestination(ScriptHash(scriptPubKey));
     }
 
     // construct TxOut, append to transaction output list
@@ -328,7 +328,7 @@ static void MutateTxAddOutMultiSig(CMutableTransaction& tx, const std::string& s
                         "redeemScript exceeds size limit: %d > %d", scriptPubKey.size(), MAX_SCRIPT_ELEMENT_SIZE));
         }
         // Get the ID for the script, and then construct a P2SH destination for it.
-        scriptPubKey = GetScriptForDestination(CScriptID(scriptPubKey));
+        scriptPubKey = GetScriptForDestination(ScriptHash(scriptPubKey));
     }
 
     // construct TxOut, append to transaction output list

@@ -233,18 +233,18 @@ public:
 
     UniValue operator()(const CNoDestination &dest) const { return UniValue(UniValue::VOBJ); }
 
-    UniValue operator()(const CKeyID &keyID) const {
+    UniValue operator()(const PKHash& pkHash) const {
         UniValue obj(UniValue::VOBJ);
         CPubKey vchPubKey;
         obj.pushKV("isscript", false);
-        if (pwallet && pwallet->GetPubKey(keyID, vchPubKey)) {
+        if (pwallet && pwallet->GetPubKey(CKeyID(pkHash), vchPubKey)) {
             obj.pushKV("pubkey", HexStr(vchPubKey));
             obj.pushKV("iscompressed", vchPubKey.IsCompressed());
         }
         return obj;
     }
 
-    UniValue operator()(const CScriptID &scriptID) const {
+    UniValue operator()(const ScriptHash& scriptID) const {
         UniValue obj(UniValue::VOBJ);
         obj.pushKV("isscript", true);
         CScript subscript;
@@ -467,13 +467,13 @@ CScript _createmultisig_redeemScript(CWallet * const pwallet, const UniValue& pa
         // Case 1: PIVX address and we have full public key:
         CTxDestination dest = DecodeDestination(ks);
         if (pwallet && IsValidDestination(dest)) {
-            const CKeyID* keyID = boost::get<CKeyID>(&dest);
-            if (!keyID) {
+            const PKHash* pkHash = boost::get<PKHash>(&dest);
+            if (!pkHash) {
                 throw std::runtime_error(
                         strprintf("%s does not refer to a key", ks));
             }
             CPubKey vchPubKey;
-            if (!pwallet->GetPubKey(*keyID, vchPubKey))
+            if (!pwallet->GetPubKey(CKeyID(*pkHash), vchPubKey))
                 throw std::runtime_error(
                     strprintf("no full public key for address %s", ks));
             if (!vchPubKey.IsFullyValid())
@@ -534,10 +534,9 @@ UniValue createmultisig(const JSONRPCRequest& request)
 
     // Construct using pay-to-script-hash:
     CScript inner = _createmultisig_redeemScript(pwallet, request.params);
-    CScriptID innerID(inner);
 
     UniValue result(UniValue::VOBJ);
-    result.pushKV("address", EncodeDestination(innerID));
+    result.pushKV("address", EncodeDestination(ScriptHash(inner)));
     result.pushKV("redeemScript", HexStr(inner));
 
     return result;
@@ -578,8 +577,8 @@ UniValue verifymessage(const JSONRPCRequest& request)
     if (!IsValidDestination(destination))
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid address");
 
-    const CKeyID* keyID = boost::get<CKeyID>(&destination);
-    if (!keyID) {
+    const PKHash* pkHash = boost::get<PKHash>(&destination);
+    if (!pkHash) {
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to key");
     }
 
@@ -590,7 +589,7 @@ UniValue verifymessage(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Malformed base64 encoding");
 
     std::string strError;
-    return CMessageSigner::VerifyMessage(*keyID, vchSig, strMessage, strError);
+    return CMessageSigner::VerifyMessage(CKeyID(*pkHash), vchSig, strMessage, strError);
 }
 
 UniValue setmocktime(const JSONRPCRequest& request)

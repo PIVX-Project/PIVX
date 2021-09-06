@@ -630,7 +630,7 @@ BOOST_AUTO_TEST_CASE(cached_balances_tests)
     std::vector<CTxIn> vinDebit = {CTxIn(COutPoint(wtxCredit.GetHash(), 0))};
     CKey key;
     key.MakeNewKey(true);
-    std::vector<CTxOut> voutDebit = {CTxOut(nDebit, GetScriptForDestination(key.GetPubKey().GetID()))};
+    std::vector<CTxOut> voutDebit = {CTxOut(nDebit, GetScriptForDestination(PKHash(key.GetPubKey())))};
     CWalletTx& wtxDebit = BuildAndLoadTxToWallet(vinDebit, voutDebit, wallet);
 
     // Validates (3)

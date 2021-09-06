@@ -201,7 +201,7 @@ UniValue getaddressinfo(const JSONRPCRequest& request)
     if (pTransDest) {
         CScript scriptPubKey = GetScriptForDestination(*pTransDest);
         ret.pushKV("scriptPubKey", HexStr(scriptPubKey));
-        ret.pushKV("ischange", pwallet->IsChange(scriptPubKey));
+        ret.pushKV("ischange", pwallet->IsChange(ScriptHash(scriptPubKey)));
     }
 
     isminetype mine = IsMine(*pwallet, dest);
@@ -221,9 +221,9 @@ UniValue getaddressinfo(const JSONRPCRequest& request)
 
     if (spk_man && pTransDest) {
         // transparent destination
-        const CKeyID* keyID = boost::get<CKeyID>(pTransDest);
-        if (keyID) {
-            auto it = pwallet->mapKeyMetadata.find(*keyID);
+        const PKHash* pkHash = boost::get<PKHash>(pTransDest);
+        if (pkHash) {
+            auto it = pwallet->mapKeyMetadata.find(CKeyID(*pkHash));
             if(it != pwallet->mapKeyMetadata.end()) {
                 meta = &it->second;
             }
@@ -759,11 +759,11 @@ UniValue delegatoradd(const JSONRPCRequest& request)
 
     const std::string strLabel = (request.params.size() > 1 ? request.params[1].get_str() : "");
 
-    const CKeyID* keyID = boost::get<CKeyID>(&dest);
-    if (!keyID)
+    const PKHash* pkHash = boost::get<PKHash>(&dest);
+    if (!pkHash)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to get KeyID from PIVX address");
 
-    return pwallet->SetAddressBook(*keyID, strLabel, AddressBook::AddressBookPurpose::DELEGATOR);
+    return pwallet->SetAddressBook(*pkHash, strLabel, AddressBook::AddressBookPurpose::DELEGATOR);
 }
 
 UniValue delegatorremove(const JSONRPCRequest& request)
@@ -794,11 +794,11 @@ UniValue delegatorremove(const JSONRPCRequest& request)
     if (!IsValidDestination(dest) || isStakingAddress)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
 
-    const CKeyID* keyID = boost::get<CKeyID>(&dest);
-    if (!keyID)
+    const PKHash* pkHash = boost::get<PKHash>(&dest);
+    if (!pkHash)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to get KeyID from PIVX address");
 
-    if (!pwallet->HasAddressBook(*keyID))
+    if (!pwallet->HasAddressBook(*pkHash))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to get PIVX address from addressBook");
 
     std::string label = "";
@@ -807,7 +807,7 @@ UniValue delegatorremove(const JSONRPCRequest& request)
         label = optAdd->name;
     }
 
-    return pwallet->SetAddressBook(*keyID, label, AddressBook::AddressBookPurpose::DELEGABLE);
+    return pwallet->SetAddressBook(*pkHash, label, AddressBook::AddressBookPurpose::DELEGABLE);
 }
 
 static UniValue ListaddressesForPurpose(CWallet* const pwallet, const std::string strPurpose)
@@ -974,10 +974,7 @@ UniValue getrawchangeaddress(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
 
     reservekey.KeepKey();
-
-    CKeyID keyID = vchPubKey.GetID();
-
-    return EncodeDestination(keyID);
+    return EncodeDestination(PKHash(vchPubKey));
 }
 
 
@@ -1205,9 +1202,10 @@ static UniValue CreateColdStakeDelegation(CWallet* const pwallet, const UniValue
     if (!IsValidDestination(stakeAddr) || !isStaking)
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX staking address");
 
-    CKeyID* stakeKey = boost::get<CKeyID>(&stakeAddr);
-    if (!stakeKey)
+    PKHash* stakerPkHash = boost::get<PKHash>(&stakeAddr);
+    if (!stakerPkHash)
         throw JSONRPCError(RPC_WALLET_ERROR, "Unable to get stake pubkey hash from stakingaddress");
+    CKeyID stakeKey(*stakerPkHash);
 
     // Get Amount
     CAmount nValue = AmountFromValue(params[1]);
@@ -1236,7 +1234,7 @@ static UniValue CreateColdStakeDelegation(CWallet* const pwallet, const UniValue
         CTxDestination dest = DecodeDestination(params[2].get_str(), isStaking);
         if (!IsValidDestination(dest) || isStaking)
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX spending address");
-        ownerKey = *boost::get<CKeyID>(&dest);
+        ownerKey = CKeyID(*boost::get<PKHash>(&dest));
         // Check that the owner address belongs to this wallet, or fForceExternalAddr is true
         bool fForceExternalAddr = params.size() > 3 && !params[3].isNull() ? params[3].get_bool() : false;
         if (!fForceExternalAddr && !pwallet->HaveKey(ownerKey)) {
@@ -1250,9 +1248,9 @@ static UniValue CreateColdStakeDelegation(CWallet* const pwallet, const UniValue
     } else {
         // Get new owner address from keypool
         CTxDestination ownerAddr = GetNewAddressFromLabel(pwallet, "delegated", NullUniValue);
-        CKeyID* pOwnerKey = boost::get<CKeyID>(&ownerAddr);
+        PKHash* pOwnerKey = boost::get<PKHash>(&ownerAddr);
         assert(pOwnerKey);
-        ownerKey = *pOwnerKey;
+        ownerKey = CKeyID(*pOwnerKey);
         ownerAddressStr = EncodeDestination(ownerAddr);
     }
 
@@ -1264,8 +1262,8 @@ static UniValue CreateColdStakeDelegation(CWallet* const pwallet, const UniValue
     if (!fUseShielded) {
         // Delegate transparent coins
         CAmount nFeeRequired;
-        CScript scriptPubKey = fV6Enforced ? GetScriptForStakeDelegation(*stakeKey, ownerKey)
-                                           : GetScriptForStakeDelegationLOF(*stakeKey, ownerKey);
+        CScript scriptPubKey = fV6Enforced ? GetScriptForStakeDelegation(stakeKey, ownerKey)
+                                           : GetScriptForStakeDelegationLOF(stakeKey, ownerKey);
         if (!pwallet->CreateTransaction(scriptPubKey, nValue, txNew, reservekey, nFeeRequired, strError, nullptr, (CAmount)0, fUseDelegated)) {
             if (nValue + nFeeRequired > currBalance)
                 strError = strprintf("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!", FormatMoney(nFeeRequired));
@@ -1279,7 +1277,7 @@ static UniValue CreateColdStakeDelegation(CWallet* const pwallet, const UniValue
         if (sporkManager.IsSporkActive(SPORK_20_SAPLING_MAINTENANCE)) {
             throw JSONRPCError(RPC_INVALID_PARAMETER, "SHIELD in maintenance (SPORK 20)");
         }
-        std::vector<SendManyRecipient> recipients = {SendManyRecipient(ownerKey, *stakeKey, nValue, fV6Enforced)};
+        std::vector<SendManyRecipient> recipients = {SendManyRecipient(ownerKey, stakeKey, nValue, fV6Enforced)};
         SaplingOperation operation(consensus, pwallet);
         OperationResult res = operation.setSelectShieldedCoins(true)
                                        ->setRecipients(recipients)
@@ -2024,12 +2022,12 @@ UniValue signmessage(const JSONRPCRequest& request)
     if (!IsValidDestination(dest))
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid address");
 
-    const CKeyID* keyID = boost::get<CKeyID>(&dest);
+    const PKHash* keyID = boost::get<PKHash>(&dest);
     if (!keyID)
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to key");
 
     CKey key;
-    if (!pwallet->GetKey(*keyID, key))
+    if (!pwallet->GetKey(CKeyID(*keyID), key))
         throw JSONRPCError(RPC_WALLET_ERROR, "Private key not available");
 
     std::vector<unsigned char> vchSig;
@@ -2513,11 +2511,11 @@ UniValue addmultisigaddress(const JSONRPCRequest& request)
 
     // Construct using pay-to-script-hash:
     CScript inner = _createmultisig_redeemScript(pwallet, request.params);
-    CScriptID innerID(inner);
+    ScriptHash scriptHash(inner);
     pwallet->AddCScript(inner);
 
-    pwallet->SetAddressBook(innerID, label, AddressBook::AddressBookPurpose::SEND);
-    return EncodeDestination(innerID);
+    pwallet->SetAddressBook(scriptHash, label, AddressBook::AddressBookPurpose::SEND);
+    return EncodeDestination(scriptHash);
 }
 
 
@@ -3849,9 +3847,9 @@ UniValue listunspent(const JSONRPCRequest& request)
         if (pk.IsPayToScriptHash()) {
             CTxDestination address;
             if (ExtractDestination(pk, address)) {
-                const CScriptID& hash = boost::get<CScriptID>(address);
+                const ScriptHash& hash = boost::get<ScriptHash>(address);
                 CScript redeemScript;
-                if (pwallet->GetCScript(hash, redeemScript))
+                if (pwallet->GetCScript(CScriptID(hash), redeemScript))
                     entry.pushKV("redeemScript", HexStr(redeemScript));
             }
         }

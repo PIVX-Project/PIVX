@@ -293,7 +293,7 @@ public:
     bool updateAddressBookPurpose(const QString &addressStr, const std::string& purpose);
     std::string getLabelForAddress(const CTxDestination& address);
     QString getSaplingAddressString(const CWalletTx* wtx, const SaplingOutPoint& op) const;
-    bool getKeyId(const CTxDestination& address, CKeyID& keyID);
+    bool getKeyId(const CTxDestination& address, PKHash& pkHashRet);
     bool getKey(const CKeyID& keyID, CKey& key) const { return wallet->GetKey(keyID, key); }
     bool haveKey(const CKeyID& keyID) const { return wallet->HaveKey(keyID); }
     bool addKeys(const CKey& key, const CPubKey& pubkey, WalletRescanReserver& reserver);

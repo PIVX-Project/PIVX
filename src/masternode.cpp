@@ -292,7 +292,7 @@ bool CMasternodeBroadcast::Create(const CTxIn& txin,
     if (fImporting || fReindex) return false;
 
     LogPrint(BCLog::MASTERNODE, "CMasternodeBroadcast::Create -- pubKeyCollateralAddressNew = %s, pubKeyMasternodeNew.GetID() = %s\n",
-             EncodeDestination(pubKeyCollateralAddressNew.GetID()),
+             EncodeDestination(PKHash(pubKeyCollateralAddressNew)),
         pubKeyMasternodeNew.GetID().ToString());
 
     // Get block hash to ping (TODO: move outside of this function)
@@ -393,7 +393,7 @@ bool CMasternodeBroadcast::CheckAndUpdate(int& nDos)
     }
 
     CScript pubkeyScript;
-    pubkeyScript = GetScriptForDestination(pubKeyCollateralAddress.GetID());
+    pubkeyScript = GetScriptForDestination(PKHash(pubKeyCollateralAddress));
 
     if (pubkeyScript.size() != 25) {
         LogPrint(BCLog::MASTERNODE,"mnb - pubkey the wrong size\n");
@@ -402,7 +402,7 @@ bool CMasternodeBroadcast::CheckAndUpdate(int& nDos)
     }
 
     CScript pubkeyScript2;
-    pubkeyScript2 = GetScriptForDestination(pubKeyMasternode.GetID());
+    pubkeyScript2 = GetScriptForDestination(PKHash(pubKeyMasternode));
 
     if (pubkeyScript2.size() != 25) {
         LogPrint(BCLog::MASTERNODE,"mnb - pubkey2 the wrong size\n");

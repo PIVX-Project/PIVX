@@ -283,9 +283,9 @@ SetupDummyInputs(CBasicKeyStore& keystoreRet, CCoinsViewCache& coinsRet)
 
     dummyTransactions[1].vout.resize(2);
     dummyTransactions[1].vout[0].nValue = 21*CENT;
-    dummyTransactions[1].vout[0].scriptPubKey = GetScriptForDestination(key[2].GetPubKey().GetID());
+    dummyTransactions[1].vout[0].scriptPubKey = GetScriptForDestination(PKHash(key[2].GetPubKey()));
     dummyTransactions[1].vout[1].nValue = 22*CENT;
-    dummyTransactions[1].vout[1].scriptPubKey = GetScriptForDestination(key[3].GetPubKey().GetID());
+    dummyTransactions[1].vout[1].scriptPubKey = GetScriptForDestination(PKHash(key[3].GetPubKey()));
     AddCoins(coinsRet, dummyTransactions[1], 0);
 
     return dummyTransactions;
@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_CASE(test_big_witness_transaction) {
     key.MakeNewKey(false);
     CBasicKeyStore keystore;
     keystore.AddKeyPubKey(key, key.GetPubKey());
-    CKeyID hash = key.GetPubKey().GetID();
+    PKHash hash(key.GetPubKey());
     CScript scriptPubKey = GetScriptForDestination(hash);
 
     std::vector<int> sigHashes;
@@ -412,7 +412,7 @@ BOOST_AUTO_TEST_CASE(test_IsStandard)
     t.vout[0].nValue = 90*CENT;
     CKey key;
     key.MakeNewKey(true);
-    t.vout[0].scriptPubKey = GetScriptForDestination(key.GetPubKey().GetID());
+    t.vout[0].scriptPubKey = GetScriptForDestination(PKHash(key.GetPubKey()));
 
     std::string reason;
     BOOST_CHECK(IsStandardTx(t, 0, reason));

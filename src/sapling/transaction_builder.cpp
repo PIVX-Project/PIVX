@@ -208,7 +208,12 @@ void TransactionBuilder::AddTransparentOutput(const CTxOut& out)
 
 void TransactionBuilder::AddTransparentOutput(const CTxDestination& dest, CAmount value)
 {
-    AddTransparentOutput(CTxOut(value, GetScriptForDestination(dest)));
+    AddTransparentOutput(GetScriptForDestination(dest), value);
+}
+
+void TransactionBuilder::AddTransparentOutput(const CScript& script, CAmount value)
+{
+    AddTransparentOutput(CTxOut(value, script));
 }
 
 void TransactionBuilder::SetFee(CAmount _fee)

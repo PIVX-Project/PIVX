@@ -34,7 +34,7 @@ static CBLSPublicKey GetRandomBLSKey()
 
 static CScript GetRandomScript()
 {
-    return GetScriptForDestination(GetRandomKeyID());
+    return GetScriptForDestination(PKHash(GetRandomKeyID()));
 }
 
 static ProRegPL GetRandomProRegPayload()

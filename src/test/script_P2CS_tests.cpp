@@ -13,7 +13,7 @@ BOOST_FIXTURE_TEST_SUITE(script_P2CS_tests, WalletTestingSetup)
 
 void CheckValidKeyId(const CTxDestination& dest, const CKeyID& expectedKey)
 {
-    const CKeyID* keyid = boost::get<CKeyID>(&dest);
+    const PKHash* keyid = boost::get<PKHash>(&dest);
     if (keyid) {
         BOOST_CHECK(keyid);
         BOOST_CHECK(*keyid == expectedKey);
@@ -68,7 +68,7 @@ static CScript GetDummyP2CS(const CKeyID& dummyKeyID)
     return GetScriptForStakeDelegation(dummyKeyID, dummyKeyID);
 }
 
-static CScript GetDummyP2PKH(const CKeyID& dummyKeyID)
+static CScript GetDummyP2PKH(const PKHash& dummyKeyID)
 {
     return GetScriptForDestination(dummyKeyID);
 }
@@ -149,7 +149,8 @@ BOOST_AUTO_TEST_CASE(coldstake_lof_script)
 
     const CKey& dummyKey = KeyIO::DecodeSecret("YNdsth3BsW53DYmCiR12SofWSAt2utXQUSGoin3PekVQCMbzfS7E");
     const CKeyID& dummyKeyID = dummyKey.GetPubKey().GetID();
-    const CScript& dummyP2PKH = GetDummyP2PKH(dummyKeyID);
+    const PKHash dummyKeyHash(dummyKey.GetPubKey());
+    const CScript& dummyP2PKH = GetDummyP2PKH(dummyKeyHash);
 
     // Add a masternode out
     tx.vout.emplace_back(3 * COIN, dummyP2PKH);
@@ -225,7 +226,8 @@ BOOST_AUTO_TEST_CASE(coldstake_script)
 
     const CKey& dummyKey = KeyIO::DecodeSecret("YNdsth3BsW53DYmCiR12SofWSAt2utXQUSGoin3PekVQCMbzfS7E");
     const CKeyID& dummyKeyID = dummyKey.GetPubKey().GetID();
-    const CScript& dummyP2PKH = GetDummyP2PKH(dummyKeyID);
+    const PKHash dummyKeyHash(dummyKey.GetPubKey());
+    const CScript& dummyP2PKH = GetDummyP2PKH(dummyKeyHash);
 
     // Add a dummy P2PKH out at the end
     tx.vout.emplace_back(3 * COIN, dummyP2PKH);

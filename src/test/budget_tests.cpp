@@ -77,7 +77,7 @@ BOOST_FIXTURE_TEST_CASE(block_value, TestnetSetup)
     // superblock - create the finalized budget with a proposal, and vote on it
     nHeight = 144;
     const CTxIn mnVin(GetRandHash(), 0);
-    const CScript payee = GetScriptForDestination(CKeyID(uint160(ParseHex("816115944e077fe7c803cfa57f29b36bf87c1d35"))));
+    const CScript payee = GetScriptForDestination(PKHash(uint160(ParseHex("816115944e077fe7c803cfa57f29b36bf87c1d35"))));
     const CAmount propAmt = 100 * COIN;
     const uint256& propHash = GetRandHash(), finTxId = GetRandHash();
     const CTxBudgetPayment txBudgetPayment(propHash, payee, propAmt);
@@ -186,9 +186,9 @@ BOOST_FIXTURE_TEST_CASE(budget_blocks_payee_test, TestChain100Setup)
     BOOST_ASSERT(g_budgetman.GetFinalizedBudgets().size() == 0);
 
     // Now we are at the superblock height, let's add a proposal to pay.
-    const CScript payee1 = GetScriptForDestination(CKeyID(uint160(ParseHex("816115944e077fe7c803cfa57f29b36bf87c1d35"))));
+    const CScript payee1 = GetScriptForDestination(PKHash(uint160(ParseHex("816115944e077fe7c803cfa57f29b36bf87c1d35"))));
     const CAmount propAmt1 = 100 * COIN;
-    const CScript payee2 = GetScriptForDestination(CKeyID(uint160(ParseHex("8d5b4f83212214d6ef693e02e6d71969fddad976"))));
+    const CScript payee2 = GetScriptForDestination(PKHash(uint160(ParseHex("8d5b4f83212214d6ef693e02e6d71969fddad976"))));
     const CAmount propAmt2 = propAmt1;
     forceAddFakeProposals({propAmt1, payee1}, {propAmt2, payee2});
 
@@ -203,7 +203,7 @@ BOOST_FIXTURE_TEST_CASE(budget_blocks_payee_test, TestChain100Setup)
 
     // Modify payee
     CMutableTransaction mtx(*block.vtx[0]);
-    mtx.vout[1].scriptPubKey = GetScriptForDestination(CKeyID(uint160(ParseHex("8c988f1a4a4de2161e0f50aac7f17e7f9555caa4"))));
+    mtx.vout[1].scriptPubKey = GetScriptForDestination(PKHash(uint160(ParseHex("8c988f1a4a4de2161e0f50aac7f17e7f9555caa4"))));
     block.vtx[0] = MakeTransactionRef(mtx);
     std::shared_ptr<CBlock> pblock = FinalizeBlock(std::make_shared<CBlock>(block));
     BOOST_CHECK(block.vtx[0]->vout[1].scriptPubKey != payee1);
@@ -266,9 +266,9 @@ BOOST_FIXTURE_TEST_CASE(budget_blocks_reorg_test, TestChain100Setup)
     BOOST_CHECK_EQUAL(WITH_LOCK(cs_main, return chainActive.Height();), 143);
 
     // Now we are at the superblock height, let's add a proposal to pay.
-    const CScript payee = GetScriptForDestination(CKeyID(uint160(ParseHex("816115944e077fe7c803cfa57f29b36bf87c1d35"))));
+    const CScript payee = GetScriptForDestination(PKHash(uint160(ParseHex("816115944e077fe7c803cfa57f29b36bf87c1d35"))));
     const CAmount propAmt = 100 * COIN;
-    const CScript payee2 = GetScriptForDestination(CKeyID(uint160(ParseHex("816115944e077fe7c803cfa57f29b36bf87c1d35"))));
+    const CScript payee2 = GetScriptForDestination(PKHash(uint160(ParseHex("816115944e077fe7c803cfa57f29b36bf87c1d35"))));
     const CAmount propAmt2 = propAmt * 2;
     forceAddFakeProposals({propAmt, payee}, {propAmt2, payee2});
 
@@ -283,7 +283,7 @@ BOOST_FIXTURE_TEST_CASE(budget_blocks_reorg_test, TestChain100Setup)
     //    b) Create and process blockE on top of blockD.
     // 6) Verify that tip is at blockE.
 
-    CScript forkCoinbaseScript = GetScriptForDestination(CKeyID(uint160(ParseHex("8c988f1a4a4de2161e0f50aac7f17e7f9555caa4"))));
+    CScript forkCoinbaseScript = GetScriptForDestination(PKHash(uint160(ParseHex("8c988f1a4a4de2161e0f50aac7f17e7f9555caa4"))));
     CBlock blockA = CreateBlock({}, coinbaseKey, false);
     CBlock blockB = CreateBlock({}, forkCoinbaseScript, false);
     BOOST_CHECK(blockA.GetHash() != blockB.GetHash());
@@ -327,7 +327,7 @@ static CScript GetRandomP2PKH()
 {
     CKey key;
     key.MakeNewKey(false);
-    return GetScriptForDestination(key.GetPubKey().GetID());
+    return GetScriptForDestination(PKHash(key.GetPubKey()));
 }
 
 static CMutableTransaction NewCoinBase(int nHeight, CAmount cbaseAmt, const CScript& cbaseScript)

@@ -150,7 +150,7 @@ static CKey GetKeyFromWallet(CWallet* pwallet, const CKeyID& keyID)
     CKey key;
     if (!pwallet->GetKey(keyID, key)) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY,
-                           strprintf("key for address %s not in wallet", EncodeDestination(keyID)));
+                           strprintf("key for address %s not in wallet", EncodeDestination(PKHash(keyID))));
     }
     return key;
 }
@@ -181,9 +181,9 @@ static CKey ParsePrivKey(CWallet* pwallet, const std::string &strKeyOrAddress, b
             throw std::runtime_error("addresses not supported when wallet is disabled");
         }
         EnsureWalletIsUnlocked(pwallet);
-        const CKeyID* keyID = boost::get<CKeyID>(dest);
-        assert (keyID != nullptr);  // we just checked IsValidDestination
-        return GetKeyFromWallet(pwallet, *keyID);
+        const PKHash* pkHash = boost::get<PKHash>(dest);
+        assert (pkHash != nullptr);  // we just checked IsValidDestination
+        return GetKeyFromWallet(pwallet, CKeyID(*pkHash));
 #else   // ENABLE_WALLET
         throw std::runtime_error("addresses not supported in no-wallet builds");
 #endif  // ENABLE_WALLET
@@ -194,7 +194,7 @@ static CKey ParsePrivKey(CWallet* pwallet, const std::string &strKeyOrAddress, b
     return key;
 }
 
-static CKeyID ParsePubKeyIDFromAddress(const std::string& strAddress)
+static PKHash ParsePubKeyHashFromAddress(const std::string& strAddress)
 {
     bool isStaking{false}, isShield{false};
     const CWDestination& cwdest = Standard::DecodeDestination(strAddress, isStaking, isShield);
@@ -204,11 +204,16 @@ static CKeyID ParsePubKeyIDFromAddress(const std::string& strAddress)
     if (isShield) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "shield addresses not supported");
     }
-    const CKeyID* keyID = boost::get<CKeyID>(Standard::GetTransparentDestination(cwdest));
-    if (!keyID) {
+    const PKHash* pkHash = boost::get<PKHash>(Standard::GetTransparentDestination(cwdest));
+    if (!pkHash) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("invalid PIVX address %s", strAddress));
     }
-    return *keyID;
+    return *pkHash;
+}
+
+static CKeyID ParsePubKeyIDFromAddress(const std::string& strAddress)
+{
+    return CKeyID(ParsePubKeyHashFromAddress(strAddress));
 }
 
 static CBLSPublicKey ParseBLSPubKey(const std::string& hexKey)
@@ -395,7 +400,7 @@ static ProRegPL ParseProRegPLParams(const UniValue& params, unsigned int paramId
 
     // payout script (!TODO: add support for P2CS)
     const std::string& strAddPayee = params[paramIdx + 4].get_str();
-    pl.scriptPayout = GetScriptForDestination(CTxDestination(ParsePubKeyIDFromAddress(strAddPayee)));
+    pl.scriptPayout = GetScriptForDestination(CTxDestination(ParsePubKeyHashFromAddress(strAddPayee)));
 
     // operator reward
     pl.nOperatorReward = 0;
@@ -412,7 +417,7 @@ static ProRegPL ParseProRegPLParams(const UniValue& params, unsigned int paramId
             // operator reward payout script
             const std::string& strAddOpPayee = params[paramIdx + 6].get_str();
             if (pl.nOperatorReward > 0 && !strAddOpPayee.empty()) {
-                pl.scriptOperatorPayout = GetScriptForDestination(CTxDestination(ParsePubKeyIDFromAddress(strAddOpPayee)));
+                pl.scriptOperatorPayout = GetScriptForDestination(CTxDestination(ParsePubKeyHashFromAddress(strAddOpPayee)));
             } else if (!strAddOpPayee.empty()) {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, "operatorPayoutAddress must be empty when operatorReward is 0");
             }
@@ -503,12 +508,12 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
     }
     CTxDestination txDest;
     ExtractDestination(coin.out.scriptPubKey, txDest);
-    const CKeyID* keyID = boost::get<CKeyID>(&txDest);
-    if (!keyID) {
+    const PKHash* pkHash = boost::get<PKHash>(&txDest);
+    if (!pkHash) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("collateral type not supported: %s-%d", collateralHash.ToString(), collateralIndex));
     }
     CKey keyCollateral;
-    if (fSignAndSend && !pwallet->GetKey(*keyID, keyCollateral)) {
+    if (fSignAndSend && !pwallet->GetKey(CKeyID(*pkHash), keyCollateral)) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("collateral key not in wallet: %s", EncodeDestination(txDest)));
     }
 
@@ -627,7 +632,7 @@ UniValue protx_register_fund(const JSONRPCRequest& request)
     // the user could have gotten from another RPC command prior to now
     pwallet->BlockUntilSyncedToCurrentChain();
 
-    const CTxDestination& collateralDest(ParsePubKeyIDFromAddress(request.params[0].get_str()));
+    const CTxDestination& collateralDest(ParsePubKeyHashFromAddress(request.params[0].get_str()));
     const CScript& collateralScript = GetScriptForDestination(collateralDest);
     const CAmount collAmt = Params().GetConsensus().nMNCollateralAmt;
 
@@ -664,11 +669,11 @@ static bool CheckWalletOwnsScript(CWallet* pwallet, const CScript& script)
     AssertLockHeld(pwallet->cs_wallet);
     CTxDestination dest;
     if (ExtractDestination(script, dest)) {
-        const CKeyID* keyID = boost::get<CKeyID>(&dest);
-        if (keyID && pwallet->HaveKey(*keyID))
+        const PKHash* pkHash = boost::get<PKHash>(&dest);
+        if (pkHash && pwallet->HaveKey(CKeyID(*pkHash)))
             return true;
-        const CScriptID* scriptID = boost::get<CScriptID>(&dest);
-        if (scriptID && pwallet->HaveCScript(*scriptID))
+        const ScriptHash* scriptHash = boost::get<ScriptHash>(&dest);
+        if (scriptHash && pwallet->HaveCScript(CScriptID(*scriptHash)))
             return true;
     }
     return false;
@@ -852,7 +857,7 @@ UniValue protx_update_service(const JSONRPCRequest& request)
         const std::string& strAddOpPayee = request.params[2].get_str();
         if (!strAddOpPayee.empty()) {
             if (dmn->nOperatorReward > 0) {
-                pl.scriptOperatorPayout = GetScriptForDestination(CTxDestination(ParsePubKeyIDFromAddress(strAddOpPayee)));
+                pl.scriptOperatorPayout = GetScriptForDestination(CTxDestination(ParsePubKeyHashFromAddress(strAddOpPayee)));
             } else {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Operator reward is 0. Cannot set operator payout address"));
             }
@@ -927,7 +932,7 @@ UniValue protx_update_registrar(const JSONRPCRequest& request)
 
     const std::string& strPayee = request.params[3].get_str();
     pl.scriptPayout = strPayee.empty() ? pl.scriptPayout = dmn->pdmnState->scriptPayout
-                                       : GetScriptForDestination(CTxDestination(ParsePubKeyIDFromAddress(strPayee)));
+                                       : GetScriptForDestination(CTxDestination(ParsePubKeyHashFromAddress(strPayee)));
 
     const std::string& strOwnKey = request.params.size() > 4 ? request.params[4].get_str() : "";
     const CKey& ownerKey = strOwnKey.empty() ? GetKeyFromWallet(pwallet, dmn->pdmnState->keyIDOwner)

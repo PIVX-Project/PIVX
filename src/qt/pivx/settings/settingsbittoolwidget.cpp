@@ -6,7 +6,6 @@
 #include "qt/pivx/settings/forms/ui_settingsbittoolwidget.h"
 #include "qt/pivx/qtutils.h"
 
-#include "guiutil.h"
 #include "walletmodel.h"
 
 #include "bip38.h"
@@ -15,7 +14,6 @@
 #include "askpassphrasedialog.h"
 
 #include <string>
-#include <vector>
 
 
 SettingsBitToolWidget::SettingsBitToolWidget(PIVXGUI* _window, QWidget *parent) :
@@ -149,8 +147,8 @@ void SettingsBitToolWidget::onEncryptKeyButtonENCClicked()
         return;
     }
 
-    const CKeyID* keyID = boost::get<CKeyID>(&dest);
-    if (!keyID) {
+    const PKHash* pkHash = boost::get<PKHash>(&dest);
+    if (!pkHash) {
         //ui->addressIn_ENC->setValid(false);
         ui->statusLabel_ENC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_ENC->setText(tr("The entered address does not refer to a key.") + QString(" ") + tr("Please check the address and try again."));
@@ -165,7 +163,7 @@ void SettingsBitToolWidget::onEncryptKeyButtonENCClicked()
     }
 
     CKey key;
-    if (!walletModel->getKey(*keyID, key)) {
+    if (!walletModel->getKey(CKeyID(*pkHash), key)) {
         ui->statusLabel_ENC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_ENC->setText(tr("Private key for the entered address is not available."));
         return;
@@ -263,8 +261,7 @@ void SettingsBitToolWidget::onDecryptClicked()
     }
 
     key.Set(privKey.begin(), privKey.end(), fCompressed);
-    CPubKey pubKey = key.GetPubKey();
-    ui->lineEditDecryptResult->setText(QString::fromStdString(EncodeDestination(pubKey.GetID())));
+    ui->lineEditDecryptResult->setText(QString::fromStdString(EncodeDestination(PKHash(key.GetPubKey()))));
     ui->pushButtonImport->setVisible(true);
 }
 
@@ -286,8 +283,9 @@ void SettingsBitToolWidget::importAddressFromDecKey()
 
     CTxDestination dest = DecodeDestination(ui->lineEditDecryptResult->text().toStdString());
     CPubKey pubkey = key.GetPubKey();
+    PKHash pkHash(pubkey);
 
-    if (!IsValidDestination(dest) || !key.IsValid() || EncodeDestination(pubkey.GetID()) != EncodeDestination(dest)) {
+    if (!IsValidDestination(dest) || !key.IsValid() || EncodeDestination(pkHash) != EncodeDestination(dest)) {
         ui->statusLabel_DEC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_DEC->setText(tr("Data Not Valid.") + QString(" ") + tr("Please try again."));
         return;
@@ -298,7 +296,7 @@ void SettingsBitToolWidget::importAddressFromDecKey()
         ui->statusLabel_DEC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_DEC->setText(tr("Please wait while key is imported"));
 
-        walletModel->updateAddressBookLabels(vchAddress, "", AddressBook::AddressBookPurpose::RECEIVE);
+        walletModel->updateAddressBookLabels(pkHash, "", AddressBook::AddressBookPurpose::RECEIVE);
 
         // Don't throw error in case a key is already there
         if (walletModel->haveKey(vchAddress)) {

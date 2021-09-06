@@ -132,6 +132,7 @@ public:
 
     void AddTransparentOutput(const CTxOut& out);
     void AddTransparentOutput(const CTxDestination& dest, CAmount value);
+    void AddTransparentOutput(const CScript& script, CAmount value);
 
     void SendChangeTo(const libzcash::SaplingPaymentAddress& changeAddr, const uint256& ovk);
 

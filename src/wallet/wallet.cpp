@@ -206,12 +206,12 @@ CallResult<CTxDestination> CWallet::getNewAddress(const std::string& addressLabe
         return CallResult<CTxDestination>(std::string(
                         _("Keypool ran out, please call keypoolrefill first, or unlock the wallet.")));
     }
-    CKeyID keyID = newKey.GetID();
+    const PKHash pkhash(newKey);
 
-    if (!SetAddressBook(keyID, addressLabel, purpose))
+    if (!SetAddressBook(pkhash, addressLabel, purpose))
         throw std::runtime_error("CWallet::getNewAddress() : SetAddressBook failed");
 
-    return CallResult<CTxDestination>(CTxDestination(keyID));
+    return CallResult<CTxDestination>(pkhash);
 }
 
 int64_t CWallet::GetKeyCreationTime(const CWDestination& dest)
@@ -228,10 +228,10 @@ int64_t CWallet::GetKeyCreationTime(CPubKey pubkey)
 
 int64_t CWallet::GetKeyCreationTime(const CTxDestination& address)
 {
-    const CKeyID* keyID = boost::get<CKeyID>(&address);
-    if (keyID) {
+    const PKHash* pkhash = boost::get<PKHash>(&address);
+    if (pkhash) {
         CPubKey keyRet;
-        if (GetPubKey(*keyID, keyRet)) {
+        if (GetPubKey(CKeyID(*pkhash), keyRet)) {
             return GetKeyCreationTime(keyRet);
         }
     }
@@ -254,7 +254,7 @@ bool CWallet::AddKeyPubKey(const CKey& secret, const CPubKey& pubkey)
     // TODO: Move the follow block entirely inside the spkm (including WriteKey to AddKeyPubKeyWithDB)
     // check if we need to remove from watch-only
     CScript script;
-    script = GetScriptForDestination(pubkey.GetID());
+    script = GetScriptForDestination(PKHash(pubkey));
     if (HaveWatchOnly(script))
         RemoveWatchOnly(script);
 
@@ -333,7 +333,7 @@ bool CWallet::LoadCScript(const CScript& redeemScript)
      * that never can be redeemed. However, old wallets may still contain
      * these. Do not add them to the wallet and warn. */
     if (redeemScript.size() > MAX_SCRIPT_ELEMENT_SIZE) {
-        std::string strAddr = EncodeDestination(CScriptID(redeemScript));
+        std::string strAddr = EncodeDestination(ScriptHash(redeemScript));
         LogPrintf("%s: Warning: This wallet contains a redeemScript of size %i which exceeds maximum size %i thus can never be redeemed. Do not use address %s.\n",
             __func__, redeemScript.size(), MAX_SCRIPT_ELEMENT_SIZE, strAddr);
         return true;
@@ -783,13 +783,13 @@ bool CWallet::GetVinAndKeysFromOutput(COutput out, CTxIn& txinRet, CPubKey& pubK
     CTxDestination address1;
     ExtractDestination(pubScript, address1, fColdStake);
 
-    const CKeyID* keyID = boost::get<CKeyID>(&address1);
+    const PKHash* keyID = boost::get<PKHash>(&address1);
     if (!keyID) {
         LogPrintf("CWallet::GetVinAndKeysFromOutput -- Address does not refer to a key\n");
         return false;
     }
 
-    if (!GetKey(*keyID, keyRet)) {
+    if (!GetKey(CKeyID(*keyID), keyRet)) {
         LogPrintf("CWallet::GetVinAndKeysFromOutput -- Private key for address is not known\n");
         return false;
     }
@@ -900,7 +900,7 @@ int64_t CWallet::IncOrderPosNext(WalletBatch* batch)
 bool CWallet::IsKeyUsed(const CPubKey& vchPubKey) const
 {
     if (vchPubKey.IsValid()) {
-        const CScript& scriptPubKey = GetScriptForDestination(vchPubKey.GetID());
+        const CScript& scriptPubKey = GetScriptForDestination(PKHash(vchPubKey));
         for (const auto& entry : mapWallet) {
             const CWalletTx& wtx = entry.second;
             for (const CTxOut& txout : wtx.tx->vout)
@@ -3152,7 +3152,7 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
                             strFailReason = _("Can't generate a change-address key. Please call keypoolrefill first.");
                             scriptChange = CScript();
                         } else {
-                            scriptChange = GetScriptForDestination(vchPubKey.GetID());
+                            scriptChange = GetScriptForDestination(PKHash(vchPubKey));
                         }
                     }
 

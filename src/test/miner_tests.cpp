@@ -302,7 +302,7 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
     tx.vin[0].scriptSig = CScript() << OP_1;
     tx.vout[0].nValue = 4900000000LL;
     script = CScript() << OP_0;
-    tx.vout[0].scriptPubKey = GetScriptForDestination(CScriptID(script));
+    tx.vout[0].scriptPubKey = GetScriptForDestination(ScriptHash(script));
     hash = tx.GetHash();
     mempool.addUnchecked(hash, entry.Fee(10000000L).Time(GetTime()).SpendsCoinbaseOrCoinstake(true).FromTx(tx));
     tx.vin[0].prevout.hash = hash;

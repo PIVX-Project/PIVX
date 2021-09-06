@@ -165,7 +165,7 @@ void SettingsSignMessageWidgets::onSignMessageButtonSMClicked()
         ui->statusLabel_SM->setText(tr("The entered address is invalid.") + QString(" ") + tr("Please check the address and try again."));
         return;
     }
-    const CKeyID* keyID = boost::get<CKeyID>(&addr);
+    const PKHash* keyID = boost::get<PKHash>(&addr);
     if (!keyID) {
         // TODO: change css..
         //ui->addressIn_SM->setValid(false);
@@ -182,7 +182,7 @@ void SettingsSignMessageWidgets::onSignMessageButtonSMClicked()
     }
 
     CKey key;
-    if (!walletModel->getKey(*keyID, key)) {
+    if (!walletModel->getKey(CKeyID(*keyID), key)) {
         ui->statusLabel_SM->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_SM->setText(tr("Private key for the entered address is not available."));
         return;
@@ -217,8 +217,8 @@ void SettingsSignMessageWidgets::onVerifyMessage()
         ui->statusLabel_SM->setText(tr("The entered address is invalid.") + QString(" ") + tr("Please check the address and try again."));
         return;
     }
-    const CKeyID* keyID = boost::get<CKeyID>(&addr);
-    if (!keyID) {
+    const PKHash* pkHash = boost::get<PKHash>(&addr);
+    if (!pkHash) {
         //ui->addressIn_SM->setValid(false);
         ui->statusLabel_SM->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_SM->setText(tr("The entered address does not refer to a key.") + QString(" ") + tr("Please check the address and try again."));
@@ -238,7 +238,7 @@ void SettingsSignMessageWidgets::onVerifyMessage()
     const std::string& message = ui->messageIn_SM->document()->toPlainText().toStdString();
 
     std::string err_log;
-    if (!CMessageSigner::VerifyMessage(*keyID, vchSig, message, err_log)) {
+    if (!CMessageSigner::VerifyMessage(CKeyID(*pkHash), vchSig, message, err_log)) {
         ui->statusLabel_SM->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_SM->setText(QString("<nobr>") + tr("Message verification failed.") + QString("</nobr>"));
         return;

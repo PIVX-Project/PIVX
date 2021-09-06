@@ -39,7 +39,7 @@ std::string CDeterministicMNState::ToString() const
 
     return strprintf("CDeterministicMNState(nRegisteredHeight=%d, nLastPaidHeight=%d, nPoSePenalty=%d, nPoSeRevivedHeight=%d, nPoSeBanHeight=%d, nRevocationReason=%d, ownerAddress=%s, operatorPubKey=%s, votingAddress=%s, addr=%s, payoutAddress=%s, operatorPayoutAddress=%s)",
         nRegisteredHeight, nLastPaidHeight, nPoSePenalty, nPoSeRevivedHeight, nPoSeBanHeight, nRevocationReason,
-        EncodeDestination(keyIDOwner), pubKeyOperator.Get().ToString(), EncodeDestination(keyIDVoting), addr.ToStringIPPort(), payoutAddress, operatorPayoutAddress);
+        EncodeDestination(PKHash(keyIDOwner)), pubKeyOperator.Get().ToString(), EncodeDestination(PKHash(keyIDVoting)), addr.ToStringIPPort(), payoutAddress, operatorPayoutAddress);
 }
 
 void CDeterministicMNState::ToJson(UniValue& obj) const
@@ -53,9 +53,9 @@ void CDeterministicMNState::ToJson(UniValue& obj) const
     obj.pushKV("PoSeRevivedHeight", nPoSeRevivedHeight);
     obj.pushKV("PoSeBanHeight", nPoSeBanHeight);
     obj.pushKV("revocationReason", nRevocationReason);
-    obj.pushKV("ownerAddress", EncodeDestination(keyIDOwner));
+    obj.pushKV("ownerAddress", EncodeDestination(PKHash(keyIDOwner)));
     obj.pushKV("operatorPubKey", pubKeyOperator.Get().ToString());
-    obj.pushKV("votingAddress", EncodeDestination(keyIDVoting));
+    obj.pushKV("votingAddress", EncodeDestination(PKHash(keyIDVoting)));
 
     CTxDestination dest1;
     if (ExtractDestination(scriptPayout, dest1)) {
@@ -397,7 +397,7 @@ void CDeterministicMNList::AddMN(const CDeterministicMNCPtr& dmn, bool fBumpTota
         throw(std::runtime_error(strprintf("%s: can't add a masternode with a duplicate address %s", __func__, dmn->pdmnState->addr.ToStringIPPort())));
     }
     if (HasUniqueProperty(dmn->pdmnState->keyIDOwner) || HasUniqueProperty(dmn->pdmnState->pubKeyOperator)) {
-        throw(std::runtime_error(strprintf("%s: can't add a masternode with a duplicate key (%s or %s)", __func__, EncodeDestination(dmn->pdmnState->keyIDOwner), dmn->pdmnState->pubKeyOperator.Get().ToString())));
+        throw(std::runtime_error(strprintf("%s: can't add a masternode with a duplicate key (%s or %s)", __func__, EncodeDestination(PKHash(dmn->pdmnState->keyIDOwner)), dmn->pdmnState->pubKeyOperator.Get().ToString())));
     }
 
     mnMap = mnMap.set(dmn->proTxHash, dmn);

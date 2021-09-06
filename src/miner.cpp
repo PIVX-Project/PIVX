@@ -42,7 +42,7 @@ std::unique_ptr<CBlockTemplate> CreateNewBlockWithKey(std::unique_ptr<CReserveKe
 {
     CPubKey pubkey;
     if (!reservekey->GetReservedKey(pubkey)) return nullptr;
-    return CreateNewBlockWithScript(GetScriptForDestination(pubkey.GetID()), pwallet);
+    return CreateNewBlockWithScript(GetScriptForDestination(PKHash(pubkey)), pwallet);
 }
 
 std::unique_ptr<CBlockTemplate> CreateNewBlockWithScript(const CScript& coinbaseScript, CWallet* pwallet)

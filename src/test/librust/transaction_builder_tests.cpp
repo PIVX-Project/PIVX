@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(TransparentToSapling)
 
     CBasicKeyStore keystore;
     CKey tsk = AddTestCKeyToKeyStore(keystore);
-    auto scriptPubKey = GetScriptForDestination(tsk.GetPubKey().GetID());
+    auto scriptPubKey = GetScriptForDestination(PKHash(tsk.GetPubKey()));
 
     auto sk_from = libzcash::SaplingSpendingKey::random();
     auto fvk_from = sk_from.full_viewing_key();
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(FailsWithNegativeChange)
     // Set up dummy transparent address
     CBasicKeyStore keystore;
     CKey tsk = AddTestCKeyToKeyStore(keystore);
-    auto tkeyid = tsk.GetPubKey().GetID();
+    auto tkeyid = PKHash(tsk.GetPubKey());
     auto scriptPubKey = GetScriptForDestination(tkeyid);
     CTxDestination taddr = tkeyid;
 
@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_CASE(ChangeOutput)
     // Set up dummy transparent address
     CBasicKeyStore keystore;
     CKey tsk = AddTestCKeyToKeyStore(keystore);
-    auto tkeyid = tsk.GetPubKey().GetID();
+    auto tkeyid = PKHash(tsk.GetPubKey());
     auto scriptPubKey = GetScriptForDestination(tkeyid);
     CTxDestination taddr = tkeyid;
 

@@ -497,14 +497,14 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
                     ownerAdd = Destination(DecodeDestination(rcp.ownerAddress.toStdString()), false);
                 }
 
-                const CKeyID* stakerId = boost::get<CKeyID>(&out);
-                const CKeyID* ownerId = ownerAdd.getKeyID();
+                const PKHash* stakerId = boost::get<PKHash>(&out);
+                const PKHash* ownerId = ownerAdd.getKeyID();
                 if (!stakerId || !ownerId) {
                     return InvalidAddress;
                 }
 
-                scriptPubKey = isV6Enforced() ? GetScriptForStakeDelegation(*stakerId, *ownerId)
-                                              : GetScriptForStakeDelegationLOF(*stakerId, *ownerId);
+                scriptPubKey = isV6Enforced() ? GetScriptForStakeDelegation(CKeyID(*stakerId), CKeyID(*ownerId))
+                        : GetScriptForStakeDelegationLOF(CKeyID(*stakerId), CKeyID(*ownerId));
             } else {
                 // Regular P2PK or P2PKH
                 scriptPubKey = GetScriptForDestination(out);
@@ -996,22 +996,22 @@ bool WalletModel::updateAddressBookPurpose(const QString &addressStr, const std:
     CTxDestination address = DecodeDestination(addressStr.toStdString(), isStaking);
     if (isStaking)
         return error("Invalid PIVX address, cold staking address");
-    CKeyID keyID;
-    if (!getKeyId(address, keyID))
+    PKHash pkhash;
+    if (!getKeyId(address, pkhash))
         return false;
-    return wallet->SetAddressBook(keyID, getLabelForAddress(address), purpose);
+    return wallet->SetAddressBook(pkhash, getLabelForAddress(address), purpose);
 }
 
-bool WalletModel::getKeyId(const CTxDestination& address, CKeyID& keyID)
+bool WalletModel::getKeyId(const CTxDestination& address, PKHash& pkHashRet)
 {
     if (!IsValidDestination(address))
         return error("Invalid PIVX address");
 
-    const CKeyID* inKeyID = boost::get<CKeyID>(&address);
-    if (!inKeyID)
+    const PKHash* pkhash = boost::get<PKHash>(&address);
+    if (!pkhash)
         return error("Unable to get KeyID from PIVX address");
 
-    keyID = *inKeyID;
+    pkHashRet = *pkhash;
     return true;
 }
 

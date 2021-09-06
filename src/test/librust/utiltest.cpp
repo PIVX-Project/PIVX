@@ -82,7 +82,7 @@ CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
                                  const CWallet* pwalletIn) {
     // From taddr
     CKey tsk = AddTestCKeyToWallet(keyStoreFrom, genNewKey);
-    auto scriptPubKey = GetScriptForDestination(tsk.GetPubKey().GetID());
+    auto scriptPubKey = GetScriptForDestination(PKHash(tsk.GetPubKey()));
 
     // Two equal dummy inputs to by-pass the coinbase check.
     TransparentInput dummyInput{COutPoint(), scriptPubKey, inputAmount / 2};
@@ -111,5 +111,5 @@ CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
 
 CScript CreateDummyDestinationScript() {
     CKey key = CreateCkey(true);
-    return GetScriptForDestination(key.GetPubKey().GetID());
+    return GetScriptForDestination(PKHash(key.GetPubKey()));
 }

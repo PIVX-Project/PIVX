@@ -195,7 +195,7 @@ OperationResult SaplingOperation::build()
             if (!tkeyChange->GetReservedKey(vchPubKey, true)) {
                 return errorOut("Could not generate a taddr to use as a change address");
             }
-            CTxDestination changeAddr = vchPubKey.GetID();
+            CTxDestination changeAddr = PKHash(vchPubKey);
             txBuilder.SendChangeTo(changeAddr);
         }
 

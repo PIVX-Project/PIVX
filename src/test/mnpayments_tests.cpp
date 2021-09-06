@@ -86,7 +86,7 @@ std::vector<FakeMasternode> buildMNList(const uint256& tipHash, uint64_t tipTime
         CKey mnKey;
         mnKey.MakeNewKey(true);
         const CPubKey& mnPubKey = mnKey.GetPubKey();
-        const CScript& mnPayeeScript = GetScriptForDestination(mnPubKey.GetID());
+        const CScript& mnPayeeScript = GetScriptForDestination(PKHash(mnPubKey.GetID()));
         // Fake collateral out and key for now
         COutPoint mnCollateral(GetRandHash(), 0);
         const CPubKey& collateralPubKey = mnPubKey;
@@ -212,8 +212,8 @@ BOOST_FIXTURE_TEST_CASE(mnwinner_test, TestChain100Setup)
 
     // Now let's push two valid winner payments and make every MN in the top ten vote for them (having more votes in mnwinnerA than in mnwinnerB).
     mnRank = mnodeman.GetMasternodeRanks(nextBlockHeight - 100);
-    CScript firstRankedPayee = GetScriptForDestination(mnRank[0].second->pubKeyCollateralAddress.GetID());
-    CScript secondRankedPayee = GetScriptForDestination(mnRank[1].second->pubKeyCollateralAddress.GetID());
+    CScript firstRankedPayee = GetScriptForDestination(PKHash(mnRank[0].second->pubKeyCollateralAddress.GetID()));
+    CScript secondRankedPayee = GetScriptForDestination(PKHash(mnRank[1].second->pubKeyCollateralAddress.GetID()));
 
     // Let's vote with the first 6 nodes for MN ranked 1
     // And with the last 4 nodes for MN ranked 2
@@ -263,7 +263,7 @@ BOOST_FIXTURE_TEST_CASE(mnwinner_test, TestChain100Setup)
     // Generate 125 blocks paying to different MNs to load the payments cache.
     for (int i = 0; i < 125; i++) {
         mnRank = mnodeman.GetMasternodeRanks(nextBlockHeight - 100);
-        payeeScript = GetScriptForDestination(mnRank[0].second->pubKeyCollateralAddress.GetID());
+        payeeScript = GetScriptForDestination(PKHash(mnRank[0].second->pubKeyCollateralAddress.GetID()));
         for (int j=0; j<7; j++) { // votes
             auto voterMn = findMNData(mnList, mnRank[j].second);
             CMasternode* pVoterMN = mnodeman.Find(voterMn.mn.vin.prevout);
@@ -288,7 +288,7 @@ BOOST_FIXTURE_TEST_CASE(mnwinner_test, TestChain100Setup)
     // 1) Schedule payment and vote for it with the first 6 MNs.
     mnRank = mnodeman.GetMasternodeRanks(nextBlockHeight - 100);
     MasternodeRef mnToPay = mnRank[0].second;
-    payeeScript = GetScriptForDestination(mnToPay->pubKeyCollateralAddress.GetID());
+    payeeScript = GetScriptForDestination(PKHash(mnToPay->pubKeyCollateralAddress.GetID()));
     for (int i=0; i<6; i++) {
         auto voterMn = findMNData(mnList, mnRank[i].second);
         CMasternode* pVoterMN = mnodeman.Find(voterMn.mn.vin.prevout);

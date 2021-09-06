@@ -230,7 +230,7 @@ public:
      */
     CScript mnPayeeScript{};
     CScript GetPayeeScript() const {
-        return mnPayeeScript.empty() ? GetScriptForDestination(pubKeyCollateralAddress.GetID())
+        return mnPayeeScript.empty() ? GetScriptForDestination(PKHash(pubKeyCollateralAddress))
                                      : mnPayeeScript;
     }
 };

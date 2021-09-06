@@ -223,7 +223,7 @@ UniValue listmasternodes(const JSONRPCRequest& request)
 
         if (strFilter != "" && strTxHash.find(strFilter) == std::string::npos &&
             mn.Status().find(strFilter) == std::string::npos &&
-            EncodeDestination(mn.pubKeyCollateralAddress.GetID()).find(strFilter) == std::string::npos) continue;
+            EncodeDestination(PKHash(mn.pubKeyCollateralAddress)).find(strFilter) == std::string::npos) continue;
 
         std::string strStatus = mn.Status();
         std::string strHost;
@@ -238,9 +238,9 @@ UniValue listmasternodes(const JSONRPCRequest& request)
         obj.pushKV("network", strNetwork);
         obj.pushKV("txhash", strTxHash);
         obj.pushKV("outidx", (uint64_t)oIdx);
-        obj.pushKV("pubkey", EncodeDestination(mn.pubKeyMasternode.GetID()));
+        obj.pushKV("pubkey", EncodeDestination(PKHash(mn.pubKeyMasternode)));
         obj.pushKV("status", strStatus);
-        obj.pushKV("addr", EncodeDestination(mn.pubKeyCollateralAddress.GetID()));
+        obj.pushKV("addr", EncodeDestination(PKHash(mn.pubKeyCollateralAddress)));
         obj.pushKV("version", mn.protocolVersion);
         obj.pushKV("lastseen", (int64_t)mn.lastPing.sigTime);
         obj.pushKV("activetime", (int64_t)(mn.lastPing.sigTime - mn.sigTime));
@@ -320,7 +320,7 @@ UniValue masternodecurrent(const JSONRPCRequest& request)
         UniValue obj(UniValue::VOBJ);
         obj.pushKV("protocol", (int64_t)winner->protocolVersion);
         obj.pushKV("txhash", winner->vin.prevout.hash.ToString());
-        obj.pushKV("pubkey", EncodeDestination(winner->pubKeyCollateralAddress.GetID()));
+        obj.pushKV("pubkey", EncodeDestination(PKHash(winner->pubKeyCollateralAddress)));
         obj.pushKV("lastseen", winner->lastPing.IsNull() ? winner->sigTime : (int64_t)winner->lastPing.sigTime);
         obj.pushKV("activeseconds", winner->lastPing.IsNull() ? 0 : (int64_t)(winner->lastPing.sigTime - winner->sigTime));
         return obj;
@@ -724,7 +724,7 @@ UniValue getmasternodestatus(const JSONRPCRequest& request)
         mnObj.pushKV("txhash", activeMasternode.vin->prevout.hash.ToString());
         mnObj.pushKV("outputidx", (uint64_t)activeMasternode.vin->prevout.n);
         mnObj.pushKV("netaddr", activeMasternode.service.ToString());
-        mnObj.pushKV("addr", EncodeDestination(pmn->pubKeyCollateralAddress.GetID()));
+        mnObj.pushKV("addr", EncodeDestination(PKHash(pmn->pubKeyCollateralAddress)));
         mnObj.pushKV("status", activeMasternode.GetStatus());
         mnObj.pushKV("message", activeMasternode.GetStatusMessage());
         return mnObj;
@@ -1041,8 +1041,8 @@ UniValue decodemasternodebroadcast(const JSONRPCRequest& request)
 
     resultObj.pushKV("vin", mnb.vin.prevout.ToString());
     resultObj.pushKV("addr", mnb.addr.ToString());
-    resultObj.pushKV("pubkeycollateral", EncodeDestination(mnb.pubKeyCollateralAddress.GetID()));
-    resultObj.pushKV("pubkeymasternode", EncodeDestination(mnb.pubKeyMasternode.GetID()));
+    resultObj.pushKV("pubkeycollateral", EncodeDestination(PKHash(mnb.pubKeyCollateralAddress)));
+    resultObj.pushKV("pubkeymasternode", EncodeDestination(PKHash(mnb.pubKeyMasternode)));
     resultObj.pushKV("vchsig", mnb.GetSignatureBase64());
     resultObj.pushKV("sigtime", mnb.sigTime);
     resultObj.pushKV("sigvalid", mnb.CheckSignature() ? "true" : "false");

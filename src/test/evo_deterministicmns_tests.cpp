@@ -130,7 +130,7 @@ static CMutableTransaction CreateProRegTx(Optional<COutPoint> optCollateralOut, 
     tx.nVersion = CTransaction::TxVersion::SAPLING;
     tx.nType = CTransaction::TxType::PROREG;
     FundTransaction(tx, utxos, scriptPayout,
-                    GetScriptForDestination(coinbaseKey.GetPubKey().GetID()),
+                    GetScriptForDestination(PKHash(coinbaseKey.GetPubKey())),
                     (optCollateralOut ? 0 : Params().GetConsensus().nMNCollateralAmt));
 
     pl.inputsHash = CalcTxInputsHash(tx);
@@ -153,7 +153,7 @@ static CMutableTransaction CreateProUpServTx(SimpleUTXOMap& utxos, const uint256
     CMutableTransaction tx;
     tx.nVersion = CTransaction::TxVersion::SAPLING;
     tx.nType = CTransaction::TxType::PROUPSERV;
-    const CScript& s = GetScriptForDestination(coinbaseKey.GetPubKey().GetID());
+    const CScript& s = GetScriptForDestination(PKHash(coinbaseKey.GetPubKey()));
     FundTransaction(tx, utxos, s, s, 1 * COIN);
     pl.inputsHash = CalcTxInputsHash(tx);
     pl.sig = operatorKey.Sign(::SerializeHash(pl));
@@ -178,7 +178,7 @@ static CMutableTransaction CreateProUpRegTx(SimpleUTXOMap& utxos, const uint256&
     CMutableTransaction tx;
     tx.nVersion = CTransaction::TxVersion::SAPLING;
     tx.nType = CTransaction::TxType::PROUPREG;
-    const CScript& s = GetScriptForDestination(coinbaseKey.GetPubKey().GetID());
+    const CScript& s = GetScriptForDestination(PKHash(coinbaseKey.GetPubKey()));
     FundTransaction(tx, utxos, s, s, 1 * COIN);
     pl.inputsHash = CalcTxInputsHash(tx);
     BOOST_ASSERT(CHashSigner::SignHash(::SerializeHash(pl), ownerKey, pl.vchSig));
@@ -200,7 +200,7 @@ static CMutableTransaction CreateProUpRevTx(SimpleUTXOMap& utxos, const uint256&
     CMutableTransaction tx;
     tx.nVersion = CTransaction::TxVersion::SAPLING;
     tx.nType = CTransaction::TxType::PROUPREV;
-    const CScript& s = GetScriptForDestination(coinbaseKey.GetPubKey().GetID());
+    const CScript& s = GetScriptForDestination(PKHash(coinbaseKey.GetPubKey()));
     FundTransaction(tx, utxos, s, s, 1 * COIN);
     pl.inputsHash = CalcTxInputsHash(tx);
     pl.sig = operatorKey.Sign(::SerializeHash(pl));
@@ -215,7 +215,7 @@ static CScript GenerateRandomAddress()
 {
     CKey key;
     key.MakeNewKey(false);
-    return GetScriptForDestination(key.GetPubKey().GetID());
+    return GetScriptForDestination(PKHash(key.GetPubKey()));
 }
 
 template<typename ProPL>
@@ -507,7 +507,7 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     }
     invalidCoinbaseTx.vout.emplace_back(
             CTxOut(GetBlockValue(nHeight + 1) - GetMasternodePayment(),
-                   GetScriptForDestination(coinbaseKey.GetPubKey().GetID())));
+                   GetScriptForDestination(PKHash(coinbaseKey.GetPubKey()))));
     pblock->vtx[0] = MakeTransactionRef(invalidCoinbaseTx);
     pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
     ProcessNewBlock(pblock, nullptr);

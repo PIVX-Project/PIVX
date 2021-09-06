@@ -126,7 +126,7 @@ UniValue generate(const JSONRPCRequest& request)
         reservekey = std::make_unique<CReserveKey>(pwallet);
         CPubKey pubkey;
         if (!reservekey->GetReservedKey(pubkey)) throw JSONRPCError(RPC_INTERNAL_ERROR, "Error: Cannot get key from keypool");
-        coinbaseScript = GetScriptForDestination(pubkey.GetID());
+        coinbaseScript = GetScriptForDestination(PKHash(pubkey));
     }
 
     // Create the blocks

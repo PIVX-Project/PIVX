@@ -202,7 +202,7 @@ static mnKeyList getDMNVotingKeys(CWallet* const pwallet, const Optional<std::st
             } else if (filtered) {
                 resultsObj.push_back(packErrorRetStatus(*mnAliasFilter, strprintf(
                                         "Private key for voting address %s not known by this wallet",
-                                        EncodeDestination(dmn->pdmnState->keyIDVoting)))
+                                        EncodeDestination(PKHash(dmn->pdmnState->keyIDVoting))))
                                     );
                 failed++;
             }

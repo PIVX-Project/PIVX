@@ -40,8 +40,8 @@ public:
     bool isP2CS{false};
 
     Destination& operator=(const Destination& from);
-    // Returns the key ID if Destination is a transparent "regular" destination
-    const CKeyID* getKeyID();
+    // Returns the key ID (pubkey hash) if Destination is a transparent "regular" destination
+    const PKHash* getKeyID();
     // Returns the encoded string address
     std::string ToString() const;
 };

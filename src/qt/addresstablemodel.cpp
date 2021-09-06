@@ -18,7 +18,6 @@
 
 #include <algorithm>
 
-#include <QDebug>
 #include <QFont>
 
 const QString AddressTableModel::Send = "S";
@@ -538,7 +537,7 @@ QString AddressTableModel::addRow(const QString& type, const QString& label, con
                 return QString();
             }
         }
-        strAddress = EncodeDestination(newKey.GetID());
+        strAddress = EncodeDestination(PKHash(newKey));
     } else {
         return QString();
     }

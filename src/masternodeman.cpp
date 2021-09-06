@@ -773,7 +773,7 @@ bool CMasternodeMan::CheckInputs(CMasternodeBroadcast& mnb, int nChainHeight, in
     }
 
     // Check collateral association with mnb pubkey
-    CScript payee = GetScriptForDestination(mnb.pubKeyCollateralAddress.GetID());
+    CScript payee = GetScriptForDestination(PKHash(mnb.pubKeyCollateralAddress.GetID()));
     if (collateralUtxo.out.scriptPubKey != payee) {
         LogPrint(BCLog::MASTERNODE,"mnb - collateral %s not associated with mnb pubkey\n", mnb.vin.prevout.ToString());
         nDoS = 33;

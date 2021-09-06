@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_CASE(multisig_Solver1)
     {
         key[i].MakeNewKey(true);
         keystore.AddKey(key[i]);
-        keyaddr[i] = key[i].GetPubKey().GetID();
+        keyaddr[i] = PKHash(key[i].GetPubKey());
     }
     partialkeystore.AddKey(key[0]);
 

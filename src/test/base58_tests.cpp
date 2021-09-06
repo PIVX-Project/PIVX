@@ -92,15 +92,15 @@ private:
     std::string exp_addrType;
 public:
     TestAddrTypeVisitor(const std::string &exp_addrType) : exp_addrType(exp_addrType) { }
-    bool operator()(const CKeyID &id) const
+    bool operator()(const PKHash& id) const
     {
         return (exp_addrType == "pubkey");
     }
-    bool operator()(const CScriptID &id) const
+    bool operator()(const ScriptHash& id) const
     {
         return (exp_addrType == "script");
     }
-    bool operator()(const CNoDestination &no) const
+    bool operator()(const CNoDestination& no) const
     {
         return (exp_addrType == "none");
     }
@@ -113,17 +113,17 @@ private:
     std::vector<unsigned char> exp_payload;
 public:
     TestPayloadVisitor(std::vector<unsigned char> &exp_payload) : exp_payload(exp_payload) { }
-    bool operator()(const CKeyID &id) const
+    bool operator()(const PKHash& id) const
     {
         uint160 exp_key(exp_payload);
         return exp_key == id;
     }
-    bool operator()(const CScriptID &id) const
+    bool operator()(const ScriptHash& id) const
     {
         uint160 exp_key(exp_payload);
         return exp_key == id;
     }
-    bool operator()(const CNoDestination &no) const
+    bool operator()(const CNoDestination& no) const
     {
         return exp_payload.size() == 0;
     }
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(base58_keys_valid_parse)
             // Must be valid public key
             destination = DecodeDestination(exp_base58string);
             BOOST_CHECK_MESSAGE(IsValidDestination(destination), "!IsValid:" + strTest);
-            BOOST_CHECK_MESSAGE((boost::get<CScriptID>(&destination) != nullptr) == (exp_addrType == "script"), "isScript mismatch" + strTest);
+            BOOST_CHECK_MESSAGE((boost::get<ScriptHash>(&destination) != nullptr) == (exp_addrType == "script"), "isScript mismatch" + strTest);
             BOOST_CHECK_MESSAGE(boost::apply_visitor(TestAddrTypeVisitor(exp_addrType), destination), "addrType mismatch" + strTest);
 
             // Public key must be invalid private key
@@ -218,11 +218,11 @@ BOOST_AUTO_TEST_CASE(base58_keys_valid_gen)
             CTxDestination dest;
             if(exp_addrType == "pubkey")
             {
-                dest = CKeyID(uint160(exp_payload));
+                dest = PKHash(uint160(exp_payload));
             }
             else if(exp_addrType == "script")
             {
-                dest = CScriptID(uint160(exp_payload));
+                dest = ScriptHash(uint160(exp_payload));
             }
             else if(exp_addrType == "none")
             {

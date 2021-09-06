@@ -91,8 +91,8 @@ static bool CheckCollateralOut(const CTxOut& out, const ProRegPL& pl, CValidatio
     }
     // don't allow reuse of collateral key for other keys (don't allow people to put the collateral key onto an online server)
     // this check applies to internal and external collateral, but internal collaterals are not necessarely a P2PKH
-    if (collateralDestRet == CTxDestination(pl.keyIDOwner) ||
-            collateralDestRet == CTxDestination(pl.keyIDVoting)) {
+    if (collateralDestRet == CTxDestination(PKHash(pl.keyIDOwner)) ||
+        collateralDestRet == CTxDestination(PKHash(pl.keyIDVoting))) {
         return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral-reuse");
     }
     // check collateral amount
@@ -141,8 +141,8 @@ bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CValid
         return state.DoS(10, false, REJECT_INVALID, "bad-protx-payee-dest");
     }
     // don't allow reuse of payout key for other keys (don't allow people to put the payee key onto an online server)
-    if (payoutDest == CTxDestination(pl.keyIDOwner) ||
-            payoutDest == CTxDestination(pl.keyIDVoting)) {
+    if (payoutDest == CTxDestination(PKHash(pl.keyIDOwner)) ||
+        payoutDest == CTxDestination(PKHash(pl.keyIDVoting))) {
         return state.DoS(10, false, REJECT_INVALID, "bad-protx-payee-reuse");
     }
 
@@ -187,12 +187,12 @@ bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CValid
         }
         // Extract key from collateral. This only works for P2PK and P2PKH collaterals and will fail for P2SH.
         // Issuer of this ProRegTx must prove ownership with this key by signing the ProRegTx
-        const CKeyID* keyForPayloadSig = boost::get<CKeyID>(&collateralTxDest);
+        const PKHash* keyForPayloadSig = boost::get<PKHash>(&collateralTxDest);
         if (!keyForPayloadSig) {
             return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral-pkh");
         }
         // collateral is not part of this ProRegTx, so we must verify ownership of the collateral
-        if (!CheckStringSig(pl, *keyForPayloadSig, state)) {
+        if (!CheckStringSig(pl, CKeyID(*keyForPayloadSig), state)) {
             // pass the state returned by the function above
             return false;
         }
@@ -226,8 +226,8 @@ std::string ProRegPL::MakeSignString() const
 
     ss << HexStr(scriptPayout) << "|";
     ss << strprintf("%d", nOperatorReward) << "|";
-    ss << EncodeDestination(keyIDOwner) << "|";
-    ss << EncodeDestination(keyIDVoting) << "|";
+    ss << EncodeDestination(PKHash(keyIDOwner)) << "|";
+    ss << EncodeDestination(PKHash(keyIDVoting)) << "|";
 
     // ... and also the full hash of the payload as a protection agains malleability and replays
     ss << ::SerializeHash(*this).ToString();
@@ -241,7 +241,7 @@ std::string ProRegPL::ToString() const
     std::string payee = ExtractDestination(scriptPayout, dest) ?
                         EncodeDestination(dest) : "unknown";
     return strprintf("ProRegPL(nVersion=%d, collateralOutpoint=%s, addr=%s, nOperatorReward=%f, ownerAddress=%s, operatorPubKey=%s, votingAddress=%s, scriptPayout=%s)",
-        nVersion, collateralOutpoint.ToStringShort(), addr.ToString(), (double)nOperatorReward / 100, EncodeDestination(keyIDOwner), pubKeyOperator.ToString(), EncodeDestination(keyIDVoting), payee);
+                     nVersion, collateralOutpoint.ToStringShort(), addr.ToString(), (double)nOperatorReward / 100, EncodeDestination(PKHash(keyIDOwner)), pubKeyOperator.ToString(), EncodeDestination(PKHash(keyIDVoting)), payee);
 }
 
 void ProRegPL::ToJson(UniValue& obj) const
@@ -252,9 +252,9 @@ void ProRegPL::ToJson(UniValue& obj) const
     obj.pushKV("collateralHash", collateralOutpoint.hash.ToString());
     obj.pushKV("collateralIndex", (int)collateralOutpoint.n);
     obj.pushKV("service", addr.ToString());
-    obj.pushKV("ownerAddress", EncodeDestination(keyIDOwner));
+    obj.pushKV("ownerAddress", EncodeDestination(PKHash(keyIDOwner)));
     obj.pushKV("operatorPubKey", pubKeyOperator.ToString());
-    obj.pushKV("votingAddress", EncodeDestination(keyIDVoting));
+    obj.pushKV("votingAddress", EncodeDestination(PKHash(keyIDVoting)));
 
     CTxDestination dest1;
     if (ExtractDestination(scriptPayout, dest1)) {
@@ -385,7 +385,7 @@ bool CheckProUpRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CVal
     }
 
     // don't allow reuse of payee key for other keys
-    if (payoutDest == CTxDestination(pl.keyIDVoting)) {
+    if (payoutDest == CTxDestination(PKHash(pl.keyIDVoting))) {
         return state.DoS(10, false, REJECT_INVALID, "bad-protx-payee-reuse");
     }
 
@@ -407,7 +407,7 @@ bool CheckProUpRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CVal
         }
 
         // don't allow reuse of payee key for owner key
-        if (payoutDest == CTxDestination(dmn->pdmnState->keyIDOwner)) {
+        if (payoutDest == CTxDestination(PKHash(dmn->pdmnState->keyIDOwner))) {
             return state.DoS(10, false, REJECT_INVALID, "bad-protx-payee-reuse");
         }
 
@@ -422,8 +422,8 @@ bool CheckProUpRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CVal
         if (!ExtractDestination(coin.out.scriptPubKey, collateralTxDest)) {
             return state.DoS(100, false, REJECT_INVALID, "bad-protx-collateral-dest");
         }
-        if (collateralTxDest == CTxDestination(dmn->pdmnState->keyIDOwner) ||
-                collateralTxDest == CTxDestination(pl.keyIDVoting)) {
+        if (collateralTxDest == CTxDestination(PKHash(dmn->pdmnState->keyIDOwner)) ||
+            collateralTxDest == CTxDestination(PKHash(pl.keyIDVoting))) {
             return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral-reuse");
         }
 
@@ -450,7 +450,7 @@ std::string ProUpRegPL::ToString() const
     std::string payee = ExtractDestination(scriptPayout, dest) ?
                         EncodeDestination(dest) : "unknown";
     return strprintf("ProUpRegPL(nVersion=%d, proTxHash=%s, operatorPubKey=%s, votingAddress=%s, payoutAddress=%s)",
-        nVersion, proTxHash.ToString(), pubKeyOperator.ToString(), EncodeDestination(keyIDVoting), payee);
+                     nVersion, proTxHash.ToString(), pubKeyOperator.ToString(), EncodeDestination(PKHash(keyIDVoting)), payee);
 }
 
 void ProUpRegPL::ToJson(UniValue& obj) const
@@ -459,7 +459,7 @@ void ProUpRegPL::ToJson(UniValue& obj) const
     obj.setObject();
     obj.pushKV("version", nVersion);
     obj.pushKV("proTxHash", proTxHash.ToString());
-    obj.pushKV("votingAddress", EncodeDestination(keyIDVoting));
+    obj.pushKV("votingAddress", EncodeDestination(PKHash(keyIDVoting)));
     CTxDestination dest;
     if (ExtractDestination(scriptPayout, dest)) {
         obj.pushKV("payoutAddress", EncodeDestination(dest));
