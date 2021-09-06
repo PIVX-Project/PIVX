@@ -82,11 +82,8 @@ CAmount CPivStake::GetValue() const
 bool CPivStake::CreateTxOuts(const CWallet* pwallet, std::vector<CTxOut>& vout, CAmount nTotal) const
 {
     std::vector<valtype> vSolutions;
-    txnouttype whichType;
     CScript scriptPubKeyKernel = outputFrom.scriptPubKey;
-    if (!Solver(scriptPubKeyKernel, whichType, vSolutions))
-        return error("%s: failed to parse kernel", __func__);
-
+    txnouttype whichType = Solver(scriptPubKeyKernel, vSolutions);
     if (whichType != TX_PUBKEY && whichType != TX_PUBKEYHASH && whichType != TX_COLDSTAKE)
         return error("%s: type=%d (%s) not supported for scriptPubKeyKernel", __func__, whichType, GetTxnOutputType(whichType));
 

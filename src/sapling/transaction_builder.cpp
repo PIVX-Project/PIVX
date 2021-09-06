@@ -199,9 +199,10 @@ void TransactionBuilder::AddTransparentInput(const COutPoint& utxo, const CScrip
 void TransactionBuilder::AddTransparentOutput(const CTxOut& out)
 {
     std::vector<std::vector<unsigned char> > vSolutions;
-    txnouttype whichType;
-    if (!Solver(out.scriptPubKey, whichType, vSolutions))
+    txnouttype whichType = Solver(out.scriptPubKey, vSolutions);
+    if (whichType == TX_NONSTANDARD) {
         throw std::runtime_error("Transaction builder: invalid script for transparent output");
+    }
     mtx.vout.push_back(out);
 }
 

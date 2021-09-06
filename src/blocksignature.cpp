@@ -9,10 +9,9 @@
 
 static bool GetKeyIDFromUTXO(const CTxOut& utxo, CKeyID& keyIDRet)
 {
+    if (utxo.scriptPubKey.empty()) return false;
     std::vector<valtype> vSolutions;
-    txnouttype whichType;
-    if (utxo.scriptPubKey.empty() || !Solver(utxo.scriptPubKey, whichType, vSolutions))
-        return false;
+    txnouttype whichType = Solver(utxo.scriptPubKey, vSolutions);
     if (whichType == TX_PUBKEY) {
         keyIDRet = CPubKey(vSolutions[0]).GetID();
         return true;
@@ -21,6 +20,7 @@ static bool GetKeyIDFromUTXO(const CTxOut& utxo, CKeyID& keyIDRet)
         keyIDRet = CKeyID(uint160(vSolutions[0]));
         return true;
     }
+    // Not supported type for coinstakes.
     return false;
 }
 
@@ -75,11 +75,9 @@ bool CheckBlockSignature(const CBlock& block)
         libzerocoin::CoinSpend spend = TxInToZerocoinSpend(block.vtx[1]->vin[0]);
         pubkey = spend.getPubKey();
     } else {
-        txnouttype whichType;
         std::vector<valtype> vSolutions;
         const CTxOut& txout = block.vtx[1]->vout[1];
-        if (!Solver(txout.scriptPubKey, whichType, vSolutions))
-            return false;
+        txnouttype whichType = Solver(txout.scriptPubKey, vSolutions);
 
         if (whichType == TX_PUBKEY) {
             valtype& vchPubKey = vSolutions[0];
@@ -105,6 +103,10 @@ bool CheckBlockSignature(const CBlock& block)
             start += 1 + (int) *(txin.scriptSig.begin()+start); // skip flag
             if (start >= txin.scriptSig.size() - 1) return false;
             pubkey = CPubKey(txin.scriptSig.begin()+start+1, txin.scriptSig.end());
+        } else {
+            // Not supported type.
+            LogPrint(BCLog::STAKING, "%s: coinstake output not supported", __func__);
+            return false;
         }
     }
 

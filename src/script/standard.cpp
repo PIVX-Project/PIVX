@@ -86,10 +86,11 @@ static bool MatchMultisig(const CScript& script, unsigned int& required, std::ve
     return (it + 1 == script.end());
 }
 
-bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::vector<unsigned char> >& vSolutionsRet)
+txnouttype Solver(const CScript& scriptPubKey, std::vector<std::vector<unsigned char> >& vSolutionsRet)
 {
-    if (scriptPubKey.empty())
-        return false;
+    if (scriptPubKey.empty()) {
+        return TX_NONSTANDARD;
+    }
 
     vSolutionsRet.clear();
 
@@ -97,10 +98,9 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::v
     // it is always OP_HASH160 20 [20 byte hash] OP_EQUAL
     if (scriptPubKey.IsPayToScriptHash())
     {
-        typeRet = TX_SCRIPTHASH;
         std::vector<unsigned char> hashBytes(scriptPubKey.begin()+2, scriptPubKey.begin()+22);
         vSolutionsRet.push_back(hashBytes);
-        return true;
+        return TX_SCRIPTHASH;
     }
 
     // Provably prunable, data-carrying output
@@ -109,57 +109,50 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::v
     // byte passes the IsPushOnly() test we don't care what exactly is in the
     // script.
     if (scriptPubKey.size() >= 1 && scriptPubKey[0] == OP_RETURN && scriptPubKey.IsPushOnly(scriptPubKey.begin()+1)) {
-        typeRet = TX_NULL_DATA;
-        return true;
+        return TX_NULL_DATA;
     }
 
     std::vector<unsigned char> data;
     if (MatchPayToPubkey(scriptPubKey, data)) {
-        typeRet = TX_PUBKEY;
         vSolutionsRet.push_back(std::move(data));
-        return true;
+        return TX_PUBKEY;
     }
 
     if (MatchPayToPubkeyHash(scriptPubKey, data)) {
-        typeRet = TX_PUBKEYHASH;
         vSolutionsRet.push_back(std::move(data));
-        return true;
+        return TX_PUBKEYHASH;
     }
 
     std::vector<unsigned char> data1;
     if (MatchPayToColdStaking(scriptPubKey, data, data1)) {
-        typeRet = TX_COLDSTAKE;
         vSolutionsRet.push_back(std::move(data));
         vSolutionsRet.push_back(std::move(data1));
-        return true;
+        return TX_COLDSTAKE;
     }
 
     unsigned int required;
     std::vector<std::vector<unsigned char>> keys;
     if (MatchMultisig(scriptPubKey, required, keys)) {
-        typeRet = TX_MULTISIG;
         vSolutionsRet.push_back({static_cast<unsigned char>(required)}); // safe as required is in range 1..16
         vSolutionsRet.insert(vSolutionsRet.end(), keys.begin(), keys.end());
         vSolutionsRet.push_back({static_cast<unsigned char>(keys.size())}); // safe as size is in range 1..16
-        return true;
+        return TX_MULTISIG;
     }
 
     vSolutionsRet.clear();
-    typeRet = TX_NONSTANDARD;
-    return false;
+    return TX_NONSTANDARD;
 }
 
 bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet, bool fColdStake)
 {
     std::vector<valtype> vSolutions;
-    txnouttype whichType;
-    if (!Solver(scriptPubKey, whichType, vSolutions))
-        return false;
+    txnouttype whichType = Solver(scriptPubKey, vSolutions);
 
     if (whichType == TX_PUBKEY) {
         CPubKey pubKey(vSolutions[0]);
-        if (!pubKey.IsValid())
+        if (!pubKey.IsValid()) {
             return false;
+        }
 
         addressRet = pubKey.GetID();
         return true;
@@ -167,7 +160,6 @@ bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet,
     } else if (whichType == TX_PUBKEYHASH) {
         addressRet = CKeyID(uint160(vSolutions[0]));
         return true;
-
     } else if (whichType == TX_SCRIPTHASH) {
         addressRet = CScriptID(uint160(vSolutions[0]));
         return true;
@@ -182,11 +174,11 @@ bool ExtractDestination(const CScript& scriptPubKey, CTxDestination& addressRet,
 bool ExtractDestinations(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<CTxDestination>& addressRet, int& nRequiredRet)
 {
     addressRet.clear();
-    typeRet = TX_NONSTANDARD;
     std::vector<valtype> vSolutions;
-    if (!Solver(scriptPubKey, typeRet, vSolutions))
+    typeRet = Solver(scriptPubKey, vSolutions);
+    if (typeRet == TX_NONSTANDARD) {
         return false;
-    if (typeRet == TX_NULL_DATA){
+    } else if (typeRet == TX_NULL_DATA){
         // This is data, not addresses
         return false;
     }
