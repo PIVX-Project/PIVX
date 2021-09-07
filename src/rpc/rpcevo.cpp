@@ -183,7 +183,7 @@ static CKey ParsePrivKey(CWallet* pwallet, const std::string &strKeyOrAddress, b
         EnsureWalletIsUnlocked(pwallet);
         const PKHash* pkHash = boost::get<PKHash>(dest);
         assert (pkHash != nullptr);  // we just checked IsValidDestination
-        return GetKeyFromWallet(pwallet, CKeyID(*pkHash));
+        return GetKeyFromWallet(pwallet, ToKeyID(*pkHash));
 #else   // ENABLE_WALLET
         throw std::runtime_error("addresses not supported in no-wallet builds");
 #endif  // ENABLE_WALLET
@@ -213,7 +213,7 @@ static PKHash ParsePubKeyHashFromAddress(const std::string& strAddress)
 
 static CKeyID ParsePubKeyIDFromAddress(const std::string& strAddress)
 {
-    return CKeyID(ParsePubKeyHashFromAddress(strAddress));
+    return ToKeyID(ParsePubKeyHashFromAddress(strAddress));
 }
 
 static CBLSPublicKey ParseBLSPubKey(const std::string& hexKey)
@@ -513,7 +513,7 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("collateral type not supported: %s-%d", collateralHash.ToString(), collateralIndex));
     }
     CKey keyCollateral;
-    if (fSignAndSend && !pwallet->GetKey(CKeyID(*pkHash), keyCollateral)) {
+    if (fSignAndSend && !pwallet->GetKey(ToKeyID(*pkHash), keyCollateral)) {
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("collateral key not in wallet: %s", EncodeDestination(txDest)));
     }
 
@@ -670,7 +670,7 @@ static bool CheckWalletOwnsScript(CWallet* pwallet, const CScript& script)
     CTxDestination dest;
     if (ExtractDestination(script, dest)) {
         const PKHash* pkHash = boost::get<PKHash>(&dest);
-        if (pkHash && pwallet->HaveKey(CKeyID(*pkHash)))
+        if (pkHash && pwallet->HaveKey(ToKeyID(*pkHash)))
             return true;
         const ScriptHash* scriptHash = boost::get<ScriptHash>(&dest);
         if (scriptHash && pwallet->HaveCScript(CScriptID(*scriptHash)))

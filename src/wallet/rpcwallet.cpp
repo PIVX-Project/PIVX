@@ -223,7 +223,7 @@ UniValue getaddressinfo(const JSONRPCRequest& request)
         // transparent destination
         const PKHash* pkHash = boost::get<PKHash>(pTransDest);
         if (pkHash) {
-            auto it = pwallet->mapKeyMetadata.find(CKeyID(*pkHash));
+            auto it = pwallet->mapKeyMetadata.find(ToKeyID(*pkHash));
             if(it != pwallet->mapKeyMetadata.end()) {
                 meta = &it->second;
             }
@@ -1234,7 +1234,7 @@ static UniValue CreateColdStakeDelegation(CWallet* const pwallet, const UniValue
         CTxDestination dest = DecodeDestination(params[2].get_str(), isStaking);
         if (!IsValidDestination(dest) || isStaking)
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX spending address");
-        ownerKey = CKeyID(*boost::get<PKHash>(&dest));
+        ownerKey = ToKeyID(*boost::get<PKHash>(&dest));
         // Check that the owner address belongs to this wallet, or fForceExternalAddr is true
         bool fForceExternalAddr = params.size() > 3 && !params[3].isNull() ? params[3].get_bool() : false;
         if (!fForceExternalAddr && !pwallet->HaveKey(ownerKey)) {
@@ -1250,7 +1250,7 @@ static UniValue CreateColdStakeDelegation(CWallet* const pwallet, const UniValue
         CTxDestination ownerAddr = GetNewAddressFromLabel(pwallet, "delegated", NullUniValue);
         PKHash* pOwnerKey = boost::get<PKHash>(&ownerAddr);
         assert(pOwnerKey);
-        ownerKey = CKeyID(*pOwnerKey);
+        ownerKey = ToKeyID(*pOwnerKey);
         ownerAddressStr = EncodeDestination(ownerAddr);
     }
 
@@ -2022,12 +2022,12 @@ UniValue signmessage(const JSONRPCRequest& request)
     if (!IsValidDestination(dest))
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid address");
 
-    const PKHash* keyID = boost::get<PKHash>(&dest);
-    if (!keyID)
+    const PKHash* pkhash = boost::get<PKHash>(&dest);
+    if (!pkhash)
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to key");
 
     CKey key;
-    if (!pwallet->GetKey(CKeyID(*keyID), key))
+    if (!pwallet->GetKey(ToKeyID(*pkhash), key))
         throw JSONRPCError(RPC_WALLET_ERROR, "Private key not available");
 
     std::vector<unsigned char> vchSig;

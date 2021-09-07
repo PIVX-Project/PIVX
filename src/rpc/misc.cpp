@@ -237,7 +237,7 @@ public:
         UniValue obj(UniValue::VOBJ);
         CPubKey vchPubKey;
         obj.pushKV("isscript", false);
-        if (pwallet && pwallet->GetPubKey(CKeyID(pkHash), vchPubKey)) {
+        if (pwallet && pwallet->GetPubKey(ToKeyID(pkHash), vchPubKey)) {
             obj.pushKV("pubkey", HexStr(vchPubKey));
             obj.pushKV("iscompressed", vchPubKey.IsCompressed());
         }
@@ -473,7 +473,7 @@ CScript _createmultisig_redeemScript(CWallet * const pwallet, const UniValue& pa
                         strprintf("%s does not refer to a key", ks));
             }
             CPubKey vchPubKey;
-            if (!pwallet->GetPubKey(CKeyID(*pkHash), vchPubKey))
+            if (!pwallet->GetPubKey(ToKeyID(*pkHash), vchPubKey))
                 throw std::runtime_error(
                     strprintf("no full public key for address %s", ks));
             if (!vchPubKey.IsFullyValid())

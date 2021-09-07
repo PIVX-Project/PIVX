@@ -163,7 +163,7 @@ void SettingsBitToolWidget::onEncryptKeyButtonENCClicked()
     }
 
     CKey key;
-    if (!walletModel->getKey(CKeyID(*pkHash), key)) {
+    if (!walletModel->getKey(ToKeyID(*pkHash), key)) {
         ui->statusLabel_ENC->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_ENC->setText(tr("Private key for the entered address is not available."));
         return;

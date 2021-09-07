@@ -487,7 +487,7 @@ UniValue dumpprivkey(const JSONRPCRequest& request)
     if (!pkHash)
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to a key");
     CKey vchSecret;
-    if (!pwallet->GetKey(CKeyID(*pkHash), vchSecret))
+    if (!pwallet->GetKey(ToKeyID(*pkHash), vchSecret))
         throw JSONRPCError(RPC_WALLET_ERROR, "Private key for address " + strAddress + " is not known");
     return KeyIO::EncodeSecret(vchSecret);
 }
@@ -1146,11 +1146,11 @@ UniValue bip38encrypt(const JSONRPCRequest& request)
     CTxDestination address = DecodeDestination(strAddress);
     if (!IsValidDestination(address))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid PIVX address");
-    const PKHash* keyID = boost::get<PKHash>(&address);
-    if (!keyID)
+    const PKHash* pkhash = boost::get<PKHash>(&address);
+    if (!pkhash)
         throw JSONRPCError(RPC_TYPE_ERROR, "Address does not refer to a key");
     CKey vchSecret;
-    if (!pwallet->GetKey(CKeyID(*keyID), vchSecret))
+    if (!pwallet->GetKey(ToKeyID(*pkhash), vchSecret))
         throw JSONRPCError(RPC_WALLET_ERROR, "Private key for address " + strAddress + " is not known");
 
     uint256 privKey = vchSecret.GetPrivKey_256();

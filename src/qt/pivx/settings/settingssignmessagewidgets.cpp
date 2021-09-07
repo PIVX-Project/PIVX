@@ -165,8 +165,8 @@ void SettingsSignMessageWidgets::onSignMessageButtonSMClicked()
         ui->statusLabel_SM->setText(tr("The entered address is invalid.") + QString(" ") + tr("Please check the address and try again."));
         return;
     }
-    const PKHash* keyID = boost::get<PKHash>(&addr);
-    if (!keyID) {
+    const PKHash* pkhash = boost::get<PKHash>(&addr);
+    if (!pkhash) {
         // TODO: change css..
         //ui->addressIn_SM->setValid(false);
         ui->statusLabel_SM->setStyleSheet("QLabel { color: red; }");
@@ -182,7 +182,7 @@ void SettingsSignMessageWidgets::onSignMessageButtonSMClicked()
     }
 
     CKey key;
-    if (!walletModel->getKey(CKeyID(*keyID), key)) {
+    if (!walletModel->getKey(ToKeyID(*pkhash), key)) {
         ui->statusLabel_SM->setStyleSheet("QLabel { color: red; }");
         ui->statusLabel_SM->setText(tr("Private key for the entered address is not available."));
         return;

@@ -234,7 +234,7 @@ int64_t CWallet::GetKeyCreationTime(const CTxDestination& address)
     const PKHash* pkhash = boost::get<PKHash>(&address);
     if (pkhash) {
         CPubKey keyRet;
-        if (GetPubKey(CKeyID(*pkhash), keyRet)) {
+        if (GetPubKey(ToKeyID(*pkhash), keyRet)) {
             return GetKeyCreationTime(keyRet);
         }
     }
@@ -786,13 +786,13 @@ bool CWallet::GetVinAndKeysFromOutput(COutput out, CTxIn& txinRet, CPubKey& pubK
     CTxDestination address1;
     ExtractDestination(pubScript, address1, fColdStake);
 
-    const PKHash* keyID = boost::get<PKHash>(&address1);
-    if (!keyID) {
+    const PKHash* pkhash = boost::get<PKHash>(&address1);
+    if (!pkhash) {
         LogPrintf("CWallet::GetVinAndKeysFromOutput -- Address does not refer to a key\n");
         return false;
     }
 
-    if (!GetKey(CKeyID(*keyID), keyRet)) {
+    if (!GetKey(ToKeyID(*pkhash), keyRet)) {
         LogPrintf("CWallet::GetVinAndKeysFromOutput -- Private key for address is not known\n");
         return false;
     }

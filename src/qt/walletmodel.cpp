@@ -503,8 +503,8 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
                     return InvalidAddress;
                 }
 
-                scriptPubKey = isV6Enforced() ? GetScriptForStakeDelegation(CKeyID(*stakerId), CKeyID(*ownerId))
-                        : GetScriptForStakeDelegationLOF(CKeyID(*stakerId), CKeyID(*ownerId));
+                scriptPubKey = isV6Enforced() ? GetScriptForStakeDelegation(ToKeyID(*stakerId), ToKeyID(*ownerId))
+                        : GetScriptForStakeDelegationLOF(ToKeyID(*stakerId), ToKeyID(*ownerId));
             } else {
                 // Regular P2PK or P2PKH
                 scriptPubKey = GetScriptForDestination(out);
