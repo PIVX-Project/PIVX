@@ -23,7 +23,7 @@ namespace Standard {
 
     // boost::get wrapper
     const libzcash::SaplingPaymentAddress* GetShieldedDestination(const CWDestination& dest);
-    const CTxDestination * GetTransparentDestination(const CWDestination& dest);
+    const CTxDestination* GetTransparentDestination(const CWDestination& dest);
 
 } // End Standard namespace
 
@@ -41,7 +41,7 @@ public:
 
     Destination& operator=(const Destination& from);
     // Returns the key ID (pubkey hash) if Destination is a transparent "regular" destination
-    const PKHash* getKeyID();
+    const PKHash* getPkHash();
     // Returns the encoded string address
     std::string ToString() const;
 };

@@ -498,7 +498,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
                 }
 
                 const PKHash* stakerId = boost::get<PKHash>(&out);
-                const PKHash* ownerId = ownerAdd.getKeyID();
+                const PKHash* ownerId = ownerAdd.getPkHash();
                 if (!stakerId || !ownerId) {
                     return InvalidAddress;
                 }
@@ -997,12 +997,12 @@ bool WalletModel::updateAddressBookPurpose(const QString &addressStr, const std:
     if (isStaking)
         return error("Invalid PIVX address, cold staking address");
     PKHash pkhash;
-    if (!getKeyId(address, pkhash))
+    if (!getPkHash(address, pkhash))
         return false;
     return wallet->SetAddressBook(pkhash, getLabelForAddress(address), purpose);
 }
 
-bool WalletModel::getKeyId(const CTxDestination& address, PKHash& pkHashRet)
+bool WalletModel::getPkHash(const CTxDestination& address, PKHash& pkHashRet)
 {
     if (!IsValidDestination(address))
         return error("Invalid PIVX address");
