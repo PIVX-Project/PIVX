@@ -161,7 +161,7 @@ public:
 
     struct MNsInfo {
         // All the known MNs
-        int total;
+        int total{0};
         // enabled MNs eligible for payments. Older than 8000 seconds.
         int stableSize{0};
         // MNs enabled.
