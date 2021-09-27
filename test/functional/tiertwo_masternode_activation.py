@@ -17,6 +17,7 @@ import time
 
 from test_framework.test_framework import PivxTier2TestFramework
 from test_framework.util import (
+    assert_equal,
     connect_nodes_clique,
     disconnect_nodes,
     wait_until,
@@ -65,10 +66,15 @@ class MasternodeActivationTest(PivxTier2TestFramework):
                     strErr = "Unable to get status \"%s\" on node %d for mnode %s" % (s, i, collaterals[k])
                     raise AssertionError(strErr)
 
-
     def run_test(self):
         self.enable_mocktime()
         self.setup_3_masternodes_network()
+
+        # check masternode count
+        self.log.info("testing masternode count now.")
+        mninfo = (self.nodes[0].getmasternodecount())
+        assert_equal(mninfo['enabled'], 2)
+        assert_equal(mninfo['total'], 2)
 
         # check masternode expiration
         self.log.info("testing expiration now.")
@@ -77,6 +83,9 @@ class MasternodeActivationTest(PivxTier2TestFramework):
         self.disconnect_remotes()
         self.advance_mocktime_and_stake(expiration_time)
         self.wait_until_mn_expired(30)
+        mninfo = (self.nodes[0].getmasternodecount())
+        assert_equal(mninfo['enabled'], 0)
+        assert_equal(mninfo['total'], 2)
         self.log.info("masternodes expired successfully")
 
         # check masternode removal
@@ -84,20 +93,27 @@ class MasternodeActivationTest(PivxTier2TestFramework):
         removal_time = 13 * 60  # regtest removal time
         self.advance_mocktime_and_stake(removal_time - expiration_time)
         self.wait_until_mn_expired(30, removed=True)
+        mninfo = (self.nodes[0].getmasternodecount())
+        assert_equal(mninfo['enabled'], 0)
+        assert_equal(mninfo['total'], 0)
         self.log.info("masternodes removed successfully")
 
         # restart and check spending the collateral now.
         self.reconnect_and_restart_masternodes()
         self.advance_mocktime(30)
+        mninfo = (self.nodes[0].getmasternodecount())
+        assert_equal(mninfo['enabled'], 2)
+        assert_equal(mninfo['total'], 2)
         self.log.info("spending the collateral now..")
         self.spend_collateral(self.ownerOne, self.mnOneCollateral, self.miner)
         self.sync_blocks()
         self.log.info("checking mn status..")
         time.sleep(3)           # wait a little bit
         self.wait_until_mn_vinspent(self.mnOneCollateral.hash, 30, [self.remoteTwo])
+        mninfo = (self.nodes[0].getmasternodecount())
+        assert_equal(mninfo['enabled'], 1)
+        assert_equal(mninfo['total'], 1)
         self.log.info("masternode list updated successfully, vin spent")
-
-
 
 
 if __name__ == '__main__':
