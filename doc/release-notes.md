@@ -18,28 +18,6 @@ Notable Changes
 (Developers: add your notes here as part of your pull requests whenever possible)
 
 
-### Deprecated autocombinerewards RPC Command
-
-The `autocombinerewards` RPC command was soft-deprecated in v5.3.0 and replaced with explicit setter/getter commands `setautocombinethreshold`/`getautocombinethreshold`. PIVX Core, by default, will no longer accept the `autocombinerewards` command, returning a deprecation error, unless the `pivxd`/`pivx-qt` is started with the `-deprecatedrpc=autocombinerewards` option.
-
-This command will be fully removed in v6.0.0.
-
-### Shield address support for RPC label commands
-
-The `setlabel` RPC command now supports a shield address input argument to allow users to set labels for shield addresses. Additionally, the `getaddressesbylabel` RPC command will also now return shield addresses with a matching label.
-
-### Specify optional label for getnewshieldaddress
-
-The `getnewshieldaddress` RPC command now takes an optional argument `label (string)` to denote the desired label for the generated address.
-
-P2P connection management
---------------------------
-
-- Peers manually added through the addnode option or addnode RPC now have their own
-  limit of sixteen connections which does not compete with other inbound or outbound
-  connection usage and is not subject to the maxconnections limitation.
-
-- New connections to manually added peers are much faster.
 
 *version* Change log
 ==============
@@ -47,8 +25,6 @@ P2P connection management
 Detailed release notes follow. This overview includes changes that affect behavior, not code moves, refactors and string updates. For convenience in locating the code changes and accompanying discussion, both the pull request and git merge commit are mentioned.
 
 ### Core Features
-
-### Build System
 
 ### P2P Protocol and Network Code
 
@@ -58,7 +34,15 @@ Detailed release notes follow. This overview includes changes that affect behavi
 
 ### Wallet
 
-### Miscellaneous
+### Tier Two Network
+
+### Build Systems
+
+### Testing
+
+### Cleanup/Refactoring
+
+### Docs/Output
 
 ## Credits
 
