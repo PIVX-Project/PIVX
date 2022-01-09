@@ -47,7 +47,8 @@ std::string HelpMessageCli()
     strUsage += HelpMessageOpt("-rpcuser=<user>", "Username for JSON-RPC connections");
     strUsage += HelpMessageOpt("-rpcpassword=<pw>", "Password for JSON-RPC connections");
     strUsage += HelpMessageOpt("-rpcclienttimeout=<n>", strprintf("Timeout in seconds during HTTP requests, or 0 for no timeout. (default: %d)", DEFAULT_HTTP_CLIENT_TIMEOUT));
-    strUsage += HelpMessageOpt("-stdin", ("Read extra arguments from standard input, one per line until EOF/Ctrl-D (recommended for sensitive information such as passphrases)"));
+    strUsage += HelpMessageOpt("-stdinrpcpass", strprintf(("Read RPC password from standard input as a single line. When combined with -stdin, the first line from standard input is used for the RPC password.")));
+    strUsage += HelpMessageOpt("-stdin", ("Read extra arguments from standard input, one per line until EOF/Ctrl-D (recommended for sensitive information such as passphrases).  When combined with -stdinrpcpass, the first line from standard input is used for the RPC password."));
     strUsage += HelpMessageOpt("-rpcwallet=<walletname>", "Send RPC for non-default wallet on RPC server (needs to exactly match corresponding -wallet option passed to pivxd)");
 
     return strUsage;
@@ -193,7 +194,7 @@ static void http_error_cb(enum evhttp_request_error err, void *ctx)
 }
 #endif
 
-UniValue CallRPC(const std::string& strMethod, const UniValue& params)
+static UniValue CallRPC(const std::string& strMethod, const UniValue& params)
 {
     std::string host = gArgs.GetArg("-rpcconnect", DEFAULT_RPCCONNECT);
     int port = gArgs.GetArg("-rpcport", BaseParams().RPCPort());
@@ -266,7 +267,7 @@ UniValue CallRPC(const std::string& strMethod, const UniValue& params)
     } else if (response.status == HTTP_UNAUTHORIZED) {
         if (failedToGetAuthCookie) {
             throw std::runtime_error(strprintf(
-                    ("Could not locate RPC credentials. No authentication cookie could be found, and RPC password is not set. See -rpcpassword. Configuration file: (%s)"),
+                    ("Could not locate RPC credentials. No authentication cookie could be found, and RPC password is not set.  See -rpcpassword and -stdinrpcpass.  Configuration file: (%s)"),
                     GetConfigFile(gArgs.GetArg("-conf", PIVX_CONF_FILENAME)).string().c_str()));
         } else {
             throw std::runtime_error("Authorization failed: Incorrect rpcuser or rpcpassword");
@@ -297,15 +298,24 @@ int CommandLineRPC(int argc, char* argv[])
             argc--;
             argv++;
         }
+        std::string rpcPass;
+        if (gArgs.GetBoolArg("-stdinrpcpass", false)) {
+            if (!std::getline(std::cin,rpcPass)) {
+                throw std::runtime_error("-stdinrpcpass specified but failed to read from standard input");
+            }
+            gArgs.ForceSetArg("-rpcpassword", rpcPass);
+        }
         std::vector<std::string> args = std::vector<std::string>(&argv[1], &argv[argc]);
         if (gArgs.GetBoolArg("-stdin", false)) {
             // Read one arg per line from stdin and append
             std::string line;
-            while (std::getline(std::cin,line))
+            while (std::getline(std::cin,line)) {
                 args.push_back(line);
+            }
         }
-        if (args.size() < 1)
+        if (args.size() < 1) {
             throw std::runtime_error("too few parameters (need at least command)");
+        }
         std::string strMethod = args[0];
         UniValue params;
         if (gArgs.GetBoolArg("-named", DEFAULT_NAMED)) {
