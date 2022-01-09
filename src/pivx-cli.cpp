@@ -47,6 +47,7 @@ std::string HelpMessageCli()
     strUsage += HelpMessageOpt("-rpcuser=<user>", "Username for JSON-RPC connections");
     strUsage += HelpMessageOpt("-rpcpassword=<pw>", "Password for JSON-RPC connections");
     strUsage += HelpMessageOpt("-rpcclienttimeout=<n>", strprintf("Timeout in seconds during HTTP requests, or 0 for no timeout. (default: %d)", DEFAULT_HTTP_CLIENT_TIMEOUT));
+    strUsage += HelpMessageOpt("-stdin", ("Read extra arguments from standard input, one per line until EOF/Ctrl-D (recommended for sensitive information such as passphrases)"));
     strUsage += HelpMessageOpt("-rpcwallet=<walletname>", "Send RPC for non-default wallet on RPC server (needs to exactly match corresponding -wallet option passed to pivxd)");
 
     return strUsage;
@@ -296,19 +297,21 @@ int CommandLineRPC(int argc, char* argv[])
             argc--;
             argv++;
         }
-
-        // Method
-        if (argc < 2)
-            throw std::runtime_error("too few parameters");
-        std::string strMethod = argv[1];
-
-        // Parameters default to strings
-        std::vector<std::string> strParams(&argv[2], &argv[argc]);
+        std::vector<std::string> args = std::vector<std::string>(&argv[1], &argv[argc]);
+        if (gArgs.GetBoolArg("-stdin", false)) {
+            // Read one arg per line from stdin and append
+            std::string line;
+            while (std::getline(std::cin,line))
+                args.push_back(line);
+        }
+        if (args.size() < 1)
+            throw std::runtime_error("too few parameters (need at least command)");
+        std::string strMethod = args[0];
         UniValue params;
-        if(gArgs.GetBoolArg("-named", DEFAULT_NAMED)) {
-            params = RPCConvertNamedValues(strMethod, strParams);
+        if (gArgs.GetBoolArg("-named", DEFAULT_NAMED)) {
+            params = RPCConvertNamedValues(strMethod, std::vector<std::string>(args.begin()+1, args.end()));
         } else {
-            params = RPCConvertValues(strMethod, strParams);
+            params = RPCConvertValues(strMethod, std::vector<std::string>(args.begin()+1, args.end()));
         }
 
         // Execute and handle connection failures with -rpcwait
