@@ -21,8 +21,8 @@ void RegisterWalletRPCCommands(CRPCTable &tableRPC);
  */
 CWallet* GetWalletForJSONRPCRequest(const JSONRPCRequest& request);
 
-std::string HelpRequiringPassphrase(CWallet* const pwallet);
-bool EnsureWalletIsAvailable(CWallet* const pwallet, bool avoidException);
-void EnsureWalletIsUnlocked(CWallet* const pwallet, bool fAllowAnonOnly = false);
+std::string HelpRequiringPassphrase(CWallet* pwallet);
+bool EnsureWalletIsAvailable(CWallet* pwallet, bool avoidException);
+void EnsureWalletIsUnlocked(CWallet* pwallet, bool fAllowAnonOnly = false);
 
 #endif //PIVX_WALLET_RPCWALLET_H

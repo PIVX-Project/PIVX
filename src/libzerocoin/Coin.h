@@ -36,7 +36,7 @@ namespace libzerocoin
     bool IsValidSerial(const ZerocoinParams* params, const CBigNum& bnSerial);
     bool IsValidCommitmentToCoinRange(const ZerocoinParams* params, const CBigNum& bnCommitment);
     CBigNum GetAdjustedSerial(const CBigNum& bnSerial);
-    CBigNum ExtractSerialFromPubKey(const CPubKey pubkey);
+    CBigNum ExtractSerialFromPubKey(CPubKey pubkey);
 
 /** A Public coin is the part of a coin that
  * is published to the network and what is handled
@@ -61,7 +61,7 @@ public:
      * @param coin the value of the commitment.
      * @param denomination The denomination of the coin.
      */
-    PublicCoin(const ZerocoinParams* p, const CBigNum& coin, const CoinDenomination d);
+    PublicCoin(const ZerocoinParams* p, const CBigNum& coin, CoinDenomination d);
     const CBigNum& getValue() const { return this->value; }
 
     CoinDenomination getDenomination() const { return this->denomination; }

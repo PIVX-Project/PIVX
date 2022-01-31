@@ -75,7 +75,7 @@ public:
 
     // Sign-Verify message
     bool Sign(const CKey& key, const CKeyID& keyID);
-    bool Sign(const std::string strSignKey);
+    bool Sign(std::string strSignKey);
     bool CheckSignature(const CKeyID& keyID) const;
 
     // Pure virtual functions (used in Sign-Verify functions)

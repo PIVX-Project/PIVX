@@ -166,10 +166,10 @@ public:
     bool EraseCoinSpend(const CBigNum& bnSerial);
 
     /** Accumulators (only for zPoS IBD): [checksum, denom] --> block height **/
-    bool WriteAccChecksum(const uint32_t nChecksum, const libzerocoin::CoinDenomination denom, const int nHeight);
-    bool ReadAccChecksum(const uint32_t nChecksum, const libzerocoin::CoinDenomination denom, int& nHeightRet);
+    bool WriteAccChecksum(uint32_t nChecksum, libzerocoin::CoinDenomination denom, int nHeight);
+    bool ReadAccChecksum(uint32_t nChecksum, libzerocoin::CoinDenomination denom, int& nHeightRet);
     bool ReadAll(std::map<std::pair<uint32_t, libzerocoin::CoinDenomination>, int>& mapCheckpoints);
-    bool EraseAccChecksum(const uint32_t nChecksum, const libzerocoin::CoinDenomination denom);
+    bool EraseAccChecksum(uint32_t nChecksum, libzerocoin::CoinDenomination denom);
     void WipeAccChecksums();
 };
 

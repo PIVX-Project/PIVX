@@ -47,7 +47,7 @@ public:
     virtual ~SaplingNote() {};
 
     Optional<uint256> cmu() const;
-    Optional<uint256> nullifier(const SaplingFullViewingKey& vk, const uint64_t position) const;
+    Optional<uint256> nullifier(const SaplingFullViewingKey& vk, uint64_t position) const;
 };
 
 class BaseNotePlaintext {

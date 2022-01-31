@@ -122,7 +122,7 @@ private Q_SLOTS:
     void onSortTypeChanged(const QString& value);
     void updateDisplayUnit();
     void showList();
-    void onTxArrived(const QString& hash, const bool isCoinStake, const bool isMNReward, const bool isCSAnyType);
+    void onTxArrived(const QString& hash, bool isCoinStake, bool isMNReward, bool isCSAnyType);
 
 #ifdef USE_QTCHARTS
     void windowResizeEvent(QResizeEvent* event);

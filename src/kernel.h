@@ -20,7 +20,7 @@ public:
      * @param[in]   nBits           target difficulty bits of the kernel block
      * @param[in]   nTimeTx         time of the kernel block
      */
-    CStakeKernel(const CBlockIndex* const pindexPrev, CStakeInput* stakeInput, unsigned int nBits, int nTimeTx);
+    CStakeKernel(const CBlockIndex* pindexPrev, CStakeInput* stakeInput, unsigned int nBits, int nTimeTx);
 
     // Return stake kernel hash
     uint256 GetHash() const;

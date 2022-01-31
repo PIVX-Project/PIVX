@@ -19,9 +19,9 @@ private:
     void operator=(const CSporkDB&);
 
 public:
-    bool WriteSpork(const SporkId nSporkId, const CSporkMessage& spork);
-    bool ReadSpork(const SporkId nSporkId, CSporkMessage& spork);
-    bool SporkExists(const SporkId nSporkId);
+    bool WriteSpork(SporkId nSporkId, const CSporkMessage& spork);
+    bool ReadSpork(SporkId nSporkId, CSporkMessage& spork);
+    bool SporkExists(SporkId nSporkId);
 };
 
 

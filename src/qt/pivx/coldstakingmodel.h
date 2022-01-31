@@ -66,7 +66,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool whitelist(const QModelIndex& modelIndex);
     bool blacklist(const QModelIndex& index);
-    void removeRowAndEmitDataChanged(const int idx);
+    void removeRowAndEmitDataChanged(int idx);
     void updateCSList();
     CAmount getTotalAmount() const { return cachedAmount; }
 
@@ -86,7 +86,7 @@ private:
     QList<CSDelegation> cachedDelegations;
     CAmount cachedAmount;
 
-    bool parseCSDelegation(const CTxOut& out, CSDelegation& ret, const QString& txId, const int utxoIndex);
+    bool parseCSDelegation(const CTxOut& out, CSDelegation& ret, const QString& txId, int utxoIndex);
 };
 
 #endif // COLDSTAKINGMODEL_H

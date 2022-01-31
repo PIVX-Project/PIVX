@@ -98,7 +98,7 @@ extern "C" {
         const unsigned char *diversifier,
         const unsigned char *rcm,
         const unsigned char *ar,
-        const uint64_t value,
+        uint64_t value,
         const unsigned char *anchor,
         const unsigned char *witness,
         unsigned char *cv,
@@ -114,7 +114,7 @@ extern "C" {
         const unsigned char *esk,
         const unsigned char *payment_address,
         const unsigned char *rcm,
-        const uint64_t value,
+        uint64_t value,
         unsigned char *cv,
         unsigned char *zkproof
     );
@@ -182,11 +182,11 @@ extern "C" {
     bool librustzcash_sapling_compute_nf(
         const unsigned char *diversifier,
         const unsigned char *pk_d,
-        const uint64_t value,
+        uint64_t value,
         const unsigned char *r,
         const unsigned char *ak,
         const unsigned char *nk,
-        const uint64_t position,
+        uint64_t position,
         unsigned char *result
     );
 
@@ -199,7 +199,7 @@ extern "C" {
     bool librustzcash_sapling_compute_cm(
         const unsigned char *diversifier,
         const unsigned char *pk_d,
-        const uint64_t value,
+        uint64_t value,
         const unsigned char *r,
         unsigned char *result
     );

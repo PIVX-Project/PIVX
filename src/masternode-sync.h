@@ -91,7 +91,7 @@ private:
     void PushMessage(CNode* pnode, const char* msg, Args&&... args);
 
     // update peer sync state data
-    bool UpdatePeerSyncState(const NodeId& id, const char* msg, const int nextSyncStatus);
+    bool UpdatePeerSyncState(const NodeId& id, const char* msg, int nextSyncStatus);
 
     // Check if an update is needed
     void CheckAndUpdateSyncStatus();

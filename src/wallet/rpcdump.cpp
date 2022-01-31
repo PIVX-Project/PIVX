@@ -173,7 +173,7 @@ UniValue abortrescan(const JSONRPCRequest& request)
     return true;
 }
 
-static void ImportAddress(CWallet* const pwallet, const CTxDestination& dest, const std::string& strLabel, const std::string& strPurpose);
+static void ImportAddress(CWallet* pwallet, const CTxDestination& dest, const std::string& strLabel, const std::string& strPurpose);
 
 static void ImportScript(CWallet* const pwallet, const CScript& script, const std::string& strLabel, bool isRedeemScript)
 {
