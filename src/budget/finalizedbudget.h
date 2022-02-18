@@ -93,6 +93,9 @@ public:
     bool GetBudgetPaymentByBlock(int64_t nBlockHeight, CTxBudgetPayment& payment) const;
     bool GetPayeeAndAmount(int64_t nBlockHeight, CScript& payee, CAmount& nAmount) const;
 
+    // Check if ALL the budgets are paid by transaction tx
+    bool AllBudgetsPaid(const CTransaction& tx) const;
+
     // Check finalized budget proposals. Masternodes only (when voting on finalized budgets)
     bool CheckProposals(const std::map<uint256, CBudgetProposal>& mapWinningProposals) const;
     // Total amount paid out by this budget

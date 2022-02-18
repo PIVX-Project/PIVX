@@ -318,7 +318,7 @@ bool IsBlockPayeeValid(const CBlock& block, const CBlockIndex* pindexPrev)
 
     // Check budget payments during superblocks
     if (sporkManager.IsSporkActive(SPORK_13_ENABLE_SUPERBLOCKS) && consensus.IsSuperBlock(nBlockHeight)) {
-        // !TODO...
+        return g_budgetman.IsValidSuperBlockTx(coinbase_tx, nBlockHeight);
     }
 
     return true;

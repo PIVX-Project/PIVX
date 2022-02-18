@@ -757,6 +757,21 @@ TrxValidationStatus CBudgetManager::IsTransactionValid(const CTransaction& txNew
     return fThreshold ? TrxValidationStatus::InValid : TrxValidationStatus::VoteThreshold;
 }
 
+bool CBudgetManager::IsValidSuperBlockTx(const CTransaction& txNew, int nBlockHeight) const
+{
+    assert(Params().GetConsensus().IsSuperBlock(nBlockHeight));
+
+    int nFivePercent = mnodeman.CountEnabled() / 20;
+
+    const auto highest = GetBudgetWithHighestVoteCount(nBlockHeight);
+    const CFinalizedBudget* pfb = highest.m_budget_fin;
+    if (pfb == nullptr || highest.m_vote_count <= nFivePercent) {
+        // No finalization or not enough votes. Nothing to check.
+        return true;
+    }
+    return pfb->AllBudgetsPaid(txNew);
+}
+
 std::vector<CBudgetProposal*> CBudgetManager::GetAllProposalsOrdered()
 {
     LOCK(cs_proposals);
