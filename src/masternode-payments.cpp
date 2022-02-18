@@ -893,30 +893,21 @@ bool IsCoinbaseValueValid(const CTransactionRef& tx, CAmount nBudgetAmt, CValida
 {
     assert(tx->IsCoinBase());
     if (g_tiertwo_sync_state.IsSynced()) {
-        const CAmount nCBaseOutAmt = tx->GetValueOut();
-        if (nBudgetAmt > 0) {
-            // Superblock
-            if (nCBaseOutAmt != nBudgetAmt) {
-                const std::string strError = strprintf("%s: invalid coinbase payment for budget (%s vs expected=%s)",
-                                                       __func__, FormatMoney(nCBaseOutAmt), FormatMoney(nBudgetAmt));
-                return _state.DoS(100, error(strError.c_str()), REJECT_INVALID, "bad-superblock-cb-amt");
-            }
-            return true;
-        } else {
-            // regular block
-            CAmount nMnAmt = GetMasternodePayment();
-            // if enforcement is disabled, there could be no masternode payment
-            bool sporkEnforced = sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT);
-            const std::string strError = strprintf("%s: invalid coinbase payment for masternode (%s vs expected=%s)",
-                                                   __func__, FormatMoney(nCBaseOutAmt), FormatMoney(nMnAmt));
-            if (sporkEnforced && nCBaseOutAmt != nMnAmt) {
-                return _state.DoS(100, error(strError.c_str()), REJECT_INVALID, "bad-cb-amt");
-            }
-            if (!sporkEnforced && nCBaseOutAmt > nMnAmt) {
-                return _state.DoS(100, error(strError.c_str()), REJECT_INVALID, "bad-cb-amt-spork8-disabled");
-            }
-            return true;
+        const CAmount paid = tx->GetValueOut();
+        const CAmount expected = GetMasternodePayment() + nBudgetAmt;
+        // if enforcement is disabled, there could be no masternode payment
+        bool sporkEnforced = sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT);
+
+        const std::string strError = strprintf("%s: invalid coinbase payment (%s vs expected=%s)",
+                                               __func__, FormatMoney(paid), FormatMoney(expected));
+        std::string rej_reason = (nBudgetAmt > 0 ? "bad-superblock-cb-amt" : "bad-cb-amt");
+        if (sporkEnforced && paid != expected) {
+            return _state.DoS(100, error(strError.c_str()), REJECT_INVALID, rej_reason);
         }
+        if (!sporkEnforced && paid > expected) {
+            return _state.DoS(100, error(strError.c_str()), REJECT_INVALID, rej_reason+"-spork8-disabled");
+        }
+        return true;
     }
     return true;
 }
