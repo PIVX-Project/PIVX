@@ -324,13 +324,30 @@ bool IsBlockPayeeValid(const CBlock& block, const CBlockIndex* pindexPrev)
     return true;
 }
 
-void FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const CBlockIndex* pindexPrev, bool fProofOfStake)
+static void FillBlockPayee_legacy(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const CBlockIndex* pindexPrev, bool fProofOfStake)
 {
     if (!sporkManager.IsSporkActive(SPORK_13_ENABLE_SUPERBLOCKS) ||           // if superblocks are not enabled
             // ... or this is not a superblock
             !g_budgetman.FillBlockPayee(txCoinbase, txCoinstake, pindexPrev->nHeight + 1, fProofOfStake) ) {
         // ... or there's no budget with enough votes, then pay a masternode
         masternodePayments.FillBlockPayee(txCoinbase, txCoinstake, pindexPrev, fProofOfStake);
+    }
+}
+
+void FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const CBlockIndex* pindexPrev, bool fProofOfStake)
+{
+    int height = pindexPrev->nHeight + 1;
+    if (!Params().GetConsensus().NetworkUpgradeActive(height, Consensus::UPGRADE_V6_0)) {
+        // legacy - !TODO: remove after transition
+        return FillBlockPayee_legacy(txCoinbase, txCoinstake, pindexPrev, fProofOfStake);
+    }
+
+    // Add masternode payment
+    masternodePayments.FillBlockPayee(txCoinbase, txCoinstake, pindexPrev, fProofOfStake);
+
+    // Add budget payments (if superblock, and SPORK_13 is active)
+    if (sporkManager.IsSporkActive(SPORK_13_ENABLE_SUPERBLOCKS)) {
+        g_budgetman.FillBlockPayees(txCoinbase, height);
     }
 }
 

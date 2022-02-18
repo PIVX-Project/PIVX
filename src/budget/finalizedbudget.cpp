@@ -422,6 +422,13 @@ bool CFinalizedBudget::AllBudgetsPaid(const CTransaction& tx) const
     return true;
 }
 
+void CFinalizedBudget::PayAllBudgets(CMutableTransaction& tx) const
+{
+    for (const CTxBudgetPayment& payment : vecBudgetPayments) {
+        tx.vout.emplace_back(payment.nAmount, payment.payee);
+    }
+}
+
 // return broadcast serialization
 CDataStream CFinalizedBudget::GetBroadcast() const
 {

@@ -568,6 +568,22 @@ bool CBudgetManager::FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTra
     return true;
 }
 
+void CBudgetManager::FillBlockPayees(CMutableTransaction& tx, int height) const
+{
+    if (!Params().GetConsensus().IsSuperBlock(height)) {
+        return;
+    }
+    int nFivePercent = mnodeman.CountEnabled() / 20;
+
+    const auto highest = GetBudgetWithHighestVoteCount(height);
+    const CFinalizedBudget* pfb = highest.m_budget_fin;
+    if (pfb == nullptr || highest.m_vote_count <= nFivePercent) {
+        // No finalization or not enough votes.
+        return;
+    }
+    pfb->PayAllBudgets(tx);
+}
+
 void CBudgetManager::VoteOnFinalizedBudgets()
 {
     // function called only from initialized masternodes
