@@ -194,7 +194,7 @@ void DumpMasternodePayments()
     LogPrint(BCLog::MASTERNODE,"Budget dump finished  %dms\n", GetTimeMillis() - nStart);
 }
 
-bool IsBlockValueValid(int nHeight, CAmount& nExpectedValue, CAmount nMinted, CAmount& nBudgetAmt)
+static bool IsBlockValueValid_legacy(int nHeight, CAmount& nExpectedValue, CAmount nMinted, CAmount& nBudgetAmt)
 {
     const Consensus::Params& consensus = Params().GetConsensus();
     if (!g_tiertwo_sync_state.IsSynced()) {
@@ -224,9 +224,31 @@ bool IsBlockValueValid(int nHeight, CAmount& nExpectedValue, CAmount nMinted, CA
     return nMinted <= nExpectedValue;
 }
 
-bool IsBlockPayeeValid(const CBlock& block, const CBlockIndex* pindexPrev)
+bool IsBlockValueValid(int nHeight, CAmount& nExpectedValue, CAmount nMinted, CAmount& nBudgetAmt)
+{
+    const Consensus::Params& consensus = Params().GetConsensus();
+    if (!consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_V6_0)) {
+        return IsBlockValueValid_legacy(nHeight, nExpectedValue, nMinted, nBudgetAmt);
+    }
+
+    if (consensus.IsSuperBlock(nHeight)) {
+        if (!g_tiertwo_sync_state.IsSynced()) {
+            // there is no budget data to use to check anything
+            nExpectedValue += g_budgetman.GetTotalBudget(nHeight);
+        } else if (sporkManager.IsSporkActive(SPORK_13_ENABLE_SUPERBLOCKS)) {
+            // we're synced and the superblock spork is enabled
+            nBudgetAmt = g_budgetman.GetFinalizedBudgetTotalPayout(nHeight);
+            nExpectedValue += nBudgetAmt;
+        }
+    }
+
+    return nMinted >= 0 && nMinted <= nExpectedValue;
+}
+
+static bool IsBlockPayeeValid_legacy(const CBlock& block, const CBlockIndex* pindexPrev)
 {
     int nBlockHeight = pindexPrev->nHeight + 1;
+    assert(!Params().GetConsensus().NetworkUpgradeActive(nBlockHeight, Consensus::UPGRADE_V6_0));
     TrxValidationStatus transactionStatus = TrxValidationStatus::InValid;
 
     if (!g_tiertwo_sync_state.IsSynced()) { //there is no budget data to use to check anything -- find the longest chain
@@ -234,8 +256,7 @@ bool IsBlockPayeeValid(const CBlock& block, const CBlockIndex* pindexPrev)
         return true;
     }
 
-    const bool fPayCoinstake = Params().GetConsensus().NetworkUpgradeActive(nBlockHeight, Consensus::UPGRADE_POS) &&
-                               !Params().GetConsensus().NetworkUpgradeActive(nBlockHeight, Consensus::UPGRADE_V6_0);
+    const bool fPayCoinstake = Params().GetConsensus().NetworkUpgradeActive(nBlockHeight, Consensus::UPGRADE_POS);
     const CTransaction& txNew = *(fPayCoinstake ? block.vtx[1] : block.vtx[0]);
 
     //check if it's a budget block
@@ -272,6 +293,36 @@ bool IsBlockPayeeValid(const CBlock& block, const CBlockIndex* pindexPrev)
     return true;
 }
 
+bool IsBlockPayeeValid(const CBlock& block, const CBlockIndex* pindexPrev)
+{
+    const Consensus::Params& consensus = Params().GetConsensus();
+    int nBlockHeight = pindexPrev->nHeight + 1;
+    if (!consensus.NetworkUpgradeActive(nBlockHeight, Consensus::UPGRADE_V6_0)) {
+        return IsBlockPayeeValid_legacy(block, pindexPrev);
+    }
+
+    if (!g_tiertwo_sync_state.IsSynced()) { //there is no budget data to use to check anything -- find the longest chain
+        // !TODO: after transition to v6, restrict this to budget-checks only
+        LogPrint(BCLog::MASTERNODE, "Client not synced, skipping block payee checks\n");
+        return true;
+    }
+
+    const CTransaction& coinbase_tx = *block.vtx[0];
+
+    // Check masternode payment
+    if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT) &&
+            !masternodePayments.IsTransactionValid(coinbase_tx, pindexPrev)) {
+        LogPrint(BCLog::MASTERNODE, "Missing required masternode payment\n");
+        return false;
+    }
+
+    // Check budget payments during superblocks
+    if (sporkManager.IsSporkActive(SPORK_13_ENABLE_SUPERBLOCKS) && consensus.IsSuperBlock(nBlockHeight)) {
+        // !TODO...
+    }
+
+    return true;
+}
 
 void FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const CBlockIndex* pindexPrev, bool fProofOfStake)
 {

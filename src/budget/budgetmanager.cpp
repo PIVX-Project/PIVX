@@ -509,6 +509,22 @@ bool CBudgetManager::GetExpectedPayeeAmount(int chainHeight, CAmount& nAmountRet
     return GetPayeeAndAmount(chainHeight, payeeRet, nAmountRet);
 }
 
+CAmount CBudgetManager::GetFinalizedBudgetTotalPayout(int chainHeight) const
+{
+    if (!Params().GetConsensus().IsSuperBlock(chainHeight)) {
+        return 0;
+    }
+    int nFivePercent = mnodeman.CountEnabled() / 20;
+
+    const auto highest = GetBudgetWithHighestVoteCount(chainHeight);
+    const CFinalizedBudget* pfb = highest.m_budget_fin;
+    if (pfb == nullptr || highest.m_vote_count <= nFivePercent) {
+        // No finalization or not enough votes.
+        return 0;
+    }
+    return pfb->GetTotalPayout();
+}
+
 bool CBudgetManager::FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const int nHeight, bool fProofOfStake) const
 {
     if (nHeight <= 0) return false;

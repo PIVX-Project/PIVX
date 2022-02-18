@@ -141,8 +141,9 @@ public:
     std::vector<CBudgetProposal*> GetAllProposalsOrdered();
     std::vector<CFinalizedBudget*> GetFinalizedBudgets();
     bool GetExpectedPayeeAmount(int chainHeight, CAmount& nAmountRet) const;
-    bool IsBudgetPaymentBlock(int nBlockHeight) const;
-    bool IsBudgetPaymentBlock(int nBlockHeight, int& nCountThreshold) const;
+    CAmount GetFinalizedBudgetTotalPayout(int chainHeight) const;
+    bool IsBudgetPaymentBlock(int nBlockHeight) const;  // legacy (multiple SB)
+    bool IsBudgetPaymentBlock(int nBlockHeight, int& nCountThreshold) const; // legacy (multiple SB)
     bool AddProposal(CBudgetProposal& budgetProposal);
     bool AddFinalizedBudget(CFinalizedBudget& finalizedBudget, CNode* pfrom = nullptr);
     void ForceAddFinalizedBudget(const uint256& nHash, const uint256& feeTxId, const CFinalizedBudget& finalizedBudget);
