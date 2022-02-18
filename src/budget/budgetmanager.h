@@ -155,6 +155,7 @@ public:
     bool IsValidSuperBlockTx(const CTransaction& txNew, int nBlockHeight) const; // v6.0: single SB
 
     std::string GetRequiredPaymentsString(int nBlockHeight);
+    const CFinalizedBudget* GetBestFinalizedBudget(int chainHeight) const;
     bool FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const int nHeight, bool fProofOfStake) const; // legacy (multiple SB)
     void FillBlockPayees(CMutableTransaction& tx, int height) const; // v6.0: single SB
 
