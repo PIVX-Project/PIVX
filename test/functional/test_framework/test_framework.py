@@ -1618,7 +1618,11 @@ class PivxDMNTestFramework(PivxTestFramework):
 # !TODO: remove after obsoleting legacy system
 class PivxTier2TestFramework(PivxTestFramework):
 
-    def set_test_params(self, v6_enforcement_height = 250):
+    def __init__(self):
+        super().__init__()
+        self.v6_enforcement_height = 250
+
+    def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 8
         self.enable_mocktime()
@@ -1631,7 +1635,7 @@ class PivxTier2TestFramework(PivxTestFramework):
         self.remoteDMN1Pos = 5
         self.ownerThreePos = 6
         self.remoteThreePos = 7
-        self.extra_args = [["-nuparams=v5_shield:249", "-nuparams=v6_evo:"+str(v6_enforcement_height), "-whitelist=127.0.0.1"]] * self.num_nodes
+        self.extra_args = [["-nuparams=v5_shield:249", "-nuparams=v6_evo:"+str(self.v6_enforcement_height), "-whitelist=127.0.0.1"]] * self.num_nodes
         for i in [self.remoteOnePos, self.remoteTwoPos, self.remoteDMN1Pos]:
             self.extra_args[i] += ["-listen", "-externalip=127.0.0.1"]
         self.extra_args[self.minerPos].append("-sporkkey=932HEevBSujW2ud7RfB1YF91AFygbBRQj3de3LyaCRqNzKKgWXi")
@@ -1644,7 +1648,7 @@ class PivxTier2TestFramework(PivxTestFramework):
         self.mnTwoPrivkey = "92Hkebp3RHdDidGZ7ARgS4orxJAGyFUPDXNqtsYsiwho1HGVRbF"
         self.mnThreePrivkey = "91qP855JNR3aWv6Z71BcFjqhkeizchSDjKSi7BdqMSSirEVDTEk"
 
-        # Updated in setup_3_masternodes_network() to be called at the start of run_test
+        # Updated in setup_masternodes_network() to be called at the start of run_test
         self.ownerOne = None        # self.nodes[self.ownerOnePos]
         self.remoteOne = None       # self.nodes[self.remoteOnePos]
         self.ownerTwo = None        # self.nodes[self.ownerTwoPos]
@@ -1690,7 +1694,7 @@ class PivxTier2TestFramework(PivxTestFramework):
         self.mocktime = self.generate_pos(self.minerPos, self.mocktime)
         time.sleep(2)
 
-    def setup_3_masternodes_network(self):
+    def setup_masternodes_network(self, setup_dmn=True):
         self.ownerOne = self.nodes[self.ownerOnePos]
         self.remoteOne = self.nodes[self.remoteOnePos]
         self.ownerTwo = self.nodes[self.ownerTwoPos]
@@ -1736,13 +1740,14 @@ class PivxTier2TestFramework(PivxTestFramework):
             os.path.join(ownerThreeDir, "regtest"),
             self.remoteThreePos,
             self.mnThreePrivkey)
-        # setup deterministic masternode
-        self.proRegTx1, self.dmn1Privkey = self.setupDMN(
-            self.ownerOne,
-            self.miner,
-            self.remoteDMN1Pos,
-            "fund"
-        )
+        if setup_dmn:
+            # setup deterministic masternode
+            self.proRegTx1, self.dmn1Privkey = self.setupDMN(
+                self.ownerOne,
+                self.miner,
+                self.remoteDMN1Pos,
+                "fund"
+            )
 
         self.log.info("masternodes setup completed, initializing them..")
 
@@ -1756,7 +1761,8 @@ class PivxTier2TestFramework(PivxTestFramework):
         self.remoteOne.initmasternode(self.mnOnePrivkey, "127.0.0.1:"+str(remoteOnePort))
         self.remoteTwo.initmasternode(self.mnTwoPrivkey, "127.0.0.1:"+str(remoteTwoPort))
         self.remoteThree.initmasternode(self.mnThreePrivkey, "127.0.0.1:"+str(remoteThreePort))
-        self.remoteDMN1.initmasternode(self.dmn1Privkey)
+        if setup_dmn:
+            self.remoteDMN1.initmasternode(self.dmn1Privkey)
 
         # wait until mnsync complete on all nodes
         self.stake(1)

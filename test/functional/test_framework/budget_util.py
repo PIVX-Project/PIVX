@@ -1,5 +1,6 @@
 from .util import (
     assert_equal,
+    assert_greater_than_or_equal,
     assert_true,
     satoshi_round,
 )
@@ -72,7 +73,7 @@ def check_budget_finalization_sync(nodes, votesCount, status):
     for i in range(0, len(nodes)):
         node = nodes[i]
         budFin = node.mnfinalbudget("show")
-        assert_true(len(budFin) == 1, "MN budget finalization not synced in node" + str(i))
+        assert_greater_than_or_equal(len(budFin), 1)
         budget = budFin[next(iter(budFin))]
         assert_equal(budget["VoteCount"], votesCount)
         assert_equal(budget["Status"], status)
