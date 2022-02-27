@@ -178,7 +178,7 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
 
     def run_test(self):
         self.enable_mocktime()
-        self.setup_3_masternodes_network()
+        self.setup_masternodes_network()
         txHashSet = set([self.mnOneCollateral.hash, self.mnTwoCollateral.hash, self.proRegTx1])
         # check mn list from miner
         self.check_mn_list(self.miner, txHashSet)

@@ -68,7 +68,7 @@ class MasternodeActivationTest(PivxTier2TestFramework):
 
     def run_test(self):
         self.enable_mocktime()
-        self.setup_3_masternodes_network()
+        self.setup_masternodes_network()
 
         # check masternode expiration
         self.log.info("testing expiration now.")

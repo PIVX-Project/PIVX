@@ -96,7 +96,7 @@ class MasternodeCompatibilityTest(PivxTier2TestFramework):
     def run_test(self):
         self.mn_addresses = {}
         self.enable_mocktime()
-        self.setup_3_masternodes_network()
+        self.setup_masternodes_network()
 
         # start with 3 masternodes (2 legacy + 1 DMN)
         self.check_mn_enabled_count(3, 3)
