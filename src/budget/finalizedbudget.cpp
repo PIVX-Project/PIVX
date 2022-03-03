@@ -187,7 +187,7 @@ bool CFinalizedBudget::CheckStartEnd()
     }
 
     // Must be the correct block for payment to happen (once a month)
-    if (nBlockStart % Params().GetConsensus().nBudgetCycleBlocks != 0) {
+    if (!Params().GetConsensus().IsSuperBlock(nBlockStart)) {
         strInvalid = "Invalid BlockStart";
         return false;
     }

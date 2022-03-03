@@ -86,7 +86,7 @@ class BudgetTest(PivxTier2TestFramework):
         assert_equal(voteResult["detail"][0]["result"], "success")
 
     def check_address_balance(self, addr, expected_balance, has_balance=True):
-        addrInfo = self.miner.listreceivedbyaddress(0, False, False, addr)
+        addrInfo = self.nodes[self.ownerOnePos].listreceivedbyaddress(0, False, False, addr)
         if has_balance:
             assert_equal(addrInfo[0]["amount"], expected_balance)
         else:
@@ -145,8 +145,8 @@ class BudgetTest(PivxTier2TestFramework):
         for i in range(16):
             props.append(Proposal("prop_"+str(i),
                          "https://link_"+str(i)+".com",
-                         3,
-                         self.miner.getnewaddress(),
+                         4,
+                         self.nodes[self.ownerOnePos].getnewaddress(),
                          11 * (i + 1)))
         self.submit_proposals(props)
 
