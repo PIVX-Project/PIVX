@@ -14,6 +14,7 @@ Test checking:
 
 import time
 
+from decimal import Decimal
 from test_framework.test_framework import PivxTier2TestFramework
 from test_framework.util import (
     assert_equal
@@ -29,6 +30,9 @@ from test_framework.budget_util import (
     get_proposal,
     Proposal,
     propagate_proposals
+)
+from test_framework.messages import (
+    COIN
 )
 
 class BudgetTest(PivxTier2TestFramework):
@@ -201,10 +205,28 @@ class BudgetTest(PivxTier2TestFramework):
         self.log.info("pre-v6 budget proposal paid, all good. Testing enforcement now..")
 
         ##################################################################
+        self.log.info("checking post enforcement coinstake value..")
         # Now test post enforcement, active from block 300
         for _ in range(4):
             self.miner.generate(30)
             self.stake_and_ping(self.minerPos, 1, [self.remoteOne, self.remoteTwo, self.remoteThree])
+
+        # Post-v6 enforcement
+        # Get the coinstake and check that the input value is equal to
+        # the output value + block reward - MN payment.
+        BLOCK_REWARD = Decimal(250 * COIN)
+        MN_BLOCK_REWARD = Decimal(3 * COIN)
+        tx_coinstake_id = self.miner.getblock(self.miner.getbestblockhash(), True)["tx"][1]
+        tx_coinstake = self.miner.getrawtransaction(tx_coinstake_id, True)
+        tx_coinstake_out_value = Decimal(tx_coinstake["vout"][1]["value"]) * COIN
+        tx_coinstake_vin = tx_coinstake["vin"][0]
+        tx_coinstake_input = self.miner.getrawtransaction(tx_coinstake_vin["txid"], True)
+        tx_coinstake_input_value = Decimal(tx_coinstake_input["vout"][int(tx_coinstake_vin["vout"])]["value"]) * COIN
+        assert(tx_coinstake_out_value == tx_coinstake_input_value + BLOCK_REWARD - MN_BLOCK_REWARD)
+
+        ##############################################################
+        # Check single block payments
+        self.log.info("mining until next superblock..")
         next_super_block = self.miner.getnextsuperblock()
         block_count = self.miner.getblockcount()
         self.stake_and_ping(self.minerPos, next_super_block - block_count - 6, [self.remoteOne, self.remoteTwo, self.remoteThree])
