@@ -1618,24 +1618,18 @@ class PivxDMNTestFramework(PivxTestFramework):
 # !TODO: remove after obsoleting legacy system
 class PivxTier2TestFramework(PivxTestFramework):
 
-    def __init__(self):
-        super().__init__()
-        self.v6_enforcement_height = 250
-
-    def set_test_params(self):
+    def set_test_params(self, v6_enforcement_height=250):
         self.setup_clean_chain = True
-        self.num_nodes = 8
+        self.num_nodes = 6
         self.enable_mocktime()
 
-        self.ownerOnePos = 0
+        self.ownerPos = 0
         self.remoteOnePos = 1
-        self.ownerTwoPos = 2
-        self.remoteTwoPos = 3
-        self.minerPos = 4
-        self.remoteDMN1Pos = 5
-        self.ownerThreePos = 6
-        self.remoteThreePos = 7
-        self.extra_args = [["-nuparams=v5_shield:249", "-nuparams=v6_evo:"+str(self.v6_enforcement_height), "-whitelist=127.0.0.1"]] * self.num_nodes
+        self.remoteTwoPos = 2
+        self.minerPos = 3
+        self.remoteDMN1Pos = 4
+        self.remoteThreePos = 5
+        self.extra_args = [["-nuparams=v5_shield:249", "-nuparams=v6_evo:"+str(v6_enforcement_height), "-whitelist=127.0.0.1"]] * self.num_nodes
         for i in [self.remoteOnePos, self.remoteTwoPos, self.remoteDMN1Pos]:
             self.extra_args[i] += ["-listen", "-externalip=127.0.0.1"]
         self.extra_args[self.minerPos].append("-sporkkey=932HEevBSujW2ud7RfB1YF91AFygbBRQj3de3LyaCRqNzKKgWXi")
@@ -1649,13 +1643,11 @@ class PivxTier2TestFramework(PivxTestFramework):
         self.mnThreePrivkey = "91qP855JNR3aWv6Z71BcFjqhkeizchSDjKSi7BdqMSSirEVDTEk"
 
         # Updated in setup_masternodes_network() to be called at the start of run_test
-        self.ownerOne = None        # self.nodes[self.ownerOnePos]
+        self.owner = None           # self.nodes[self.ownerPos]
         self.remoteOne = None       # self.nodes[self.remoteOnePos]
-        self.ownerTwo = None        # self.nodes[self.ownerTwoPos]
         self.remoteTwo = None       # self.nodes[self.remoteTwoPos]
         self.miner = None           # self.nodes[self.minerPos]
         self.remoteDMN1 = None      # self.nodes[self.remoteDMN1Pos]
-        self.ownerThree = None      # self.nodes[self.ownerThreePos]
         self.remoteThree = None     # self.nodes[self.remoteThreePos]
         self.mnOneCollateral = COutPoint()
         self.mnTwoCollateral = COutPoint()
@@ -1676,13 +1668,13 @@ class PivxTier2TestFramework(PivxTestFramework):
         self.stake_and_ping(self.minerPos, num_blocks, with_ping_mns)
 
     def controller_start_all_masternodes(self):
-        self.controller_start_masternode(self.ownerOne, self.masternodeOneAlias)
-        self.controller_start_masternode(self.ownerTwo, self.masternodeTwoAlias)
-        self.controller_start_masternode(self.ownerThree, self.masternodeThreeAlias)
+        self.controller_start_masternode(self.owner, self.masternodeOneAlias)
+        self.controller_start_masternode(self.owner, self.masternodeTwoAlias)
+        self.controller_start_masternode(self.owner, self.masternodeThreeAlias)
         self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)
         self.wait_until_mn_preenabled(self.mnTwoCollateral.hash, 40)
         self.wait_until_mn_preenabled(self.mnThreeCollateral.hash, 40)
-        self.log.info("masternodes started, waiting until both get enabled..")
+        self.log.info("masternodes started, waiting until they get enabled..")
         self.send_3_pings()
         self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [self.remoteOne, self.remoteTwo, self.remoteThree])
         self.wait_until_mn_enabled(self.mnTwoCollateral.hash, 120, [self.remoteOne, self.remoteTwo, self.remoteThree])
@@ -1695,17 +1687,13 @@ class PivxTier2TestFramework(PivxTestFramework):
         time.sleep(2)
 
     def setup_masternodes_network(self, setup_dmn=True):
-        self.ownerOne = self.nodes[self.ownerOnePos]
+        self.owner = self.nodes[self.ownerPos]
         self.remoteOne = self.nodes[self.remoteOnePos]
-        self.ownerTwo = self.nodes[self.ownerTwoPos]
         self.remoteTwo = self.nodes[self.remoteTwoPos]
-        self.ownerThree = self.nodes[self.ownerThreePos]
         self.remoteThree = self.nodes[self.remoteThreePos]
         self.miner = self.nodes[self.minerPos]
         self.remoteDMN1 = self.nodes[self.remoteDMN1Pos]
-        ownerOneDir = os.path.join(self.options.tmpdir, "node%d" % self.ownerOnePos)
-        ownerTwoDir = os.path.join(self.options.tmpdir, "node%d" % self.ownerTwoPos)
-        ownerThreeDir = os.path.join(self.options.tmpdir, "node%d" % self.ownerThreePos)
+        ownerDir = os.path.join(self.options.tmpdir, "node%d" % self.ownerPos)
 
         self.log.info("generating 256 blocks..")
         # First mine 250 PoW blocks
@@ -1718,32 +1706,32 @@ class PivxTier2TestFramework(PivxTestFramework):
         self.log.info("masternodes setup..")
         # setup first masternode node, corresponding to nodeOne
         self.mnOneCollateral = self.setupMasternode(
-            self.ownerOne,
+            self.owner,
             self.miner,
             self.masternodeOneAlias,
-            os.path.join(ownerOneDir, "regtest"),
+            os.path.join(ownerDir, "regtest"),
             self.remoteOnePos,
             self.mnOnePrivkey)
         # setup second masternode node, corresponding to nodeTwo
         self.mnTwoCollateral = self.setupMasternode(
-            self.ownerTwo,
+            self.owner,
             self.miner,
             self.masternodeTwoAlias,
-            os.path.join(ownerTwoDir, "regtest"),
+            os.path.join(ownerDir, "regtest"),
             self.remoteTwoPos,
             self.mnTwoPrivkey)
         # setup third masternode node, corresponding to nodeTwo
         self.mnThreeCollateral = self.setupMasternode(
-            self.ownerThree,
+            self.owner,
             self.miner,
             self.masternodeThreeAlias,
-            os.path.join(ownerThreeDir, "regtest"),
+            os.path.join(ownerDir, "regtest"),
             self.remoteThreePos,
             self.mnThreePrivkey)
         if setup_dmn:
             # setup deterministic masternode
             self.proRegTx1, self.dmn1Privkey = self.setupDMN(
-                self.ownerOne,
+                self.owner,
                 self.miner,
                 self.remoteDMN1Pos,
                 "fund"

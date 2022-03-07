@@ -65,7 +65,7 @@ def check_mns_status(node, txhash):
 def check_mn_list(node, txHashSet):
     # check masternode list from node
     mnlist = node.listmasternodes()
-    assert_equal(len(mnlist), 3)
+    assert_equal(len(mnlist), len(txHashSet))
     foundHashes = set([mn["txhash"] for mn in mnlist if mn["txhash"] in txHashSet])
     assert_equal(len(foundHashes), len(txHashSet))
 

@@ -38,8 +38,7 @@ from test_framework.messages import (
 class BudgetTest(PivxTier2TestFramework):
 
     def set_test_params(self):
-        self.v6_enforcement_height = 300
-        super().set_test_params()
+        super().set_test_params(300)
 
     def broadcastbudgetfinalization(self, node, with_ping_mns=[]):
         self.log.info("suggesting the budget finalization..")
@@ -86,7 +85,7 @@ class BudgetTest(PivxTier2TestFramework):
         assert_equal(voteResult["detail"][0]["result"], "success")
 
     def check_address_balance(self, addr, expected_balance, has_balance=True):
-        addrInfo = self.nodes[self.ownerOnePos].listreceivedbyaddress(0, False, False, addr)
+        addrInfo = self.nodes[self.ownerPos].listreceivedbyaddress(0, False, False, addr)
         if has_balance:
             assert_equal(addrInfo[0]["amount"], expected_balance)
         else:
@@ -115,7 +114,7 @@ class BudgetTest(PivxTier2TestFramework):
         time.sleep(2)
         print(budgetFinHash)
         self.log.info("voting budget finalization..")
-        for node in [self.ownerOne, self.ownerTwo, self.ownerThree]:
+        for node in [self.remoteOne, self.remoteTwo, self.remoteThree]:
             self.vote_finalization(node, budgetFinHash, True)
         time.sleep(2) # wait a bit
         check_budget_finalization_sync(self.nodes, 3, "OK")
@@ -146,7 +145,7 @@ class BudgetTest(PivxTier2TestFramework):
             props.append(Proposal("prop_"+str(i),
                          "https://link_"+str(i)+".com",
                          4,
-                         self.nodes[self.ownerOnePos].getnewaddress(),
+                         self.nodes[self.ownerPos].getnewaddress(),
                          11 * (i + 1)))
         self.submit_proposals(props)
 
@@ -163,12 +162,12 @@ class BudgetTest(PivxTier2TestFramework):
         alloted = 0
         for i in range(2):
             prop = props[i]
-            self.vote_legacy(self.ownerOne, prop, "yes", self.masternodeOneAlias)
+            self.vote_legacy(self.owner, prop, "yes", self.masternodeOneAlias)
             check_vote_existence(self.nodes, prop.name, self.mnOneCollateral.hash, "YES", True)
-            self.vote_legacy(self.ownerTwo, prop, "yes", self.masternodeTwoAlias)
+            self.vote_legacy(self.owner, prop, "yes", self.masternodeTwoAlias)
             check_vote_existence(self.nodes, prop.name, self.mnTwoCollateral.hash, "YES", True)
             if i < 1:
-                self.vote_legacy(self.ownerThree, prop, "yes", self.masternodeThreeAlias)
+                self.vote_legacy(self.owner, prop, "yes", self.masternodeThreeAlias)
                 check_vote_existence(self.nodes, prop.name, self.mnThreeCollateral.hash, "YES", True)
             alloted += prop.amountPerCycle
             expected_budget.append(get_proposal(prop, blockStart, prop.amountPerCycle, alloted, 3 - i))
@@ -177,7 +176,7 @@ class BudgetTest(PivxTier2TestFramework):
         check_budgetprojection(self.nodes, expected_budget, self.log)
 
         # Quick block count check.
-        assert_equal(self.ownerOne.getblockcount(), 272)
+        assert_equal(self.owner.getblockcount(), 272)
         self.stake(10, [self.remoteOne, self.remoteTwo, self.remoteThree])
         # Finalize budget
         self.finalize_and_vote_budget()
@@ -230,12 +229,12 @@ class BudgetTest(PivxTier2TestFramework):
         next_super_block = self.miner.getnextsuperblock()
         block_count = self.miner.getblockcount()
         self.stake_and_ping(self.minerPos, next_super_block - block_count - 6, [self.remoteOne, self.remoteTwo, self.remoteThree])
-        assert_equal(self.ownerOne.getblockcount(), 426)
+        assert_equal(self.owner.getblockcount(), 426)
         # Finalize budget
         self.finalize_and_vote_budget()
         self.stake(2, [self.remoteOne, self.remoteTwo, self.remoteThree])
         self.log.info("checking single block payments..")
-        assert_equal(self.ownerOne.getblockcount(), 432)
+        assert_equal(self.owner.getblockcount(), 432)
         self.check_block_proposal_payment(self.miner.getbestblockhash(), prop1.paymentAddr, prop1.amountPerCycle, 1, True)
         self.check_block_proposal_payment(self.miner.getbestblockhash(), prop2.paymentAddr, prop2.amountPerCycle, 2, True)
 
@@ -250,7 +249,7 @@ class BudgetTest(PivxTier2TestFramework):
         self.log.info("Now test proposal with duplicate script and value")
 
         self.proRegTx1, self.dmn1Privkey = self.setupDMN(
-            self.ownerOne,
+            self.owner,
             self.miner,
             self.remoteDMN1Pos,
             "fund"
@@ -269,13 +268,13 @@ class BudgetTest(PivxTier2TestFramework):
         for i in range(self.num_nodes):
             assert_equal(len(self.nodes[i].getbudgetinfo()), 17)
         # vote prop17
-        self.vote_legacy(self.ownerOne, prop17, "yes", self.masternodeOneAlias)
+        self.vote_legacy(self.owner, prop17, "yes", self.masternodeOneAlias)
         check_vote_existence(self.nodes, prop17.name, self.mnOneCollateral.hash, "YES", True)
-        self.vote_legacy(self.ownerTwo, prop17, "yes", self.masternodeTwoAlias)
+        self.vote_legacy(self.owner, prop17, "yes", self.masternodeTwoAlias)
         check_vote_existence(self.nodes, prop17.name, self.mnTwoCollateral.hash, "YES", True)
-        self.vote_legacy(self.ownerThree, prop17, "yes", self.masternodeThreeAlias)
+        self.vote_legacy(self.owner, prop17, "yes", self.masternodeThreeAlias)
         check_vote_existence(self.nodes, prop17.name, self.mnThreeCollateral.hash, "YES", True)
-        self.vote(self.ownerOne, prop17, "yes", self.proRegTx1)
+        self.vote(self.owner, prop17, "yes", self.proRegTx1)
         check_vote_existence(self.nodes, prop17.name, self.proRegTx1, "YES", True)
 
         alloted += prop17.amountPerCycle
@@ -291,7 +290,7 @@ class BudgetTest(PivxTier2TestFramework):
         next_super_block = self.miner.getnextsuperblock()
         block_count = self.miner.getblockcount()
         self.stake_and_ping(self.minerPos, next_super_block - block_count - 6, [self.remoteOne, self.remoteTwo, self.remoteThree])
-        assert_equal(self.ownerOne.getblockcount(), 570)
+        assert_equal(self.owner.getblockcount(), 570)
 
         # Finalize budget
         self.finalize_and_vote_budget()
