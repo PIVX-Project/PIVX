@@ -1021,6 +1021,12 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     font-size:14px;
 }
 
+*[cssClass="text-section-title"] {
+    color:#b088ff;
+    font-size:16px;
+    font-weight: bold;
+}
+
 *[cssClass="text-title-white"] {
     color:#FFFFFF;
     font-size:16px;

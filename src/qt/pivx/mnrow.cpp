@@ -4,6 +4,7 @@
 
 #include "qt/pivx/mnrow.h"
 #include "qt/pivx/forms/ui_mnrow.h"
+#include "qt/pivx/mnmodel.h"
 #include "qt/pivx/qtutils.h"
 
 MNRow::MNRow(QWidget *parent) :
@@ -17,13 +18,18 @@ MNRow::MNRow(QWidget *parent) :
     ui->lblDivisory->setStyleSheet("background-color:#bababa;");
 }
 
-void MNRow::updateView(QString address, const QString& label, QString status, bool wasCollateralAccepted)
+void MNRow::updateView(QString address,
+                       const QString& label,
+                       QString status,
+                       bool wasCollateralAccepted,
+                       uint8_t type)
 {
     ui->labelName->setText(label);
     address = address.size() < 40 ? address : address.left(20) + "..." + address.right(20);
     ui->labelAddress->setText(address);
     if (!wasCollateralAccepted) status = tr("Collateral tx not found");
     ui->labelDate->setText(tr("Status: %1").arg(status));
+    ui->btnIcon->setIcon(QIcon(type == MNViewType::LEGACY ? "://ic-lmn" : "://ic-dmn"));
 }
 
 MNRow::~MNRow()

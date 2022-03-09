@@ -7,7 +7,6 @@
 
 #include "bls/key_io.h"
 #include "chain.h"
-#include "coins.h"
 #include "chainparams.h"
 #include "consensus/upgrades.h"
 #include "consensus/validation.h"
@@ -505,6 +504,7 @@ bool CDeterministicMNManager::ProcessBlock(const CBlock& block, const CBlockInde
         }
 
         diff.nHeight = pindex->nHeight;
+        diff.blockHash = pindex->GetBlockHash();
         mnListDiffsCache.emplace(pindex->GetBlockHash(), diff);
     } catch (const std::exception& e) {
         LogPrintf("CDeterministicMNManager::%s -- internal error: %s\n", __func__, e.what());
@@ -888,6 +888,7 @@ CDeterministicMNList CDeterministicMNManager::GetListForBlock(const CBlockIndex*
         }
 
         diff.nHeight = pindex->nHeight;
+        diff.blockHash = pindex->GetBlockHash();
         mnListDiffsCache.emplace(pindex->GetBlockHash(), std::move(diff));
         listDiffIndexes.emplace_front(pindex);
         pindex = pindex->pprev;

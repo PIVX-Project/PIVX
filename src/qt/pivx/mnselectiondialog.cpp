@@ -111,13 +111,18 @@ void MnSelectionDialog::updateView()
     QFlags<Qt::ItemFlag> flgCheckbox = Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable;
     QFlags<Qt::ItemFlag> flgTristate = Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsTristate;
 
+    bool isLegacyObselete = mnModel->isLegacySystemObsolete();
     for (int i = 0; i < mnModel->rowCount(); ++i) {
-        QString alias = mnModel->index(i, MNModel::ALIAS, QModelIndex()).data().toString();
-        QString status = mnModel->index(i, MNModel::STATUS, QModelIndex()).data().toString();
-        VoteInfo* ptrVoteInfo{nullptr};
-        auto it = votes.find(alias.toStdString());
-        if (it != votes.end()) { ptrVoteInfo = &it->second; }
-        appendItem(flgCheckbox, flgTristate, alias, status, ptrVoteInfo);
+        uint8_t mnType = mnModel->index(i, MNModel::TYPE, QModelIndex()).data().toUInt();
+        bool acceptLegacy = mnType == MNViewType::LEGACY && !isLegacyObselete;
+        if (acceptLegacy || mnType & MNViewType::DMN_VOTER) {
+            QString alias = mnModel->index(i, MNModel::ALIAS, QModelIndex()).data().toString();
+            QString status = mnModel->index(i, MNModel::STATUS, QModelIndex()).data().toString();
+            VoteInfo* ptrVoteInfo{nullptr};
+            auto it = votes.find(alias.toStdString());
+            if (it != votes.end()) { ptrVoteInfo = &it->second; }
+            appendItem(flgCheckbox, flgTristate, alias, status, ptrVoteInfo);
+        }
     }
 
     // save COLUMN_CHECKBOX width for tree-mode

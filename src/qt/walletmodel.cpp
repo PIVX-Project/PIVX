@@ -1063,6 +1063,19 @@ bool WalletModel::isSpent(const COutPoint& outpoint) const
     return wallet->IsSpent(outpoint.hash, outpoint.n);
 }
 
+Optional<CKeyID> WalletModel::getKeyIDFromAddr(const std::string& addr)
+{
+    if (addr.empty()) return nullopt;
+    CTxDestination dest = DecodeDestination(addr);
+    const CTxDestination* regDest = Standard::GetTransparentDestination(dest);
+    return (regDest) ? Optional<CKeyID>{*boost::get<CKeyID>(regDest)} : nullopt;
+}
+
+std::string WalletModel::getStrFromTxExtraData(const uint256& txHash, const std::string& key)
+{
+    return wallet->GetStrFromTxExtraData(txHash, key);
+}
+
 void WalletModel::listCoins(std::map<ListCoinsKey, std::vector<ListCoinsValue>>& mapCoins, bool fTransparent) const
 {
     if (fTransparent) {

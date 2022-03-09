@@ -234,6 +234,7 @@ set(SERVER_SOURCES
         ./src/tiertwo/init.cpp
         ./src/interfaces/handler.cpp
         ./src/interfaces/wallet.cpp
+        ./src/interfaces/tiertwo.cpp
         ./src/dbwrapper.cpp
         ./src/legacy/validation_zerocoin_legacy.cpp
         ./src/mapport.cpp
@@ -417,6 +418,7 @@ set(COMMON_SOURCES
         ./src/evo/evodb.cpp
         ./src/evo/providertx.cpp
         ./src/evo/specialtx_validation.cpp
+        ./src/evo/specialtx_utils.cpp
         ./src/llmq/quorums_blockprocessor.cpp
         ./src/llmq/quorums_commitment.cpp
         ./src/llmq/quorums_connections.cpp

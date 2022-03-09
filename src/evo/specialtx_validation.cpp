@@ -21,7 +21,7 @@
 
 /* -- Helper static functions -- */
 
-static bool CheckService(const CService& addr, CValidationState& state)
+bool CheckService(const CService& addr, CValidationState& state)
 {
     if (!addr.IsValid()) {
         return state.DoS(10, false, REJECT_INVALID, "bad-protx-ipaddr");
@@ -641,18 +641,3 @@ bool UndoSpecialTxsInBlock(const CBlock& block, const CBlockIndex* pindex)
     return true;
 }
 
-uint256 CalcTxInputsHash(const CTransaction& tx)
-{
-    CHashWriter hw(CLIENT_VERSION, SER_GETHASH);
-    // transparent inputs
-    for (const CTxIn& in: tx.vin) {
-        hw << in.prevout;
-    }
-    // shield inputs
-    if (tx.hasSaplingData()) {
-        for (const SpendDescription& sd: tx.sapData->vShieldedSpend) {
-            hw << sd.nullifier;
-        }
-    }
-    return hw.GetHash();
-}

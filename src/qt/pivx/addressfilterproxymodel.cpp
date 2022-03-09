@@ -31,7 +31,8 @@ void AddressFilterProxyModel::setType(const QString& type)
 
 void AddressFilterProxyModel::setType(const QStringList& types)
 {
-    this->m_types = types;
+    if (m_types == types) return;
+    m_types = types;
     invalidateFilter();
 }
 

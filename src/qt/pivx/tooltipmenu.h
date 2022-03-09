@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The PIVX developers
+// Copyright (c) 2019-2022 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,15 +6,16 @@
 #define TOOLTIPMENU_H
 
 #include "qt/pivx/pwidget.h"
-#include <QWidget>
+#include <QObject>
+#include <QPushButton>
+#include <QMap>
 #include <QModelIndex>
+#include <QMetaMethod>
+#include <QVBoxLayout>
+#include <QWidget>
 
 class PIVXGUI;
 class WalletModel;
-
-namespace Ui {
-class TooltipMenu;
-}
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -26,35 +27,36 @@ class TooltipMenu : public PWidget
 
 public:
     explicit TooltipMenu(PIVXGUI* _window, QWidget *parent = nullptr);
-    ~TooltipMenu() override;
 
-    virtual void showEvent(QShowEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
-    void setEditBtnText(const QString& btnText);
-    void setDeleteBtnText(const QString& btnText);
-    void setCopyBtnText(const QString& btnText);
-    void setLastBtnText(const QString& btnText, int minHeight = 30);
-    void setCopyBtnVisible(bool visible);
-    void setDeleteBtnVisible(bool visible);
-    void setEditBtnVisible(bool visible);
-    void setLastBtnVisible(bool visible);
-    void setLastBtnCheckable(bool checkable, bool isChecked);
+    template <typename Func>
+    void addBtn(uint8_t id, const QString& label, Func func) {
+        QPushButton* btn = createBtn(label);
+        connect(btn, &QPushButton::clicked, [this, func](){func(); hideTooltip();});
+        verticalLayoutBtns->addWidget(btn, 0, Qt::AlignLeft);
+        mapBtns.insert(id, btn);
+    }
+    void showHideBtn(uint8_t id, bool show);
+    void updateLabelForBtn(uint8_t id, const QString& newLabel);
+    void setBtnCheckable(uint8_t id, bool checkable, bool isChecked);
 
 Q_SIGNALS:
-    void onDeleteClicked();
-    void onCopyClicked();
-    void onEditClicked();
-    void onLastClicked();
+    void onBtnClicked(const QString& btnLabel);
 
-private Q_SLOTS:
-    void deleteClicked();
-    void copyClicked();
-    void editClicked();
-    void lastClicked();
+public Q_SLOTS:
+    void hideTooltip();
 
 private:
-    Ui::TooltipMenu *ui;
     QModelIndex index;
+    QWidget* container{nullptr};
+    QVBoxLayout* containerLayout{nullptr};
+    QVBoxLayout* verticalLayoutBtns{nullptr};
+    QMap<uint8_t, QPushButton*> mapBtns{};
+
+    void setupUi();
+
+    QPushButton* createBtn(const QString& label);
 };
 
 #endif // TOOLTIPMENU_H

@@ -41,7 +41,7 @@ public:
 
     Destination& operator=(const Destination& from);
     // Returns the key ID if Destination is a transparent "regular" destination
-    const CKeyID* getKeyID();
+    const CKeyID* getKeyID() const;
     // Returns the encoded string address
     std::string ToString() const;
 };

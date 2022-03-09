@@ -495,7 +495,8 @@ private:
 class CDeterministicMNListDiff
 {
 public:
-    int nHeight{-1}; //memory only
+    int nHeight{-1}; // memory only
+    uint256 blockHash; // memory only
 
     std::vector<CDeterministicMNCPtr> addedMNs;
     // keys are all relating to the internalId of MNs

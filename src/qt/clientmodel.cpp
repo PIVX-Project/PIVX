@@ -113,6 +113,11 @@ int ClientModel::getNumBlocksAtStartup()
     return numBlocksAtStartup;
 }
 
+unsigned int ClientModel::getNetworkPort()
+{
+    return Params().GetDefaultPort();
+}
+
 quint64 ClientModel::getTotalBytesRecv() const
 {
     if(!g_connman)

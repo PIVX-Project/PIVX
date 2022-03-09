@@ -26,6 +26,7 @@
 
 #ifdef ENABLE_WALLET
 #include "coincontrol.h"
+#include "evo/specialtx_utils.h"
 #include "wallet/wallet.h"
 #include "wallet/rpcwallet.h"
 
@@ -145,6 +146,10 @@ std::string GetHelpString(int nParamNum, ProRegParam p)
     return strprintf(it->second, nParamNum);
 }
 
+void CheckOpResult(const OperationResult& res, RPCErrorCode errorCode = RPC_INTERNAL_ERROR) {
+    if (!res) throw JSONRPCError(errorCode, res.getError());
+}
+
 #ifdef ENABLE_WALLET
 static CKey GetKeyFromWallet(CWallet* pwallet, const CKeyID& keyID)
 {
@@ -198,19 +203,12 @@ static CKey ParsePrivKey(CWallet* pwallet, const std::string &strKeyOrAddress, b
 
 static CKeyID ParsePubKeyIDFromAddress(const std::string& strAddress)
 {
-    bool isStaking{false}, isShield{false};
-    const CWDestination& cwdest = Standard::DecodeDestination(strAddress, isStaking, isShield);
-    if (isStaking) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "cold staking addresses not supported");
+    std::string strError;
+    auto ret = ParsePubKeyIDFromAddress(strAddress, strError);
+    if (!ret) {
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strError);
     }
-    if (isShield) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "shield addresses not supported");
-    }
-    const CKeyID* keyID = boost::get<CKeyID>(Standard::GetTransparentDestination(cwdest));
-    if (!keyID) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("invalid PIVX address %s", strAddress));
-    }
-    return *keyID;
+    return *ret;
 }
 
 static CBLSPublicKey ParseBLSPubKey(const CChainParams& params, const std::string& strKey)
@@ -262,130 +260,6 @@ static UniValue DmnToJson(const CDeterministicMNCPtr dmn)
 
 #ifdef ENABLE_WALLET
 
-template<typename SpecialTxPayload>
-static void FundSpecialTx(CWallet* pwallet, CMutableTransaction& tx, SpecialTxPayload& payload)
-{
-    SetTxPayload(tx, payload);
-
-    static CTxOut dummyTxOut(0, CScript() << OP_RETURN);
-    std::vector<CRecipient> vecSend;
-    bool dummyTxOutAdded = false;
-
-    if (tx.vout.empty()) {
-        // add dummy txout as CreateTransaction requires at least one recipient
-        tx.vout.emplace_back(dummyTxOut);
-        dummyTxOutAdded = true;
-    }
-
-    CAmount nFee;
-    CFeeRate feeRate = CFeeRate(0);
-    int nChangePos = -1;
-    std::string strFailReason;
-    std::set<int> setSubtractFeeFromOutputs;
-    if (!pwallet->FundTransaction(tx, nFee, false, feeRate, nChangePos, strFailReason, false, false, {}))
-        throw JSONRPCError(RPC_INTERNAL_ERROR, strFailReason);
-
-    if (dummyTxOutAdded && tx.vout.size() > 1) {
-        // FundTransaction added a change output, so we don't need the dummy txout anymore
-        // Removing it results in slight overpayment of fees, but we ignore this for now (as it's a very low amount)
-        auto it = std::find(tx.vout.begin(), tx.vout.end(), dummyTxOut);
-        assert(it != tx.vout.end());
-        tx.vout.erase(it);
-    }
-
-    UpdateSpecialTxInputsHash(tx, payload);
-}
-
-#endif
-
-template<typename SpecialTxPayload>
-static void UpdateSpecialTxInputsHash(const CMutableTransaction& tx, SpecialTxPayload& payload)
-{
-    payload.inputsHash = CalcTxInputsHash(tx);
-}
-
-template<typename SpecialTxPayload>
-static void SignSpecialTxPayloadByHash(const CMutableTransaction& tx, SpecialTxPayload& payload, const CKey& key)
-{
-    payload.vchSig.clear();
-
-    uint256 hash = ::SerializeHash(payload);
-    if (!CHashSigner::SignHash(hash, key, payload.vchSig)) {
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "failed to sign special tx payload");
-    }
-}
-
-template<typename SpecialTxPayload>
-static void SignSpecialTxPayloadByHash(const CMutableTransaction& tx, SpecialTxPayload& payload, const CBLSSecretKey& key)
-{
-    payload.sig = key.Sign(::SerializeHash(payload));
-    if (!payload.sig.IsValid()) {
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "failed to sign special tx payload");
-    }
-}
-
-template<typename SpecialTxPayload>
-static void SignSpecialTxPayloadByString(SpecialTxPayload& payload, const CKey& key)
-{
-    payload.vchSig.clear();
-
-    std::string m = payload.MakeSignString();
-    if (!CMessageSigner::SignMessage(m, payload.vchSig, key)) {
-        throw JSONRPCError(RPC_INTERNAL_ERROR, "failed to sign special tx payload");
-    }
-}
-
-static std::string TxInErrorToString(int i, const CTxIn& txin, const std::string& strError)
-{
-    return strprintf("Input %d (%s): %s", i, txin.prevout.ToStringShort(), strError);
-}
-
-#ifdef ENABLE_WALLET
-
-static OperationResult SignTransaction(CWallet* const pwallet, CMutableTransaction& tx)
-{
-    LOCK2(cs_main, pwallet->cs_wallet);
-    const CTransaction txConst(tx);
-    for (unsigned int i = 0; i < tx.vin.size(); i++) {
-        CTxIn& txin = tx.vin[i];
-        const Coin& coin = pcoinsTip->AccessCoin(txin.prevout);
-        if (coin.IsSpent()) {
-            return errorOut(TxInErrorToString(i, txin, "not found or already spent"));
-        }
-        SigVersion sv = tx.GetRequiredSigVersion();
-        txin.scriptSig.clear();
-        SignatureData sigdata;
-        if (!ProduceSignature(MutableTransactionSignatureCreator(pwallet, &tx, i, coin.out.nValue, SIGHASH_ALL),
-                              coin.out.scriptPubKey, sigdata, sv, false)) {
-            return errorOut(TxInErrorToString(i, txin, "signature failed"));
-        }
-        UpdateTransaction(tx, i, sigdata);
-    }
-    return OperationResult(true);
-}
-
-template<typename SpecialTxPayload>
-static std::string SignAndSendSpecialTx(CWallet* const pwallet, CMutableTransaction& tx, const SpecialTxPayload& pl)
-{
-    SetTxPayload(tx, pl);
-
-    CValidationState state;
-    CCoinsViewCache view(pcoinsTip.get());
-    if (!WITH_LOCK(cs_main, return CheckSpecialTx(tx, GetChainTip(), &view, state); )) {
-        throw JSONRPCError(RPC_MISC_ERROR, FormatStateMessage(state));
-    }
-
-    const OperationResult& sigRes = SignTransaction(pwallet, tx);
-    if (!sigRes) {
-        throw JSONRPCError(RPC_INTERNAL_ERROR, sigRes.getError());
-    }
-
-    TryATMP(tx, false);
-    const uint256& hashTx = tx.GetHash();
-    RelayTx(hashTx);
-    return hashTx.GetHex();
-}
-
 // Parses inputs (starting from index paramIdx) and returns ProReg payload
 static ProRegPL ParseProRegPLParams(const UniValue& params, unsigned int paramIdx)
 {
@@ -418,7 +292,6 @@ static ProRegPL ParseProRegPLParams(const UniValue& params, unsigned int paramId
     pl.scriptPayout = GetScriptForDestination(CTxDestination(ParsePubKeyIDFromAddress(strAddPayee)));
 
     // operator reward
-    pl.nOperatorReward = 0;
     if (params.size() > paramIdx + 5) {
         int64_t operReward = 0;
         if (!ParseFixedPoint(params[paramIdx + 5].getValStr(), 2, &operReward)) {
@@ -506,10 +379,6 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
     pl.nVersion = ProRegPL::CURRENT_VERSION;
     pl.collateralOutpoint = COutPoint(collateralHash, (uint32_t)collateralIndex);
 
-    CMutableTransaction tx;
-    tx.nVersion = CTransaction::TxVersion::SAPLING;
-    tx.nType = CTransaction::TxType::PROREG;
-
     // referencing unspent collateral outpoint
     Coin coin;
     if (!WITH_LOCK(cs_main, return pcoinsTip->GetUTXOCoin(pl.collateralOutpoint, coin); )) {
@@ -532,12 +401,16 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
     // make sure fee calculation works
     pl.vchSig.resize(CPubKey::COMPACT_SIGNATURE_SIZE);
 
-    FundSpecialTx(pwallet, tx, pl);
+    CMutableTransaction tx;
+    tx.nVersion = CTransaction::TxVersion::SAPLING;
+    tx.nType = CTransaction::TxType::PROREG;
+    CheckOpResult(FundSpecialTx(pwallet, tx, pl));
 
     if (fSignAndSend) {
-        SignSpecialTxPayloadByString(pl, keyCollateral); // prove we own the collateral
+        CheckOpResult(SignSpecialTxPayloadByString(pl, keyCollateral)); // prove we own the collateral
         // check the payload, add the tx inputs sigs, and send the tx.
-        return SignAndSendSpecialTx(pwallet, tx, pl);
+        CheckOpResult(SignAndSendSpecialTx(pwallet, tx, pl), RPC_VERIFY_REJECTED);
+        return tx.GetHash().GetHex();
     }
     // external signing with collateral key
     pl.vchSig.clear();
@@ -606,7 +479,8 @@ UniValue protx_register_submit(const JSONRPCRequest& request)
     pl.vchSig = DecodeBase64(request.params[1].get_str().c_str());
 
     // check the payload, add the tx inputs sigs, and send the tx.
-    return SignAndSendSpecialTx(pwallet, tx, pl);
+    CheckOpResult(SignAndSendSpecialTx(pwallet, tx, pl), RPC_VERIFY_REJECTED);
+    return tx.GetHash().GetHex();
 }
 
 UniValue protx_register_fund(const JSONRPCRequest& request)
@@ -656,7 +530,7 @@ UniValue protx_register_fund(const JSONRPCRequest& request)
     tx.nType = CTransaction::TxType::PROREG;
     tx.vout.emplace_back(collAmt, collateralScript);
 
-    FundSpecialTx(pwallet, tx, pl);
+    CheckOpResult(FundSpecialTx(pwallet, tx, pl));
 
     for (uint32_t i = 0; i < tx.vout.size(); i++) {
         if (tx.vout[i].nValue == collAmt && tx.vout[i].scriptPubKey == collateralScript) {
@@ -668,7 +542,8 @@ UniValue protx_register_fund(const JSONRPCRequest& request)
     // update payload on tx (with final collateral outpoint)
     pl.vchSig.clear();
     // check the payload, add the tx inputs sigs, and send the tx.
-    return SignAndSendSpecialTx(pwallet, tx, pl);
+    CheckOpResult(SignAndSendSpecialTx(pwallet, tx, pl), RPC_VERIFY_REJECTED);
+    return tx.GetHash().GetHex();
 }
 
 #endif  //ENABLE_WALLET
@@ -720,8 +595,8 @@ static void AddDMNEntryToList(UniValue& ret, CWallet* pwallet, const CDeterminis
     // No need to check wallet if not wallet_only and not verbose
     bool skipWalletCheck = !fFromWallet && !fVerbose;
 
-    if (pwallet && !skipWalletCheck) {
-        LOCK(pwallet->cs_wallet);
+    if (pwallet && !skipWalletCheck) { // TODO: First can only do the controller/owner DMNs, that is how the GUI works now..
+        LOCK2(cs_main, pwallet->cs_wallet); // ERROR, this was locking cs_wallet first, then cs_main in GetTransaction.
         hasOwnerKey = pwallet->HaveKey(dmn->pdmnState->keyIDOwner);
         hasVotingKey = pwallet->HaveKey(dmn->pdmnState->keyIDVoting);
         ownsPayeeScript = CheckWalletOwnsScript(pwallet, dmn->pdmnState->scriptPayout);
@@ -887,10 +762,11 @@ UniValue protx_update_service(const JSONRPCRequest& request)
     tx.nVersion = CTransaction::TxVersion::SAPLING;
     tx.nType = CTransaction::TxType::PROUPSERV;
 
-    FundSpecialTx(pwallet, tx, pl);
-    SignSpecialTxPayloadByHash(tx, pl, operatorKey);
+    CheckOpResult(FundSpecialTx(pwallet, tx, pl));
+    CheckOpResult(SignSpecialTxPayloadByHash(tx, pl, operatorKey));
 
-    return SignAndSendSpecialTx(pwallet, tx, pl);
+    CheckOpResult(SignAndSendSpecialTx(pwallet, tx, pl), RPC_VERIFY_REJECTED);
+    return tx.GetHash().GetHex();
 }
 
 UniValue protx_update_registrar(const JSONRPCRequest& request)
@@ -961,10 +837,11 @@ UniValue protx_update_registrar(const JSONRPCRequest& request)
 
     // make sure fee calculation works
     pl.vchSig.resize(CPubKey::COMPACT_SIGNATURE_SIZE);
-    FundSpecialTx(pwallet, tx, pl);
-    SignSpecialTxPayloadByHash(tx, pl, ownerKey);
+    CheckOpResult(FundSpecialTx(pwallet, tx, pl));
+    CheckOpResult(SignSpecialTxPayloadByHash(tx, pl, ownerKey));
 
-    return SignAndSendSpecialTx(pwallet, tx, pl);
+    CheckOpResult(SignAndSendSpecialTx(pwallet, tx, pl), RPC_VERIFY_REJECTED);
+    return tx.GetHash().GetHex();
 }
 
 UniValue protx_revoke(const JSONRPCRequest& request)
@@ -1027,10 +904,11 @@ UniValue protx_revoke(const JSONRPCRequest& request)
     tx.nVersion = CTransaction::TxVersion::SAPLING;
     tx.nType = CTransaction::TxType::PROUPREV;
 
-    FundSpecialTx(pwallet, tx, pl);
-    SignSpecialTxPayloadByHash(tx, pl, operatorKey);
+    CheckOpResult(FundSpecialTx(pwallet, tx, pl));
+    CheckOpResult(SignSpecialTxPayloadByHash(tx, pl, operatorKey));
 
-    return SignAndSendSpecialTx(pwallet, tx, pl);
+    CheckOpResult(SignAndSendSpecialTx(pwallet, tx, pl), RPC_VERIFY_REJECTED);
+    return tx.GetHash().GetHex();
 }
 #endif
 
