@@ -30,6 +30,8 @@
 
 #include "support/events.h"
 
+#include <deque>
+
 #ifdef EVENT__HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #ifdef _XOPEN_SOURCE_EXTENDED
