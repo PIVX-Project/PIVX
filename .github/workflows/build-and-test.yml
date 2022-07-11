@@ -82,8 +82,8 @@ jobs:
           - name: macOS
             os: macos-10.15
             packages: python3 autoconf automake berkeley-db4 libtool boost miniupnpc libnatpmp pkg-config qt5 zmq libevent qrencode gmp libsodium rust
-            cc: $(brew --prefix llvm)/bin/clang
-            cxx: $(brew --prefix llvm)/bin/clang++
+            cc: $(brew --prefix llvm@13)/bin/clang
+            cxx: $(brew --prefix llvm@13)/bin/clang++
 
     steps:
       - name: Get Source
