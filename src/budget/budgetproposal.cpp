@@ -4,6 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "budget/budgetproposal.h"
+
 #include "chainparams.h"
 #include "script/standard.h"
 #include "utilstrencodings.h"
@@ -86,8 +87,7 @@ bool CBudgetProposal::IsHeavilyDownvoted(int mnCount)
 bool CBudgetProposal::CheckStartEnd()
 {
     // block start must be a superblock
-    if (nBlockStart < 0 ||
-            nBlockStart % Params().GetConsensus().nBudgetCycleBlocks != 0) {
+    if (nBlockStart < 0 || !Params().GetConsensus().IsSuperBlock(nBlockStart)) {
         strInvalid = "Invalid nBlockStart";
         return false;
     }

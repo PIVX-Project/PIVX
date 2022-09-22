@@ -136,8 +136,9 @@ public:
     std::vector<CBudgetProposal*> GetAllProposalsOrdered();
     std::vector<CFinalizedBudget*> GetFinalizedBudgets();
     bool GetExpectedPayeeAmount(int chainHeight, CAmount& nAmountRet) const;
-    bool IsBudgetPaymentBlock(int nBlockHeight) const;
-    bool IsBudgetPaymentBlock(int nBlockHeight, int& nCountThreshold) const;
+    CAmount GetFinalizedBudgetTotalPayout(int chainHeight) const;
+    bool IsBudgetPaymentBlock(int nBlockHeight) const;  // legacy (multiple SB)
+    bool IsBudgetPaymentBlock(int nBlockHeight, int& nCountThreshold) const; // legacy (multiple SB)
     bool AddProposal(CBudgetProposal& budgetProposal);
     bool AddFinalizedBudget(CFinalizedBudget& finalizedBudget, CNode* pfrom = nullptr);
     void ForceAddFinalizedBudget(const uint256& nHash, const uint256& feeTxId, const CFinalizedBudget& finalizedBudget);
@@ -145,9 +146,13 @@ public:
 
     bool UpdateProposal(const CBudgetVote& vote, CNode* pfrom, std::string& strError);
     bool UpdateFinalizedBudget(const CFinalizedBudgetVote& vote, CNode* pfrom, std::string& strError);
-    TrxValidationStatus IsTransactionValid(const CTransaction& txNew, const uint256& nBlockHash, int nBlockHeight) const;
+    TrxValidationStatus IsTransactionValid(const CTransaction& txNew, const uint256& nBlockHash, int nBlockHeight) const; // legacy (multiple SB)
+    bool IsValidSuperBlockTx(const CTransaction& txNew, int nBlockHeight) const; // v6.0: single SB
+
     std::string GetRequiredPaymentsString(int nBlockHeight);
-    bool FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const int nHeight, bool fProofOfStake) const;
+    const CFinalizedBudget* GetBestFinalizedBudget(int chainHeight) const;
+    bool FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const int nHeight, bool fProofOfStake) const; // legacy (multiple SB)
+    void FillBlockPayees(CMutableTransaction& tx, int height) const; // v6.0: single SB
 
     // Only initialized masternodes: sign and submit votes on valid finalized budgets
     void VoteOnFinalizedBudgets();

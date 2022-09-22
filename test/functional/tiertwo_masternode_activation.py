@@ -68,7 +68,7 @@ class MasternodeActivationTest(PivxTier2TestFramework):
 
     def run_test(self):
         self.enable_mocktime()
-        self.setup_3_masternodes_network()
+        self.setup_masternodes_network()
 
         # check masternode expiration
         self.log.info("testing expiration now.")
@@ -90,7 +90,7 @@ class MasternodeActivationTest(PivxTier2TestFramework):
         self.reconnect_and_restart_masternodes()
         self.advance_mocktime(30)
         self.log.info("spending the collateral now..")
-        self.spend_collateral(self.ownerOne, self.mnOneCollateral, self.miner)
+        self.spend_collateral(self.owner, self.mnOneCollateral, self.miner)
         self.sync_blocks()
         self.log.info("checking mn status..")
         time.sleep(3)           # wait a little bit

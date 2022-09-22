@@ -417,36 +417,52 @@ BOOST_FIXTURE_TEST_CASE(IsCoinbaseValueValid_test, TestingSetup)
 
     // Exact
     cbase.vout.clear();
+    cbase.vout.emplace_back(mnAmt, cbaseScript);
     cbase.vout.emplace_back(budgAmt, cbaseScript);
     BOOST_CHECK(IsCoinbaseValueValid(MakeTransactionRef(cbase), budgAmt, state));
-    cbase.vout[0].nValue /= 2;
-    cbase.vout.emplace_back(cbase.vout[0]);
+    cbase.vout[1].nValue /= 2;
+    cbase.vout.emplace_back(cbase.vout[1]);
     BOOST_CHECK(IsCoinbaseValueValid(MakeTransactionRef(cbase), budgAmt, state));
 
     // Underpaying
     cbase.vout.clear();
+    cbase.vout.emplace_back(mnAmt, cbaseScript);
     cbase.vout.emplace_back(budgAmt - 1, cbaseScript);
     BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), budgAmt, state));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-superblock-cb-amt");
     state = CValidationState();
-    cbase.vout[0].nValue = budgAmt/2;
-    cbase.vout.emplace_back(cbase.vout[0]);
-    cbase.vout[1].nValue = budgAmt/2 - 1;
+    cbase.vout[1].nValue = budgAmt/2;
+    cbase.vout.emplace_back(cbase.vout[1]);
+    cbase.vout[2].nValue = budgAmt/2 - 1;
+    BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), budgAmt, state));
+    BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-superblock-cb-amt");
+    state = CValidationState();
+    cbase.vout.clear();
+    cbase.vout.emplace_back(mnAmt - 1, cbaseScript);
+    cbase.vout.emplace_back(budgAmt, cbaseScript);
     BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), budgAmt, state));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-superblock-cb-amt");
     state = CValidationState();
 
     // Overpaying
     cbase.vout.clear();
+    cbase.vout.emplace_back(mnAmt, cbaseScript);
     cbase.vout.emplace_back(budgAmt + 1, cbaseScript);
     BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), budgAmt, state));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-superblock-cb-amt");
     state = CValidationState();
-    cbase.vout[0].nValue = budgAmt/2;
-    cbase.vout.emplace_back(cbase.vout[0]);
-    cbase.vout[1].nValue = budgAmt/2 + 1;
+    cbase.vout[1].nValue = budgAmt/2;
+    cbase.vout.emplace_back(cbase.vout[1]);
+    cbase.vout[2].nValue = budgAmt/2 + 1;
     BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), budgAmt, state));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-superblock-cb-amt");
+    state = CValidationState();
+    cbase.vout.clear();
+    cbase.vout.emplace_back(mnAmt + 1, cbaseScript);
+    cbase.vout.emplace_back(budgAmt, cbaseScript);
+    BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), budgAmt, state));
+    BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-superblock-cb-amt");
+    state = CValidationState();
 }
 
 BOOST_AUTO_TEST_CASE(fbv_signverify_bls)

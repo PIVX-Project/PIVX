@@ -16,38 +16,15 @@ from test_framework.util import (
 
 
 class MasternodeCompatibilityTest(PivxTier2TestFramework):
-
     def set_test_params(self):
-        self.setup_clean_chain = True
-        self.num_nodes = 7
-        self.enable_mocktime()
-
-        self.minerPos = 0
-        self.ownerOnePos = self.ownerTwoPos = 1
-        self.remoteOnePos = 2
-        self.remoteTwoPos = 3
-        self.remoteDMN1Pos = 4
-        self.remoteDMN2Pos = 5
-        self.remoteDMN3Pos = 6
-
-        self.masternodeOneAlias = "mnOne"
-        self.masternodeTwoAlias = "mntwo"
-
+        super().set_test_params()
+        self.num_nodes = 8
+        self.remoteDMN2Pos = 6
+        self.remoteDMN3Pos = 7
         self.extra_args = [["-nuparams=v5_shield:249", "-nuparams=v6_evo:250", "-whitelist=127.0.0.1"]] * self.num_nodes
-        for i in [self.remoteOnePos, self.remoteTwoPos, self.remoteDMN1Pos, self.remoteDMN2Pos, self.remoteDMN3Pos]:
+        for i in [self.remoteOnePos, self.remoteTwoPos, self.remoteDMN1Pos]:
             self.extra_args[i] += ["-listen", "-externalip=127.0.0.1"]
         self.extra_args[self.minerPos].append("-sporkkey=932HEevBSujW2ud7RfB1YF91AFygbBRQj3de3LyaCRqNzKKgWXi")
-
-        self.mnOnePrivkey = "9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK"
-        self.mnTwoPrivkey = "92Hkebp3RHdDidGZ7ARgS4orxJAGyFUPDXNqtsYsiwho1HGVRbF"
-
-        self.miner = None
-        self.ownerOne = self.ownerTwo = None
-        self.remoteOne = None
-        self.remoteTwo = None
-        self.remoteDMN1 = None
-        self.remoteDMN2 = None
-        self.remoteDMN3 = None
 
     def check_mns_status_legacy(self, node, txhash):
         status = node.getmasternodestatus()
@@ -96,10 +73,10 @@ class MasternodeCompatibilityTest(PivxTier2TestFramework):
     def run_test(self):
         self.mn_addresses = {}
         self.enable_mocktime()
-        self.setup_3_masternodes_network()
+        self.setup_masternodes_network()
 
-        # start with 3 masternodes (2 legacy + 1 DMN)
-        self.check_mn_enabled_count(3, 3)
+        # start with 4 masternodes (3 legacy + 1 DMN)
+        self.check_mn_enabled_count(4, 4)
 
         # add two more nodes to the network
         self.remoteDMN2 = self.nodes[self.remoteDMN2Pos]
@@ -111,7 +88,7 @@ class MasternodeCompatibilityTest(PivxTier2TestFramework):
         self.sync_all()
 
         # check mn list from miner
-        txHashSet = set([self.mnOneCollateral.hash, self.mnTwoCollateral.hash, self.proRegTx1])
+        txHashSet = set([self.mnOneCollateral.hash, self.mnTwoCollateral.hash, self.mnThreeCollateral.hash, self.proRegTx1])
         self.check_mn_list(self.miner, txHashSet)
 
         # check status of masternodes
@@ -119,13 +96,15 @@ class MasternodeCompatibilityTest(PivxTier2TestFramework):
         self.log.info("MN1 active. Pays %s" % self.mn_addresses[self.mnOneCollateral.hash])
         self.check_mns_status_legacy(self.remoteTwo, self.mnTwoCollateral.hash)
         self.log.info("MN2 active Pays %s" % self.mn_addresses[self.mnTwoCollateral.hash])
+        self.check_mns_status_legacy(self.remoteThree, self.mnThreeCollateral.hash)
+        self.log.info("MN3 active Pays %s" % self.mn_addresses[self.mnThreeCollateral.hash])
         self.check_mns_status(self.remoteDMN1, self.proRegTx1)
         self.log.info("DMN1 active Pays %s" % self.mn_addresses[self.proRegTx1])
 
         # Create another DMN, this time without funding the collateral.
         # ProTx references another transaction in the owner's wallet
         self.proRegTx2, self.dmn2Privkey = self.setupDMN(
-            self.ownerOne,
+            self.owner,
             self.miner,
             self.remoteDMN2Pos,
             "internal"
@@ -133,7 +112,7 @@ class MasternodeCompatibilityTest(PivxTier2TestFramework):
         self.remoteDMN2.initmasternode(self.dmn2Privkey)
 
         # check list and status
-        self.check_mn_enabled_count(4, 4) # 2 legacy + 2 DMN
+        self.check_mn_enabled_count(5, 5) # 3 legacy + 2 DMN
         txHashSet.add(self.proRegTx2)
         self.check_mn_list(self.miner, txHashSet)
         self.check_mns_status(self.remoteDMN2, self.proRegTx2)
@@ -153,7 +132,7 @@ class MasternodeCompatibilityTest(PivxTier2TestFramework):
         # Now create a DMN, reusing the collateral output of a legacy MN
         self.log.info("Creating a DMN reusing the collateral of a legacy MN...")
         self.proRegTx3, self.dmn3Privkey = self.setupDMN(
-            self.ownerOne,
+            self.owner,
             self.miner,
             self.remoteDMN3Pos,
             "external",
@@ -166,7 +145,7 @@ class MasternodeCompatibilityTest(PivxTier2TestFramework):
 
         # The legacy masternode must no longer be in the list
         # and the DMN must have taken its place
-        self.check_mn_enabled_count(4, 4)  # 1 legacy + 3 DMN
+        self.check_mn_enabled_count(5, 5)  # 2 legacy + 3 DMN
         txHashSet.remove(self.mnOneCollateral.hash)
         txHashSet.add(self.proRegTx3)
         for node in self.nodes:
@@ -177,11 +156,11 @@ class MasternodeCompatibilityTest(PivxTier2TestFramework):
 
         # Now try to start a legacy MN with a collateral used by a DMN
         self.log.info("Now trying to start a legacy MN with a collateral of a DMN...")
-        self.controller_start_masternode(self.ownerOne, self.masternodeOneAlias)
+        self.controller_start_masternode(self.owner, self.masternodeOneAlias)
         self.send_3_pings()
 
         # the masternode list hasn't changed
-        self.check_mn_enabled_count(4, 4)
+        self.check_mn_enabled_count(5, 5)
         for node in self.nodes:
             self.check_mn_list(node, txHashSet)
         self.log.info("Masternode list correctly unchanged in all nodes.")
