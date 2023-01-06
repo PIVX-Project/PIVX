@@ -182,12 +182,9 @@ static bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev,
         // This is checked only when pindexPrev is not null (thus during ConnectBlock-->CheckSpecialTx),
         // because this is a contextual check: we need the updated utxo set, to verify that
         // the coin exists and it is unspent.
-        Coin coin;
-        if (!view->GetUTXOCoin(pl.collateralOutpoint, coin)) {
-            return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral");
-        }
+        CTxOut out = tx.vout[pl.collateralOutpoint.n];
         CTxDestination collateralTxDest;
-        if (!CheckCollateralOut(coin.out, pl, state, collateralTxDest)) {
+        if (!CheckCollateralOut(out, pl, state, collateralTxDest)) {
             // pass the state returned by the function above
             return false;
         }
