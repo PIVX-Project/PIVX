@@ -464,6 +464,7 @@ bool MasterNodeWizardDialog::createMN()
 
         // For now, collateral key is always inside the wallet
         std::string error_str;
+        walletModel->lockCoin(collateralOut);
         auto res = mnModel->createDMN(alias,
                                       collateralOut,
                                       ipAddress,
@@ -476,6 +477,7 @@ bool MasterNodeWizardDialog::createMN()
                                       (uint16_t) operatorPercentage * 100, // operator percentage
                                       operatorPayoutKeyId); // operator payout script
         if (!res) {
+            walletModel->unlockCoin(collateralOut);
             return errorOut(tr(error_str.c_str()));
         }
 
