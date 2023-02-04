@@ -8,12 +8,14 @@
 #include "budget/budgetutil.h"
 #include "destination_io.h"
 #include "guiconstants.h"
+#include "optional.h"
 #include "qt/transactiontablemodel.h"
 #include "qt/transactionrecord.h"
 #include "qt/pivx/mnmodel.h"
 #include "tiertwo/tiertwo_sync_state.h"
 #include "utilmoneystr.h"
 #include "utilstrencodings.h"
+#include "wallet/wallet.h" // TODO: Move to walletModel
 #include "walletmodel.h"
 
 #include <algorithm>
@@ -262,14 +264,15 @@ OperationResult GovernanceModel::voteForProposal(const ProposalInfo& prop,
                                                  const std::vector<std::string>& mnVotingAlias)
 {
     UniValue ret; // future: don't use UniValue here.
+    auto p_wallet = vpwallets[0]; // TODO: Move to walletModel
+    bool fLegacyMN = walletModel->isRegTestNetwork() ? false : true; // For now, only DMN on regtest
     for (const auto& mnAlias : mnVotingAlias) {
-        bool fLegacyMN = true; // For now, only legacy MNs
-        ret = mnBudgetVoteInner(nullptr,
+        ret = mnBudgetVoteInner(p_wallet,
                           fLegacyMN,
                           prop.id,
                           false,
                           isVotePositive ? CBudgetVote::VoteDirection::VOTE_YES : CBudgetVote::VoteDirection::VOTE_NO,
-                          mnAlias);
+                          fLegacyMN ?  mnAlias  : boost::optional<std::string>{});
         if (ret.exists("detail") && ret["detail"].isArray()) {
             const UniValue& obj = ret["detail"].get_array()[0];
             if (obj["result"].getValStr() != "success") {
