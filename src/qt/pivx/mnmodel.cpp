@@ -6,6 +6,7 @@
 
 #include "bls/key_io.h"
 #include "coincontrol.h"
+#include "evo/deterministicmns.h"
 #include "interfaces/tiertwo.h"
 #include "evo/specialtx_utils.h"
 #include "masternode.h"
@@ -417,7 +418,6 @@ CallResult<uint256> MNModel::createDMN(const std::string& alias,
     // 2. external.
     // 3. fund.
 
-    //Either one of them must be non null
     auto p_wallet = vpwallets[0]; // TODO: Move to walletModel
     const auto& chainparams = Params();
 
@@ -476,7 +476,45 @@ CallResult<uint256> MNModel::createDMN(const std::string& alias,
     // All good
     return res;
 }
+//unban a Pose-banned DMN
+bool MNModel::unbanDMN(CBLSSecretKey& operatorKey,uint256 proTxHash, std::string& strError){
+    ProUpServPL pl;
+    pl.nVersion = ProUpServPL::CURRENT_VERSION;
+    pl.proTxHash = proTxHash;
+    auto dmn = deterministicMNManager->GetListAtChainTip().GetMN(pl.proTxHash); //make sure that the wallet is synced first?
+    if (!dmn) {
+        strError = "Masternode not found";
+        return false;
+    }
+    if(!dmn->IsPoSeBanned()){
+        strError = "Masternode is not Pose-banned";
+        return false;
+    }
+    pl.addr = dmn->pdmnState->addr;
+    pl.scriptOperatorPayout = dmn->pdmnState->scriptOperatorPayout;
 
+    CMutableTransaction tx;
+    tx.nVersion = CTransaction::TxVersion::SAPLING;
+    tx.nType = CTransaction::TxType::PROUPSERV;
+    
+    auto wallet = vpwallets[0]; // TODO: Move to walletModel
+    auto res = FundSpecialTx(wallet, tx, pl);
+    if(!res){
+        strError = res.getError();
+        return false;
+    }
+    res = SignSpecialTxPayloadByHash(tx, pl, operatorKey);
+    if(!res){
+        strError = res.getError();
+        return false;
+    }
+    res = SignAndSendSpecialTx(wallet, tx, pl);
+    if(!res){
+        strError = res.getError();
+        return false;
+    }
+    return true;
+}
 OperationResult MNModel::killDMN(const uint256& collateralHash, unsigned int outIndex)
 {
     auto p_wallet = vpwallets[0]; // TODO: Move to walletModel
