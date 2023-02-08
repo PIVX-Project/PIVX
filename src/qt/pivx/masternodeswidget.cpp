@@ -237,6 +237,8 @@ void MasterNodesWidget::onEditMNClicked()
                             std::string error_str = "";
                             if(!mnModel->unbanDMN(*operator_key,proTxHash,error_str)){
                                 inform(QString::fromStdString(error_str));
+                            }else{
+                                inform("Masternode successfully unbanned! Wait for the next minted block and it will update");
                             }
                         }else{
                             inform("Could not decode operator secret key");
