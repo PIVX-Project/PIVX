@@ -408,22 +408,6 @@ bool MasterNodeWizardDialog::createMN()
     std::string ipAddress = addressStr.toStdString();
     std::string port = portStr.toStdString();
 
-    // Look for a valid collateral utxo
-    COutPoint collateralOut;
-
-    if (!walletModel->getMNCollateralCandidate(collateralOut)) {
-        // New receive address
-        auto r = walletModel->getNewAddress(alias);
-        if (!r) return errorOut(tr(r.getError().c_str()));
-        if (!mnModel->createMNCollateral(addressLabel,
-                QString::fromStdString(r.getObjResult()->ToString()),
-                collateralOut,
-                returnStr)) {
-            // error str set internally
-            return false;
-        }
-    }
-
     if (isDeterministic) {
         auto opOwnerAddrAndKeyId = getOrCreateOwnerAddress(alias);
         if (!opOwnerAddrAndKeyId.getRes()) {
