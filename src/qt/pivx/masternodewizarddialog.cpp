@@ -3,6 +3,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "qt/pivx/masternodewizarddialog.h"
+#include "optional.h"
+#include "primitives/transaction.h"
 #include "qt/pivx/forms/ui_masternodewizarddialog.h"
 
 #include "key_io.h"
@@ -425,7 +427,6 @@ bool MasterNodeWizardDialog::createMN()
     }
 
     if (isDeterministic) {
-        // 1) Get or create the owner addr
         auto opOwnerAddrAndKeyId = getOrCreateOwnerAddress(alias);
         if (!opOwnerAddrAndKeyId.getRes()) {
             return errorOut(tr(opOwnerAddrAndKeyId.getError().c_str()));
@@ -462,11 +463,20 @@ bool MasterNodeWizardDialog::createMN()
             votingAddr = ownerKeyId;
         }
 
-        // For now, collateral key is always inside the wallet
+        Optional<COutPoint> collateralOut =  COutPoint(); 
+        bool foundCandidate = false;
+        if(!walletModel->getMNCollateralCandidate(*collateralOut)){
+            collateralOut= nullopt;    
+        }else{
+            //We have to lock the collateral or the system could spend it
+            walletModel->lockCoin(*collateralOut);
+            foundCandidate = true;
+        }
         std::string error_str;
-        walletModel->lockCoin(collateralOut);
+        
         auto res = mnModel->createDMN(alias,
                                       collateralOut,
+                                      addressLabel,
                                       ipAddress,
                                       port,
                                       ownerKeyId,
@@ -477,16 +487,18 @@ bool MasterNodeWizardDialog::createMN()
                                       (uint16_t) operatorPercentage * 100, // operator percentage
                                       operatorPayoutKeyId); // operator payout script
         if (!res) {
-            walletModel->unlockCoin(collateralOut);
+            //unlock in case of error
+            if(foundCandidate){
+                walletModel->unlockCoin(*collateralOut);
+            }
             return errorOut(tr(error_str.c_str()));
         }
-
         // If the operator key was created locally, let's get it for the summary
         // future: move "operatorSk" to a constant field
         std::string operatorSk = walletModel->getStrFromTxExtraData(*res.getObjResult(), "operatorSk");
         mnSummary = std::make_unique<MNSummary>(alias,
                                                 ipAddress+":"+port,
-                                                collateralOut,
+                                                collateralOut?*collateralOut:COutPoint(UINT256_ZERO,0), //TODO: the outpoint index is not 0 in general, but it does not matter (just display)
                                                 ownerAddrStr,
                                                 payoutAddrStr,
                                                 operatorSk.empty() ? operatorKey.toStdString() : operatorSk,
@@ -496,7 +508,24 @@ bool MasterNodeWizardDialog::createMN()
 
         returnStr = tr("Deterministic Masternode created! It will appear on your list on the next mined block!");
     } else {
+
         // Legacy
+        // Look for a valid collateral utxo
+        COutPoint collateralOut;
+
+        if (!walletModel->getMNCollateralCandidate(collateralOut)) {
+            // New receive address
+            auto r = walletModel->getNewAddress(alias);
+            if (!r) return errorOut(tr(r.getError().c_str()));
+                if (!mnModel->createDMNExternalCollateral(addressLabel,
+                                     QString::fromStdString(r.getObjResult()->ToString()),
+                                     collateralOut,
+                                     returnStr)) {
+                // error str set internally
+                return false;
+            }
+        }
+
         CKey secret;
         secret.MakeNewKey(false);
         std::string mnKeyString = KeyIO::EncodeSecret(secret);

@@ -214,7 +214,7 @@ public:
     const CWalletTx* getTx(uint256 id);
 
     // prepare transaction for getting txfee before sending coins
-    SendCoinsReturn prepareTransaction(WalletModelTransaction* transaction, const CCoinControl* coinControl = NULL, bool fIncludeDelegations = true);
+    SendCoinsReturn prepareTransaction(WalletModelTransaction* transaction, const CCoinControl* coinControl = NULL, bool fIncludeDelegations = true, int nExtraSize=0);
 
     // Send coins to a list of recipients
     SendCoinsReturn sendCoins(WalletModelTransaction& transaction);

@@ -452,7 +452,7 @@ bool WalletModel::addKeys(const CKey& key, const CPubKey& pubkey, WalletRescanRe
     return true;
 }
 
-WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction* transaction, const CCoinControl* coinControl, bool fIncludeDelegations)
+WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction* transaction, const CCoinControl* coinControl, bool fIncludeDelegations, int nExtraSize)
 {
     CAmount total = 0;
     QList<SendCoinsRecipient> recipients = transaction->getRecipients();
@@ -540,7 +540,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
                                                   true,
                                                   0,
                                                   fIncludeDelegations,
-                                                  &transaction->fIsStakeDelegationVoided);
+                                                  &transaction->fIsStakeDelegationVoided,nExtraSize);
         transaction->setTransactionFee(nFeeRequired);
 
         if (!fCreated) {

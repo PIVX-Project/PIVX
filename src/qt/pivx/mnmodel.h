@@ -10,6 +10,8 @@
 #include "masternodeconfig.h"
 #include "operationresult.h"
 #include "primitives/transaction.h"
+#include "bls/key_io.h"
+#include "wallet/wallet.h" // TODO: Move to walletModel
 
 class CMasternode;
 class DMNView;
@@ -110,7 +112,8 @@ public:
 
     // Creates the DMN and return the hash of the proregtx
     CallResult<uint256> createDMN(const std::string& alias,
-                                  const COutPoint& collateral,
+                                  const Optional<COutPoint>& collateral,
+                                  const Optional<QString>& addr_label,
                                   std::string& serviceAddr,
                                   const std::string& servicePort,
                                   const CKeyID& ownerAddr,
@@ -124,8 +127,10 @@ public:
     // Completely stops the Masternode spending the collateral
     OperationResult killDMN(const uint256& collateralHash, unsigned int outIndex);
 
+
     // Generates the collateral transaction
-    bool createMNCollateral(const QString& alias, const QString& addr, COutPoint& ret_outpoint, QString& ret_error);
+    bool createDMNExternalCollateral(const QString& alias, const QString& addr, COutPoint& ret_outpoint, QString& ret_error);
+    bool createDMNInternalCollateral(const QString& alias, const QString& addr, CTransactionRef& ret_tx,COutPoint& ret_outpoint, QString& ret_error,int nExtraSize=0);
     // Creates the mnb and broadcast it to the network
     bool startLegacyMN(const CMasternodeConfig::CMasternodeEntry& mne, int chainHeight, std::string& strError);
     void startAllLegacyMNs(bool onlyMissing, int& amountOfMnFailed, int& amountOfMnStarted,
@@ -148,6 +153,17 @@ private:
     QMap<std::string, bool> collateralTxAccepted;
 
     const MasternodeWrapper* getMNWrapper(const QString& mnAlias);
+    CallResult<uint256> createDMNInternal(const Optional<COutPoint>& collateral,
+                                             const Optional<QString>& addr_label,
+                                             const Optional<CKey>& keyCollateral,
+                                             const CService& service,
+                                             const CKeyID& ownerAddr,
+                                             const CBLSPublicKey& operatorPubKey,
+                                             const Optional<CKeyID>& votingAddr,
+                                             const CKeyID& payoutAddr,
+                                             const Optional<CBLSSecretKey>& operatorSk,
+                                             const Optional<uint16_t>& operatorPercentage,
+                                             const Optional<CKeyID>& operatorPayoutAddr);
 };
 
 #endif // MNMODEL_H
