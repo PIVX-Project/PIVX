@@ -218,11 +218,14 @@ void CMainSignals::BlockChecked(const CBlock& block, const CValidationState& sta
 }
 
 void CMainSignals::NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff) {
-    m_internals->NotifyMasternodeListChanged(undo, oldMNList, diff);
-    LOG_EVENT("%s: (undo=%d) old list for=%s, added=%d, updated=%d, removed=%d", __func__,
-              undo,
-              oldMNList.GetBlockHash().ToString(),
-              diff.addedMNs.size(),
-              diff.updatedMNs.size(),
-              diff.removedMns.size());
+    auto event = [undo, oldMNList, diff, this] {
+        m_internals->NotifyMasternodeListChanged(undo, oldMNList, diff);
+    };
+    ENQUEUE_AND_LOG_EVENT(event,
+                          "%s: (undo=%d) old list for=%s, added=%d, updated=%d, removed=%d", __func__,
+                          undo,
+                          oldMNList.GetBlockHash().ToString(),
+                          diff.addedMNs.size(),
+                          diff.updatedMNs.size(),
+                          diff.removedMns.size());
 }

@@ -74,7 +74,7 @@ Destination& Destination::operator=(const Destination& from)
 }
 
 // Returns the key ID if Destination is a transparent "regular" destination
-const CKeyID* Destination::getKeyID()
+const CKeyID* Destination::getKeyID() const
 {
     const CTxDestination* regDest = Standard::GetTransparentDestination(dest);
     return (regDest) ? boost::get<CKeyID>(regDest) : nullptr;

@@ -141,12 +141,12 @@ void AddressesWidget::handleAddressClicked(const QModelIndex& _index)
 
     QModelIndex rIndex = filter->mapToSource(_index);
 
-    if (!this->menu) {
-        this->menu = new TooltipMenu(window, this);
-        connect(this->menu, &TooltipMenu::message, this, &AddressesWidget::message);
-        connect(this->menu, &TooltipMenu::onEditClicked, this, &AddressesWidget::onEditClicked);
-        connect(this->menu, &TooltipMenu::onDeleteClicked, this, &AddressesWidget::onDeleteClicked);
-        connect(this->menu, &TooltipMenu::onCopyClicked, this, &AddressesWidget::onCopyClicked);
+    if (!menu) {
+        menu = new TooltipMenu(window, this);
+        connect(menu, &TooltipMenu::message, this, &AddressesWidget::message);
+        menu->addBtn(0, tr("Edit"), [this](){onEditClicked();});
+        menu->addBtn(1, tr("Copy"), [this](){onCopyClicked();});
+        menu->addBtn(2, tr("Delete"), [this](){onDeleteClicked();});
     } else {
         this->menu->hide();
     }

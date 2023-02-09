@@ -23,6 +23,7 @@ from test_framework.util import (
     spend_mn_collateral,
 )
 
+RPC_VERIFY_REJECTED = -26 #! Transaction was rejected by network rules
 
 class DIP3Test(PivxTestFramework):
 
@@ -224,21 +225,21 @@ class DIP3Test(PivxTestFramework):
         # Now try to register dmn2 again with an already-used IP
         self.log.info("Trying duplicate IP...")
         rand_idx = mns[randrange(len(mns))].idx
-        assert_raises_rpc_error(-1, "bad-protx-dup-IP-address",
+        assert_raises_rpc_error(RPC_VERIFY_REJECTED, "bad-protx-dup-IP-address",
                                 self.register_new_dmn, rand_idx, self.minerPos, self.controllerPos, "fund",
                                 op_blskeys=dmn2_keys)
 
         # Now try with duplicate operator key
         self.log.info("Trying duplicate operator key...")
         dmn2b = create_new_dmn(dmn2.idx, controller, dummy_add, dmn_keys)
-        assert_raises_rpc_error(-1, "bad-protx-dup-operator-key",
+        assert_raises_rpc_error(RPC_VERIFY_REJECTED, "bad-protx-dup-operator-key",
                                 self.protx_register_fund, miner, controller, dmn2b, dummy_add)
 
         # Now try with duplicate owner key
         self.log.info("Trying duplicate owner key...")
         dmn2c = create_new_dmn(dmn2.idx, controller, dummy_add, dmn2_keys)
         dmn2c.owner = mns[randrange(len(mns))].owner
-        assert_raises_rpc_error(-1, "bad-protx-dup-owner-key",
+        assert_raises_rpc_error(RPC_VERIFY_REJECTED, "bad-protx-dup-owner-key",
                                 self.protx_register_fund, miner, controller, dmn2c, dummy_add)
 
         # Finally, register it properly. This time setting 10% of the reward for the operator
@@ -295,7 +296,7 @@ class DIP3Test(PivxTestFramework):
         assert_raises_rpc_error(-8, "not found", miner.protx_update_service,
                                 "%064x" % getrandbits(256), "127.0.0.1:1000")
         self.log.info("Trying to update an IP address to an already used one...")
-        assert_raises_rpc_error(-1, "bad-protx-dup-addr", miner.protx_update_service,
+        assert_raises_rpc_error(RPC_VERIFY_REJECTED, "bad-protx-dup-addr", miner.protx_update_service,
                                 mns[0].proTx, mns[1].ipport, "", mns[0].operator_sk)
         self.log.info("Trying to update the payout address when the reward is 0...")
         assert_raises_rpc_error(-8, "Operator reward is 0. Cannot set operator payout address",
@@ -333,7 +334,7 @@ class DIP3Test(PivxTestFramework):
         assert_raises_rpc_error(-8, "not found", miner.protx_update_registrar,
                                 "%064x" % getrandbits(256), "", "", "")
         self.log.info("Trying to update an operator address to an already used one...")
-        assert_raises_rpc_error(-1, "bad-protx-dup-key", controller.protx_update_registrar,
+        assert_raises_rpc_error(RPC_VERIFY_REJECTED, "bad-protx-dup-key", controller.protx_update_registrar,
                                 mns[0].proTx, mns[1].operator_pk, "", "")
         self.log.info("Trying to update the payee to an invalid address...")
         assert_raises_rpc_error(-5, "invalid PIVX address InvalidPayee", controller.protx_update_registrar,

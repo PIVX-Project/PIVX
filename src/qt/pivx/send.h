@@ -78,10 +78,6 @@ private Q_SLOTS:
     void clearEntries();
     void clearAll(bool fClearSettings = true);
     void onCheckBoxChanged();
-    void onContactMultiClicked();
-    void onDeleteClicked();
-    void onEntryMemoClicked();
-    void onSubtractFeeFromAmountChecked();
     void onResetCustomOptions(bool fRefreshAmounts);
     void onResetSettings();
 
@@ -128,6 +124,12 @@ private:
     void resetChangeAddress();
     void hideContactsMenu();
     void tryRefreshAmounts();
+
+    // Menu
+    void onContactMultiClicked();
+    void onDeleteClicked();
+    void onEntryMemoClicked();
+    void onSubtractFeeFromAmountChecked();
 };
 
 #endif // SEND_H

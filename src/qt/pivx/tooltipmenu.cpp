@@ -1,91 +1,87 @@
-// Copyright (c) 2019 The PIVX developers
+// Copyright (c) 2019-2022 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
-// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+// file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
 #include "qt/pivx/tooltipmenu.h"
-#include "qt/pivx/forms/ui_tooltipmenu.h"
 
 #include "qt/pivx/qtutils.h"
 #include <QTimer>
 
-TooltipMenu::TooltipMenu(PIVXGUI *_window, QWidget *parent) :
-    PWidget(_window, parent),
-    ui(new Ui::TooltipMenu)
+TooltipMenu::TooltipMenu(PIVXGUI* _window, QWidget* parent) :
+    PWidget(_window, parent)
 {
-    ui->setupUi(this);
-    ui->btnLast->setVisible(false);
-    setCssProperty(ui->container, "container-list-menu");
-    setCssProperty({ui->btnCopy, ui->btnDelete, ui->btnEdit, ui->btnLast}, "btn-list-menu");
-    connect(ui->btnCopy, &QPushButton::clicked, this, &TooltipMenu::copyClicked);
-    connect(ui->btnDelete, &QPushButton::clicked, this, &TooltipMenu::deleteClicked);
-    connect(ui->btnEdit, &QPushButton::clicked, this, &TooltipMenu::editClicked);
-    connect(ui->btnLast, &QPushButton::clicked, this, &TooltipMenu::lastClicked);
+    setupUi();
+    setCssProperty(container, "container-list-menu");
 }
 
-void TooltipMenu::setEditBtnText(const QString& btnText){
-    ui->btnEdit->setText(btnText);
-}
-
-void TooltipMenu::setDeleteBtnText(const QString& btnText){
-    ui->btnDelete->setText(btnText);
-}
-
-void TooltipMenu::setCopyBtnText(const QString& btnText){
-    ui->btnCopy->setText(btnText);
-}
-
-void TooltipMenu::setLastBtnText(const QString& btnText, int minHeight){
-    ui->btnLast->setText(btnText);
-    ui->btnLast->setMinimumHeight(minHeight);
-}
-
-void TooltipMenu::setLastBtnCheckable(bool checkable, bool isChecked)
+QPushButton* TooltipMenu::createBtn(const QString& label)
 {
-    ui->btnLast->setCheckable(checkable);
-    ui->btnLast->setChecked(isChecked);
+    auto* btn = new QPushButton(container);
+    QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
+    sizePolicy.setHorizontalStretch(0);
+    sizePolicy.setVerticalStretch(0);
+    sizePolicy.setHeightForWidth(btn->sizePolicy().hasHeightForWidth());
+    btn->setSizePolicy(sizePolicy);
+    btn->setMinimumSize(QSize(0, 30));
+    btn->setMaximumSize(QSize(16777215, 30));
+    btn->setFocusPolicy(Qt::NoFocus);
+    btn->setText(label);
+    setCssProperty({btn}, "btn-list-menu");
+    return btn;
 }
 
-void TooltipMenu::setCopyBtnVisible(bool visible){
-    ui->btnCopy->setVisible(visible);
+void TooltipMenu::setupUi()
+{
+    auto* parent = dynamic_cast<QWidget*>(this);
+    if (parent->objectName().isEmpty())
+        parent->setObjectName(QStringLiteral("TooltipMenu"));
+    parent->resize(90, 110);
+    parent->setMinimumSize(QSize(90, 110));
+    parent->setMaximumSize(QSize(16777215, 140));
+    containerLayout = new QVBoxLayout(parent);
+    containerLayout->setSpacing(0);
+    containerLayout->setObjectName(QStringLiteral("containerLayout"));
+    containerLayout->setContentsMargins(0, 0, 0, 0);
+    container = new QWidget(parent);
+    container->setObjectName(QStringLiteral("container"));
+    verticalLayoutBtns = new QVBoxLayout(container);
+    verticalLayoutBtns->setSpacing(0);
+    verticalLayoutBtns->setObjectName(QStringLiteral("verticalLayoutBtns"));
+    verticalLayoutBtns->setContentsMargins(10, 0, 0, 0);
+    containerLayout->addWidget(container);
 }
 
-void TooltipMenu::setDeleteBtnVisible(bool visible){
-    ui->btnDelete->setVisible(visible);
+void TooltipMenu::showHideBtn(uint8_t id, bool show)
+{
+    auto it = mapBtns.find(id);
+    if (it != mapBtns.end()) {
+        it.value()->setVisible(show);
+    }
 }
 
-void TooltipMenu::setEditBtnVisible(bool visible) {
-    ui->btnEdit->setVisible(visible);
+void TooltipMenu::updateLabelForBtn(uint8_t id, const QString& btnLabel)
+{
+    auto it = mapBtns.find(id);
+    if (it != mapBtns.end()) {
+        it.value()->setText(btnLabel);
+    }
 }
 
-void TooltipMenu::setLastBtnVisible(bool visible) {
-    ui->btnLast->setVisible(visible);
+void TooltipMenu::setBtnCheckable(uint8_t id, bool checkable, bool isChecked)
+{
+    auto it = mapBtns.find(id);
+    if (it != mapBtns.end()) {
+        auto btn = it.value();
+        btn->setCheckable(checkable);
+        btn->setChecked(isChecked);
+    }
 }
 
-void TooltipMenu::deleteClicked(){
-    hide();
-    Q_EMIT onDeleteClicked();
-}
-
-void TooltipMenu::copyClicked(){
-    hide();
-    Q_EMIT onCopyClicked();
-}
-
-void TooltipMenu::editClicked(){
-    hide();
-    Q_EMIT onEditClicked();
-}
-
-void TooltipMenu::lastClicked() {
-    hide();
-    Q_EMIT onLastClicked();
+void TooltipMenu::hideTooltip()
+{
+    dynamic_cast<QWidget*>(this)->hide();
 }
 
 void TooltipMenu::showEvent(QShowEvent *event){
-    QTimer::singleShot(5000, this, &TooltipMenu::hide);
-}
-
-TooltipMenu::~TooltipMenu()
-{
-    delete ui;
+    QTimer::singleShot(5000, this, &TooltipMenu::hideTooltip);
 }

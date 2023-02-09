@@ -712,6 +712,9 @@ public:
 
     bool HasSaplingSPKM() const;
 
+    // Returns the extra value associated with the key.
+    std::string GetStrFromTxExtraData(const uint256& txHash, const std::string& key);
+
     /*
      * Main wallet lock.
      * This lock protects all the fields added by CWallet.
@@ -1056,6 +1059,7 @@ public:
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;
     CAmount GetLegacyBalance(const isminefilter& filter, int minDepth) const;
+    bool SignTransaction(CMutableTransaction& tx);
     bool FundTransaction(CMutableTransaction& tx, CAmount &nFeeRet, bool overrideEstimatedFeeRate, const CFeeRate& specificFeeRate, int& nChangePosInOut, std::string& strFailReason, bool includeWatching, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, const CTxDestination& destChange = CNoDestination());
     /**
      * Create a new transaction paying the recipients with a set of coins

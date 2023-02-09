@@ -224,3 +224,19 @@ std::string CTransaction::ToString() const
         ss << "    " << out.ToString() << "\n";
     return ss.str();
 }
+
+uint256 CalcTxInputsHash(const CTransaction& tx)
+{
+    CHashWriter hw(SER_GETHASH, PROTOCOL_VERSION);
+    // transparent inputs
+    for (const CTxIn& in: tx.vin) {
+        hw << in.prevout;
+    }
+    // shield inputs
+    if (tx.hasSaplingData()) {
+        for (const SpendDescription& sd: tx.sapData->vShieldedSpend) {
+            hw << sd.nullifier;
+        }
+    }
+    return hw.GetHash();
+}

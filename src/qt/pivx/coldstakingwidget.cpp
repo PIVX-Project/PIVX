@@ -602,13 +602,9 @@ void ColdStakingWidget::handleMyColdAddressClicked(const QModelIndex &_index)
 
     if (!menuAddresses) {
         menuAddresses = new TooltipMenu(window, this);
-        menuAddresses->setEditBtnText(tr("Copy"));
-        menuAddresses->setDeleteBtnText(tr("Edit"));
-        menuAddresses->setCopyBtnVisible(false);
-        menuAddresses->adjustSize();
         connect(menuAddresses, &TooltipMenu::message, this, &AddressesWidget::message);
-        connect(menuAddresses, &TooltipMenu::onEditClicked, this, &ColdStakingWidget::onAddressCopyClicked);
-        connect(menuAddresses, &TooltipMenu::onDeleteClicked, this, &ColdStakingWidget::onAddressEditClicked);
+        menu->addBtn(0, tr("Copy"), [this](){onAddressCopyClicked();});
+        menu->addBtn(1, tr("Edit"), [this](){onAddressEditClicked();});
     } else {
         menuAddresses->hide();
     }
@@ -618,6 +614,13 @@ void ColdStakingWidget::handleMyColdAddressClicked(const QModelIndex &_index)
     menuAddresses->move(pos);
     menuAddresses->show();
 }
+
+enum SubMenuItems : uint8_t {
+    STAKE = 0,
+    BLACKLIST = 1,
+    EDIT = 2,
+    COPY = 3
+};
 
 void ColdStakingWidget::handleAddressClicked(const QModelIndex &rIndex)
 {
@@ -629,23 +632,17 @@ void ColdStakingWidget::handleAddressClicked(const QModelIndex &rIndex)
     pos.setX(pos.x() - (DECORATION_SIZE * 2));
     pos.setY(pos.y() + (DECORATION_SIZE * 2));
 
-    if (!this->menu) {
-        this->menu = new TooltipMenu(window, this);
-        this->menu->setEditBtnText(tr("Stake"));
-        this->menu->setDeleteBtnText(tr("Blacklist"));
-        this->menu->setCopyBtnText(tr("Edit Label"));
-        this->menu->setLastBtnText(tr("Copy owner\naddress"), 40);
-        this->menu->setLastBtnVisible(true);
-        this->menu->setMinimumHeight(157);
-        this->menu->setFixedHeight(157);
-        this->menu->setMinimumWidth(125);
-        connect(this->menu, &TooltipMenu::message, this, &AddressesWidget::message);
-        connect(this->menu, &TooltipMenu::onEditClicked, this, &ColdStakingWidget::onEditClicked);
-        connect(this->menu, &TooltipMenu::onDeleteClicked, this, &ColdStakingWidget::onDeleteClicked);
-        connect(this->menu, &TooltipMenu::onCopyClicked, [this](){onLabelClicked();});
-        connect(this->menu, &TooltipMenu::onLastClicked, this, &ColdStakingWidget::onCopyOwnerClicked);
+    if (!menu) {
+        menu = new TooltipMenu(window, this);
+        menu->addBtn(SubMenuItems::STAKE, tr("Stake"), [this](){onEditClicked();});
+        menu->addBtn(SubMenuItems::BLACKLIST, tr("Blacklist"), [this](){onDeleteClicked();});
+        menu->addBtn(SubMenuItems::EDIT, tr("Edit Label"), [this](){onLabelClicked();});
+        menu->addBtn(SubMenuItems::COPY, tr("Copy owner\naddress"), [this](){onCopyOwnerClicked();});
+        menu->setMinimumHeight(157);
+        menu->setFixedHeight(157);
+        menu->setMinimumWidth(125);
     } else {
-        this->menu->hide();
+        menu->hide();
     }
 
     this->index = rIndex;
@@ -653,16 +650,16 @@ void ColdStakingWidget::handleAddressClicked(const QModelIndex &rIndex)
     if (isReceivedDelegation) {
         bool isWhitelisted = rIndex.sibling(rIndex.row(), ColdStakingModel::IS_WHITELISTED).data(
                 Qt::DisplayRole).toBool();
-        this->menu->setDeleteBtnVisible(isWhitelisted);
-        this->menu->setEditBtnVisible(!isWhitelisted);
-        this->menu->setCopyBtnVisible(true);
-        this->menu->setMinimumHeight(157);
+        menu->showHideBtn(SubMenuItems::BLACKLIST, isWhitelisted);
+        menu->showHideBtn(SubMenuItems::STAKE, !isWhitelisted);
+        menu->showHideBtn(SubMenuItems::COPY, true);
+        menu->setMinimumHeight(157);
     } else {
         // owner side
-        this->menu->setDeleteBtnVisible(false);
-        this->menu->setEditBtnVisible(false);
-        this->menu->setCopyBtnVisible(false);
-        this->menu->setMinimumHeight(60);
+        menu->showHideBtn(SubMenuItems::BLACKLIST, false);
+        menu->showHideBtn(SubMenuItems::STAKE, false);
+        menu->showHideBtn(SubMenuItems::COPY, false);
+        menu->setMinimumHeight(60);
     }
 
     this->menu->adjustSize();

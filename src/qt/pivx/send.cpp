@@ -846,6 +846,12 @@ void SendWidget::onContactsClicked(SendMultiRow* entry)
     menuContacts->show();
 }
 
+// SubMenu items
+const uint8_t SUBMENU_MEMO = 0;
+const uint8_t SUBMENU_SAVE = 1;
+const uint8_t SUBMENU_FEE = 2;
+const uint8_t SUBMENU_DELETE = 3;
+
 void SendWidget::onMenuClicked(SendMultiRow* entry)
 {
     focusedEntry = entry;
@@ -856,23 +862,19 @@ void SendWidget::onMenuClicked(SendMultiRow* entry)
     pos.setX(pos.x() + (entry->width() - entry->getMenuBtnWidth()));
     pos.setY(pos.y() + entry->height() + (entry->getMenuBtnWidth()));
 
-    if (!this->menu) {
-        this->menu = new TooltipMenu(window, this);
-        this->menu->setCopyBtnText(tr("Add Memo"));
-        this->menu->setEditBtnText(tr("Save contact"));
-        this->menu->setLastBtnVisible(true);
-        this->menu->setLastBtnText(tr("Subtract fee"));
-        this->menu->setMinimumHeight(157);
-        this->menu->setMinimumSize(this->menu->width() + 30, this->menu->height());
-        connect(this->menu, &TooltipMenu::message, this, &AddressesWidget::message);
-        connect(this->menu, &TooltipMenu::onEditClicked, this, &SendWidget::onContactMultiClicked);
-        connect(this->menu, &TooltipMenu::onDeleteClicked, this, &SendWidget::onDeleteClicked);
-        connect(this->menu, &TooltipMenu::onCopyClicked, this, &SendWidget::onEntryMemoClicked);
-        connect(this->menu, &TooltipMenu::onLastClicked, this, &SendWidget::onSubtractFeeFromAmountChecked);
+    if (!menu) {
+        menu = new TooltipMenu(window, this);
+        menu->addBtn(SUBMENU_MEMO, tr("Add Memo"), [this](){onEntryMemoClicked();});
+        menu->addBtn(SUBMENU_SAVE, tr("Save contact"), [this](){onContactMultiClicked();});
+        menu->addBtn(SUBMENU_FEE, tr("Subtract fee"), [this](){onSubtractFeeFromAmountChecked();});
+        menu->addBtn(SUBMENU_DELETE, tr("Delete"), [this](){onDeleteClicked();});
+        menu->setMinimumHeight(157);
+        menu->setMinimumSize(menu->width() + 30, menu->height());
+        connect(menu, &TooltipMenu::message, this, &AddressesWidget::message);
     } else {
-        this->menu->hide();
+        menu->hide();
     }
-    this->menu->setLastBtnCheckable(true, entry->getSubtractFeeFromAmount());
+    menu->setBtnCheckable(SUBMENU_FEE, true, entry->getSubtractFeeFromAmount());
     menu->move(pos);
     menu->show();
 }
@@ -930,7 +932,7 @@ void SendWidget::onEntryMemoClicked()
 {
     if (focusedEntry) {
         focusedEntry->launchMemoDialog();
-        menu->setCopyBtnText(tr("Memo"));
+        menu->updateLabelForBtn(SUBMENU_MEMO, tr("Memo"));
     }
 }
 

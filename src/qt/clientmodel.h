@@ -62,6 +62,8 @@ public:
     int getNumConnections(unsigned int flags = CONNECTIONS_ALL) const;
     int getNumBlocksAtStartup();
 
+    unsigned int getNetworkPort();
+
     // from cached block index
     int getNumBlocks();
     QDateTime getLastBlockDate() const;
@@ -69,6 +71,7 @@ public:
     uint256 getLastBlockProcessed() const;
     int getLastBlockProcessedHeight() const;
     int64_t getLastBlockProcessedTime() const;
+    const CBlockIndex* getLastBlockIndexProcessed() const { return cacheTip; }
     double getVerificationProgress() const;
     bool isTipCached() const;
 

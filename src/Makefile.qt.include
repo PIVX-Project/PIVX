@@ -111,6 +111,7 @@ QT_MOC_CPP = \
   qt/pivx/moc_furabstractlistitemdelegate.cpp \
   qt/pivx/moc_receivedialog.cpp \
   qt/pivx/moc_pfborderimage.cpp \
+  qt/pivx/moc_clickablelabel.cpp \
   qt/pivx/moc_topbar.cpp \
   qt/pivx/moc_txrow.cpp \
   qt/pivx/moc_dashboardwidget.cpp \
@@ -275,7 +276,8 @@ BITCOIN_QT_H = \
   qt/pivx/settings/settingswalletrepairwidget.h \
   qt/pivx/settings/settingswidget.h \
   qt/pivx/welcomecontentwidget.h \
-  qt/pivx/splash.h
+  qt/pivx/splash.h \
+  qt/pivx/clickablelabel.h
 
 RES_ICONS = \
   qt/res/icons/bitcoin.ico \
@@ -511,6 +513,8 @@ RES_ICONS = \
   qt/pivx/res/img/ic-nav-governance-hover.svg \
   qt/pivx/res/img/ic-time.svg \
   qt/pivx/res/img/ic-link-hover.svg \
+  qt/pivx/res/img/ic-dmn.svg \
+  qt/pivx/res/img/ic-lmn.svg \
   qt/pivx/res/img/img-empty-governance.svg \
   qt/pivx/res/img/img-empty-dark-governance.svg
 

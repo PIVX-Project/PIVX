@@ -305,6 +305,12 @@ public:
     int getWalletTxDepth(const uint256& txHash) const;
     bool isSpent(const COutPoint& outpoint) const;
 
+    // Parse the addr and return the keyid if valid
+    Optional<CKeyID> getKeyIDFromAddr(const std::string& addr);
+
+    // Gets the extra data key->value
+    std::string getStrFromTxExtraData(const uint256& txHash, const std::string& key);
+
     class ListCoinsKey {
     public:
         QString address;
