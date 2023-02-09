@@ -216,41 +216,40 @@ void MasterNodesWidget::onEditMNClicked()
                 }
             } else {
                 inform(tr(
-                        "Cannot start masternode, the collateral transaction has not been confirmed by the network yet.\n"
-                        "Please wait few more minutes (masternode collaterals require %1 confirmations).").arg(
-                        mnModel->getMasternodeCollateralMinConf()));
+                    "Cannot start masternode, the collateral transaction has not been confirmed by the network yet.\n"
+                    "Please wait few more minutes (masternode collaterals require %1 confirmations).")
+                           .arg(
+                               mnModel->getMasternodeCollateralMinConf()));
             }
         } else {
             // Deterministic
             bool isEnabled = index.sibling(index.row(), MNModel::IS_POSE_ENABLED).data(Qt::DisplayRole).toBool();
             if (isEnabled) {
                 inform(tr("Cannot start an already started Masternode"));
-            }else{
-                uint256 proTxHash =uint256S(index.sibling(index.row(), MNModel::PRO_TX_HASH).data(Qt::DisplayRole).toString().toStdString());
+            } else {
+                uint256 proTxHash = uint256S(index.sibling(index.row(), MNModel::PRO_TX_HASH).data(Qt::DisplayRole).toString().toStdString());
                 Optional<DMNData> opDMN = interfaces::g_tiertwo->getDMNData(proTxHash,
-                                                  clientModel->getLastBlockIndexProcessed());
-                if(!opDMN){
+                    clientModel->getLastBlockIndexProcessed());
+                if (!opDMN) {
                     inform(tr("Masternode not found"));
-                }else{
+                } else {
                     std::string operatorKeyS = opDMN->operatorSk;
-                    if(operatorKeyS.empty()){
+                    if (operatorKeyS.empty()) {
                         inform("Operator secret key not found");
-                    }else{
-                        Optional<CBLSSecretKey> operator_key = bls::DecodeSecret(Params(),operatorKeyS);
-                        if(operator_key){
+                    } else {
+                        Optional<CBLSSecretKey> operator_key = bls::DecodeSecret(Params(), operatorKeyS);
+                        if (operator_key) {
                             std::string error_str = "";
-                            if(!mnModel->unbanDMN(*operator_key,proTxHash,error_str)){
+                            if (!mnModel->unbanDMN(*operator_key, proTxHash, error_str)) {
                                 inform(QString::fromStdString(error_str));
-                            }else{
+                            } else {
                                 inform("Masternode successfully unbanned! Wait for the next minted block and it will update");
                             }
-                        }else{
+                        } else {
                             inform("Could not decode operator secret key");
                         }
                     }
-
                 }
-                
             }
         }
     }
