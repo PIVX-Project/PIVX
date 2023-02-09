@@ -159,6 +159,7 @@ SET(QT_SOURCES
         )
 
 qt5_generate_moc(pivx/pfborderimage.h ${CMAKE_CURRENT_SOURCE_DIR}/pivx/moc_pfborderimage.cpp)
+qt5_generate_moc(pivx/clickablelabel.h ${CMAKE_CURRENT_SOURCE_DIR}/pivx/moc_clickablelabel.cpp)
 list(APPEND QT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/pivx/moc_pfborderimage.cpp)
 list(APPEND QT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/pivx/moc_clickablelabel.cpp)
 
