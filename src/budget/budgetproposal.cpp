@@ -250,15 +250,6 @@ bool CBudgetProposal::AddOrUpdateVote(const CBudgetVote& vote, std::string& strE
     return true;
 }
 
-UniValue CBudgetProposal::GetVotesArray() const
-{
-    UniValue ret(UniValue::VARR);
-    for (const auto& it: mapVotes) {
-        ret.push_back(it.second.ToJSON());
-    }
-    return ret;
-}
-
 void CBudgetProposal::SetSynced(bool synced)
 {
     for (auto& it: mapVotes) {

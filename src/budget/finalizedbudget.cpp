@@ -78,16 +78,6 @@ bool CFinalizedBudget::AddOrUpdateVote(const CFinalizedBudgetVote& vote, std::st
     return true;
 }
 
-UniValue CFinalizedBudget::GetVotesObject() const
-{
-    UniValue ret(UniValue::VOBJ);
-    for (const auto& it: mapVotes) {
-        const CFinalizedBudgetVote& vote = it.second;
-        ret.pushKV(vote.GetVin().prevout.ToStringShort(), vote.ToJSON());
-    }
-    return ret;
-}
-
 void CFinalizedBudget::SetSynced(bool synced)
 {
     for (auto& it: mapVotes) {

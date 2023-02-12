@@ -62,7 +62,6 @@ public:
     CBudgetProposal(const std::string& name, const std::string& url, int paycount, const CScript& payee, const CAmount& amount, int blockstart, const uint256& nfeetxhash);
 
     bool AddOrUpdateVote(const CBudgetVote& vote, std::string& strError);
-    UniValue GetVotesArray() const;
     void SetSynced(bool synced);    // sets fSynced on votes (true only if valid)
 
     // sync proposal votes with a node
