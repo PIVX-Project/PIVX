@@ -13,6 +13,7 @@
 namespace llmq
 {
 
+
 enum QuorumPhase {
     QuorumPhase_None = -1,
     QuorumPhase_Initialized = 1,

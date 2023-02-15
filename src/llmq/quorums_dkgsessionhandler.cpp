@@ -7,9 +7,11 @@
 
 #include "activemasternode.h"
 #include "chainparams.h"
+#include "evo/deterministicmns.h"
 #include "llmq/quorums_blockprocessor.h"
 #include "llmq/quorums_connections.h"
 #include "llmq/quorums_debug.h"
+#include "logging.h"
 #include "net_processing.h"
 #include "shutdown.h"
 #include "util/threadnames.h"
@@ -170,7 +172,7 @@ bool CDKGSessionHandler::InitNewQuorum(const CBlockIndex* pindexQuorum)
     }
 
     auto mns = deterministicMNManager->GetAllQuorumMembers(params.type, pindexQuorum);
-
+    LogPrintf("CDKGSessionHandler::%s -- trying to initialize quorum of type: %d", __func__, deterministicMNManager->GetQuorumIpType(params, pindexQuorum));
     if (!curSession->Init(pindexQuorum, mns, activeMasternodeManager->GetProTx())) {
         LogPrintf("CDKGSessionHandler::%s -- quorum initialiation failed for %s\n", __func__, curSession->params.name);
         return false;

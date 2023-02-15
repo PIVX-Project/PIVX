@@ -7,18 +7,24 @@
 
 #include "bls/key_io.h"
 #include "chain.h"
-#include "coins.h"
 #include "chainparams.h"
+#include "coins.h"
+#include "consensus/params.h"
 #include "consensus/upgrades.h"
 #include "consensus/validation.h"
 #include "core_io.h"
-#include "key_io.h"
 #include "guiinterface.h"
+#include "key_io.h"
+#include "llmq/quorums_commitment.h"
+#include "llmq/quorums_dkgsessionhandler.h"
+#include "logging.h"
 #include "masternodeman.h" // for mnodeman (!TODO: remove)
+#include "optional.h"
 #include "script/standard.h"
 #include "spork.h"
 #include "sync.h"
 
+#include <cstdint>
 #include <univalue.h>
 
 static const std::string DB_LIST_SNAPSHOT = "dmn_S";
@@ -67,7 +73,19 @@ void CDeterministicMNState::ToJson(UniValue& obj) const
         obj.pushKV("operatorPayoutAddress", EncodeDestination(dest2));
     }
 }
-
+Consensus::LLMQIpType CDeterministicMN::GetIpType() const
+{
+    if (pdmnState->addr.IsIPv4()) {
+        return Consensus::LLMQIpType::LLMQ_IPV4;
+    }
+    if (pdmnState->addr.IsIPv6()) {
+        return Consensus::LLMQIpType::LLMQ_IPV6;
+    }
+    if (pdmnState->addr.IsTor()) {
+        return Consensus::LLMQIpType::LLMQ_TOR;
+    }
+    return Consensus::LLMQIpType::LLMQ_UNKNOWN;
+}
 uint64_t CDeterministicMN::GetInternalId() const
 {
     // can't get it if it wasn't set yet
@@ -214,7 +232,7 @@ std::vector<CDeterministicMNCPtr> CDeterministicMNList::GetProjectedMNPayees(uns
     return result;
 }
 
-std::vector<CDeterministicMNCPtr> CDeterministicMNList::CalculateQuorum(size_t maxSize, const uint256& modifier) const
+std::vector<CDeterministicMNCPtr> CDeterministicMNList::CalculateQuorum(size_t maxSize, const uint256& modifier, Consensus::LLMQIpType quorumIpType) const
 {
     auto scores = CalculateScores(modifier);
 
@@ -227,11 +245,25 @@ std::vector<CDeterministicMNCPtr> CDeterministicMNList::CalculateQuorum(size_t m
         return a.first < b.first;
     });
 
+    size_t realScoreSize = 0;
+    for (auto x : scores) {
+        if (x.second->GetIpType() == quorumIpType) {
+            realScoreSize += 1;
+        }
+    }
     // take top maxSize entries and return it
     std::vector<CDeterministicMNCPtr> result;
-    result.resize(std::min(maxSize, scores.size()));
-    for (size_t i = 0; i < result.size(); i++) {
-        result[i] = std::move(scores[i].second);
+
+    result.resize(std::min(maxSize, realScoreSize));
+    size_t j = 0;
+    for (size_t i = 0; i < scores.size(); i++) {
+        if (scores[i].second->GetIpType() == quorumIpType) {
+            result[j] = std::move(scores[i].second);
+            j += 1;
+            if (j == result.size()) {
+                break;
+            }
+        }
     }
     return result;
 }
@@ -977,7 +1009,18 @@ std::vector<CDeterministicMNCPtr> CDeterministicMNManager::GetAllQuorumMembers(C
     auto& params = Params().GetConsensus().llmqs.at(llmqType);
     auto allMns = GetListForBlock(pindexQuorum);
     auto modifier = ::SerializeHash(std::make_pair(static_cast<uint8_t>(llmqType), pindexQuorum->GetBlockHash()));
-    return allMns.CalculateQuorum(params.size, modifier);
+    Consensus::LLMQIpType quorumIpType = GetQuorumIpType(params, pindexQuorum);
+    // At the moment in case of iptype not found we return by default ipv4.
+    return allMns.CalculateQuorum(params.size, modifier, quorumIpType);
 }
-
-
+Consensus::LLMQIpType CDeterministicMNManager::GetQuorumIpType(Consensus::LLMQParams params, const CBlockIndex* pindexQuorum)
+{
+    uint8_t id = pindexQuorum->nHeight % (3 * params.dkgInterval) + 1;
+    if (id > Consensus::LLMQIpType::LLMQ_TOR || id < Consensus::LLMQIpType::LLMQ_IPV4) {
+        // Should never happen but in this case we just output ipv4
+        LogPrint(BCLog::DKG, "CDeterministicMNManager::%s -- ip type unkown, nHeight: %d, dkgInterval: %d", __func__, pindexQuorum->nHeight, params.dkgInterval);
+        return Consensus::LLMQIpType::LLMQ_IPV4;
+    } else {
+        return static_cast<Consensus::LLMQIpType>(id);
+    }
+}

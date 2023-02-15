@@ -10,6 +10,7 @@
 #include "libzerocoin/Params.h"
 #include "optional.h"
 #include "uint256.h"
+#include <cstdint>
 #include <map>
 #include <string>
 
@@ -83,6 +84,16 @@ struct NetworkUpgrade {
      * work of this block, otherwise this detection will have false positives.
      */
     Optional<uint256> hashActivationBlock;
+};
+
+
+enum LLMQIpType : uint8_t
+{
+    LLMQ_UNKNOWN =0,
+    LLMQ_IPV4 = 1,
+    LLMQ_IPV6 = 2,
+    LLMQ_TOR = 3,
+    
 };
 
 enum LLMQType : uint8_t
