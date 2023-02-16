@@ -86,14 +86,12 @@ struct NetworkUpgrade {
     Optional<uint256> hashActivationBlock;
 };
 
-
-enum LLMQIpType : uint8_t
-{
-    LLMQ_UNKNOWN =0,
+enum LLMQIpType : uint8_t {
+    LLMQ_UNKNOWN = 0,
     LLMQ_IPV4 = 1,
     LLMQ_IPV6 = 2,
     LLMQ_TOR = 3,
-    
+
 };
 
 enum LLMQType : uint8_t

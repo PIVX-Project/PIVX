@@ -10,7 +10,13 @@ export LC_ALL=C
 
 EXPECTED_CIRCULAR_DEPENDENCIES=(
     "activemasternode -> masternodeman -> activemasternode"
+    "activemasternode -> evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> activemasternode"
+    "activemasternode -> evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> net_processing -> evo/mnauth -> activemasternode"
+    "activemasternode -> evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> net_processing -> masternode-sync -> activemasternode"
     "budget/budgetmanager -> validation -> budget/budgetmanager"
+    "budget/budgetmanager -> evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> net_processing -> budget/budgetmanager"
+    "budget/budgetmanager -> evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> net_processing -> masternode-payments -> budget/budgetmanager"
+    "budget/budgetmanager -> evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> net_processing -> masternode-sync -> budget/budgetmanager"
     "chain -> legacy/stakemodifier -> chain"
     "chainparamsbase -> util/system -> chainparamsbase"
     "consensus/params -> consensus/upgrades -> consensus/params"
@@ -40,7 +46,6 @@ EXPECTED_CIRCULAR_DEPENDENCIES=(
     "chain -> legacy/stakemodifier -> stakeinput -> chain"
     "chain -> legacy/stakemodifier -> validation -> chain"
     "legacy/validation_zerocoin_legacy -> wallet/wallet -> validation -> legacy/validation_zerocoin_legacy"
-    "llmq/quorums -> llmq/quorums_connections -> llmq/quorums"
     "llmq/quorums_dkgsession -> llmq/quorums_dkgsessionmgr -> llmq/quorums_dkgsessionhandler -> llmq/quorums_dkgsession"
     "llmq/quorums_dkgsessionhandler -> net_processing -> llmq/quorums_dkgsessionmgr -> llmq/quorums_dkgsessionhandler"
     "chain -> legacy/stakemodifier -> validation -> validationinterface -> chain"
@@ -48,8 +53,16 @@ EXPECTED_CIRCULAR_DEPENDENCIES=(
     "chain -> legacy/stakemodifier -> validation -> checkpoints -> chain"
     "chain -> legacy/stakemodifier -> validation -> undo -> chain"
     "chain -> legacy/stakemodifier -> validation -> pow -> chain"
-    "evo/deterministicmns -> masternodeman -> net -> tiertwo/net_masternodes -> evo/deterministicmns"
-    "evo/deterministicmns -> masternodeman -> validation -> validationinterface -> evo/deterministicmns"
+    "evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> evo/deterministicmns"
+    "evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> llmq/quorums_connections -> evo/deterministicmns"
+    "evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> llmq/quorums_debug -> evo/deterministicmns"
+    "evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> llmq/quorums_dkgsession -> evo/deterministicmns"
+    "evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> net_processing -> evo/deterministicmns"
+    "evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> net_processing -> masternode-payments -> evo/deterministicmns"
+    "evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> net_processing -> masternode-sync -> evo/deterministicmns"
+    "evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> llmq/quorums_connections -> tiertwo/net_masternodes -> evo/deterministicmns"
+    "evo/deterministicmns -> llmq/quorums_dkgsessionhandler -> net_processing -> validationinterface -> evo/deterministicmns"
+
 )
 
 EXIT_CODE=0
