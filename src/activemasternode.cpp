@@ -40,7 +40,7 @@ static bool GetLocalAddress(CService& addrRet)
     if (!fFound) {
         // If we have some peers, let's try to find our local address from one of them
         g_connman->ForEachNodeContinueIf([&fFound, &addrRet](CNode* pnode) {
-            if (pnode->addr.IsIPv4() || pnode->addr.IsIPv6())
+            if (pnode->addr.IsIPv4() || pnode->addr.IsIPv6() || pnode->addr.IsTor())
                 fFound = GetLocal(addrRet, &pnode->addr) && CActiveDeterministicMasternodeManager::IsValidNetAddr(addrRet);
             return !fFound;
         });

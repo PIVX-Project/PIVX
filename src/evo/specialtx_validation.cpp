@@ -40,8 +40,8 @@ static bool CheckService(const CService& addr, CValidationState& state)
         return state.DoS(10, false, REJECT_INVALID, "bad-protx-ipaddr-port");
     }
 
-    // !TODO: add support for Tor
-    if (!(addr.IsIPv4() || addr.IsIPv6())) {
+
+    if (!(addr.IsIPv4() || addr.IsIPv6() || addr.IsTor())) {
         return state.DoS(10, false, REJECT_INVALID, "bad-protx-ipaddr");
     }
 
