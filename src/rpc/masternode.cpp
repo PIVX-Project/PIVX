@@ -408,11 +408,6 @@ void SerializeMNB(UniValue& statusObjRet, const CMasternodeBroadcast& mnb, const
 
 UniValue startmasternode(const JSONRPCRequest& request)
 {
-    // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
-    if (deterministicMNManager->LegacyMNObsolete()) {
-        throw JSONRPCError(RPC_MISC_ERROR, "startmasternode is not supported when deterministic masternode list is active (DIP3)");
-    }
-
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
 
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
@@ -462,7 +457,10 @@ UniValue startmasternode(const JSONRPCRequest& request)
 
             "\nExamples:\n" +
             HelpExampleCli("startmasternode", "\"alias\" \"0\" \"my_mn\"") + HelpExampleRpc("startmasternode", "\"alias\" \"0\" \"my_mn\""));
-
+    // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
+    if (deterministicMNManager->LegacyMNObsolete()) {
+        throw JSONRPCError(RPC_MISC_ERROR, "startmasternode is not supported when deterministic masternode list is active (DIP3)");
+    }
     bool fLock = (request.params[1].get_str() == "true" ? true : false);
 
     EnsureWalletIsUnlocked(pwallet);
