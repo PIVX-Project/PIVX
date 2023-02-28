@@ -433,12 +433,12 @@ public:
     template <typename T>
     bool HasUniqueProperty(const T& v) const
     {
-        return mnUniquePropertyMap.count(::SerializeHash(v)) != 0;
+        return mnUniquePropertyMap.count(::SerializeHash(v,SER_GETHASH, PROTOCOL_VERSION | ADDRV2_FORMAT)) != 0;
     }
     template <typename T>
     CDeterministicMNCPtr GetUniquePropertyMN(const T& v) const
     {
-        auto p = mnUniquePropertyMap.find(::SerializeHash(v));
+        auto p = mnUniquePropertyMap.find(::SerializeHash(v,SER_GETHASH, PROTOCOL_VERSION | ADDRV2_FORMAT));
         if (!p) {
             return nullptr;
         }
@@ -452,7 +452,7 @@ private:
         static const T nullValue;
         assert(v != nullValue);
 
-        auto hash = ::SerializeHash(v);
+        auto hash = ::SerializeHash(v,SER_GETHASH, PROTOCOL_VERSION | ADDRV2_FORMAT);
         auto oldEntry = mnUniquePropertyMap.find(hash);
         assert(!oldEntry || oldEntry->first == dmn->proTxHash);
         std::pair<uint256, uint32_t> newEntry(dmn->proTxHash, 1);
@@ -467,7 +467,7 @@ private:
         static const T nullValue;
         assert(oldValue != nullValue);
 
-        auto oldHash = ::SerializeHash(oldValue);
+        auto oldHash = ::SerializeHash(oldValue,SER_GETHASH, PROTOCOL_VERSION | ADDRV2_FORMAT);
         auto p = mnUniquePropertyMap.find(oldHash);
         assert(p && p->first == dmn->proTxHash);
         if (p->second == 1) {
