@@ -314,7 +314,7 @@ static ProRegPL ParseProRegPLParams(const UniValue& params, unsigned int paramId
     return pl;
 }
 
-// handles registerprotx, and preprareprotxregistration
+// handles registerprotx, and prepareprotxregistration
 static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -329,7 +329,7 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
                     "The collateral is specified through \"collateralHash\" and \"collateralIndex\" and must be an unspent\n"
                     "transaction output spendable by this wallet. It must also not be used by any other masternode.\n"
                         :
-                    "preprareprotxregistration \"collateralHash\" collateralIndex \"ipAndPort\" \"ownerAddress\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (operatorReward \"operatorPayoutAddress\")\n"
+                    "prepareprotxregistration \"collateralHash\" collateralIndex \"ipAndPort\" \"ownerAddress\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (operatorReward \"operatorPayoutAddress\")\n"
                     "\nCreates an unsigned ProTx and returns it. The ProTx must be signed externally with the collateral\n"
                     "key and then passed to \"submitprotxregistration\".\n"
                     "The collateral is specified through \"collateralHash\" and \"collateralIndex\" and must be an unspent transaction output.\n"
@@ -357,7 +357,7 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
                         "  \"signMessage\" :        (string) The string message that needs to be signed with the collateral key\n"
                         "}\n"
                         "\nExamples:\n"
-                        + HelpExampleCli("preprareprotxregistration", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" 0 \"168.192.1.100:51472\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\"")
+                        + HelpExampleCli("prepareprotxregistration", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" 0 \"168.192.1.100:51472\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\"")
                         )
                 )
         );
@@ -427,7 +427,7 @@ UniValue registerprotx(const JSONRPCRequest& request)
     return ProTxRegister(request, true);
 }
 
-UniValue preprareprotxregistration(const JSONRPCRequest& request)
+UniValue prepareprotxregistration(const JSONRPCRequest& request)
 {
     return ProTxRegister(request, false);
 }
@@ -443,10 +443,10 @@ UniValue submitprotxregistration(const JSONRPCRequest& request)
         throw std::runtime_error(
                 "submitprotxregistration \"tx\" \"sig\"\n"
                 "\nSubmits the specified ProTx to the network. This command will also sign the inputs of the transaction\n"
-                "which were previously added by \"preprareprotxregistration\" to cover transaction fees\n"
+                "which were previously added by \"prepareprotxregistration\" to cover transaction fees\n"
                 + HelpRequiringPassphrase(pwallet) + "\n"
                 "\nArguments:\n"
-                "1. \"tx\"                 (string, required) The serialized transaction previously returned by \"preprareprotxregistration\"\n"
+                "1. \"tx\"                 (string, required) The serialized transaction previously returned by \"prepareprotxregistration\"\n"
                 "2. \"sig\"                (string, required) The signature signed with the collateral key. Must be in base64 format.\n"
                 "\nResult:\n"
                 "\"txid\"                  (string) The transaction id.\n"
@@ -947,7 +947,7 @@ static const CRPCCommand commands[] =
 #ifdef ENABLE_WALLET
     { "evo",         "registerprotx",                 &registerprotx,         true,  {"collateralHash","collateralIndex","ipAndPort","ownerAddress","operatorPubKey","votingAddress","payoutAddress","operatorReward","operatorPayoutAddress"} },
     { "evo",         "fundprotxregistration",            &fundprotxregistration,    true,  {"collateralAddress","ipAndPort","ownerAddress","operatorPubKey","votingAddress","payoutAddress","operatorReward","operatorPayoutAddress"} },
-    { "evo",         "preprareprotxregistration",         &preprareprotxregistration, true,  {"collateralHash","collateralIndex","ipAndPort","ownerAddress","operatorPubKey","votingAddress","payoutAddress","operatorReward","operatorPayoutAddress"} },
+    { "evo",         "prepareprotxregistration",         &prepareprotxregistration, true,  {"collateralHash","collateralIndex","ipAndPort","ownerAddress","operatorPubKey","votingAddress","payoutAddress","operatorReward","operatorPayoutAddress"} },
     { "evo",         "submitprotxregistration",          &submitprotxregistration,  true,  {"tx","sig"}  },
     { "evo",         "revokeprotx",                   &revokeprotx,           true,  {"proTxHash","operatorKey","reason"}  },
     { "evo",         "updateprotxregistrar",         &updateprotxregistrar, true,  {"proTxHash","operatorPubKey","votingAddress","payoutAddress","ownerKey"}  },

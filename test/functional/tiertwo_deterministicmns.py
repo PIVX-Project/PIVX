@@ -122,7 +122,7 @@ class DIP3Test(PivxTestFramework):
         assert_raises_rpc_error(-1, "Evo upgrade is not active yet", self.add_new_dmn, mns, "fund")
         # Can create the raw proReg
         dmn = create_new_dmn(2, controller, dummy_add, None)
-        tx, sig = self.registerprotx_ext(miner, controller, dmn, None, False)
+        tx, sig = self.register_protx_ext(miner, controller, dmn, None, False)
         # but cannot send it
         assert_raises_rpc_error(-1, "Evo upgrade is not active yet", miner.submitprotxregistration, tx, sig)
         self.log.info("Done. Now mine blocks till enforcement...")
@@ -233,20 +233,20 @@ class DIP3Test(PivxTestFramework):
         self.log.info("Trying duplicate operator key...")
         dmn2b = create_new_dmn(dmn2.idx, controller, dummy_add, dmn_keys)
         assert_raises_rpc_error(RPC_VERIFY_REJECTED, "bad-protx-dup-operator-key",
-                                self.fundprotxregistration, miner, controller, dmn2b, dummy_add)
+                                self.fund_protx_registration, miner, controller, dmn2b, dummy_add)
 
         # Now try with duplicate owner key
         self.log.info("Trying duplicate owner key...")
         dmn2c = create_new_dmn(dmn2.idx, controller, dummy_add, dmn2_keys)
         dmn2c.owner = mns[randrange(len(mns))].owner
         assert_raises_rpc_error(RPC_VERIFY_REJECTED, "bad-protx-dup-owner-key",
-                                self.fundprotxregistration, miner, controller, dmn2c, dummy_add)
+                                self.fund_protx_registration, miner, controller, dmn2c, dummy_add)
 
         # Finally, register it properly. This time setting 10% of the reward for the operator
         op_rew = {"reward": 10.00, "address": self.nodes[dmn2.idx].getnewaddress()}
         self.log.info("Reactivating the node with a new registration (with operator reward)...")
         dmn2c = create_new_dmn(dmn2.idx, controller, dummy_add, dmn2_keys)
-        self.fundprotxregistration(miner, controller, dmn2c, dummy_add, op_rew)
+        self.fund_protx_registration(miner, controller, dmn2c, dummy_add, op_rew)
         mns.append(dmn2c)
         time.sleep(1)
         self.sync_mempools([miner, controller])
@@ -314,7 +314,7 @@ class DIP3Test(PivxTestFramework):
         miner.generate(1)
         self.sync_blocks()
         # Then send the ProUpServ tx from the masternode
-        remote_node.updateprotxservice(mns[0].proTx, mns[0].ipport)
+        remote_node.update_protx_service(mns[0].proTx, mns[0].ipport)
         self.sync_mempools([miner, remote_node])
         miner.generate(1)
         self.sync_blocks()
@@ -334,17 +334,17 @@ class DIP3Test(PivxTestFramework):
         assert_raises_rpc_error(-8, "not found", miner.updateprotxregistrar,
                                 "%064x" % getrandbits(256), "", "", "")
         self.log.info("Trying to update an operator address to an already used one...")
-        assert_raises_rpc_error(RPC_VERIFY_REJECTED, "bad-protx-dup-key", controller.updateprotxregistrar,
+        assert_raises_rpc_error(RPC_VERIFY_REJECTED, "bad-protx-dup-key", controller.update_protx_registrar,
                                 mns[0].proTx, mns[1].operator_pk, "", "")
         self.log.info("Trying to update the payee to an invalid address...")
-        assert_raises_rpc_error(-5, "invalid PIVX address InvalidPayee", controller.updateprotxregistrar,
+        assert_raises_rpc_error(-5, "invalid PIVX address InvalidPayee", controller.update_protx_registrar,
                                 mns[0].proTx, "", "", "InvalidPayee")
         self.log.info("Update operator keys...")
         bls_keypair = self.nodes[mns[0].idx].generateblskeypair()
         mns[0].operator_pk = bls_keypair["public"]
         mns[0].operator_sk = bls_keypair["secret"]
         # Controller should already have the key (as it was generated there), no need to pass it
-        controller.updateprotxregistrar(mns[0].proTx, mns[0].operator_pk, "", "")
+        controller.update_protx_registrar(mns[0].proTx, mns[0].operator_pk, "", "")
         self.sync_mempools([miner, controller])
         miner.generate(1)
         self.sync_blocks()
@@ -398,7 +398,7 @@ class DIP3Test(PivxTestFramework):
         assert_raises_rpc_error(-8, "not found", miner.revokeprotx,
                                 "%064x" % getrandbits(256))
         self.log.info("Trying to revoke with invalid reason...")
-        assert_raises_rpc_error(-8, "invalid reason", controller.revokeprotx, mns[3].proTx, mns[3].operator_sk, 100)
+        assert_raises_rpc_error(-8, "invalid reason", controller.revoke_protx, mns[3].proTx, mns[3].operator_sk, 100)
         self.log.info("Revoke masternode...")
         # Do it from the remote node (so no need to pass the operator BLS secret key)
         remote_node = self.nodes[mns[3].idx]
@@ -407,7 +407,7 @@ class DIP3Test(PivxTestFramework):
         miner.generate(1)
         self.sync_blocks()
         # Then send the ProUpRev tx from the masternode
-        remote_node.revokeprotx(mns[3].proTx, "", 1)
+        remote_node.revoke_protx(mns[3].proTx, "", 1)
         mns[3].revoked()
         self.sync_mempools([miner, remote_node])
         miner.generate(1)

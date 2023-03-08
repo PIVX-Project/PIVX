@@ -115,9 +115,9 @@ Upgrade instructions: !TODO
     "txid"                        (string) The transaction id.
     ```
 
-* `preprareprotxregistration`
+* `prepareprotxregistration`
     ```
-    preprareprotxregistration "collateralHash" collateralIndex "ipAndPort" "ownerAddress" "operatorPubKey" "votingAddress" "payoutAddress" (operatorReward "operatorPayoutAddress")
+    prepareprotxregistration "collateralHash" collateralIndex "ipAndPort" "ownerAddress" "operatorPubKey" "votingAddress" "payoutAddress" (operatorReward "operatorPayoutAddress")
 
     Creates an unsigned ProTx and returns it. The ProTx must be signed externally with the collateral
     key and then passed to "submitprotxregistration".
@@ -156,10 +156,10 @@ Upgrade instructions: !TODO
     submitprotxregistration "tx" "sig"
 
     Submits the specified ProTx to the network. This command will also sign the inputs of the transaction
-    which were previously added by "preprareprotxregistration" to cover transaction fees
+    which were previously added by "prepareprotxregistration" to cover transaction fees
 
     Arguments:
-    1. "tx"                 (string, required) The serialized transaction previously returned by "preprareprotxregistration"
+    1. "tx"                 (string, required) The serialized transaction previously returned by "prepareprotxregistration"
     2. "sig"                (string, required) The signature signed with the collateral key. Must be in base64 format.
 
     Result:
