@@ -50,7 +50,7 @@ class TiertwoReorgMempoolTest(PivxTestFramework):
         self.log.info("Nodes disconnected")
 
     def register_masternode(self, from_node, dmn, collateral_addr):
-        dmn.proTx = from_node.protx_register_fund(collateral_addr, dmn.ipport, dmn.owner,
+        dmn.proTx = from_node.fundprotxregistration(collateral_addr, dmn.ipport, dmn.owner,
                                                   dmn.operator_pk, dmn.voting, dmn.payee)
         dmn.collateral = COutPoint(int(dmn.proTx, 16),
                                    get_collateral_vout(from_node.getrawtransaction(dmn.proTx, True)))
@@ -168,41 +168,41 @@ class TiertwoReorgMempoolTest(PivxTestFramework):
         # Send to the mempool a ProRegTx using the collateral mined after the split
         mempool_dmn4 = create_new_dmn(free_idx, nodeA, collateral_addr, None)
         mempool_dmn4.collateral = initial_collateral
-        self.protx_register_ext(nodeA, nodeA, mempool_dmn4, mempool_dmn4.collateral, True)
+        self.registerprotx_ext(nodeA, nodeA, mempool_dmn4, mempool_dmn4.collateral, True)
 
         # Now send a valid proUpServ tx to the mempool, without mining it
-        proupserv1_txid = nodeA.protx_update_service(pre_split_mn1.proTx,
+        proupserv1_txid = nodeA.updateprotxservice(pre_split_mn1.proTx,
                                                      "127.0.0.1:1000", "", pre_split_mn1.operator_sk)
 
         # Try sending another update, reusing the same ip of the previous mempool tx
         self.log.info("Testing proUpServ in-mempool duplicate-IP rejection...")
-        assert_raises_rpc_error(-26, "protx-dup", nodeA.protx_update_service,
+        assert_raises_rpc_error(-26, "protx-dup", nodeA.updateprotxservice,
                                 mnsA[0].proTx, "127.0.0.1:1000", "", mnsA[0].operator_sk)
 
         # Now send other two valid proUpServ txes to the mempool, without mining them
-        proupserv2_txid = nodeA.protx_update_service(mnsA[3].proTx,
+        proupserv2_txid = nodeA.updateprotxservice(mnsA[3].proTx,
                                                      "127.0.0.1:2000", "", mnsA[3].operator_sk)
-        proupserv3_txid = nodeA.protx_update_service(pre_split_mn1.proTx,
+        proupserv3_txid = nodeA.updateprotxservice(pre_split_mn1.proTx,
                                                      "127.0.0.1:1001", "", pre_split_mn1.operator_sk)
 
         # Send valid proUpReg tx to the mempool
         operator_to_reuse = nodeA.generateblskeypair()["public"]
-        proupreg1_txid = nodeA.protx_update_registrar(mnsA[4].proTx, operator_to_reuse, "", "")
+        proupreg1_txid = nodeA.updateprotxregistrar(mnsA[4].proTx, operator_to_reuse, "", "")
 
         # Try sending another one, reusing the operator key used by another mempool proTx
         self.log.info("Testing proUpReg in-mempool duplicate-operator-key rejection...")
-        assert_raises_rpc_error(-26, "protx-dup", nodeA.protx_update_registrar,
+        assert_raises_rpc_error(-26, "protx-dup", nodeA.updateprotxregistrar,
                                 mnsA[5].proTx, mempool_dmn1.operator_pk, "", "")
 
         # Now send other two valid proUpServ txes to the mempool, without mining them
         new_voting_address = nodeA.getnewaddress()
-        proupreg2_txid = nodeA.protx_update_registrar(mnsA[5].proTx, "", new_voting_address, "")
-        proupreg3_txid = nodeA.protx_update_registrar(pre_split_mn1.proTx, "", new_voting_address, "")
+        proupreg2_txid = nodeA.updateprotxregistrar(mnsA[5].proTx, "", new_voting_address, "")
+        proupreg3_txid = nodeA.updateprotxregistrar(pre_split_mn1.proTx, "", new_voting_address, "")
 
         # Send two valid proUpRev txes to the mempool, without mining them
         self.log.info("Revoking two masternodes...")
-        prouprev1_txid = nodeA.protx_revoke(mnsA[6].proTx, mnsA[6].operator_sk)
-        prouprev2_txid = nodeA.protx_revoke(pre_split_mn2.proTx, pre_split_mn2.operator_sk)
+        prouprev1_txid = nodeA.revokeprotx(mnsA[6].proTx, mnsA[6].operator_sk)
+        prouprev2_txid = nodeA.revokeprotx(pre_split_mn2.proTx, pre_split_mn2.operator_sk)
 
         # Now nodeA has 4 proReg txes in its mempool, 3 proUpServ txes, 3 proUpReg txes, and 2 proUpRev
         mempoolA = nodeA.getrawmempool()

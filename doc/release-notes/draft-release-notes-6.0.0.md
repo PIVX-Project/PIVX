@@ -35,9 +35,9 @@ Upgrade instructions: !TODO
 
 #### New RPC commands
 
-* `protx_list`
+* `listprotxes`
     ```  
-    protx_list (detailed wallet_only valid_only height)
+    listprotxes (detailed wallet_only valid_only height)
 
     Lists all ProTxs.
 
@@ -54,9 +54,9 @@ Upgrade instructions: !TODO
     [...]                         (list) List of protx txids or, if detailed=true, list of json objects.
     ```
 
-* `protx_register`
+* `registerprotx`
     ```
-    protx_register "collateralHash" collateralIndex "ipAndPort" "ownerAddress" "operatorPubKey" "votingAddress" "payoutAddress" (operatorReward "operatorPayoutAddress")
+    registerprotx "collateralHash" collateralIndex "ipAndPort" "ownerAddress" "operatorPubKey" "votingAddress" "payoutAddress" (operatorReward "operatorPayoutAddress")
 
     Creates and sends a ProTx to the network. The collateral is specified through "collateralHash" and collateralIndex, and must be an unspent
     transaction output spendable by this wallet. It must also not be used by any other masternode.
@@ -85,9 +85,9 @@ Upgrade instructions: !TODO
     "txid"                 (string) The transaction id.
     ```
 
-* `protx_register_fund`
+* `fundprotxregistration`
     ```
-    protx_register_fund "collateralAddress" "ipAndPort" "ownerAddress" "operatorPubKey" "votingAddress" "payoutAddress" (operatorReward "operatorPayoutAddress")
+    fundprotxregistration "collateralAddress" "ipAndPort" "ownerAddress" "operatorPubKey" "votingAddress" "payoutAddress" (operatorReward "operatorPayoutAddress")
 
     Creates, funds and sends a ProTx to the network. The resulting transaction will move 10000 PIV
     to the address specified by collateralAddress and will then function as masternode collateral.
@@ -115,12 +115,12 @@ Upgrade instructions: !TODO
     "txid"                        (string) The transaction id.
     ```
 
-* `protx_register_prepare`
+* `preprareprotxregistration`
     ```
-    protx_register_prepare "collateralHash" collateralIndex "ipAndPort" "ownerAddress" "operatorPubKey" "votingAddress" "payoutAddress" (operatorReward "operatorPayoutAddress")
+    preprareprotxregistration "collateralHash" collateralIndex "ipAndPort" "ownerAddress" "operatorPubKey" "votingAddress" "payoutAddress" (operatorReward "operatorPayoutAddress")
 
     Creates an unsigned ProTx and returns it. The ProTx must be signed externally with the collateral
-    key and then passed to "protx_register_submit".
+    key and then passed to "submitprotxregistration".
     The collateral is specified through "collateralHash" and "collateralIndex" and must be an unspent transaction output.
 
     Arguments:
@@ -151,24 +151,24 @@ Upgrade instructions: !TODO
     }
     ```
 
-* `protx_register_submit`
+* `submitprotxregistration`
     ```
-    protx_register_submit "tx" "sig"
+    submitprotxregistration "tx" "sig"
 
     Submits the specified ProTx to the network. This command will also sign the inputs of the transaction
-    which were previously added by "protx_register_prepare" to cover transaction fees
+    which were previously added by "preprareprotxregistration" to cover transaction fees
 
     Arguments:
-    1. "tx"                 (string, required) The serialized transaction previously returned by "protx_register_prepare"
+    1. "tx"                 (string, required) The serialized transaction previously returned by "preprareprotxregistration"
     2. "sig"                (string, required) The signature signed with the collateral key. Must be in base64 format.
 
     Result:
     "txid"                  (string) The transaction id.
     ```
 
-* `protx_revoke`
+* `revokeprotx`
     ```
-    protx_revoke \"proTxHash\" (\"operatorKey\" reason)\n"
+    revokeprotx \"proTxHash\" (\"operatorKey\" reason)\n"
 
     Creates and sends a ProUpRevTx to the network. This will revoke the operator key of the masternode and
     put it into the PoSe-banned state. It will also set the service field of the masternode
@@ -187,7 +187,7 @@ Upgrade instructions: !TODO
     "txid"                  (string) The transaction id.
     ```
 
-* `protx_update_registrar`
+* `updateprotxregistrar`
     ```
     protx update_registrar \"proTxHash\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (\"ownerKey\")
 
@@ -216,9 +216,9 @@ Upgrade instructions: !TODO
     "txid"                        (string) The transaction id.
     ```
 
-* `protx_update_service`
+* `updateprotxservice`
     ```
-    protx_update_service "proTxHash" "ipAndPort" ("operatorPayoutAddress" "operatorKey")
+    updateprotxservice "proTxHash" "ipAndPort" ("operatorPayoutAddress" "operatorKey")
 
     Creates and sends a ProUpServTx to the network. This will update the IP address
     of a masternode, and/or the operator payout address.
