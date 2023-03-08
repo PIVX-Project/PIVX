@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2012 The Bitcoin developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -357,7 +357,7 @@ bool StartMasternodeEntry(UniValue& statusObjRet, CMasternodeBroadcast& mnbRet, 
 
     CTxIn vin = CTxIn(uint256S(mne.getTxHash()), uint32_t(nIndex));
     CMasternode* pmn = mnodeman.Find(vin.prevout);
-    if (pmn != NULL) {
+    if (pmn != nullptr) {
         if (strCommand == "missing") return false;
         if (strCommand == "disabled" && pmn->IsEnabled()) return false;
     }

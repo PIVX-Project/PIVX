@@ -1,7 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -3196,7 +3196,7 @@ UniValue listsinceblock(const JSONRPCRequest& request)
 
     LOCK2(cs_main, pwallet->cs_wallet);
 
-    CBlockIndex* pindex = NULL;
+    CBlockIndex* pindex = nullptr;
     int target_confirms = 1;
     isminefilter filter = ISMINE_SPENDABLE_ALL | ISMINE_COLD;
 

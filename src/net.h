@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -525,7 +525,7 @@ bool AddLocal(const CNetAddr& addr, int nScore = LOCAL_NONE);
 bool RemoveLocal(const CService& addr);
 bool SeenLocal(const CService& addr);
 bool IsLocal(const CService& addr);
-bool GetLocal(CService& addr, const CNetAddr* paddrPeer = NULL);
+bool GetLocal(CService& addr, const CNetAddr* paddrPeer = nullptr);
 CAddress GetLocalAddress(const CNetAddr* paddrPeer, ServiceFlags nLocalServices);
 
 bool validateMasternodeIP(const std::string& addrStr);          // valid, reachable and routable address

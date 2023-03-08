@@ -419,6 +419,12 @@ AX_PTHREAD
 
 AC_SEARCH_LIBS([clock_gettime],[rt])
 
+case $host in
+  *mingw*)
+     AC_CHECK_LIB([ssp], [main], [], AC_MSG_ERROR([libssp missing]))
+  ;;
+esac
+
 AC_MSG_CHECKING([whether to build runtest])
 if test x$use_tests = xyes; then
   AC_MSG_RESULT([yes])

@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2021 The Bitcoin developers
-// Copyright (c) 2019-2021 The PIVX developers
+// Copyright (c) 2019-2021 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -87,10 +87,10 @@ public:
 
     DbTxn* TxnBegin(int flags = DB_TXN_WRITE_NOSYNC)
     {
-        DbTxn* ptxn = NULL;
-        int ret = dbenv->txn_begin(NULL, &ptxn, flags);
+        DbTxn* ptxn = nullptr;
+        int ret = dbenv->txn_begin(nullptr, &ptxn, flags);
         if (!ptxn || ret != 0)
-            return NULL;
+            return nullptr;
         return ptxn;
     }
 };
@@ -224,7 +224,7 @@ public:
         int ret = pdb->get(activeTxn, &datKey, &datValue, 0);
         memory_cleanse(datKey.get_data(), datKey.get_size());
         bool success = false;
-        if (datValue.get_data() != NULL) {
+        if (datValue.get_data() != nullptr) {
             // Unserialize value
             try {
                 CDataStream ssValue((char*)datValue.get_data(), (char*)datValue.get_data() + datValue.get_size(), SER_DISK, CLIENT_VERSION);
@@ -315,11 +315,11 @@ public:
     Dbc* GetCursor()
     {
         if (!pdb)
-            return NULL;
-        Dbc* pcursor = NULL;
-        int ret = pdb->cursor(NULL, &pcursor, 0);
+            return nullptr;
+        Dbc* pcursor = nullptr;
+        int ret = pdb->cursor(nullptr, &pcursor, 0);
         if (ret != 0)
-            return NULL;
+            return nullptr;
         return pcursor;
     }
 
@@ -339,7 +339,7 @@ public:
         int ret = pcursor->get(&datKey, &datValue, fFlags);
         if (ret != 0)
             return ret;
-        else if (datKey.get_data() == NULL || datValue.get_data() == NULL)
+        else if (datKey.get_data() == nullptr || datValue.get_data() == nullptr)
             return 99999;
 
         // Convert to streams
@@ -375,7 +375,7 @@ public:
         if (!pdb || !activeTxn)
             return false;
         int ret = activeTxn->commit(0);
-        activeTxn = NULL;
+        activeTxn = nullptr;
         return (ret == 0);
     }
 
@@ -384,7 +384,7 @@ public:
         if (!pdb || !activeTxn)
             return false;
         int ret = activeTxn->abort();
-        activeTxn = NULL;
+        activeTxn = nullptr;
         return (ret == 0);
     }
 
@@ -399,7 +399,7 @@ public:
         return Write(std::string("version"), nVersion);
     }
 
-    bool static Rewrite(BerkeleyDatabase& database, const char* pszSkip = NULL);
+    bool static Rewrite(BerkeleyDatabase& database, const char* pszSkip = nullptr);
 };
 
 #endif // BITCOIN_DB_H

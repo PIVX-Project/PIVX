@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2012 The Bitcoin developers
-// Copyright (c) 2017-2019 The PIVX developers
+// Copyright (c) 2017-2021 The PIVX Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -116,7 +116,7 @@ arith_uint256 CBigNum::getuint256() const
         throw std::range_error("cannot convert to uint256, bignum longer than 256 bits");
     }
     uint256 n = UINT256_ZERO;
-    mpz_export((unsigned char*)&n, NULL, -1, 1, 0, 0, bn);
+    mpz_export((unsigned char*)&n, nullptr, -1, 1, 0, 0, bn);
     return UintToArith256(n);
 }
 
@@ -176,11 +176,11 @@ bool CBigNum::SetHexBool(const std::string& str)
 
 std::string CBigNum::ToString(int nBase) const
 {
-    char* c_str = mpz_get_str(NULL, nBase, bn);
+    char* c_str = mpz_get_str(nullptr, nBase, bn);
     std::string str(c_str);
     // Free c_str with the right free function:
     void (*freefunc)(void *, size_t);
-    mp_get_memory_functions (NULL, NULL, &freefunc);
+    mp_get_memory_functions (nullptr, nullptr, &freefunc);
     freefunc(c_str, strlen(c_str) + 1);
 
     return str;

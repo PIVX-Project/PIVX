@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2016-2020 The PIVX developers
+// Copyright (c) 2016-2021 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -661,7 +661,7 @@ public:
      *  If no answer can be given at nBlocks, return an estimate
      *  at the lowest number of blocks where one can be given
      */
-    CFeeRate estimateSmartFee(int nBlocks, int *answerFoundAtBlocks = NULL) const;
+    CFeeRate estimateSmartFee(int nBlocks, int *answerFoundAtBlocks = nullptr) const;
 
     /** Estimate fee rate needed to get into the next nBlocks */
     CFeeRate estimateFee(int nBlocks) const;

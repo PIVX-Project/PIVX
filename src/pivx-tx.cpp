@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2021 The PIVX Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -725,7 +725,7 @@ static int CommandLineRawTx(int argc, char* argv[])
         strPrint = std::string("error: ") + e.what();
         nRet = EXIT_FAILURE;
     } catch (...) {
-        PrintExceptionContinue(NULL, "CommandLineRawTx()");
+        PrintExceptionContinue(nullptr, "CommandLineRawTx()");
         throw;
     }
 
@@ -746,7 +746,7 @@ int main(int argc, char* argv[])
         PrintExceptionContinue(&e, "AppInitRawTx()");
         return EXIT_FAILURE;
     } catch (...) {
-        PrintExceptionContinue(NULL, "AppInitRawTx()");
+        PrintExceptionContinue(nullptr, "AppInitRawTx()");
         return EXIT_FAILURE;
     }
 
@@ -756,7 +756,7 @@ int main(int argc, char* argv[])
     } catch (const std::exception& e) {
         PrintExceptionContinue(&e, "CommandLineRawTx()");
     } catch (...) {
-        PrintExceptionContinue(NULL, "CommandLineRawTx()");
+        PrintExceptionContinue(nullptr, "CommandLineRawTx()");
     }
     return ret;
 }

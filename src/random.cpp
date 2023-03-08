@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2018 The Bitcoin developers
-// Copyright (c) 2019-2020 The PIVX developers
+// Copyright (c) 2019-2021 The PIVX Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -279,7 +279,7 @@ void GetOSRand(unsigned char *ent32)
 {
 #if defined(WIN32)
     HCRYPTPROV hProvider;
-    int ret = CryptAcquireContextW(&hProvider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
+    int ret = CryptAcquireContextW(&hProvider, nullptr, nullptr, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
     if (!ret) {
         RandFailure();
     }
@@ -318,7 +318,7 @@ void GetOSRand(unsigned char *ent32)
     }
 #elif defined(HAVE_GETENTROPY_RAND) && defined(MAC_OSX)
     // We need a fallback for OSX < 10.12
-    if (&getentropy != NULL) {
+    if (&getentropy != nullptr) {
         if (getentropy(ent32, NUM_OS_RANDOM_BYTES) != 0) {
             RandFailure();
         }
@@ -333,7 +333,7 @@ void GetOSRand(unsigned char *ent32)
     int have = 0;
     do {
         size_t len = NUM_OS_RANDOM_BYTES - have;
-        if (sysctl(name, ARRAYLEN(name), ent32 + have, &len, NULL, 0) != 0) {
+        if (sysctl(name, ARRAYLEN(name), ent32 + have, &len, nullptr, 0) != 0) {
             RandFailure();
         }
         have += len;

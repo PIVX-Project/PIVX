@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -445,7 +445,7 @@ bool CMasternodeBroadcast::CheckAndUpdate(int& nDos)
     CMasternode* pmn = mnodeman.Find(vin.prevout);
 
     // no such masternode, nothing to update
-    if (pmn == NULL) return true;
+    if (pmn == nullptr) return true;
 
     // this broadcast is older or equal than the one that we already have - it's bad and should never happen
     // unless someone is doing something fishy

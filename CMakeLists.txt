@@ -6,8 +6,8 @@ if(CCACHE_PROGRAM)
     message(STATUS "Found ccache: ${CCACHE_PROGRAM}")
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
     # Set up wrapper scripts
-    set(C_LAUNCHER   "${CCACHE_PROGRAM}")
-    set(CXX_LAUNCHER "${CCACHE_PROGRAM}")
+    set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
 endif()
 
 # Search for the cargo and rustc compilers required to build libzcashrust
@@ -85,7 +85,7 @@ find_package(GMP REQUIRED)
 find_package(ZMQ)
 find_package(Miniupnp)
 find_package(NAT-PMP)
-find_package(Boost COMPONENTS system filesystem thread REQUIRED)
+find_package(Boost COMPONENTS system filesystem chrono thread REQUIRED)
 find_package(Sodium REQUIRED)
 
 # run autogen.sh if missing header files from configure on Linux/Mac

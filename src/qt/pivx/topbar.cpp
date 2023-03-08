@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2020 The PIVX developers
+// Copyright (c) 2019-2021 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
@@ -725,7 +725,7 @@ void TopBar::updateHDState(const bool upgraded, const QString& upgradeError)
             // backup wallet
             QString filename = GUIUtil::getSaveFileName(this,
                                                 tr("Backup Wallet"), QString(),
-                                                tr("Wallet Data (*.dat)"), NULL);
+                                                tr("Wallet Data (*.dat)"), nullptr);
             if (!filename.isEmpty()) {
                 inform(walletModel->backupWallet(filename) ? tr("Backup created") : tr("Backup creation failed"));
             } else {

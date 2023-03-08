@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.14)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS system filesystem thread unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS system filesystem chrono thread unit_test_framework REQUIRED)
 
 set(RAW_TEST_FILES  ${CMAKE_CURRENT_SOURCE_DIR}/data/block2680960.raw)
 

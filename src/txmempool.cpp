@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2016-2020 The PIVX developers
+// Copyright (c) 2016-2021 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -993,7 +993,7 @@ void CTxMemPool::check(const CCoinsViewCache* pcoins) const
         else {
             CValidationState state;
             PrecomputedTransactionData precomTxData(tx);
-            assert(CheckInputs(tx, state, mempoolDuplicate, false, 0, false, precomTxData, NULL));
+            assert(CheckInputs(tx, state, mempoolDuplicate, false, 0, false, precomTxData, nullptr));
             UpdateCoins(tx, mempoolDuplicate, 1000000);
         }
     }
@@ -1009,7 +1009,7 @@ void CTxMemPool::check(const CCoinsViewCache* pcoins) const
             assert(stepsSinceLastRemove < waitingOnDependants.size());
         } else {
             PrecomputedTransactionData precomTxData(entry->GetTx());
-            assert(CheckInputs(entry->GetTx(), state, mempoolDuplicate, false, 0, false, precomTxData, NULL));
+            assert(CheckInputs(entry->GetTx(), state, mempoolDuplicate, false, 0, false, precomTxData, nullptr));
             UpdateCoins(entry->GetTx(), mempoolDuplicate, 1000000);
             stepsSinceLastRemove = 0;
         }

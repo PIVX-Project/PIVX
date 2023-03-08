@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# Copyright (c) 2016-2018 The Bitcoin Core developers
-# Copyright (c) 2018-2019 The PIVX developers
+# Copyright (c) 2016-2019 The Bitcoin Core developers
+# Copyright (c) 2018-2023 The PIVX Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,8 +20,10 @@ EXCLUDE = [
     'src/qt/pivxstrings.cpp',
     'src/chainparamsseeds.h',
     # other external copyrights:
+    'src/ctpl_stl.h',
     'src/tinyformat.h',
     'src/crypto/scrypt.cpp',
+    'src/crypto/scrypt.h',
     'test/functional/test_framework/bignum.py',
     # python init:
     '*__init__.py',
@@ -35,9 +37,12 @@ EXCLUDE_DIRS = [
     "src/secp256k1/",
     "src/univalue/",
     "src/crc32c",
+    "src/chiabls",
+    "src/immer",
+    "src/rust",
 ]
 
-INCLUDE = ['*.h', '*.cpp', '*.cc', '*.c', '*.py']
+INCLUDE = ['*.h', '*.cpp', '*.cc', '*.c', '*.mm', '*.py', '*.sh', '*.bash-completion']
 INCLUDE_COMPILED = re.compile('|'.join([fnmatch.translate(m) for m in INCLUDE]))
 
 def applies_to_file(filename):
@@ -115,11 +120,15 @@ EXPECTED_HOLDER_NAMES = [
     r"Sam Rushing",
     r"ArtForz -- public domain half-a-node",
     r" Projet RNRT SAPHIR",
+    r"Jeremy Rubin",
+    r"André L. Maravilha",
     r"The Zcash developers",
+    r"The ZCash developers",
+    r"The Zcash Core developers",
     r"The Dash developers",
     r"The Dash Developers",
     r"The Dash Core developers",
-    r"The PIVX developers",
+    r"The PIVX Core developers",
     r"The PPCoin developers",
     r"The NovaCoin Developers",
     r"The BlackCoin Developers",
@@ -356,7 +365,7 @@ def write_file_lines(filename, file_lines):
 COPYRIGHT = r'Copyright \(c\)'
 YEAR = "20[0-9][0-9]"
 YEAR_RANGE = '(%s)(-%s)?' % (YEAR, YEAR)
-HOLDER = 'The PIVX developers'
+HOLDER = 'The PIVX Core developers'
 UPDATEABLE_LINE_COMPILED = re.compile(' '.join([COPYRIGHT, YEAR_RANGE, HOLDER]))
 
 def get_updatable_copyright_line(file_lines):
@@ -390,7 +399,7 @@ def create_updated_copyright_line(line, last_git_change_year):
     space_split = after_copyright.split(' ')
     year_range = space_split[0]
     start_year, end_year = parse_year_range(year_range)
-    if end_year == last_git_change_year:
+    if end_year >= last_git_change_year:
         return line
     return (before_copyright + copyright_splitter +
             year_range_to_str(start_year, last_git_change_year) + ' ' +
@@ -421,24 +430,24 @@ def exec_update_header_year(base_directory):
 ################################################################################
 
 UPDATE_USAGE = """
-Updates all the copyright headers of "The PIVX developers" which were
+Updates all the copyright headers of "The PIVX Core developers" which were
 changed in a year more recent than is listed. For example:
 
-// Copyright (c) <firstYear>-<lastYear> The PIVX developers
+// Copyright (c) <firstYear>-<lastYear> The PIVX Core developers
 
 will be updated to:
 
-// Copyright (c) <firstYear>-<lastModifiedYear> The PIVX developers
+// Copyright (c) <firstYear>-<lastModifiedYear> The PIVX Core developers
 
 where <lastModifiedYear> is obtained from the 'git log' history.
 
 This subcommand also handles copyright headers that have only a single year. In those cases:
 
-// Copyright (c) <year> The PIVX developers
+// Copyright (c) <year> The PIVX Core developers
 
 will be updated to:
 
-// Copyright (c) <year>-<lastModifiedYear> The PIVX developers
+// Copyright (c) <year>-<lastModifiedYear> The PIVX Core developers
 
 where the update is appropriate.
 
@@ -471,7 +480,7 @@ def get_header_lines(header, start_year, end_year):
     return [line + '\n' for line in lines]
 
 CPP_HEADER = '''
-// Copyright (c) %s The PIVX developers
+// Copyright (c) %s The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 '''
@@ -479,14 +488,14 @@ CPP_HEADER = '''
 def get_cpp_header_lines_to_insert(start_year, end_year):
     return reversed(get_header_lines(CPP_HEADER, start_year, end_year))
 
-PYTHON_HEADER = '''
-# Copyright (c) %s The PIVX developers
+SCRIPT_HEADER = '''
+# Copyright (c) %s The PIVX Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 '''
 
-def get_python_header_lines_to_insert(start_year, end_year):
-    return reversed(get_header_lines(PYTHON_HEADER, start_year, end_year))
+def get_script_header_lines_to_insert(start_year, end_year):
+    return reversed(get_header_lines(SCRIPT_HEADER, start_year, end_year))
 
 ################################################################################
 # query git for year of last change
@@ -515,17 +524,18 @@ def file_has_hashbang(file_lines):
         return False
     return file_lines[0][:2] == '#!'
 
-def insert_python_header(filename, file_lines, start_year, end_year):
+def insert_script_header(filename, file_lines, start_year, end_year):
     if file_has_hashbang(file_lines):
         insert_idx = 1
     else:
         insert_idx = 0
-    header_lines = get_python_header_lines_to_insert(start_year, end_year)
+    header_lines = get_script_header_lines_to_insert(start_year, end_year)
     for line in header_lines:
         file_lines.insert(insert_idx, line)
     write_file_lines(filename, file_lines)
 
 def insert_cpp_header(filename, file_lines, start_year, end_year):
+    file_lines.insert(0, '\n')
     header_lines = get_cpp_header_lines_to_insert(start_year, end_year)
     for line in header_lines:
         file_lines.insert(0, line)
@@ -534,11 +544,11 @@ def insert_cpp_header(filename, file_lines, start_year, end_year):
 def exec_insert_header(filename, style):
     file_lines = read_file_lines(filename)
     if file_already_has_core_copyright(file_lines):
-        sys.exit('*** %s already has a copyright by The PIVX developers'
+        sys.exit('*** %s already has a copyright by The PIVX Core developers'
                  % (filename))
     start_year, end_year = get_git_change_year_range(filename)
-    if style == 'python':
-        insert_python_header(filename, file_lines, start_year, end_year)
+    if style in ['python', 'shell']:
+        insert_script_header(filename, file_lines, start_year, end_year)
     else:
         insert_cpp_header(filename, file_lines, start_year, end_year)
 
@@ -547,7 +557,7 @@ def exec_insert_header(filename, style):
 ################################################################################
 
 INSERT_USAGE = """
-Inserts a copyright header for "The PIVX developers" at the top of the
+Inserts a copyright header for "The PIVX Core developers" at the top of the
 file in either Python or C++ style as determined by the file extension. If the
 file is a Python file and it has a '#!' starting the first line, the header is
 inserted in the line below it.
@@ -561,7 +571,7 @@ where <year_introduced> is according to the 'git log' history. If
 
 "<current_year>"
 
-If the file already has a copyright for "The PIVX developers", the
+If the file already has a copyright for "The PIVX Core developers", the
 script will exit.
 
 Usage:
@@ -579,11 +589,13 @@ def insert_cmd(argv):
     if not os.path.isfile(filename):
         sys.exit("*** bad filename: %s" % filename)
     _, extension = os.path.splitext(filename)
-    if extension not in ['.h', '.cpp', '.cc', '.c', '.py']:
+    if extension not in ['.h', '.cpp', '.cc', '.c', '.py', '.sh']:
         sys.exit("*** cannot insert for file extension %s" % extension)
 
     if extension == '.py':
         style = 'python'
+    elif extension == '.sh':
+        style = 'shell'
     else:
         style = 'cpp'
     exec_insert_header(filename, style)

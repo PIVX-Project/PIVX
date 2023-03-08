@@ -14,28 +14,28 @@ jobs:
       matrix:
         config:
           - name: ARM 32-bit
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             host: arm-linux-gnueabihf
             arch: armhf
             apt_get: gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf
             arch_packages: libgmp-dev:armhf libsodium-dev:armhf
 
           - name: ARM 64-bit
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             host: aarch64-linux-gnu
             arch: arm64
             apt_get: gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
             arch_packages: libgmp-dev:arm64 libsodium-dev:arm64
 
           #- name: i686 Linux
-          #  os: ubuntu-18.04
+          #  os: ubuntu-20.04
           #  host: i686-pc-linux-gnu
           #  arch: armhf
           #  apt_get: gcc-multilib g++-multilib
           #  arch_packages: libgmp-dev:i386 libsodium-dev:i386
 
           - name: x86_64 Linux
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             host: x86_64-unknown-linux-gnu
             arch: armhf # dummy arch
             apt_get: gcc-multilib g++-multilib
@@ -43,8 +43,8 @@ jobs:
             unit_tests: true
 
           - name: x86_64 MacOS
-            os: macos-10.15
-            host: x86_64-apple-darwin19.6.0
+            os: macos-11
+            host: x86_64-apple-darwin20.6.0
             brew_install: autoconf automake libtool gmp libsodium
             cc: clang
             cxx: clang++
@@ -52,7 +52,7 @@ jobs:
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Arches
         if: matrix.config.arch

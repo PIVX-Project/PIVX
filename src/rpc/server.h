@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -193,7 +193,7 @@ extern double ParseDoubleV(const UniValue& v, const std::string &strName);
 
 extern CAmount AmountFromValue(const UniValue& value);
 extern UniValue ValueFromAmount(const CAmount& amount);
-extern double GetDifficulty(const CBlockIndex* blockindex = NULL);
+extern double GetDifficulty(const CBlockIndex* blockindex = nullptr);
 extern std::string HelpExampleCli(std::string methodname, std::string args);
 extern std::string HelpExampleRpc(std::string methodname, std::string args);
 

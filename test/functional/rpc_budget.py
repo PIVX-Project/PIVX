@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2019 The PIVX developers
+# Copyright (c) 2019-2021 The PIVX Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test RPC commands for budget proposal creation, submission, and verification."""

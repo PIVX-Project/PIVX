@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2015 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2019 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -222,7 +222,7 @@ UniValue addnode(const JSONRPCRequest& request)
 
     if (strCommand == "onetry") {
         CAddress addr;
-        g_connman->OpenNetworkConnection(addr, false, NULL, strNode.c_str());
+        g_connman->OpenNetworkConnection(addr, false, nullptr, strNode.c_str());
         return NullUniValue;
     }
 

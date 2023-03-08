@@ -4,7 +4,7 @@
 // Copyright (c) 2011-2013 The PPCoin developers
 // Copyright (c) 2013-2014 The NovaCoin Developers
 // Copyright (c) 2014-2018 The BlackCoin Developers
-// Copyright (c) 2015-2021 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -91,7 +91,7 @@ std::unique_ptr<CConnman> g_connman;
 std::unique_ptr<PeerLogicValidation> peerLogic;
 
 #if ENABLE_ZMQ
-static CZMQNotificationInterface* pzmqNotificationInterface = NULL;
+static CZMQNotificationInterface* pzmqNotificationInterface = nullptr;
 #endif
 
 #ifdef WIN32
@@ -219,7 +219,7 @@ void Shutdown()
     for (CWalletRef pwallet : vpwallets) {
         pwallet->Flush(false);
     }
-    GenerateBitcoins(false, NULL, 0);
+    GenerateBitcoins(false, nullptr, 0);
 #endif
     StopMapPort();
 
@@ -273,7 +273,7 @@ void Shutdown()
 
     {
         LOCK(cs_main);
-        if (pcoinsTip != NULL) {
+        if (pcoinsTip != nullptr) {
             FlushStateToDisk();
 
             //record that client took the proper shutdown procedure
@@ -802,7 +802,7 @@ bool AppInitBasicSetup()
 #ifdef _MSC_VER
     // Turn off Microsoft heap dump noise
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-    _CrtSetReportFile(_CRT_WARN, CreateFileA("NUL", GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, 0));
+    _CrtSetReportFile(_CRT_WARN, CreateFileA("NUL", GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, 0, 0));
 #endif
 #if _MSC_VER >= 1400
     // Disable confusing "helpful" text message on abort, Ctrl-C
@@ -819,7 +819,7 @@ bool AppInitBasicSetup()
 #endif
     typedef BOOL(WINAPI * PSETPROCDEPPOL)(DWORD);
     PSETPROCDEPPOL setProcDEPPol = (PSETPROCDEPPOL)GetProcAddress(GetModuleHandleA("Kernel32.dll"), "SetProcessDEPPolicy");
-    if (setProcDEPPol != NULL) setProcDEPPol(PROCESS_DEP_ENABLE);
+    if (setProcDEPPol != nullptr) setProcDEPPol(PROCESS_DEP_ENABLE);
 #endif
 
     if (!SetupNetworking())
@@ -1065,7 +1065,7 @@ bool AppInitParameterInteraction()
     else if (nScriptCheckThreads > MAX_SCRIPTCHECK_THREADS)
         nScriptCheckThreads = MAX_SCRIPTCHECK_THREADS;
 
-    setvbuf(stdout, NULL, _IOLBF, 0); /// ***TODO*** do we still need this after -printtoconsole is gone?
+    setvbuf(stdout, nullptr, _IOLBF, 0); /// ***TODO*** do we still need this after -printtoconsole is gone?
 
 #ifndef ENABLE_WALLET
     if (gArgs.SoftSetBoolArg("-staking", false))

@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2021 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -42,10 +42,10 @@ bool CheckBlock(int nHeight, const uint256& hash, bool fMatchesCheckpoint)
 //! Guess how far we are in the verification process at the given block index
 double GuessVerificationProgress(const CBlockIndex* pindex, bool fSigchecks)
 {
-    if (pindex == NULL)
+    if (pindex == nullptr)
         return 0.0;
 
-    int64_t nNow = time(NULL);
+    int64_t nNow = time(nullptr);
 
     double fSigcheckVerificationFactor = fSigchecks ? SIGCHECK_VERIFICATION_FACTOR : 1.0;
     double fWorkBefore = 0.0; // Amount of work done before pindex

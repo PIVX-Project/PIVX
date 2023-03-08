@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2020 The PIVX developers
+// Copyright (c) 2019-2020 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -48,7 +48,7 @@ void SettingsBackupWallet::selectFileOutput()
 {
     QString filename = GUIUtil::getSaveFileName(this,
                                         tr("Backup Wallet"), QString(),
-                                        tr("Wallet Data (*.dat)"), NULL);
+                                        tr("Wallet Data (*.dat)"), nullptr);
 
     if (!filename.isEmpty() && walletModel) {
         ui->pushButtonDocuments->setText(filename);

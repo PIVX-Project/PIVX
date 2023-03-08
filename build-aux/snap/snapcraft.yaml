@@ -2,7 +2,7 @@
 # Copyright (c) 2019 The PIVX developers
 name: pivx-core
 base: core18
-version: 5.4.99
+version: 5.5.99
 summary:   PIVX (Private – Instant – Verified – Transaction)
 description: |
   PIVX is an MIT licensed,

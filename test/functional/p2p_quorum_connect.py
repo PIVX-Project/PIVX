@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2021 The PIVX Core developers
+# Copyright (c) 2021-2022 The PIVX Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php.
 """Test MN quorum connection flows"""

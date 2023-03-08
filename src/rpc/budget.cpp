@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -331,7 +331,7 @@ UniValue getbudgetvotes(const JSONRPCRequest& request)
 
     std::string strProposalName = SanitizeString(request.params[0].get_str());
     const CBudgetProposal* pbudgetProposal = g_budgetman.FindProposalByName(strProposalName);
-    if (pbudgetProposal == NULL) throw std::runtime_error("Unknown proposal name");
+    if (pbudgetProposal == nullptr) throw std::runtime_error("Unknown proposal name");
     return pbudgetProposal->GetVotesArray();
 }
 
@@ -455,7 +455,7 @@ UniValue getbudgetinfo(const JSONRPCRequest& request)
     if (request.params.size() == 1) {
         std::string strProposalName = SanitizeString(request.params[0].get_str());
         const CBudgetProposal* pbudgetProposal = g_budgetman.FindProposalByName(strProposalName);
-        if (pbudgetProposal == NULL) throw std::runtime_error("Unknown proposal name");
+        if (pbudgetProposal == nullptr) throw std::runtime_error("Unknown proposal name");
         UniValue bObj(UniValue::VOBJ);
         budgetToJSON(pbudgetProposal, bObj, nCurrentHeight);
         ret.push_back(bObj);
@@ -704,7 +704,7 @@ UniValue mnfinalbudget(const JSONRPCRequest& request)
 
         LOCK(g_budgetman.cs_budgets);
         CFinalizedBudget* pfinalBudget = g_budgetman.FindFinalizedBudget(hash);
-        if (pfinalBudget == NULL) return "Unknown budget hash";
+        if (pfinalBudget == nullptr) return "Unknown budget hash";
         return pfinalBudget->GetVotesObject();
     }
 

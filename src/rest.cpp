@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2017-2019 The PIVX developers
+// Copyright (c) 2017-2022 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -118,7 +118,7 @@ static bool rest_headers(HTTPRequest* req,
     if (path.size() != 2)
         return RESTERR(req, HTTP_BAD_REQUEST, "No header count specified. Use /rest/headers/<count>/<hash>.<ext>.");
 
-    long count = strtol(path[0].c_str(), NULL, 10);
+    long count = strtol(path[0].c_str(), nullptr, 10);
     if (count < 1 || count > 2000)
         return RESTERR(req, HTTP_BAD_REQUEST, "Header count out of range: " + path[0]);
 
@@ -134,7 +134,7 @@ static bool rest_headers(HTTPRequest* req,
         LOCK(cs_main);
         tip = chainActive.Tip();
         CBlockIndex* pindex = LookupBlockIndex(hash);
-        while (pindex != NULL && chainActive.Contains(pindex)) {
+        while (pindex != nullptr && chainActive.Contains(pindex)) {
             headers.push_back(pindex);
             if (headers.size() == (unsigned long)count)
                 break;

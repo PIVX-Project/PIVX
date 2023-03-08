@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2019 The PIVX developers
+// Copyright (c) 2015-2021 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 #include "masternodeconfig.h"
@@ -45,7 +45,7 @@ bool CMasternodeConfig::read(std::string& strErr)
 
     if (!streamConfig.good()) {
         FILE* configFile = fsbridge::fopen(pathMasternodeConfigFile, "a");
-        if (configFile != NULL) {
+        if (configFile != nullptr) {
             std::string strHeader = "# Masternode config file\n"
                                     "# Format: alias IP:port masternodeprivkey collateral_output_txid collateral_output_index\n"
                                     "# Example: mn1 127.0.0.2:51472 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0"

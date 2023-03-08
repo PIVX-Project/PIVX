@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2018 The Bitcoin developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -258,7 +258,7 @@ void BCLog::Logger::ShrinkDebugFile()
             fwrite(vch.data(), 1, nBytes, file);
             fclose(file);
         }
-    } else if (file != NULL)
+    } else if (file != nullptr)
         fclose(file);
 }
 

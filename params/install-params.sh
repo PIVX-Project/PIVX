@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Copyright (c) 2015-2020 The Zcash developers
-# Copyright (c) 2020 The PIVX developers
+# Copyright (c) 2020-2021 The PIVX Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 

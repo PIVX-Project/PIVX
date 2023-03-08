@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2021 The PIVX Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -35,7 +35,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     arith_uint256 PastDifficultyAveragePrev;
     const arith_uint256& powLimit = UintToArith256(consensus.powLimit);
 
-    if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin) {
+    if (BlockLastSolved == nullptr || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin) {
         return powLimit.GetCompact();
     }
 
@@ -92,7 +92,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         }
         LastBlockTime = BlockReading->GetBlockTime();
 
-        if (BlockReading->pprev == NULL) {
+        if (BlockReading->pprev == nullptr) {
             assert(BlockReading);
             break;
         }

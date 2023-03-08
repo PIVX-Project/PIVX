@@ -1,5 +1,5 @@
 // Copyright (c) 2018-2020 The ZCash developers
-// Copyright (c) 2021 The PIVX developers
+// Copyright (c) 2021 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
@@ -42,9 +42,9 @@ uint256 ovkForShieldingFromTaddr(HDSeed& seed) {
     crypto_generichash_blake2b_state state;
     assert(crypto_generichash_blake2b_init_salt_personal(
             &state,
-            NULL, 0, // No key.
+            nullptr, 0, // No key.
             64,
-            NULL,    // No salt.
+            nullptr,    // No salt.
             PIVX_TADDR_OVK_PERSONAL) == 0);
     crypto_generichash_blake2b_update(&state, rawSeed.data(), rawSeed.size());
     auto intermediate = std::array<unsigned char, 64>();

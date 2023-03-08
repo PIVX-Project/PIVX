@@ -4,7 +4,7 @@
 // Copyright (c) 2011-2013 The PPCoin developers
 // Copyright (c) 2013-2014 The NovaCoin Developers
 // Copyright (c) 2014-2018 The BlackCoin Developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -180,7 +180,7 @@ FILE* OpenUndoFile(const FlatFilePos& pos, bool fReadOnly = false);
 /** Translation to a filesystem path */
 fs::path GetBlockPosFilename(const FlatFilePos &pos);
 /** Import blocks from an external file */
-bool LoadExternalBlockFile(FILE* fileIn, FlatFilePos* dbp = NULL);
+bool LoadExternalBlockFile(FILE* fileIn, FlatFilePos* dbp = nullptr);
 /** Ensures we have a genesis block in the block tree, possibly writing one to disk. */
 bool LoadGenesisBlock();
 /** Load the block tree and coins database from disk,
@@ -246,10 +246,10 @@ CAmount GetShieldedTxMinFee(const CTransaction& tx);
 
 /**
  * Check whether all inputs of this transaction are valid (no double spends, scripts & sigs, amounts)
- * This does not modify the UTXO set. If pvChecks is not NULL, script checks are pushed onto it
+ * This does not modify the UTXO set. If pvChecks is not nullptr, script checks are pushed onto it
  * instead of being performed inline.
  */
-bool CheckInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& view, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& precomTxData, std::vector<CScriptCheck>* pvChecks = NULL);
+bool CheckInputs(const CTransaction& tx, CValidationState& state, const CCoinsViewCache& view, bool fScriptChecks, unsigned int flags, bool cacheStore, PrecomputedTransactionData& precomTxData, std::vector<CScriptCheck>* pvChecks = nullptr);
 
 /** Apply the effects of this transaction on the UTXO set represented by view */
 void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight, bool fSkipInvalid = false);

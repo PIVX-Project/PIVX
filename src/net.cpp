@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -312,7 +312,7 @@ CNode* CConnman::FindNode(const std::string& addrName)
             return pnode;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 CNode* CConnman::FindNode(const CService& addr)
@@ -2088,8 +2088,8 @@ void Discover()
     // Get local host ip
     struct ifaddrs* myaddrs;
     if (getifaddrs(&myaddrs) == 0) {
-        for (struct ifaddrs* ifa = myaddrs; ifa != NULL; ifa = ifa->ifa_next) {
-            if (ifa->ifa_addr == NULL) continue;
+        for (struct ifaddrs* ifa = myaddrs; ifa != nullptr; ifa = ifa->ifa_next) {
+            if (ifa->ifa_addr == nullptr) continue;
             if ((ifa->ifa_flags & IFF_UP) == 0) continue;
             if (strcmp(ifa->ifa_name, "lo") == 0) continue;
             if (strcmp(ifa->ifa_name, "lo0") == 0) continue;
@@ -2236,7 +2236,7 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
 
     // Initialize random numbers. Even when rand() is only usable for trivial use-cases most nodes should have a different
     // seed after all the file-IO done at this point. Should be good enough even when nodes are started via scripts.
-    srand(time(NULL));
+    srand(time(nullptr));
 
     fAddressesInitialized = true;
 

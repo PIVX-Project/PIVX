@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2020 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -872,7 +872,7 @@ int CMasternodeMan::ProcessMNPing(CNode* pfrom, CMasternodePing& mnp)
         // if nothing significant failed, search existing Masternode list
         CMasternode* pmn = Find(mnp.vin.prevout);
         // if it's known, don't ask for the mnb, just return
-        if (pmn != NULL) return 0;
+        if (pmn != nullptr) return 0;
     }
 
     // something significant is broken or mn is unknown,
@@ -1035,7 +1035,7 @@ void CMasternodeMan::UpdateMasternodeList(CMasternodeBroadcast& mnb)
     LogPrint(BCLog::MASTERNODE,"%s -- masternode=%s\n", __func__, mnb.vin.prevout.ToString());
 
     CMasternode* pmn = Find(mnb.vin.prevout);
-    if (pmn == NULL) {
+    if (pmn == nullptr) {
         CMasternode mn(mnb);
         Add(mn);
     } else {

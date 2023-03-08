@@ -6,18 +6,18 @@ jobs:
     env:
       SHELLCHECK_VERSION: v0.7.1
       LC_ALL: C
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     defaults:
       run:
         shell: bash
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Initialize Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.6
 
@@ -74,7 +74,7 @@ jobs:
       matrix:
         config:
           - name: Linux
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             cc: gcc
             cxx: g++
@@ -87,7 +87,7 @@ jobs:
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Environment
         run: |
@@ -102,13 +102,10 @@ jobs:
 
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
-        shell: cmake -P {0}
-        run: |
-          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
-          message("::set-output name=timestamp::${current_date}")
+        run: echo "timestamp=$(date +%Y-%m-%dT%H:%M:%S%z)" >> $GITHUB_OUTPUT
 
       - name: ccache cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .ccache
           key: cmake-${{ matrix.config.name }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
@@ -144,33 +141,33 @@ jobs:
       matrix:
         config:
           - name: ARM 32-bit
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             host: arm-linux-gnueabihf
             apt_get: python3 g++-arm-linux-gnueabihf
 
           - name: AARCH64
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             host: aarch64-linux-gnu
             apt_get: python3 g++-aarch64-linux-gnu
 
           - name: Win64
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             host: x86_64-w64-mingw32
             apt_get: python3 nsis g++-mingw-w64-x86-64 wine-binfmt wine64
 
           - name: 32-bit + dash
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             host: i686-pc-linux-gnu
             apt_get: g++-multilib python3-zmq
 
           - name: x86_64 Linux
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             host: x86_64-unknown-linux-gnu
             apt_get: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libqrencode-dev libdbus-1-dev libharfbuzz-dev
             dep_opts: NO_QT=1 NO_UPNP=1 NO_NATPMP=1 DEBUG=1 ALLOW_HOST_PACKAGES=1
 
           - name: macOS 10.12
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             host: x86_64-apple-darwin16
             apt_get: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python3-dev python3-setuptools
             XCODE_VERSION: 11.3.1
@@ -178,7 +175,7 @@ jobs:
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Environment
         run: |
@@ -187,13 +184,10 @@ jobs:
 
       - name: Prepare Depends timestamp
         id: depends_cache_timestamp
-        shell: cmake -P {0}
-        run: |
-          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
-          message("::set-output name=timestamp::${current_date}")
+        run: echo "timestamp=$(date +%Y-%m-%dT%H:%M:%S%z)" >> $GITHUB_OUTPUT
 
       - name: depends cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             depends/built
@@ -254,7 +248,8 @@ jobs:
       matrix:
         config:
           - name: ARM 32-bit [GOAL:install]  [no unit or functional tests]
-            os: ubuntu-18.04
+            id: ARM32
+            os: ubuntu-20.04
             host: arm-linux-gnueabihf
             apt_get: python3 g++-arm-linux-gnueabihf
             unit_tests: false
@@ -265,7 +260,8 @@ jobs:
             BITCOIN_CONFIG: "--with-gui=qt5 --enable-glibc-back-compat --enable-reduce-exports --disable-online-rust CXXFLAGS=-Wno-psabi"
 
           - name: AARCH64 [GOAL:install] [no unit or functional tests]
-            os: ubuntu-18.04
+            id: ARM64
+            os: ubuntu-20.04
             host: aarch64-linux-gnu
             apt_get: python3 g++-aarch64-linux-gnu
             unit_tests: false
@@ -274,7 +270,8 @@ jobs:
             BITCOIN_CONFIG: "--with-gui=qt5 --enable-glibc-back-compat --enable-reduce-exports --disable-online-rust"
 
           - name: Win64  [GOAL:deploy] [no unit or functional tests]
-            os: ubuntu-18.04
+            id: Win64
+            os: ubuntu-20.04
             host: x86_64-w64-mingw32
             apt_get: python3 nsis g++-mingw-w64-x86-64 wine-binfmt wine64
             unit_tests: false
@@ -282,8 +279,9 @@ jobs:
             goal: deploy
             BITCOIN_CONFIG: "--with-gui=auto --enable-reduce-exports --disable-online-rust"
 
-          - name: x86_64 Linux  [GOAL:install]  [bionic]
-            os: ubuntu-18.04
+          - name: x86_64 Linux  [GOAL:install]  [focal]
+            id: Linux-x86_64
+            os: ubuntu-20.04
             host: x86_64-unknown-linux-gnu
             apt_get: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libqrencode-dev libdbus-1-dev libharfbuzz-dev
             unit_tests: true
@@ -292,8 +290,9 @@ jobs:
             test_runner_extra: "--coverage --all  --exclude feature_dbcrash"
             BITCOIN_CONFIG: "--enable-zmq --with-gui=qt5 --enable-glibc-back-compat --enable-reduce-exports --disable-online-rust"
 
-          - name: x86_64 Linux  [GOAL:install]  [bionic] [no GUI no unit tests - only functional tests on legacy pre-HD wallets]
-            os: ubuntu-18.04
+          - name: x86_64 Linux  [GOAL:install]  [focal] [no GUI no unit tests - only functional tests on legacy pre-HD wallets]
+            id: Linux-x86_64-nogui
+            os: ubuntu-20.04
             host: x86_64-unknown-linux-gnu
             apt_get: python3-zmq
             unit_tests: false
@@ -302,8 +301,9 @@ jobs:
             test_runner_extra: "--legacywallet"
             BITCOIN_CONFIG: "--enable-zmq --with-gui=no --enable-glibc-back-compat --enable-reduce-exports --disable-online-rust"
 
-          - name: x86_64 Linux  [GOAL:install]  [bionic]  [no depends only system libs]
-            os: ubuntu-18.04
+          - name: x86_64 Linux  [GOAL:install]  [focal]  [no depends only system libs]
+            id: Linux-x86_64-nodepends
+            os: ubuntu-20.04
             host: x86_64-unknown-linux-gnu
             apt_get: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             unit_tests: true
@@ -312,7 +312,8 @@ jobs:
             BITCOIN_CONFIG: "--enable-zmq --with-incompatible-bdb --with-gui=qt5 CPPFLAGS='-DARENA_DEBUG -DDEBUG_LOCKORDER'"
 
           - name: macOS 10.12  [GOAL:deploy] [no functional tests]
-            os: ubuntu-18.04
+            id: macOS10.12
+            os: ubuntu-20.04
             host: x86_64-apple-darwin16
             apt_get: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python3-dev python3-setuptools
             XCODE_VERSION: 11.3.1
@@ -323,6 +324,7 @@ jobs:
             BITCOIN_CONFIG: "--enable-gui --enable-reduce-exports --enable-werror --disable-online-rust"
 
           - name: macOS 11 [GOAL:deploy] [native macOS using syslibs]
+            id: macOS11
             os: macos-11
             host: x86_64-apple-darwin20.6.0
             brew_install: autoconf automake ccache berkeley-db4 libtool boost miniupnpc pkg-config python@3.8 qt5 zmq libevent qrencode gmp libsodium rust librsvg
@@ -336,7 +338,7 @@ jobs:
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Environment
         run: |
@@ -352,7 +354,7 @@ jobs:
 
       - name: depends cache files
         if: matrix.config.no_depends != 1
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             depends/built
@@ -364,20 +366,17 @@ jobs:
 
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
-        shell: cmake -P {0}
-        run: |
-          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
-          message("::set-output name=timestamp::${current_date}")
+        run: echo "timestamp=$(date +%Y-%m-%dT%H:%M:%S%z)" >> $GITHUB_OUTPUT
 
       - name: ccache cache files
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             .ccache
             .pivx-params
-          key: ${{ matrix.config.name }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
+          key: ${{ matrix.config.id }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
           restore-keys: |
-            ${{ matrix.config.name }}-ccache-
+            ${{ matrix.config.id }}-ccache-
 
       - name: Build Wallet
         run: |

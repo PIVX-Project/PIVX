@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Pieter Wuille
 // Copyright (c) 2012-2015 The Bitcoin developers
-// Copyright (c) 2017-2020 The PIVX developers
+// Copyright (c) 2017-2021 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 

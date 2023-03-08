@@ -1,7 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2021 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2021 The PIVX developers
+// Copyright (c) 2015-2022 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1011,7 +1011,7 @@ public:
      * Increment the next transaction order id
      * @return next transaction order id
      */
-    int64_t IncOrderPosNext(WalletBatch* batch = NULL);
+    int64_t IncOrderPosNext(WalletBatch* batch = nullptr);
 
     void MarkDirty();
     bool AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose = true);
@@ -1175,7 +1175,7 @@ public:
     unsigned int GetStakingKeyPoolSize();
 
     //! signify that a particular wallet feature is now used. this may change nWalletVersion and nWalletMaxVersion if those are lower
-    bool SetMinVersion(enum WalletFeature, WalletBatch* batch_in = NULL, bool fExplicit = false);
+    bool SetMinVersion(enum WalletFeature, WalletBatch* batch_in = nullptr, bool fExplicit = false);
 
     //! change which version we're allowed to upgrade to (note that this does not immediately imply upgrading to that format)
     bool SetMaxVersion(int nVersion);

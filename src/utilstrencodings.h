@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2017-2019 The PIVX developers
+// Copyright (c) 2017-2022 The PIVX Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -56,11 +56,11 @@ std::vector<unsigned char> ParseHex(const char* psz);
 std::vector<unsigned char> ParseHex(const std::string& str);
 signed char HexDigit(char c);
 bool IsHex(const std::string& str);
-std::vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid = NULL);
+std::vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid = nullptr);
 std::string DecodeBase64(const std::string& str);
 std::string EncodeBase64(Span<const unsigned char> input);
 std::string EncodeBase64(const std::string& str);
-std::vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid = NULL);
+std::vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid = nullptr);
 std::string DecodeBase32(const std::string& str);
 
 /**
