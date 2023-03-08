@@ -701,6 +701,14 @@ bool CWallet::HasSaplingSPKM() const
     return GetSaplingScriptPubKeyMan()->IsEnabled();
 }
 
+std::string CWallet::GetStrFromTxExtraData(const uint256& txHash, const std::string& key)
+{
+    auto tx = GetWalletTx(txHash);
+    if (!tx) return "";
+    auto it = tx->mapValue.find(key);
+    return it != tx->mapValue.end() ? it->second : "";
+}
+
 /**
  * Outpoint is spent if any non-conflicted transaction
  * spends it:
@@ -2906,6 +2914,34 @@ bool CWallet::CreateBudgetFeeTX(CTransactionRef& tx, const uint256& hash, CReser
     return true;
 }
 
+bool CWallet::SignTransaction(CMutableTransaction& tx)
+{
+    LOCK(cs_wallet); // mapWallet
+
+    // sign the new tx
+    int nIn = 0;
+    for (auto& input : tx.vin) {
+        std::map<uint256, CWalletTx>::const_iterator mi = mapWallet.find(input.prevout.hash);
+        if (mi == mapWallet.end() || input.prevout.n >= mi->second.tx->vout.size()) {
+            return false;
+        }
+        const CScript& scriptPubKey = mi->second.tx->vout[input.prevout.n].scriptPubKey;
+        const CAmount& amount = mi->second.tx->vout[input.prevout.n].nValue;
+        SignatureData sigdata;
+
+        if (!ProduceSignature(MutableTransactionSignatureCreator(this, &tx, nIn, amount, SIGHASH_ALL),
+                              scriptPubKey,
+                              sigdata,
+                              tx.GetRequiredSigVersion(),
+                              false /* fColdStake */ )) {
+            return false;
+        }
+        UpdateTransaction(tx, nIn, sigdata);
+        nIn++;
+    }
+    return true;
+}
+
 bool CWallet::FundTransaction(CMutableTransaction& tx, CAmount& nFeeRet, bool overrideEstimatedFeeRate, const CFeeRate& specificFeeRate, int& nChangePosInOut, std::string& strFailReason, bool includeWatching, bool lockUnspents, const std::set<int>& setSubtractFeeFromOutputs, const CTxDestination& destChange)
 {
     std::vector<CRecipient> vecSend;
@@ -3204,7 +3240,6 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
         }
 
         if (sign) {
-            CTransaction txNewConst(txNew);
             int nIn = 0;
             for (const auto& coin : setCoins) {
                 const CScript& scriptPubKey = coin.first->tx->vout[coin.second].scriptPubKey;
@@ -3212,10 +3247,10 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
                 bool haveKey = coin.first->GetStakeDelegationCredit() > 0;
 
                 if (!ProduceSignature(
-                        TransactionSignatureCreator(this, &txNewConst, nIn, coin.first->tx->vout[coin.second].nValue, SIGHASH_ALL),
+                        MutableTransactionSignatureCreator(this, &txNew, nIn, coin.first->tx->vout[coin.second].nValue, SIGHASH_ALL),
                         scriptPubKey,
                         sigdata,
-                        txNewConst.GetRequiredSigVersion(),
+                        txNew.GetRequiredSigVersion(),
                         !haveKey    // fColdStake
                         )) {
                     strFailReason = _("Signing transaction failed");

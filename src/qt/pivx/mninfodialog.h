@@ -8,6 +8,9 @@
 #include "qt/pivx/focuseddialog.h"
 #include "qt/pivx/snackbar.h"
 
+#include "interfaces/tiertwo.h"
+#include "optional.h"
+
 class WalletModel;
 
 namespace Ui {
@@ -20,11 +23,17 @@ class MnInfoDialog : public FocusedDialog
 
 public:
     explicit MnInfoDialog(QWidget *parent = nullptr);
-    ~MnInfoDialog();
+    ~MnInfoDialog() override;
 
     bool exportMN = false;
 
-    void setData(const QString& _pubKey, const QString& name, const QString& address, const QString& _txId, const QString& outputIndex, const QString& status);
+    void setData(const QString& _pubKey,
+                 const QString& name,
+                 const QString& address,
+                 const QString& _txId,
+                 const QString& outputIndex,
+                 const QString& status,
+                 const Optional<DMNData>& dmnData);
 
 public Q_SLOTS:
     void reject() override;
@@ -36,8 +45,10 @@ private:
     WalletModel *model = nullptr;
     QString txId;
     QString pubKey;
+    Optional<DMNData> dmnData{nullopt};
 
     void copyInform(const QString& copyStr, const QString& message);
+    void setDMNDataVisible(bool show);
 };
 
 #endif // MNINFODIALOG_H

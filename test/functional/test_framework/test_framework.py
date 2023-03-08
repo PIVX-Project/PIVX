@@ -1079,7 +1079,7 @@ class PivxTestFramework():
             self.stake_and_sync(self.nodes.index(miner), 1)
             assert_greater_than(mnOwner.getrawtransaction(fundingTxId, 1)["confirmations"], 0)
             # create and send the ProRegTx funding the collateral
-            proTxId = mnOwner.protx_register_fund(collateralAdd, ipport, ownerAdd,
+            proTxId = mnOwner.fund_protx_registration(collateralAdd, ipport, ownerAdd,
                                                   bls_keypair["public"], votingAdd, collateralAdd)
         elif strType == "internal":
             mnOwner.getnewaddress("dust")
@@ -1096,20 +1096,20 @@ class PivxTestFramework():
                     break
             assert_greater_than(collateralTxId_n, -1)
             assert_greater_than(json_tx["confirmations"], 0)
-            proTxId = mnOwner.protx_register(collateralTxId, collateralTxId_n, ipport, ownerAdd,
+            proTxId = mnOwner.register_protx(collateralTxId, collateralTxId_n, ipport, ownerAdd,
                                              bls_keypair["public"], votingAdd, collateralAdd)
         elif strType == "external":
             self.log.info("Setting up ProRegTx with collateral externally-signed...")
             # send the tx from the miner
             payoutAdd = mnOwner.getnewaddress("payout")
-            register_res = miner.protx_register_prepare(outpoint.hash, outpoint.n, ipport, ownerAdd,
+            register_res = miner.prepareprotxregistration(outpoint.hash, outpoint.n, ipport, ownerAdd,
                                                         bls_keypair["public"], votingAdd, payoutAdd)
             self.log.info("ProTx prepared")
             message_to_sign = register_res["signMessage"]
             collateralAdd = register_res["collateralAddress"]
             signature = mnOwner.signmessage(collateralAdd, message_to_sign)
             self.log.info("ProTx signed")
-            proTxId = miner.protx_register_submit(register_res["tx"], signature)
+            proTxId = miner.submitprotxregistration(register_res["tx"], signature)
         else:
             raise Exception("Type %s not available" % strType)
 
@@ -1117,7 +1117,7 @@ class PivxTestFramework():
         # confirm and verify inclusion in list
         self.stake_and_sync(self.nodes.index(miner), 1)
         assert_greater_than(self.nodes[mnRemotePos].getrawtransaction(proTxId, 1)["confirmations"], 0)
-        assert proTxId in self.nodes[mnRemotePos].protx_list(False)
+        assert proTxId in self.nodes[mnRemotePos].listprotxes(False)
         return proTxId, bls_keypair["secret"]
 
     def setupMasternode(self,
@@ -1175,7 +1175,7 @@ class PivxTestFramework():
     """
     Create a ProReg tx, which has the collateral as one of its outputs
     """
-    def protx_register_fund(self, miner, controller, dmn, collateral_addr, op_rew=None):
+    def fund_protx_registration(self, miner, controller, dmn, collateral_addr, op_rew=None):
         # send to the owner the collateral tx + some dust for the ProReg and fee
         funding_txid = miner.sendtoaddress(collateral_addr, Decimal('101'))
         # confirm and verify reception
@@ -1184,10 +1184,10 @@ class PivxTestFramework():
         assert_greater_than(controller.getrawtransaction(funding_txid, True)["confirmations"], 0)
         # create and send the ProRegTx funding the collateral
         if op_rew is None:
-            dmn.proTx = controller.protx_register_fund(collateral_addr, dmn.ipport, dmn.owner,
+            dmn.proTx = controller.fundprotxregistration(collateral_addr, dmn.ipport, dmn.owner,
                                                        dmn.operator_pk, dmn.voting, dmn.payee)
         else:
-            dmn.proTx = controller.protx_register_fund(collateral_addr, dmn.ipport, dmn.owner,
+            dmn.proTx = controller.fundprotxregistration(collateral_addr, dmn.ipport, dmn.owner,
                                                        dmn.operator_pk, dmn.voting, dmn.payee,
                                                        op_rew["reward"], op_rew["address"])
         dmn.collateral = COutPoint(int(dmn.proTx, 16),
@@ -1197,7 +1197,7 @@ class PivxTestFramework():
     Create a ProReg tx, which references an 100 PIV UTXO as collateral.
     The controller node owns the collateral and creates the ProReg tx.
     """
-    def protx_register(self, miner, controller, dmn, collateral_addr):
+    def register_protx(self, miner, controller, dmn, collateral_addr):
         # send to the owner the exact collateral tx amount
         funding_txid = miner.sendtoaddress(collateral_addr, Decimal('100'))
         # send another output to be used for the fee of the proReg tx
@@ -1209,14 +1209,14 @@ class PivxTestFramework():
         assert_greater_than(json_tx["confirmations"], 0)
         # create and send the ProRegTx
         dmn.collateral = COutPoint(int(funding_txid, 16), get_collateral_vout(json_tx))
-        dmn.proTx = controller.protx_register(funding_txid, dmn.collateral.n, dmn.ipport, dmn.owner,
+        dmn.proTx = controller.registerprotx(funding_txid, dmn.collateral.n, dmn.ipport, dmn.owner,
                                               dmn.operator_pk, dmn.voting, dmn.payee)
 
     """
     Create a ProReg tx, referencing a collateral signed externally (eg. HW wallets).
     Here the controller node owns the collateral (and signs), but the miner creates the ProReg tx.
     """
-    def protx_register_ext(self, miner, controller, dmn, outpoint, fSubmit):
+    def register_protx_ext(self, miner, controller, dmn, outpoint, fSubmit):
         # send to the owner the collateral tx if the outpoint is not specified
         if outpoint is None:
             funding_txid = miner.sendtoaddress(controller.getnewaddress("collateral"), Decimal('100'))
@@ -1228,11 +1228,11 @@ class PivxTestFramework():
             outpoint = COutPoint(int(funding_txid, 16), get_collateral_vout(json_tx))
         dmn.collateral = outpoint
         # Prepare the message to be signed externally by the owner of the collateral (the controller)
-        reg_tx = miner.protx_register_prepare("%064x" % outpoint.hash, outpoint.n, dmn.ipport, dmn.owner,
+        reg_tx = miner.prepareprotxregistration("%064x" % outpoint.hash, outpoint.n, dmn.ipport, dmn.owner,
                                               dmn.operator_pk, dmn.voting, dmn.payee)
         sig = controller.signmessage(reg_tx["collateralAddress"], reg_tx["signMessage"])
         if fSubmit:
-            dmn.proTx = miner.protx_register_submit(reg_tx["tx"], sig)
+            dmn.proTx = miner.submitprotxregistration(reg_tx["tx"], sig)
         else:
             return reg_tx["tx"], sig
 
@@ -1268,11 +1268,11 @@ class PivxTestFramework():
         self.log.info("Creating%s proRegTx for deterministic masternode idx=%d..." % (
             " and funding" if strType == "fund" else "", idx))
         if strType == "fund":
-            self.protx_register_fund(miner_node, controller_node, dmn, collateral_addr)
+            self.fund_protx_registration(miner_node, controller_node, dmn, collateral_addr)
         elif strType == "internal":
-            self.protx_register(miner_node, controller_node, dmn, collateral_addr)
+            self.register_protx(miner_node, controller_node, dmn, collateral_addr)
         elif strType == "external":
-            self.protx_register_ext(miner_node, controller_node, dmn, outpoint, True)
+            self.register_protx_ext(miner_node, controller_node, dmn, outpoint, True)
         else:
             raise Exception("Type %s not available" % strType)
         time.sleep(1)
@@ -1283,7 +1283,7 @@ class PivxTestFramework():
         self.sync_blocks()
         json_tx = mn_node.getrawtransaction(dmn.proTx, 1)
         assert_greater_than(json_tx["confirmations"], 0)
-        assert dmn.proTx in mn_node.protx_list(False)
+        assert dmn.proTx in mn_node.listprotxes(False)
 
         # check coin locking
         assert is_coin_locked_by(controller_node, dmn.collateral)

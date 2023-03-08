@@ -155,10 +155,13 @@ SET(QT_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/pivx/welcomecontentwidget.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/pivx/splash.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/pivx/governancemodel.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/pivx/clickablelabel.h
         )
 
 qt5_generate_moc(pivx/pfborderimage.h ${CMAKE_CURRENT_SOURCE_DIR}/pivx/moc_pfborderimage.cpp)
+qt5_generate_moc(pivx/clickablelabel.h ${CMAKE_CURRENT_SOURCE_DIR}/pivx/moc_clickablelabel.cpp)
 list(APPEND QT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/pivx/moc_pfborderimage.cpp)
+list(APPEND QT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/pivx/moc_clickablelabel.cpp)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     list(APPEND QT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/macdockiconhandler.mm)

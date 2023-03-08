@@ -214,7 +214,7 @@ public:
     const CWalletTx* getTx(uint256 id);
 
     // prepare transaction for getting txfee before sending coins
-    SendCoinsReturn prepareTransaction(WalletModelTransaction* transaction, const CCoinControl* coinControl = nullptr, bool fIncludeDelegations = true);
+    SendCoinsReturn prepareTransaction(WalletModelTransaction* transaction, const CCoinControl* coinControl = NULL, bool fIncludeDelegations = true, int nExtraSize=0);
 
     // Send coins to a list of recipients
     SendCoinsReturn sendCoins(WalletModelTransaction& transaction);
@@ -304,6 +304,12 @@ public:
     // Depth of a wallet transaction or -1 if not found
     int getWalletTxDepth(const uint256& txHash) const;
     bool isSpent(const COutPoint& outpoint) const;
+
+    // Parse the addr and return the keyid if valid
+    Optional<CKeyID> getKeyIDFromAddr(const std::string& addr);
+
+    // Gets the extra data key->value
+    std::string getStrFromTxExtraData(const uint256& txHash, const std::string& key);
 
     class ListCoinsKey {
     public:

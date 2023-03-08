@@ -452,7 +452,7 @@ bool WalletModel::addKeys(const CKey& key, const CPubKey& pubkey, WalletRescanRe
     return true;
 }
 
-WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction* transaction, const CCoinControl* coinControl, bool fIncludeDelegations)
+WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction* transaction, const CCoinControl* coinControl, bool fIncludeDelegations, int nExtraSize)
 {
     CAmount total = 0;
     QList<SendCoinsRecipient> recipients = transaction->getRecipients();
@@ -540,7 +540,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
                                                   true,
                                                   0,
                                                   fIncludeDelegations,
-                                                  &transaction->fIsStakeDelegationVoided);
+                                                  &transaction->fIsStakeDelegationVoided,nExtraSize);
         transaction->setTransactionFee(nFeeRequired);
 
         if (!fCreated) {
@@ -1061,6 +1061,19 @@ bool WalletModel::isSpent(const COutPoint& outpoint) const
 {
     LOCK(wallet->cs_wallet);
     return wallet->IsSpent(outpoint.hash, outpoint.n);
+}
+
+Optional<CKeyID> WalletModel::getKeyIDFromAddr(const std::string& addr)
+{
+    if (addr.empty()) return nullopt;
+    CTxDestination dest = DecodeDestination(addr);
+    const CTxDestination* regDest = Standard::GetTransparentDestination(dest);
+    return (regDest) ? Optional<CKeyID>{*boost::get<CKeyID>(regDest)} : nullopt;
+}
+
+std::string WalletModel::getStrFromTxExtraData(const uint256& txHash, const std::string& key)
+{
+    return wallet->GetStrFromTxExtraData(txHash, key);
 }
 
 void WalletModel::listCoins(std::map<ListCoinsKey, std::vector<ListCoinsValue>>& mapCoins, bool fTransparent) const

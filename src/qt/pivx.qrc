@@ -237,5 +237,7 @@
         <file alias="img-empty-governance">pivx/res/img/img-empty-governance.svg</file>
         <file alias="img-empty-dark-governance">pivx/res/img/img-empty-dark-governance.svg</file>
         <file alias="ic-check-block">pivx/res/img/ic-check-block.svg</file>
+        <file alias="ic-dmn">pivx/res/img/ic-dmn.svg</file>
+        <file alias="ic-lmn">pivx/res/img/ic-lmn.svg</file>
     </qresource>
 </RCC>
