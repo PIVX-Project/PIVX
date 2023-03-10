@@ -21,6 +21,6 @@ bool WalletParameterInteraction();
 bool WalletVerify();
 
 //! Load wallet databases.
-bool InitLoadWallet();
+bool InitLoadWallet(bool clearWitnessCaches);
 
 #endif // PIVX_WALLET_INIT_H

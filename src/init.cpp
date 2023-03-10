@@ -421,6 +421,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-reindex-chainstate", "Rebuild chain state from the currently indexed blocks");
     strUsage += HelpMessageOpt("-reindex", "Rebuild block chain index from current blk000??.dat files on startup");
     strUsage += HelpMessageOpt("-resync", "Delete blockchain folders and resync from scratch on startup");
+    strUsage += HelpMessageOpt("-rewindblockindex", "Rewind blockchain to the last checkpoint");
 #if !defined(WIN32)
     strUsage += HelpMessageOpt("-sysperms", "Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)");
 #endif
@@ -1424,6 +1425,7 @@ bool AppInitMain()
 
     fReindex = gArgs.GetBoolArg("-reindex", false);
     bool fReindexChainState = gArgs.GetBoolArg("-reindex-chainstate", false);
+    bool clearWitnessCaches = false;
 
     // cache size calculations
     int64_t nTotalCache = (gArgs.GetArg("-dbcache", nDefaultDbCache) << 20);
@@ -1572,8 +1574,17 @@ bool AppInitMain()
                     }
                 }
 
+                uiInterface.InitMessage(_("Verifying blocks..."));
+
                 if (!is_coinsview_empty) {
-                    uiInterface.InitMessage(_("Verifying blocks..."));
+                    if (!fReindex && chainActive.Tip() != NULL) {
+                        uiInterface.InitMessage(_("Rewinding blocks to last checkpoint if needed..."));
+                        if (!RewindBlockIndexToLastCheckpoint(chainparams, clearWitnessCaches, gArgs.GetBoolArg("-rewindblockindex", false))) {
+                            strLoadError = _("Unable to rewind the blockchain to last checkpoint. You will need to redownload the blockchain");
+                            break;
+                        }
+                    }
+
                     CBlockIndex *tip = chainActive.Tip();
                     RPCNotifyBlockChange(true, tip);
                     if (tip && tip->nTime > GetAdjustedTime() + 2 * 60 * 60) {
@@ -1635,7 +1646,7 @@ bool AppInitMain()
 
 // ********************************************************* Step 8: Backup and Load wallet
 #ifdef ENABLE_WALLET
-    if (!InitLoadWallet())
+    if (!InitLoadWallet(clearWitnessCaches))
         return false;
 #else
     LogPrintf("No wallet compiled in!\n");

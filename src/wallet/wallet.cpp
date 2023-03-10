@@ -4157,14 +4157,14 @@ void CWallet::LockIfMyCollateral(const CTransactionRef& ptx)
     }
 }
 
-CWallet* CWallet::CreateWalletFromFile(const std::string& name, const fs::path& path)
+CWallet* CWallet::CreateWalletFromFile(const std::string& name, const fs::path& path, bool clearWitnessCaches)
 {
     const std::string& walletFile = name;
 
     // needed to restore wallet transaction meta data after -zapwallettxes
     std::vector<CWalletTx> vWtx;
 
-    if (gArgs.GetBoolArg("-zapwallettxes", false)) {
+    if (clearWitnessCaches || gArgs.GetBoolArg("-zapwallettxes", false)) {
         uiInterface.InitMessage(_("Zapping all transactions from wallet..."));
 
         std::unique_ptr<CWallet> tempWallet = std::make_unique<CWallet>(name, WalletDatabase::Create(path));
@@ -4278,7 +4278,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string& name, const fs::path& 
     LOCK(cs_main);
     CBlockIndex* pindexRescan = chainActive.Genesis();
 
-    if (gArgs.GetBoolArg("-rescan", false)) {
+    if (clearWitnessCaches || gArgs.GetBoolArg("-rescan", false)) {
         // clear note witness cache before a full rescan
         walletInstance->ClearNoteWitnessCache();
     } else {
@@ -4326,7 +4326,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string& name, const fs::path& 
         walletInstance->database->IncrementUpdateCounter();
 
         // Restore wallet transaction metadata after -zapwallettxes=1
-        if (gArgs.GetBoolArg("-zapwallettxes", false) && gArgs.GetArg("-zapwallettxes", "1") != "2") {
+        if ((clearWitnessCaches || gArgs.GetBoolArg("-zapwallettxes", false)) && gArgs.GetArg("-zapwallettxes", "1") != "2") {
             WalletBatch batch(*walletInstance->database);
             for (const CWalletTx& wtxOld : vWtx) {
                 uint256 hash = wtxOld.GetHash();
