@@ -193,6 +193,7 @@ EXTENDED_SCRIPTS = [
     # Longest test should go first, to favor running tests in parallel
     # vv Tests less than 20m vv
     'feature_dbcrash.py',
+    'feature_rewind.py',                        # ~ 353 sec
     'sapling_fillblock.py',                     # ~ 780 sec
     'feature_fee_estimation.py',                # ~ 360 sec
     # vv Tests less than 5m vv
