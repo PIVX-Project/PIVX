@@ -126,6 +126,148 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" ${{ github.workspace }}
           cmake --build ${{ github.workspace }}/cmake-build-debug --target all -- -j 2
 
+  build_native_wallet:
+    name: Native-${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    needs: lint
+    env:
+      APT_BASE: ccache
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CCACHE_SIZE: 500M
+      CCACHE_COMPRESS: 1
+      PARAMS_DIR: ${{ github.workspace }}/.pivx-params
+      WINEDEBUG: fixme-all
+      BOOST_TEST_RANDOM: 1 # random seed based on the current time
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: x64-Linux
+            id: Linux-x86_64-nodepends
+            os: ubuntu-20.04
+            host: x86_64-unknown-linux-gnu
+            apt_get: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            unit_tests: true
+            functional_tests: true
+            goal: install
+            BITCOIN_CONFIG: "--enable-zmq --enable-debug --with-incompatible-bdb --with-gui=qt5 CPPFLAGS='-DARENA_DEBUG -DDEBUG_LOCKORDER'"
+
+          - name: x64-macOS-11
+            id: macOS11-nodepends
+            os: macos-11
+            host: x86_64-apple-darwin20.6.0
+            brew_install: autoconf automake ccache berkeley-db4 libtool boost miniupnpc pkg-config python@3.8 qt5 zmq libevent qrencode gmp libsodium rust librsvg
+            unit_tests: true
+            functional_tests: true
+            goal: deploy
+            cc: clang
+            cxx: clang++
+            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug"
+
+    steps:
+      - name: Get Source
+        uses: actions/checkout@v3
+
+      - name: Setup Environment
+        run: |
+          if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
+            sudo apt-add-repository "ppa:ondrej/php" -y
+            sudo apt-get --yes update
+            sudo apt-get install --no-install-recommends --no-upgrade -qq "$APT_BASE" ${{ matrix.config.apt_get }}
+          fi
+          if [[ ${{ matrix.config.os }} = macos* ]]; then
+            brew install ${{ matrix.config.brew_install }}
+            pip3.8 install ds_store mac_alias
+          fi
+
+      - name: Prepare ccache timestamp
+        id: ccache_cache_timestamp
+        run: echo "timestamp=$(date +%Y-%m-%dT%H:%M:%S%z)" >> $GITHUB_OUTPUT
+
+      - name: ccache cache files
+        uses: actions/cache@v3
+        with:
+          path: |
+            .ccache
+            .pivx-params
+          key: ${{ matrix.config.id }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
+          restore-keys: |
+            ${{ matrix.config.id }}-ccache-
+
+      - name: Build Syslib Wallet
+        run: |
+          export LC_ALL=C.UTF-8
+
+          echo $CCACHE_DIR
+          echo $PARAMS_DIR
+
+          PATH=$(echo $PATH | tr ':' "\n" | sed '/\/opt\/python/d' | tr "\n" ":" | sed "s|::|:|g")
+          # Add llvm-symbolizer directory to PATH. Needed to get symbolized stack traces from the sanitizers.
+          PATH=$PATH:/usr/lib/llvm-6.0/bin/
+          export PATH
+
+          if [[ ${{ matrix.config.os }} = macos* ]]; then
+            CC=${{ matrix.config.cc }}
+            CXX=${{ matrix.config.cxx }}
+            export CC
+            export CXX
+          fi
+
+          if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
+            OUTDIR_PATH="$GITHUB_WORKSPACE/$GITHUB_RUN_NUMBER-${{ matrix.config.host }}"
+            BITCOIN_CONFIG_ALL="--disable-dependency-tracking --prefix=$GITHUB_WORKSPACE/${{ matrix.config.host }} --bindir=$OUTDIR_PATH/bin --libdir=$OUTDIR_PATH/lib"
+          fi
+
+          if [ "${{ matrix.config.unit_tests }}" = "true" ] || [ "${{ matrix.config.functional_tests }}" = "true" ]; then
+            mkdir -p $PARAMS_DIR
+            PARAMS_FLAGS="--with-params-dir=$PARAMS_DIR"
+          fi
+
+          echo ::group::Autogen
+          ./autogen.sh
+          echo ::endgroup::
+
+          mkdir build && cd build
+
+          echo ::group::Configure
+          ../configure --cache-file=config.cache $BITCOIN_CONFIG_ALL ${{ matrix.config.BITCOIN_CONFIG }} $PARAMS_FLAGS || ( cat config.log && false)
+          echo ::endgroup::
+
+          echo ::group::Distdir
+          make distdir VERSION=${{ matrix.config.host }}
+          echo ::endgroup::
+
+          cd pivx-${{ matrix.config.host }}
+
+          echo ::group::Configure
+          ./configure --cache-file=../config.cache $BITCOIN_CONFIG_ALL ${{ matrix.config.BITCOIN_CONFIG }} $PARAMS_FLAGS || ( cat config.log && false)
+          echo ::endgroup
+
+          echo ::group::Build
+          make -j2 ${{ matrix.config.goal }} || ( echo "Build failure. Verbose build follows." && make ${{ matrix.config.goal }} V=1 ; false )
+          echo ::endgroup::
+
+          if [ "${{ matrix.config.unit_tests }}" = "true" ] || [ "${{ matrix.config.functional_tests }}" = "true" ]; then
+            echo ::group::Params
+            ./params/install-params.sh $PARAMS_DIR
+            echo ::endgroup::
+          fi
+
+          if [ "${{ matrix.config.unit_tests }}" = "true" ]; then
+            echo ::group::Unit-Tests
+            make -j2 check VERBOSE=1
+            echo ::endgroup::
+          fi
+
+          if [ "${{ matrix.config.functional_tests }}" = "true" ]; then
+            echo ::group::Functional-Tests
+            test/functional/test_runner.py --combinedlogslen=4000 ${{ matrix.config.test_runner_extra }}
+            echo ::endgroup::
+          fi
+
   build_depends:
     name: Depends-${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
@@ -163,8 +305,8 @@ jobs:
           - name: x86_64 Linux
             os: ubuntu-20.04
             host: x86_64-unknown-linux-gnu
-            apt_get: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libqrencode-dev libdbus-1-dev libharfbuzz-dev
-            dep_opts: NO_QT=1 NO_UPNP=1 NO_NATPMP=1 DEBUG=1 ALLOW_HOST_PACKAGES=1
+            apt_get: python3-zmq
+            dep_opts: DEBUG=1
 
           - name: macOS 10.12
             os: ubuntu-20.04
@@ -228,7 +370,7 @@ jobs:
             make -j2 -C depends HOST=${{ matrix.config.host }} ${{ matrix.config.dep_opts }}
           fi
 
-  build_wallet:
+  build_depends_wallet:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     needs: [lint, build_depends]
@@ -247,7 +389,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - name: ARM 32-bit [GOAL:install]  [no unit or functional tests]
+          - name: ARM 32-bit [GOAL:install] [no unit or functional tests]
             id: ARM32
             os: ubuntu-20.04
             host: arm-linux-gnueabihf
@@ -269,7 +411,7 @@ jobs:
             goal: install
             BITCOIN_CONFIG: "--with-gui=qt5 --enable-glibc-back-compat --enable-reduce-exports --disable-online-rust"
 
-          - name: Win64  [GOAL:deploy] [no unit or functional tests]
+          - name: Win64 [GOAL:deploy] [no unit or functional tests]
             id: Win64
             os: ubuntu-20.04
             host: x86_64-w64-mingw32
@@ -279,18 +421,18 @@ jobs:
             goal: deploy
             BITCOIN_CONFIG: "--with-gui=auto --enable-reduce-exports --disable-online-rust"
 
-          - name: x86_64 Linux  [GOAL:install]  [focal]
+          - name: x86_64 Linux [GOAL:install]
             id: Linux-x86_64
             os: ubuntu-20.04
             host: x86_64-unknown-linux-gnu
-            apt_get: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libqrencode-dev libdbus-1-dev libharfbuzz-dev
+            apt_get: python3-zmq
             unit_tests: true
             functional_tests: true
             goal: install
             test_runner_extra: "--coverage --all  --exclude feature_dbcrash"
             BITCOIN_CONFIG: "--enable-zmq --with-gui=qt5 --enable-glibc-back-compat --enable-reduce-exports --disable-online-rust"
 
-          - name: x86_64 Linux  [GOAL:install]  [focal] [no GUI no unit tests - only functional tests on legacy pre-HD wallets]
+          - name: x86_64 Linux [GOAL:install] [no GUI, no unit tests, only functional tests on legacy pre-HD wallets]
             id: Linux-x86_64-nogui
             os: ubuntu-20.04
             host: x86_64-unknown-linux-gnu
@@ -301,17 +443,7 @@ jobs:
             test_runner_extra: "--legacywallet"
             BITCOIN_CONFIG: "--enable-zmq --with-gui=no --enable-glibc-back-compat --enable-reduce-exports --disable-online-rust"
 
-          - name: x86_64 Linux  [GOAL:install]  [focal]  [no depends only system libs]
-            id: Linux-x86_64-nodepends
-            os: ubuntu-20.04
-            host: x86_64-unknown-linux-gnu
-            apt_get: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
-            unit_tests: true
-            no_depends: 1
-            goal: install
-            BITCOIN_CONFIG: "--enable-zmq --with-incompatible-bdb --with-gui=qt5 CPPFLAGS='-DARENA_DEBUG -DDEBUG_LOCKORDER'"
-
-          - name: macOS 10.12  [GOAL:deploy] [no functional tests]
+          - name: macOS 10.12 [GOAL:deploy] [no unit or functional tests]
             id: macOS10.12
             os: ubuntu-20.04
             host: x86_64-apple-darwin16
@@ -322,19 +454,6 @@ jobs:
             functional_tests: false
             goal: deploy
             BITCOIN_CONFIG: "--enable-gui --enable-reduce-exports --enable-werror --disable-online-rust"
-
-          - name: macOS 11 [GOAL:deploy] [native macOS using syslibs]
-            id: macOS11
-            os: macos-11
-            host: x86_64-apple-darwin20.6.0
-            brew_install: autoconf automake ccache berkeley-db4 libtool boost miniupnpc pkg-config python@3.8 qt5 zmq libevent qrencode gmp libsodium rust librsvg
-            unit_tests: true
-            functional_tests: true
-            no_depends: 1
-            goal: deploy
-            cc: clang
-            cxx: clang++
-            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror"
 
     steps:
       - name: Get Source
