@@ -3158,7 +3158,7 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
                 for (const auto & coin : setCoins) {
                     const CScript& scriptPubKey = coin.first->tx->vout[coin.second].scriptPubKey;
                     SignatureData sigdata;
-                    if (!ProduceSignature(DummySignatureCreator(this), scriptPubKey, sigdata, txNew.GetRequiredSigVersion(), false)) {
+                    if (!ProduceSignature(*this, DUMMY_SIGNATURE_CREATOR, scriptPubKey, sigdata, txNew.GetRequiredSigVersion(), false)) {
                         strFailReason = _("Signing transaction failed");
                         return false;
                     } else {
@@ -3212,7 +3212,8 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
                 bool haveKey = coin.first->GetStakeDelegationCredit() > 0;
 
                 if (!ProduceSignature(
-                        TransactionSignatureCreator(this, &txNewConst, nIn, coin.first->tx->vout[coin.second].nValue, SIGHASH_ALL),
+                        *this,
+                        TransactionSignatureCreator(&txNewConst, nIn, coin.first->tx->vout[coin.second].nValue, SIGHASH_ALL),
                         scriptPubKey,
                         sigdata,
                         txNewConst.GetRequiredSigVersion(),
@@ -3419,7 +3420,7 @@ bool CWallet::CreateCoinStake(
 bool CWallet::SignCoinStake(CMutableTransaction& txNew) const
 {
     // Sign it
-    int nIn = 0;
+    unsigned int nIn = 0;
     for (const CTxIn& txIn : txNew.vin) {
         const CWalletTx* wtx = GetWalletTx(txIn.prevout.hash);
         if (!wtx || !SignSignature(*this, *(wtx->tx), txNew, nIn++, SIGHASH_ALL, true))
