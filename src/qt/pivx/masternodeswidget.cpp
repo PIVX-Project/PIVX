@@ -3,6 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "qt/pivx/masternodeswidget.h"
+#include "bls/bls_wrapper.h"
 #include "qt/pivx/forms/ui_masternodeswidget.h"
 
 #include "qt/pivx/defaultdialog.h"
@@ -17,6 +18,7 @@
 #include "qt/pivx/mnmodel.h"
 #include "qt/pivx/optionbutton.h"
 #include "qt/walletmodel.h"
+#include "uint256.h"
 
 #define DECORATION_SIZE 65
 #define NUM_ITEMS 3
@@ -166,7 +168,7 @@ void MasterNodesWidget::onMNClicked(const QModelIndex& _index)
     if (!menu) {
         menu = new TooltipMenu(window, this);
         connect(menu, &TooltipMenu::message, this, &AddressesWidget::message);
-        menu->addBtn(0, tr("Start"), [this](){onEditMNClicked();});
+        menu->addBtn(0, tr("Start"), [this](){onEditMNClicked();}); //TODO: change to UNBAN once 6.0 is out
         menu->addBtn(1, tr("Delete"), [this](){onDeleteMNClicked();});
         menu->addBtn(2, tr("Info"), [this](){onInfoMNClicked();});
         menu->adjustSize();
@@ -214,15 +216,40 @@ void MasterNodesWidget::onEditMNClicked()
                 }
             } else {
                 inform(tr(
-                        "Cannot start masternode, the collateral transaction has not been confirmed by the network yet.\n"
-                        "Please wait few more minutes (masternode collaterals require %1 confirmations).").arg(
-                        mnModel->getMasternodeCollateralMinConf()));
+                    "Cannot start masternode, the collateral transaction has not been confirmed by the network yet.\n"
+                    "Please wait few more minutes (masternode collaterals require %1 confirmations).")
+                           .arg(
+                               mnModel->getMasternodeCollateralMinConf()));
             }
         } else {
             // Deterministic
             bool isEnabled = index.sibling(index.row(), MNModel::IS_POSE_ENABLED).data(Qt::DisplayRole).toBool();
             if (isEnabled) {
                 inform(tr("Cannot start an already started Masternode"));
+            } else {
+                uint256 proTxHash = uint256S(index.sibling(index.row(), MNModel::PRO_TX_HASH).data(Qt::DisplayRole).toString().toStdString());
+                Optional<DMNData> opDMN = interfaces::g_tiertwo->getDMNData(proTxHash,
+                    clientModel->getLastBlockIndexProcessed());
+                if (!opDMN) {
+                    inform(tr("Masternode not found"));
+                } else {
+                    std::string operatorKeyS = opDMN->operatorSk;
+                    if (operatorKeyS.empty()) {
+                        inform("Operator secret key not found");
+                    } else {
+                        Optional<CBLSSecretKey> operator_key = bls::DecodeSecret(Params(), operatorKeyS);
+                        if (operator_key) {
+                            std::string error_str = "";
+                            if (!mnModel->unbanDMN(*operator_key, proTxHash, error_str)) {
+                                inform(QString::fromStdString(error_str));
+                            } else {
+                                inform("Masternode successfully unbanned! Wait for the next minted block and it will update");
+                            }
+                        } else {
+                            inform("Could not decode operator secret key");
+                        }
+                    }
+                }
             }
         }
     }

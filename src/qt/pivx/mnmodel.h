@@ -11,6 +11,7 @@
 #include "operationresult.h"
 #include "primitives/transaction.h"
 #include "bls/key_io.h"
+#include "uint256.h"
 #include "wallet/wallet.h" // TODO: Move to walletModel
 
 class CMasternode;
@@ -128,6 +129,8 @@ public:
     OperationResult killDMN(const uint256& collateralHash, unsigned int outIndex);
 
 
+    //Unban a Pose-banned DMN
+    bool unbanDMN(CBLSSecretKey& operatorKey,uint256 proTxHash, std::string& strError);
     // Generates the collateral transaction
     bool createDMNExternalCollateral(const QString& alias, const QString& addr, COutPoint& ret_outpoint, QString& ret_error);
     bool createDMNInternalCollateral(const QString& alias, const QString& addr, CTransactionRef& ret_tx,COutPoint& ret_outpoint, QString& ret_error,int nExtraSize=0);

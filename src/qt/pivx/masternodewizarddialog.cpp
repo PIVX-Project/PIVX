@@ -3,8 +3,6 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "qt/pivx/masternodewizarddialog.h"
-#include "optional.h"
-#include "primitives/transaction.h"
 #include "qt/pivx/forms/ui_masternodewizarddialog.h"
 
 #include "key_io.h"
@@ -410,22 +408,6 @@ bool MasterNodeWizardDialog::createMN()
     std::string ipAddress = addressStr.toStdString();
     std::string port = portStr.toStdString();
 
-    // Look for a valid collateral utxo
-    COutPoint collateralOut;
-
-    if (!walletModel->getMNCollateralCandidate(collateralOut)) {
-        // New receive address
-        auto r = walletModel->getNewAddress(alias);
-        if (!r) return errorOut(tr(r.getError().c_str()));
-        if (!mnModel->createMNCollateral(addressLabel,
-                                         QString::fromStdString(r.getObjResult()->ToString()),
-                                         collateralOut,
-                                         returnStr)) {
-                                            // error str set internally
-                                            return false;
-                                         }
-    }
-
     if (isDeterministic) {
         auto opOwnerAddrAndKeyId = getOrCreateOwnerAddress(alias);
         if (!opOwnerAddrAndKeyId.getRes()) {
@@ -447,7 +429,7 @@ bool MasterNodeWizardDialog::createMN()
         // 3) Get operator data
         QString operatorKey = ui->lineEditOperatorKey->text();
         Optional<CKeyID> operatorPayoutKeyId = walletModel->getKeyIDFromAddr(ui->lineEditOperatorPayoutAddress->text().toStdString());
-        double operatorPercentage = ui->lineEditPercentage->text().isEmpty() ? 0 : (double) ui->lineEditPercentage->text().toDouble();
+        double operatorPercentage = ui->lineEditPercentage->text().isEmpty() ? 0 : (double)ui->lineEditPercentage->text().toDouble();
 
         // 4) Get voter data
         Optional<CKeyID> votingAddr;
@@ -463,32 +445,32 @@ bool MasterNodeWizardDialog::createMN()
             votingAddr = ownerKeyId;
         }
 
-        Optional<COutPoint> collateralOut =  COutPoint(); 
+        Optional<COutPoint> collateralOut = COutPoint();
         bool foundCandidate = false;
-        if(!walletModel->getMNCollateralCandidate(*collateralOut)){
-            collateralOut= nullopt;    
-        }else{
-            //We have to lock the collateral or the system could spend it
+        if (!walletModel->getMNCollateralCandidate(*collateralOut)) {
+            collateralOut = nullopt;
+        } else {
+            // We have to lock the collateral or the system could spend it
             walletModel->lockCoin(*collateralOut);
             foundCandidate = true;
         }
         std::string error_str;
-        
+
         auto res = mnModel->createDMN(alias,
-                                      collateralOut,
-                                      addressLabel,
-                                      ipAddress,
-                                      port,
-                                      ownerKeyId,
-                                      operatorKey.isEmpty() ? nullopt : Optional<std::string>(operatorKey.toStdString()),
-                                      votingAddr,
-                                      payoutKeyId,
-                                      error_str,
-                                      (uint16_t) operatorPercentage * 100, // operator percentage
-                                      operatorPayoutKeyId); // operator payout script
+            collateralOut,
+            addressLabel,
+            ipAddress,
+            port,
+            ownerKeyId,
+            operatorKey.isEmpty() ? nullopt : Optional<std::string>(operatorKey.toStdString()),
+            votingAddr,
+            payoutKeyId,
+            error_str,
+            (uint16_t)operatorPercentage * 100, // operator percentage
+            operatorPayoutKeyId);               // operator payout script
         if (!res) {
-            //unlock in case of error
-            if(foundCandidate){
+            // unlock in case of error
+            if (foundCandidate) {
                 walletModel->unlockCoin(*collateralOut);
             }
             return errorOut(tr(error_str.c_str()));
@@ -497,18 +479,17 @@ bool MasterNodeWizardDialog::createMN()
         // future: move "operatorSk" to a constant field
         std::string operatorSk = walletModel->getStrFromTxExtraData(*res.getObjResult(), "operatorSk");
         mnSummary = std::make_unique<MNSummary>(alias,
-                                                ipAddress+":"+port,
-                                                collateralOut?*collateralOut:COutPoint(UINT256_ZERO,0), //TODO: the outpoint index is not 0 in general, but it does not matter (just display)
-                                                ownerAddrStr,
-                                                payoutAddrStr,
-                                                operatorSk.empty() ? operatorKey.toStdString() : operatorSk,
-                                                ownerAddrStr, // voting key, for now fixed to owner addr
-                                                0, // operator percentage
-                                                nullopt); // operator payout
+            ipAddress + ":" + port,
+            collateralOut ? *collateralOut : COutPoint(UINT256_ZERO, 0), // TODO: the outpoint index is not 0 in general, but it does not matter (just display)
+            ownerAddrStr,
+            payoutAddrStr,
+            operatorSk.empty() ? operatorKey.toStdString() : operatorSk,
+            ownerAddrStr, // voting key, for now fixed to owner addr
+            0,            // operator percentage
+            nullopt);     // operator payout
 
         returnStr = tr("Deterministic Masternode created! It will appear on your list on the next mined block!");
     } else {
-
         // Legacy
         // Look for a valid collateral utxo
         COutPoint collateralOut;
@@ -517,10 +498,10 @@ bool MasterNodeWizardDialog::createMN()
             // New receive address
             auto r = walletModel->getNewAddress(alias);
             if (!r) return errorOut(tr(r.getError().c_str()));
-                if (!mnModel->createDMNExternalCollateral(addressLabel,
-                                     QString::fromStdString(r.getObjResult()->ToString()),
-                                     collateralOut,
-                                     returnStr)) {
+            if (!mnModel->createDMNExternalCollateral(addressLabel,
+                    QString::fromStdString(r.getObjResult()->ToString()),
+                    collateralOut,
+                    returnStr)) {
                 // error str set internally
                 return false;
             }

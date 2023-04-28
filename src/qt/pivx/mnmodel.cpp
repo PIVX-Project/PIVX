@@ -6,6 +6,7 @@
 
 #include "bls/key_io.h"
 #include "coincontrol.h"
+#include "evo/deterministicmns.h"
 #include "interfaces/tiertwo.h"
 #include "evo/specialtx_utils.h"
 #include "masternode.h"
@@ -314,16 +315,16 @@ std::string translateRejectionError(const std::string& rejection)
 }
 
 CallResult<uint256> MNModel::createDMNInternal(const Optional<COutPoint>& collateral,
-                                             const Optional<QString>& addr_label,
-                                             const Optional<CKey>& keyCollateral,
-                                             const CService& service,
-                                             const CKeyID& ownerAddr,
-                                             const CBLSPublicKey& operatorPubKey,
-                                             const Optional<CKeyID>& votingAddr,
-                                             const CKeyID& payoutAddr,
-                                             const Optional<CBLSSecretKey>& operatorSk,
-                                             const Optional<uint16_t>& operatorPercentage,
-                                             const Optional<CKeyID>& operatorPayoutAddr)
+    const Optional<QString>& addr_label,
+    const Optional<CKey>& keyCollateral,
+    const CService& service,
+    const CKeyID& ownerAddr,
+    const CBLSPublicKey& operatorPubKey,
+    const Optional<CKeyID>& votingAddr,
+    const CKeyID& payoutAddr,
+    const Optional<CBLSSecretKey>& operatorSk,
+    const Optional<uint16_t>& operatorPercentage,
+    const Optional<CKeyID>& operatorPayoutAddr)
 {
     ProRegPL pl;
     pl.nVersion = ProRegPL::CURRENT_VERSION;
@@ -331,7 +332,7 @@ CallResult<uint256> MNModel::createDMNInternal(const Optional<COutPoint>& collat
     pl.keyIDOwner = ownerAddr;
     pl.pubKeyOperator = operatorPubKey;
     pl.keyIDVoting = votingAddr ? *votingAddr : pl.keyIDOwner;
-    pl.collateralOutpoint = (collateral ? *collateral : COutPoint(UINT256_ZERO, 0)); //dummy outpoint if collateral is nullopt
+    pl.collateralOutpoint = (collateral ? *collateral : COutPoint(UINT256_ZERO, 0)); // dummy outpoint if collateral is nullopt
     pl.scriptPayout = GetScriptForDestination(payoutAddr);
     if (operatorPayoutAddr) {
         pl.nOperatorReward = *operatorPercentage;
@@ -346,8 +347,8 @@ CallResult<uint256> MNModel::createDMNInternal(const Optional<COutPoint>& collat
         extraValues.emplace("operatorSk", bls::EncodeSecret(Params(), *operatorSk));
     }
     auto wallet = vpwallets[0]; // TODO: Move to walletModel
-    if(collateral){
-        if(!keyCollateral){
+    if (collateral) {
+        if (!keyCollateral) {
             return CallResult<uint256>("null key collateral");
         }
         CMutableTransaction tx;
@@ -355,38 +356,38 @@ CallResult<uint256> MNModel::createDMNInternal(const Optional<COutPoint>& collat
         tx.nType = CTransaction::TxType::PROREG;
         auto res = FundSpecialTx(wallet, tx, pl);
         if (!res) return {res.getError()};
-    
+
         res = SignSpecialTxPayloadByString(pl, *keyCollateral);
         if (!res) return {res.getError()};
         res = SignAndSendSpecialTx(wallet, tx, pl, &extraValues);
         return res ? CallResult<uint256>(tx.GetHash()) :
-            CallResult<uint256>(translateRejectionError(res.getError()));
-    }else{
-        if(!addr_label){
-            return  CallResult<uint256>("Null address label");
+                     CallResult<uint256>(translateRejectionError(res.getError()));
+    } else {
+        if (!addr_label) {
+            return CallResult<uint256>("Null address label");
         }
-         std::string alias = addr_label->toStdString();
-         CTransactionRef ret_tx;
-         auto r = walletModel->getNewAddress(alias);
-         QString returnStr;
+        std::string alias = addr_label->toStdString();
+        CTransactionRef ret_tx;
+        auto r = walletModel->getNewAddress(alias);
+        QString returnStr;
 
-         //CmutTx used only to compute the size of payload
-         CMutableTransaction tx_test;
-         tx_test.nVersion= CTransaction::TxVersion::SAPLING;
-         tx_test.nType = CTransaction::TxType::PROREG;
-         SetTxPayload(tx_test, pl);
-         const int nExtraSize = int(GetSerializeSize(tx_test.extraPayload)+GetSerializeSize(tx_test.sapData));
+        // CmutTx used only to compute the size of payload
+        CMutableTransaction tx_test;
+        tx_test.nVersion = CTransaction::TxVersion::SAPLING;
+        tx_test.nType = CTransaction::TxType::PROREG;
+        SetTxPayload(tx_test, pl);
+        const int nExtraSize = int(GetSerializeSize(tx_test.extraPayload) + GetSerializeSize(tx_test.sapData));
 
-         COutPoint collateral_outpoint;
-         if (!r) return  CallResult<uint256>(translateRejectionError(r.getError()));
-            if (!createDMNInternalCollateral(*addr_label,
-                                    QString::fromStdString(r.getObjResult()->ToString()),
-                                    ret_tx,
-                                    collateral_outpoint,
-                                    returnStr,nExtraSize)) {
-                 //error str set internally
-                return  CallResult<uint256>(returnStr.toStdString());
-            }
+        COutPoint collateral_outpoint;
+        if (!r) return CallResult<uint256>(translateRejectionError(r.getError()));
+        if (!createDMNInternalCollateral(*addr_label,
+                QString::fromStdString(r.getObjResult()->ToString()),
+                ret_tx,
+                collateral_outpoint,
+                returnStr, nExtraSize)) {
+            // error str set internally
+            return CallResult<uint256>(returnStr.toStdString());
+        }
         pl.collateralOutpoint = collateral_outpoint;
         CMutableTransaction tx = CMutableTransaction(*ret_tx);
         tx.nVersion = CTransaction::TxVersion::SAPLING;
@@ -395,36 +396,35 @@ CallResult<uint256> MNModel::createDMNInternal(const Optional<COutPoint>& collat
         UpdateSpecialTxInputsHash(tx, pl);
         auto res = SignAndSendSpecialTx(wallet, tx, pl, &extraValues);
         return res ? CallResult<uint256>(tx.GetHash()) :
-            CallResult<uint256>(translateRejectionError(res.getError()));
+                     CallResult<uint256>(translateRejectionError(res.getError()));
     }
 }
 
 CallResult<uint256> MNModel::createDMN(const std::string& alias,
-                                       const Optional<COutPoint>& collateral,
-                                       const Optional<QString>& addr_label,
-                                       std::string& serviceAddr,
-                                       const std::string& servicePort,
-                                       const CKeyID& ownerAddr,
-                                       const Optional<std::string>& operatorPubKey,
-                                       const Optional<CKeyID>& votingAddr,
-                                       const CKeyID& payoutKeyId,
-                                       std::string& strError,
-                                       const Optional<uint16_t>& operatorPercentage,
-                                       const Optional<CKeyID>& operatorPayoutAddr)
+    const Optional<COutPoint>& collateral,
+    const Optional<QString>& addr_label,
+    std::string& serviceAddr,
+    const std::string& servicePort,
+    const CKeyID& ownerAddr,
+    const Optional<std::string>& operatorPubKey,
+    const Optional<CKeyID>& votingAddr,
+    const CKeyID& payoutKeyId,
+    std::string& strError,
+    const Optional<uint16_t>& operatorPercentage,
+    const Optional<CKeyID>& operatorPayoutAddr)
 {
     // Different DMN creation types:
     // 1. internal.
     // 2. external.
     // 3. fund.
 
-    //Either one of them must be non null
     auto p_wallet = vpwallets[0]; // TODO: Move to walletModel
     const auto& chainparams = Params();
 
     // 1) Create the simplest DMN, the collateral was generated by this wallet.
     CService service;
     if (!serviceAddr.empty()) {
-        if (!Lookup(serviceAddr+":"+servicePort, service, chainparams.GetDefaultPort(), false)) {
+        if (!Lookup(serviceAddr + ":" + servicePort, service, chainparams.GetDefaultPort(), false)) {
             strError = strprintf("invalid network address %s", serviceAddr);
             return {strError};
         }
@@ -432,14 +432,14 @@ CallResult<uint256> MNModel::createDMN(const std::string& alias,
 
     CPubKey pubKeyCollateral;
     Optional<CKey> keyCollateral = nullopt;
-  
-    if (collateral){
+
+    if (collateral) {
         keyCollateral = CKey();
-        if(!p_wallet->GetMasternodeVinAndKeys(pubKeyCollateral, *keyCollateral, *collateral, false, strError)) {
-        return {strError};
+        if (!p_wallet->GetMasternodeVinAndKeys(pubKeyCollateral, *keyCollateral, *collateral, false, strError)) {
+            return {strError};
         }
     }
-  
+
     // parse operator pubkey or create one
     Optional<CBLSSecretKey> operatorSk{nullopt};
     CBLSPublicKey operatorPk;
@@ -458,16 +458,16 @@ CallResult<uint256> MNModel::createDMN(const std::string& alias,
     }
 
     auto res = createDMNInternal(collateral,
-                                 addr_label,
-                                 keyCollateral,
-                                 service,
-                                 ownerAddr,
-                                 operatorPk,
-                                 votingAddr, // voting key
-                                 payoutKeyId, // payout script
-                                 operatorSk, // only if the operator was provided (or locally created)
-                                 operatorPercentage,   // operator percentage
-                                 operatorPayoutAddr);  // operator payout keyid
+        addr_label,
+        keyCollateral,
+        service,
+        ownerAddr,
+        operatorPk,
+        votingAddr,          // voting key
+        payoutKeyId,         // payout script
+        operatorSk,          // only if the operator was provided (or locally created)
+        operatorPercentage,  // operator percentage
+        operatorPayoutAddr); // operator payout keyid
     if (!res) {
         strError = res.getError();
         return {strError};
@@ -476,7 +476,46 @@ CallResult<uint256> MNModel::createDMN(const std::string& alias,
     // All good
     return res;
 }
+// unban a Pose-banned DMN
+bool MNModel::unbanDMN(CBLSSecretKey& operatorKey, uint256 proTxHash, std::string& strError)
+{
+    ProUpServPL pl;
+    pl.nVersion = ProUpServPL::CURRENT_VERSION;
+    pl.proTxHash = proTxHash;
+    auto dmn = deterministicMNManager->GetListAtChainTip().GetMN(pl.proTxHash); // make sure that the wallet is synced first?
+    if (!dmn) {
+        strError = "Masternode not found";
+        return false;
+    }
+    if (!dmn->IsPoSeBanned()) {
+        strError = "Masternode is not Pose-banned";
+        return false;
+    }
+    pl.addr = dmn->pdmnState->addr;
+    pl.scriptOperatorPayout = dmn->pdmnState->scriptOperatorPayout;
 
+    CMutableTransaction tx;
+    tx.nVersion = CTransaction::TxVersion::SAPLING;
+    tx.nType = CTransaction::TxType::PROUPSERV;
+
+    auto wallet = vpwallets[0]; // TODO: Move to walletModel
+    auto res = FundSpecialTx(wallet, tx, pl);
+    if (!res) {
+        strError = res.getError();
+        return false;
+    }
+    res = SignSpecialTxPayloadByHash(tx, pl, operatorKey);
+    if (!res) {
+        strError = res.getError();
+        return false;
+    }
+    res = SignAndSendSpecialTx(wallet, tx, pl);
+    if (!res) {
+        strError = res.getError();
+        return false;
+    }
+    return true;
+}
 OperationResult MNModel::killDMN(const uint256& collateralHash, unsigned int outIndex)
 {
     auto p_wallet = vpwallets[0]; // TODO: Move to walletModel
@@ -498,13 +537,12 @@ OperationResult MNModel::killDMN(const uint256& collateralHash, unsigned int out
 
     CClientUIInterface::MessageBoxFlags informType;
     QString returnMsg = GuiTransactionsUtils::ProcessSendCoinsReturn(
-            prepareStatus,
-            walletModel,
-            informType, // this flag is not needed
-            BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(),
-                                         currentTransaction.getTransactionFee()),
-            true
-    );
+        prepareStatus,
+        walletModel,
+        informType, // this flag is not needed
+        BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(),
+            currentTransaction.getTransactionFee()),
+        true);
 
     if (prepareStatus.status != WalletModel::OK) {
         walletModel->lockCoin(collateral_output);
@@ -520,15 +558,15 @@ OperationResult MNModel::killDMN(const uint256& collateralHash, unsigned int out
 
     return {true};
 }
-//This functions create a collateral that will be "locked" inside the ProRegTx (so INTERNAL collateral)
+// This functions create a collateral that will be "locked" inside the ProRegTx (so INTERNAL collateral)
 bool MNModel::createDMNInternalCollateral(
     const QString& alias,
     const QString& addr,
     CTransactionRef& ret_tx,
     COutPoint& ret_outpoint,
     QString& ret_error,
-    int nExtraSize
-){
+    int nExtraSize)
+{
     SendCoinsRecipient sendCoinsRecipient(addr, alias, getMNCollateralRequiredAmount(), "");
 
     // Send the 10 tx to one of your address
@@ -537,20 +575,19 @@ bool MNModel::createDMNInternalCollateral(
     WalletModelTransaction currentTransaction(recipients);
     WalletModel::SendCoinsReturn prepareStatus;
     // no coincontrol, no P2CS delegations
-    prepareStatus = walletModel->prepareTransaction(&currentTransaction, nullptr, false,nExtraSize);
+    prepareStatus = walletModel->prepareTransaction(&currentTransaction, nullptr, false, nExtraSize);
     ret_tx = currentTransaction.getTransaction();
 
     QString returnMsg = tr("Unknown error");
     // process prepareStatus and on error generate message shown to user
     CClientUIInterface::MessageBoxFlags informType;
     returnMsg = GuiTransactionsUtils::ProcessSendCoinsReturn(
-            prepareStatus,
-            walletModel,
-            informType, // this flag is not needed
-            BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(),
-                                         currentTransaction.getTransactionFee()),
-            true
-    );
+        prepareStatus,
+        walletModel,
+        informType, // this flag is not needed
+        BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(),
+            currentTransaction.getTransactionFee()),
+        true);
 
     if (prepareStatus.status != WalletModel::OK) {
         ret_error = tr("Prepare master node failed.\n\n%1\n").arg(returnMsg);
@@ -558,7 +595,7 @@ bool MNModel::createDMNInternalCollateral(
     }
 
     int indexOut = -1;
-    for (int i=0; i < (int)ret_tx->vout.size(); i++) {
+    for (int i = 0; i < (int)ret_tx->vout.size(); i++) {
         const CTxOut& out = ret_tx->vout[i];
         if (out.nValue == getMNCollateralRequiredAmount()) {
             indexOut = i;
@@ -570,16 +607,16 @@ bool MNModel::createDMNInternalCollateral(
         return false;
     }
     // save the collateral outpoint
-    ret_outpoint = COutPoint(UINT256_ZERO, indexOut); //generalise to second case
+    ret_outpoint = COutPoint(UINT256_ZERO, indexOut); // generalise to second case
     return true;
 }
 
-//This functions creates and send an EXTERNAL collateral the ProRegTx will just reference it
+// This functions creates and send an EXTERNAL collateral the ProRegTx will just reference it
 bool MNModel::createDMNExternalCollateral(
-        const QString& alias,
-        const QString& addr,
-        COutPoint& ret_outpoint,
-        QString& ret_error)
+    const QString& alias,
+    const QString& addr,
+    COutPoint& ret_outpoint,
+    QString& ret_error)
 {
     SendCoinsRecipient sendCoinsRecipient(addr, alias, getMNCollateralRequiredAmount(), "");
 
@@ -596,13 +633,12 @@ bool MNModel::createDMNExternalCollateral(
     // process prepareStatus and on error generate message shown to user
     CClientUIInterface::MessageBoxFlags informType;
     returnMsg = GuiTransactionsUtils::ProcessSendCoinsReturn(
-            prepareStatus,
-            walletModel,
-            informType, // this flag is not needed
-            BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(),
-                                         currentTransaction.getTransactionFee()),
-            true
-    );
+        prepareStatus,
+        walletModel,
+        informType, // this flag is not needed
+        BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(),
+            currentTransaction.getTransactionFee()),
+        true);
 
     if (prepareStatus.status != WalletModel::OK) {
         ret_error = tr("Prepare master node failed.\n\n%1\n").arg(returnMsg);
@@ -622,7 +658,7 @@ bool MNModel::createDMNExternalCollateral(
     CTransactionRef walletTx = currentTransaction.getTransaction();
     std::string txID = walletTx->GetHash().GetHex();
     int indexOut = -1;
-    for (int i=0; i < (int)walletTx->vout.size(); i++) {
+    for (int i = 0; i < (int)walletTx->vout.size(); i++) {
         const CTxOut& out = walletTx->vout[i];
         if (out.nValue == getMNCollateralRequiredAmount()) {
             indexOut = i;
