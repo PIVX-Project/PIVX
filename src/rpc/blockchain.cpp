@@ -8,8 +8,9 @@
 #include "budget/budgetmanager.h"
 #include "checkpoints.h"
 #include "clientversion.h"
-#include "core_io.h"
 #include "consensus/upgrades.h"
+#include "core_io.h"
+#include "hash.h"
 #include "kernel.h"
 #include "key_io.h"
 #include "masternodeman.h"
@@ -22,15 +23,17 @@
 #include "util/system.h"
 #include "utilmoneystr.h"
 #include "utilstrencodings.h"
-#include "hash.h"
+#include "utiltime.h"
+#include "validation.h"
 #include "validationinterface.h"
 #include "wallet/wallet.h"
 #include "warnings.h"
 
-#include <stdint.h>
-#include <univalue.h>
-#include <numeric>
 #include <condition_variable>
+#include <numeric>
+#include <stdint.h>
+#include <string>
+#include <univalue.h>
 
 #include <boost/thread/thread.hpp> // boost::thread::interrupt
 
@@ -993,6 +996,74 @@ void NetworkUpgradeDescPushBack(
     }
 }
 
+int EstimateChainHeight(const Consensus::Params& consensusParams, int lastHeaderHeight, int lastHeaderTime)
+{
+    int currentTime = GetSystemTimeInSeconds();
+    if (lastHeaderTime > currentTime) {
+        return lastHeaderTime;
+    }
+    int estimatedHeight = lastHeaderHeight + (currentTime - lastHeaderTime) / consensusParams.nTargetSpacing;
+    return ((estimatedHeight + 5) / 10) * 10;
+}
+
+UniValue getchaindownloadinfo(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 0)
+        throw std::runtime_error(
+            "getblockchaininfo\n"
+            "Returns an object containing info about the initial blockchain download.\n"
+
+            "\nResult:\n"
+            "{\n"
+            "  \"chain\": \"xxxx\",                    (string) current network name (main, test, regtest)\n"
+            "  \"downloadedblocks\": \"xxxx\",         (string) info on the current number of blocks processed in the server\n"
+            "  \"downloadedheaders\": \"xxxx\",        (string) info the current number of headers we have validated\n"
+            "  \"nextupgrade\": \"xxxx\",              (string) info on the next network upgrade\n"
+            "  \"connections\": xxxxxx,              (numeric) current number of connections\n"
+            "}\n"
+
+            "\nExamples:\n" +
+            HelpExampleCli("getchaindownloadinfo", "") + HelpExampleRpc("getchaindownloadinfo", ""));
+
+    LOCK(cs_main);
+    if (!IsInitialBlockDownload()) {
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "This RPC can only be used during the initial blockchain download!");
+    }
+    UniValue obj(UniValue::VOBJ);
+    obj.pushKV("chain", Params().NetworkIDString());
+
+    const Consensus::Params& consensusParams = Params().GetConsensus();
+    const CBlockIndex* pChainTip = chainActive.Tip();
+    int nTipHeight = pChainTip ? pChainTip->nHeight : -1;
+    int lastHeaderHeight = pindexBestHeader ? pindexBestHeader->nHeight : -1;
+    int lastHeaderTime = pindexBestHeader ? pindexBestHeader->nTime : 0;
+    int estimatedHeight = lastHeaderHeight == -1 || lastHeaderTime == 0 ? 0 : EstimateChainHeight(consensusParams, lastHeaderHeight, lastHeaderTime);
+    if (estimatedHeight < lastHeaderHeight) {
+        estimatedHeight = lastHeaderHeight;
+    }
+    if (estimatedHeight <= 0) {
+        estimatedHeight = 1;
+    }
+    int blockDownloadPercentage = nTipHeight == -1 ? 0 : nTipHeight * 100 / estimatedHeight;
+    int headerDownloadPercentage = lastHeaderHeight == -1 ? 0 : lastHeaderHeight * 100 / estimatedHeight;
+
+    std::string blockMessage = std::to_string(nTipHeight) + " of ~" + std::to_string(estimatedHeight) + " (" + std::to_string(blockDownloadPercentage) + "%)";
+    obj.pushKV("downloadedblocks", blockMessage);
+    std::string headerMessage = std::to_string(lastHeaderHeight) + " of ~" + std::to_string(estimatedHeight) + " (" + std::to_string(headerDownloadPercentage) + "%)";
+    obj.pushKV("downloadedheaders", headerMessage);
+    auto nextUpgradeHeight = NextActivationHeight(nTipHeight, consensusParams);
+    auto nextUpgradeEpoch = NextEpoch(nTipHeight, consensusParams);
+    std::string nextUpgradeMessage;
+    if (nextUpgradeEpoch && nextUpgradeHeight) {
+        nextUpgradeMessage = NetworkUpgradeInfo[*nextUpgradeEpoch].strName + " at block height " + std::to_string(*nextUpgradeHeight);
+    } else {
+        nextUpgradeMessage = "No more known upgrades incoming";
+    }
+    obj.pushKV("nextupgrade", nextUpgradeMessage);
+    obj.pushKV("connections", g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL));
+    return obj;
+}
+
 UniValue getblockchaininfo(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 0)
@@ -1677,6 +1748,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "getbestblockhash",       &getbestblockhash,       true,  {} },
     { "blockchain",         "getbestsaplinganchor",   &getbestsaplinganchor,   true,  {} },
     { "blockchain",         "getblock",               &getblock,               true,  {"blockhash","verbose|verbosity"} },
+    { "blockchain",         "getchaindownloadinfo",   &getchaindownloadinfo,   true,  {} },
     { "blockchain",         "getblockchaininfo",      &getblockchaininfo,      true,  {} },
     { "blockchain",         "getblockcount",          &getblockcount,          true,  {} },
     { "blockchain",         "getblockhash",           &getblockhash,           true,  {"height"} },
