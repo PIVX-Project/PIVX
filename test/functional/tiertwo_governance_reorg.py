@@ -82,7 +82,7 @@ class GovernanceReorgTest(PivxTestFramework):
         mn1.initmasternode(self.mnOnePrivkey, "127.0.0.1:"+str(remoteOnePort))
         mn2.initmasternode(self.mnTwoPrivkey, "127.0.0.1:"+str(remoteTwoPort))
         self.stake_and_ping(self.minerAPos, 1, [])
-        self.wait_until_mnsync_finished()
+        self.wait_until_mnsync_finished(45)
         self.controller_start_masternodes(minerA, [self.masternodeOneAlias, self.masternodeTwoAlias])
         self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)
         self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)

@@ -174,7 +174,7 @@ public:
     bool IsPingedWithin(int seconds, int64_t now = -1) const
     {
         now == -1 ? now = GetAdjustedTime() : now;
-        return lastPing.IsNull() ? false : now - lastPing.sigTime < seconds;
+        return lastPing.IsNull() ? true : now - lastPing.sigTime < seconds;
     }
 
     void SetSpent()

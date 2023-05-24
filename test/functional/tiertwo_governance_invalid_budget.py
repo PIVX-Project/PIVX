@@ -121,7 +121,7 @@ class GovernanceInvalidBudgetTest(PivxTestFramework):
         self.mn1.initmasternode(self.mnOnePrivkey, "127.0.0.1:"+str(remoteOnePort))
         self.mn2.initmasternode(self.mnTwoPrivkey, "127.0.0.1:"+str(remoteTwoPort))
         self.stake_and_ping(self.minerAPos, 1, [])
-        self.wait_until_mnsync_finished()
+        self.wait_until_mnsync_finished(45)
         self.controller_start_masternode(self.minerA, self.masternodeOneAlias)
         self.controller_start_masternode(self.minerA, self.masternodeTwoAlias)
         self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)

@@ -974,11 +974,11 @@ class PivxTestFramework():
         time.sleep(1)
 
 
-    def wait_until_mnsync_finished(self):
+    def wait_until_mnsync_finished(self, _timeout):
         SYNC_FINISHED = [999] * self.num_nodes
         synced = [-1] * self.num_nodes
         time.sleep(2)
-        timeout = time.time() + 45
+        timeout = time.time() + _timeout
         while synced != SYNC_FINISHED and time.time() < timeout:
             for i in range(self.num_nodes):
                 if synced[i] != SYNC_FINISHED[i]:
@@ -1743,7 +1743,7 @@ class PivxTier2TestFramework(PivxTestFramework):
 
         # wait until mnsync complete on all nodes
         self.stake(1)
-        self.wait_until_mnsync_finished()
+        self.wait_until_mnsync_finished(45)
         self.log.info("tier two synced! starting masternodes..")
 
         # Now everything is set, can start both masternodes

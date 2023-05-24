@@ -85,7 +85,7 @@ class MasternodePingTest(PivxTestFramework):
         # Wait until mnsync is complete (max 120 seconds)
         self.log.info("waiting to complete mnsync...")
         start_time = time.time()
-        self.wait_until_mnsync_finished()
+        self.wait_until_mnsync_finished(120)
         self.log.info("MnSync completed in %d seconds" % (time.time() - start_time))
         miner.generate(1)
         self.sync_blocks()

@@ -190,7 +190,7 @@ class MasternodeCompatibilityTest(PivxTier2TestFramework):
         self.log.info("Staking 30 blocks...")
         self.stake(30, [self.remoteTwo])
         self.sync_blocks()
-        self.wait_until_mnsync_finished()
+        self.wait_until_mnsync_finished(45)
 
         # check projection
         self.log.info("Checking winners...")

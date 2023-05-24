@@ -353,7 +353,7 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         assert_equal(self.remoteOne.getbudgetinfo(), [])
 
         self.log.info("budget cleaned, starting resync")
-        self.wait_until_mnsync_finished()
+        self.wait_until_mnsync_finished(45)
         self.check_budgetprojection(expected_budget)
         for i in range(self.num_nodes):
             assert_equal(len(self.nodes[i].getbudgetinfo()), 16)
@@ -375,7 +375,7 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         self.stake(2, [self.remoteOne, self.remoteTwo])
 
         self.log.info("syncing node..")
-        self.wait_until_mnsync_finished()
+        self.wait_until_mnsync_finished(45)
         for i in range(self.num_nodes):
             assert_equal(len(self.nodes[i].getbudgetinfo()), 16)
         self.log.info("resync (2): budget data resynchronized successfully!")

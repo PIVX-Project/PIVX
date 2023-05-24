@@ -38,7 +38,7 @@ class MasternodeActivationTest(PivxTier2TestFramework):
     def reconnect_and_restart_masternodes(self):
         self.log.info("Reconnecting nodes and sending start message again...")
         self.reconnect_remotes()
-        self.wait_until_mnsync_finished()
+        self.wait_until_mnsync_finished(45)
         self.controller_start_all_masternodes()
 
     # Similar to base class wait_until_mn_status but skipping the disconnected nodes

@@ -581,7 +581,7 @@ bool CMasternodePing::CheckAndUpdate(int& nDos, bool fRequireAvailable, bool fCh
             // SetLastPing locks masternode cs. Be careful with the lock ordering.
             pmn->SetLastPing(*this);
 
-            //mnodeman.mapSeenMasternodeBroadcast.lastPing is probably outdated, so we'll update it
+            //mnodeman.mapSeenMasternodeBroadcast.lastPing is probably outdated or empty/null, so we'll update it
             CMasternodeBroadcast mnb(*pmn);
             const uint256& hash = mnb.GetHash();
             if (mnodeman.mapSeenMasternodeBroadcast.count(hash)) {
