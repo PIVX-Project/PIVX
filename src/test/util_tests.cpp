@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2017-2022 The PIVX Core developers
+// Copyright (c) 2017-2022 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,7 +10,7 @@
 #include "utilstrencodings.h"
 #include "util/string.h"
 #include "utilmoneystr.h"
-#include "test/test_pivx.h"
+#include "test/test_hemis.h"
 #include "util/vector.h"
 
 #include <stdint.h>
@@ -965,7 +965,7 @@ BOOST_AUTO_TEST_CASE(test_ToUpper)
 BOOST_AUTO_TEST_CASE(test_Capitalize)
 {
     BOOST_CHECK_EQUAL(Capitalize(""), "");
-    BOOST_CHECK_EQUAL(Capitalize("pivx"), "Pivx");
+    BOOST_CHECK_EQUAL(Capitalize("hemis"), "Pivx");
     BOOST_CHECK_EQUAL(Capitalize("\x00\xfe\xff"), "\x00\xfe\xff");
 }
 
@@ -975,11 +975,11 @@ BOOST_AUTO_TEST_CASE(test_validateURL)
     BOOST_CHECK(validateURL("http://foo.bar"));
     BOOST_CHECK(validateURL("https://foo.bar"));
     BOOST_CHECK(validateURL("https://foo.bar/"));
-    BOOST_CHECK(validateURL("http://pivx.foo.bar"));
-    BOOST_CHECK(validateURL("https://foo.bar/pivx"));
-    BOOST_CHECK(validateURL("https://foo.bar/pivx/more/"));
+    BOOST_CHECK(validateURL("http://hemis.foo.bar"));
+    BOOST_CHECK(validateURL("https://foo.bar/hemis"));
+    BOOST_CHECK(validateURL("https://foo.bar/hemis/more/"));
     BOOST_CHECK(validateURL("https://142.2.3.1"));
-    BOOST_CHECK(validateURL("https://foo_bar.pivx.com"));
+    BOOST_CHECK(validateURL("https://foo_bar.hemis.com"));
     BOOST_CHECK(validateURL("http://foo.bar/?baz=some"));
     BOOST_CHECK(validateURL("http://foo.bar/?baz=some&p=364"));
 

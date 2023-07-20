@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2016 The Dash developers
-// Copyright (c) 2015-2022 The PIVX Core developers
+// Copyright (c) 2015-2022 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -301,7 +301,7 @@ OperationResult initMasternode(const std::string& _strMasterNodePrivKey, const s
 }
 
 //
-// Bootup the Masternode, look for a 10000 PIVX input and register on the network
+// Bootup the Masternode, look for a 10000 hemis input and register on the network
 //
 void CActiveMasternode::ManageStatus()
 {

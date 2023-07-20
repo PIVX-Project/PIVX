@@ -2,7 +2,7 @@
 # Copyright (c) 2017 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Class for pivxd node under test"""
+"""Class for hemisd node under test"""
 
 import contextlib
 import decimal
@@ -41,7 +41,7 @@ class ErrorMatch(Enum):
 
 
 class TestNode():
-    """A class for representing a pivxd node under test.
+    """A class for representing a hemisd node under test.
 
     This class contains:
 
@@ -60,7 +60,7 @@ class TestNode():
         self.rpchost = rpchost
         self.rpc_timeout = timewait
         if binary is None:
-            self.binary = os.getenv("BITCOIND", "pivxd")
+            self.binary = os.getenv("BITCOIND", "hemisd")
         else:
             self.binary = binary
         self.stderr = stderr
@@ -82,7 +82,7 @@ class TestNode():
             "-uacomment=testnode%d" % i
         ]
 
-        self.cli = TestNodeCLI(os.getenv("BITCOINCLI", "pivx-cli"), self.datadir)
+        self.cli = TestNodeCLI(os.getenv("BITCOINCLI", "hemis-cli"), self.datadir)
         self.use_cli = use_cli
 
         self.running = False
@@ -96,7 +96,7 @@ class TestNode():
         self.p2ps = []
 
     def __del__(self):
-        # Ensure that we don't leave any pivxd processes lying around after
+        # Ensure that we don't leave any hemisd processes lying around after
         # the test ends
         if self.process and self.cleanup_on_exit:
             # Should only happen on test failure
@@ -120,20 +120,20 @@ class TestNode():
         if stderr is None:
             stderr = self.stderr
         # Delete any existing cookie file -- if such a file exists (eg due to
-        # unclean shutdown), it will get overwritten anyway by pivxd, and
+        # unclean shutdown), it will get overwritten anyway by hemisd, and
         # potentially interfere with our attempt to authenticate
         delete_cookie_file(self.datadir)
         self.process = subprocess.Popen(self.args + extra_args, stderr=stderr, *args, **kwargs)
         self.running = True
-        self.log.debug("pivxd started, waiting for RPC to come up")
+        self.log.debug("hemisd started, waiting for RPC to come up")
 
     def wait_for_rpc_connection(self):
-        """Sets up an RPC connection to the pivxd process. Returns False if unable to connect."""
+        """Sets up an RPC connection to the hemisd process. Returns False if unable to connect."""
         # Poll at a rate of four times per second
         poll_per_s = 4
         time.sleep(5)
         for _ in range(poll_per_s * self.rpc_timeout):
-            assert self.process.poll() is None, "pivxd exited with status %i during initialization" % self.process.returncode
+            assert self.process.poll() is None, "hemisd exited with status %i during initialization" % self.process.returncode
             try:
                 rpc = get_rpc_proxy(rpc_url(self.datadir, self.index, self.rpchost),
                                     self.index,
@@ -172,11 +172,11 @@ class TestNode():
             except JSONRPCException as e:  # Initialization phase
                 if e.error['code'] != -28:  # RPC in warmup?
                     raise  # unknown JSON RPC exception
-            except ValueError as e:  # cookie file not found and no rpcuser or rpcassword. pivxd still starting
+            except ValueError as e:  # cookie file not found and no rpcuser or rpcassword. hemisd still starting
                 if "No RPC credentials" not in str(e):
                     raise
             time.sleep(1.0 / poll_per_s)
-        raise AssertionError("Unable to connect to pivxd")
+        raise AssertionError("Unable to connect to hemisd")
 
     def get_wallet_rpc(self, wallet_name):
         if self.use_cli:
@@ -225,11 +225,11 @@ class TestNode():
     def assert_start_raises_init_error(self, extra_args=None, expected_msg=None, match=ErrorMatch.FULL_TEXT, *args, **kwargs):
         """Attempt to start the node and expect it to raise an error.
 
-        extra_args: extra arguments to pass through to pivxd
-        expected_msg: regex that stderr should match when pivxd fails
+        extra_args: extra arguments to pass through to hemisd
+        expected_msg: regex that stderr should match when hemisd fails
 
-        Will throw if pivxd starts without an error.
-        Will throw if an expected_msg is provided and it does not match pivxd's stdout."""
+        Will throw if hemisd starts without an error.
+        Will throw if an expected_msg is provided and it does not match hemisd's stdout."""
         with tempfile.SpooledTemporaryFile(max_size=2**16) as log_stderr:
             try:
                 self.start(extra_args, stderr=log_stderr, *args, **kwargs)
@@ -237,7 +237,7 @@ class TestNode():
                 self.stop_node()
                 self.wait_until_stopped()
             except Exception as e:
-                assert 'pivxd exited' in str(e)  # node must have shutdown
+                assert 'hemisd exited' in str(e)  # node must have shutdown
                 self.running = False
                 self.process = None
                 # Check stderr for expected message
@@ -255,9 +255,9 @@ class TestNode():
                             raise AssertionError('Expected message "{}" does not fully match stderr:\n"{}"'.format(expected_msg, stderr))
             else:
                 if expected_msg is None:
-                    assert_msg = "pivxd should have exited with an error"
+                    assert_msg = "hemisd should have exited with an error"
                 else:
-                    assert_msg = "pivxd should have exited with expected error " + expected_msg
+                    assert_msg = "hemisd should have exited with expected error " + expected_msg
                 raise AssertionError(assert_msg)
 
     @contextlib.contextmanager
@@ -304,8 +304,8 @@ class TestNode():
             # So syncing here is redundant when we only want to send a message, but the cost is low (a few milliseconds)
             # in comparison to the upside of making tests less fragile and unexpected intermittent errors less likely.
             p2p_conn.sync_with_ping()
-            # Consistency check that the PIVX Core has received our user agent string. This checks the
-            # node's newest peer. It could be racy if another PIVX Core node has connected since we opened
+            # Consistency check that the hemis Core has received our user agent string. This checks the
+            # node's newest peer. It could be racy if another hemis Core node has connected since we opened
             # our connection, but we don't expect that to happen.
             assert_equal(self.getpeerinfo()[-1]['subver'], MY_SUBVERSION)
 
@@ -338,7 +338,7 @@ class TestNodeCLIAttr:
         return lambda: self(*args, **kwargs)
 
 class TestNodeCLI():
-    """Interface to pivx-cli for an individual node"""
+    """Interface to hemis-cli for an individual node"""
 
     def __init__(self, binary, datadir):
         self.options = []
@@ -348,7 +348,7 @@ class TestNodeCLI():
         self.log = logging.getLogger('TestFramework.bitcoincli')
 
     def __call__(self, *options, input=None):
-        # TestNodeCLI is callable with pivx-cli command-line options
+        # TestNodeCLI is callable with hemis-cli command-line options
         cli = TestNodeCLI(self.binary, self.datadir)
         cli.options = [str(o) for o in options]
         cli.input = input
@@ -367,11 +367,11 @@ class TestNodeCLI():
         return results
 
     def send_cli(self, command=None, *args, **kwargs):
-        """Run pivx-cli command. Deserializes returned string as python object."""
+        """Run hemis-cli command. Deserializes returned string as python object."""
 
         pos_args = [str(arg) for arg in args]
         named_args = [str(key) + "=" + str(value) for (key, value) in kwargs.items()]
-        assert not (pos_args and named_args), "Cannot use positional arguments and named arguments in the same pivx-cli call"
+        assert not (pos_args and named_args), "Cannot use positional arguments and named arguments in the same hemis-cli call"
         p_args = [self.binary, "-datadir=" + self.datadir] + self.options
         if named_args:
             p_args += ["-named"]

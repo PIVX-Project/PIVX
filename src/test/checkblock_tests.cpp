@@ -6,7 +6,7 @@
 // Unit tests for block.CheckBlock()
 //
 
-#include "test/test_pivx.h"
+#include "test/test_hemis.h"
 
 #include "clientversion.h"
 #include "fs.h"

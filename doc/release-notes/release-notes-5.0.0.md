@@ -1,14 +1,14 @@
-PIVX Core version *v5.0.0* is now available from:  <https://github.com/pivx-project/pivx/releases>
+hemis Core version *v5.0.0* is now available from:  <https://github.com/hemis-project/hemis/releases>
 
 This is a new major version release, including various bug fixes and performance improvements, as well as updated translations.
 
-Please report bugs using the issue tracker at github: <https://github.com/pivx-project/pivx/issues>
+Please report bugs using the issue tracker at github: <https://github.com/hemis-project/hemis/issues>
 
 
 Mandatory Update
 ==============
 
-PIVX Core v5.0.0 is a mandatory update for all users. This release contains a protocol upgrade (to `70920`), new consensus rules and improvements that are not backwards compatible with older versions. Users will need to update their clients before enforcement of this update goes into effect.
+hemis Core v5.0.0 is a mandatory update for all users. This release contains a protocol upgrade (to `70920`), new consensus rules and improvements that are not backwards compatible with older versions. Users will need to update their clients before enforcement of this update goes into effect.
 
 Update enforcement is currently scheduled to go into effect at the following block height:
 ```
@@ -21,19 +21,19 @@ Note: In preparation for the enforcement, upgraded peers will start rejecting no
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/hemis-Qt (on Mac) or hemisd/hemis-qt (on Linux).
 
 #### Sapling Parameters
-In order to run, PIVX Core now requires two files, `sapling-output.params` and `sapling-spend.params` (with total size ~50 MB), to be saved in a specific location.
+In order to run, hemis Core now requires two files, `sapling-output.params` and `sapling-spend.params` (with total size ~50 MB), to be saved in a specific location.
 
 For the following packages, no action is required by the user:
 - macOS release `dmg` binaries will use the params that are bundled into the .app bundle.
 - Windows installer `.exe` will automatically copy the files in the proper location.
 - Linux `PPA/Snap/Copr` installs will automatically copy the files in the proper location.
 
-For the other packages, the user must save the param files in the proper location, before being able to run PIVX v5.0.0:
+For the other packages, the user must save the param files in the proper location, before being able to run hemis v5.0.0:
 - macOS/Linux `tar.gz` tarballs include a bash script (`install-params.sh`) to copy the parameters in the appropriate location.
-- Windows `.zip` users need to manually copy the files from the `share/pivx` folder to the `%APPDATA%\PIVXParams` directory.
+- Windows `.zip` users need to manually copy the files from the `share/hemis` folder to the `%APPDATA%\hemisParams` directory.
 - self compilers can run the script from the repository sources (`params/install-params.sh`), or copy the files directly from the `params` subdirectory.
 
 
@@ -41,13 +41,13 @@ For the other packages, the user must save the param files in the proper locatio
 Compatibility
 ==============
 
-PIVX Core is extensively tested on multiple operating systems using the Linux kernel, macOS 10.10+, and Windows 7 and later.
+hemis Core is extensively tested on multiple operating systems using the Linux kernel, macOS 10.10+, and Windows 7 and later.
 
 Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support), No attempt is made to prevent installing or running the software on Windows XP, you can still do so at your own risk but be aware that there are known instabilities and issues. Please do not report issues about Windows XP to the issue tracker.
 
-Apple released it's last Mountain Lion update August 13, 2015, and officially ended support on [December 14, 2015](http://news.fnal.gov/2015/10/mac-os-x-mountain-lion-10-8-end-of-life-december-14/). PIVX Core software starting with v3.2.0 will no longer run on MacOS versions prior to Yosemite (10.10). Please do not report issues about MacOS versions prior to Yosemite to the issue tracker.
+Apple released it's last Mountain Lion update August 13, 2015, and officially ended support on [December 14, 2015](http://news.fnal.gov/2015/10/mac-os-x-mountain-lion-10-8-end-of-life-december-14/). hemis Core software starting with v3.2.0 will no longer run on MacOS versions prior to Yosemite (10.10). Please do not report issues about MacOS versions prior to Yosemite to the issue tracker.
 
-PIVX Core should also work on most other Unix-like systems but is not frequently tested on them.
+hemis Core should also work on most other Unix-like systems but is not frequently tested on them.
 
 
 Notable Changes
@@ -58,7 +58,7 @@ New SHIELD Protocol Implemented!
 
 #### Overview
 Users will be able to protect their financial information by sending and receiving PIVs privately, as well as sending and receiving encrypted messages attached to the shield transactions.
-More visual information about the protocol can be found at https://pivx.org .
+More visual information about the protocol can be found at https://hemis.org .
 
 #### GUI features
 New set of functionalities for the interaction with the SHIELD protocol:
@@ -158,7 +158,7 @@ Account API Removed
 The 'account' API was deprecated in v4.2.0, and has been fully removed in v5.0.0.
 The 'label' API was introduced in v4.2.0 as a replacement for accounts.
 
-See the release notes from [v4.2.0](https://github.com/PIVX-Project/PIVX/blob/master/doc/release-notes/release-notes-4.2.0.md#label-and-account-apis-for-wallet) for a full description of the changes from the 'account' API to the 'label' API.
+See the release notes from [v4.2.0](https://github.com/hemis-Project/hemis/blob/master/doc/release-notes/release-notes-4.2.0.md#label-and-account-apis-for-wallet) for a full description of the changes from the 'account' API to the 'label' API.
 
 SwiftX Removed
 --------------
@@ -471,7 +471,7 @@ Each new command is detailed below:
         "spend" : n,                    (numeric, sapling) the index of the spend within vShieldedSpend
         "txidPrev" : "transactionid",   (string) The id for the transaction this note was created in
         "outputPrev" : n,               (numeric, sapling) the index of the output within the vShieldedOutput
-        "address" : "pivxaddress",      (string) The PIVX address involved in the transaction
+        "address" : "hemisaddress",      (string) The hemis address involved in the transaction
         "value" : x.xxx                 (numeric) The amount in PIV
         "valueSat" : xxxx               (numeric) The amount in satoshis
       }
@@ -480,7 +480,7 @@ Each new command is detailed below:
     "outputs" : [
       {
         "output" : n,                   (numeric, sapling) the index of the output within the vShieldedOutput
-        "address" : "pivxaddress",      (string) The PIVX address involved in the transaction
+        "address" : "hemisaddress",      (string) The hemis address involved in the transaction
         "outgoing" : true|false         (boolean, sapling) True if the output is not for an address in the wallet
         "value" : x.xxx                 (numeric) The amount in PIV
         "valueSat" : xxxx               (numeric) The amount in satoshis
@@ -660,17 +660,17 @@ The table below details RPC commands that have now been fully removed. These com
 | ------------ | ---------------- | ------------------ |
 | `findserial` | Searches the zerocoin database for a zerocoin spend transaction that contains the specified serial | Zerocoin deprecation |
 | `getserials` | Look at the inputs of any tx in a range of blocks and returns the serial numbers for any coinspend | Zerocoin deprecation |
-| `getaccountaddress` | Returned the current PIVX address associated with an internal account | Account system removal |
-| `setaccount` | Associate a PIVX address with an internal account name | Account system removal |
-| `getaccount` | Returned the internal account associated with a given PIVX address | Account system removal |
-| `getaddressesbyaccount` | Returned a list of PIVX addresses associated with an internal account | Account system removal |
+| `getaccountaddress` | Returned the current hemis address associated with an internal account | Account system removal |
+| `setaccount` | Associate a hemis address with an internal account name | Account system removal |
+| `getaccount` | Returned the internal account associated with a given hemis address | Account system removal |
+| `getaddressesbyaccount` | Returned a list of hemis addresses associated with an internal account | Account system removal |
 | `sendtoaddressix` | Send an amount to a given address using SwiftX | SwiftX disabled |
 | `getreceivedbyaccount` | Returned the total amount received by addresses associated with an internal account | Account system removal |
 | `move` | Move funds from one internal account to another internal account | Account system removal |
-| `sendfrom` | Send an amount from an internal account to a PIVX address | Account system removal |
+| `sendfrom` | Send an amount from an internal account to a hemis address | Account system removal |
 | `listreceivedbyaccount` | List received transactions by account | Account system removal |
 | `listaccounts` | List internal account names and balances | Account system removal |
-| `multisend` | Configure sending a portion of stake rewards to a PIVX address | Pending a full rewrite |
+| `multisend` | Configure sending a portion of stake rewards to a hemis address | Pending a full rewrite |
 | `getzerocoinbalance` | Returned the wallet's total zPIV balance | Zerocoin deprecation |
 | `listmintedzerocoins` | List all zPIV mints in the wallet | Zerocoin deprecation |
 | `listzerocoinamounts` | List information about your zerocoin amounts | Zerocoin deprecation |
@@ -878,7 +878,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #2112 `e7283dec9e` [Consensus] Set v5 enforcement height for mainnet (furszy)
 
 ### Build Systems
-- #1856 `1bbb906059` [CMake] Add test_pivx unit test target (Fuzzbawls)
+- #1856 `1bbb906059` [CMake] Add test_hemis unit test target (Fuzzbawls)
 - #1877 `a59e8273fb` [Misc] Fixing recurrent compiler warnings (furszy)
 - #1882 `5bd7d52c2c` [Build][Doc] Post branch-off/release maintenance (Fuzzbawls)
 - #1883 `e7d78bd2c2` [Build] Clean lcov artifacts from all paths (Fuzzbawls)
@@ -891,7 +891,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #2021 `3845c18723` [GA] Reduce number of concurrent jobs (Fuzzbawls)
 - #2022 `8385a96f94` [Build] Package sapling params in repo/release (Fuzzbawls)
 - #2036 `a3e75c2afa` [Build] Proper coverage for ppa (Fuzzbawls)
-- #2041 `a15dc3417d` [Build] CMake pivxd and unit tests: fixing missing MacOS framework. (furszy)
+- #2041 `a15dc3417d` [Build] CMake hemisd and unit tests: fixing missing MacOS framework. (furszy)
 - #2087 `869b621c2c` [Build] Unify header file extensions (Fuzzbawls)
 
 ### P2P/Network
@@ -970,4 +970,4 @@ Thanks to everyone who directly contributed to this release:
 - practicalswift
 - random-zebra
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/), the QA team during Testing and the Node hosts supporting our Testnet.
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/hemis-project-translations/), the QA team during Testing and the Node hosts supporting our Testnet.

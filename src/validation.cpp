@@ -4,7 +4,7 @@
 // Copyright (c) 2011-2013 The PPCoin developers
 // Copyright (c) 2013-2014 The NovaCoin Developers
 // Copyright (c) 2014-2018 The BlackCoin Developers
-// Copyright (c) 2015-2022 The PIVX Core developers
+// Copyright (c) 2015-2022 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -59,7 +59,7 @@
 
 
 #if defined(NDEBUG)
-#error "PIVX cannot be compiled without assertions."
+#error "hemis cannot be compiled without assertions."
 #endif
 
 /**
@@ -1405,7 +1405,7 @@ static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck()
 {
-    util::ThreadRename("pivx-scriptch");
+    util::ThreadRename("hemis-scriptch");
     scriptcheckqueue.Thread();
 }
 
@@ -2762,7 +2762,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         }
         nHeight = pindexPrev->nHeight + 1;
 
-        // PIVX
+        // hemis
         // It is entierly possible that we don't have enough data and this could fail
         // (i.e. the block could indeed be valid). Store the block for later consideration
         // but issue an initial reject message.
@@ -2841,7 +2841,7 @@ bool CheckWork(const CBlock& block, const CBlockIndex* const pindexPrev)
         const Consensus::Params& consensus = Params().GetConsensus();
         if ((block.nTime == (uint32_t) consensus.nPivxBadBlockTime) &&
                 (block.nBits == (uint32_t) consensus.nPivxBadBlockBits)) {
-            // accept PIVX block minted with incorrect proof of work threshold
+            // accept hemis block minted with incorrect proof of work threshold
             return true;
         }
 

@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2022 The PIVX Core developers
+// Copyright (c) 2015-2022 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -522,7 +522,7 @@ bool CBudgetManager::FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTra
 
     CAmount blockValue = GetBlockValue(nHeight);
 
-    // Starting from PIVX v6.0 masternode and budgets are paid in the coinbase tx of PoS blocks
+    // Starting from hemis v6.0 masternode and budgets are paid in the coinbase tx of PoS blocks
     const bool fPayCoinstake = fProofOfStake &&
                                !Params().GetConsensus().NetworkUpgradeActive(nHeight, Consensus::UPGRADE_V6_0);
 

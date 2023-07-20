@@ -12,7 +12,7 @@ top-level functions named as test_<test_case_description>. The test functions
 can be disabled or reordered if needed for debugging. If new test cases are
 added in the future, they should try to follow the same convention and not
 make assumptions about execution order.
-
+"""
 
 from decimal import Decimal
 import io
@@ -25,6 +25,7 @@ from test_framework.util import (
     assert_equal,
     assert_greater_than,
     assert_raises_rpc_error,
+    bytes_to_hex_str,
     hex_str_to_bytes
 )
 
@@ -297,10 +298,9 @@ def submit_block_with_tx(node, tx):
     block.hashMerkleRoot = block.calc_merkle_root()
     blocktools.add_witness_commitment(block)
     block.solve()
-    node.submitblock(block.serialize(True).hex())
+    node.submitblock(bytes_to_hex_str(block.serialize(True)))
     return block
 
 
 if __name__ == "__main__":
     BumpFeeTest().main()
-"""

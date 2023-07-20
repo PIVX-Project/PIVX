@@ -1,10 +1,10 @@
 // Copyright (c) 2014-2020 The Dash Core developers
-// Copyright (c) 2021-2022 The PIVX Core developers
+// Copyright (c) 2021-2022 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_FLAT_DATABASE_H
-#define PIVX_FLAT_DATABASE_H
+#ifndef hemis_FLAT_DATABASE_H
+#define hemis_FLAT_DATABASE_H
 
 #include "chainparams.h"
 #include "clientversion.h"
@@ -180,4 +180,4 @@ public:
 };
 
 
-#endif // PIVX_FLAT_DATABASE_H
+#endif // hemis_FLAT_DATABASE_H

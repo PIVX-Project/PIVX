@@ -1,10 +1,10 @@
 // Copyright (c) 2019-2020 The Dash Core developers
-// Copyright (c) 2021 The PIVX Core developers
+// Copyright (c) 2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_EVO_MNAUTH_H
-#define PIVX_EVO_MNAUTH_H
+#ifndef hemis_EVO_MNAUTH_H
+#define hemis_EVO_MNAUTH_H
 
 #include "bls/bls_wrapper.h"
 #include "serialize.h"
@@ -48,4 +48,4 @@ public:
 };
 
 
-#endif // PIVX_EVO_MNAUTH_H
+#endif // hemis_EVO_MNAUTH_H

@@ -1,10 +1,10 @@
 // Copyright (c) 2011-2020 The Bitcoin Core developers
-// Copyright (c) 2021 The PIVX Core developers
+// Copyright (c) 2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_MAPPORT_H
-#define PIVX_MAPPORT_H
+#ifndef hemis_MAPPORT_H
+#define hemis_MAPPORT_H
 
 #ifdef USE_UPNP
 static constexpr bool DEFAULT_UPNP = USE_UPNP;
@@ -28,4 +28,4 @@ void StartMapPort(bool use_upnp, bool use_natpmp);
 void InterruptMapPort();
 void StopMapPort();
 
-#endif //PIVX_MAPPORT_H
+#endif //hemis_MAPPORT_H

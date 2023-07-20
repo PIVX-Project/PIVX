@@ -1,15 +1,15 @@
 
 #!/bin/sh
 
-# setup pivx account, homedir etc
+# setup hemis account, homedir etc
 
 set -e
 
-BCUSER="pivx"
-BCHOME="/var/lib/pivx"
+BCUSER="hemis"
+BCHOME="/var/lib/hemis"
 
 if [ "$1" = "configure" ]; then
-	# Add pivx user/group - this will gracefully abort if the user already exists.
+	# Add hemis user/group - this will gracefully abort if the user already exists.
 	# A homedir is never created.
 	set +e
 	adduser --system --home "${BCHOME}" --no-create-home --group "${BCUSER}" 2>/dev/null

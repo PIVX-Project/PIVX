@@ -107,7 +107,7 @@ def byte_to_base58(b, version):
     return b58encode(data + checksum)
 
 def keyhash_to_p2pkh(hash, main=False, isCold=False):
-    assert len(hash) == 20
+    assert (len(hash) == 20)
     if isCold:
         version = COLD_ADD_VERSION if main else TNET_COLD_ADD_VERSION
     else:
@@ -115,7 +115,7 @@ def keyhash_to_p2pkh(hash, main=False, isCold=False):
     return byte_to_base58(hash, version)
 
 def scripthash_to_p2sh(hash, main = False):
-    assert len(hash) == 20
+    assert (len(hash) == 20)
     version = SCRIPT_VERSION if main else TNET_SCRIPT_VERSION
     return byte_to_base58(hash, version)
 
@@ -142,11 +142,11 @@ def check_key(key):
         key = hex_str_to_bytes(key) # Assuming this is hex string
     if (type(key) is bytes and (len(key) == 33 or len(key) == 65)):
         return key
-    assert False
+    assert(False)
 
 def check_script(script):
     if (type(script) is str):
         script = hex_str_to_bytes(script) # Assuming this is hex string
     if (type(script) is bytes or type(script) is CScript):
         return script
-    assert False
+    assert(False)

@@ -137,7 +137,7 @@ def check_estimates(node, fees_seen, max_invalid, print_estimates = True):
         if e >= 0:
             valid_estimate = True
             if i >= 13:  # for n>=14 estimatesmartfee(n/2) should be at least as high as estimatefee(n)
-                assert node.estimatesmartfee((i+1)//2)["feerate"] > float(e) - delta
+                assert(node.estimatesmartfee((i+1)//2)["feerate"] > float(e) - delta)
 
         else:
             invalid_estimates += 1
@@ -145,8 +145,8 @@ def check_estimates(node, fees_seen, max_invalid, print_estimates = True):
             # estimatesmartfee should still be valid
             approx_estimate = node.estimatesmartfee(i+1)["feerate"]
             answer_found = node.estimatesmartfee(i+1)["blocks"]
-            assert approx_estimate > 0
-            assert answer_found > i+1
+            assert(approx_estimate > 0)
+            assert(answer_found > i+1)
 
             # Once we're at a high enough confirmation count that we can give an estimate
             # We should have estimates for all higher confirmation counts

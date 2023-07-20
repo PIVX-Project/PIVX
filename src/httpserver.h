@@ -1,10 +1,10 @@
 // Copyright (c) 2015-2021 The Bitcoin Core developers
-// Copyright (c) 2021 The PIVX Core developers
+// Copyright (c) 2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_HTTPSERVER_H
-#define PIVX_HTTPSERVER_H
+#ifndef hemis_HTTPSERVER_H
+#define hemis_HTTPSERVER_H
 
 #include <string>
 #include <stdint.h>
@@ -151,4 +151,4 @@ private:
 
 std::string urlDecode(const std::string &urlEncoded);
 
-#endif // PIVX_HTTPSERVER_H
+#endif // hemis_HTTPSERVER_H

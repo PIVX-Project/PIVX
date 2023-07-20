@@ -1,5 +1,5 @@
 // Copyright (c) 2018-2020 The ZCash developers
-// Copyright (c) 2021 The PIVX Core developers
+// Copyright (c) 2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
@@ -14,10 +14,10 @@
 #include <librustzcash.h>
 #include <sodium.h>
 
-const unsigned char PIVX_HD_SEED_FP_PERSONAL[crypto_generichash_blake2b_PERSONALBYTES] =
+const unsigned char hemis_HD_SEED_FP_PERSONAL[crypto_generichash_blake2b_PERSONALBYTES] =
     {'P', 'I', 'V', 'X', '_', '_', 'H', 'D', '_', 'S', 'e', 'e', 'd', '_', 'F', 'P'};
 
-const unsigned char PIVX_TADDR_OVK_PERSONAL[crypto_generichash_blake2b_PERSONALBYTES] =
+const unsigned char hemis_TADDR_OVK_PERSONAL[crypto_generichash_blake2b_PERSONALBYTES] =
         {'P', 'x', 'T', 'a', 'd', 'd', 'r', 'T', 'o', 'S', 'a', 'p', 'l', 'i', 'n', 'g'};
 
 HDSeed HDSeed::Random(size_t len)
@@ -30,7 +30,7 @@ HDSeed HDSeed::Random(size_t len)
 
 uint256 HDSeed::Fingerprint() const
 {
-    CBLAKE2bWriter h(SER_GETHASH, 0, PIVX_HD_SEED_FP_PERSONAL);
+    CBLAKE2bWriter h(SER_GETHASH, 0, hemis_HD_SEED_FP_PERSONAL);
     h << seed;
     return h.GetHash();
 }
@@ -45,7 +45,7 @@ uint256 ovkForShieldingFromTaddr(HDSeed& seed) {
             nullptr, 0, // No key.
             64,
             nullptr,    // No salt.
-            PIVX_TADDR_OVK_PERSONAL) == 0);
+            hemis_TADDR_OVK_PERSONAL) == 0);
     crypto_generichash_blake2b_update(&state, rawSeed.data(), rawSeed.size());
     auto intermediate = std::array<unsigned char, 64>();
     crypto_generichash_blake2b_final(&state, intermediate.data(), 64);

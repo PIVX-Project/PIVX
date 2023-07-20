@@ -1,10 +1,10 @@
 
-## <summary>policy for pivx</summary>
+## <summary>policy for hemis</summary>
 
 
 ########################################
 ## <summary>
-##	Transition to pivx.
+##	Transition to hemis.
 ## </summary>
 ## <param name="domain">
 ## <summary>
@@ -12,19 +12,19 @@
 ## </summary>
 ## </param>
 #
-interface(`pivx_domtrans',`
+interface(`hemis_domtrans',`
 	gen_require(`
-		type pivx_t, pivx_exec_t;
+		type hemis_t, hemis_exec_t;
 	')
 
 	corecmd_search_bin($1)
-	domtrans_pattern($1, pivx_exec_t, pivx_t)
+	domtrans_pattern($1, hemis_exec_t, hemis_t)
 ')
 
 
 ########################################
 ## <summary>
-##	Execute pivx server in the pivx domain.
+##	Execute hemis server in the hemis domain.
 ## </summary>
 ## <param name="domain">
 ##	<summary>
@@ -32,18 +32,18 @@ interface(`pivx_domtrans',`
 ##	</summary>
 ## </param>
 #
-interface(`pivx_initrc_domtrans',`
+interface(`hemis_initrc_domtrans',`
 	gen_require(`
-		type pivx_initrc_exec_t;
+		type hemis_initrc_exec_t;
 	')
 
-	init_labeled_script_domtrans($1, pivx_initrc_exec_t)
+	init_labeled_script_domtrans($1, hemis_initrc_exec_t)
 ')
 
 
 ########################################
 ## <summary>
-##	Search pivx lib directories.
+##	Search hemis lib directories.
 ## </summary>
 ## <param name="domain">
 ##	<summary>
@@ -51,18 +51,18 @@ interface(`pivx_initrc_domtrans',`
 ##	</summary>
 ## </param>
 #
-interface(`pivx_search_lib',`
+interface(`hemis_search_lib',`
 	gen_require(`
-		type pivx_var_lib_t;
+		type hemis_var_lib_t;
 	')
 
-	allow $1 pivx_var_lib_t:dir search_dir_perms;
+	allow $1 hemis_var_lib_t:dir search_dir_perms;
 	files_search_var_lib($1)
 ')
 
 ########################################
 ## <summary>
-##	Read pivx lib files.
+##	Read hemis lib files.
 ## </summary>
 ## <param name="domain">
 ##	<summary>
@@ -70,18 +70,18 @@ interface(`pivx_search_lib',`
 ##	</summary>
 ## </param>
 #
-interface(`pivx_read_lib_files',`
+interface(`hemis_read_lib_files',`
 	gen_require(`
-		type pivx_var_lib_t;
+		type hemis_var_lib_t;
 	')
 
 	files_search_var_lib($1)
-	read_files_pattern($1, pivx_var_lib_t, pivx_var_lib_t)
+	read_files_pattern($1, hemis_var_lib_t, hemis_var_lib_t)
 ')
 
 ########################################
 ## <summary>
-##	Manage pivx lib files.
+##	Manage hemis lib files.
 ## </summary>
 ## <param name="domain">
 ##	<summary>
@@ -89,18 +89,18 @@ interface(`pivx_read_lib_files',`
 ##	</summary>
 ## </param>
 #
-interface(`pivx_manage_lib_files',`
+interface(`hemis_manage_lib_files',`
 	gen_require(`
-		type pivx_var_lib_t;
+		type hemis_var_lib_t;
 	')
 
 	files_search_var_lib($1)
-	manage_files_pattern($1, pivx_var_lib_t, pivx_var_lib_t)
+	manage_files_pattern($1, hemis_var_lib_t, hemis_var_lib_t)
 ')
 
 ########################################
 ## <summary>
-##	Manage pivx lib directories.
+##	Manage hemis lib directories.
 ## </summary>
 ## <param name="domain">
 ##	<summary>
@@ -108,20 +108,20 @@ interface(`pivx_manage_lib_files',`
 ##	</summary>
 ## </param>
 #
-interface(`pivx_manage_lib_dirs',`
+interface(`hemis_manage_lib_dirs',`
 	gen_require(`
-		type pivx_var_lib_t;
+		type hemis_var_lib_t;
 	')
 
 	files_search_var_lib($1)
-	manage_dirs_pattern($1, pivx_var_lib_t, pivx_var_lib_t)
+	manage_dirs_pattern($1, hemis_var_lib_t, hemis_var_lib_t)
 ')
 
 
 ########################################
 ## <summary>
 ##	All of the rules required to administrate
-##	a pivx environment
+##	a hemis environment
 ## </summary>
 ## <param name="domain">
 ##	<summary>
@@ -135,23 +135,23 @@ interface(`pivx_manage_lib_dirs',`
 ## </param>
 ## <rolecap/>
 #
-interface(`pivx_admin',`
+interface(`hemis_admin',`
 	gen_require(`
-		type pivx_t;
-		type pivx_initrc_exec_t;
-		type pivx_var_lib_t;
+		type hemis_t;
+		type hemis_initrc_exec_t;
+		type hemis_var_lib_t;
 	')
 
-	allow $1 pivx_t:process { ptrace signal_perms };
-	ps_process_pattern($1, pivx_t)
+	allow $1 hemis_t:process { ptrace signal_perms };
+	ps_process_pattern($1, hemis_t)
 
-	pivx_initrc_domtrans($1)
+	hemis_initrc_domtrans($1)
 	domain_system_change_exemption($1)
-	role_transition $2 pivx_initrc_exec_t system_r;
+	role_transition $2 hemis_initrc_exec_t system_r;
 	allow $2 system_r;
 
 	files_search_var_lib($1)
-	admin_pattern($1, pivx_var_lib_t)
+	admin_pattern($1, hemis_var_lib_t)
 
 ')
 

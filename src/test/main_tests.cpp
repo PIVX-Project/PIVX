@@ -1,10 +1,18 @@
 // Copyright (c) 2014 The Bitcoin Core developers
 // Copyright (c) 2014-2015 The Dash developers
+<<<<<<< HEAD
 // Copyright (c) 2015-2021 The PIVX Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "test/test_pivx.h"
+=======
+// Copyright (c) 2015-2021 The hemis Core developers
+// Distributed under the MIT/X11 software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#include "test/test_hemis.h"
+>>>>>>> 1f345019d (first step)
 
 #include "blocksignature.h"
 #include "net.h"

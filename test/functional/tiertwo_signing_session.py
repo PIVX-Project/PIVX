@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2023 The PIVX Core developers
+# Copyright (c) 2023 The hemis Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test a generic LLQM signing session"""
@@ -14,7 +14,7 @@ class SigningSessionTest(PivxDMNTestFramework):
 
     def set_test_params(self):
         self.set_base_test_params()
-        self.extra_args = [["-nuparams=v5_shield:1", "-nuparams=PIVX_v5.5:130", "-nuparams=v6_evo:130", "-debug=llmq", "-debug=dkg", "-debug=net"]] * self.num_nodes
+        self.extra_args = [["-nuparams=v5_shield:1", "-nuparams=hemis_v5.5:130", "-nuparams=v6_evo:130", "-debug=llmq", "-debug=dkg", "-debug=net"]] * self.num_nodes
         self.extra_args[0].append("-sporkkey=932HEevBSujW2ud7RfB1YF91AFygbBRQj3de3LyaCRqNzKKgWXi")
 
     def run_test(self):

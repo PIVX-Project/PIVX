@@ -1,15 +1,15 @@
 QT_TS = \
-  qt/locale/pivx_de.ts \
-  qt/locale/pivx_en.ts \
-  qt/locale/pivx_en_US.ts \
-  qt/locale/pivx_es.ts \
-  qt/locale/pivx_es_ES.ts \
-  qt/locale/pivx_fr_FR.ts \
-  qt/locale/pivx_hr_HR.ts \
-  qt/locale/pivx_it.ts \
-  qt/locale/pivx_ko_KR.ts \
-  qt/locale/pivx_nl.ts \
-  qt/locale/pivx_pl.ts \
-  qt/locale/pivx_ru.ts \
-  qt/locale/pivx_tr.ts \
-  qt/locale/pivx_zh_CN.ts
+  qt/locale/hemis_de.ts \
+  qt/locale/hemis_en.ts \
+  qt/locale/hemis_en_US.ts \
+  qt/locale/hemis_es.ts \
+  qt/locale/hemis_es_ES.ts \
+  qt/locale/hemis_fr_FR.ts \
+  qt/locale/hemis_hr_HR.ts \
+  qt/locale/hemis_it.ts \
+  qt/locale/hemis_ko_KR.ts \
+  qt/locale/hemis_nl.ts \
+  qt/locale/hemis_pl.ts \
+  qt/locale/hemis_ru.ts \
+  qt/locale/hemis_tr.ts \
+  qt/locale/hemis_zh_CN.ts

@@ -8,7 +8,7 @@ from io import BytesIO
 
 from test_framework.messages import CTransaction
 from test_framework.test_framework import PivxTestFramework
-from test_framework.util import assert_equal, hex_str_to_bytes
+from test_framework.util import assert_equal, bytes_to_hex_str, hex_str_to_bytes
 
 class DecodeScriptTest(PivxTestFramework):
     def set_test_params(self):
@@ -149,7 +149,7 @@ class DecodeScriptTest(PivxTestFramework):
         # some more full transaction tests of varying specific scriptSigs. used instead of
         # tests in decodescript_script_sig because the decodescript RPC is specifically
         # for working on scriptPubKeys (argh!).
-        push_signature = txSave.vin[0].scriptSig.hex()[2:(0x48 * 2 + 4)]
+        push_signature = bytes_to_hex_str(txSave.vin[0].scriptSig)[2:(0x48 * 2 + 4)]
         signature = push_signature[2:]
         der_signature = signature[:-2]
         signature_sighash_decoded = der_signature + '[ALL]'
@@ -159,24 +159,24 @@ class DecodeScriptTest(PivxTestFramework):
 
         # 1) P2PK scriptSig
         txSave.vin[0].scriptSig = hex_str_to_bytes(push_signature)
-        rpc_result = self.nodes[0].decoderawtransaction(txSave.serialize().hex())
+        rpc_result = self.nodes[0].decoderawtransaction(bytes_to_hex_str(txSave.serialize()))
         assert_equal(signature_sighash_decoded, rpc_result['vin'][0]['scriptSig']['asm'])
 
         # make sure that the sighash decodes come out correctly for a more complex / lesser used case.
         txSave.vin[0].scriptSig = hex_str_to_bytes(push_signature_2)
-        rpc_result = self.nodes[0].decoderawtransaction(txSave.serialize().hex())
+        rpc_result = self.nodes[0].decoderawtransaction(bytes_to_hex_str(txSave.serialize()))
         assert_equal(signature_2_sighash_decoded, rpc_result['vin'][0]['scriptSig']['asm'])
 
         # 2) multisig scriptSig
         txSave.vin[0].scriptSig = hex_str_to_bytes('00' + push_signature + push_signature_2)
-        rpc_result = self.nodes[0].decoderawtransaction(txSave.serialize().hex())
+        rpc_result = self.nodes[0].decoderawtransaction(bytes_to_hex_str(txSave.serialize()))
         assert_equal('0 ' + signature_sighash_decoded + ' ' + signature_2_sighash_decoded,
                      rpc_result['vin'][0]['scriptSig']['asm'])
 
         # 3) test a scriptSig that contains more than push operations.
         # in fact, it contains an OP_RETURN with data specially crafted to cause improper decode if the code does not catch it.
         txSave.vin[0].scriptSig = hex_str_to_bytes('6a143011020701010101010101020601010101010101')
-        rpc_result = self.nodes[0].decoderawtransaction(txSave.serialize().hex())
+        rpc_result = self.nodes[0].decoderawtransaction(bytes_to_hex_str(txSave.serialize()))
         assert_equal('OP_RETURN 3011020701010101010101020601010101010101', rpc_result['vin'][0]['scriptSig']['asm'])
 
     def run_test(self):

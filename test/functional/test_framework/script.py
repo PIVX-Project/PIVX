@@ -8,26 +8,35 @@ This file is modified from python-bitcoinlib.
 """
 
 import struct
+import sys
 
 from .bignum import bn2vch
 from .messages import CTransaction, CTxOut, sha256, hash256
 from .ripemd160 import ripemd160
-from typing import List, Dict
+from binascii import hexlify
+
+
+bchr = chr
+bord = ord
+if sys.version > '3':
+    long = int
+    bchr = lambda x: bytes([x])
+    bord = lambda x: x
 
 
 MAX_SCRIPT_ELEMENT_SIZE = 520
 MAX_PUBKEYS_PER_MULTISIG = 20
 
-OPCODE_NAMES = {}  # type: Dict[CScriptOp, str]
+OPCODE_NAMES = {}
 
 def hash160(s):
     return ripemd160(sha256(s))
 
 
-_opcode_instances = []  # type: List[CScriptOp]
+_opcode_instances = []
 class CScriptOp(int):
     """A single script opcode"""
-    __slots__ = ()
+    __slots__ = []
 
     @staticmethod
     def encode_op_pushdata(d):
@@ -362,11 +371,8 @@ class CScriptTruncatedPushDataError(CScriptInvalidError):
         self.data = data
         super(CScriptTruncatedPushDataError, self).__init__(msg)
 
-
 # This is used, eg, for blockchain heights in coinbase scripts (bip34)
-class CScriptNum:
-    __slots__ = ("value",)
-
+class CScriptNum():
     def __init__(self, d=0):
         self.value = d
 
@@ -397,8 +403,6 @@ class CScript(bytes):
 
     iter(script) however does iterate by opcode.
     """
-    __slots__ = ()
-
     @classmethod
     def __coerce_instance(cls, other):
         # Coerce other into bytes
@@ -526,7 +530,7 @@ class CScript(bytes):
     def __repr__(self):
         def _repr(o):
             if isinstance(o, bytes):
-                return "x('%s')" % o.hex()
+                return "x('%s')" % hexlify(o).decode('ascii')
             else:
                 return repr(o)
 

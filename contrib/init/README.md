@@ -1,11 +1,11 @@
 Sample configuration files for:
 ```
-SystemD: pivxd.service
-Upstart: pivxd.conf
-OpenRC:  pivxd.openrc
-         pivxd.openrcconf
-CentOS:  pivxd.init
-macOS:    org.pivx.pivxd.plist
+SystemD: hemisd.service
+Upstart: hemisd.conf
+OpenRC:  hemisd.openrc
+         hemisd.openrcconf
+CentOS:  hemisd.init
+macOS:    org.hemis.hemisd.plist
 ```
 have been made available to assist packagers in creating node packages here.
 

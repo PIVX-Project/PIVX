@@ -1,13 +1,13 @@
 [Desktop Entry]
 Version=1.0
-Name=PIVX Core
-Comment=PIVX P2P Cryptocurrency
-Comment[fr]=PIVX, monnaie virtuelle cryptographique pair à pair
-Comment[tr]=PIVX, eşten eşe kriptografik sanal para birimi
-Exec=pivx-qt %u
+Name=hemis Core
+Comment=hemis P2P Cryptocurrency
+Comment[fr]=hemis, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=hemis, eşten eşe kriptografik sanal para birimi
+Exec=hemis-qt %u
 Terminal=false
 Type=Application
-Icon=pivx128
-MimeType=x-scheme-handler/pivx;
+Icon=hemis128
+MimeType=x-scheme-handler/hemis;
 Categories=Office;Finance;
 StartupWMClass=Pivx-qt

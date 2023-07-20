@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Pieter Wuille
 // Copyright (c) 2012-2015 The Bitcoin developers
-// Copyright (c) 2017-2021 The PIVX Core developers
+// Copyright (c) 2017-2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +8,7 @@
 #define BITCOIN_ADDRMAN_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/pivx-config.h"
+#include "config/hemis-config.h"
 #endif //HAVE_CONFIG_H
 
 #include "clientversion.h"
@@ -325,12 +325,12 @@ public:
      * * format version byte (@see `Format`)
      * * lowest compatible format version byte. This is used to help old software decide
      *   whether to parse the file. For example:
-     *   * PIVX Core version N knows how to parse up to format=3. If a new format=4 is
+     *   * hemis Core version N knows how to parse up to format=3. If a new format=4 is
      *     introduced in version N+1 that is compatible with format=3 and it is known that
      *     version N will be able to parse it, then version N+1 will write
      *     (format=4, lowest_compatible=3) in the first two bytes of the file, and so
      *     version N will still try to parse it.
-     *   * PIVX Core version N+2 introduces a new incompatible format=5. It will write
+     *   * hemis Core version N+2 introduces a new incompatible format=5. It will write
      *     (format=5, lowest_compatible=5) and so any versions that do not know how to parse
      *     format=5 will not try to read the file.
      * * nKey

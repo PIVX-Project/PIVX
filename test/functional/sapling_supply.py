@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2020-2021 The PIVX Core developers
+# Copyright (c) 2020-2021 The hemis Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php .
 
@@ -18,7 +18,7 @@ class SaplingSupplyTest(PivxTestFramework):
         self.extra_args = [['-nuparams=v5_shield:1']]
 
     def generate_and_sync(self, count):
-        assert count > 0
+        assert(count > 0)
         height = self.nodes[0].getblockcount()
         self.nodes[0].generate(count)
         assert_equal(height + count, self.nodes[0].getblockcount())

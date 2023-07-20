@@ -3,10 +3,10 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>org.pivx.pivxd</string>
+	<string>org.hemis.hemisd</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/usr/local/bin/pivxd</string>
+		<string>/usr/local/bin/hemisd</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

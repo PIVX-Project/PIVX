@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2021 The Bitcoin developers
-// Copyright (c) 2019-2021 The PIVX Core developers
+// Copyright (c) 2019-2021 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -138,7 +138,7 @@ bool BerkeleyEnvironment::Open(bool retry)
     fs::path pathIn = strPath;
     TryCreateDirectories(pathIn);
     if (!LockDirectory(pathIn, ".walletlock")) {
-        LogPrintf("Cannot obtain a lock on wallet directory %s. Another instance of PIVX may be using it.\n", strPath);
+        LogPrintf("Cannot obtain a lock on wallet directory %s. Another instance of hemis may be using it.\n", strPath);
         return false;
     }
 
@@ -493,7 +493,7 @@ BerkeleyBatch::BerkeleyBatch(BerkeleyDatabase& database, const char* pszMode, bo
             // files in the same environment have the same fileid.
             //
             // Also call CheckUniqueFileid on all the other g_dbenvs to prevent
-            // PIVX from opening the same data file through another
+            // hemis from opening the same data file through another
             // environment when the file is referenced through equivalent but
             // not obviously identical symlinked or hard linked or bind mounted
             // paths. In the future a more relaxed check for equal inode and

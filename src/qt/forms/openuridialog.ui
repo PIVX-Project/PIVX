@@ -56,7 +56,7 @@
       <item>
        <widget class="QLabel" name="labelTitle">
         <property name="text">
-         <string>Open PIVX URI</string>
+         <string>Open hemis URI</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

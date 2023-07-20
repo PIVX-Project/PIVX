@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2015-2021 The Bitcoin Core developers
-# Copyright (c) 2020-2022 The PIVX Core developers
+# Copyright (c) 2020-2022 The hemis Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test block processing."""
@@ -312,7 +312,7 @@ class FullBlockTest(PivxTestFramework):
         b26 = self.update_block(26, [])
         self.send_blocks([b26], False, "bad-cb-length", reconnect=True)
 
-        # Extend the b26 chain to make sure pivxd isn't accepting b26
+        # Extend the b26 chain to make sure hemisd isn't accepting b26
         b27 = self.next_block(27, spend=out[7])
         self.send_blocks([b27], False)
 
@@ -324,7 +324,7 @@ class FullBlockTest(PivxTestFramework):
         b28 = self.update_block(28, [])
         self.send_blocks([b28], False, "bad-cb-length", reconnect=True)
 
-        # Extend the b28 chain to make sure pivxd isn't accepting b28
+        # Extend the b28 chain to make sure hemisd isn't accepting b28
         b29 = self.next_block(29, spend=out[7])
         self.send_blocks([b29], False)
         # b30
@@ -441,7 +441,7 @@ class FullBlockTest(PivxTestFramework):
         tx_new = None
         tx_last = tx
         total_size = len(b39.serialize())
-        while total_size < MAX_BLOCK_BASE_SIZE:
+        while(total_size < MAX_BLOCK_BASE_SIZE):
             tx_new = self.create_tx(tx_last, 1, 1, p2sh_script)
             tx_new.vout.append(CTxOut(tx_last.vout[1].nValue - 1, CScript([OP_TRUE])))
             tx_new.rehash()
@@ -622,7 +622,7 @@ class FullBlockTest(PivxTestFramework):
         self.send_blocks([b53], False)
         self.save_spendable_output()
 
-        # PIVX: timestamp checks disabled for regtest
+        # hemis: timestamp checks disabled for regtest
 
         # valid timestamp
         self.move_tip(53)
@@ -714,7 +714,7 @@ class FullBlockTest(PivxTestFramework):
         self.move_tip(57)
         b58 = self.next_block(58, spend=out[17])
         tx = CTransaction()
-        assert len(out[17].tx.vout) < 42
+        assert(len(out[17].tx.vout) < 42)
         tx.vin.append(CTxIn(COutPoint(out[17].tx.sha256, 42), CScript([OP_TRUE]), 0xffffffff))
         tx.vout.append(CTxOut(0, CScript([OP_TRUE])))
         tx.calc_sha256()
@@ -763,10 +763,10 @@ class FullBlockTest(PivxTestFramework):
         b62 = self.next_block(62)
         tx = CTransaction()
         tx.nLockTime = 0xffffffff  # this locktime is non-final
-        assert out[18].n < len(out[18].tx.vout)
+        assert(out[18].n < len(out[18].tx.vout))
         tx.vin.append(CTxIn(COutPoint(out[18].tx.sha256, out[18].n)))  # don't set nSequence
         tx.vout.append(CTxOut(0, CScript([OP_TRUE])))
-        assert tx.vin[0].nSequence < 0xffffffff
+        assert(tx.vin[0].nSequence < 0xffffffff)
         tx.calc_sha256()
         b62 = self.update_block(62, [tx])
         self.send_blocks([b62], False, "bad-txns-nonfinal")
@@ -998,7 +998,7 @@ class FullBlockTest(PivxTestFramework):
         #
         #    The tx'es must be unsigned and pass the node's mempool policy.  It is unsigned for the
         #    rather obscure reason that the Python signature code does not distinguish between
-        #    Low-S and High-S values (whereas the pivx code has custom code which does so);
+        #    Low-S and High-S values (whereas the hemis code has custom code which does so);
         #    as a result of which, the odds are 50% that the python code will use the right
         #    value and the transaction will be accepted into the mempool. Until we modify the
         #    test framework to support low-S signing, we are out of luck.
@@ -1043,8 +1043,8 @@ class FullBlockTest(PivxTestFramework):
         # now check that tx78 and tx79 have been put back into the peer's mempool
         mempool = self.nodes[0].getrawmempool()
         assert_equal(len(mempool), 2)
-        assert tx78.hash in mempool
-        assert tx79.hash in mempool
+        assert(tx78.hash in mempool)
+        assert(tx79.hash in mempool)
 
         # Test invalid opcodes in dead execution paths.
         #
@@ -1220,7 +1220,7 @@ class FullBlockTest(PivxTestFramework):
         if reconnect:
             self.reconnect_p2p()
 
-    # PIVX
+    # hemis
     # create a block with a tx spending a given out, and lots of txes spending the outputs created
     # in the first one. Keep the tx size under 150 kB limit.
     def create_sized_block(self, block, spend, block_size):

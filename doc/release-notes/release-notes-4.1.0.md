@@ -1,8 +1,8 @@
-PIVX Core version *4.1.0* is now available from:  <https://github.com/pivx-project/pivx/releases>
+hemis Core version *4.1.0* is now available from:  <https://github.com/hemis-project/hemis/releases>
 
 This is a new major version release, including various bug fixes and performance improvements, as well as updated translations.
 
-Please report bugs using the issue tracker at github: <https://github.com/pivx-project/pivx/issues>
+Please report bugs using the issue tracker at github: <https://github.com/hemis-project/hemis/issues>
 
 
 Recommended Update
@@ -13,19 +13,19 @@ This version is an optional, but recommended, update for all users and services.
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/hemis-Qt (on Mac) or hemisd/hemis-qt (on Linux).
 
 
 Compatibility
 ==============
 
-PIVX Core is extensively tested on multiple operating systems using the Linux kernel, macOS 10.10+, and Windows 7 and later.
+hemis Core is extensively tested on multiple operating systems using the Linux kernel, macOS 10.10+, and Windows 7 and later.
 
 Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support), No attempt is made to prevent installing or running the software on Windows XP, you can still do so at your own risk but be aware that there are known instabilities and issues. Please do not report issues about Windows XP to the issue tracker.
 
-Apple released it's last Mountain Lion update August 13, 2015, and officially ended support on [December 14, 2015](http://news.fnal.gov/2015/10/mac-os-x-mountain-lion-10-8-end-of-life-december-14/). PIVX Core software starting with v3.2.0 will no longer run on MacOS versions prior to Yosemite (10.10). Please do not report issues about MacOS versions prior to Yosemite to the issue tracker.
+Apple released it's last Mountain Lion update August 13, 2015, and officially ended support on [December 14, 2015](http://news.fnal.gov/2015/10/mac-os-x-mountain-lion-10-8-end-of-life-december-14/). hemis Core software starting with v3.2.0 will no longer run on MacOS versions prior to Yosemite (10.10). Please do not report issues about MacOS versions prior to Yosemite to the issue tracker.
 
-PIVX Core should also work on most other Unix-like systems but is not frequently tested on them.
+hemis Core should also work on most other Unix-like systems but is not frequently tested on them.
 
 
 Notable Changes
@@ -36,12 +36,12 @@ Hierarchical Deterministic Wallet (HD Wallet)
 
 Wallets under a tree derivation structure in which keypairs are generated deterministically from a single seed, which can be shared partially or entirely with different systems, each with or without the ability to spend coins, [BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki).
 
-Enabling major improvements over the keystore management, the PIVX wallet doesn't require regular backups as before, keys are following a deterministic creation path that can be verified at any time (before HD Wallet, every keypair was randomly created and added to the keypool, forcing the user to backup the wallet every certain amount of time or could end up loosing coins forever if the latest `wallet.dat` was not being used).
+Enabling major improvements over the keystore management, the hemis wallet doesn't require regular backups as before, keys are following a deterministic creation path that can be verified at any time (before HD Wallet, every keypair was randomly created and added to the keypool, forcing the user to backup the wallet every certain amount of time or could end up loosing coins forever if the latest `wallet.dat` was not being used).
 As well as new possibilities like the account extended public key that enables deterministic public keys creation without the private keys requisite inside the wallet (A good use case could be online stores generating fresh addresses).
 
 This work includes a customization/extension to the [BIP44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki) standard. We have included an unique staking keys derivation path which introduced the deterministic generation/recovery of staking addresses.
 
-An extended description of this large work can be found in the PR [here](https://github.com/PIVX-Project/PIVX/pull/1327).
+An extended description of this large work can be found in the PR [here](https://github.com/hemis-Project/hemis/pull/1327).
 
 ### HD Wallet FAQ
 
@@ -89,38 +89,38 @@ GUI Changes
 
 ### Keyboard navigation
 
-Dialogs can now be accepted with the `ENTER` (`RETURN`) key, and dismissed with the `ESC` key ([#1392](https://github.com/PIVX-Project/PIVX/pull/1392)).
+Dialogs can now be accepted with the `ENTER` (`RETURN`) key, and dismissed with the `ESC` key ([#1392](https://github.com/hemis-Project/hemis/pull/1392)).
 
 ### Address sorting
 
 Address sorting in "My Addresses" / "Contacts" / "Cold Staking" can now be customized, setting it either by label (default), by address, or by creation date, ascending (default) or descending order.
-Addresses in the dropdown of the "Send Transaction" and "Send Delegation" widgets are now automatically sorted by label with ascending order ([#1393](https://github.com/PIVX-Project/PIVX/pull/1393)).
+Addresses in the dropdown of the "Send Transaction" and "Send Delegation" widgets are now automatically sorted by label with ascending order ([#1393](https://github.com/hemis-Project/hemis/pull/1393)).
 
 ### Custom Fee
 
-The custom fee selected when sending a transaction is now saved in the wallet database and persisted across multiple sends and wallet's restarts ([#1406](https://github.com/PIVX-Project/PIVX/pull/1406)). The fee is now also validated against the maximum value (10000 times `minRelayTxFee`) and minimum value (`minTxFee`) ([#1576](https://github.com/PIVX-Project/PIVX/pull/1576)).
+The custom fee selected when sending a transaction is now saved in the wallet database and persisted across multiple sends and wallet's restarts ([#1406](https://github.com/hemis-Project/hemis/pull/1406)). The fee is now also validated against the maximum value (10000 times `minRelayTxFee`) and minimum value (`minTxFee`) ([#1576](https://github.com/hemis-Project/hemis/pull/1576)).
 
 ### Include delegations in send
 
-The send and cold-staking page present a checkbox to make the automatic input selection algorithm include delegated (P2CS) utxos if needed. The option is unchecked by default. ([#1391](https://github.com/PIVX-Project/PIVX/pull/1391))
+The send and cold-staking page present a checkbox to make the automatic input selection algorithm include delegated (P2CS) utxos if needed. The option is unchecked by default. ([#1391](https://github.com/hemis-Project/hemis/pull/1391))
 
 ### Optional Hiding of Staking Charts
 
-The staking charts can now be hidden at startup (with a flag `--hidecharts`) or at runtime with a checkbox in settings --> options --> display ([#1475](https://github.com/PIVX-Project/PIVX/pull/1475)).
+The staking charts can now be hidden at startup (with a flag `--hidecharts`) or at runtime with a checkbox in settings --> options --> display ([#1475](https://github.com/hemis-Project/hemis/pull/1475)).
 
 ### Context Lock/Unlock
 
 Present the unlock dialog directly (instead of an error message), whenever an action on encrypted/locked wallet requires full unlock.<br>
 
-Restore the previous locking state ("locked" or "locked for staking only") when the action is completed. ([#1387](https://github.com/PIVX-Project/PIVX/pull/1387))
+Restore the previous locking state ("locked" or "locked for staking only") when the action is completed. ([#1387](https://github.com/hemis-Project/hemis/pull/1387))
 
 ### External Change Address Warning
 
-A new warning/confirmation dialog is displayed if a custom change address is not part of the wallet. ([#1527](https://github.com/PIVX-Project/PIVX/pull/1527))
+A new warning/confirmation dialog is displayed if a custom change address is not part of the wallet. ([#1527](https://github.com/hemis-Project/hemis/pull/1527))
 
 ### Cold Stake delegations marked in Coin Control
 
-The Coin Control window now includes an icon next to the select checkbox when the UTXO is a Cold Stake delegation. This shares the space with the locked UTXO indicator icon, and locked UTXO's take priority in their icon display. ([#1470](https://github.com/PIVX-Project/PIVX/pull/1470))
+The Coin Control window now includes an icon next to the select checkbox when the UTXO is a Cold Stake delegation. This shares the space with the locked UTXO indicator icon, and locked UTXO's take priority in their icon display. ([#1470](https://github.com/hemis-Project/hemis/pull/1470))
 
 ### Hide zPIV balance info as needed
 
@@ -146,7 +146,7 @@ Functional Changes
 
 ### zPIV Backup Removed
 
-Automatic zPIV backup has been disabled. Thus, the following configuration options have been removed  (either as entries in the pivx.conf file or as startup flags):
+Automatic zPIV backup has been disabled. Thus, the following configuration options have been removed  (either as entries in the hemis.conf file or as startup flags):
 - `autozpivbackup`
 - `backupzpiv`
 - `zpivbackuppath`
@@ -161,13 +161,13 @@ The default value for the stake-split threshold has been lowered from 2000 PIV, 
 
 - `-debuglogfile=<file>` can be used to specify an alternative debug logging file. This can be an absolute path or a path relative to the data directory
 - `-debugexclude=<category>` can be used to specify which debug categories to not log, useful when pairing with the `-debug=<exclude>` option.
-- The `-reservebalance` configuration/startup option has been removed ([#1373](https://github.com/PIVX-Project/PIVX/pull/1373)).
+- The `-reservebalance` configuration/startup option has been removed ([#1373](https://github.com/hemis-Project/hemis/pull/1373)).
 
 
 Dependencies
 ------------
 
-The minimum required version of QT has been increased from 5.0 to 5.5.1 (the [depends system](https://github.com/pivx-project/pivx/blob/master/depends/README.md) provides 5.9.7)
+The minimum required version of QT has been increased from 5.0 to 5.5.1 (the [depends system](https://github.com/hemis-project/hemis/blob/master/depends/README.md) provides 5.9.7)
 
 
 RPC Changes
@@ -200,8 +200,8 @@ RPC Changes
   ```
   {
      "staking_status": true|false,       (boolean) whether the wallet is staking or not
-     "staking_enabled": true|false,      (boolean) whether staking is enabled/disabled in pivx.conf
-     "coldstaking_enabled": true|false,  (boolean) whether cold-staking is enabled/disabled in pivx.conf
+     "staking_enabled": true|false,      (boolean) whether staking is enabled/disabled in hemis.conf
+     "coldstaking_enabled": true|false,  (boolean) whether cold-staking is enabled/disabled in hemis.conf
      "haveconnections": true|false,      (boolean) whether network connections are present
      "mnsync": true|false,               (boolean) whether masternode data is synced
      "walletunlocked": true|false,       (boolean) whether the wallet is unlocked
@@ -493,4 +493,4 @@ Thanks to everyone who directly contributed to this release:
 - practicalswift
 - random-zebra
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/), the QA team during Testing and the Node hosts supporting our Testnet.
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/hemis-project-translations/), the QA team during Testing and the Node hosts supporting our Testnet.

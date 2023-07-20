@@ -5,8 +5,8 @@ connections, inter-process communication, and shared-memory,
 providing various message-oriented semantics such as publish/subscribe,
 request/reply, and push/pull.
 
-The PIVX Core daemon can be configured to act as a trusted "border
-router", implementing the pivx wire protocol and relay, making
+The hemis Core daemon can be configured to act as a trusted "border
+router", implementing the hemis wire protocol and relay, making
 consensus decisions, maintaining the local blockchain database,
 broadcasting locally generated transactions into the network, and
 providing a queryable RPC interface to interact on a polled basis for
@@ -33,7 +33,7 @@ buffering or reassembly.
 
 ## Prerequisites
 
-The ZeroMQ feature in PIVX Core requires the ZeroMQ API >= 4.0.0
+The ZeroMQ feature in hemis Core requires the ZeroMQ API >= 4.0.0
 [libzmq](https://github.com/zeromq/libzmq/releases).
 For version information, see [dependencies.md](dependencies.md).
 Typically, it is packaged by distributions as something like
@@ -47,7 +47,7 @@ operation.
 
 By default, the ZeroMQ feature is automatically compiled in if the
 necessary prerequisites are found.  To disable, use --disable-zmq
-during the *configure* step of building pivxd:
+during the *configure* step of building hemisd:
 
     $ ./configure --disable-zmq (other options)
 
@@ -70,8 +70,8 @@ address. The same address can be used in more than one notification.
 
 For instance:
 
-    $ pivxd -zmqpubhashtx=tcp://127.0.0.1:28332 \
-               -zmqpubrawtx=ipc:///tmp/pivxd.tx.raw
+    $ hemisd -zmqpubhashtx=tcp://127.0.0.1:28332 \
+               -zmqpubrawtx=ipc:///tmp/hemisd.tx.raw
 
 Each PUB notification has a topic and body, where the header
 corresponds to the notification type. For instance, for the
@@ -79,7 +79,7 @@ notification `-zmqpubhashtx` the topic is `hashtx` (no null
 terminator) and the body is the hexadecimal transaction hash (32
 bytes).
 
-These options can also be provided in pivx.conf.
+These options can also be provided in hemis.conf.
 
 ZeroMQ endpoint specifiers for TCP (and others) are documented in the
 [ZeroMQ API](http://api.zeromq.org/4-0:_start).
@@ -91,9 +91,9 @@ arriving. Please see `contrib/zmq/zmq_sub.py` for a working example.
 
 ## Remarks
 
-From the perspective of pivxd, the ZeroMQ socket is write-only; PUB
+From the perspective of hemisd, the ZeroMQ socket is write-only; PUB
 sockets don't even have a read function. Thus, there is no state
-introduced into pivxd directly. Furthermore, no information is
+introduced into hemisd directly. Furthermore, no information is
 broadcast that wasn't already received from the public P2P network.
 
 No authentication or authorization is done on connecting clients; it
@@ -106,5 +106,5 @@ retrieve the chain from the last known block to the new tip.
 
 There are several possibilities that ZMQ notification can get lost
 during transmission depending on the communication type you are
-using. pivxd appends an up-counting sequence number to each
+using. hemisd appends an up-counting sequence number to each
 notification which allows listeners to detect lost notifications.

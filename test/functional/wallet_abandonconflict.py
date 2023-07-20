@@ -37,7 +37,7 @@ class AbandonConflictTest(PivxTestFramework):
 
         self.sync_blocks()
         newbalance = self.nodes[0].getbalance()
-        assert balance - newbalance < Decimal("0.001")  #no more than fees lost
+        assert(balance - newbalance < Decimal("0.001")) #no more than fees lost
         balance = newbalance
 
         # Disconnect nodes so node0's transactions don't get into node1's mempool
@@ -103,7 +103,7 @@ class AbandonConflictTest(PivxTestFramework):
         unconfbalance = self.nodes[0].getunconfirmedbalance() + self.nodes[0].getbalance()
         assert_equal(unconfbalance, newbalance)
         # Also shouldn't show up in listunspent
-        assert not txABC2 in [utxo["txid"] for utxo in self.nodes[0].listunspent(0)]
+        assert(not txABC2 in [utxo["txid"] for utxo in self.nodes[0].listunspent(0)])
         balance = newbalance
 
         # Abandon original transaction and verify inputs are available again

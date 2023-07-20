@@ -1,11 +1,11 @@
-// Copyright (c) 2021 The PIVX Core developers
+// Copyright (c) 2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_POS_TEST_FIXTURE_H
-#define PIVX_POS_TEST_FIXTURE_H
+#ifndef hemis_POS_TEST_FIXTURE_H
+#define hemis_POS_TEST_FIXTURE_H
 
-#include "test/test_pivx.h"
+#include "test/test_hemis.h"
 
 class CWallet;
 
@@ -21,4 +21,4 @@ struct TestPoSChainSetup: public TestChainSetup
     ~TestPoSChainSetup();
 };
 
-#endif // PIVX_POS_TEST_FIXTURE_H
+#endif // hemis_POS_TEST_FIXTURE_H

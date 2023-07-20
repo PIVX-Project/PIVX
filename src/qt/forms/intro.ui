@@ -154,7 +154,7 @@
 }</string>
               </property>
               <property name="text">
-               <string>%1 will download and store a copy of the PIVX block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</string>
+               <string>%1 will download and store a copy of the hemis block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>

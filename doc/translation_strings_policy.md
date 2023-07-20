@@ -1,7 +1,7 @@
 Translation Strings Policy
 ===========================
 
-This document provides guidelines for internationalization of the PIVX Core software.
+This document provides guidelines for internationalization of the hemis Core software.
 
 How to translate?
 ------------------
@@ -75,10 +75,10 @@ In Qt code, use tr's third argument for optional plurality. For example:
 This adds `<numerusform>`s to the respective `.ts` file, which can be translated separately depending on the language. In English, this is simply:
 
     <message numerus="yes">
-        <source>%n active connection(s) to PIVX network</source>
+        <source>%n active connection(s) to hemis network</source>
         <translation>
-            <numerusform>%n active connection to PIVX network</numerusform>
-            <numerusform>%n active connections to PIVX network</numerusform>
+            <numerusform>%n active connection to hemis network</numerusform>
+            <numerusform>%n active connections to hemis network</numerusform>
         </translation>
     </message>
 
@@ -96,4 +96,4 @@ The second example reduces the number of pluralized words that translators have 
 
 During a string freeze (often before a major release), no translation strings are to be added, modified or removed.
 
-This can be checked by executing `make translate` in the `src` directory, then verifying that `pivx_en.ts` remains unchanged.
+This can be checked by executing `make translate` in the `src` directory, then verifying that `hemis_en.ts` remains unchanged.

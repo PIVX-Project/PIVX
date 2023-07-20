@@ -1,7 +1,7 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2022 The PIVX Core developers
+// Copyright (c) 2015-2022 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
@@ -198,7 +198,7 @@ UniValue generatetoaddress(const JSONRPCRequest& request)
 
 #endif // ENABLE_WALLET
 
-#ifdef ENABLE_MINING_RPC
+
 /**
  * Return average network hashes per second based on the last 'lookup' blocks,
  * or from the last difficulty change if 'lookup' is nonpositive.
@@ -264,14 +264,14 @@ UniValue getnetworkhashps(const JSONRPCRequest& request)
     return GetNetworkHashPS(request.params.size() > 0 ? request.params[0].get_int() : 120, request.params.size() > 1 ? request.params[1].get_int() : -1);
 }
 
-#ifdef ENABLE_WALLET
+
 UniValue getgenerate(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 0)
         throw std::runtime_error(
             "getgenerate\n"
             "\nReturn if the server is set to generate coins or not. The default is false.\n"
-            "It is set with the command line argument -gen (or pivx.conf setting gen)\n"
+            "It is set with the command line argument -gen (or hemis.conf setting gen)\n"
             "It can also be set with the setgenerate call.\n"
 
             "\nResult\n"
@@ -352,7 +352,7 @@ UniValue gethashespersec(const JSONRPCRequest& request)
         return (int64_t)0;
     return (int64_t)dHashesPerSec;
 }
-#endif
+
 
 
 UniValue getmininginfo(const JSONRPCRequest& request)
@@ -399,13 +399,13 @@ UniValue getmininginfo(const JSONRPCRequest& request)
     } else {
         obj.pushKV("warnings", GetWarnings("statusbar"));
     }
-#ifdef ENABLE_WALLET
+
     obj.pushKV("generate", getgenerate(request));
     obj.pushKV("hashespersec", gethashespersec(request));
-#endif
+
     return obj;
 }
-#endif // ENABLE_MINING_RPC
+
 
 // NOTE: Unlike wallet RPC (which use BTC values), mining RPCs follow GBT (BIP 22) in using satoshi amounts
 UniValue prioritisetransaction(const JSONRPCRequest& request)
@@ -454,7 +454,7 @@ static UniValue BIP22ValidationResult(const CValidationState& state)
     return "valid?";
 }
 
-#ifdef ENABLE_MINING_RPC
+
 UniValue getblocktemplate(const JSONRPCRequest& request)
 {
     CWallet * const pwallet = GetWalletForJSONRPCRequest(request);
@@ -575,10 +575,10 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
     if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "PIVX is not connected!");
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "hemis is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "PIVX is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "hemis is downloading blocks...");
 
     static unsigned int nTransactionsUpdatedLast;
 
@@ -725,7 +725,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
 
     return result;
 }
-#endif // ENABLE_MINING_RPC
+
 
 UniValue submitblock(const JSONRPCRequest& request)
 {
@@ -866,21 +866,18 @@ static const CRPCCommand commands[] =
     { "mining",             "prioritisetransaction",  &prioritisetransaction,  true,  {"txid","priority_delta","fee_delta"} },
 
     /** Not shown in help */
-#ifdef ENABLE_WALLET
+
     { "hidden",             "generate",               &generate,               true,  {"nblocks"} },
     { "hidden",             "generatetoaddress",      &generatetoaddress,      true,  {"nblocks","address"} },
-#endif
     { "hidden",             "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
-#ifdef ENABLE_MINING_RPC
     { "hidden",             "getblocktemplate",       &getblocktemplate,       true,  {"template_request"} },
     { "hidden",             "getnetworkhashps",       &getnetworkhashps,       true,  {"nblocks","height"} },
     { "hidden",             "getmininginfo",          &getmininginfo,          true,  {} },
-#ifdef ENABLE_WALLET
     { "hidden",             "getgenerate",            &getgenerate,            true,  {} },
     { "hidden",             "gethashespersec",        &gethashespersec,        true,  {} },
     { "hidden",             "setgenerate",            &setgenerate,            true,  {"generate","genproclimit"} },
-#endif // ENABLE_WALLET
-#endif // ENABLE_MINING_RPC
+
+
 
 };
 // clang-format on

@@ -1,9 +1,9 @@
-PIVX Core version v5.3.0 is now available from: <https://github.com/pivx-project/pivx/releases>
+hemis Core version v5.3.0 is now available from: <https://github.com/hemis-project/hemis/releases>
 
 Mandatory Update
 ==============
 
-PIVX Core v5.3.0 is a mandatory update for all users. This release contains new consensus rules and improvements that are not backwards compatible with older versions. Users will need to update their clients before enforcement of this update goes into effect.
+hemis Core v5.3.0 is a mandatory update for all users. This release contains new consensus rules and improvements that are not backwards compatible with older versions. Users will need to update their clients before enforcement of this update goes into effect.
 
 Update enforcement is currently scheduled to go into effect at the following time:
 
@@ -15,12 +15,12 @@ If you are running a Masternode over Tor, please read the "How To Upgrade" secti
 
 Note: In preparation for the enforcement, upgraded peers will start rejecting non-upgraded peers few hours before the enforcement block height, we recommend everyone to be updated at max a day before the final time.
 
-Please report bugs using the issue tracker at github: <https://github.com/pivx-project/pivx/issues>
+Please report bugs using the issue tracker at github: <https://github.com/hemis-project/hemis/issues>
 
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/hemis-Qt (on Mac) or hemisd/hemis-qt (on Linux).
 
 **Important note for Masternodes running over Tor (v2 onion address):**
 Before starting the node, copy the content of the `onion_private_key` file, located inside the data directory into a new `onion_v3_private_key` file inside the same directory.
@@ -35,7 +35,7 @@ If it's not done on time, the node will drop off the network.
 Sapling Parameters
 ==================
 
-In order to run, as all versions after 5.0.0, PIVX Core requires two files, `sapling-output.params` and `sapling-spend.params` (with total size ~50 MB), to be saved in a specific location.
+In order to run, as all versions after 5.0.0, hemis Core requires two files, `sapling-output.params` and `sapling-spend.params` (with total size ~50 MB), to be saved in a specific location.
 
 For the following packages, no action is required by the user:
 - macOS release `dmg` binaries will use the params that are bundled into the .app bundle.
@@ -44,21 +44,21 @@ For the following packages, no action is required by the user:
 
 For the other packages, the user must save the param files in the proper location:
 - macOS/Linux `tar.gz` tarballs include a bash script (`install-params.sh`) to copy the parameters in the appropriate location.
-- Windows `.zip` users need to manually copy the files from the `share/pivx` folder to the `%APPDATA%\PIVXParams` directory.
+- Windows `.zip` users need to manually copy the files from the `share/hemis` folder to the `%APPDATA%\hemisParams` directory.
 - self compilers can run the script from the repository sources (`params/install-params.sh`), or copy the files directly from the `params` subdirectory.
 
 Compatibility
 ==============
 
-PIVX Core is extensively tested on multiple operating systems using the Linux kernel, macOS 10.12+, and Windows 7 and later.
+hemis Core is extensively tested on multiple operating systems using the Linux kernel, macOS 10.12+, and Windows 7 and later.
 
 Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support), No attempt is made to prevent installing or running the software on Windows XP, you can still do so at your own risk but be aware that there are known instabilities and issues. Please do not report issues about Windows XP to the issue tracker.
 
-From PIVX Core v5.3 onwards, macOS versions earlier than 10.12 are no longer supported.
+From hemis Core v5.3 onwards, macOS versions earlier than 10.12 are no longer supported.
 
-PIVX Core should also work on most other Unix-like systems but is not frequently tested on them.
+hemis Core should also work on most other Unix-like systems but is not frequently tested on them.
 
-The node's known peers are persisted to disk in a file called `peers.dat`. The format of this file has been changed in a backwards-incompatible way in order to accommodate the storage of Tor v3 and other BIP155 addresses. This means that if the file is modified by v5.3 or newer then older versions will not be able to read it. Those old versions, in the event of a downgrade, will log an error message "Incorrect keysize in addrman deserialization" and will continue normal operation as if the file was missing, creating a new empty one. ([PR #2411](https://github.com/PIVX-Project/PIVX/pull/2411))
+The node's known peers are persisted to disk in a file called `peers.dat`. The format of this file has been changed in a backwards-incompatible way in order to accommodate the storage of Tor v3 and other BIP155 addresses. This means that if the file is modified by v5.3 or newer then older versions will not be able to read it. Those old versions, in the event of a downgrade, will log an error message "Incorrect keysize in addrman deserialization" and will continue normal operation as if the file was missing, creating a new empty one. ([PR #2411](https://github.com/hemis-Project/hemis/pull/2411))
 
 Notable Changes
 ==============
@@ -72,17 +72,17 @@ The launch-on-startup option is no longer available on macOS
 
 A new checkbox in the send widget allows the user to deduct the fee from the transaction recipient amount.
 The most common use-case is when sending the whole balance, or a selection of UTXOs, without getting any change back.
-If the transaction has multiple recipients, each recipient can be checked with a toggleable button in the context menu, and the fee will be split, and subtracted evenly from the outputs selected ([PR #2347](https://github.com/PIVX-Project/PIVX/pull/2347)).
+If the transaction has multiple recipients, each recipient can be checked with a toggleable button in the context menu, and the fee will be split, and subtracted evenly from the outputs selected ([PR #2347](https://github.com/hemis-Project/hemis/pull/2347)).
 
 #### Settings
 
 A new checkbox added to the wallet settings to enable or disable automatic port mapping with NAT-PMP.
 If both UPnP and NAT-PMP are enabled, a successful allocation from UPnP prevails over one from NAT-PMP.<br/>
-Note: Successful automatic port mapping requires a router that supports either UPnP or NAT-PMP ([PR #2338](https://github.com/PIVX-Project/PIVX/pull/2338)).
+Note: Successful automatic port mapping requires a router that supports either UPnP or NAT-PMP ([PR #2338](https://github.com/hemis-Project/hemis/pull/2338)).
 
 #### RPC-Console
 
-The GUI RPC-Console now accepts "parenthesized syntax", nested commands, and simple queries ([PR #2282](https://github.com/PIVX-Project/PIVX/pull/2282).
+The GUI RPC-Console now accepts "parenthesized syntax", nested commands, and simple queries ([PR #2282](https://github.com/hemis-Project/hemis/pull/2282).
 A new command `help-console` (available only on the GUI console) documents how to use it:
 
 ```
@@ -111,17 +111,17 @@ P2P and network changes
 
 #### Tor v3 hidden services support - addrv2 message (BIP155)
 
-This release adds support for Tor version 3 hidden services, and rumoring them over the network to other peers using [BIP155](https://github.com/bitcoin/bips/blob/master/bip-0155.mediawiki). Version 2 hidden services are still supported by PIVX Core, but the Tor network has started [deprecating](https://blog.torproject.org/v2-deprecation-timeline) them, and will remove support soon. ([PR #2411](https://github.com/PIVX-Project/PIVX/pull/2411))
+This release adds support for Tor version 3 hidden services, and rumoring them over the network to other peers using [BIP155](https://github.com/bitcoin/bips/blob/master/bip-0155.mediawiki). Version 2 hidden services are still supported by hemis Core, but the Tor network has started [deprecating](https://blog.torproject.org/v2-deprecation-timeline) them, and will remove support soon. ([PR #2411](https://github.com/hemis-Project/hemis/pull/2411))
 
-The Tor onion service that is automatically created by setting the `-listenonion` configuration parameter will now be created as a Tor v3 service instead of Tor v2. The private key that was used for Tor v2 (if any) will be left untouched in the `onion_private_key` file in the data directory (see `-datadir`) and can be removed if not needed. PIVX Core will no longer attempt to read it. The private key for the Tor v3 service will be saved in a file named `onion_v3_private_key`. To use the deprecated Tor v2 service (not recommended), then `onion_private_key` can be copied over `onion_v3_private_key`, e.g.
+The Tor onion service that is automatically created by setting the `-listenonion` configuration parameter will now be created as a Tor v3 service instead of Tor v2. The private key that was used for Tor v2 (if any) will be left untouched in the `onion_private_key` file in the data directory (see `-datadir`) and can be removed if not needed. hemis Core will no longer attempt to read it. The private key for the Tor v3 service will be saved in a file named `onion_v3_private_key`. To use the deprecated Tor v2 service (not recommended), then `onion_private_key` can be copied over `onion_v3_private_key`, e.g.
 `cp -f onion_private_key onion_v3_private_key`.
 
-#### Removal of reject network messages from PIVX Core (BIP61)
+#### Removal of reject network messages from hemis Core (BIP61)
 
 Nodes on the network can not generally be trusted to send valid ("reject") messages, so this should only ever be used when connected to a trusted node.
 Please use the recommended alternatives if you rely on this feature:
 
-* Testing or debugging of implementations of the PIVX P2P network protocol should be done by inspecting the log messages that are produced by a recent version of PIVX Core. PIVX Core logs debug messages (`-debug=<category>`) to a stream (`-printtoconsole`) or to a file (`-debuglogfile=<debug.log>`).
+* Testing or debugging of implementations of the hemis P2P network protocol should be done by inspecting the log messages that are produced by a recent version of hemis Core. hemis Core logs debug messages (`-debug=<category>`) to a stream (`-printtoconsole`) or to a file (`-debuglogfile=<debug.log>`).
 
 * Testing the validity of a block can be achieved by specific RPCs (`submitblock`)
 
@@ -132,17 +132,17 @@ Please use the recommended alternatives if you rely on this feature:
 Multi-wallet support
 --------------------
 
-PIVX Core now supports loading multiple, separate wallets ([PR #2337](https://github.com/PIVX-Project/PIVX/pull/2337)) with individual balances, keys and received transactions.
+hemis Core now supports loading multiple, separate wallets ([PR #2337](https://github.com/hemis-Project/hemis/pull/2337)) with individual balances, keys and received transactions.
 
-Multi-wallet is enabled by using more than one `-wallet` argument when starting PIVX client, either on the command line or in the `pivx.conf` config file.
+Multi-wallet is enabled by using more than one `-wallet` argument when starting hemis client, either on the command line or in the `hemis.conf` config file.
 
-**In pivx-qt, only the first wallet will be displayed and accessible for creating and signing transactions.** GUI selectable multiple wallets will be supported in a future version. However, even in 5.3, other loaded wallets will remain synchronized to the node's current tip in the background.
+**In hemis-qt, only the first wallet will be displayed and accessible for creating and signing transactions.** GUI selectable multiple wallets will be supported in a future version. However, even in 5.3, other loaded wallets will remain synchronized to the node's current tip in the background.
 
-PIVX Core 5.3.0 contains the following changes to the RPC interface and pivx-cli for multi-wallet:
+hemis Core 5.3.0 contains the following changes to the RPC interface and hemis-cli for multi-wallet:
 
-* When running PIVX Core with a single wallet, there are **no** changes to the RPC interface or `pivx-cli`. All RPC calls and `pivx-cli` commands continue to work as before.
-* When running PIVX Core with multi-wallet, all *node-level* RPC methods continue to work as before. HTTP RPC requests should be send to the normal `<RPC IP address>:<RPC port>` endpoint, and `pivx-cli` commands should be run as before. A *node-level* RPC method is any method which does not require access to the wallet.
-* When running PIVX Core with multi-wallet, *wallet-level* RPC methods must specify the wallet for which they're intended in every request. HTTP RPC requests should be send to the `<RPC IP address>:<RPC port>/wallet/<wallet name>` endpoint, for example `127.0.0.1:8332/wallet/wallet1.dat`. `pivx-cli` commands should be run with a `-rpcwallet` option, for example `pivx-cli -rpcwallet=wallet1.dat getbalance`.
+* When running hemis Core with a single wallet, there are **no** changes to the RPC interface or `hemis-cli`. All RPC calls and `hemis-cli` commands continue to work as before.
+* When running hemis Core with multi-wallet, all *node-level* RPC methods continue to work as before. HTTP RPC requests should be send to the normal `<RPC IP address>:<RPC port>` endpoint, and `hemis-cli` commands should be run as before. A *node-level* RPC method is any method which does not require access to the wallet.
+* When running hemis Core with multi-wallet, *wallet-level* RPC methods must specify the wallet for which they're intended in every request. HTTP RPC requests should be send to the `<RPC IP address>:<RPC port>/wallet/<wallet name>` endpoint, for example `127.0.0.1:8332/wallet/wallet1.dat`. `hemis-cli` commands should be run with a `-rpcwallet` option, for example `hemis-cli -rpcwallet=wallet1.dat getbalance`.
 
 * A new *node-level* `listwallets` RPC method is added to display which wallets are currently loaded. The names returned by this method are the same as those used in the HTTP endpoint and for the `rpcwallet` argument.
 
@@ -154,7 +154,7 @@ Reindexing changes
 ------------------
 
 It is now possible to only redo validation, without rebuilding the block index, using the command line option `-reindex-chainstate` (in addition to `-reindex` which does both).
-This new option is useful when the blocks on disk are assumed to be fine, but the chainstate is still corrupted. It is also useful for benchmarks ([PR #2391](https://github.com/PIVX-Project/PIVX/pull/2391)).
+This new option is useful when the blocks on disk are assumed to be fine, but the chainstate is still corrupted. It is also useful for benchmarks ([PR #2391](https://github.com/hemis-Project/hemis/pull/2391)).
 
 Mining/Staking transaction selection ("Child Pays For Parent")
 --------------------------------------------------------------
@@ -165,8 +165,8 @@ With this change, the `-blockminsize` command line option has been removed.
 Removal of Priority Estimation - Coin Age Priority
 --------------------------------------------------
 
-In previous versions of PIVX Core, a portion of each block could be reserved for transactions based on the age and value of UTXOs they spent. This concept (Coin Age Priority) is a policy choice by miners/stakers, and there are no consensus rules around the inclusion of Coin Age Priority transactions in blocks.
-PIVX Core v5.3.0 removes all remaining support for Coin Age Priority ([PR #2378](https://github.com/PIVX-Project/PIVX/pull/2378)). This has the following implications:
+In previous versions of hemis Core, a portion of each block could be reserved for transactions based on the age and value of UTXOs they spent. This concept (Coin Age Priority) is a policy choice by miners/stakers, and there are no consensus rules around the inclusion of Coin Age Priority transactions in blocks.
+hemis Core v5.3.0 removes all remaining support for Coin Age Priority ([PR #2378](https://github.com/hemis-Project/hemis/pull/2378)). This has the following implications:
 
 - The concept of *free transactions* has been removed. High Coin Age Priority transactions would previously be allowed to be relayed even if they didn't attach a miner fee. This is no longer possible since there is no concept of Coin Age Priority. The `-limitfreerelay` and `-relaypriority` options which controlled relay of free transactions have therefore been removed.
 - The `-blockprioritysize` option has been removed.
@@ -179,7 +179,7 @@ Configuration/Settings changes
 
 #### Wallets directory configuration (`-walletdir`)
 
-PIVX Core now has more flexibility in where the wallets directory can be located. Previously wallet database files were stored at the top level of the PIVX data directory ([PR #2423](https://github.com/PIVX-Project/PIVX/pull/2423)). The behavior is now:
+hemis Core now has more flexibility in where the wallets directory can be located. Previously wallet database files were stored at the top level of the hemis data directory ([PR #2423](https://github.com/hemis-Project/hemis/pull/2423)). The behavior is now:
 
 - For new installations (where the data directory doesn't already exist), wallets will now be stored in a new `wallets/` subdirectory inside the data directory by default.
 
@@ -191,17 +191,17 @@ Care should be taken when choosing the wallets directory location, as if it beco
 
 #### External wallet files
 
-A new `-wallet=<path>` option allows the user to specify the wallet db location. It accepts either absolute paths or paths relative to the `-walletdir` directory. Multiple `-wallet` paths can be configured at the same time in order to run PIVX Core with multiple wallets (see section "Multi-wallet support").
+A new `-wallet=<path>` option allows the user to specify the wallet db location. It accepts either absolute paths or paths relative to the `-walletdir` directory. Multiple `-wallet` paths can be configured at the same time in order to run hemis Core with multiple wallets (see section "Multi-wallet support").
 
 If `-wallet=<path>` is specified with a path that does not exist, it will create a wallet directory at the specified location (containing a `wallet.dat` data file, a `db.log` file, and `database/log.??????????` files).
 If `-wallet=<path>` is specified with paths that are names of existing data files in the `-walletdir` directory, then log files are stored in the parent directory.
 
 #### Configuration sections for testnet and regtest
 
-It is now possible for a single configuration file to set different options for different networks ([PR #2324](https://github.com/PIVX-Project/PIVX/pull/2324)). This is done by using sections or by prefixing the option with the network, such as:
+It is now possible for a single configuration file to set different options for different networks ([PR #2324](https://github.com/hemis-Project/hemis/pull/2324)). This is done by using sections or by prefixing the option with the network, such as:
 ```
-    main.uacomment=pivx
-    test.uacomment=pivx-testnet
+    main.uacomment=hemis
+    test.uacomment=hemis-testnet
     regtest.uacomment=regtest
     [main]
     mempoolsize=300
@@ -214,15 +214,15 @@ The `addnode=`, `connect=`, `port=`, `bind=`, `rpcport=`, `rpcbind=`, and `walle
 
 #### Custom directory for blocks storage
 
-A new initialization option flag `-blocksdir` allows the users to store block files outside of the data directory ([PR #2326](https://github.com/PIVX-Project/PIVX/pull/2326)).
+A new initialization option flag `-blocksdir` allows the users to store block files outside of the data directory ([PR #2326](https://github.com/hemis-Project/hemis/pull/2326)).
 
 #### Enable NAT-PMP port mapping at startup
 
-The `-natpmp` option has been added to use NAT-PMP to map the listening port. If both UPnP and NAT-PMP are enabled, a successful allocation from UPnP prevails over one from NAT-PMP ([PR #2338](https://github.com/PIVX-Project/PIVX/pull/2338)).
+The `-natpmp` option has been added to use NAT-PMP to map the listening port. If both UPnP and NAT-PMP are enabled, a successful allocation from UPnP prevails over one from NAT-PMP ([PR #2338](https://github.com/hemis-Project/hemis/pull/2338)).
 
 #### asmap feature
 
-A new `-asmap` configuration option has been added to diversify the node's network connections by mapping IP addresses Autonomous System Numbers (ASNs) and then limiting the number of connections made to any single ASN ([PR #2480](https://github.com/PIVX-Project/PIVX/pull/2480)).
+A new `-asmap` configuration option has been added to diversify the node's network connections by mapping IP addresses Autonomous System Numbers (ASNs) and then limiting the number of connections made to any single ASN ([PR #2480](https://github.com/hemis-Project/hemis/pull/2480)).
 
 #### Removed startup options
 
@@ -233,16 +233,16 @@ Low-level RPC changes
 
 #### Support for JSON-RPC Named Arguments
 
-Commands sent over the JSON-RPC interface and through the `pivx-cli` binary can now use named arguments. This follows the [JSON-RPC specification](http://www.jsonrpc.org/specification) for passing parameters by-name with an object.
-`pivx-cli` has been updated to support this by parsing `name=value` arguments when the `-named` option is given. ([PR #2386](https://github.com/PIVX-Project/PIVX/pull/2386))
+Commands sent over the JSON-RPC interface and through the `hemis-cli` binary can now use named arguments. This follows the [JSON-RPC specification](http://www.jsonrpc.org/specification) for passing parameters by-name with an object.
+`hemis-cli` has been updated to support this by parsing `name=value` arguments when the `-named` option is given. ([PR #2386](https://github.com/hemis-Project/hemis/pull/2386))
 
 Some examples:
 
 ```
-    src/pivx-cli -named help command="help"
-    src/pivx-cli -named getblockhash height=0
-    src/pivx-cli -named getblock blockhash=000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f
-    src/pivx-cli -named sendtoaddress address="DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6" amount="1.0" comment="donation"
+    src/hemis-cli -named help command="help"
+    src/hemis-cli -named getblockhash height=0
+    src/hemis-cli -named getblock blockhash=000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f
+    src/hemis-cli -named sendtoaddress address="DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6" amount="1.0" comment="donation"
 ```
 
 The order of arguments doesn't matter in this case. Named arguments are also useful to leave out arguments that should stay at their default value.
@@ -250,20 +250,20 @@ The RPC server remains fully backwards compatible with positional arguments.
 
 #### Query options for `listunspent` RPC
 
-The `listunspent` RPC now takes a `query_options` argument ([PR #2317](https://github.com/PIVX-Project/PIVX/pull/2317)), which is a JSON object containing one or more of the following members:
+The `listunspent` RPC now takes a `query_options` argument ([PR #2317](https://github.com/hemis-Project/hemis/pull/2317)), which is a JSON object containing one or more of the following members:
 - `minimumAmount` - a number specifying the minimum value of each UTXO
 - `maximumAmount` - a number specifying the maximum value of each UTXO
 - `maximumCount` - a number specifying the minimum number of UTXOs
 - `minimumSumAmount` - a number specifying the minimum sum value of all UTXOs
 
 The `listunspent` RPC also takes an additional boolean argument `include_unsafe` (true by default) to optionally exclude "unsafe" utxos.
-An unconfirmed output from outside keys is considered unsafe ([PR #2351](https://github.com/PIVX-Project/PIVX/pull/2351)).
+An unconfirmed output from outside keys is considered unsafe ([PR #2351](https://github.com/hemis-Project/hemis/pull/2351)).
 
 The `listunspent` output also shows whether the utxo is considered safe to spend or not.
 
 #### Wallet name returned by `getwalletinfo`
 
-`walletinfo` return object includes a `"walletname"` field. When PIVX is not started with any `-wallet=<path>` options, the name of the default wallet returned by `getwalletinfo` (and `listwallets`) RPCs is the empty string `""`. If PIVX is started with any `-wallet=<path>` options, the name of any wallet is its `<path>` string.
+`walletinfo` return object includes a `"walletname"` field. When hemis is not started with any `-wallet=<path>` options, the name of the default wallet returned by `getwalletinfo` (and `listwallets`) RPCs is the empty string `""`. If hemis is started with any `-wallet=<path>` options, the name of any wallet is its `<path>` string.
 
 #### Removal of 'detach' argument from `stop`
 
@@ -308,7 +308,7 @@ The `stop` RPC no longer accepts the (already deprecated, ignored, and undocumen
   ```
 
 In all cases the selected recipients will receive less PIV than their corresponding amount set.
-If no outputs/addresses are specified, the sender pays the fee as usual. ([PR #2341](https://github.com/PIVX-Project/PIVX/pull/2341))
+If no outputs/addresses are specified, the sender pays the fee as usual. ([PR #2341](https://github.com/hemis-Project/hemis/pull/2341))
 
 ### New output fields in `getmempoolinfo`
 
@@ -316,7 +316,7 @@ If no outputs/addresses are specified, the sender pays the fee as usual. ([PR #2
 ```
 "loaded": true|false      (boolean) Whether the mempool is fully loaded
 "maxmempool": xxxxx       (numeric) Maximum memory usage for the mempool
-"mempoolminfee": xxxxx    (numeric) Minimum fee rate in PIVX/kB for tx to be
+"mempoolminfee": xxxxx    (numeric) Minimum fee rate in hemis/kB for tx to be
                           accepted. Is the maximum of minrelaytxfee and
                           minimum mempool fee
 "minrelaytxfee": xxxxx    (numeric) Current minimum relay fee for transactions
@@ -324,7 +324,7 @@ If no outputs/addresses are specified, the sender pays the fee as usual. ([PR #2
 
 #### `ischange` added to `getaddressinfo` output
 
-Boolean value, to return whether the PIVX (transparent) address was used for change output.
+Boolean value, to return whether the hemis (transparent) address was used for change output.
 
 #### `mapped_as` added to `getpeerinfo` output
 
@@ -332,18 +332,18 @@ The `getpeerinfo` RPC now includes a mapped_as field to indicate the mapped Auto
 
 #### Show wallet's auto-combine settings in `getwalletinfo`
 
-`getwalletinfo` now has two additional auto-combine related return fields. `autocombine_enabled` (boolean) and `autocombine_threshold` (numeric) that will show the auto-combine threshold and whether or not it is currently enabled ([PR #2248](https://github.com/PIVX-Project/PIVX/pull/2248)).
+`getwalletinfo` now has two additional auto-combine related return fields. `autocombine_enabled` (boolean) and `autocombine_threshold` (numeric) that will show the auto-combine threshold and whether or not it is currently enabled ([PR #2248](https://github.com/hemis-Project/hemis/pull/2248)).
 
 #### Deprecate the autocombine RPC command
 
-The `autocombine` RPC command has been replaced ([PR #2248](https://github.com/PIVX-Project/PIVX/pull/2248)) with specific set/get commands (`setautocombinethreshold` and `getautocombinethreshold`, respectively) to bring this functionality further in-line with our RPC standards. Previously, the `autocombine` command gave no user-facing feedback when the setting was changed. This is now resolved with the introduction of the two new commands as detailed below:
+The `autocombine` RPC command has been replaced ([PR #2248](https://github.com/hemis-Project/hemis/pull/2248)) with specific set/get commands (`setautocombinethreshold` and `getautocombinethreshold`, respectively) to bring this functionality further in-line with our RPC standards. Previously, the `autocombine` command gave no user-facing feedback when the setting was changed. This is now resolved with the introduction of the two new commands as detailed below:
 
 * `setautocombinethreshold`
     ```
     setautocombinethreshold enable ( value )
     This will set the auto-combine threshold value.
     Wallet will automatically monitor for any coins with value below the threshold amount,
-    and combine them if they reside with the same PIVX address.  When auto-combine runs,
+    and combine them if they reside with the same hemis address.  When auto-combine runs,
     it will create a transaction, and therefore will be subject to transaction fees.
 
     Arguments:
@@ -520,11 +520,11 @@ Database cache memory increased
 As a result of growth of the UTXO set, performance with the prior default database cache of 100 MiB has suffered.
 For this reason the default was changed to 300 MiB in this release.
 For nodes on low-memory systems, the database cache can be changed back to 100 MiB (or to another value) by either:
-- Adding `dbcache=100` in `pivx.conf`
+- Adding `dbcache=100` in `hemis.conf`
 - Adding `-dbcache=100` startup flag
 - Changing it in the GUI under `Settings → Options → Main → Size of database cache`
 
-Note that the database cache setting has the most performance impact during initial sync of a node, and when catching up after downtime ([PR #2391](https://github.com/PIVX-Project/PIVX/pull/2391)).
+Note that the database cache setting has the most performance impact during initial sync of a node, and when catching up after downtime ([PR #2391](https://github.com/hemis-Project/hemis/pull/2391)).
 
 Updated settings
 ----------------
@@ -536,29 +536,29 @@ Build system changes
 
 #### C++14 standard
 
-PIVX Core now requires a C++14 compiler ([PR #2269](https://github.com/PIVX-Project/PIVX/pull/2269)).
+hemis Core now requires a C++14 compiler ([PR #2269](https://github.com/hemis-Project/hemis/pull/2269)).
 
 #### Bump miniUPnPc API version
 
 The minimum supported miniUPnPc API version is set to 10. This keeps compatibility with Ubuntu 16.04 LTS and Debian 8 `libminiupnpc-dev` packages. Please note, on Debian this package is still vulnerable to [CVE-2017-8798](https://security-tracker.debian.org/tracker/CVE-2017-8798) (in jessie only) and [CVE-2017-1000494](https://security-tracker.debian.org/tracker/CVE-2017-1000494) (both in jessie and in stretch).
 
-OpenSSL is no longer used by PIVX Core
+OpenSSL is no longer used by hemis Core
 
 #### Disabled PoW mining RPC Commands
 
-A new configure flag has been introduced to allow more granular control over weather or not the PoW mining RPC commands are compiled into the wallet. By default they are not. This behavior can be overridden by passing `--enable-mining-rpc` to the `configure` script ([PR #2105](https://github.com/PIVX-Project/PIVX/pull/2105)).
+A new configure flag has been introduced to allow more granular control over weather or not the PoW mining RPC commands are compiled into the wallet. By default they are not. This behavior can be overridden by passing `--enable-mining-rpc` to the `configure` script ([PR #2105](https://github.com/hemis-Project/hemis/pull/2105)).
 
 #### NAT-PMP Support
 
-PIVX v5.3.0 added NAT-PMP port-mapping support via [`libnatpmp`](https://miniupnp.tuxfamily.org/libnatpmp.html). Similar to how UPnP is treated, NAT-PMP will be compiled if the library is found, but the functionality is disabled unless either using the `-natpmp` option at startup (see section "Configuration changes"), or selecting the relative checkbox in the graphical interface (see section "GUI changes").
+hemis v5.3.0 added NAT-PMP port-mapping support via [`libnatpmp`](https://miniupnp.tuxfamily.org/libnatpmp.html). Similar to how UPnP is treated, NAT-PMP will be compiled if the library is found, but the functionality is disabled unless either using the `-natpmp` option at startup (see section "Configuration changes"), or selecting the relative checkbox in the graphical interface (see section "GUI changes").
 
-Alternatively, PIVX Core can be compiled with the functionality enabled by default passing `--enable-natpmp-default` to the `configure` script.
+Alternatively, hemis Core can be compiled with the functionality enabled by default passing `--enable-natpmp-default` to the `configure` script.
 
 ISO 8601 for timestamps in logs and backup file names
 -----------------------------------------------------
 
 The log timestamp format is now ISO 8601 (e.g. "2021-02-28T12:34:56Z").
-The file extension applied to automatic backups is now in ISO 8601 basic notation (e.g. "20210228T123456Z"). The basic notation is used to prevent illegal `:` characters from appearing in the filename ([PR #2300](https://github.com/PIVX-Project/PIVX/pull/2300)).
+The file extension applied to automatic backups is now in ISO 8601 basic notation (e.g. "20210228T123456Z"). The basic notation is used to prevent illegal `:` characters from appearing in the filename ([PR #2300](https://github.com/hemis-Project/hemis/pull/2300)).
 
 
 v5.3.0 Change log
@@ -628,12 +628,12 @@ v5.3.0 Change log
 - #2375 [RPC] Update getrawtransaction warning message (random-zebra)
 - #2386 Support for JSON-RPC named arguments (random-zebra)
 - #2392 [RPC] Remove compiler warning in autocombinerewards and update help text (random-zebra)
-- #2476 correct non PIVXified help commands texts and add missing "ischange" result (furszy)
+- #2476 correct non hemisified help commands texts and add missing "ischange" result (furszy)
 - #2503 [Net] Add getnodeaddresses RPC command (Fuzzbawls)
 - #2519 [RPC] Do not register DMN-related RPC commands (random-zebra)
 
 ### GUI
-- #2249 Make box of PIVX Send address return to purple when it's empty (PicklesRcool)
+- #2249 Make box of hemis Send address return to purple when it's empty (PicklesRcool)
 - #2247 Fix double fade-in Topbar Available click animation. Issue 2216 (PicklesRcool)
 - #2237 Set fee to highest possible if input is too big (dnchk)
 - #2264 fix 'split is deprecated' warnings (Fuzzbawls)
@@ -653,7 +653,7 @@ v5.3.0 Change log
 - #2490 [BugFix] fix app always triggering the tutorial dialog if no manual '-wallet' arg is provided (furszy)
 - #2448 Periodic make translate (Fuzzbawls)
 - #2481 [BUG][GUI] Fix P2CS grouping in coin control (random-zebra)
-- #2506 bugfix, the command line interface is called "pivx-cli" not "pivx-core" (furszy)
+- #2506 bugfix, the command line interface is called "hemis-cli" not "hemis-core" (furszy)
 - #2513 [GUI] Remove extra jump line in mnb creation error message (furszy)
 - #2516 [GUI][BUG] Console: allow empty arguments (random-zebra)
 
@@ -877,4 +877,4 @@ Thanks to everyone who directly contributed to this release:
 - Wladimir J. van der Laan
 - wodry
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/), the QA team during Testing and the Node hosts supporting our Testnet.
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/hemis-project-translations/), the QA team during Testing and the Node hosts supporting our Testnet.

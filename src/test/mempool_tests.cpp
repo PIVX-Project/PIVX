@@ -2,7 +2,11 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+<<<<<<< HEAD
 #include "test/test_pivx.h"
+=======
+#include "test/test_hemis.h"
+>>>>>>> 1f345019d (first step)
 
 #include "policy/feerate.h"
 #include "txmempool.h"

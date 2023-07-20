@@ -4,7 +4,7 @@
 
 #include "compat/sanity.h"
 #include "key.h"
-#include "test_pivx.h"
+#include "test_hemis.h"
 
 #include <boost/test/unit_test.hpp>
 

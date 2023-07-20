@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[pivx-project-translations.qt-translation-50x]
-file_filter = src/qt/locale/pivx_<lang>.ts
-source_file = src/qt/locale/pivx_en.ts
+[hemis-project-translations.qt-translation-50x]
+file_filter = src/qt/locale/hemis_<lang>.ts
+source_file = src/qt/locale/hemis_en.ts
 source_lang = en

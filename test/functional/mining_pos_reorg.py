@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2019-2021 The PIVX Core developers
+# Copyright (c) 2019-2021 The hemis Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -85,17 +85,17 @@ class ReorgStakeTest(PivxTestFramework):
         initial_unspent_0 = self.nodes[0].listunspent()
         self.mocktime = self.generate_pos(0, self.mocktime)
         last_block = self.nodes[0].getblock(self.nodes[0].getbestblockhash())
-        assert len(last_block["tx"]) > 1  # a PoS block has at least two txes
+        assert(len(last_block["tx"]) > 1)   # a PoS block has at least two txes
         coinstake_txid = last_block["tx"][1]
         coinstake_tx = self.nodes[0].getrawtransaction(coinstake_txid, True)
-        assert coinstake_tx["vout"][0]["scriptPubKey"]["hex"] == ""  # first output of coinstake is empty
+        assert (coinstake_tx["vout"][0]["scriptPubKey"]["hex"] == "")  # first output of coinstake is empty
         stakeinput = coinstake_tx["vin"][0]
 
         # The stake input was unspent 1 block ago, now it's not
         res, utxo = findUtxoInList(stakeinput["txid"], stakeinput["vout"], initial_unspent_0)
-        assert res
+        assert (res)
         res, utxo = findUtxoInList(stakeinput["txid"], stakeinput["vout"], self.nodes[0].listunspent())
-        assert not res
+        assert (not res)
         self.log.info("Coinstake input %s...%s-%d is no longer spendable." % (
             stakeinput["txid"][:9], stakeinput["txid"][-4:], stakeinput["vout"]))
 
@@ -119,7 +119,7 @@ class ReorgStakeTest(PivxTestFramework):
             [{"txid": stakeinput["txid"], "vout": int(stakeinput["vout"])}],
             {"xxncEuJK27ygNh7imNfaX8JV6ZQUnoBqzN": (stakeinput_amount-0.01)})
         rawtx = self.nodes[0].signrawtransaction(rawtx_unsigned)
-        assert rawtx["complete"]
+        assert(rawtx["complete"])
         assert_raises_rpc_error(-25, "Missing inputs", self.nodes[0].sendrawtransaction, rawtx["hex"])
         txid = self.nodes[0].decoderawtransaction(rawtx["hex"])["txid"]
         assert_raises_rpc_error(-5, "No such mempool or blockchain transaction",

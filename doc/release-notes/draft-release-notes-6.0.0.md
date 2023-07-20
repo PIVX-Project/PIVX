@@ -1,16 +1,16 @@
 (note: this is a temporary file, to be added-to by anybody, and moved to release-notes at release time)
 
-PIVX Core version *version* is now available from:  <https://github.com/pivx-project/pivx/releases>
+hemis Core version *version* is now available from:  <https://github.com/hemis-project/hemis/releases>
 
 This is a new major version release, including various bug fixes and performance improvements, as well as updated translations.
 
-Please report bugs using the issue tracker at github: <https://github.com/pivx-project/pivx/issues>
+Please report bugs using the issue tracker at github: <https://github.com/hemis-project/hemis/issues>
 
 
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/hemis-Qt (on Mac) or hemisd/hemis-qt (on Linux).
 
 Notable Changes
 ==============
@@ -21,7 +21,7 @@ Notable Changes
 Deterministic Masternode Lists
 ------------------------------
 
-PIVX v6.0.0 introduces on-chain consensus for masternode lists, which allow for deterministic quorum derivation, implementing Dash's [DIP-0003](https://github.com/dashpay/dips/blob/master/dip-0003.md).
+hemis v6.0.0 introduces on-chain consensus for masternode lists, which allow for deterministic quorum derivation, implementing Dash's [DIP-0003](https://github.com/dashpay/dips/blob/master/dip-0003.md).
 
 In the previous masternode system, each node needed to maintain their own individual masternode list with P2P messages, thus discrepancies might occur, for example, due to a different order of message reception.
 Deterministic Masternode lists are lists of masternodes, built at every block, relying only on on-chain data (previous list, and transactions included in the current block).
@@ -29,7 +29,7 @@ All nodes derive (and verify) their masternode lists independently, from the sam
 
 Masternodes are "registered" by special transactions called ProTx, and removed only by spending the collateral.
 A ProTx either creates a 10000-PIV collateral as tx output, or includes a reference to an unspent 10000-PIV utxo on chain (and a proof of ownership).
-See PR [#2267](https://github.com/PIVX-Project/PIVX/pull/2267) for more information.
+See PR [#2267](https://github.com/hemis-Project/hemis/pull/2267) for more information.
 
 Upgrade instructions: !TODO
 
@@ -66,7 +66,7 @@ Upgrade instructions: !TODO
     2. collateralIndex         (numeric, required) The collateral transaction output index.
     3. "ipAndPort"             (string, required) IP and port in the form "IP:PORT".
                                   Must be unique on the network. Can be set to 0, which will require a ProUpServTx afterwards.
-    4. "ownerAddress"          (string, required) The PIVX address to use for payee updates and proposal voting.
+    4. "ownerAddress"          (string, required) The hemis address to use for payee updates and proposal voting.
                                   The private key belonging to this address must be known in your wallet, in order to send updates.
                                   The address must not be already registered, and must differ from the collateralAddress
     5. "operatorPubKey"        (string, required) The operator BLS public key. The private BLS key does not have to be known.
@@ -74,7 +74,7 @@ Upgrade instructions: !TODO
     6. "votingAddress"         (string, required) The voting key address. The private key does not have to be known by your wallet.
                                   It has to match the private key which is later used when voting on proposals.
                                   If set to an empty string, ownerAddress will be used.
-    7. "payoutAddress"         (string, required) The PIVX address to use for masternode reward payments.
+    7. "payoutAddress"         (string, required) The hemis address to use for masternode reward payments.
     8. "operatorReward"        (numeric, optional) The fraction in % to share with the operator. The value must be
                                   between 0.00 and 100.00. If not set, it takes the default value of 0.0
     9. "operatorPayoutAddress" (string, optional) The address used for operator reward payments.
@@ -93,10 +93,10 @@ Upgrade instructions: !TODO
     to the address specified by collateralAddress and will then function as masternode collateral.
 
     Arguments:
-    1. "collateralAddress"     (string, required) The PIVX address to send the collateral to.
+    1. "collateralAddress"     (string, required) The hemis address to send the collateral to.
     2. "ipAndPort"             (string, required) IP and port in the form "IP:PORT".
                                   Must be unique on the network. Can be set to 0, which will require a ProUpServTx afterwards.
-    3. "ownerAddress"          (string, required) The PIVX address to use for payee updates and proposal voting.
+    3. "ownerAddress"          (string, required) The hemis address to use for payee updates and proposal voting.
                                   The private key belonging to this address must be known in your wallet, in order to send updates.
                                   The address must not be already registered, and must differ from the collateralAddress
     4. "operatorPubKey"        (string, required) The operator BLS public key. The private BLS key does not have to be known.
@@ -104,7 +104,7 @@ Upgrade instructions: !TODO
     5. "votingAddress"         (string, required) The voting key address. The private key does not have to be known by your wallet.
                                   It has to match the private key which is later used when voting on proposals.
                                   If set to an empty string, ownerAddress will be used.
-    6. "payoutAddress"         (string, required) The PIVX address to use for masternode reward payments.
+    6. "payoutAddress"         (string, required) The hemis address to use for masternode reward payments.
     7. "operatorReward"        (numeric, optional) The fraction in % to share with the operator. The value must be
                                   between 0.00 and 100.00. If not set, it takes the default value of 0.0
     8. "operatorPayoutAddress" (string, optional) The address used for operator reward payments.
@@ -128,7 +128,7 @@ Upgrade instructions: !TODO
     2. collateralIndex          (numeric, required) The collateral transaction output index.
     3. "ipAndPort"              (string, required) IP and port in the form "IP:PORT".
                                   Must be unique on the network. Can be set to 0, which will require a ProUpServTx afterwards.
-    4. "ownerAddress"           (string, required) The PIVX address to use for payee updates and proposal voting.
+    4. "ownerAddress"           (string, required) The hemis address to use for payee updates and proposal voting.
                                   The private key belonging to this address must be known in your wallet, in order to send updates.
                                   The address must not be already registered, and must differ from the collateralAddress
     5. "operatorPubKey"         (string, required) The operator BLS public key. The private BLS key does not have to be known.
@@ -136,7 +136,7 @@ Upgrade instructions: !TODO
     6. "votingAddress"          (string, required) The voting key address. The private key does not have to be known by your wallet.
                                   It has to match the private key which is later used when voting on proposals.
                                   If set to an empty string, ownerAddress will be used.
-    7. "payoutAddress"          (string, required) The PIVX address to use for masternode reward payments.
+    7. "payoutAddress"          (string, required) The hemis address to use for masternode reward payments.
     8. "operatorReward"         (numeric, optional) The fraction in % to share with the operator. The value must be
                                   between 0.00 and 100.00. If not set, it takes the default value of 0.0
     9. "operatorPayoutAddress"  (string, optional) The address used for operator reward payments.
@@ -207,7 +207,7 @@ Upgrade instructions: !TODO
     3. "votingAddress"         (string, required) The voting key address. The private key does not have to be known by your wallet.
                                   It has to match the private key which is later used when voting on proposals.
                                   If set to an empty string, the currently active voting key address is reused.
-    4. "payoutAddress"         (string, required) The PIVX address to use for masternode reward payments.
+    4. "payoutAddress"         (string, required) The hemis address to use for masternode reward payments.
                                   If set to an empty string, the currently active payout address is reused.
     5. "ownerKey"              (string, optional) The owner key associated with the operator address of the masternode.
                                   If not specified, or set to an empty string, then the mn key must be known by your wallet,
@@ -245,7 +245,7 @@ Upgrade instructions: !TODO
 #### Protocol changes
 
 Starting with the enforcement block, masternode rewards and budget payments are paid as outputs of the coinbase transaction, instead of the coinstake transaction.
-With this rule, a new opcode (`0xd2`) is introduced (see PR [#2275](https://github.com/PIVX-Project/PIVX/pull/2275)).
+With this rule, a new opcode (`0xd2`) is introduced (see PR [#2275](https://github.com/hemis-Project/hemis/pull/2275)).
 It enforces the same rules as the legacy cold-staking opcode, but without allowing a "free" script for the last output of the transaction.
 The new opcode takes the name of `OP_CHECKCOLDSTAKEVERIFY`, and the legacy opcode (`0xd1`) is renamed to `OP_CHECKCOLDSTAKEVERIFY_LOF` (last-output-free).
 Scripts with the old opcode are still accepted on the network (the restriction on the last-output is enforced after the script validation in this case), but the client creates new delegations with the new opcode, by default, after the upgrade enforcement.
@@ -271,4 +271,4 @@ Configuration changes
 Thanks to everyone who directly contributed to this release:
 
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/), the QA team during Testing and the Node hosts supporting our Testnet.
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/hemis-project-translations/), the QA team during Testing and the Node hosts supporting our Testnet.

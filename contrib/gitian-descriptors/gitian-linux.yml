@@ -1,5 +1,5 @@
 ---
-name: "pivx-linux-6.0"
+name: "hemis-linux-6.0"
 enable_cache: true
 distro: "ubuntu"
 suites:
@@ -33,8 +33,8 @@ packages:
 - "ca-certificates"
 - "python3"
 remotes:
-- "url": "https://github.com/pivx-project/pivx.git"
-  "dir": "pivx"
+- "url": "https://github.com/hemis-project/hemis.git"
+  "dir": "hemis"
 files: []
 script: |
   set -e -o pipefail
@@ -121,7 +121,7 @@ script: |
   chmod +x ${WRAP_DIR}/${prog}
   done
 
-  cd pivx
+  cd hemis
   BASEPREFIX="${PWD}/depends"
   # Build dependencies for each host
   for i in $HOSTS; do
@@ -144,13 +144,13 @@ script: |
   ./autogen.sh
   CONFIG_SITE=${BASEPREFIX}/$(echo "${HOSTS}" | awk '{print $1;}')/share/config.site ./configure --prefix=/
   make dist
-  SOURCEDIST=$(echo pivx-*.tar.gz)
+  SOURCEDIST=$(echo hemis-*.tar.gz)
   DISTNAME=${SOURCEDIST/%.tar.gz}
   # Correct tar file order
   mkdir -p temp
   pushd temp
   tar -xf ../$SOURCEDIST
-  find pivx-* | sort | tar --mtime="$REFERENCE_DATETIME" --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
+  find hemis-* | sort | tar --mtime="$REFERENCE_DATETIME" --no-recursion --mode='u+rw,go+r-w,a+X' --owner=0 --group=0 -c -T - | gzip -9n > ../$SOURCEDIST
   popd
 
   # Workaround for tarball not building with the bare tag version (prep)

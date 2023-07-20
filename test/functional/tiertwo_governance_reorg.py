@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2021 The PIVX Core developers
+# Copyright (c) 2021 The hemis Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
@@ -120,11 +120,11 @@ class GovernanceReorgTest(PivxTestFramework):
         # Create the finalized budget and vote on it
         self.log.info("Finalizing the budget...")
         self.stake_and_ping(self.minerAPos, 5, [mn1, mn2])
-        assert minerA.mnfinalbudgetsuggest() is not None
+        assert (minerA.mnfinalbudgetsuggest() is not None)
         time.sleep(1)
         self.stake_and_ping(self.minerAPos, 4, [mn1, mn2])
         budgetFinHash = minerA.mnfinalbudgetsuggest()
-        assert budgetFinHash != ""
+        assert (budgetFinHash != "")
         time.sleep(1)
         minerA.mnfinalbudget("vote-many", budgetFinHash)
         self.stake_and_ping(self.minerAPos, 2, [mn1, mn2])

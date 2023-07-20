@@ -4,7 +4,7 @@
 
 #include "random.h"
 #include "streams.h"
-#include "test/test_pivx.h"
+#include "test/test_hemis.h"
 
 #include <boost/test/unit_test.hpp>
 

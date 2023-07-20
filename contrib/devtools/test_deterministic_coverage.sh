@@ -17,7 +17,7 @@ NON_DETERMINISTIC_TESTS=(
     "dummy_tests"                                # We currently don't have any unit tests that have determinism issues
 )
 
-TEST_BITCOIN_BINARY="src/test/test_pivx"
+TEST_BITCOIN_BINARY="src/test/test_hemis"
 
 print_usage() {
     echo "Usage: $0 [custom test filter (default: all but known non-deterministic tests)] [number of test runs (default: 2)]"

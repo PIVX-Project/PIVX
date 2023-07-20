@@ -30,8 +30,8 @@ class BlocksdirTest(PivxTestFramework):
         self.start_node(0, ["-blocksdir=" + blocksdir_path])
         self.log.info("mining blocks..")
         self.nodes[0].generate(10)
-        assert os.path.isfile(os.path.join(self.options.tmpdir, "blocksdir", "regtest", "blocks", "blk00000.dat"))
-        assert os.path.isdir(os.path.join(self.options.tmpdir, "node0", "regtest", "blocks", "index"))
+        assert(os.path.isfile(os.path.join(self.options.tmpdir, "blocksdir", "regtest", "blocks", "blk00000.dat")))
+        assert(os.path.isdir(os.path.join(self.options.tmpdir, "node0", "regtest", "blocks", "index")))
 
 if __name__ == '__main__':
     BlocksdirTest().main()

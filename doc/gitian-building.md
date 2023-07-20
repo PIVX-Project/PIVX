@@ -1,9 +1,9 @@
 Gitian building
 ================
 
-*Setup instructions for a gitian build of PIVX Core using a VM or physical system.*
+*Setup instructions for a gitian build of hemis Core using a VM or physical system.*
 
-Gitian is the deterministic build process that is used to build the PIVX
+Gitian is the deterministic build process that is used to build the hemis
 Core executables. It provides a way to be reasonably sure that the
 executables are really built from source on GitHub. It also makes sure that
 the same, tested dependencies are used and statically built into the executable.
@@ -11,7 +11,7 @@ the same, tested dependencies are used and statically built into the executable.
 Multiple developers build the source code by following a specific descriptor
 ("recipe"), cryptographically sign the result, and upload the resulting signature.
 These results are compared and only if they match, the build is accepted and uploaded
-to the PIVX GitHub release page.
+to the hemis GitHub release page.
 
 More independent gitian builders are needed, which is why this guide exists.
 It is preferred to follow these steps yourself instead of using someone else's
@@ -23,7 +23,7 @@ Table of Contents
 - [Preparing the Gitian builder host](#preparing-the-gitian-builder-host)
   - [macOS Builds](#macos-builds)
 - [Initial Gitian Setup](#initial-gitian-setup)
-- [Building PIVX Core](#building-pivx-core)
+- [Building hemis Core](#building-hemis-core)
 - [Signing externally](#signing-externally)
 - [Uploading signatures](#uploading-signatures)
 
@@ -63,7 +63,7 @@ Initial Gitian Setup
 
 The `gitian-build.py` script is designed to checkout different release tags, commits, branches, or pull requests. The linked guides above cover the process of obtaining the script and doing the basic initial setup.
 
-Building PIVX Core
+Building hemis Core
 --------------------
 
 The script allows you to build tags, commits, branches, and even pull requests. Below are some examples:
@@ -104,15 +104,15 @@ Signing Externally
 If your gitian host does not have your GPG private key installed, you will need to copy these uncommited changes to your host machine, where you can sign them:
 
 ```bash
-gpg --output ${VERSION}-linux/${NAME}/pivx-linux-${VERSION%\.*}-build.assert.sig --detach-sign ${VERSION}-linux/$NAME/pivx-linux-${VERSION%\.*}-build.assert
-gpg --output ${VERSION}-osx-unsigned/$NAME/pivx-osx-${VERSION%\.*}-build.assert.sig --detach-sign ${VERSION}-osx-unsigned/$NAME/pivx-osx-${VERSION%\.*}-build.assert
-gpg --output ${VERSION}-win-unsigned/$NAME/pivx-win-${VERSION%\.*}-build.assert.sig --detach-sign ${VERSION}-win-unsigned/$NAME/pivx-win-${VERSION%\.*}-build.assert
+gpg --output ${VERSION}-linux/${NAME}/hemis-linux-${VERSION%\.*}-build.assert.sig --detach-sign ${VERSION}-linux/$NAME/hemis-linux-${VERSION%\.*}-build.assert
+gpg --output ${VERSION}-osx-unsigned/$NAME/hemis-osx-${VERSION%\.*}-build.assert.sig --detach-sign ${VERSION}-osx-unsigned/$NAME/hemis-osx-${VERSION%\.*}-build.assert
+gpg --output ${VERSION}-win-unsigned/$NAME/hemis-win-${VERSION%\.*}-build.assert.sig --detach-sign ${VERSION}-win-unsigned/$NAME/hemis-win-${VERSION%\.*}-build.assert
 ```
 
 Uploading Signatures
 --------------------
 Make a Pull Request (both the `.assert` and `.assert.sig` files) to the
-[gitian.sigs](https://github.com/pivx-project/gitian.sigs/) repository:
+[gitian.sigs](https://github.com/hemis-project/gitian.sigs/) repository:
 
 ```bash
 git checkout -b ${VERSION}-not-codesigned
@@ -120,12 +120,12 @@ git commit -S -a -m "Add $NAME $VERSION non-code signed signatures"
 git push --set-upstream $NAME $VERSION-not-codesigned
 ```
 
-You can also mail the files to Fuzzbawls (fuzzbawls@pivx.org) and he will commit them.
+You can also mail the files to Fuzzbawls (fuzzbawls@hemis.org) and he will commit them.
 
 ```bash
-gpg --detach-sign ${VERSION}-linux/${NAME}/pivx-linux-*-build.assert
-gpg --detach-sign ${VERSION}-win-unsigned/${NAME}/pivx-win-*-build.assert
-gpg --detach-sign ${VERSION}-osx-unsigned/${NAME}/pivx-osx-*-build.assert
+gpg --detach-sign ${VERSION}-linux/${NAME}/hemis-linux-*-build.assert
+gpg --detach-sign ${VERSION}-win-unsigned/${NAME}/hemis-win-*-build.assert
+gpg --detach-sign ${VERSION}-osx-unsigned/${NAME}/hemis-osx-*-build.assert
 ```
 
 You may have other .assert files as well (e.g. `signed` ones), in which case you should sign them too. You can see all of them by doing `ls ${VERSION}-*/${NAME}`.

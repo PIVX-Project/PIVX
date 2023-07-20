@@ -1,9 +1,9 @@
-// Copyright (c) 2022 The PIVX Core developers
+// Copyright (c) 2022 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_BLS_KEY_IO_H
-#define PIVX_BLS_KEY_IO_H
+#ifndef hemis_BLS_KEY_IO_H
+#define hemis_BLS_KEY_IO_H
 
 #include "optional.h"
 
@@ -21,4 +21,4 @@ namespace bls {
 
 } // end bls namespace
 
-#endif //PIVX_BLS_KEY_IO_H
+#endif //hemis_BLS_KEY_IO_H

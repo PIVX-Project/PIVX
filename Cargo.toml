@@ -12,7 +12,7 @@ homepage = "https://github.com/zcash/zcash"
 repository = "https://github.com/zcash/zcash"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
-edition = "2021"
+edition = "2018"
 
 [lib]
 name = "rustzcash"
@@ -20,16 +20,14 @@ path = "src/rust/src/rustzcash.rs"
 crate-type = ["staticlib"]
 
 [dependencies]
-bellman = "0.14.0"
-blake2s_simd = "1.0.1"
-ff = "0.13.0"
-libc = "0.2.144"
-bls12_381="0.8.0"
-byteorder = "1.4.3"
-group = "0.13"
-rand_core = "0.6.4"
-jubjub = "0.10.0"
-zcash_primitives = { git="https://github.com/PIVX-Project/librustzcash", rev="e7662b23d16c38595ef9ad1f3ae683b1f54dc732" }
-zcash_proofs = { git="https://github.com/PIVX-Project/librustzcash", rev="e7662b23d16c38595ef9ad1f3ae683b1f54dc732" }
-zcash_note_encryption = "0.3.0"
-
+bellman = "0.2.0"
+blake2b_simd = "0.5"
+blake2s_simd = "0.5"
+ff = "0.5.0"
+libc = "0.2"
+pairing = "0.15.0"
+lazy_static = "1"
+byteorder = "1"
+rand_core = "0.5.1"
+zcash_primitives = "0.1.0"
+zcash_proofs = "0.1.0"

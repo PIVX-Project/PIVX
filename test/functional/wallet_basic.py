@@ -93,7 +93,7 @@ class WalletTest(PivxTestFramework):
         memory_before = self.nodes[0].getmemoryinfo()
         self.nodes[1].sendtoaddress(self.nodes[0].getnewaddress(), 21)
         memory_after = self.nodes[0].getmemoryinfo()
-        assert memory_before['locked']['used'] + 32 <= memory_after['locked']['used']
+        assert(memory_before['locked']['used'] + 32 <= memory_after['locked']['used'])
         self.sync_mempools(self.nodes[0:3])
 
         # Node0 should have two unspent outputs.
@@ -175,7 +175,7 @@ class WalletTest(PivxTestFramework):
         self.nodes[1].importaddress(address_to_import)
 
         # 3. Validate that the imported address is watch-only on node1
-        assert self.nodes[1].validateaddress(address_to_import)["iswatchonly"]
+        assert(self.nodes[1].validateaddress(address_to_import)["iswatchonly"])
 
         # 4. Check that the unspents after import are not spendable
         listunspent = self.nodes[1].listunspent(1, 9999999, [], 2)

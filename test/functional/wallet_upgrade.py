@@ -4,7 +4,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the walletupgrade functionality.
 
-- 1) start one pivxd node from an pre-HD wallet wallet.dat file localized in util/data
+- 1) start one hemisd node from an pre-HD wallet wallet.dat file localized in util/data
 - 2) dumpwallet and get all the keys.
 - 3) Upgrade Wallet: stopnode and initialize it with the -upgradewallet flag.
 - 4) Verify that all of the pre-HD keys are still in the upgraded wallet.

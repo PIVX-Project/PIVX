@@ -3,7 +3,7 @@
 # Copyright 2016-2017 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
-"""Test framework for pivx utils.
+"""Test framework for hemis utils.
 
 Runs automatically during `make check`.
 
@@ -157,7 +157,7 @@ def bctest(testDir, testObj, buildenv):
         want_error = testObj["error_txt"]
         # Compare error text
         # TODO: ideally, we'd compare the strings exactly and also assert
-        # That stderr is empty if no errors are expected. However, pivx-tx
+        # That stderr is empty if no errors are expected. However, hemis-tx
         # emits DISPLAY errors when running as a windows application on
         # linux through wine. Just assert that the expected error text appears
         # somewhere in stderr.

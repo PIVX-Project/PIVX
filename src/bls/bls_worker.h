@@ -1,10 +1,10 @@
 // Copyright (c) 2018 The Dash Core developers
-// Copyright (c) 2021 The PIVX Core developers
+// Copyright (c) 2021 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_CRYPTO_BLS_WORKER_H
-#define PIVX_CRYPTO_BLS_WORKER_H
+#ifndef hemis_CRYPTO_BLS_WORKER_H
+#define hemis_CRYPTO_BLS_WORKER_H
 
 #include "bls/bls_wrapper.h"
 #include "ctpl_stl.h"
@@ -200,4 +200,4 @@ private:
     }
 };
 
-#endif // PIVX_CRYPTO_BLS_WORKER_H
+#endif // hemis_CRYPTO_BLS_WORKER_H

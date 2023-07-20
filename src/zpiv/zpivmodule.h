@@ -1,9 +1,9 @@
-// Copyright (c) 2019-2021 The PIVX Core developers
+// Copyright (c) 2019-2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
-#ifndef PIVX_ZPIVMODULE_H
-#define PIVX_ZPIVMODULE_H
+#ifndef hemis_ZPIVMODULE_H
+#define hemis_ZPIVMODULE_H
 
 #include "libzerocoin/bignum.h"
 #include "libzerocoin/Denominations.h"
@@ -84,4 +84,4 @@ namespace ZPIVModule {
 };
 
 
-#endif //PIVX_ZPIVMODULE_H
+#endif //hemis_ZPIVMODULE_H

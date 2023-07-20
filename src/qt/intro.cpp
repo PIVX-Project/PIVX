@@ -1,11 +1,11 @@
 // Copyright (c) 2011-2014 The Bitcoin developers
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2021 The PIVX Core developers
+// Copyright (c) 2015-2021 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #if defined(HAVE_CONFIG_H)
-#include "config/pivx-config.h"
+#include "config/hemis-config.h"
 #endif
 
 #include "intro.h"
@@ -15,7 +15,7 @@
 #include "guiutil.h"
 
 #include "util/system.h"
-#include "qt/pivx/qtutils.h"
+#include "qt/hemis/qtutils.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -226,8 +226,8 @@ bool Intro::pickDataDirectory()
     }
 
     /* Only override -datadir if different from the default, to make it possible to
-     * override -datadir in the pivx.conf file in the default data directory
-     * (to be consistent with pivxd behavior)
+     * override -datadir in the hemis.conf file in the default data directory
+     * (to be consistent with hemisd behavior)
      */
 
     if (dataDir != getDefaultDataDirectory())

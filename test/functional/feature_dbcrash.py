@@ -29,12 +29,19 @@
 import errno
 import http.client
 import random
+import sys
 import time
 
 from test_framework.messages import COIN, COutPoint, CTransaction, CTxIn, CTxOut, ToHex
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import assert_equal, create_confirmed_utxos, hex_str_to_bytes
 
+
+HTTP_DISCONNECT_ERRORS = [http.client.CannotSendRequest]
+try:
+    HTTP_DISCONNECT_ERRORS.append(http.client.RemoteDisconnected)
+except AttributeError:
+    pass
 
 
 class ChainstateWriteCrashTest(PivxTestFramework):
@@ -45,8 +52,8 @@ class ChainstateWriteCrashTest(PivxTestFramework):
         self.setup_clean_chain = False
         # Need a bit of extra time for the nodes to start up for this test
 
-        self.chain_params = ['-nuparams=v5_shield:90000', '-nuparams=PIVX_v4.0:90000',
-                             '-nuparams=PIVX_v3.4:90000', '-nuparams=Zerocoin_Public:90000',
+        self.chain_params = ['-nuparams=v5_shield:90000', '-nuparams=hemis_v4.0:90000',
+                             '-nuparams=hemis_v3.4:90000', '-nuparams=Zerocoin_Public:90000',
                              '-nuparams=Zerocoin_v2:90000', '-nuparams=Zerocoin:90000',
                              '-nuparams=PoS_v2:90000', '-nuparams=PoS:90000']
         # Set -maxmempool=0 to turn off mempool memory sharing with dbcache
@@ -85,14 +92,14 @@ class ChainstateWriteCrashTest(PivxTestFramework):
                 return utxo_hash
             except:
                 # An exception here should mean the node is about to crash.
-                # If pivxd exits, then try again.  wait_for_node_exit()
-                # should raise an exception if pivxd doesn't exit.
+                # If hemisd exits, then try again.  wait_for_node_exit()
+                # should raise an exception if hemisd doesn't exit.
                 self.wait_for_node_exit(node_index, timeout=10)
             self.crashed_on_restart += 1
             time.sleep(1)
 
-        # If we got here, pivxd isn't coming back up on restart.  Could be a
-        # bug in pivxd, or we've gotten unlucky with our dbcrash ratio --
+        # If we got here, hemisd isn't coming back up on restart.  Could be a
+        # bug in hemisd, or we've gotten unlucky with our dbcrash ratio --
         # perhaps we generated a test case that blew up our cache?
         # TODO: If this happens a lot, we should try to restart without -dbcrashratio
         # and make sure that recovery happens.
@@ -107,7 +114,14 @@ class ChainstateWriteCrashTest(PivxTestFramework):
         try:
             self.nodes[node_index].submitblock(block)
             return True
-        except (http.client.CannotSendRequest, http.client.RemoteDisconnected) as e:
+        except http.client.BadStatusLine as e:
+            # Prior to 3.5 BadStatusLine('') was raised for a remote disconnect error.
+            if sys.version_info[0] == 3 and sys.version_info[1] < 5 and e.line == "''":
+                self.log.debug("node %d submitblock raised exception: %s", node_index, e)
+                return False
+            else:
+                raise
+        except tuple(HTTP_DISCONNECT_ERRORS) as e:
             self.log.debug("node %d submitblock raised exception: %s", node_index, e)
             return False
         except OSError as e:

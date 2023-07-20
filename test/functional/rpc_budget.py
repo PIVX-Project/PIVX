@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2019-2021 The PIVX Core developers
+# Copyright (c) 2019-2021 The hemis Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test RPC commands for budget proposal creation, submission, and verification."""
@@ -46,8 +46,8 @@ class BudgetProposalTest(PivxTestFramework):
         assert_raises_rpc_error(-8, "Invalid block start", self.nodes[0].preparebudget,
                                 name, scheme + url, numcycles, nextsuperblock - budgetcycleblocks, address, cycleamount)
 
-        self.log.info("Test with invalid PIVX address")
-        assert_raises_rpc_error(-5, "Invalid PIVX address", self.nodes[0].preparebudget,
+        self.log.info("Test with invalid hemis address")
+        assert_raises_rpc_error(-5, "Invalid hemis address", self.nodes[0].preparebudget,
                                 name, scheme + url, numcycles, nextsuperblock, "DBREvBPNQguwuC4YMoCG5FoH1sA2YntvZm", cycleamount)
 
         self.log.info("Test with too low amount")

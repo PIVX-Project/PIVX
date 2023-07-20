@@ -9,5 +9,5 @@ v2.1.5
 7. Wallet crashing with certain blockchain corruption has been prevented.
 8. Lots of updates for OS X build.
 9. In-Wallet Blockexplorer! (still needs Styling)
-10. Added Fallback Seed Nodes - You no longer need to add initial addnodes lines to pivx.conf!
+10. Added Fallback Seed Nodes - You no longer need to add initial addnodes lines to hemis.conf!
 11. Lots more minor updates (readme, copyright etc) and bug fixes.

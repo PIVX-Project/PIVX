@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
-// Copyright (c) 2015-2021 The PIVX Core developers
+// Copyright (c) 2015-2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_SERIALIZE_H
-#define PIVX_SERIALIZE_H
+#ifndef hemis_SERIALIZE_H
+#define hemis_SERIALIZE_H
 
 #include <algorithm>
 #include <array>
@@ -1464,4 +1464,4 @@ unsigned int GetSerializeSize(const Optional<T> &item)
     }
 }
 
-#endif // PIVX_SERIALIZE_H
+#endif // hemis_SERIALIZE_H

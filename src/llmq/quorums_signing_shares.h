@@ -1,10 +1,10 @@
 // Copyright (c) 2018-2022 The Dash Core developers
-// Copyright (c) 2023 The PIVX Core developers
+// Copyright (c) 2023 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_QUORUMS_SIGNING_SHARES_H
-#define PIVX_QUORUMS_SIGNING_SHARES_H
+#ifndef hemis_QUORUMS_SIGNING_SHARES_H
+#define hemis_QUORUMS_SIGNING_SHARES_H
 
 #include "chainparams.h"
 #include "consensus/params.h"
@@ -263,4 +263,4 @@ extern CSigSharesManager* quorumSigSharesManager;
 
 } // namespace llmq
 
-#endif // PIVX_QUORUMS_SIGNING_SHARES_H
+#endif // hemis_QUORUMS_SIGNING_SHARES_H

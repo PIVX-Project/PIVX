@@ -29,16 +29,16 @@
   <string>????</string>
 
   <key>CFBundleExecutable</key>
-  <string>PIVX-Qt</string>
+  <string>hemis-Qt</string>
 
   <key>CFBundleName</key>
-  <string>PIVX-Qt</string>
+  <string>hemis-Qt</string>
 
   <key>LSHasLocalizedDisplayName</key>
   <true/>
 
   <key>CFBundleIdentifier</key>
-  <string>io.pivx.Pivx-Qt</string>
+  <string>io.hemis.Pivx-Qt</string>
 
   <key>CFBundleURLTypes</key>
   <array>
@@ -46,10 +46,10 @@
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleURLName</key>
-      <string>io.pivx.PivxPayment</string>
+      <string>io.hemis.PivxPayment</string>
       <key>CFBundleURLSchemes</key>
       <array>
-        <string>pivx</string>
+        <string>hemis</string>
       </array>
     </dict>
   </array>

@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2022 The PIVX Core developers
+// Copyright (c) 2015-2022 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -1157,7 +1157,7 @@ bool CMasternodeMan::IsWithinDepth(const uint256& nHash, int depth) const
 void ThreadCheckMasternodes()
 {
     // Make this thread recognisable as the wallet flushing thread
-    util::ThreadRename("pivx-masternodeman");
+    util::ThreadRename("hemis-masternodeman");
     LogPrintf("Masternodes thread started\n");
 
     unsigned int c = 0;

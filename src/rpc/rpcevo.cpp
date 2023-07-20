@@ -1,5 +1,5 @@
 // Copyright (c) 2018-2021 The Dash Core developers
-// Copyright (c) 2021-2022 The PIVX Core developers
+// Copyright (c) 2021-2022 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -57,7 +57,7 @@ enum ProRegParam {
 
 static const std::map<ProRegParam, std::string> mapParamHelp = {
         {collateralAddress,
-            "%d. \"collateralAddress\"     (string, required) The PIVX address to send the collateral to.\n"
+            "%d. \"collateralAddress\"     (string, required) The hemis address to send the collateral to.\n"
         },
         {collateralHash,
             "%d. \"collateralHash\"        (string, required) The collateral transaction hash.\n"
@@ -102,7 +102,7 @@ static const std::map<ProRegParam, std::string> mapParamHelp = {
             "                                between 0.00 and 100.00. If not set, it takes the default value of 0.0\n"
         },
         {ownerAddress,
-            "%d. \"ownerAddress\"          (string, required) The PIVX address to use for payee updates and proposal voting.\n"
+            "%d. \"ownerAddress\"          (string, required) The hemis address to use for payee updates and proposal voting.\n"
             "                                The private key belonging to this address must be known in your wallet, in order to send updates.\n"
             "                                The address must not be already registered, and must differ from the collateralAddress\n"
         },
@@ -111,10 +111,10 @@ static const std::map<ProRegParam, std::string> mapParamHelp = {
             "                                If not specified, or set to an empty string, then the mn key must be known by your wallet, in order to sign the tx.\n"
         },
         {payoutAddress_register,
-            "%d. \"payoutAddress\"          (string, required) The PIVX address to use for masternode reward payments.\n"
+            "%d. \"payoutAddress\"          (string, required) The hemis address to use for masternode reward payments.\n"
         },
         {payoutAddress_update,
-            "%d. \"payoutAddress\"          (string, required) The PIVX address to use for masternode reward payments.\n"
+            "%d. \"payoutAddress\"          (string, required) The hemis address to use for masternode reward payments.\n"
             "                                 If set to an empty string, the currently active payout address is reused.\n"
         },
         {proTxHash,
@@ -166,7 +166,7 @@ static void CheckEvoUpgradeEnforcement()
     }
 }
 
-// Allows to specify PIVX address or priv key (as strings). In case of PIVX address, the priv key is taken from the wallet
+// Allows to specify hemis address or priv key (as strings). In case of hemis address, the priv key is taken from the wallet
 static CKey ParsePrivKey(CWallet* pwallet, const std::string &strKeyOrAddress, bool allowAddresses = true) {
     bool isStaking{false}, isShield{false};
     const CWDestination& cwdest = Standard::DecodeDestination(strKeyOrAddress, isStaking, isShield);
@@ -208,7 +208,7 @@ static CKeyID ParsePubKeyIDFromAddress(const std::string& strAddress)
     }
     const CKeyID* keyID = boost::get<CKeyID>(Standard::GetTransparentDestination(cwdest));
     if (!keyID) {
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("invalid PIVX address %s", strAddress));
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, strprintf("invalid hemis address %s", strAddress));
     }
     return *keyID;
 }

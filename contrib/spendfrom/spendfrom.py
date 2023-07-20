@@ -7,7 +7,7 @@
 #  spendfrom.py  # Lists available funds
 #  spendfrom.py --from=ADDRESS --to=ADDRESS --amount=11.00
 #
-# Assumes it will talk to a pivxd or pivx-Qt running
+# Assumes it will talk to a hemisd or hemis-Qt running
 # on localhost.
 #
 # Depends on jsonrpc
@@ -33,15 +33,15 @@ def check_json_precision():
         raise RuntimeError("JSON encode/decode loses precision")
 
 def determine_db_dir():
-    """Return the default location of the pivx data directory"""
+    """Return the default location of the hemis data directory"""
     if platform.system() == "Darwin":
-        return os.path.expanduser("~/Library/Application Support/PIVX/")
+        return os.path.expanduser("~/Library/Application Support/hemis/")
     elif platform.system() == "Windows":
-        return os.path.join(os.environ['APPDATA'], "PIVX")
-    return os.path.expanduser("~/.pivx")
+        return os.path.join(os.environ['APPDATA'], "hemis")
+    return os.path.expanduser("~/.hemis")
 
 def read_bitcoin_config(dbdir):
-    """Read the pivx.conf file from dbdir, returns dictionary of settings"""
+    """Read the hemis.conf file from dbdir, returns dictionary of settings"""
     from ConfigParser import SafeConfigParser
 
     class FakeSecHead(object):
@@ -59,11 +59,11 @@ def read_bitcoin_config(dbdir):
                 return s
 
     config_parser = SafeConfigParser()
-    config_parser.readfp(FakeSecHead(open(os.path.join(dbdir, "pivx.conf"))))
+    config_parser.readfp(FakeSecHead(open(os.path.join(dbdir, "hemis.conf"))))
     return dict(config_parser.items("all"))
 
 def connect_JSON(config):
-    """Connect to a pivx JSON-RPC server"""
+    """Connect to a hemis JSON-RPC server"""
     testnet = config.get('testnet', '0')
     testnet = (int(testnet) > 0)  # 0/1 in config file, convert to True/False
     if not 'rpcport' in config:
@@ -72,7 +72,7 @@ def connect_JSON(config):
     try:
         result = ServiceProxy(connect)
         # ServiceProxy is lazy-connect, so send an RPC command mostly to catch connection errors,
-        # but also make sure the pivxd we're talking to is/isn't testnet:
+        # but also make sure the hemisd we're talking to is/isn't testnet:
         if result.getmininginfo()['testnet'] != testnet:
             sys.stderr.write("RPC server at "+connect+" testnet setting mismatch\n")
             sys.exit(1)
@@ -81,36 +81,36 @@ def connect_JSON(config):
         sys.stderr.write("Error connecting to RPC server at "+connect+"\n")
         sys.exit(1)
 
-def unlock_wallet(pivxd):
-    info = pivxd.getinfo()
+def unlock_wallet(hemisd):
+    info = hemisd.getinfo()
     if 'unlocked_until' not in info:
         return True # wallet is not encrypted
     t = int(info['unlocked_until'])
     if t <= time.time():
         try:
             passphrase = getpass.getpass("Wallet is locked; enter passphrase: ")
-            pivxd.walletpassphrase(passphrase, 5)
+            hemisd.walletpassphrase(passphrase, 5)
         except:
             sys.stderr.write("Wrong passphrase\n")
 
-    info = pivxd.getinfo()
+    info = hemisd.getinfo()
     return int(info['unlocked_until']) > time.time()
 
-def list_available(pivxd):
+def list_available(hemisd):
     address_summary = dict()
 
     address_to_account = dict()
-    for info in pivxd.listreceivedbyaddress(0):
+    for info in hemisd.listreceivedbyaddress(0):
         address_to_account[info["address"]] = info["account"]
 
-    unspent = pivxd.listunspent(0)
+    unspent = hemisd.listunspent(0)
     for output in unspent:
         # listunspent doesn't give addresses, so:
-        rawtx = pivxd.getrawtransaction(output['txid'], 1)
+        rawtx = hemisd.getrawtransaction(output['txid'], 1)
         vout = rawtx["vout"][output['vout']]
         pk = vout["scriptPubKey"]
 
-        # This code only deals with ordinary pay-to-pivx-address
+        # This code only deals with ordinary pay-to-hemis-address
         # or pay-to-script-hash outputs right now; anything exotic is ignored.
         if pk["type"] != "pubkeyhash" and pk["type"] != "scripthash":
             continue
@@ -139,8 +139,8 @@ def select_coins(needed, inputs):
         n += 1
     return (outputs, have-needed)
 
-def create_tx(pivxd, fromaddresses, toaddress, amount, fee):
-    all_coins = list_available(pivxd)
+def create_tx(hemisd, fromaddresses, toaddress, amount, fee):
+    all_coins = list_available(hemisd)
 
     total_available = Decimal("0.0")
     needed = amount+fee
@@ -159,7 +159,7 @@ def create_tx(pivxd, fromaddresses, toaddress, amount, fee):
     # Note:
     # Python's json/jsonrpc modules have inconsistent support for Decimal numbers.
     # Instead of wrestling with getting json.dumps() (used by jsonrpc) to encode
-    # Decimals, I'm casting amounts to float before sending them to pivxd.
+    # Decimals, I'm casting amounts to float before sending them to hemisd.
     #
     outputs = { toaddress : float(amount) }
     (inputs, change_amount) = select_coins(needed, potential_inputs)
@@ -170,8 +170,8 @@ def create_tx(pivxd, fromaddresses, toaddress, amount, fee):
         else:
             outputs[change_address] = float(change_amount)
 
-    rawtx = pivxd.createrawtransaction(inputs, outputs)
-    signed_rawtx = pivxd.signrawtransaction(rawtx)
+    rawtx = hemisd.createrawtransaction(inputs, outputs)
+    signed_rawtx = hemisd.signrawtransaction(rawtx)
     if not signed_rawtx["complete"]:
         sys.stderr.write("signrawtransaction failed\n")
         sys.exit(1)
@@ -179,10 +179,10 @@ def create_tx(pivxd, fromaddresses, toaddress, amount, fee):
 
     return txdata
 
-def compute_amount_in(pivxd, txinfo):
+def compute_amount_in(hemisd, txinfo):
     result = Decimal("0.0")
     for vin in txinfo['vin']:
-        in_info = pivxd.getrawtransaction(vin['txid'], 1)
+        in_info = hemisd.getrawtransaction(vin['txid'], 1)
         vout = in_info['vout'][vin['vout']]
         result = result + vout['value']
     return result
@@ -193,12 +193,12 @@ def compute_amount_out(txinfo):
         result = result + vout['value']
     return result
 
-def sanity_test_fee(pivxd, txdata_hex, max_fee):
+def sanity_test_fee(hemisd, txdata_hex, max_fee):
     class FeeError(RuntimeError):
         pass
     try:
-        txinfo = pivxd.decoderawtransaction(txdata_hex)
-        total_in = compute_amount_in(pivxd, txinfo)
+        txinfo = hemisd.decoderawtransaction(txdata_hex)
+        total_in = compute_amount_in(hemisd, txinfo)
         total_out = compute_amount_out(txinfo)
         if total_in-total_out > max_fee:
             raise FeeError("Rejecting transaction, unreasonable fee of "+str(total_in-total_out))
@@ -229,7 +229,7 @@ def main():
     parser.add_option("--fee", dest="fee", default="0.0",
                       help="fee to include")
     parser.add_option("--datadir", dest="datadir", default=determine_db_dir(),
-                      help="location of pivx.conf file with RPC username/password (default: %default)")
+                      help="location of hemis.conf file with RPC username/password (default: %default)")
     parser.add_option("--testnet", dest="testnet", default=False, action="store_true",
                       help="Use the test network")
     parser.add_option("--dry_run", dest="dry_run", default=False, action="store_true",
@@ -240,10 +240,10 @@ def main():
     check_json_precision()
     config = read_bitcoin_config(options.datadir)
     if options.testnet: config['testnet'] = True
-    pivxd = connect_JSON(config)
+    hemisd = connect_JSON(config)
 
     if options.amount is None:
-        address_summary = list_available(pivxd)
+        address_summary = list_available(hemisd)
         for address,info in address_summary.iteritems():
             n_transactions = len(info['outputs'])
             if n_transactions > 1:
@@ -253,14 +253,14 @@ def main():
     else:
         fee = Decimal(options.fee)
         amount = Decimal(options.amount)
-        while unlock_wallet(pivxd) == False:
+        while unlock_wallet(hemisd) == False:
             pass # Keep asking for passphrase until they get it right
-        txdata = create_tx(pivxd, options.fromaddresses.split(","), options.to, amount, fee)
-        sanity_test_fee(pivxd, txdata, amount*Decimal("0.01"))
+        txdata = create_tx(hemisd, options.fromaddresses.split(","), options.to, amount, fee)
+        sanity_test_fee(hemisd, txdata, amount*Decimal("0.01"))
         if options.dry_run:
             print(txdata)
         else:
-            txid = pivxd.sendrawtransaction(txdata)
+            txid = hemisd.sendrawtransaction(txdata)
             print(txid)
 
 if __name__ == '__main__':

@@ -10,7 +10,7 @@
 #include "consensus/validation.h"
 #include "pow.h"
 #include "random.h"
-#include "test/test_pivx.h"
+#include "test/test_hemis.h"
 #include "util/blockstatecatcher.h"
 #include "validation.h"
 #include "validationinterface.h"

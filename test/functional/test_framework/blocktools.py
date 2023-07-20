@@ -81,7 +81,7 @@ def create_coinbase(height, pubkey = None):
 # If the scriptPubKey is not specified, make it anyone-can-spend.
 def create_transaction(prevtx, n, sig, value, scriptPubKey=CScript()):
     tx = CTransaction()
-    assert n < len(prevtx.vout)
+    assert(n < len(prevtx.vout))
     tx.vin.append(CTxIn(COutPoint(prevtx.sha256, n), sig, 0xffffffff))
     tx.vout.append(CTxOut(value, scriptPubKey))
     tx.calc_sha256()
@@ -109,7 +109,7 @@ def get_legacy_sigopcount_tx(tx, fAccurate=True):
         count += CScript(j.scriptSig).GetSigOpCount(fAccurate)
     return count
 
-# PIVX specific blocktools
+# hemis specific blocktools
 def create_coinbase_pos(height):
     coinbase = CTransaction()
     coinbase.vin = [CTxIn(NullOutPoint, script_BIP34_coinbase_height(height), 0xffffffff)]

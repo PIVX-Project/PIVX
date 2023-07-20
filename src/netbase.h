@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2015 The Bitcoin developers
-// Copyright (c) 2017-2022 The PIVX Core developers
+// Copyright (c) 2017-2022 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 #define BITCOIN_NETBASE_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/pivx-config.h"
+#include "config/hemis-config.h"
 #endif
 
 #include "compat.h"

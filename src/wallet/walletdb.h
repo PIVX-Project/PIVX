@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2021 The Bitcoin developers
-// Copyright (c) 2016-2021 The PIVX Core developers
+// Copyright (c) 2016-2021 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_WALLETDB_H
-#define PIVX_WALLETDB_H
+#ifndef hemis_WALLETDB_H
+#define hemis_WALLETDB_H
 
 #include "amount.h"
 #include "wallet/db.h"
@@ -237,4 +237,4 @@ bool AutoBackupWallet(CWallet& wallet, std::string& strBackupWarning, std::strin
 //! Compacts BDB state so that wallet.dat is self-contained (if there are changes)
 void MaybeCompactWalletDB();
 
-#endif // PIVX_WALLETDB_H
+#endif // hemis_WALLETDB_H

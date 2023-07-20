@@ -1,5 +1,9 @@
 // Copyright (c) 2012-2013 The Bitcoin Core developers
+<<<<<<< HEAD
 // Copyright (c) 2017-2021 The PIVX Core developers
+=======
+// Copyright (c) 2017-2021 The hemis Core developers
+>>>>>>> 1f345019d (first step)
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -9,7 +13,11 @@
 #include "uint256.h"
 #include "version.h"
 #include "consensus/merkle.h"
+<<<<<<< HEAD
 #include "test/test_pivx.h"
+=======
+#include "test/test_hemis.h"
+>>>>>>> 1f345019d (first step)
 
 #include <vector>
 

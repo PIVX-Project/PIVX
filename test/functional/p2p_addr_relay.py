@@ -37,7 +37,7 @@ class AddrReceiver(P2PInterface):
         for addr in message.addrs:
             assert_equal(addr.nServices, 1)
             assert addr.ip.startswith('123.123.123.')
-            assert 8333 <= addr.port < 8343
+            assert (8333 <= addr.port < 8343)
 
     def on_getaddr(self, message):
         # When the node sends us a getaddr, it increments the addr relay tokens for the connection by 1000

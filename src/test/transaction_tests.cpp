@@ -1,9 +1,9 @@
 // Copyright (c) 2011-2014 The Bitcoin Core developers
-// Copyright (c) 2017-2021 The PIVX Core developers
+// Copyright (c) 2017-2021 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "test/test_pivx.h"
+#include "test/test_hemis.h"
 
 #include "test/data/tx_invalid.json.h"
 #include "test/data/tx_valid.json.h"

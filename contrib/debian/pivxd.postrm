@@ -1,15 +1,15 @@
 #!/bin/sh
 
-# setup pivx account, homedir etc
+# setup hemis account, homedir etc
 
 set -e
 
-BCUSER="pivx"
-BCHOME="/var/lib/pivx"
+BCUSER="hemis"
+BCHOME="/var/lib/hemis"
 
 if [ "$1" = "purge" ]; then
 
-	# The pivx user is left in place for now - This is to ensure that a new user
+	# The hemis user is left in place for now - This is to ensure that a new user
 	# will not inherit the users UID/GID and inadvertently gain access to wallets etc
 
 	# The homedir is also left intact to ensure that we don't accidentally delete a
@@ -17,7 +17,7 @@ if [ "$1" = "purge" ]; then
 
 	echo
 	echo "#"
-	echo "#  The pivx user (${BCUSER}) and data dir (${BCHOME})"
+	echo "#  The hemis user (${BCUSER}) and data dir (${BCHOME})"
 	echo "#  were left intact."
 	echo "#"
 	echo "#  Make sure to check \"${BCHOME}\" for wallets and other"

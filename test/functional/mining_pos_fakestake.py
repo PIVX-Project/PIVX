@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2019-2022 The PIVX Core developers
+# Copyright (c) 2019-2022 The hemis Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """
@@ -51,6 +51,7 @@ from test_framework.messages import COutPoint
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,
+    bytes_to_hex_str,
     set_node_times
 )
 
@@ -168,7 +169,7 @@ class FakeStakeTest(PivxTestFramework):
 
     def send_block_and_check_error(self, block, error_mess):
         with self.nodes[1].assert_debug_log([error_mess]):
-            self.nodes[1].submitblock(block.serialize().hex())
+            self.nodes[1].submitblock(bytes_to_hex_str(block.serialize()))
 
 
     def fake_stake(self,
@@ -247,7 +248,7 @@ class FakeStakeTest(PivxTestFramework):
                     reject_log = "bad-txns-inputs-spent-fork-post-split"
                 self.send_block_and_check_error(block, reject_log)
             else:
-                var = self.nodes[1].submitblock(block.serialize().hex())
+                var = self.nodes[1].submitblock(bytes_to_hex_str(block.serialize()))
                 if (var != "inconclusive"):
                     raise AssertionError("Error, block not submitted (%s) in %s chain" % (var, chainName))
             self.log.info("Done.")

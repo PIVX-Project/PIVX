@@ -161,7 +161,7 @@ class BaseNode(SingleNodeConnCB):
         expect_headers = headers if headers is not None else []
         expect_inv = inv if inv is not None else []
         test_function = lambda: self.block_announced
-        assert wait_until(test_function, timeout=60)
+        assert(wait_until(test_function, timeout=60))
         with mininode_lock:
             self.block_announced = False
 
@@ -186,12 +186,12 @@ class BaseNode(SingleNodeConnCB):
     # Syncing helpers
     def wait_for_block(self, blockhash, timeout=60):
         test_function = lambda: self.last_block is not None and self.last_block.sha256 == blockhash
-        assert wait_until(test_function, timeout=timeout)
+        assert(wait_until(test_function, timeout=timeout))
         return
 
     def wait_for_getheaders(self, timeout=60):
         test_function = lambda: self.last_getheaders is not None
-        assert wait_until(test_function, timeout=timeout)
+        assert(wait_until(test_function, timeout=timeout))
         return
 
     def wait_for_getdata(self, hash_list, timeout=60):
@@ -199,17 +199,17 @@ class BaseNode(SingleNodeConnCB):
             return
 
         test_function = lambda: self.last_getdata is not None and [x.hash for x in self.last_getdata.inv] == hash_list
-        assert wait_until(test_function, timeout=timeout)
+        assert(wait_until(test_function, timeout=timeout))
         return
 
     def wait_for_disconnect(self, timeout=60):
         test_function = lambda: self.disconnected
-        assert wait_until(test_function, timeout=timeout)
+        assert(wait_until(test_function, timeout=timeout))
         return
 
     def wait_for_block_announcement(self, block_hash, timeout=60):
         test_function = lambda: self.last_blockhash_announced == block_hash
-        assert wait_until(test_function, timeout=timeout)
+        assert(wait_until(test_function, timeout=timeout))
         return
 
     def send_header_for_blocks(self, new_blocks):

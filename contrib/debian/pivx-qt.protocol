@@ -1,6 +1,6 @@
 [Protocol]
-exec=pivx-qt '%u'
-protocol=pivx
+exec=hemis-qt '%u'
+protocol=hemis
 input=none
 output=none
 helper=true

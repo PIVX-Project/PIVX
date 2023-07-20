@@ -1,10 +1,10 @@
 // Copyright (c) 2018 The Dash Core developers
-// Copyright (c) 2021 The PIVX Core developers
+// Copyright (c) 2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_CRYPTO_BLS_IES_H
-#define PIVX_CRYPTO_BLS_IES_H
+#ifndef hemis_CRYPTO_BLS_IES_H
+#define hemis_CRYPTO_BLS_IES_H
 
 #include "bls/bls_wrapper.h"
 #include "streams.h"
@@ -156,4 +156,4 @@ public:
     }
 };
 
-#endif // PIVX_CRYPTO_BLS_IES_H
+#endif // hemis_CRYPTO_BLS_IES_H

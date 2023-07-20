@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2018 The Zcash developers
-# Copyright (c) 2020-2021 The PIVX Core developers
+# Copyright (c) 2020-2021 The hemis Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php .
 
@@ -48,8 +48,8 @@ class WalletSaplingTest(PivxTestFramework):
         saplingAddr1 = self.nodes[1].getnewshieldaddress()
 
         # Verify addresses
-        assert saplingAddr0 in self.nodes[0].listshieldaddresses()
-        assert saplingAddr1 in self.nodes[1].listshieldaddresses()
+        assert(saplingAddr0 in self.nodes[0].listshieldaddresses())
+        assert(saplingAddr1 in self.nodes[1].listshieldaddresses())
 
         # Verify balance
         assert_equal(self.nodes[0].getshieldbalance(saplingAddr0), Decimal('0'))
@@ -235,21 +235,21 @@ class WalletSaplingTest(PivxTestFramework):
         assert_equal(Decimal(resp['valueBalance']), Decimal('10.05'))    # 20 shield input - 8 shield spend - 1.95 change
         assert_equal(len(resp['vShieldSpend']), 3)
         assert_equal(len(resp['vShieldOutput']), 2)
-        assert 'bindingSig' in resp
+        assert('bindingSig' in resp)
         shieldedSpend = resp['vShieldSpend'][0]
-        assert 'cv' in shieldedSpend
-        assert 'anchor' in shieldedSpend
-        assert 'nullifier' in shieldedSpend
-        assert 'rk' in shieldedSpend
-        assert 'proof' in shieldedSpend
-        assert 'spendAuthSig' in shieldedSpend
+        assert('cv' in shieldedSpend)
+        assert('anchor' in shieldedSpend)
+        assert('nullifier' in shieldedSpend)
+        assert('rk' in shieldedSpend)
+        assert('proof' in shieldedSpend)
+        assert('spendAuthSig' in shieldedSpend)
         shieldedOutput = resp['vShieldOutput'][0]
-        assert 'cv' in shieldedOutput
-        assert 'cmu' in shieldedOutput
-        assert 'ephemeralKey' in shieldedOutput
-        assert 'encCiphertext' in shieldedOutput
-        assert 'outCiphertext' in shieldedOutput
-        assert 'proof' in shieldedOutput
+        assert('cv' in shieldedOutput)
+        assert('cmu' in shieldedOutput)
+        assert('ephemeralKey' in shieldedOutput)
+        assert('encCiphertext' in shieldedOutput)
+        assert('outCiphertext' in shieldedOutput)
+        assert('proof' in shieldedOutput)
         self.log.info("Raw transaction decoding checks out")
 
         # Verify importing a spending key will update the nullifiers and witnesses correctly

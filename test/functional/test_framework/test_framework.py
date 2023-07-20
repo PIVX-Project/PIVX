@@ -51,6 +51,7 @@ from .util import (
     DEFAULT_FEE,
     get_datadir_path,
     hex_str_to_bytes,
+    bytes_to_hex_str,
     initialize_datadir,
     is_coin_locked_by,
     create_new_dmn,
@@ -71,13 +72,13 @@ TEST_EXIT_PASSED = 0
 TEST_EXIT_FAILED = 1
 TEST_EXIT_SKIPPED = 77
 
-TMPDIR_PREFIX = "pivx_func_test_"
+TMPDIR_PREFIX = "hemis_func_test_"
 
 
 class PivxTestFramework():
-    """Base class for a pivx test script.
+    """Base class for a hemis test script.
 
-    Individual pivx test scripts should subclass this class and override the set_test_params() and run_test() methods.
+    Individual hemis test scripts should subclass this class and override the set_test_params() and run_test() methods.
 
     Individual tests can also override the following methods to customize the test setup:
 
@@ -108,11 +109,11 @@ class PivxTestFramework():
 
         parser = optparse.OptionParser(usage="%prog [options]")
         parser.add_option("--nocleanup", dest="nocleanup", default=False, action="store_true",
-                          help="Leave pivxds and test.* datadir on exit or error")
+                          help="Leave hemisds and test.* datadir on exit or error")
         parser.add_option("--noshutdown", dest="noshutdown", default=False, action="store_true",
-                          help="Don't stop pivxds after the test execution")
+                          help="Don't stop hemisds after the test execution")
         parser.add_option("--srcdir", dest="srcdir", default=os.path.normpath(os.path.dirname(os.path.realpath(__file__))+"/../../../src"),
-                          help="Source directory containing pivxd/pivx-cli (default: %default)")
+                          help="Source directory containing hemisd/hemis-cli (default: %default)")
         parser.add_option("--cachedir", dest="cachedir", default=os.path.normpath(os.path.dirname(os.path.realpath(__file__)) + "/../../cache"),
                           help="Directory for caching pregenerated datadirs")
         parser.add_option("--tmpdir", dest="tmpdir", help="Root directory for datadirs")
@@ -135,7 +136,7 @@ class PivxTestFramework():
         parser.add_option("--pdbonfailure", dest="pdbonfailure", default=False, action="store_true",
                           help="Attach a python debugger if test fails")
         parser.add_option("--usecli", dest="usecli", default=False, action="store_true",
-                          help="use pivx-cli instead of RPC for all commands")
+                          help="use hemis-cli instead of RPC for all commands")
         self.add_options(parser)
         (self.options, self.args) = parser.parse_args()
 
@@ -196,7 +197,7 @@ class PivxTestFramework():
         else:
             for node in self.nodes:
                 node.cleanup_on_exit = False
-            self.log.info("Note: pivxds were not stopped and may still be running")
+            self.log.info("Note: hemisds were not stopped and may still be running")
 
         if not self.options.nocleanup and not self.options.noshutdown and success != TestStatus.FAILED:
             self.log.info("Cleaning up")
@@ -291,7 +292,7 @@ class PivxTestFramework():
             self.nodes.append(TestNode(i, self.options.tmpdir, rpchost=rpchost, timewait=self.rpc_timewait, binary=binary[i], stderr=None, mocktime=self.mocktime, coverage_dir=self.options.coveragedir, extra_conf=extra_confs[i], extra_args=extra_args[i], use_cli=self.options.usecli))
 
     def start_node(self, i, *args, **kwargs):
-        """Start a pivxd"""
+        """Start a hemisd"""
 
         node = self.nodes[i]
 
@@ -304,7 +305,7 @@ class PivxTestFramework():
             coverage.write_all_rpc_commands(self.options.coveragedir, node.rpc)
 
     def start_nodes(self, extra_args=None, *args, **kwargs):
-        """Start multiple pivxds"""
+        """Start multiple hemisds"""
 
         if extra_args is None:
             extra_args = [None] * self.num_nodes
@@ -326,12 +327,12 @@ class PivxTestFramework():
                 coverage.write_all_rpc_commands(self.options.coveragedir, node.rpc)
 
     def stop_node(self, i):
-        """Stop a pivxd test node"""
+        """Stop a hemisd test node"""
         self.nodes[i].stop_node()
         self.nodes[i].wait_until_stopped()
 
     def stop_nodes(self):
-        """Stop multiple pivxd test nodes"""
+        """Stop multiple hemisd test nodes"""
         for node in self.nodes:
             # Issue RPC to stop nodes
             node.stop_node()
@@ -379,7 +380,7 @@ class PivxTestFramework():
             if best_hash.count(best_hash[0]) == len(rpc_connections):
                 return
             # Check that each peer has at least one connection
-            assert all([len(x.getpeerinfo()) for x in rpc_connections])
+            assert (all([len(x.getpeerinfo()) for x in rpc_connections]))
             time.sleep(wait)
         raise AssertionError("Block sync timed out after {}s:{}".format(
             timeout,
@@ -401,7 +402,7 @@ class PivxTestFramework():
                         r.syncwithvalidationinterfacequeue()
                 return
             # Check that each peer has at least one connection
-            assert all([len(x.getpeerinfo()) for x in rpc_connections])
+            assert (all([len(x.getpeerinfo()) for x in rpc_connections]))
             time.sleep(wait)
         raise AssertionError("Mempool sync timed out after {}s:{}".format(
             timeout,
@@ -440,7 +441,7 @@ class PivxTestFramework():
         # User can provide log level as a number or string (eg DEBUG). loglevel was caught as a string, so try to convert it to an int
         ll = int(self.options.loglevel) if self.options.loglevel.isdigit() else self.options.loglevel.upper()
         ch.setLevel(ll)
-        # Format logs the same as pivxd's debug.log with microprecision (so log files can be concatenated and sorted)
+        # Format logs the same as hemisd's debug.log with microprecision (so log files can be concatenated and sorted)
         formatter = logging.Formatter(fmt='%(asctime)s.%(msecs)03d000Z %(name)s (%(levelname)s): %(message)s', datefmt='%Y-%m-%dT%H:%M:%S')
         formatter.converter = time.gmtime
         fh.setFormatter(formatter)
@@ -469,7 +470,7 @@ class PivxTestFramework():
                 from_dir = get_datadir_path(origin, i)
                 to_dir = get_datadir_path(destination, i)
                 shutil.copytree(from_dir, to_dir)
-                initialize_datadir(destination, i)  # Overwrite port/rpcport in pivx.conf
+                initialize_datadir(destination, i)  # Overwrite port/rpcport in hemis.conf
 
         def clone_cache_from_node_1(cachedir, from_num=4):
             """ Clones cache subdir from node 1 to nodes from 'from_num' to MAX_NODES"""
@@ -484,7 +485,7 @@ class PivxTestFramework():
                 for subdir in ["blocks", "chainstate", "evodb", "sporks", "zerocoin"]:
                     copy_and_overwrite(os.path.join(node_0_datadir, subdir),
                                     os.path.join(node_i_datadir, subdir))
-                initialize_datadir(cachedir, i)  # Overwrite port/rpcport in pivx.conf
+                initialize_datadir(cachedir, i)  # Overwrite port/rpcport in hemis.conf
 
         def cachedir_valid(cachedir):
             for i in range(MAX_NODES):
@@ -531,7 +532,7 @@ class PivxTestFramework():
                     # Add .incomplete flagfile
                     # (removed at the end during clean_cache_subdir)
                     open(os.path.join(datadir, ".incomplete"), 'a', encoding="utf8").close()
-                args = [os.getenv("BITCOIND", "pivxd"), "-spendzeroconfchange=1", "-server", "-keypool=1",
+                args = [os.getenv("BITCOIND", "hemisd"), "-spendzeroconfchange=1", "-server", "-keypool=1",
                         "-datadir=" + datadir, "-discover=0"]
                 self.nodes.append(
                     TestNode(i, ddir, extra_conf=["bind=127.0.0.1"], extra_args=[], rpchost=None, timewait=self.rpc_timewait, binary=None, stderr=None,
@@ -565,7 +566,7 @@ class PivxTestFramework():
             # blocks are created with timestamps 1 minutes apart
             # starting from 331 minutes in the past
 
-            # Create cache directories, run pivxds:
+            # Create cache directories, run hemisds:
             create_cachedir(powcachedir)
             self.log.info("Creating 'PoW-chain': 200 blocks")
             start_nodes_from_dir(powcachedir, 4)
@@ -617,7 +618,7 @@ class PivxTestFramework():
         for i in range(self.num_nodes):
             initialize_datadir(self.options.tmpdir, i)
 
-    # PIVX Specific TestFramework
+    # hemis Specific TestFramework
     def init_dummy_key(self):
         self.DUMMY_KEY = ECKey()
         self.DUMMY_KEY.generate()
@@ -669,7 +670,7 @@ class PivxTestFramework():
             prevout.deserialize_uniqueness(BytesIO(uniqueness))
             tx = create_transaction_from_outpoint(prevout, b"", value_out, scriptPubKey)
             # sign tx
-            raw_spend = rpc_conn.signrawtransaction(tx.serialize().hex())['hex']
+            raw_spend = rpc_conn.signrawtransaction(bytes_to_hex_str(tx.serialize()))['hex']
             # add signed tx to the list
             signed_tx = CTransaction()
             signed_tx.from_hex(raw_spend)
@@ -752,7 +753,7 @@ class PivxTestFramework():
 
         # Sign coinstake TX and add it to the block
         stake_tx_signed_raw_hex = rpc_conn.signrawtransaction(
-            coinstakeTx_unsigned.serialize().hex())['hex']
+            bytes_to_hex_str(coinstakeTx_unsigned.serialize()))['hex']
 
         # Add coinstake to the block
         coinstakeTx = CTransaction()
@@ -779,11 +780,9 @@ class PivxTestFramework():
             stakeableUtxos,
             btime=None,
             privKeyWIF=None,
-            vtx=None,
+            vtx=[],
             fDoubleSpend=False):
         """ Calls stake_block appending to the current tip"""
-        if vtx is None:
-            vtx = []
         assert_greater_than(len(self.nodes), node_id)
         saplingActive = self.nodes[node_id].getblockchaininfo()['upgrades']['v5 shield']['status'] == 'active'
         blockVersion = 8 if saplingActive else 7
@@ -991,9 +990,7 @@ class PivxTestFramework():
             raise AssertionError("Unable to complete mnsync: %s" % str(synced))
 
 
-    def wait_until_mn_status(self, status, mnTxHash, _timeout, orEmpty=False, with_ping_mns=None):
-        if with_ping_mns is None:
-            with_ping_mns = []
+    def wait_until_mn_status(self, status, mnTxHash, _timeout, orEmpty=False, with_ping_mns=[]):
         nodes_status = [None] * self.num_nodes
 
         def node_synced(i):
@@ -1020,21 +1017,15 @@ class PivxTestFramework():
             raise AssertionError(strErr)
 
 
-    def wait_until_mn_enabled(self, mnTxHash, _timeout, _with_ping_mns=None):
-        if _with_ping_mns is None:
-            _with_ping_mns = []
+    def wait_until_mn_enabled(self, mnTxHash, _timeout, _with_ping_mns=[]):
         self.wait_until_mn_status("ENABLED", mnTxHash, _timeout, with_ping_mns=_with_ping_mns)
 
 
-    def wait_until_mn_preenabled(self, mnTxHash, _timeout, _with_ping_mns=None):
-        if _with_ping_mns is None:
-            _with_ping_mns = []
+    def wait_until_mn_preenabled(self, mnTxHash, _timeout, _with_ping_mns=[]):
         self.wait_until_mn_status("PRE_ENABLED", mnTxHash, _timeout, with_ping_mns=_with_ping_mns)
 
 
-    def wait_until_mn_vinspent(self, mnTxHash, _timeout, _with_ping_mns=None):
-        if _with_ping_mns is None:
-            _with_ping_mns = []
+    def wait_until_mn_vinspent(self, mnTxHash, _timeout, _with_ping_mns=[]):
         self.wait_until_mn_status("VIN_SPENT", mnTxHash, _timeout, orEmpty=True, with_ping_mns=_with_ping_mns)
 
 
@@ -1044,9 +1035,7 @@ class PivxTestFramework():
         time.sleep(1)
 
 
-    def controller_start_masternodes(self, mnOwner, aliases=None):
-        if aliases is None:
-            aliases = []
+    def controller_start_masternodes(self, mnOwner, aliases=[]):
         ret = mnOwner.startmasternode(set="all", lock_wallet=False, reload_conf=True)
         for i in range(len(aliases)):
             assert_equal(ret["detail"][i]["alias"], aliases[i])
@@ -1070,10 +1059,8 @@ class PivxTestFramework():
         time.sleep(1)
 
 
-    def stake_and_ping(self, node_id, num_blocks, with_ping_mns=None):
+    def stake_and_ping(self, node_id, num_blocks, with_ping_mns=[]):
         # stake blocks and send mn pings in between
-        if with_ping_mns is None:
-            with_ping_mns = []
         for i in range(num_blocks):
             self.stake_and_sync(node_id, 1)
             if len(with_ping_mns) > 0:
@@ -1578,9 +1565,7 @@ class PivxDMNTestFramework(PivxTestFramework):
                  (or None if all members participated)
     """
     def mine_quorum(self, invalidate_func=None, invalidated_idx=None, skip_bad_member_sync=False,
-                    expected_messages=None):
-        if expected_messages is None:
-            expected_messages = [ExpectedDKGMessages() for _ in range(3)]
+                    expected_messages=[ExpectedDKGMessages() for _ in range(3)]):
         nodes_to_sync = self.nodes.copy()
         if invalidated_idx is not None:
             assert invalidate_func is None
@@ -1656,7 +1641,7 @@ class PivxTier2TestFramework(PivxTestFramework):
         self.minerPos = 4
         self.remoteDMN1Pos = 5
 
-        self.extra_args = [["-nuparams=v5_shield:249", "-nuparams=PIVX_v5.5:250", "-nuparams=v6_evo:250", "-whitelist=127.0.0.1"]] * self.num_nodes
+        self.extra_args = [["-nuparams=v5_shield:249", "-nuparams=hemis_v5.5:250", "-nuparams=v6_evo:250", "-whitelist=127.0.0.1"]] * self.num_nodes
         for i in [self.remoteOnePos, self.remoteTwoPos, self.remoteDMN1Pos]:
             self.extra_args[i] += ["-listen", "-externalip=127.0.0.1"]
         self.extra_args[self.minerPos].append("-sporkkey=932HEevBSujW2ud7RfB1YF91AFygbBRQj3de3LyaCRqNzKKgWXi")
@@ -1688,9 +1673,7 @@ class PivxTier2TestFramework(PivxTestFramework):
         self.send_pings(mns)
         time.sleep(2)
 
-    def stake(self, num_blocks, with_ping_mns=None):
-        if with_ping_mns is None:
-            with_ping_mns = []
+    def stake(self, num_blocks, with_ping_mns=[]):
         self.stake_and_ping(self.minerPos, num_blocks, with_ping_mns)
 
     def controller_start_all_masternodes(self):

@@ -1,10 +1,10 @@
 // Copyright (c) 2018-2021 The Dash Core developers
-// Copyright (c) 2022 The PIVX Core developers
+// Copyright (c) 2022 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_QUORUMS_DKGSESSIONMGR_H
-#define PIVX_QUORUMS_DKGSESSIONMGR_H
+#ifndef hemis_QUORUMS_DKGSESSIONMGR_H
+#define hemis_QUORUMS_DKGSESSIONMGR_H
 
 #include "ctpl_stl.h"
 #include "llmq/quorums_dkgsessionhandler.h"
@@ -74,4 +74,4 @@ extern std::unique_ptr<CDKGSessionManager> quorumDKGSessionManager;
 
 }
 
-#endif //PIVX_QUORUMS_DKGSESSIONMGR_H
+#endif //hemis_QUORUMS_DKGSESSIONMGR_H

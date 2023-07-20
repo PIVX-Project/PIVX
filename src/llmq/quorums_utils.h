@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_QUORUMS_UTILS_H
-#define PIVX_QUORUMS_UTILS_H
+#ifndef hemis_QUORUMS_UTILS_H
+#define hemis_QUORUMS_UTILS_H
 
 #include "consensus/params.h"
 
@@ -64,4 +64,4 @@ static void IterateNodesRandom(NodesContainer& nodeStates, Continue&& cont, Call
 
 } // namespace llmq
 
-#endif // PIVX_QUORUMS_UTILS_H
+#endif // hemis_QUORUMS_UTILS_H

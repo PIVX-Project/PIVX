@@ -14,14 +14,14 @@
 #
 # These caches can be manually removed if necessary. This is one of the very
 # few manual operations that is possible with Travis, and it can be done by a
-# PIVX GitHub member via the Travis web interface [0].
+# hemis GitHub member via the Travis web interface [0].
 #
 # Travis CI uploads the cache after the script phase of the build [1].
 # However, the build is terminated without saving the chache if it takes over
 # 50 minutes [2]. Thus, if we spent too much time in early build stages, fail
 # with an error and save the cache.
 #
-# [0] https://travis-ci.org/pivx-project/pivx/caches
+# [0] https://travis-ci.org/hemis-project/hemis/caches
 # [1] https://docs.travis-ci.com/user/caching/#build-phases
 # [2] https://docs.travis-ci.com/user/customizing-the-build#build-timeouts
 
@@ -34,7 +34,7 @@ cache:
     - $TRAVIS_BUILD_DIR/depends/built
     - $TRAVIS_BUILD_DIR/depends/sdk-sources
     - $HOME/.ccache
-    - $HOME/.pivx-params
+    - $HOME/.hemis-params
 stages:
   - lint
   - cmake
@@ -52,7 +52,7 @@ env:
     - CCACHE_TEMPDIR=/tmp/.ccache-temp
     - CCACHE_COMPRESS=1
     - CCACHE_DIR=$HOME/.ccache
-    - PARAMS_DIR=$HOME/.pivx-params
+    - PARAMS_DIR=$HOME/.hemis-params
     - BASE_OUTDIR=$TRAVIS_BUILD_DIR/out
     - SDK_URL=https://bitcoincore.org/depends-sources/sdks
     - WINEDEBUG=fixme-all

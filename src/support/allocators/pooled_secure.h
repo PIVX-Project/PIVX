@@ -1,10 +1,10 @@
 // Copyright (c) 2018-2021 The Dash Core developers
-// Copyright (c) 2021 The PIVX Core developers
+// Copyright (c) 2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_SUPPORT_ALLOCATORS_POOLED_SECURE_H
-#define PIVX_SUPPORT_ALLOCATORS_POOLED_SECURE_H
+#ifndef hemis_SUPPORT_ALLOCATORS_POOLED_SECURE_H
+#define hemis_SUPPORT_ALLOCATORS_POOLED_SECURE_H
 
 #include "support/lockedpool.h"
 #include "support/cleanse.h"
@@ -71,4 +71,4 @@ private:
     boost::pool<internal_secure_allocator> pool;
 };
 
-#endif // PIVX_SUPPORT_ALLOCATORS_POOLED_SECURE_H
+#endif // hemis_SUPPORT_ALLOCATORS_POOLED_SECURE_H

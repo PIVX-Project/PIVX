@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2015-2018 The Dash Core developers
-# Copyright (c) 2023 The PIVX Core developers
+# Copyright (c) 2023 The hemis Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -20,7 +20,7 @@ class ChainLocksTest(PivxDMNTestFramework):
 
     def set_test_params(self):
         self.set_base_test_params()
-        self.extra_args = [["-nuparams=v5_shield:1", "-nuparams=PIVX_v5.5:130", "-nuparams=v6_evo:130", "-debug=llmq", "-debug=dkg", "-debug=net"]] * self.num_nodes
+        self.extra_args = [["-nuparams=v5_shield:1", "-nuparams=hemis_v5.5:130", "-nuparams=v6_evo:130", "-debug=llmq", "-debug=dkg", "-debug=net"]] * self.num_nodes
         self.extra_args[0].append("-sporkkey=932HEevBSujW2ud7RfB1YF91AFygbBRQj3de3LyaCRqNzKKgWXi")
 
     def run_test(self):
@@ -46,14 +46,14 @@ class ChainLocksTest(PivxDMNTestFramework):
         # assert that all blocks up until the tip are chainlocked
         for h in range(1, self.nodes[0].getblockcount()):
             block = self.nodes[0].getblock(self.nodes[0].getblockhash(h))
-            assert block['chainlock']
+            assert (block['chainlock'])
 
         # Isolate node, mine on another, and reconnect
         self.nodes[0].setnetworkactive(False)
         node0_tip = self.nodes[0].getbestblockhash()
         self.nodes[1].generate(5)
         self.wait_for_chainlock_tip(self.nodes[1])
-        assert self.nodes[0].getbestblockhash() == node0_tip
+        assert (self.nodes[0].getbestblockhash() == node0_tip)
         self.nodes[0].setnetworkactive(True)
         connect_nodes(self.nodes[0], 1)
         self.nodes[1].generate(1)
@@ -65,13 +65,13 @@ class ChainLocksTest(PivxDMNTestFramework):
         self.nodes[1].generate(1)
         good_tip = self.nodes[1].getbestblockhash()
         self.wait_for_chainlock_tip(self.nodes[1])
-        assert not self.nodes[0].getblock(self.nodes[0].getbestblockhash())["chainlock"]
+        assert (not self.nodes[0].getblock(self.nodes[0].getbestblockhash())["chainlock"])
         self.nodes[0].setnetworkactive(True)
         connect_nodes(self.nodes[0], 1)
         self.nodes[1].generate(1)
         self.wait_for_chainlock(self.nodes[0], self.nodes[1].getbestblockhash())
-        assert self.nodes[0].getblock(self.nodes[0].getbestblockhash())["previousblockhash"] == good_tip
-        assert self.nodes[1].getblock(self.nodes[1].getbestblockhash())["previousblockhash"] == good_tip
+        assert (self.nodes[0].getblock(self.nodes[0].getbestblockhash())["previousblockhash"] == good_tip)
+        assert (self.nodes[1].getblock(self.nodes[1].getbestblockhash())["previousblockhash"] == good_tip)
 
         # Keep node connected and let it try to reorg the chain
         good_tip = self.nodes[0].getbestblockhash()
@@ -83,17 +83,17 @@ class ChainLocksTest(PivxDMNTestFramework):
         # Now try to reorg the chain
         self.nodes[0].generate(2)
         time.sleep(2)
-        assert self.nodes[1].getbestblockhash() == good_tip
+        assert (self.nodes[1].getbestblockhash() == good_tip)
         self.nodes[0].generate(2)
         time.sleep(2)
-        assert self.nodes[1].getbestblockhash() == good_tip
+        assert (self.nodes[1].getbestblockhash() == good_tip)
 
         # Now let the node which is on the wrong chain reorg back to the locked chain
         self.nodes[0].reconsiderblock(good_tip)
-        assert self.nodes[0].getbestblockhash() != good_tip
+        assert (self.nodes[0].getbestblockhash() != good_tip)
         self.nodes[1].generate(1)
         self.wait_for_chainlock(self.nodes[0], self.nodes[1].getbestblockhash())
-        assert self.nodes[0].getbestblockhash() == self.nodes[1].getbestblockhash()
+        assert (self.nodes[0].getbestblockhash() == self.nodes[1].getbestblockhash())
 
     def wait_for_chainlock_tip_all_nodes(self):
         for node in self.nodes:

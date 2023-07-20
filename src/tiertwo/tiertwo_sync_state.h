@@ -1,9 +1,9 @@
-// Copyright (c) 2021 The PIVX Core developers
+// Copyright (c) 2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_TIERTWO_SYNC_STATE_H
-#define PIVX_TIERTWO_SYNC_STATE_H
+#ifndef hemis_TIERTWO_SYNC_STATE_H
+#define hemis_TIERTWO_SYNC_STATE_H
 
 #include <atomic>
 #include <map>
@@ -80,4 +80,4 @@ private:
 
 extern TierTwoSyncState g_tiertwo_sync_state;
 
-#endif //PIVX_TIERTWO_SYNC_STATE_H
+#endif //hemis_TIERTWO_SYNC_STATE_H

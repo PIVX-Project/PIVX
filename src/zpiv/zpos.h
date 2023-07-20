@@ -1,9 +1,9 @@
-// Copyright (c) 2020-2021 The PIVX Core developers
+// Copyright (c) 2020-2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_LEGACY_ZPOS_H
-#define PIVX_LEGACY_ZPOS_H
+#ifndef hemis_LEGACY_ZPOS_H
+#define hemis_LEGACY_ZPOS_H
 
 #include "stakeinput.h"
 #include "txdb.h"
@@ -33,4 +33,4 @@ public:
     bool GetTxOutFrom(CTxOut& out) const override { return false; /* not available */ }
 };
 
-#endif //PIVX_LEGACY_ZPOS_H
+#endif //hemis_LEGACY_ZPOS_H

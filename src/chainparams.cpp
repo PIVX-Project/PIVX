@@ -14,6 +14,13 @@
 
 #include <assert.h>
 
+#include <thread>
+#include <atomic>
+#include <vector>
+
+std::atomic<bool> found(false); // global flag to indicate if genesis block found
+
+
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     CMutableTransaction txNew;
@@ -54,7 +61,7 @@ void CChainParams::UpdateNetworkUpgradeParameters(Consensus::UpgradeIndex idx, i
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "U.S. News & World Report Jan 28 2016 With His Absence, Trump Dominates Another Debate";
+    const char* pszTimestamp = "Takosha Churu, a dear friend and Hemis developer, died too young on 31st May 2023. May he rest in peace";
     const CScript genesisOutputScript = CScript() << ParseHex("04c10e83b2703ccf322f7dbd62dd5855ac7c10bd055814ce121ba32607d573b8810c02c0582aed05b4deb9c4b77b26d92428c61256cd42774babea0a073b2ed0c9") << OP_CHECKSIG;
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
@@ -156,37 +163,12 @@ static Consensus::LLMQParams llmq400_85 = {
  * + Contains no strange transactions
  */
 static MapCheckpoints mapCheckpoints = {
-    { 259201, uint256S("1c9121bf9329a6234bfd1ea2d91515f19cd96990725265253f4b164283ade5dd")},
-    { 424998, uint256S("f31e381eedb0ed3ed65fcc98cc71f36012bee32e8efd017c4f9fb0620fd35f6b")},
-    { 616764, uint256S("29dd0bd1c59484f290896687b4ffb6a49afa5c498caf61967c69a541f8191557")}, //!< First block to use new modifierV1
-    { 623933, uint256S("c7aafa648a0f1450157dc93bd4d7448913a85b7448f803b4ab970d91fc2a7da7")},
-    { 791150, uint256S("8e76f462e4e82d1bd21cb72e1ce1567d4ddda2390f26074ffd1f5d9c270e5e50")},
-    { 795000, uint256S("4423cceeb9fd574137a18733416275a70fdf95283cc79ad976ca399aa424a443")},
-    { 863787, uint256S("5b2482eca24caf2a46bb22e0545db7b7037282733faa3a42ec20542509999a64")},
-    { 863795, uint256S("2ad866818c4866e0d555181daccc628056216c0db431f88a825e84ed4f469067")},
-    { 863805, uint256S("a755bd9a22b63c70d3db474f4b2b61a1f86c835b290a081bb3ec1ba2103eb4cb")},
-    { 867733, uint256S("03b26296bf693de5782c76843d2fb649cb66d4b05550c6a79c047ff7e1c3ae15")},
-    { 879650, uint256S("227e1d2b738b6cd83c46d1d64617934ec899d77cee34336a56e61b71acd10bb2")},
-    { 895400, uint256S("7796a0274a608fac12d400198174e50beda992c1d522e52e5b95b884bc1beac6")}, //!< Block that serial# range is enforced
-    { 895991, uint256S("d53013ed7ea5c325b9696c95e07667d6858f8ff7ee13fecfa90827bf3c9ae316")}, //!< Network split here
-    { 908000, uint256S("202708f8c289b676fceb832a079ff6b308a28608339acbf7584de533619d014d")},
-    {1142400, uint256S("98aff9d605bf123247f98b1e3a02567eb5799d208d78ec30fb89737b1c1f79c5")},
-    {1679090, uint256S("f747ce055ba1b12e1f2e842bd480bc647210799359cb2e553ab292065e3419d6")}, //!< First block with a "wrapped" serial spend
-    {1686229, uint256S("bb42bf1e886a7c23474634c90893dd3d68a6ccbfea4ac92a98da5cad0c6a6cb7")}, //!< Last block in the "wrapped" serial attack range
-    {1778954, uint256S("0d3241268264a2908d6babf00d9cd1ffb83d93d7bb4e428820127fe227c2029c")}, //!< Network split here
-    {1788528, uint256S("ea9243ff8fc079fdd7a04f11fac415de4d98e1bb0dc38db6f79f8f8bbfdbe496")}, //!< Network split here
-    {2153200, uint256S("14e477e597d24549cac5e59d97d32155e6ec2861c1003b42d0566f9bf39b65d5")}, //!< First v7 block
-    {2356049, uint256S("62e80d8e193bca84655fb78893b20f54a79f2d71124c4ea37b7ef51a0d5451c4")}, //!< Network split here
-    {2365700, uint256S("b5d0beead57735539abc2db2b0b08cd65db3e5928efd3c3bf3182d5bf013f36c")}, //!< PIVX v4.1.1 enforced
-    {2678402, uint256S("580a26ff0a45177a7a6f387f009c5b26140ea48b4790a857d9a796f8b3c25899")}, //!< Network split here
-    {3014000, uint256S("78ad99b7225f73c42238bd7ca841ff700542b92bba75a0ef2ed351caa560f87f")}, //!< PIVX v5.3.0 enforced
-    {3024000, uint256S("be4bc75afcfb9136924810f7483b2695089a366cc4ee27fd6dc3ecd5396e1f0f")}, //!< Superblock
-    {3715200, uint256S("a676b9a598c393c82b949c37dd35013aeda55f5d18ab062349db6a8235972aaa")}, //!< Superblock for 5.5.0 mainnet rewards changeover
+    { 1, uint256S("0000000f8341b145db2106f10c2dc365ad326e4262ff1f3e4e5fed388ae14a1e")}
 };
 
 static const CCheckpointData data = {
     &mapCheckpoints,
-    1591401645, // * UNIX timestamp of last checkpoint block
+    1689664118, // * UNIX timestamp of last checkpoint block
     5607713,    // * total number of transactions between genesis and last checkpoint
                 //   (the tx=... number in the UpdateTip debug.log lines)
     3000        // * estimated number of transactions per day after checkpoint
@@ -210,6 +192,98 @@ static const CCheckpointData dataRegtest = {
     0,
     100};
 
+/*
+void findGenesisBlock()
+{
+    // Parameters for CreateGenesisBlock can be changed to suit your needs
+    uint32_t nTime = 1628178136;  // Your desired timestamp
+    int32_t nVersion = 1;  // Your desired block version
+    uint32_t nNonce = 0;  // Starting nonce, will iterate this
+    const CAmount& genesisReward = 0 * COIN;  // No reward for genesis block
+
+    // Initialize maximum allowed difficulty at genesis block
+    uint32_t nBits = 0x1e000fff;  // This is maximum target for proof-of-work at genesis block
+    arith_uint256 bnTarget;
+    bnTarget.SetCompact(nBits);
+	std::cout << "Hemis Genesis block Generation"  << std::endl;
+    for (;; ++nNonce)
+    {
+        CBlock genesis = CreateGenesisBlock(nTime, nNonce, nBits, nVersion, genesisReward);
+        uint256 hashGenesisBlock = genesis.GetHash();
+
+        if (UintToArith256(hashGenesisBlock) <= bnTarget)
+        {
+            std::cout << "Genesis Block Found!" << std::endl;
+            std::cout << "nonce: " << nNonce << std::endl;
+            std::cout << "genesis hash: " << hashGenesisBlock.GetHex() << std::endl;
+            std::cout << "merkle root: " << genesis.hashMerkleRoot.GetHex() << std::endl;
+            break;
+        }
+
+        if (nNonce % 10000 == 0)  // just to see a progress in console
+        {
+            std::cout << "\rStill searching. Current nonce: " << nNonce;
+        }
+    }
+}
+*/
+
+void findGenesisBlock(uint32_t nTime, uint32_t startNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
+{
+
+    bool fNegative;
+    bool fOverflow;
+    arith_uint256 bnTarget;
+
+    bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
+
+    uint32_t nNonce = 0;
+    while (!found) 
+    {
+        CBlock genesis = CreateGenesisBlock(nTime, nNonce, nBits, nVersion, genesisReward);
+        uint256 hashGenesisBlock = genesis.GetHash();
+
+        if (UintToArith256(hashGenesisBlock) <= bnTarget)
+        {
+            std::cout << "Genesis Block Found!" << std::endl;
+            std::cout << "nonce: " << nNonce << std::endl;
+            std::cout << "genesis hash: " << hashGenesisBlock.GetHex() << std::endl;
+            std::cout << "merkle root: " << genesis.hashMerkleRoot.GetHex() << std::endl;
+            found = true;
+            break;
+        }
+
+        nNonce++;
+
+        if (nNonce % 100000 == 0) 
+        {
+            std::cout << "\rThread " << std::this_thread::get_id() << ": checked " << nNonce << " nonces, still running.";
+        }
+    }
+}
+
+void findGenesis() 
+{
+    uint32_t nTime = 1628178136;  
+    int32_t nVersion = 1;  
+    const CAmount& genesisReward = 0 * COIN;  
+    uint32_t nBits = 0x1e00ffff;
+
+    const unsigned numThreads = std::thread::hardware_concurrency(); // Get number of cores
+
+    std::vector<std::thread> threads(numThreads);
+    for (unsigned i = 0; i < numThreads; ++i) {
+        // Pass a different start nonce to each thread
+        threads[i] = std::thread(findGenesisBlock, nTime, i, nBits, nVersion, genesisReward);
+    }
+    // Join all threads
+    for (auto& t : threads) {
+        t.join();
+    }
+
+}
+
+
 class CMainParams : public CChainParams
 {
 public:
@@ -217,23 +291,28 @@ public:
     {
         strNetworkID = "main";
 
-        genesis = CreateGenesisBlock(1454124731, 2402015, 0x1e0ffff0, 1, 250 * COIN);
+//	findGenesis();
+        genesis = CreateGenesisBlock(1628178136, 33166035, 0x1e00ffff, 1, 0 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000041e482b9b9691d98eefb48473405c0b8ec31b76df3797c74a78680ef818"));
-        assert(genesis.hashMerkleRoot == uint256S("0x1b2ef6e2f28be914103a277377ae7729dcd125dfeb8bf97bd5964ba72b6dc39b"));
+
+	//std::cout << "genesis Block Hash: " << consensus.hashGenesisBlock.GetHex() << std::endl;
+	//std::cout << "Merkle Root Hash: " << genesis.hashMerkleRoot.GetHex() << std::endl;
+
+        assert(consensus.hashGenesisBlock == uint256S("0x00000009851b2c7fe9ba54c2a8888f065eef82c53cf848973be14e734cb96b3a"));
+        assert(genesis.hashMerkleRoot == uint256S("0x2e3276b73ee45ae023eb98045ebe4132c41363cb1388daf9c10cef499c3ff536"));
 
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.powLimit   = uint256S("0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.posLimitV1 = uint256S("0x000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.powLimit   = uint256S("0x00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.posLimitV1 = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.posLimitV2 = uint256S("0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nBudgetCycleBlocks = 43200;       // approx. 1 every 30 days
         consensus.nBudgetFeeConfirmations = 6;      // Number of confirmations for the finalization fee
         consensus.nCoinbaseMaturity = 100;
         consensus.nFutureTimeDriftPoW = 7200;
         consensus.nFutureTimeDriftPoS = 180;
-        consensus.nMaxMoneyOut = 21000000 * COIN;
-        consensus.nMNCollateralAmt = 10000 * COIN;
+        consensus.nMaxMoneyOut = 10000000 * COIN;
+        consensus.nMNCollateralAmt = 1000 * COIN;
         consensus.nMNBlockReward = 3 * COIN;
         consensus.nNewMNBlockReward = 6 * COIN;
         consensus.nMNCollateralMinConf = 15;
@@ -253,13 +332,13 @@ public:
         consensus.nTime_RejectOldSporkKey = 1614560400;     //!> March 1, 2021 01:00:00 AM GMT
 
         // height-based activations
-        consensus.height_last_invalid_UTXO = 894538;
-        consensus.height_last_ZC_AccumCheckpoint = 1686240;
-        consensus.height_last_ZC_WrappedSerials = 1686229;
+        consensus.height_last_invalid_UTXO = 1;
+        consensus.height_last_ZC_AccumCheckpoint = 1;
+        consensus.height_last_ZC_WrappedSerials = 1;
 
         // validation by-pass
-        consensus.nPivxBadBlockTime = 1471401614;    // Skip nBit validation of Block 259201 per PR #915
-        consensus.nPivxBadBlockBits = 0x1c056dac;    // Skip nBit validation of Block 259201 per PR #915
+//        consensus.nPivxBadBlockTime = 1471401614;    // Skip nBit validation of Block 259201 per PR #915
+//        consensus.nPivxBadBlockBits = 0x1c056dac;    // Skip nBit validation of Block 259201 per PR #915
 
         // Zerocoin-related params
         consensus.ZC_Modulus = "25195908475657893494027183240048398571429282126204032027777137836043662020707595556264018525880784"
@@ -274,27 +353,27 @@ public:
         consensus.ZC_MinMintFee = 1 * CENT;
         consensus.ZC_MinStakeDepth = 200;
         consensus.ZC_TimeStart = 1508214600;        // October 17, 2017 4:30:00 AM
-        consensus.ZC_HeightStart = 863735;
+        consensus.ZC_HeightStart = 1;
 
         // Network upgrades
         consensus.vUpgrades[Consensus::BASE_NETWORK].nActivationHeight =
                 Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
         consensus.vUpgrades[Consensus::UPGRADE_TESTDUMMY].nActivationHeight =
                 Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
-        consensus.vUpgrades[Consensus::UPGRADE_POS].nActivationHeight           = 259201;
-        consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 615800;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 863787;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 1153160;
-        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         = 1808634;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 1880000;
-        consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 1967000;
-        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 2153200;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 2700500;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 2927000;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 3014000;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 3715200;
-        consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight =
-                Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
+        consensus.vUpgrades[Consensus::UPGRADE_POS].nActivationHeight           = 120;
+        consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 120;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 120;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 120;
+        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         = 120;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 130;
+        consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 131;
+        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 131;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 131;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 131;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 131;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 131;
+        consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight 		= 131;
+//                Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
         consensus.vUpgrades[Consensus::UPGRADE_ZC].hashActivationBlock =
                 uint256S("0x5b2482eca24caf2a46bb22e0545db7b7037282733faa3a42ec20542509999a64");
@@ -314,25 +393,27 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 4-byte int at any alignment.
          */
-        pchMessageStart[0] = 0x90;
-        pchMessageStart[1] = 0xc4;
-        pchMessageStart[2] = 0xfd;
-        pchMessageStart[3] = 0xe9;
-        nDefaultPort = 51472;
+        pchMessageStart[0] = 0xa0;
+        pchMessageStart[1] = 0x14;
+        pchMessageStart[2] = 0xdd;
+        pchMessageStart[3] = 0x99;
+        nDefaultPort = 49165;
 
         // Note that of those with the service bits flag, most only support a subset of possible options
-        vSeeds.emplace_back("pivx.seed.fuzzbawls.pw", true);     // Primary DNS Seeder from Fuzzbawls
-        vSeeds.emplace_back("pivx.seed2.fuzzbawls.pw", true);    // Secondary DNS Seeder from Fuzzbawls
-        vSeeds.emplace_back("dnsseed.liquid369.wtf", true);     // Primary DNS Seeder from Liquid369
+//        vSeeds.emplace_back("hemis.seed.fuzzbawls.pw", true);     // Primary DNS Seeder from Fuzzbawls
+//        vSeeds.emplace_back("hemis.seed2.fuzzbawls.pw", true);    // Secondary DNS Seeder from Fuzzbawls
+//        vSeeds.emplace_back("dnsseed.liquid369.wtf", true);     // Primary DNS Seeder from Liquid369
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 30);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 13);
         base58Prefixes[STAKING_ADDRESS] = std::vector<unsigned char>(1, 63);     // starting with 'S'
         base58Prefixes[SECRET_KEY] = std::vector<unsigned char>(1, 212);
-        base58Prefixes[EXT_PUBLIC_KEY] = {0x02, 0x2D, 0x25, 0x33};
-        base58Prefixes[EXT_SECRET_KEY] = {0x02, 0x21, 0x31, 0x2B};
+
+        base58Prefixes[EXT_PUBLIC_KEY] = {0xa0, 0xf2, 0xf5, 0xf3};
+        base58Prefixes[EXT_SECRET_KEY] = {0xa0, 0xf3, 0xf1, 0xfB};
+
         // BIP44 coin type is from https://github.com/satoshilabs/slips/blob/master/slip-0044.md
-        base58Prefixes[EXT_COIN_TYPE] = {0x80, 0x00, 0x00, 0x77};
+        base58Prefixes[EXT_COIN_TYPE] = {0xa8, 0xa0, 0xa0, 0xa7};
 
         vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_main), std::end(chainparams_seed_main));
 
@@ -466,18 +547,18 @@ public:
         nDefaultPort = 51474;
 
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("pivx-testnet.seed.fuzzbawls.pw", true);
-        vSeeds.emplace_back("pivx-testnet.seed2.fuzzbawls.pw", true);
+        vSeeds.emplace_back("hemis-testnet.seed.fuzzbawls.pw", true);
+        vSeeds.emplace_back("hemis-testnet.seed2.fuzzbawls.pw", true);
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 139); // Testnet pivx addresses start with 'x' or 'y'
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 19);  // Testnet pivx script addresses start with '8' or '9'
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 139); // Testnet hemis addresses start with 'x' or 'y'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 19);  // Testnet hemis script addresses start with '8' or '9'
         base58Prefixes[STAKING_ADDRESS] = std::vector<unsigned char>(1, 73);     // starting with 'W'
         base58Prefixes[SECRET_KEY] = std::vector<unsigned char>(1, 239);     // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
-        // Testnet pivx BIP32 pubkeys start with 'DRKV'
+        // Testnet hemis BIP32 pubkeys start with 'DRKV'
         base58Prefixes[EXT_PUBLIC_KEY] = {0x3a, 0x80, 0x61, 0xa0};
-        // Testnet pivx BIP32 prvkeys start with 'DRKP'
+        // Testnet hemis BIP32 prvkeys start with 'DRKP'
         base58Prefixes[EXT_SECRET_KEY] = {0x3a, 0x80, 0x58, 0x37};
-        // Testnet pivx BIP44 coin type is '1' (All coin's testnet default)
+        // Testnet hemis BIP44 coin type is '1' (All coin's testnet default)
         base58Prefixes[EXT_COIN_TYPE] = {0x80, 0x00, 0x00, 0x01};
 
         vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_test), std::end(chainparams_seed_test));
@@ -615,15 +696,15 @@ public:
         pchMessageStart[3] = 0xac;
         nDefaultPort = 51476;
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 139); // Testnet pivx addresses start with 'x' or 'y'
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 19);  // Testnet pivx script addresses start with '8' or '9'
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 139); // Testnet hemis addresses start with 'x' or 'y'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 19);  // Testnet hemis script addresses start with '8' or '9'
         base58Prefixes[STAKING_ADDRESS] = std::vector<unsigned char>(1, 73);     // starting with 'W'
         base58Prefixes[SECRET_KEY] = std::vector<unsigned char>(1, 239);     // Testnet private keys start with '9' or 'c' (Bitcoin defaults)
-        // Testnet pivx BIP32 pubkeys start with 'DRKV'
+        // Testnet hemis BIP32 pubkeys start with 'DRKV'
         base58Prefixes[EXT_PUBLIC_KEY] = {0x3a, 0x80, 0x61, 0xa0};
-        // Testnet pivx BIP32 prvkeys start with 'DRKP'
+        // Testnet hemis BIP32 prvkeys start with 'DRKP'
         base58Prefixes[EXT_SECRET_KEY] = {0x3a, 0x80, 0x58, 0x37};
-        // Testnet pivx BIP44 coin type is '1' (All coin's testnet default)
+        // Testnet hemis BIP44 coin type is '1' (All coin's testnet default)
         base58Prefixes[EXT_COIN_TYPE] = {0x80, 0x00, 0x00, 0x01};
 
         // Reject non-standard transactions by default

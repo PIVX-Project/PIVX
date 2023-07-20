@@ -1,11 +1,11 @@
 // Copyright (c) 2011-2013 The Bitcoin Core developers
-// Copyright (c) 2017-2022 The PIVX Core developers
+// Copyright (c) 2017-2022 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #define BOOST_TEST_MODULE Pivx Test Suite
 
-#include "test/test_pivx.h"
+#include "test/test_hemis.h"
 
 #include "blockassembler.h"
 #include "consensus/merkle.h"
@@ -65,7 +65,7 @@ std::ostream& operator<<(std::ostream& os, const uint256& num)
 }
 
 BasicTestingSetup::BasicTestingSetup(const std::string& chainName)
-    : m_path_root{fs::temp_directory_path() / "test_pivx" / std::to_string(g_insecure_rand_ctx_temp_path.rand32())}
+    : m_path_root{fs::temp_directory_path() / "test_hemis" / std::to_string(g_insecure_rand_ctx_temp_path.rand32())}
 {
     ECC_Start();
     BLSInit();

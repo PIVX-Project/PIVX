@@ -1,10 +1,10 @@
 // Copyright (c) 2016-2020 The Zcash developers
-// Copyright (c) 2020-2021 The PIVX Core developers
+// Copyright (c) 2020-2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php .
 
-#ifndef PIVX_UTIL_TEST_H
-#define PIVX_UTIL_TEST_H
+#ifndef hemis_UTIL_TEST_H
+#define hemis_UTIL_TEST_H
 
 #include "sapling/address.h"
 #include "sapling/incrementalmerkletree.h"
@@ -74,4 +74,8 @@ CWalletTx GetValidSaplingReceive(const Consensus::Params& consensusParams,
                                  bool genNewKey = false,
                                  const CWallet* pwalletIn = nullptr);
 
+<<<<<<< HEAD
 #endif // PIVX_UTIL_TEST_H
+=======
+#endif // hemis_UTIL_TEST_H
+>>>>>>> 1f345019d (first step)

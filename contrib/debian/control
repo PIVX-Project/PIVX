@@ -1,4 +1,4 @@
-Source: pivx
+Source: hemis
 Section: utils
 Priority: optional
 Maintainer: Fuzzbawls <fuzzbawls@gmail.com>
@@ -28,15 +28,15 @@ Build-Depends: debhelper,
  libzmq3-dev,
  dh-systemd
 Standards-Version: 3.9.2
-Homepage: http://www.pivx.org
-Vcs-Git: git://github.com/PIVX-Project/PIVX.git
-Vcs-Browser: http://github.com/PIVX-Project/PIVX
+Homepage: http://www.hemis.org
+Vcs-Git: git://github.com/hemis-Project/hemis.git
+Vcs-Browser: http://github.com/hemis-Project/hemis
 
-Package: pivxd
+Package: hemisd
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: peer-to-peer network based digital currency - daemon
- PIVX is a free, open source peer-to-peer electronic cash system that
+ hemis is a free, open source peer-to-peer electronic cash system that
  is completely decentralized, without the need for a central server or
  trusted parties.  Users hold the crypto keys to their own money and
  transact directly with each other, with the help of a P2P network to
@@ -45,14 +45,14 @@ Description: peer-to-peer network based digital currency - daemon
  Full transaction history is stored locally at each client.  This
  requires 18.5+ GB of space, slowly growing.
  .
- This package provides the daemon, pivxd, and the CLI tool
- pivx-cli to interact with the daemon.
+ This package provides the daemon, hemisd, and the CLI tool
+ hemis-cli to interact with the daemon.
 
-Package: pivx-qt
+Package: hemis-qt
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: peer-to-peer network based digital currency - Qt GUI
- PIVX is a free, open source peer-to-peer electronic cash system that
+ hemis is a free, open source peer-to-peer electronic cash system that
  is completely decentralized, without the need for a central server or
  trusted parties.  Users hold the crypto keys to their own money and
  transact directly with each other, with the help of a P2P network to
@@ -61,4 +61,4 @@ Description: peer-to-peer network based digital currency - Qt GUI
  Full transaction history is stored locally at each client.  This
  requires 18.5+ GB of space, slowly growing.
  .
- This package provides Pivx-Qt, a GUI for PIVX based on Qt.
+ This package provides Pivx-Qt, a GUI for hemis based on Qt.

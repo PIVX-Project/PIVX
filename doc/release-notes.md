@@ -1,16 +1,16 @@
 (note: this is a temporary file, to be added-to by anybody, and moved to release-notes at release time)
 
-PIVX Core version *version* is now available from:  <https://github.com/pivx-project/pivx/releases>
+hemis Core version *version* is now available from:  <https://github.com/hemis-project/hemis/releases>
 
 This is a new major version release, including various bug fixes and performance improvements, as well as updated translations.
 
-Please report bugs using the issue tracker at github: <https://github.com/pivx-project/pivx/issues>
+Please report bugs using the issue tracker at github: <https://github.com/hemis-project/hemis/issues>
 
 
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/hemis-Qt (on Mac) or hemisd/hemis-qt (on Linux).
 
 Notable Changes
 ==============
@@ -20,7 +20,7 @@ Notable Changes
 
 ### Deprecated autocombinerewards RPC Command
 
-The `autocombinerewards` RPC command was soft-deprecated in v5.3.0 and replaced with explicit setter/getter commands `setautocombinethreshold`/`getautocombinethreshold`. PIVX Core, by default, will no longer accept the `autocombinerewards` command, returning a deprecation error, unless the `pivxd`/`pivx-qt` is started with the `-deprecatedrpc=autocombinerewards` option.
+The `autocombinerewards` RPC command was soft-deprecated in v5.3.0 and replaced with explicit setter/getter commands `setautocombinethreshold`/`getautocombinethreshold`. hemis Core, by default, will no longer accept the `autocombinerewards` command, returning a deprecation error, unless the `hemisd`/`hemis-qt` is started with the `-deprecatedrpc=autocombinerewards` option.
 
 This command will be fully removed in v6.0.0.
 
@@ -65,4 +65,4 @@ Detailed release notes follow. This overview includes changes that affect behavi
 Thanks to everyone who directly contributed to this release:
 
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/), the QA team during Testing and the Node hosts supporting our Testnet.
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/hemis-project-translations/), the QA team during Testing and the Node hosts supporting our Testnet.

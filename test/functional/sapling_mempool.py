@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2020-2021 The PIVX Core developers
+# Copyright (c) 2020-2021 The hemis Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -52,9 +52,9 @@ class SaplingMempoolTest(PivxTestFramework):
         txid_B = alice.shieldsendmany(alice_zaddr, [{"address": tadd_B, "amount": Decimal('9.95')}], 1, fee)
 
         # Miner receives tx_B and accepts it in the mempool
-        assert txid_B in alice.getrawmempool()
+        assert (txid_B in alice.getrawmempool())
         self.sync_mempools()
-        assert txid_B in miner.getrawmempool()
+        assert(txid_B in miner.getrawmempool())
         self.log.info("tx_B accepted in the memory pool.")
 
         # Now tx_A would double-spend the sapling note in the memory pool
@@ -67,7 +67,7 @@ class SaplingMempoolTest(PivxTestFramework):
         miner.generate(1)
         self.sync_all()
         txB_json = alice.getrawtransaction(txid_B, True)
-        assert "blockhash" in txB_json
+        assert("blockhash" in txB_json)
         self.log.info("trying to relay tx_A again...")
         assert_raises_rpc_error(-26, "bad-txns-shielded-requirements-not-met",
                                 alice.sendrawtransaction, rawTx_hex)
@@ -88,7 +88,7 @@ class SaplingMempoolTest(PivxTestFramework):
 
         # Miner receives tx_C and accepts it in the mempool
         self.sync_mempools()
-        assert txid_C in miner.getrawmempool()
+        assert(txid_C in miner.getrawmempool())
         self.log.info("tx_C accepted in the memory pool.")
 
         # Now disconnect the block with the note's anchor,
@@ -97,8 +97,8 @@ class SaplingMempoolTest(PivxTestFramework):
         anchor = alice.decoderawtransaction(txC_hex)['vShieldSpend'][0]['anchor']
         assert_equal(anchor, miner.getbestsaplinganchor())
         miner.invalidateblock(miner.getbestblockhash())
-        assert anchor != miner.getbestsaplinganchor()
-        assert txid_C not in miner.getrawmempool()
+        assert (anchor != miner.getbestsaplinganchor())
+        assert(txid_C not in miner.getrawmempool())
         self.log.info("Good. tx_C removed from the memory pool.")
 
 

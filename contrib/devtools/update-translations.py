@@ -25,7 +25,7 @@ import xml.etree.ElementTree as ET
 # Name of transifex tool
 TX = 'tx'
 # Name of source language file
-SOURCE_LANG = 'pivx_en.ts'
+SOURCE_LANG = 'hemis_en.ts'
 # Directory with locale files
 LOCALE_DIR = 'src/qt/locale'
 # Minimum number of messages for translation to be considered at all
@@ -45,7 +45,7 @@ def remove_current_translations():
     '''
     Remove current translations, as well as temporary files that might be left behind
     We only want the active translations that are currently on transifex.
-    This leaves pivx_en.ts untouched.
+    This leaves hemis_en.ts untouched.
     '''
     for (_,name) in all_ts_files():
         os.remove(name)
@@ -104,7 +104,7 @@ def check_format_specifiers(source, translation, errors, numerus):
     source_f = split_format_specifiers(find_format_specifiers(source))
     # assert that no source messages contain both Qt and strprintf format specifiers
     # if this fails, go change the source as this is hacky and confusing!
-    assert not source_f[0] and source_f[1]
+    assert(not(source_f[0] and source_f[1]))
     try:
         translation_f = split_format_specifiers(find_format_specifiers(translation))
     except IndexError:
@@ -127,7 +127,7 @@ def all_ts_files(suffix='', include_source=False):
         if suffix: # remove provided suffix
             filename = filename[0:-len(suffix)]
         filepath = os.path.join(LOCALE_DIR, filename)
-        yield filename, filepath
+        yield(filename, filepath)
 
 FIX_RE = re.compile(b'[\x00-\x09\x0b\x0c\x0e-\x1f]')
 def remove_invalid_characters(s):
@@ -234,11 +234,11 @@ def update_build_systems():
     '''
     Update build system and Qt resource descriptors.
     '''
-    filename_lang = [re.match(r'((pivx_(.*)).ts)$', filename).groups() for (filename, filepath) in all_ts_files(include_source=True)]
+    filename_lang = [re.match(r'((hemis_(.*)).ts)$', filename).groups() for (filename, filepath) in all_ts_files(include_source=True)]
     filename_lang.sort(key=lambda x: x[0])
 
     # update qrc locales
-    with open('src/qt/pivx_locale.qrc', 'w', encoding="utf8") as f:
+    with open('src/qt/hemis_locale.qrc', 'w', encoding="utf8") as f:
         f.write('<!DOCTYPE RCC><RCC version="1.0">\n')
         f.write('    <qresource prefix="/translations">\n')
         for (filename, basename, lang) in filename_lang:

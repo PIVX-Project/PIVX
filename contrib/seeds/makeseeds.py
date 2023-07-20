@@ -27,7 +27,7 @@ PATTERN_IPV4 = re.compile(r"^((\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})):(\d+)$
 PATTERN_IPV6 = re.compile(r"^\[([0-9a-z:]+)\]:(\d+)$")
 PATTERN_ONION = re.compile(r"^([abcdefghijklmnopqrstuvwxyz234567]{16}\.onion):(\d+)$")
 PATTERN_AGENT = re.compile(
-    r"^/PIVXCore:("
+    r"^/hemisCore:("
     r"4.0.(0|1|2|99|99.1|99.2)|"
     r"4.1.(0|99)"
     r")")
@@ -207,9 +207,9 @@ def main():
     print('%s Require a known and recent user agent' % (ip_stats(ips)), file=sys.stderr)
     # Sort by availability (and use last success as tie breaker)
     ips.sort(key=lambda x: (x['uptime'], x['lastsuccess'], x['ip']), reverse=True)
-    # Filter out hosts with multiple pivx ports, these are likely abusive
+    # Filter out hosts with multiple hemis ports, these are likely abusive
     ips = filtermultiport(ips)
-    print('%s Filter out hosts with multiple pivx ports' % (ip_stats(ips)), file=sys.stderr)
+    print('%s Filter out hosts with multiple hemis ports' % (ip_stats(ips)), file=sys.stderr)
     # Look up ASNs and limit results, both per ASN and globally.
     ips = filterbyasn(ips, MAX_SEEDS_PER_ASN, NSEEDS)
     print('%s Look up ASNs and limit results per ASN and per net' % (ip_stats(ips)), file=sys.stderr)

@@ -1,8 +1,8 @@
-// Copyright (c) 2018-2022 The PIVX Core developers
+// Copyright (c) 2018-2022 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "test_pivx.h"
+#include "test_hemis.h"
 
 #include "bls/bls_wrapper.h"
 #include "budget/budgetmanager.h"

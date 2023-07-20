@@ -1,9 +1,17 @@
+<<<<<<< HEAD
 // Copyright (c) 2022 The PIVX Core developers
+=======
+// Copyright (c) 2022 The hemis Core developers
+>>>>>>> 1f345019d (first step)
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
 #include "netbase.h"
+<<<<<<< HEAD
 #include "test/test_pivx.h"
+=======
+#include "test/test_hemis.h"
+>>>>>>> 1f345019d (first step)
 #include "tiertwo/netfulfilledman.h"
 #include "utiltime.h"
 

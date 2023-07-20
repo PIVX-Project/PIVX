@@ -1,14 +1,14 @@
-PIVX Core version v5.3.1 is now available from: https://github.com/pivx-project/pivx/releases
+hemis Core version v5.3.1 is now available from: https://github.com/hemis-project/hemis/releases
 
 This is an important release for stakers and Masternodes: including several tier two synchronization, GUI and build system bug fixes.
 We recommend everyone to update your node/wallet.
 
-Please report bugs using the issue tracker at github: https://github.com/pivx-project/pivx/issues
+Please report bugs using the issue tracker at github: https://github.com/hemis-project/hemis/issues
 
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down, then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down, then run the installer (on Windows) or just copy over /Applications/hemis-Qt (on Mac) or hemisd/hemis-qt (on Linux).
 
 Notable Changes
 ==============
@@ -62,4 +62,4 @@ Thanks to everyone who directly contributed to this release:
 - random-zebra
 - W. J. van der Laan
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/), the QA team during Testing and the node hosts supporting our Testnet.
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/hemis-project-translations/), the QA team during Testing and the node hosts supporting our Testnet.

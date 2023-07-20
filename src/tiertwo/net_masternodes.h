@@ -1,10 +1,10 @@
 // Copyright (c) 2020 The Dash developers
-// Copyright (c) 2021-2022 The PIVX Core developers
+// Copyright (c) 2021-2022 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_NET_MASTERNODES_H
-#define PIVX_NET_MASTERNODES_H
+#ifndef hemis_NET_MASTERNODES_H
+#define hemis_NET_MASTERNODES_H
 
 #include "consensus/params.h"
 #include "net.h"
@@ -95,4 +95,4 @@ private:
     void doMaintenance();
 };
 
-#endif //PIVX_NET_MASTERNODES_H
+#endif //hemis_NET_MASTERNODES_H

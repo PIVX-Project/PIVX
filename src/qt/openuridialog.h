@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2021 The PIVX Core developers
+// Copyright (c) 2019-2021 The hemis Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,7 +6,7 @@
 #define BITCOIN_QT_OPENURIDIALOG_H
 
 #include <QDialog>
-#include "qt/pivx/snackbar.h"
+#include "qt/hemis/snackbar.h"
 
 namespace Ui
 {

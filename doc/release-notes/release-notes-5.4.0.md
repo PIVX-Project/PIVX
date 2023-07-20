@@ -1,13 +1,13 @@
-PIVX Core version v5.4.0 is now available from: <https://github.com/pivx-project/pivx/releases>
+hemis Core version v5.4.0 is now available from: <https://github.com/hemis-project/hemis/releases>
 
 This is a new major version release, including a brand-new visual graphical interface for the Governance system, tier two network stability improvements, various bug fixes and performance enhancements, as well as updated translations.
 
-Please report bugs using the issue tracker at github: <https://github.com/pivx-project/pivx/issues>
+Please report bugs using the issue tracker at github: <https://github.com/hemis-project/hemis/issues>
 
 How to Upgrade
 ==============
 
-If you are running an older version, shut it down. Wait until it has completely shut down, then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+If you are running an older version, shut it down. Wait until it has completely shut down, then run the installer (on Windows) or just copy over /Applications/hemis-Qt (on Mac) or hemisd/hemis-qt (on Linux).
 
 Notable Changes
 ==============
@@ -37,7 +37,7 @@ Notable Changes
 
 ### Deprecated 'autocombinerewards' Command
 
-The `autocombinerewards` RPC command was soft-deprecated in v5.3.0 and replaced with explicit setter/getter commands `setautocombinethreshold`/`getautocombinethreshold`. PIVX Core, by default, will no longer accept the `autocombinerewards` command, returning a deprecation error, unless the `pivxd`/`pivx-qt` is started with the `-deprecatedrpc=autocombinerewards` option.
+The `autocombinerewards` RPC command was soft-deprecated in v5.3.0 and replaced with explicit setter/getter commands `setautocombinethreshold`/`getautocombinethreshold`. hemis Core, by default, will no longer accept the `autocombinerewards` command, returning a deprecation error, unless the `hemisd`/`hemis-qt` is started with the `-deprecatedrpc=autocombinerewards` option.
 
 This command will be fully removed in v6.0.0.
 
@@ -140,7 +140,7 @@ v5.4.0 Change log
 - #2558 Cleaning unused code (furszy)
 - #2629 util: Support serialization of std::vector<bool> (random-zebra)
 - #2586 [Cleanup] Remove fNetworkNode and pnodeLocalHost, and encapsulate CNode id. (furszy)
-- #2579 pivx-cli better error handling + libevent RAII upstream backports (furszy)
+- #2579 hemis-cli better error handling + libevent RAII upstream backports (furszy)
 
 ### Refactoring and cleanups
 - #2569 [Cleanup] Remove and deglobalize system.h global variables (furszy)
@@ -187,4 +187,4 @@ Thanks to everyone who directly contributed to this release:
 - Suhas Daftuar
 - Wladimir J. van der Laan
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/), and every single person who tested the release candidates.
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/hemis-project-translations/), and every single person who tested the release candidates.

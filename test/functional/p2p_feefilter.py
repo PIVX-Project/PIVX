@@ -55,7 +55,7 @@ class FeeFilterTest(PivxTestFramework):
         # Test that invs are received for all txs at feerate of 20 sat/byte
         node1.settxfee(float(0.00020000))
         txids = [node1.sendtoaddress(node1.getnewaddress(), 1) for x in range(3)]
-        assert allInvsMatch(txids, self.nodes[0].p2p)
+        assert(allInvsMatch(txids, self.nodes[0].p2p))
         self.nodes[0].p2p.clear_invs()
 
         # Set a filter of 15 sat/byte
@@ -63,7 +63,7 @@ class FeeFilterTest(PivxTestFramework):
 
         # Test that txs are still being received (paying 20 sat/byte)
         txids = [node1.sendtoaddress(node1.getnewaddress(), 1) for x in range(3)]
-        assert allInvsMatch(txids, self.nodes[0].p2p)
+        assert(allInvsMatch(txids, self.nodes[0].p2p))
         self.nodes[0].p2p.clear_invs()
 
         # Change tx fee rate to 10 sat/byte and test they are no longer received
@@ -80,13 +80,13 @@ class FeeFilterTest(PivxTestFramework):
         # as well.
         node0.settxfee(float(0.00020000))
         txids = [node0.sendtoaddress(node0.getnewaddress(), 1)]
-        assert allInvsMatch(txids, self.nodes[0].p2p)
+        assert(allInvsMatch(txids, self.nodes[0].p2p))
         self.nodes[0].p2p.clear_invs()
 
         # Remove fee filter and check that txs are received again
         self.nodes[0].p2p.send_and_ping(msg_feefilter(0))
         txids = [node1.sendtoaddress(node1.getnewaddress(), 1) for x in range(3)]
-        assert allInvsMatch(txids, self.nodes[0].p2p)
+        assert(allInvsMatch(txids, self.nodes[0].p2p))
         self.nodes[0].p2p.clear_invs()
 
 if __name__ == '__main__':

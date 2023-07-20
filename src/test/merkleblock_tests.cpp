@@ -4,7 +4,11 @@
 
 #include "merkleblock.h"
 #include "uint256.h"
+<<<<<<< HEAD
 #include "test/test_pivx.h"
+=======
+#include "test/test_hemis.h"
+>>>>>>> 1f345019d (first step)
 #include "test/util/blocksutil.h"
 
 #include <boost/test/unit_test.hpp>

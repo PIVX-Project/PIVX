@@ -1,9 +1,9 @@
 // Copyright (c) 2016-2021 The Bitcoin Core developers
-// Copyright (c) 2021 The PIVX Core developers
+// Copyright (c) 2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#ifndef PIVX_WALLET_RPCWALLET_H
-#define PIVX_WALLET_RPCWALLET_H
+#ifndef hemis_WALLET_RPCWALLET_H
+#define hemis_WALLET_RPCWALLET_H
 
 #include <string>
 
@@ -25,4 +25,4 @@ std::string HelpRequiringPassphrase(CWallet* const pwallet);
 bool EnsureWalletIsAvailable(CWallet* const pwallet, bool avoidException);
 void EnsureWalletIsUnlocked(CWallet* const pwallet, bool fAllowAnonOnly = false);
 
-#endif //PIVX_WALLET_RPCWALLET_H
+#endif //hemis_WALLET_RPCWALLET_H

@@ -8,7 +8,11 @@
 #include "uint256.h"
 #include "util/system.h"
 
+<<<<<<< HEAD
 #include "test/test_pivx.h"
+=======
+#include "test/test_hemis.h"
+>>>>>>> 1f345019d (first step)
 
 #include <boost/test/unit_test.hpp>
 

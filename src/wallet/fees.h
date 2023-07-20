@@ -1,11 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2017 The Bitcoin Core developers
-// Copyright (c) 2021 The PIVX Core developers
+// Copyright (c) 2021 The hemis Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_WALLET_FEES_H
-#define PIVX_WALLET_FEES_H
+#ifndef hemis_WALLET_FEES_H
+#define hemis_WALLET_FEES_H
 
 #include "amount.h"
 
@@ -24,4 +24,4 @@ CAmount GetRequiredFee(unsigned int nTxBytes);
 CAmount GetMinimumFee(unsigned int nTxBytes, unsigned int nConfirmTarget, const CTxMemPool& pool);
 
 
-#endif // PIVX_WALLET_FEES_H
+#endif // hemis_WALLET_FEES_H

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2019-2021 The PIVX Core developers
+# Copyright (c) 2019-2021 The hemis Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -18,7 +18,7 @@ class BlockHashCacheTest(PivxTestFramework):
         self.num_nodes = 1
         self.setup_clean_chain = True
         # This test can go up to block 400 (2 * CACHE_SIZE). Delay POS activation
-        self.extra_args = [['-nuparams=PoS:401', '-nuparams=PIVX_v3.4:402']]
+        self.extra_args = [['-nuparams=PoS:401', '-nuparams=hemis_v3.4:402']]
 
     def log_title(self):
         title = "*** Starting %s ***" % self.__class__.__name__

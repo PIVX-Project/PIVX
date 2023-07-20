@@ -70,7 +70,7 @@ class TxnMallTest(PivxTestFramework):
 
         if (rawtx1 == clone_raw):
             print("## !! Equal hex!!")
-            assert False
+            assert(False)
 
         # Use a different signature hash type to sign.  This creates an equivalent but malleated clone.
         # Don't send the clone anywhere yet
