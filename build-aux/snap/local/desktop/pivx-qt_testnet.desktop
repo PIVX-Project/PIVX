@@ -2,14 +2,14 @@
 
 [Desktop Entry]
 Encoding=UTF-8
-Name=PIVX Core
-Comment=PIVX Core QT test network
-GenericName=PIVX Digital Currency QT client testnet network
-Exec=pivx-core.qt-testnet %u
+Name=hemis Core
+Comment=hemis Core QT test network
+GenericName=hemis Digital Currency QT client testnet network
+Exec=hemis-core.qt-testnet %u
 Terminal=false
 Type=Application
-Icon=${SNAP}/share/pixmaps/pivx_testnet.png
+Icon=${SNAP}/share/pixmaps/hemis_testnet.png
 MimeType=x-scheme-handler/piv;
 Categories=X-Office;X-Finance;
-Keywords=internet;pivx;zpiv;tpiv;core;wallet;qt;testnet;snap;launchpad;crypto;digital;currency;coin;token;zerocoin;
+Keywords=internet;hemis;zpiv;tpiv;core;wallet;qt;testnet;snap;launchpad;crypto;digital;currency;coin;token;zerocoin;
 Version=1.0

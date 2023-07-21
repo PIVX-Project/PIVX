@@ -1,0 +1,30 @@
+#!/bin/sh
+make distclean
+echo "compiling for linux"
+./autogen.sh
+./configure --disable-tests --disable-bench --enable-mining-rpc --enable-debug
+make -j6
+cp ./src/hemisd ~/builds/linux/hemisd
+cp ./src/hemis-cli ~/builds/linux/hemis-cli
+cp ./src/hemis-tx ~/builds/linux/hemis-tx
+
+cp ./src/qt/hemis-qt ~/builds/linux/qt/hemis-qt
+
+
+echo "Compiling for Windows"
+make distclean
+PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
+cd depends
+make HOST=x86_64-w64-mingw32 -j6
+cd ..
+./autogen.sh
+CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --prefix=/ --disable-online-rust --disable-tests --disable-bench
+make -j6
+make deploy
+
+cp ./src/hemisd.exe ~/builds/windows/hemisd.exe
+cp ./src/hemis-cli.exe ~/builds/windows/hemis-cli.exe
+cp ./src/hemis-tx.exe ~/builds/windows/hemis-tx.exe
+
+cp ./src/qt/hemis-qt.exe ~/builds/windows/qt/hemis-qt.exe
+cp ./hemis-*.exe ~/builds/windows/qt/hemis-installer.exe

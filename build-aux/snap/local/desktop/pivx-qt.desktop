@@ -2,14 +2,14 @@
 
 [Desktop Entry]
 Encoding=UTF-8
-Name=PIVX Core
-Comment=PIVX Core QT main network
-GenericName=PIVX Digital Currency QT client main network
-Exec=pivx-core.qt %u
+Name=hemis Core
+Comment=hemis Core QT main network
+GenericName=hemis Digital Currency QT client main network
+Exec=hemis-core.qt %u
 Terminal=false
 Type=Application
-Icon=${SNAP}/share/pixmaps/pivx.png
-MimeType=x-scheme-handler/pivx;
+Icon=${SNAP}/share/pixmaps/hemis.png
+MimeType=x-scheme-handler/hemis;
 Categories=X-Office;X-Finance;
-Keywords=internet;pivx;zpiv;piv;core;wallet;qt;main;snap;launchpad;crypto;digital;currency;coin;token;zerocoin;
+Keywords=internet;hemis;zpiv;piv;core;wallet;qt;main;snap;launchpad;crypto;digital;currency;coin;token;zerocoin;
 Version=1.0

@@ -1,0 +1,8 @@
+#!/bin/sh
+make distclean
+echo "compiling for linux"
+./autogen.sh
+./configure --disable-tests --disable-bench --enable-mining-rpc --enable-debug
+make -j6
+cp ./src/hemisd ./hemisd
+cp ./src/hemis-cli ./hemis-cli

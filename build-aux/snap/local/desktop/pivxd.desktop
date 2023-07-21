@@ -2,14 +2,14 @@
 
 [Desktop Entry]
 Encoding=UTF-8
-Name=PIVX Core Daemon SNAP
+Name=hemis Core Daemon SNAP
 Comment=main
-GenericName=PIVX Digital Currency Daemon Client main network
-Exec=pivx-core.daemon %u
+GenericName=hemis Digital Currency Daemon Client main network
+Exec=hemis-core.daemon %u
 Terminal=true
 Type=Application
-Icon=${SNAP}/share/pixmaps/pivx.png
+Icon=${SNAP}/share/pixmaps/hemis.png
 MimeType=x-scheme-handler/piv;
 Categories=X-Office;X-Finance;
-Keywords=internet;pivx;zpiv;core;wallet;daemon;main;snap;launchpad;crypto;digital;currency;coin;token;zerocoin;
+Keywords=internet;hemis;zpiv;core;wallet;daemon;main;snap;launchpad;crypto;digital;currency;coin;token;zerocoin;
 Version=1.0

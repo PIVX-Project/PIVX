@@ -27,7 +27,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     txNew.nVersion = 1;
     txNew.vin.resize(1);
     txNew.vout.resize(1);
-    txNew.vin[0].scriptSig = CScript() << 486604799 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
+    txNew.vin[0].scriptSig = CScript() << 00 << 486604799 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
     txNew.vout[0].nValue = genesisReward;
     txNew.vout[0].scriptPubKey = genesisOutputScript;
 
@@ -163,19 +163,20 @@ static Consensus::LLMQParams llmq400_85 = {
  * + Contains no strange transactions
  */
 static MapCheckpoints mapCheckpoints = {
-    { 1, uint256S("0000000f8341b145db2106f10c2dc365ad326e4262ff1f3e4e5fed388ae14a1e")}
+{0, uint256S("0x0000009efeaed4a864a417a90065b12da5bd89ac7742c4f88a93d8687a94abb0")},
+//    { 1, uint256S("0x0000008f180a09479e4004c973f39fd2de6d1324be60fe196abb8d6460b7ae7a")}
 };
 
 static const CCheckpointData data = {
     &mapCheckpoints,
-    1689664118, // * UNIX timestamp of last checkpoint block
-    5607713,    // * total number of transactions between genesis and last checkpoint
+    1692423000, // * UNIX timestamp of last checkpoint block
+    0,    // * total number of transactions between genesis and last checkpoint
                 //   (the tx=... number in the UpdateTip debug.log lines)
-    3000        // * estimated number of transactions per day after checkpoint
+    100        // * estimated number of transactions per day after checkpoint
 };
 
 static MapCheckpoints mapCheckpointsTestnet = {
-    {0, uint256S("0x001")},
+    {0, uint256S("0x0000008f180a09479e4004c973f39fd2de6d1324be60fe196abb8d6460b7ae7a")},
     //{    201, uint256S("6ae7d52092fd918c8ac8d9b1334400387d3057997e6e927a88e57186dc395231")},     // v5 activation (PoS/Sapling)
 };
 
@@ -196,7 +197,7 @@ static const CCheckpointData dataRegtest = {
 void findGenesisBlock()
 {
     // Parameters for CreateGenesisBlock can be changed to suit your needs
-    uint32_t nTime = 1628178136;  // Your desired timestamp
+    uint32_t nTime = 1692283012;  // Your desired timestamp
     int32_t nVersion = 1;  // Your desired block version
     uint32_t nNonce = 0;  // Starting nonce, will iterate this
     const CAmount& genesisReward = 0 * COIN;  // No reward for genesis block
@@ -264,7 +265,7 @@ void findGenesisBlock(uint32_t nTime, uint32_t startNonce, uint32_t nBits, int32
 
 void findGenesis() 
 {
-    uint32_t nTime = 1628178136;  
+    uint32_t nTime = 1692423000;  
     int32_t nVersion = 1;  
     const CAmount& genesisReward = 0 * COIN;  
     uint32_t nBits = 0x1e00ffff;
@@ -291,21 +292,21 @@ public:
     {
         strNetworkID = "main";
 
-//	findGenesis();
-        genesis = CreateGenesisBlock(1628178136, 33166035, 0x1e00ffff, 1, 0 * COIN);
+	//findGenesis();
+        genesis = CreateGenesisBlock(1692423000, 4820300, 0x1e00ffff, 1, 0 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
 
 	//std::cout << "genesis Block Hash: " << consensus.hashGenesisBlock.GetHex() << std::endl;
 	//std::cout << "Merkle Root Hash: " << genesis.hashMerkleRoot.GetHex() << std::endl;
 
-        assert(consensus.hashGenesisBlock == uint256S("0x00000009851b2c7fe9ba54c2a8888f065eef82c53cf848973be14e734cb96b3a"));
-        assert(genesis.hashMerkleRoot == uint256S("0x2e3276b73ee45ae023eb98045ebe4132c41363cb1388daf9c10cef499c3ff536"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0000009efeaed4a864a417a90065b12da5bd89ac7742c4f88a93d8687a94abb0"));
+        assert(genesis.hashMerkleRoot == uint256S("0x93ad7b455294f429da00d11b656d62f7fb197a72b7315f58de8c9380dbdaa113"));
 
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.powLimit   = uint256S("0x00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.posLimitV1 = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.posLimitV2 = uint256S("0x00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.powLimit   = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.posLimitV1 = uint256S("0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.posLimitV2 = uint256S("0x0000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nBudgetCycleBlocks = 43200;       // approx. 1 every 30 days
         consensus.nBudgetFeeConfirmations = 6;      // Number of confirmations for the finalization fee
         consensus.nCoinbaseMaturity = 100;
@@ -319,17 +320,17 @@ public:
         consensus.nProposalEstablishmentTime = 60 * 60 * 24;    // must be at least a day old to make it into a budget
         consensus.nStakeMinAge = 60 * 60;
         consensus.nStakeMinDepth = 600;
-        consensus.nTargetTimespan = 40 * 60;
-        consensus.nTargetTimespanV2 = 30 * 60;
-        consensus.nTargetSpacing = 1 * 60;
+        consensus.nTargetTimespan = 20 * 60;
+        consensus.nTargetTimespanV2 = 20 * 60;
+        consensus.nTargetSpacing = 0.5 * 60;
         consensus.nTimeSlotLength = 15;
         consensus.nMaxProposalPayments = 6;
 
         // spork keys
-        consensus.strSporkPubKey = "0410050aa740d280b134b40b40658781fc1116ba7700764e0ce27af3e1737586b3257d19232e0cb5084947f5107e44bcd577f126c9eb4a30ea2807b271d2145298";
+        consensus.strSporkPubKey = "04a47ab30df33aad81929a2704ae1ba2d5d5d26c26549940c3126fd0941856088e2c0d57b65a32c46f19dd855cd999eb3a675c7a01e20ca0ba3ca0f32a225fcb1e";
         consensus.strSporkPubKeyOld = "040F129DE6546FE405995329A887329BED4321325B1A73B0A257423C05C1FCFE9E40EF0678AEF59036A22C42E61DFD29DF7EFB09F56CC73CADF64E05741880E3E7";
-        consensus.nTime_EnforceNewSporkKey = 1608512400;    //!> December 21, 2020 01:00:00 AM GMT
-        consensus.nTime_RejectOldSporkKey = 1614560400;     //!> March 1, 2021 01:00:00 AM GMT
+        consensus.nTime_EnforceNewSporkKey = 1808512400;    //!> December 21, 2020 01:00:00 AM GMT
+        consensus.nTime_RejectOldSporkKey = 1814560400;     //!> March 1, 2021 01:00:00 AM GMT
 
         // height-based activations
         consensus.height_last_invalid_UTXO = 1;
@@ -352,27 +353,27 @@ public:
         consensus.ZC_MinMintConfirmations = 20;
         consensus.ZC_MinMintFee = 1 * CENT;
         consensus.ZC_MinStakeDepth = 200;
-        consensus.ZC_TimeStart = 1508214600;        // October 17, 2017 4:30:00 AM
+        consensus.ZC_TimeStart = 1808214600;        // October 17, 2017 4:30:00 AM
         consensus.ZC_HeightStart = 1;
 
         // Network upgrades
-        consensus.vUpgrades[Consensus::BASE_NETWORK].nActivationHeight =
+        consensus.vUpgrades[Consensus::BASE_NETWORK].nActivationHeight = 
                 Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
-        consensus.vUpgrades[Consensus::UPGRADE_TESTDUMMY].nActivationHeight =
+        consensus.vUpgrades[Consensus::UPGRADE_TESTDUMMY].nActivationHeight = 
                 Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
-        consensus.vUpgrades[Consensus::UPGRADE_POS].nActivationHeight           = 120;
-        consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 120;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 120;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 120;
-        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         = 120;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 130;
-        consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 131;
-        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 131;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 131;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 131;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 131;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 131;
-        consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight 		= 131;
+        consensus.vUpgrades[Consensus::UPGRADE_POS].nActivationHeight           = 750;
+        consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 750;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 750;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 750;
+        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         = 750;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 750;
+        consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 750;
+        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 751;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 752;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 753;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 754;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 755;
+        consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight 		= 756;
 //                Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
         consensus.vUpgrades[Consensus::UPGRADE_ZC].hashActivationBlock =
@@ -490,7 +491,7 @@ public:
         consensus.nMaxProposalPayments = 20;
 
         // spork keys
-        consensus.strSporkPubKey = "04677c34726c491117265f4b1c83cef085684f36c8df5a97a3a42fc499316d0c4e63959c9eca0dba239d9aaaf72011afffeb3ef9f51b9017811dec686e412eb504";
+        consensus.strSporkPubKey = "04a47ab30df33aad81929a2704ae1ba2d5d5d26c26549940c3126fd0941856088e2c0d57b65a32c46f19dd855cd999eb3a675c7a01e20ca0ba3ca0f32a225fcb1e";
         consensus.strSporkPubKeyOld = "04E88BB455E2A04E65FCC41D88CD367E9CCE1F5A409BE94D8C2B4B35D223DED9C8E2F4E061349BA3A38839282508066B6DC4DB72DD432AC4067991E6BF20176127";
         consensus.nTime_EnforceNewSporkKey = 1608512400;    //!> December 21, 2020 01:00:00 AM GMT
         consensus.nTime_RejectOldSporkKey = 1614560400;     //!> March 1, 2021 01:00:00 AM GMT
