@@ -161,6 +161,7 @@ BASE_SCRIPTS= [
 TIERTWO_SCRIPTS = [
     # Longest test should go first, to favor running tests in parallel
     'tiertwo_governance_sync_basic.py',         # ~ 1160 sec
+    'tiertwo_budget.py',                        # ~ 500 sec
     'tiertwo_dkg_errors.py',                    # ~ 486 sec
     'tiertwo_dkg_pose.py',                      # ~ 444 sec
     'tiertwo_mn_compatibility.py',              # ~ 413 sec

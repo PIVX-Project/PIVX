@@ -34,7 +34,7 @@ void FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoin
  * Check coinbase output value for blocks after v6.0 enforcement.
  * It must pay the masternode for regular blocks and a proposal during superblocks.
  */
-bool IsCoinbaseValueValid(const CTransactionRef& tx, CAmount nBudgetAmt, CValidationState& _state);
+bool IsCoinbaseValueValid(const int nHeight, const CTransactionRef& tx, CAmount nBudgetAmt, CValidationState& _state);
 
 void DumpMasternodePayments();
 

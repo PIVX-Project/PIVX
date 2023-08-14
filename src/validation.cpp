@@ -1629,7 +1629,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
         nExpectedMint += nFees;
 
     //Check that the block does not overmint
-    CAmount nBudgetAmt = 0;     // If this is a superblock, amount to be paid to the winning proposal, otherwise 0
+    CAmount nBudgetAmt = 0; // If this is a superblock, amount to be paid to the winning proposals, otherwise 0
     if (!IsBlockValueValid(pindex->nHeight, nExpectedMint, nMint, nBudgetAmt)) {
         return state.DoS(100, error("%s: reward pays too much (actual=%s vs limit=%s)",
                                     __func__, FormatMoney(nMint), FormatMoney(nExpectedMint)),
@@ -1646,7 +1646,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     }
 
     // After v6 enforcement: Check that the coinbase pays the exact amount
-    if (isPoSBlock && isV6UpgradeEnforced && !IsCoinbaseValueValid(block.vtx[0], nBudgetAmt, state)) {
+    if (isPoSBlock && isV6UpgradeEnforced && !IsCoinbaseValueValid(pindex->nHeight, block.vtx[0], nBudgetAmt, state)) {
         // pass the state returned by the function above
         return false;
     }

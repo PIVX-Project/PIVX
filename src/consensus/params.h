@@ -243,6 +243,7 @@ struct Params {
         return (contextHeight - utxoFromBlockHeight >= nStakeMinDepth);
     }
 
+    bool IsSuperBlock(int height) const { return height % nBudgetCycleBlocks == 0; }
 
     /*
      * (Legacy) Zerocoin consensus params

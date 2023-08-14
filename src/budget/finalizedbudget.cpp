@@ -5,7 +5,9 @@
 
 #include "budget/finalizedbudget.h"
 
+#include "chainparams.h"
 #include "masternodeman.h"
+#include "utilmoneystr.h"
 #include "validation.h"
 
 CFinalizedBudget::CFinalizedBudget() :
@@ -187,7 +189,7 @@ bool CFinalizedBudget::CheckStartEnd()
     }
 
     // Must be the correct block for payment to happen (once a month)
-    if (nBlockStart % Params().GetConsensus().nBudgetCycleBlocks != 0) {
+    if (!Params().GetConsensus().IsSuperBlock(nBlockStart)) {
         strInvalid = "Invalid BlockStart";
         return false;
     }
@@ -387,6 +389,45 @@ bool CFinalizedBudget::GetPayeeAndAmount(int64_t nBlockHeight, CScript& payee, C
     payee = vecBudgetPayments[i].payee;
     nAmount = vecBudgetPayments[i].nAmount;
     return true;
+}
+
+bool CFinalizedBudget::AllBudgetsPaid(const CTransaction& tx) const
+{
+    // make a map for faster lookup and deal with duplicate payees
+    struct cmp {
+        bool operator()(const CTxOut& a, const CTxOut& b) const
+        {
+            return a.scriptPubKey < b.scriptPubKey ||
+                   (a.scriptPubKey == b.scriptPubKey && a.nValue < b.nValue);
+        }
+    };
+    std::map<CTxOut, int, cmp> txouts;
+    for (const CTxOut& o : tx.vout) {
+        txouts[o]++;
+    }
+
+    for (const CTxBudgetPayment& payment : vecBudgetPayments) {
+        auto it = txouts.find(CTxOut(payment.nAmount, payment.payee));
+        if (it == txouts.end() || it->second == 0) {
+            // Payment not found
+            CTxDestination addr;
+            const std::string& payee = ExtractDestination(payment.payee, addr) ? EncodeDestination(addr) : HexStr(payment.payee);
+            LogPrint(BCLog::MNBUDGET, "Missing payment of %s for %s (proposal hash: %s)\n",
+                FormatMoney(payment.nAmount), payee, payment.nProposalHash.ToString());
+            return false;
+        }
+        it->second--;
+    }
+
+    // all budgets are paid by tx
+    return true;
+}
+
+void CFinalizedBudget::PayAllBudgets(CMutableTransaction& tx) const
+{
+    for (const CTxBudgetPayment& payment : vecBudgetPayments) {
+        tx.vout.emplace_back(payment.nAmount, payment.payee);
+    }
 }
 
 // return broadcast serialization

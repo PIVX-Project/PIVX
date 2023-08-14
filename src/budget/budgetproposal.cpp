@@ -87,7 +87,7 @@ bool CBudgetProposal::CheckStartEnd()
 {
     // block start must be a superblock
     if (nBlockStart < 0 ||
-            nBlockStart % Params().GetConsensus().nBudgetCycleBlocks != 0) {
+        !Params().GetConsensus().IsSuperBlock(nBlockStart)) {
         strInvalid = "Invalid nBlockStart";
         return false;
     }
