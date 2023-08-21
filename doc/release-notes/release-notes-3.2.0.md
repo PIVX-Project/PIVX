@@ -50,11 +50,11 @@ A full report provided by hemis developers is available on the [hemis Website](h
 
 ### Wrapped Serials
 
-On March 6th 2019, an attack was detected on the hemis network zerocoin protocol, or zPIV. The vulnerability allows an attacker to fake serials accepted by the network and thus to spend zerocoins that have never been minted. As severe as it is, it does not harm users’ privacy and does not affect their holdings directly.
+On March 6th 2019, an attack was detected on the hemis network zerocoin protocol, or zHMS. The vulnerability allows an attacker to fake serials accepted by the network and thus to spend zerocoins that have never been minted. As severe as it is, it does not harm users’ privacy and does not affect their holdings directly.
 
-As a result of this, all zPIV functionality was disabled via one of our sporks shortly after verification of this exploit. A full report, detailing how this attack was performed, as well as investigation results and mitigation methods is available [On Medium](https://medium.com/@dev.hemis/report-wrapped-serials-attack-5f4bf7b51701).
+As a result of this, all zHMS functionality was disabled via one of our sporks shortly after verification of this exploit. A full report, detailing how this attack was performed, as well as investigation results and mitigation methods is available [On Medium](https://medium.com/@dev.hemis/report-wrapped-serials-attack-5f4bf7b51701).
 
-zPIV functions will be restored after v3.2.0 is pushed out and the majority of the network has upgraded.
+zHMS functions will be restored after v3.2.0 is pushed out and the majority of the network has upgraded.
 
 Major New Features
 ------
@@ -65,7 +65,7 @@ hemis Core v3.2.0 introduces new consensus rules for scripting pathways to suppo
 
 ### Automint Addresses
 
-A new "Automint Addresses" feature has been added to the wallet that allows for the creation of new addresses who's purpose is to automatically convert any PIV funds received by such addresses to zPIV. The feature as a whole can be enabled/disabled either at runtime using the `-enableautoconvertaddress` option, via RPC/Console with the `enableautomintaddress` command, or via the GUI's options dialog, with the default being enabled.
+A new "Automint Addresses" feature has been added to the wallet that allows for the creation of new addresses who's purpose is to automatically convert any HMS funds received by such addresses to zHMS. The feature as a whole can be enabled/disabled either at runtime using the `-enableautoconvertaddress` option, via RPC/Console with the `enableautomintaddress` command, or via the GUI's options dialog, with the default being enabled.
 
 Creation of these automint addresses is currently only available via the RPC/Console `createautomintaddress` command, which takes no additional arguments. The command returns a new hemis address each time, but addresses created by this command can be re-used if desired.
 
@@ -81,9 +81,9 @@ A full technical writeup of the protocol can be found [Here](https://hemis.org/w
 
 ### Precomputed Zerocoin Proofs
 
-This introduces the ability to do most of the heavy computation required for zPIV spends **before** actually initiating the spend. A new thread, `ThreadPrecomputeSpends`, is added which constantly runs in the background.
+This introduces the ability to do most of the heavy computation required for zHMS spends **before** actually initiating the spend. A new thread, `ThreadPrecomputeSpends`, is added which constantly runs in the background.
 
-`ThreadPrecomputeSpends`' purpose is to monitor the wallet's zPIV mints and perform partial witness accumulations up to `nHeight - 20` blocks from the chain's tip (to ensure that it only ever computes data that is at least 2 accumulator checkpoints deep), retaining the results in memory.
+`ThreadPrecomputeSpends`' purpose is to monitor the wallet's zHMS mints and perform partial witness accumulations up to `nHeight - 20` blocks from the chain's tip (to ensure that it only ever computes data that is at least 2 accumulator checkpoints deep), retaining the results in memory.
 
 Additionally, a file based cache is introduced, `precomputes.dat`, which serves as a place to store any precomputed data between sessions, or when the in-memory cache size is exhausted. Swapping data between memory and disk file is done as needed, and periodic cache flushes to the disk are routine.
 
@@ -94,7 +94,7 @@ This also introduces 2 new runtime configuration options:
 
 A new RPC command, `clearspendcache`, has been added that allows for the clearing/resetting of the precompute cache (both memory and disk). This command takes no additional arguments.
 
-Finally, the "security level" option for spending zPIV has been completely removed, and all zPIV spends now spend at what was formerly "security level" `100`. This change has been reflected in any RPC command that previously took a security level argument, as well as in the GUI's Privacy section for spending zPIV.
+Finally, the "security level" option for spending zHMS has been completely removed, and all zHMS spends now spend at what was formerly "security level" `100`. This change has been reflected in any RPC command that previously took a security level argument, as well as in the GUI's Privacy section for spending zHMS.
 
 ### Regression Test Suite
 
@@ -234,16 +234,16 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #781 `10e1a8a306` [Qt] Don't show staking/automint status icons without a wallet (Fuzzbawls)
  - #776 `3fcdc932d9` [Qt] Add a security warning to the debug console's default output. (Fuzzbawls)
  - #747 `feb87c10fa` [GUI] Hide orphans - contextMenu action (random-zebra)
- - #741 `ea2637838c` [GUI] Sort by 'data' in zPIV and coin control dialogs (random-zebra)
+ - #741 `ea2637838c` [GUI] Sort by 'data' in zHMS and coin control dialogs (random-zebra)
  - #733 `9a792d73e9` [GUI] Hide orphans (random-zebra)
  - #735 `44840c5069` [Qt] Stop using dummy strings in clientversion.cpp (Fuzzbawls)
- - #725 `793db15baf` [UI] Sort numbers correctly in zPIV and coin control dialogs (random-zebra)
+ - #725 `793db15baf` [UI] Sort numbers correctly in zHMS and coin control dialogs (random-zebra)
  - #714 `bf2ad88066` [UI] Add address field in receive tab (warrows)
  - #683 `ec1180b52c` [Qt] receivecoinsdialog - address control + clean UI (random-zebra)
  - #677 `29fab5982f` [Qt] change colors for tx labels in history/overview (random-zebra)
  - #693 `022b58257c` [UI] Add address to the payment request history (warrows)
  - #698 `3f35bc81d8` [Qt] Remove Qt4 build support & code fallbacks (Wladimir J. van der Laan)
- - #655 `de0c4e0888` [Qt] Fix PIV balances on overview page (Fuzzbawls)
+ - #655 `de0c4e0888` [Qt] Fix HMS balances on overview page (Fuzzbawls)
  - #680 `71ac5285e5` [Qt] Privacy dialog: hide/show denominations (random-zebra)
  - #675 `8a26ba0b07` [Qt] SwiftX - intuitiveness (random-zebra)
  - #668 `4a68c9ed43` [Qt] Clean up Multisend Dialog UI (Fuzzbawls)
@@ -268,11 +268,11 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #688 `64071d142d` [Zerocoin]  RPC import/export zerocoins private key standardized + Cleanup in AccPoK and SoK to avoid redundant calculations. (furszy)
 
 ### Wallet
- - #842 `c6c84fe85f` [Wallet] [zPIV] Precomputed Zerocoin Proofs (Fuzzbawls)
+ - #842 `c6c84fe85f` [Wallet] [zHMS] Precomputed Zerocoin Proofs (Fuzzbawls)
  - #817 `37a06eaa93` [Wallet] Fix segfault with runtime -disablewallet (Fuzzbawls)
  - #763 `d4762f7e7a` [Wallet] Add automint address (Fuzzbawls)
- - #759 `19fd0877cd` [Wallet] Avoid failed zPIV spend because of changed seed (warrows)
- - #755 `65be6b611b` [Wallet] Fix zPIV spend when too much mints are selected (warrows)
+ - #759 `19fd0877cd` [Wallet] Avoid failed zHMS spend because of changed seed (warrows)
+ - #755 `65be6b611b` [Wallet] Fix zHMS spend when too much mints are selected (warrows)
  - #734 `5df105fed2` [Staking] Ensure nCredit is correctly initialized in CreateCoinStake (warrows)
  - #730 `394d48b2c9` [Wallet] fix bug with fWalletUnlockAnonymizeOnly flag setting (random-zebra)
  - #715 `30048cce62` [Refactor] Remove GetCoinAge (Fuzzbawls)
@@ -292,7 +292,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #667 `49f9a0fa9e` [Zerocoin] Clean zerocoin bignum file (warrows)
  - #669 `dd6909fd30` [Utils] Fix syntax error in gitian-build.sh (Aitor González)
  - #632 `0d91550ff6` [MoveOnly] Move non-wallet RPC files to subdir (Fuzzbawls)
- - #731 `f7f49cfa7c` [zPIV] Fix bignum overloads when using OpenSSL (Fuzzbawls)
+ - #731 `f7f49cfa7c` [zHMS] Fix bignum overloads when using OpenSSL (Fuzzbawls)
  - #692 `1fde9b2b7a` [Zerocoin] Remove explicit copy assignement operator from Accumulator (warrows)
  - #761 `88a93bd35a` [Refactoring] Abstract out and switch openssl cleanse (Adam Langley)
  - #743 `af0c340fe0` [Refactor] remove CPubKey::GetHex (random-zebra)

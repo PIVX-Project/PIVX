@@ -192,7 +192,7 @@ void OptionsModel::setWindowDefaultOptions(QSettings& settings, bool reset)
 void OptionsModel::setDisplayDefaultOptions(QSettings& settings, bool reset)
 {
     if (!settings.contains("nDisplayUnit") || reset)
-        settings.setValue("nDisplayUnit", BitcoinUnits::PIV);
+        settings.setValue("nDisplayUnit", BitcoinUnits::HMS);
     nDisplayUnit = settings.value("nDisplayUnit").toInt();
     if (!settings.contains("digits") || reset)
         settings.setValue("digits", "2");
@@ -205,8 +205,8 @@ void OptionsModel::setDisplayDefaultOptions(QSettings& settings, bool reset)
     if (!gArgs.SoftSetArg("-lang", settings.value("language").toString().toStdString()))
         addOverriddenOption("-lang");
 
-    if (settings.contains("nAnonymizePivxAmount") || reset)
-        gArgs.SoftSetArg("-anonymizehemisamount", settings.value("nAnonymizePivxAmount").toString().toStdString());
+    if (settings.contains("nAnonymizeHemisAmount") || reset)
+        gArgs.SoftSetArg("-anonymizehemisamount", settings.value("nAnonymizeHemisAmount").toString().toStdString());
 
     if (!settings.contains("strThirdPartyTxUrls") || reset)
         settings.setValue("strThirdPartyTxUrls", "");

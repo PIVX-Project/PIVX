@@ -12,7 +12,7 @@ import json
 from struct import unpack, pack
 import urllib.parse
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal, assert_greater_than, connect_nodes, hex_str_to_bytes
 
 
@@ -43,7 +43,7 @@ def http_post_call(host, port, path, requestdata = '', response_object = 0):
 
     return conn.getresponse().read()
 
-class RESTTest (PivxTestFramework):
+class RESTTest (HemisTestFramework):
     FORMAT_SEPARATOR = "."
 
     def set_test_params(self):

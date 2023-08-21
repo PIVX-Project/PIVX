@@ -81,7 +81,7 @@ CAmount CPivStake::GetValue() const
 
 CDataStream CPivStake::GetUniqueness() const
 {
-    //The unique identifier for a PIV stake is the outpoint
+    //The unique identifier for a HMS stake is the outpoint
     CDataStream ss(SER_NETWORK, 0);
     ss << outpointFrom.n << outpointFrom.hash;
     return ss;

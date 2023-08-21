@@ -14,7 +14,7 @@ Test checking:
 import time
 
 from test_framework.messages import COutPoint
-from test_framework.test_framework import PivxTier2TestFramework
+from test_framework.test_framework import HemisTier2TestFramework
 from test_framework.util import (
     assert_equal,
     assert_true,
@@ -35,7 +35,7 @@ class Proposal:
         self.feeTxId = ""
         self.proposalHash = ""
 
-class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
+class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
 
     def check_mns_status_legacy(self, node, txhash):
         status = node.getmasternodestatus()

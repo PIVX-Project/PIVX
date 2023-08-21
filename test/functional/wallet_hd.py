@@ -7,7 +7,7 @@
 import os
 import shutil
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes,
@@ -15,7 +15,7 @@ from test_framework.util import (
 )
 
 
-class WalletHDTest(PivxTestFramework):
+class WalletHDTest(HemisTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 2
@@ -220,7 +220,7 @@ class WalletHDTest(PivxTestFramework):
         self.nodes[1].sethdseed(True, hdseed)
         z_add_3 = self.generate_shield_addr(masterkeyid, NUM_SHIELD_ADDS)
         assert_equal(z_add, z_add_3)
-        # Restart, zap, and check balance: 1 PIV * (NUM_HD_ADDS + NUM_SHIELD_ADDS) recovered from seed
+        # Restart, zap, and check balance: 1 HMS * (NUM_HD_ADDS + NUM_SHIELD_ADDS) recovered from seed
         self.stop_node(1)
         self.start_node(1, extra_args=self.extra_args[1] + ['-zapwallettxes=1'])
         assert_equal(self.nodes[1].getbalance(), NUM_HD_ADDS + NUM_SHIELD_ADDS)

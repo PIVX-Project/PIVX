@@ -364,8 +364,8 @@ za staking</translation>
         <translation>PONIŠTI</translation>
     </message>
     <message>
-        <source>hemis will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
-        <translation>hemis će se sada zatvoriti kako bi se dovršio proces šifriranja. Ne zaboravite da šifriranje Vašeg novčanika ne može u potpunosti zaštititi vaše PIV od krađje zlonamjernog softvera koji zarazi vaše računalo.</translation>
+        <source>hemis will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your HMSs from being stolen by malware infecting your computer.</source>
+        <translation>hemis će se sada zatvoriti kako bi se dovršio proces šifriranja. Ne zaboravite da šifriranje Vašeg novčanika ne može u potpunosti zaštititi vaše HMS od krađje zlonamjernog softvera koji zarazi vaše računalo.</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -469,8 +469,8 @@ za staking</translation>
         <translation>Ušteđjevina</translation>
     </message>
     <message>
-        <source>0,00 PIV</source>
-        <translation>0,00 PIV</translation>
+        <source>0,00 HMS</source>
+        <translation>0,00 HMS</translation>
     </message>
     <message>
         <source>address</source>
@@ -511,8 +511,8 @@ za staking</translation>
         <translation>Odabir novčića</translation>
     </message>
     <message>
-        <source>Select PIV Outputs to Spend</source>
-        <translation>Odaberi PIV za potrošiti</translation>
+        <source>Select HMS Outputs to Spend</source>
+        <translation>Odaberi HMS za potrošiti</translation>
     </message>
     <message>
         <source>Dust:</source>
@@ -539,8 +539,8 @@ za staking</translation>
         <translation>Iznos</translation>
     </message>
     <message>
-        <source>0.00 PIV</source>
-        <translation>0.00 PIV</translation>
+        <source>0.00 HMS</source>
+        <translation>0.00 HMS</translation>
     </message>
     <message>
         <source>0</source>
@@ -742,7 +742,7 @@ za staking</translation>
         <translation>Greška pri učitavanju delegacija: %1</translation>
     </message>
     <message>
-        <source>You can delegate your PIVs, letting a hot node (24/7 online node)
+        <source>You can delegate your HMSs, letting a hot node (24/7 online node)
 stake on your behalf, while you keep the keys securely offline.</source>
         <translation>Možete delegirati vaše novčiće, dozvoljavajući drugom novčaniku (koji radi 24/7) staking u vaše ime, dok su vaši novčići spremljeni na sigurnom.</translation>
     </message>
@@ -751,8 +751,8 @@ stake on your behalf, while you keep the keys securely offline.</source>
         <translation>Unesi adresu vlasnika</translation>
     </message>
     <message>
-        <source>Accept PIV delegation / Delegate PIV</source>
-        <translation>Prihvati PIV delegaciju / Delegiraj PIV</translation>
+        <source>Accept HMS delegation / Delegate HMS</source>
+        <translation>Prihvati HMS delegaciju / Delegiraj HMS</translation>
     </message>
     <message>
         <source>Cold Staking address</source>
@@ -956,8 +956,8 @@ vlasnika</translation>
         <translation>Pogledajte vašu povijest računa</translation>
     </message>
     <message>
-        <source>How to get PIV</source>
-        <translation>Kako dobiti PIV</translation>
+        <source>How to get HMS</source>
+        <translation>Kako dobiti HMS</translation>
     </message>
     <message>
         <source>Sort by</source>
@@ -980,8 +980,8 @@ vlasnika</translation>
         <translation>Filtriraj prema</translation>
     </message>
     <message>
-        <source>Amount of PIV and zPIV staked.</source>
-        <translation>Iznos PIV i zPIV koji se stake-a.</translation>
+        <source>Amount of HMS and zHMS staked.</source>
+        <translation>Iznos HMS i zHMS koji se stake-a.</translation>
     </message>
     <message>
         <source>Please wait until the wallet is fully synced to see your correct balance</source>
@@ -1328,8 +1328,8 @@ Staking će se automatski pokrenuti čim novčanik dobije dovoljno potvrda o nep
         <translation>Stvori novi Masternode Controller</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To create a hemis Masternode you must dedicate 10,000 PIV (the unit of hemis) to the network (however, these coins are still yours and will never leave your possession). &lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;You can deactivate the node and unlock the coins at any time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Da biste stvoriti hemis Masternode, morate odvojiti 10,000 PIV (jedinica hemis-a) prema mreži (međjutim, ti novčići su i dalje vaši i nikad neće napustiti vaše vlasništvo). &lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt; Možete isključiti node i otključati novčiće u bilo kojem trenutku.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To create a hemis Masternode you must dedicate 10,000 HMS (the unit of hemis) to the network (however, these coins are still yours and will never leave your possession). &lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;You can deactivate the node and unlock the coins at any time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Da biste stvoriti hemis Masternode, morate odvojiti 10,000 HMS (jedinica hemis-a) prema mreži (međjutim, ti novčići su i dalje vaši i nikad neće napustiti vaše vlasništvo). &lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt; Možete isključiti node i otključati novčiće u bilo kojem trenutku.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Set Masternode Name</source>
@@ -1348,8 +1348,8 @@ Staking će se automatski pokrenuti čim novčanik dobije dovoljno potvrda o nep
         <translation>Obavezno imajte tu količinu novčića.</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 10,000 PIV will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Transakcija od 10,000 PIV će biti napravljena&lt;/p&gt;&lt;p&gt;u novu praznu adresu u Vašem novčaniku.&lt;/p&gt;&lt;p&gt;Adresa je označena pod imenom Masternode-a.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 10,000 HMS will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Transakcija od 10,000 HMS će biti napravljena&lt;/p&gt;&lt;p&gt;u novu praznu adresu u Vašem novčaniku.&lt;/p&gt;&lt;p&gt;Adresa je označena pod imenom Masternode-a.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Address of the node that must always be online running the actual master node.</source>
@@ -1865,36 +1865,36 @@ https://www.transifex.com/hemis-project/hemis-project-translations</translation>
         <translation>Mapiranje porta koristeći &amp;UPnP</translation>
     </message>
     <message>
-        <source>Enable automatic minting of PIV units to zPIV</source>
-        <translation>Omogući automatsko stvaranje PIV jedinica na zPIV</translation>
+        <source>Enable automatic minting of HMS units to zHMS</source>
+        <translation>Omogući automatsko stvaranje HMS jedinica na zHMS</translation>
     </message>
     <message>
-        <source>Enable zPIV Automint</source>
-        <translation>Omogući automatsko stvaranje zPIV-a</translation>
+        <source>Enable zHMS Automint</source>
+        <translation>Omogući automatsko stvaranje zHMS-a</translation>
     </message>
     <message>
-        <source>Enable automatic zPIV minting from specific addresses</source>
-        <translation>Omogući automatsko stvaranje zPIV-a s određjenih adresa</translation>
+        <source>Enable automatic zHMS minting from specific addresses</source>
+        <translation>Omogući automatsko stvaranje zHMS-a s određjenih adresa</translation>
     </message>
     <message>
         <source>Enable Automint Addresses</source>
         <translation>Omogući Automint adrese</translation>
     </message>
     <message>
-        <source>Percentage of incoming PIV which get automatically converted to zPIV via Zerocoin Protocol (min: 10%)</source>
-        <translation>Postotak dolaznih PIV koji se automatski pretvara u zPIV putem Zerocoin Protokola (min: 10%)</translation>
+        <source>Percentage of incoming HMS which get automatically converted to zHMS via Zerocoin Protocol (min: 10%)</source>
+        <translation>Postotak dolaznih HMS koji se automatski pretvara u zHMS putem Zerocoin Protokola (min: 10%)</translation>
     </message>
     <message>
-        <source>Percentage of autominted zPIV</source>
-        <translation>Postotak automatski stvorenog zPIV-a</translation>
+        <source>Percentage of autominted zHMS</source>
+        <translation>Postotak automatski stvorenog zHMS-a</translation>
     </message>
     <message>
-        <source>Wait with automatic conversion to Zerocoin until enough PIV for this denomination is available</source>
-        <translation>Pričekajte s automatskom pretvorbom u Zerocoin dok ne bude dostupno dovoljno PIV-a za ovu denominaciju</translation>
+        <source>Wait with automatic conversion to Zerocoin until enough HMS for this denomination is available</source>
+        <translation>Pričekajte s automatskom pretvorbom u Zerocoin dok ne bude dostupno dovoljno HMS-a za ovu denominaciju</translation>
     </message>
     <message>
-        <source>Preferred Automint zPIV Denomination</source>
-        <translation>Preferirana denominacija za automatsko stvaranje zPIV-a</translation>
+        <source>Preferred Automint zHMS Denomination</source>
+        <translation>Preferirana denominacija za automatsko stvaranje zHMS-a</translation>
     </message>
     <message>
         <source>Stake split threshold:</source>
@@ -2077,7 +2077,7 @@ https://www.transifex.com/hemis-project/hemis-project-translations</translation>
     </message>
     <message>
         <source>hemis Core client</source>
-        <translation>PIVIX Core Klijent</translation>
+        <translation>HMSIX Core Klijent</translation>
     </message>
     <message>
         <source>Error</source>
@@ -2708,8 +2708,8 @@ Adresa: %4
         <translation>Put prilagođenog sigurnosnog kopiranja:</translation>
     </message>
     <message>
-        <source>Custom zPIV Backup Path:</source>
-        <translation>Prilagođeni put zPIV sigurnosne kopije:</translation>
+        <source>Custom zHMS Backup Path:</source>
+        <translation>Prilagođeni put zHMS sigurnosne kopije:</translation>
     </message>
     <message>
         <source>Custom Backups Threshold:</source>
@@ -2926,8 +2926,8 @@ Adresa: %4
         <translation>Obrazac</translation>
     </message>
     <message>
-        <source>Scan the QR code or copy the address to receive PIV</source>
-        <translation>Skeniraj QR kod ili kopiraj adresu da bi primio PIV</translation>
+        <source>Scan the QR code or copy the address to receive HMS</source>
+        <translation>Skeniraj QR kod ili kopiraj adresu da bi primio HMS</translation>
     </message>
     <message>
         <source>Transparent</source>
@@ -2938,8 +2938,8 @@ Adresa: %4
         <translation>Zaštićeno</translation>
     </message>
     <message>
-        <source>Accept transparent or shielded PIV</source>
-        <translation>Prihvati transparentan ili zaštićeni PIV</translation>
+        <source>Accept transparent or shielded HMS</source>
+        <translation>Prihvati transparentan ili zaštićeni HMS</translation>
     </message>
     <message>
         <source>Add Label</source>
@@ -3070,8 +3070,8 @@ pokušajte otključati novčanik</translation>
         <translation>Iznos</translation>
     </message>
     <message>
-        <source>PIV</source>
-        <translation>PIV</translation>
+        <source>HMS</source>
+        <translation>HMS</translation>
     </message>
     <message>
         <source>Instead of sharing only a hemis address, you can create a payment request, bundling up more information</source>
@@ -3196,8 +3196,8 @@ pokušajte otključati novčanik</translation>
         <translation>Preporučeno</translation>
     </message>
     <message>
-        <source>PIV/kilobyte</source>
-        <translation>PIV/kilobajt</translation>
+        <source>HMS/kilobyte</source>
+        <translation>HMS/kilobajt</translation>
     </message>
     <message>
         <source>0.00 KB</source>
@@ -3480,12 +3480,12 @@ Uz naknadu %2
 </translation>
     </message>
     <message>
-        <source>Error generating address to shield PIVs</source>
-        <translation>Pogreška pri generiranju adrese za zaštićene PIV-ove</translation>
+        <source>Error generating address to shield HMSs</source>
+        <translation>Pogreška pri generiranju adrese za zaštićene HMS-ove</translation>
     </message>
     <message>
-        <source>You don't have any transparent PIVs to shield.</source>
-        <translation>Nemate nikakvih transparentnih PIV za zaštititi.</translation>
+        <source>You don't have any transparent HMSs to shield.</source>
+        <translation>Nemate nikakvih transparentnih HMS za zaštititi.</translation>
     </message>
     <message>
         <source>No contacts available, you can go to the contacts screen and add some there!</source>
@@ -3958,8 +3958,8 @@ Došlo je do greške prilikom spremanja popisa adresa u %1. Molimo pokušajte po
         <translation>1) Što je hemis?</translation>
     </message>
     <message>
-        <source>2) Why are my PIV unspendable?</source>
-        <translation>2) Zašto se moji PIV ne mogu potrošiti?</translation>
+        <source>2) Why are my HMS unspendable?</source>
+        <translation>2) Zašto se moji HMS ne mogu potrošiti?</translation>
     </message>
     <message>
         <source>https://hemis.org/</source>
@@ -3978,8 +3978,8 @@ Došlo je do greške prilikom spremanja popisa adresa u %1. Molimo pokušajte po
         <translation>2</translation>
     </message>
     <message>
-        <source>Why are my PIV unspendable?</source>
-        <translation>Zašto se moji PIV ne mogu potrošiti?</translation>
+        <source>Why are my HMS unspendable?</source>
+        <translation>Zašto se moji HMS ne mogu potrošiti?</translation>
     </message>
     <message>
         <source>
@@ -4006,8 +4006,8 @@ da biste vidjeli i mogli potrošiti sredstva na mreži.
         <translation>3</translation>
     </message>
     <message>
-        <source>How do I stake PIV?</source>
-        <translation>Kako stakeat PIV?</translation>
+        <source>How do I stake HMS?</source>
+        <translation>Kako stakeat HMS?</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;ol style="margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"&gt;&lt;li align="justify" style=" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;Make sure your wallet is completely synchronized and you are using the latest release. &lt;/li&gt;&lt;li align="justify" style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;You must have a balance of hemis with a minimum of 600 confirmations. &lt;/li&gt;&lt;li align="justify" style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;Your wallet must stay online and be unlocked for staking purposes. &lt;/li&gt;&lt;li align="justify" style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;Once all those steps are followed staking should be enabled. &lt;/li&gt;&lt;li align="justify" style=" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;You can see the status of staking in the wallet by mousing over the package icon in the row on the top left of the wallet interface. There package will be lit up and will state &amp;quot;Staking Enabled&amp;quot; to indicate it is staking. Using the command line interface (hemis-cli); the command &lt;span style=" font-style:italic;"&gt;getstakingstatus&lt;/span&gt; will confirm that staking is active. &lt;/li&gt;&lt;/ol&gt;&lt;/body&gt;&lt;/html&gt;</source>
@@ -4091,14 +4091,14 @@ na našoj Freshdesk stranici za podršku&lt;/a&gt;.
         <translation>Što je Masternode Controller?</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;A Masternode Controller wallet is where the 10,000 PIV collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet(s) and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;Masternode Controller novčanik je mjesto gdje zalog od 10,000 PIV može stajati tijekom Controller-Remote podešavanja masternode-a. To je novčanik koji može aktivirati Remote masternode novčanik(e) i omogućiti Vam držanje zaloga novčića offline dok Remote masternode novčanik ostaje online.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;A Masternode Controller wallet is where the 10,000 HMS collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet(s) and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;Masternode Controller novčanik je mjesto gdje zalog od 10,000 HMS može stajati tijekom Controller-Remote podešavanja masternode-a. To je novčanik koji može aktivirati Remote masternode novčanik(e) i omogućiti Vam držanje zaloga novčića offline dok Remote masternode novčanik ostaje online.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>
                            &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
                            A masternode is a computer running a full node hemis core wallet with a
-                           requirement of 10,000 PIV secured collateral to provide extra services
+                           requirement of 10,000 HMS secured collateral to provide extra services
                            to the network and in return, receive a portion of the block reward
                            regularly.  These services include:
                            &lt;/p&gt;&lt;p align="justify"&gt;
@@ -4130,7 +4130,7 @@ na našoj Freshdesk stranici za podršku&lt;/a&gt;.
                            Requirements:
                            &lt;/p&gt;&lt;p align="justify"&gt;
                            &lt;ul&gt;
-                           &lt;li&gt;10,000 PIV per single Masternode instance&lt;/li&gt;
+                           &lt;li&gt;10,000 HMS per single Masternode instance&lt;/li&gt;
                            &lt;li&gt;Must be stored in a core wallet&lt;/li&gt;
                            &lt;li&gt;Need dedicated IP address&lt;/li&gt;
                            &lt;li&gt;Masternode wallet to remain online&lt;/li&gt;
@@ -4140,7 +4140,7 @@ na našoj Freshdesk stranici za podršku&lt;/a&gt;.
         <translation>
 &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
 Masternode je računalo koje pokreće full node hemis Core novčanik sa
-zahtjevanih 10,000 PIV-a osiguranog zaloga da pruži dodatne usluge
+zahtjevanih 10,000 HMS-a osiguranog zaloga da pruži dodatne usluge
 mreži, i zauzvrat redovito primi dio nagrade blokova.
 Te usluge uključuju:
 &lt;/p&gt;&lt;p align="justify"&gt;
@@ -4172,7 +4172,7 @@ Povlastice masternode-ova:
 Zahtjevi:
 &lt;/p&gt;&lt;p align="justify"&gt;
 &lt;ul&gt;
-&lt;li&gt;10,000 PIV po svakom Masternode-u&lt;/li&gt;
+&lt;li&gt;10,000 HMS po svakom Masternode-u&lt;/li&gt;
 &lt;li&gt;Mora biti pohranjem u Core novčaniku&lt;/li&gt;
 &lt;li&gt;Mora biti jedinstvena IP adresa&lt;/li&gt;
 &lt;li&gt;Masternode novčanik treba ostati online&lt;/li&gt;
@@ -4189,8 +4189,8 @@ Zahtjevi:
         <translation>Zatvori FAQ</translation>
     </message>
     <message>
-        <source>3) How do I stake PIV?</source>
-        <translation>3) Kako stake-am PIV?</translation>
+        <source>3) How do I stake HMS?</source>
+        <translation>3) Kako stake-am HMS?</translation>
     </message>
     <message>
         <source>4) Where I should go if I need support?</source>
@@ -5572,12 +5572,12 @@ stvorit će se nova sigurnosna kopija.
         <translation>Obrazac</translation>
     </message>
     <message>
-        <source>+0.000585 PIV</source>
-        <translation>+0.000585 PIV</translation>
+        <source>+0.000585 HMS</source>
+        <translation>+0.000585 HMS</translation>
     </message>
     <message>
-        <source>-0.000585 PIV</source>
-        <translation>-0.000585 PIV</translation>
+        <source>-0.000585 HMS</source>
+        <translation>-0.000585 HMS</translation>
     </message>
 </context>
 <context>
@@ -6374,8 +6374,8 @@ Pokrenite 'sapling-fetch-params' ili '.util/fetch-params.sh' te ponovno pokrenit
         <translation>Naknade (u %s/Kb) manje od ovoga će se smatrati kao da nema naknade za stvaranje transakcije (default: %s)</translation>
     </message>
     <message>
-        <source>Minimum positive amount (in PIV) allowed by GUI and RPC for the stake split threshold (default: %s)</source>
-        <translation>Najmanji dozvoljeni iznos (u PIV) kroz GUI RPC za prag dijeljenja stake-a (default: %s)</translation>
+        <source>Minimum positive amount (in HMS) allowed by GUI and RPC for the stake split threshold (default: %s)</source>
+        <translation>Najmanji dozvoljeni iznos (u HMS) kroz GUI RPC za prag dijeljenja stake-a (default: %s)</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong hemis Core will not work properly.</source>

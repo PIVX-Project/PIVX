@@ -154,7 +154,7 @@ bool CheckProofOfStake(const CBlock& block, std::string& strError, const CBlockI
     }
 
     // zPoS disabled (ContextCheck) before blocks V7, and the tx input signature is in CoinSpend
-    if (stakeInput->IsZPIV()) return true;
+    if (stakeInput->IsZHMS()) return true;
 
     // Verify tx input signature
     CTxOut stakePrevout;

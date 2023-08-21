@@ -153,7 +153,7 @@ UniValue preparebudget(const JSONRPCRequest& request)
     CTransactionRef wtx;
     // make our change address
     CReserveKey keyChange(pwallet);
-    if (!pwallet->CreateBudgetFeeTX(wtx, nHash, keyChange, BUDGET_FEE_TX_OLD)) { // 50 PIV collateral for proposal
+    if (!pwallet->CreateBudgetFeeTX(wtx, nHash, keyChange, BUDGET_FEE_TX_OLD)) { // 50 HMS collateral for proposal
         throw std::runtime_error("Error making collateral transaction for proposal. Please check your wallet balance.");
     }
 
@@ -381,13 +381,13 @@ UniValue getbudgetprojection(const JSONRPCRequest& request)
             "    \"Yeas\": n,                    (numeric) Number of yea votes\n"
             "    \"Nays\": n,                    (numeric) Number of nay votes\n"
             "    \"Abstains\": n,                (numeric) Number of abstains\n"
-            "    \"TotalPayment\": xxx.xxx,      (numeric) Total payment amount in PIV\n"
-            "    \"MonthlyPayment\": xxx.xxx,    (numeric) Monthly payment amount in PIV\n"
+            "    \"TotalPayment\": xxx.xxx,      (numeric) Total payment amount in HMS\n"
+            "    \"MonthlyPayment\": xxx.xxx,    (numeric) Monthly payment amount in HMS\n"
             "    \"IsEstablished\": true|false,  (boolean) Proposal is considered established, 24 hrs after being submitted to network. (Testnet is 5 mins)\n"
             "    \"IsValid\": true|false,        (boolean) Valid (true) or Invalid (false)\n"
             "    \"IsInvalidReason\": \"xxxx\",  (string) Error message, if any\n"
-            "    \"Allotted\": xxx.xxx,           (numeric) Amount of PIV allotted in current period\n"
-            "    \"TotalBudgetAllotted\": xxx.xxx (numeric) Total PIV allotted\n"
+            "    \"Allotted\": xxx.xxx,           (numeric) Amount of HMS allotted in current period\n"
+            "    \"TotalBudgetAllotted\": xxx.xxx (numeric) Total HMS allotted\n"
             "  }\n"
             "  ,...\n"
             "]\n"
@@ -437,8 +437,8 @@ UniValue getbudgetinfo(const JSONRPCRequest& request)
             "    \"Yeas\": n,                    (numeric) Number of yea votes\n"
             "    \"Nays\": n,                    (numeric) Number of nay votes\n"
             "    \"Abstains\": n,                (numeric) Number of abstains\n"
-            "    \"TotalPayment\": xxx.xxx,      (numeric) Total payment amount in PIV\n"
-            "    \"MonthlyPayment\": xxx.xxx,    (numeric) Monthly payment amount in PIV\n"
+            "    \"TotalPayment\": xxx.xxx,      (numeric) Total payment amount in HMS\n"
+            "    \"MonthlyPayment\": xxx.xxx,    (numeric) Monthly payment amount in HMS\n"
             "    \"IsEstablished\": true|false,  (boolean) Proposal is considered established, 24 hrs after being submitted to network. (5 mins for Testnet)\n"
             "    \"IsValid\": true|false,        (boolean) Valid (true) or Invalid (false)\n"
             "    \"IsInvalidReason\": \"xxxx\",      (string) Error message, if any\n"

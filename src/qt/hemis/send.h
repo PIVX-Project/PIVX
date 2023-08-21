@@ -70,7 +70,7 @@ protected:
     void onError(QString error, int type) override;
 
 private Q_SLOTS:
-    void onPIVSelected(bool _isTransparent);
+    void onHMSSelected(bool _isTransparent);
     void onSendClicked();
     void onContactsClicked(SendMultiRow* entry);
     void onMenuClicked(SendMultiRow* entry);

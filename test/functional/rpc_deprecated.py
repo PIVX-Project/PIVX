@@ -4,11 +4,11 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test deprecation of RPC calls."""
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 # from test_framework.util import assert_raises_rpc_error
 
 
-class DeprecatedRpcTest(PivxTestFramework):
+class DeprecatedRpcTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
         self.setup_clean_chain = True

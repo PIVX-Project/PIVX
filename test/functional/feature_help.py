@@ -6,11 +6,11 @@
 
 import subprocess
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal
 
 
-class HelpTest(PivxTestFramework):
+class HelpTest(HemisTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1

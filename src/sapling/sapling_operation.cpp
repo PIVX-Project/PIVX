@@ -448,7 +448,7 @@ OperationResult SaplingOperation::loadUnspentNotes(TxValues& txValues, uint256& 
             sspkm->GetFilteredNotes(_shieldedInputs, fromAddress.fromSapAddr, 0);
             return errorOut(_shieldedInputs.empty() ?
                     "Insufficient funds, no available notes to spend" :
-                    "Insufficient funds, shielded PIV need at least 5 confirmations");
+                    "Insufficient funds, shielded HMS need at least 5 confirmations");
         }
     }
 

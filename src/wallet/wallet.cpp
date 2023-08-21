@@ -2433,7 +2433,7 @@ bool CWallet::GetMasternodeVinAndKeys(CPubKey& pubKeyRet,
     // Masternode collateral value
     const auto& consensus = Params().GetConsensus();
     if (txOut.nValue != consensus.nMNCollateralAmt) {
-        strError = strprintf("Invalid collateral tx value, must be %s PIV", FormatMoney(Params().GetConsensus().nMNCollateralAmt));
+        strError = strprintf("Invalid collateral tx value, must be %s HMS", FormatMoney(Params().GetConsensus().nMNCollateralAmt));
         return error("%s: tx %s, index %d not a masternode collateral", __func__, collateralOut.hash.GetHex(), collateralOut.n);
     }
 
@@ -4534,7 +4534,7 @@ void CWallet::SetNull()
     // Stake split threshold
     nStakeSplitThreshold = DEFAULT_STAKE_SPLIT_THRESHOLD;
 
-    // User-defined fee PIV/kb
+    // User-defined fee HMS/kb
     fUseCustomFee = false;
     nCustomFee = CWallet::minTxFee.GetFeePerK();
 

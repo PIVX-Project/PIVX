@@ -9,7 +9,7 @@ import random
 
 from test_framework.messages import CTransaction, CTxIn, CTxOut, COutPoint, ToHex, COIN
 from test_framework.script import CScript, OP_1, OP_DROP, OP_2, OP_HASH160, OP_EQUAL, hash160, OP_TRUE
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import connect_nodes, satoshi_round
 
 
@@ -161,7 +161,7 @@ def check_estimates(node, fees_seen, max_invalid, print_estimates = True):
     return all_estimates
 
 
-class EstimateFeeTest(PivxTestFramework):
+class EstimateFeeTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 3
 

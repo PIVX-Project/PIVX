@@ -7,7 +7,7 @@ from decimal import Decimal
 import os
 import time
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes,
@@ -17,7 +17,7 @@ from test_framework.util import (
 )
 
 
-class GovernanceReorgTest(PivxTestFramework):
+class GovernanceReorgTest(HemisTestFramework):
 
     def set_test_params(self):
         self.setup_clean_chain = True

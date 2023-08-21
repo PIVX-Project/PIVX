@@ -236,7 +236,7 @@
     </message>
     <message>
         <source>Invalid Contact Address</source>
-        <translation>Adresse Pivx incorrecte</translation>
+        <translation>Adresse Hemis incorrecte</translation>
     </message>
     <message>
         <source>Cannot store your own address as contact</source>
@@ -364,8 +364,8 @@ pour le staking</translation>
         <translation>ANNULER</translation>
     </message>
     <message>
-        <source>hemis will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your PIVs from being stolen by malware infecting your computer.</source>
-        <translation>hemis va maintenant se fermer pour finir le processus de cryptage. Notez que le cryptage de votre portefeuille ne peut pas complètement protéger vos PIVs d'un vol par un malware ayant infecté votre ordinateur. </translation>
+        <source>hemis will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your HMSs from being stolen by malware infecting your computer.</source>
+        <translation>hemis va maintenant se fermer pour finir le processus de cryptage. Notez que le cryptage de votre portefeuille ne peut pas complètement protéger vos HMSs d'un vol par un malware ayant infecté votre ordinateur. </translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
@@ -457,8 +457,8 @@ pour le staking</translation>
         <translation>Épargne</translation>
     </message>
     <message>
-        <source>0,00 PIV</source>
-        <translation>0,00 PIV</translation>
+        <source>0,00 HMS</source>
+        <translation>0,00 HMS</translation>
     </message>
     <message>
         <source>address</source>
@@ -499,8 +499,8 @@ pour le staking</translation>
         <translation>Sélection des pièces</translation>
     </message>
     <message>
-        <source>Select PIV Outputs to Spend</source>
-        <translation>Choisir les sorties PIV à dépenser</translation>
+        <source>Select HMS Outputs to Spend</source>
+        <translation>Choisir les sorties HMS à dépenser</translation>
     </message>
     <message>
         <source>Dust:</source>
@@ -527,8 +527,8 @@ pour le staking</translation>
         <translation>Montant</translation>
     </message>
     <message>
-        <source>0.00 PIV</source>
-        <translation>0.00 PIV</translation>
+        <source>0.00 HMS</source>
+        <translation>0.00 HMS</translation>
     </message>
     <message>
         <source>0</source>
@@ -726,17 +726,17 @@ pour le staking</translation>
         <translation>Erreur lors du chargement des délégations: %1</translation>
     </message>
     <message>
-        <source>You can delegate your PIVs, letting a hot node (24/7 online node)
+        <source>You can delegate your HMSs, letting a hot node (24/7 online node)
 stake on your behalf, while you keep the keys securely offline.</source>
-        <translation>Vous pouvez déléguer vos PIVs et laissez un noeud à chaud (en ligne 24/7) faire du staking en votre nom, tout en conservant les clés privées hors ligne.</translation>
+        <translation>Vous pouvez déléguer vos HMSs et laissez un noeud à chaud (en ligne 24/7) faire du staking en votre nom, tout en conservant les clés privées hors ligne.</translation>
     </message>
     <message>
         <source>Enter owner address</source>
         <translation>Entrer l'adresse propriétaire</translation>
     </message>
     <message>
-        <source>Accept PIV delegation / Delegate PIV</source>
-        <translation>Accepter la délégation de PIV / Déléguer des PIV</translation>
+        <source>Accept HMS delegation / Delegate HMS</source>
+        <translation>Accepter la délégation de HMS / Déléguer des HMS</translation>
     </message>
     <message>
         <source>Cold Staking address</source>
@@ -941,8 +941,8 @@ propriétaire</translation>
         <translation>Voir l'historique de votre compte</translation>
     </message>
     <message>
-        <source>How to get PIV</source>
-        <translation>Comment obtenir des PIV</translation>
+        <source>How to get HMS</source>
+        <translation>Comment obtenir des HMS</translation>
     </message>
     <message>
         <source>Sort by</source>
@@ -965,8 +965,8 @@ propriétaire</translation>
         <translation>Filtrer par</translation>
     </message>
     <message>
-        <source>Amount of PIV and zPIV staked.</source>
-        <translation>Le montant de PIV et de zPIV en staking</translation>
+        <source>Amount of HMS and zHMS staked.</source>
+        <translation>Le montant de HMS et de zHMS en staking</translation>
     </message>
     <message>
         <source>Please wait until the wallet is fully synced to see your correct balance</source>
@@ -1313,8 +1313,8 @@ Il commencera automatiquement dès que le portefeuille aura assez de confirmatio
         <translation>Créer un nouveau contrôleur de Masternode</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To create a hemis Masternode you must dedicate 10,000 PIV (the unit of hemis) to the network (however, these coins are still yours and will never leave your possession). &lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;You can deactivate the node and unlock the coins at any time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pour créer un Masternode hemis vous devez dédier 10.000 PIV (l'unité de hemis) au réseau (notez que ces monnaies restent les votres et ne quitteront jamais votre portefeuille)&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt; Vous pouvez désactiver votre noeud et libérer vos monnaies en tous temps. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;To create a hemis Masternode you must dedicate 10,000 HMS (the unit of hemis) to the network (however, these coins are still yours and will never leave your possession). &lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;You can deactivate the node and unlock the coins at any time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pour créer un Masternode hemis vous devez dédier 10.000 HMS (l'unité de hemis) au réseau (notez que ces monnaies restent les votres et ne quitteront jamais votre portefeuille)&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt; Vous pouvez désactiver votre noeud et libérer vos monnaies en tous temps. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Set Masternode Name</source>
@@ -1333,8 +1333,8 @@ Il commencera automatiquement dès que le portefeuille aura assez de confirmatio
         <translation>Assurez-vous d'avoir ce montant de pièces.</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 10,000 PIV will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Une transaction de 10 000 PIV sera effectuée &lt;/p&gt;&lt;p&gt; vers une nouvelle adresse de votre partefeuille.&lt;/p&gt;&lt;p&gt; L'adresse est étiquettée avec le nom de masternode. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A transaction of 10,000 HMS will be made&lt;/p&gt;&lt;p&gt;to a new empty address in your wallet.&lt;/p&gt;&lt;p&gt;The Address is labeled under the master node's name.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Une transaction de 10 000 HMS sera effectuée &lt;/p&gt;&lt;p&gt; vers une nouvelle adresse de votre partefeuille.&lt;/p&gt;&lt;p&gt; L'adresse est étiquettée avec le nom de masternode. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Address of the node that must always be online running the actual master node.</source>
@@ -1847,36 +1847,36 @@ https://www.transifex.com/hemis-project/hemis-project-translations</translation>
         <translation>Répertorier les port utilisant UPnP</translation>
     </message>
     <message>
-        <source>Enable automatic minting of PIV units to zPIV</source>
-        <translation>Activé l'auto-monnayage de PIV unités en zPIV</translation>
+        <source>Enable automatic minting of HMS units to zHMS</source>
+        <translation>Activé l'auto-monnayage de HMS unités en zHMS</translation>
     </message>
     <message>
-        <source>Enable zPIV Automint</source>
-        <translation>Activer l'Auto-monnayage zPIV </translation>
+        <source>Enable zHMS Automint</source>
+        <translation>Activer l'Auto-monnayage zHMS </translation>
     </message>
     <message>
-        <source>Enable automatic zPIV minting from specific addresses</source>
-        <translation>Activer la frappe zPIV automatique à partir d'adresses spécifiques</translation>
+        <source>Enable automatic zHMS minting from specific addresses</source>
+        <translation>Activer la frappe zHMS automatique à partir d'adresses spécifiques</translation>
     </message>
     <message>
         <source>Enable Automint Addresses</source>
         <translation>Activer les Adresses Automint</translation>
     </message>
     <message>
-        <source>Percentage of incoming PIV which get automatically converted to zPIV via Zerocoin Protocol (min: 10%)</source>
-        <translation>Pourcentage des PIV entrants qui seront automatiquement convertis en zPIV via le protocole Zerocoin (min. 10%)</translation>
+        <source>Percentage of incoming HMS which get automatically converted to zHMS via Zerocoin Protocol (min: 10%)</source>
+        <translation>Pourcentage des HMS entrants qui seront automatiquement convertis en zHMS via le protocole Zerocoin (min. 10%)</translation>
     </message>
     <message>
-        <source>Percentage of autominted zPIV</source>
-        <translation>Pourcentage de zPIV auto-monnayé</translation>
+        <source>Percentage of autominted zHMS</source>
+        <translation>Pourcentage de zHMS auto-monnayé</translation>
     </message>
     <message>
-        <source>Wait with automatic conversion to Zerocoin until enough PIV for this denomination is available</source>
-        <translation>Met en attente la conversion automatique Zerocoin jusqu'à ce qu'il y ai suffisament de PIV disponibles pour la dénomination demandée</translation>
+        <source>Wait with automatic conversion to Zerocoin until enough HMS for this denomination is available</source>
+        <translation>Met en attente la conversion automatique Zerocoin jusqu'à ce qu'il y ai suffisament de HMS disponibles pour la dénomination demandée</translation>
     </message>
     <message>
-        <source>Preferred Automint zPIV Denomination</source>
-        <translation>Dénomination préférée pour l'auto-monnayage zPIV</translation>
+        <source>Preferred Automint zHMS Denomination</source>
+        <translation>Dénomination préférée pour l'auto-monnayage zHMS</translation>
     </message>
     <message>
         <source>Stake split threshold:</source>
@@ -2666,8 +2666,8 @@ Adresse : %4
         <translation>Chemin du répertoire de sauvegarde personnalisé:</translation>
     </message>
     <message>
-        <source>Custom zPIV Backup Path:</source>
-        <translation>Chemin du répertoire de sauvegarde zPIV personnalisé:</translation>
+        <source>Custom zHMS Backup Path:</source>
+        <translation>Chemin du répertoire de sauvegarde zHMS personnalisé:</translation>
     </message>
     <message>
         <source>Custom Backups Threshold:</source>
@@ -2884,8 +2884,8 @@ Adresse : %4
         <translation>Formulaire</translation>
     </message>
     <message>
-        <source>Scan the QR code or copy the address to receive PIV</source>
-        <translation>Balayez le QR code ou copiez l'adresse pour recevoir les PIV</translation>
+        <source>Scan the QR code or copy the address to receive HMS</source>
+        <translation>Balayez le QR code ou copiez l'adresse pour recevoir les HMS</translation>
     </message>
     <message>
         <source>Add Label</source>
@@ -3010,8 +3010,8 @@ Adresse : %4
         <translation>Montant</translation>
     </message>
     <message>
-        <source>PIV</source>
-        <translation>PIV</translation>
+        <source>HMS</source>
+        <translation>HMS</translation>
     </message>
     <message>
         <source>Instead of sharing only a hemis address, you can create a payment request, bundling up more information</source>
@@ -3136,8 +3136,8 @@ Adresse : %4
         <translation>Recommandé </translation>
     </message>
     <message>
-        <source>PIV/kilobyte</source>
-        <translation>PIV/kilo-octet</translation>
+        <source>HMS/kilobyte</source>
+        <translation>HMS/kilo-octet</translation>
     </message>
     <message>
         <source>0.00 KB</source>
@@ -3795,8 +3795,8 @@ Il y a eu une erreur de sauvegarde de la liste d'adresses vers %1. SVP rééssay
         <translation>1) Qu'est ce que hemis?</translation>
     </message>
     <message>
-        <source>2) Why are my PIV unspendable?</source>
-        <translation>2) Pourquoi mes PIV ne peuvent pas être dépensés?</translation>
+        <source>2) Why are my HMS unspendable?</source>
+        <translation>2) Pourquoi mes HMS ne peuvent pas être dépensés?</translation>
     </message>
     <message>
         <source>https://hemis.org/</source>
@@ -3815,8 +3815,8 @@ Il y a eu une erreur de sauvegarde de la liste d'adresses vers %1. SVP rééssay
         <translation>2</translation>
     </message>
     <message>
-        <source>Why are my PIV unspendable?</source>
-        <translation>Pourquoi mes PIV ne peuvent pas être dépensés?</translation>
+        <source>Why are my HMS unspendable?</source>
+        <translation>Pourquoi mes HMS ne peuvent pas être dépensés?</translation>
     </message>
     <message>
         <source>
@@ -3843,8 +3843,8 @@ pour voir votre solde de monnaie dépensable sur le réseau.
         <translation>3</translation>
     </message>
     <message>
-        <source>How do I stake PIV?</source>
-        <translation>Comment staker des PIV?</translation>
+        <source>How do I stake HMS?</source>
+        <translation>Comment staker des HMS?</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;ol style="margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"&gt;&lt;li align="justify" style=" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;Make sure your wallet is completely synchronized and you are using the latest release. &lt;/li&gt;&lt;li align="justify" style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;You must have a balance of hemis with a minimum of 600 confirmations. &lt;/li&gt;&lt;li align="justify" style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;Your wallet must stay online and be unlocked for staking purposes. &lt;/li&gt;&lt;li align="justify" style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;Once all those steps are followed staking should be enabled. &lt;/li&gt;&lt;li align="justify" style=" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;You can see the status of staking in the wallet by mousing over the package icon in the row on the top left of the wallet interface. There package will be lit up and will state &amp;quot;Staking Enabled&amp;quot; to indicate it is staking. Using the command line interface (hemis-cli); the command &lt;span style=" font-style:italic;"&gt;getstakingstatus&lt;/span&gt; will confirm that staking is active. &lt;/li&gt;&lt;/ol&gt;&lt;/body&gt;&lt;/html&gt;</source>
@@ -3897,14 +3897,14 @@ pour voir votre solde de monnaie dépensable sur le réseau.
         <translation>10) Qu'est ce qu'un contrôleur de Masternode?</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;A Masternode Controller wallet is where the 10,000 PIV collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet(s) and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt; Un contrôleur de masternode est un portefeuille dans lequel le dépôt de garantie de 10 000 PIV réside pendant la configuration d'un masternode contrôleur-distant. C'est un portefeuille qui peut activer le portefeuille masternode distant et vous permet de conserver le dépôt de garantie hors ligne tandis que le masternode restera en ligne.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;A Masternode Controller wallet is where the 10,000 HMS collateral can reside during a Controller-Remote masternode setup. It is a wallet that can activate the remote masternode wallet(s) and allows you to keep your collateral coins offline while the remote masternode remains online. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt; Un contrôleur de masternode est un portefeuille dans lequel le dépôt de garantie de 10 000 HMS réside pendant la configuration d'un masternode contrôleur-distant. C'est un portefeuille qui peut activer le portefeuille masternode distant et vous permet de conserver le dépôt de garantie hors ligne tandis que le masternode restera en ligne.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>
                            &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
                            A masternode is a computer running a full node hemis core wallet with a
-                           requirement of 10,000 PIV secured collateral to provide extra services
+                           requirement of 10,000 HMS secured collateral to provide extra services
                            to the network and in return, receive a portion of the block reward
                            regularly.  These services include:
                            &lt;/p&gt;&lt;p align="justify"&gt;
@@ -3936,7 +3936,7 @@ pour voir votre solde de monnaie dépensable sur le réseau.
                            Requirements:
                            &lt;/p&gt;&lt;p align="justify"&gt;
                            &lt;ul&gt;
-                           &lt;li&gt;10,000 PIV per single Masternode instance&lt;/li&gt;
+                           &lt;li&gt;10,000 HMS per single Masternode instance&lt;/li&gt;
                            &lt;li&gt;Must be stored in a core wallet&lt;/li&gt;
                            &lt;li&gt;Need dedicated IP address&lt;/li&gt;
                            &lt;li&gt;Masternode wallet to remain online&lt;/li&gt;
@@ -3946,7 +3946,7 @@ pour voir votre solde de monnaie dépensable sur le réseau.
         <translation>
 &lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align="justify"&gt;
 Un masternode est un ordinateur qui exécute un noeud complet du portefeuille hemis core avec une
-exigence de 10 000 PIV déposé en garantie pour fournir au réseau des services aditionnels et recevoir, en retour et régulièrement, une partie des récompense de blocs.
+exigence de 10 000 HMS déposé en garantie pour fournir au réseau des services aditionnels et recevoir, en retour et régulièrement, une partie des récompense de blocs.
 Ces services comprennent:
 &lt;/p&gt;&lt;p align="justify"&gt;
 &lt;ul&gt;
@@ -3972,7 +3972,7 @@ Avantages du Masternode:
 Exigences:
 &lt;/p&gt;&lt;p align="justify"&gt;
 &lt;ul&gt;
-&lt;li&gt;10 000 PIV pour chaque instance de masternode&lt;/li&gt;
+&lt;li&gt;10 000 HMS pour chaque instance de masternode&lt;/li&gt;
 &lt;li&gt;Montant conservé dans un portefeuille core&lt;/li&gt;
 &lt;li&gt;Nécessite une IP fixe dédiée&lt;/li&gt;
 &lt;li&gt;Le portefeuille masternode doit rester en ligne&lt;/li&gt;
@@ -3985,8 +3985,8 @@ Exigences:
         <translation>Foire Aux Questions</translation>
     </message>
     <message>
-        <source>3) How do I stake PIV?</source>
-        <translation>3) Comment staker des PIV?</translation>
+        <source>3) How do I stake HMS?</source>
+        <translation>3) Comment staker des HMS?</translation>
     </message>
     <message>
         <source>4) Where I should go if I need support?</source>
@@ -5273,8 +5273,8 @@ sauvegarde sera créée.
         <translation>Formulaire</translation>
     </message>
     <message>
-        <source>+0.000585 PIV</source>
-        <translation>+0.000585 PIV</translation>
+        <source>+0.000585 HMS</source>
+        <translation>+0.000585 HMS</translation>
     </message>
     </context>
 <context>
@@ -5772,7 +5772,7 @@ Portefeuille hemis Core</translation>
     </message>
     <message>
         <source>Specify custom backup path to add a copy of any wallet backup. If set as dir, every backup generates a timestamped file. If set as file, will rewrite to that file every backup.</source>
-        <translation>Spécifier un chemin de sauvegarde personnalisé pour y ajouter les sauvegardes automatiques zPIV. S'il est paramétré comme un dossier, chaque sauvegarde génère un fichier horodaté. S'il est paramétré comme fichier, chaque sauvegarde écrasera la précédente.</translation>
+        <translation>Spécifier un chemin de sauvegarde personnalisé pour y ajouter les sauvegardes automatiques zHMS. S'il est paramétré comme un dossier, chaque sauvegarde génère un fichier horodaté. S'il est paramétré comme fichier, chaque sauvegarde écrasera la précédente.</translation>
     </message>
     <message>
         <source>&lt;category&gt; can be:</source>
@@ -5983,8 +5983,8 @@ Portefeuille hemis Core</translation>
         <translation>Les frais (en %s/Kb) inférieurs à cette valeur sont considérés comme des frais nuls pour la création de transaction (par défaut: %s)</translation>
     </message>
     <message>
-        <source>Minimum positive amount (in PIV) allowed by GUI and RPC for the stake split threshold (default: %s)</source>
-        <translation>Montant minimum positif (en PIV) autorisé par l'interface graphique et le RPC pour la division des mises du stake (par défaut: %s)</translation>
+        <source>Minimum positive amount (in HMS) allowed by GUI and RPC for the stake split threshold (default: %s)</source>
+        <translation>Montant minimum positif (en HMS) autorisé par l'interface graphique et le RPC pour la division des mises du stake (par défaut: %s)</translation>
     </message>
     <message>
         <source>Please check that your computer's date and time are correct! If your clock is wrong hemis Core will not work properly.</source>

@@ -14,7 +14,7 @@ from test_framework.messages import (
     NODE_NETWORK
 )
 from test_framework.mininode import P2PInterface
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal
 
 ADDRS = []
@@ -44,7 +44,7 @@ class AddrReceiver(P2PInterface):
         self.wait_until(lambda: "addrv2" in self.last_message)
 
 
-class AddrTest(PivxTestFramework):
+class AddrTest(HemisTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1

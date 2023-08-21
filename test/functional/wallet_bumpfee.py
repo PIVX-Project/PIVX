@@ -20,7 +20,7 @@ import io
 from test_framework import blocktools
 from test_framework.blocktools import send_to_witness
 from test_framework.messages import CTransaction
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than,
@@ -37,7 +37,7 @@ WALLET_PASSPHRASE = "test"
 WALLET_PASSPHRASE_TIMEOUT = 3600
 
 
-class BumpFeeTest(PivxTestFramework):
+class BumpFeeTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
         self.setup_clean_chain = True

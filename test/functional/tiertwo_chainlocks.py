@@ -4,7 +4,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-from test_framework.test_framework import PivxDMNTestFramework
+from test_framework.test_framework import HemisDMNTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes,
@@ -16,7 +16,7 @@ Check quorum based Chainlocks
 '''
 
 
-class ChainLocksTest(PivxDMNTestFramework):
+class ChainLocksTest(HemisDMNTestFramework):
 
     def set_test_params(self):
         self.set_base_test_params()

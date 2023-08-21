@@ -50,7 +50,7 @@ public:
         HideCharts,          // bool
         HideZeroBalances,    // bool
         HideOrphans,    // bool
-        AnonymizePivxAmount, //int
+        AnonymizeHemisAmount, //int
         ShowMasternodesTab,  // bool
         Listen,              // bool
         ShowColdStakingScreen,  // bool

@@ -9,9 +9,9 @@ multiple functional tests. This helper script is executed by test_runner when mu
 tests are being run in parallel.
 """
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 
-class CreateCache(PivxTestFramework):
+class CreateCache(HemisTestFramework):
     # Test network and test nodes are not required:
     def setup_chain(self):
         self.log.info("Initializing test directory " + self.options.tmpdir)

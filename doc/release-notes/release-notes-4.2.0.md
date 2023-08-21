@@ -33,7 +33,7 @@ Notable Changes
 
 ### Removed zerocoin GUI
 
-Spending zPIV and getting zPIV balance information is no longer available in the graphical interface ([#1549](https://github.com/hemis-Project/hemis/pull/1549)). The feature remains accessible through the RPC interface: `getzerocoinbalance`, `listmintedzerocoins`, `listzerocoinamounts`, `spendzerocoin`, `spendzerocoinmints`.
+Spending zHMS and getting zHMS balance information is no longer available in the graphical interface ([#1549](https://github.com/hemis-Project/hemis/pull/1549)). The feature remains accessible through the RPC interface: `getzerocoinbalance`, `listmintedzerocoins`, `listzerocoinamounts`, `spendzerocoin`, `spendzerocoinmints`.
 
 
 ### Memory pool limiting
@@ -111,7 +111,7 @@ Functional Changes
 
 ### Stake-Split threshold
 
-If the stake split is active (threshold > 0), then stake split threshold value must be greater than a minimum, set by default at 100 PIV. The minimum value can be changed using the `-minstakesplit` startup flag ([#1586](https://github.com/hemis-Project/hemis/pull/1586)). A value `0` is still allowed, regardless of the minimum set, and, as before, can be used to disable the stake splitting functionality.
+If the stake split is active (threshold > 0), then stake split threshold value must be greater than a minimum, set by default at 100 HMS. The minimum value can be changed using the `-minstakesplit` startup flag ([#1586](https://github.com/hemis-Project/hemis/pull/1586)). A value `0` is still allowed, regardless of the minimum set, and, as before, can be used to disable the stake splitting functionality.
 
 ### Changed command-line options
 
@@ -207,8 +207,8 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #1059 `39a0fa6e04` [UI] Improve staking chart workflow (Akshay)
  - #1287 `e7dd0947c0` [GUI] Load persisted transaction filter during start (Mrs-X)
  - #1516 `93df7ce6ec` [GUI] MacOS fix open files with no default app. (furszy)
- - #1548 `176d3ae558` [Cleanup][GUI] Remove zPIV faqs (random-zebra)
- - #1549 `47bf23aa14` [Cleanup][GUI] Nuke zPIV from the GUI (random-zebra)
+ - #1548 `176d3ae558` [Cleanup][GUI] Remove zHMS faqs (random-zebra)
+ - #1549 `47bf23aa14` [Cleanup][GUI] Nuke zHMS from the GUI (random-zebra)
  - #1598 `f66f72656d` [GUI] Split "Delegators" address type in the table model (furszy)
  - #1601 `78a2923184` [GUI] Tor state missing translation (furszy)
  - #1604 `8ec6bbe737` [Refactor][GUI] Set static texts in .ui files + add missing tr() (random-zebra)
@@ -242,7 +242,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 
 ### RPC/REST
  - #1640 `0b84a5025d` [P2P][RPC] Rework addnode behaviour (Pieter Wuille)
- - #1660 `10876c6c80` [RPC] Change btc to PIV in help text (PeterL73)
+ - #1660 `10876c6c80` [RPC] Change btc to HMS in help text (PeterL73)
  - #1663 `0724bbbad2` [Wallet][RPC] FundTransaction - fundrawtransaction (random-zebra)
  - #1702 `7a849ca06a` [RPC] Table registration update and wallet table decoupled. (furszy)
  - #1731 `fe845a83d2` [RPC][Wallet] Deprecate internal account system (Fuzzbawls)

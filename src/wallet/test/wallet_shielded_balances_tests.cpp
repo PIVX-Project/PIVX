@@ -320,7 +320,7 @@ BOOST_AUTO_TEST_CASE(GetShieldedAvailableCredit)
     LOCK2(cs_main, wallet.cs_wallet);
     setupWallet(wallet);
 
-    // 1) generate a shielded address and send 20 PIV in two shielded outputs
+    // 1) generate a shielded address and send 20 HMS in two shielded outputs
     libzcash::SaplingPaymentAddress pa = wallet.GenerateNewSaplingZKey();
     CAmount credit = COIN * 20;
 

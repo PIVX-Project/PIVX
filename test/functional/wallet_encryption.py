@@ -6,7 +6,7 @@
 
 import time
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
@@ -15,7 +15,7 @@ from test_framework.util import (
 )
 
 
-class WalletEncryptionTest(PivxTestFramework):
+class WalletEncryptionTest(HemisTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1

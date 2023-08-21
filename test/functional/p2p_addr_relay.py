@@ -15,7 +15,7 @@ from test_framework.mininode import (
     P2PInterface,
     mininode_lock
 )
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal
 
 import random
@@ -54,7 +54,7 @@ class AddrReceiver(P2PInterface):
             self._tokens += n
 
 
-class AddrTest(PivxTestFramework):
+class AddrTest(HemisTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = False
         self.num_nodes = 1

@@ -57,11 +57,11 @@ import time
 from test_framework.blocktools import create_block, create_coinbase, create_transaction
 from test_framework.messages import CBlockHeader, CInv, msg_block, msg_headers, msg_inv
 from test_framework.mininode import mininode_lock, P2PInterface
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal, assert_raises_rpc_error, connect_nodes
 
 
-class AcceptBlockTest(PivxTestFramework):
+class AcceptBlockTest(HemisTestFramework):
     def add_options(self, parser):
         parser.add_option("--testbinary", dest="testbinary",
                           default=os.getenv("BITCOIND", "hemisd"),

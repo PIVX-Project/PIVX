@@ -142,7 +142,7 @@ public:
 };
 std::unique_ptr<CoinSpendCache> g_coinspends_cache = std::make_unique<CoinSpendCache>();
 
-namespace ZPIVModule {
+namespace ZHMSModule {
 
     // Return stream of CoinSpend from tx input scriptsig
     CDataStream ScriptSigToSerializedSpend(const CScript& scriptSig)
@@ -216,7 +216,7 @@ namespace ZPIVModule {
             return state.DoS(100, error("%s: public zerocoin spend prev output not found, prevTx %s, index %d",
                                         __func__, txIn.prevout.hash.GetHex(), txIn.prevout.n));
         }
-        if (!ZPIVModule::parseCoinSpend(txIn, tx, prevOut, publicSpend)) {
+        if (!ZHMSModule::parseCoinSpend(txIn, tx, prevOut, publicSpend)) {
             return state.Invalid(error("%s: invalid public coin spend parse %s\n", __func__,
                                        tx.GetHash().GetHex()), REJECT_INVALID, "bad-txns-invalid-zpiv");
         }

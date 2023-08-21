@@ -6,7 +6,7 @@
 
 from decimal import Decimal
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than,
@@ -15,7 +15,7 @@ from test_framework.util import (
     gen_return_txouts
 )
 
-class MempoolLimitTest(PivxTestFramework):
+class MempoolLimitTest(HemisTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 1

@@ -158,7 +158,7 @@ private:
     void operator=(const CZerocoinDB&);
 
 public:
-    /** Write zPIV spends to the zerocoinDB in a batch
+    /** Write zHMS spends to the zerocoinDB in a batch
      * Pair of: CBigNum -> coinSerialNumber and uint256 -> txHash.
      */
     bool WriteCoinSpendBatch(const std::vector<std::pair<CBigNum, uint256> >& spendInfo);

@@ -10,10 +10,10 @@
 - verify that getchaintips now returns two chain tips.
 """
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal
 
-class GetChainTipsTest (PivxTestFramework):
+class GetChainTipsTest (HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 4
 

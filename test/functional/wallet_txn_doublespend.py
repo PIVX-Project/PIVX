@@ -6,10 +6,10 @@
 
 from decimal import Decimal
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal, connect_nodes, disconnect_nodes, find_output
 
-class TxnMallTest(PivxTestFramework):
+class TxnMallTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 4
 
@@ -24,7 +24,7 @@ class TxnMallTest(PivxTestFramework):
         disconnect_nodes(self.nodes[2], 1)
 
     def run_test(self):
-        # All nodes should start with 6,250 PIV:
+        # All nodes should start with 6,250 HMS:
         starting_balance = 6250
         for i in range(4):
             assert_equal(self.nodes[i].getbalance(), starting_balance)
@@ -45,7 +45,7 @@ class TxnMallTest(PivxTestFramework):
         # Coins are sent to node1_address
         node1_address = self.nodes[1].getnewaddress()
 
-        # First: use raw transaction API to send 1240 * 5 PIV to node1_address,
+        # First: use raw transaction API to send 1240 * 5 HMS to node1_address,
         # but don't broadcast:
         doublespend_fee = Decimal('-.02')
         rawtx_input_0 = {}

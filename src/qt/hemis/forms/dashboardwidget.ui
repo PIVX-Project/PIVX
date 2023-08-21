@@ -454,7 +454,7 @@
             <enum>Qt::NoFocus</enum>
            </property>
            <property name="text">
-            <string>How to get PIV</string>
+            <string>How to get HMS</string>
            </property>
           </widget>
          </item>
@@ -519,7 +519,7 @@
             <item>
              <widget class="QLabel" name="labelMessage">
               <property name="text">
-               <string>Amount of PIV stakes and masternodes rewards.</string>
+               <string>Amount of HMS stakes and masternodes rewards.</string>
               </property>
              </widget>
             </item>

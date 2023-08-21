@@ -12,7 +12,7 @@ in the next block are accepted into the memory pool,
 but less mature coinbase spends are NOT.
 """
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
@@ -20,7 +20,7 @@ from test_framework.util import (
 )
 
 # Create one-input, one-output, no-fee transaction:
-class MempoolSpendCoinbaseTest(PivxTestFramework):
+class MempoolSpendCoinbaseTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.extra_args = [["-checkmempool"]]

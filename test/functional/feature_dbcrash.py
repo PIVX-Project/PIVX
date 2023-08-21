@@ -33,7 +33,7 @@ import sys
 import time
 
 from test_framework.messages import COIN, COutPoint, CTransaction, CTxIn, CTxOut, ToHex
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal, create_confirmed_utxos, hex_str_to_bytes
 
 
@@ -44,7 +44,7 @@ except AttributeError:
     pass
 
 
-class ChainstateWriteCrashTest(PivxTestFramework):
+class ChainstateWriteCrashTest(HemisTestFramework):
 
     def set_test_params(self):
         self.num_nodes = 4

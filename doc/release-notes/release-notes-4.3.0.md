@@ -170,7 +170,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 
 ### Miner/Block Generation
  - #1700 `40742084de` [Miner] Move coinbase & coinstake to P2PKH (furszy)
- - #1809 `959d707bc9` [Miner] decouple zPIV duplicated serials checks from CreateNewBlock (furszy)
+ - #1809 `959d707bc9` [Miner] decouple zHMS duplicated serials checks from CreateNewBlock (furszy)
  - #1816 `0fa40d7695` [Miner] Unifying the disperse coinbase tx flow + further clean up. (furszy)
  - #1818 `242356d012` [Miner] PoS process (furszy)
 

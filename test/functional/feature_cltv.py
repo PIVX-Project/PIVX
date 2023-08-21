@@ -14,7 +14,7 @@ from test_framework.blocktools import create_coinbase, create_block
 from test_framework.messages import CTransaction, msg_block, ToHex
 from test_framework.mininode import mininode_lock, P2PInterface
 from test_framework.script import CScript, OP_1NEGATE, OP_CHECKLOCKTIMEVERIFY, OP_DROP, CScriptNum
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal, hex_str_to_bytes, wait_until
 
 CLTV_HEIGHT = 750
@@ -61,7 +61,7 @@ def create_transaction(node, coinbase, to_address, amount):
     tx.deserialize(BytesIO(hex_str_to_bytes(signresult['hex'])))
     return tx
 
-class BIP65Test(PivxTestFramework):
+class BIP65Test(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.extra_args = [['-promiscuousmempoolflags=1', '-whitelist=127.0.0.1']]

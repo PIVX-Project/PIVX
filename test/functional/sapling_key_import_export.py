@@ -7,10 +7,10 @@
 from decimal import Decimal
 from functools import reduce
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal, assert_greater_than
 
-class SaplingkeyImportExportTest(PivxTestFramework):
+class SaplingkeyImportExportTest(HemisTestFramework):
 
     def set_test_params(self):
         self.num_nodes = 5
@@ -114,7 +114,7 @@ class SaplingkeyImportExportTest(PivxTestFramework):
         bob_fee = Decimal("0")
 
         # Try to reproduce zombie balance reported in zcash#1936
-        # At generated shield_addr, receive PIV, and send PIV back out. bob -> alice
+        # At generated shield_addr, receive HMS, and send HMS back out. bob -> alice
         for amount in amounts[:2]:
             print("Sending amount from bob to alice: ", amount)
             txid = shielded_send(bob, bob_addr, alice_addr, amount)

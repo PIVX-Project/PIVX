@@ -9,7 +9,7 @@ Tests correspond to code in rpc/net.cpp.
 
 from test_framework.messages import NODE_NETWORK
 from test_framework.mininode import P2PInterface
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than_or_equal,
@@ -21,7 +21,7 @@ from test_framework.util import (
     wait_until,
 )
 
-class NetTest(PivxTestFramework):
+class NetTest(HemisTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 2

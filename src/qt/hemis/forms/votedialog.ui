@@ -257,7 +257,7 @@
          <item>
           <widget class="QLabel" name="labelAmount">
            <property name="text">
-            <string notr="true">5,000 PIV</string>
+            <string notr="true">5,000 HMS</string>
            </property>
           </widget>
          </item>

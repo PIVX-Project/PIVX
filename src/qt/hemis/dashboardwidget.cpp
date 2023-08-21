@@ -215,7 +215,7 @@ void DashboardWidget::loadWalletModel()
                 &DashboardWidget::onHideChartsChanged);
 #endif
     }
-    // update the display unit, to not use the default ("PIV")
+    // update the display unit, to not use the default ("HMS")
     updateDisplayUnit();
 }
 
@@ -518,7 +518,7 @@ void DashboardWidget::updateStakeFilter()
     }
 }
 
-// pair PIV, MN Reward
+// pair HMS, MN Reward
 QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy()
 {
     if (filterUpdateNeeded) {
@@ -577,7 +577,7 @@ bool DashboardWidget::loadChartData(bool withMonthNames)
     }
 
     chartData = new ChartData();
-    chartData->amountsByCache = getAmountBy(); // pair PIV, MN Reward
+    chartData->amountsByCache = getAmountBy(); // pair HMS, MN Reward
 
     std::pair<int,int> range = getChartRange(chartData->amountsByCache);
     if (range.first == 0 && range.second == 0) {
@@ -885,7 +885,7 @@ void DashboardWidget::onHideChartsChanged(bool fHide)
             stakesFilter->setFilterCaseSensitivity(Qt::CaseInsensitive);
             stakesFilter->setTypeFilter(TransactionFilterProxy::TYPE(TransactionRecord::StakeMint) |
                                         TransactionFilterProxy::TYPE(TransactionRecord::Generated) |
-                                        TransactionFilterProxy::TYPE(TransactionRecord::StakeZPIV) |
+                                        TransactionFilterProxy::TYPE(TransactionRecord::StakeZHMS) |
                                         TransactionFilterProxy::TYPE(TransactionRecord::StakeDelegated) |
                                         TransactionFilterProxy::TYPE(TransactionRecord::MNReward));
         }

@@ -29,7 +29,7 @@
 
 typedef std::map<COutPoint, std::pair<int, CAmount>> SimpleUTXOMap;
 
-// static 0.1 PIV fee used for the special txes in these tests
+// static 0.1 HMS fee used for the special txes in these tests
 static const CAmount fee = 10000000;
 
 static SimpleUTXOMap BuildSimpleUtxoMap(const std::vector<CTransaction>& txs)

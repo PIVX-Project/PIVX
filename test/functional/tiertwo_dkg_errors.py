@@ -4,14 +4,14 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test errors during DKG phases"""
 
-from test_framework.test_framework import PivxDMNTestFramework, ExpectedDKGMessages
+from test_framework.test_framework import HemisDMNTestFramework, ExpectedDKGMessages
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
 )
 
 
-class DkgErrorsTest(PivxDMNTestFramework):
+class DkgErrorsTest(HemisDMNTestFramework):
 
     def set_test_params(self):
         self.set_base_test_params()

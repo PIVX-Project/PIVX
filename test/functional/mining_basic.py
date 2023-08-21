@@ -15,7 +15,7 @@ from decimal import Decimal
 
 from test_framework.blocktools import create_coinbase
 from test_framework.messages import CBlock
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal, assert_raises_rpc_error
 
 
@@ -28,7 +28,7 @@ def assert_template(node, block, expect, rehash=True):
     rsp = node.getblocktemplate({'data': b2x(block.serialize()), 'mode': 'proposal'})
     assert_equal(rsp, expect)
 
-class MiningTest(PivxTestFramework):
+class MiningTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
         self.setup_clean_chain = False

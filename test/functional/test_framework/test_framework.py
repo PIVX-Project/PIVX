@@ -75,7 +75,7 @@ TEST_EXIT_SKIPPED = 77
 TMPDIR_PREFIX = "hemis_func_test_"
 
 
-class PivxTestFramework():
+class HemisTestFramework():
     """Base class for a hemis test script.
 
     Individual hemis test scripts should subclass this class and override the set_test_params() and run_test() methods.
@@ -1202,7 +1202,7 @@ class PivxTestFramework():
                                    get_collateral_vout(controller.getrawtransaction(dmn.proTx, True)))
 
     """
-    Create a ProReg tx, which references an 100 PIV UTXO as collateral.
+    Create a ProReg tx, which references an 100 HMS UTXO as collateral.
     The controller node owns the collateral and creates the ProReg tx.
     """
     def protx_register(self, miner, controller, dmn, collateral_addr):
@@ -1351,7 +1351,7 @@ class SkipTest(Exception):
 
 
 '''
-PivxTestFramework extensions
+HemisTestFramework extensions
 '''
 
 class ExpectedDKGMessages:
@@ -1367,7 +1367,7 @@ class ExpectedDKGMessages:
         self.recv_justif = r_justif
         self.recv_commit = r_commit
 
-class PivxDMNTestFramework(PivxTestFramework):
+class HemisDMNTestFramework(HemisTestFramework):
 
     def set_base_test_params(self):
         # 1 miner, 1 controller, 6 remote mns
@@ -1627,7 +1627,7 @@ class PivxDMNTestFramework(PivxTestFramework):
         return qfc, bad_member
 
 # !TODO: remove after obsoleting legacy system
-class PivxTier2TestFramework(PivxTestFramework):
+class HemisTier2TestFramework(HemisTestFramework):
 
     def set_test_params(self):
         self.setup_clean_chain = True

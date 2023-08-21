@@ -14,7 +14,7 @@ import time
 
 from test_framework.messages import msg_getaddr, msg_ping, msg_verack
 from test_framework.mininode import mininode_lock, P2PInterface, msg_version
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than_or_equal,
@@ -95,7 +95,7 @@ class P2PVersionStore(P2PInterface):
         self.version_received = msg
 
 
-class P2PLeakTest(PivxTestFramework):
+class P2PLeakTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.extra_args = [['-banscore='+str(banscore)]]

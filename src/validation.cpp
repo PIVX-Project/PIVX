@@ -819,7 +819,7 @@ CAmount GetBlockValue(int nHeight)
         if (nHeight > nLast) return 10 * COIN;
         return 250 * COIN;
     }
-    // Testnet high-inflation blocks [2, 200] with value 250k PIV
+    // Testnet high-inflation blocks [2, 200] with value 250k HMS
     const bool isTestnet = Params().IsTestnet();
     if (isTestnet && nHeight < 201 && nHeight > 1) {
         return 250000 * COIN;
@@ -1708,13 +1708,13 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
         CacheAccChecksum(pindex, true);
         // Clean coinspends cache every 50k blocks, so it does not grow unnecessarily
         if (pindex->nHeight % 50000 == 0) {
-            ZPIVModule::CleanCoinSpendsCache();
+            ZHMSModule::CleanCoinSpendsCache();
         }
     } else if (accumulatorCache && pindex->nHeight > consensus.height_last_ZC_AccumCheckpoint + 100) {
         // 100 blocks After last Checkpoint block, wipe the checksum database and cache
         accumulatorCache->Wipe();
         accumulatorCache.reset();
-        ZPIVModule::CleanCoinSpendsCache();
+        ZHMSModule::CleanCoinSpendsCache();
     }
 
     // 100 blocks after the last invalid out, clean the map contents
@@ -2837,10 +2837,10 @@ bool CheckWork(const CBlock& block, const CBlockIndex* const pindexPrev)
     }
 
     if (block.nBits != nBitsRequired) {
-        // Pivx Specific reference to the block with the wrong threshold was used.
+        // Hemis Specific reference to the block with the wrong threshold was used.
         const Consensus::Params& consensus = Params().GetConsensus();
-        if ((block.nTime == (uint32_t) consensus.nPivxBadBlockTime) &&
-                (block.nBits == (uint32_t) consensus.nPivxBadBlockBits)) {
+        if ((block.nTime == (uint32_t) consensus.nHemisBadBlockTime) &&
+                (block.nBits == (uint32_t) consensus.nHemisBadBlockBits)) {
             // accept hemis block minted with incorrect proof of work threshold
             return true;
         }
@@ -3096,12 +3096,12 @@ static bool CheckInBlockDoubleSpends(const CBlock& block, int nHeight, CValidati
                 libzerocoin::CoinSpend spend;
                 if (isPublicSpend) {
                     PublicCoinSpend publicSpend(params);
-                    if (!ZPIVModule::ParseZerocoinPublicSpend(in, *tx, state, publicSpend)){
+                    if (!ZHMSModule::ParseZerocoinPublicSpend(in, *tx, state, publicSpend)){
                         return false;
                     }
                     spend = publicSpend;
                 } else {
-                    spend = ZPIVModule::TxInToZerocoinSpend(in);
+                    spend = ZHMSModule::TxInToZerocoinSpend(in);
                 }
                 // Check for serials double spending in the same block
                 const CBigNum& s = spend.getCoinSerialNumber();
@@ -3197,7 +3197,7 @@ static bool IsUnspentOnFork(std::unordered_set<COutPoint, SaltedOutpointHasher>&
                     }
                 } else {
                     // zerocoin serial
-                    const CBigNum& s = ZPIVModule::TxInToZerocoinSpend(in).getCoinSerialNumber();
+                    const CBigNum& s = ZHMSModule::TxInToZerocoinSpend(in).getCoinSerialNumber();
                     if (serials.find(s) != serials.end()) {
                         return state.DoS(100, false, REJECT_INVALID, "bad-txns-serials-spent-fork-post-split");
                     }
@@ -3369,7 +3369,7 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, CBlockInde
         const CTransaction& coinstake = *block.vtx[1];
         const CTxIn& coinstake_in = coinstake.vin[0];
         if (coinstake_in.IsZerocoinSpend()) {
-            libzerocoin::CoinSpend spend = ZPIVModule::TxInToZerocoinSpend(coinstake_in);
+            libzerocoin::CoinSpend spend = ZHMSModule::TxInToZerocoinSpend(coinstake_in);
             if (!ContextualCheckZerocoinSpend(coinstake, &spend, pindex->nHeight)) {
                 return state.DoS(100,error("%s: main chain ContextualCheckZerocoinSpend failed for tx %s", __func__,
                         coinstake.GetHash().GetHex()), REJECT_INVALID, "bad-txns-invalid-zpiv");

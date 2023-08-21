@@ -15,13 +15,13 @@
   been zapped.
 """
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
 )
 
-class ZapWalletTXesTest (PivxTestFramework):
+class ZapWalletTXesTest (HemisTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 2

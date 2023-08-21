@@ -7,7 +7,7 @@
 import time
 
 from random import getrandbits
-from test_framework.test_framework import PivxDMNTestFramework
+from test_framework.test_framework import HemisDMNTestFramework
 from test_framework.bech32 import bech32_str_to_bytes
 from test_framework.mininode import P2PInterface
 from test_framework.messages import msg_version
@@ -23,7 +23,7 @@ class TestP2PConn(P2PInterface):
     def on_version(self, message):
         pass
 
-class DMNConnectionTest(PivxDMNTestFramework):
+class DMNConnectionTest(HemisDMNTestFramework):
 
     def set_test_params(self):
         self.set_base_test_params()

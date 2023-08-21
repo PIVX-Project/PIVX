@@ -25,7 +25,7 @@ public:
 
     static CLegacyZPivStake* NewZPivStake(const CTxIn& txin, int nHeight);
 
-    bool IsZPIV() const override { return true; }
+    bool IsZHMS() const override { return true; }
     uint32_t GetChecksum() const { return nChecksum; }
     const CBlockIndex* GetIndexFrom() const override;
     CAmount GetValue() const override;

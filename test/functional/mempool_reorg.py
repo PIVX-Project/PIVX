@@ -8,7 +8,7 @@ Test re-org scenarios with a mempool that contains transactions
 that spend (directly or indirectly) coinbase transactions.
 """
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
@@ -16,7 +16,7 @@ from test_framework.util import (
 )
 
 # Create one-input, one-output, no-fee transaction:
-class MempoolCoinbaseTest(PivxTestFramework):
+class MempoolCoinbaseTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
         self.extra_args = [["-checkmempool"]] * 2

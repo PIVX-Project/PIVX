@@ -95,7 +95,7 @@ void CreateProposalDialog::setupPageTwo()
 {
     setCssProperty(ui->labelTitleDest, "text-title-dialog");
     setCssProperty(ui->labelMessageDest, "dialog-proposal-message");
-    setEditBoxStyle(ui->labelAmount, ui->lineEditAmount, "e.g 500 PIV");
+    setEditBoxStyle(ui->labelAmount, ui->lineEditAmount, "e.g 500 HMS");
     setCssProperty(ui->labelMonths, "text-title");
     setEditBoxStyle(ui->labelAddress, ui->lineEditAddress, "e.g D...something..");
     setCssProperty(ui->lineEditAddress, "edit-primary-multi-book");

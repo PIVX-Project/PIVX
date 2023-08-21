@@ -34,7 +34,7 @@ public:
     int votesNo{0};
     /** Payment script destination */
     std::string recipientAdd;
-    /** Amount of PIV paid per month */
+    /** Amount of HMS paid per month */
     CAmount amount{0};
     /** Amount of times that the proposal will be paid */
     int totalPayments{0};

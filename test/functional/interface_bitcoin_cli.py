@@ -6,11 +6,11 @@
 
 import time
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal, get_auth_cookie
 
 
-class TestBitcoinCli(PivxTestFramework):
+class TestBitcoinCli(HemisTestFramework):
 
     def set_test_params(self):
         self.setup_clean_chain = True

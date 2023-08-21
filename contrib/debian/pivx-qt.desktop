@@ -10,4 +10,4 @@ Type=Application
 Icon=hemis128
 MimeType=x-scheme-handler/hemis;
 Categories=Office;Finance;
-StartupWMClass=Pivx-qt
+StartupWMClass=Hemis-qt

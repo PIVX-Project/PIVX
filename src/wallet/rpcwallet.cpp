@@ -1123,14 +1123,14 @@ UniValue sendtoaddress(const JSONRPCRequest& request)
 
             "\nArguments:\n"
             "1. \"address\"     (string, required) The hemis address to send to.\n"
-            "2. \"amount\"      (numeric, required) The amount in PIV to send. eg 0.1\n"
+            "2. \"amount\"      (numeric, required) The amount in HMS to send. eg 0.1\n"
             "3. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
             "                             This is not part of the transaction, just kept in your wallet.\n"
             "4. \"comment-to\"  (string, optional) A comment to store the name of the person or organization \n"
             "                             to which you're sending the transaction. This is not part of the \n"
             "                             transaction, just kept in your wallet.\n"
             "5. subtract_fee    (boolean, optional, default=false) The fee will be deducted from the amount being sent.\n"
-            "                             The recipient will receive less PIVs than you enter in the amount field.\n"
+            "                             The recipient will receive less HMSs than you enter in the amount field.\n"
 
             "\nResult:\n"
             "\"transactionid\"  (string) The transaction id.\n"
@@ -1312,7 +1312,7 @@ UniValue delegatestake(const JSONRPCRequest& request)
 
             "\nArguments:\n"
             "1. \"staking_addr\"      (string, required) The hemis staking address to delegate.\n"
-            "2. \"amount\"            (numeric, required) The amount in PIV to delegate for staking. eg 100\n"
+            "2. \"amount\"            (numeric, required) The amount in HMS to delegate for staking. eg 100\n"
             "3. \"owner_addr\"        (string, optional) The hemis address corresponding to the key that will be able to spend the stake.\n"
             "                               If not provided, or empty string, a new wallet address is generated.\n"
             "4. \"ext_owner\"         (boolean, optional, default = false) use the provided 'owneraddress' anyway, even if not present in this wallet.\n"
@@ -1369,7 +1369,7 @@ UniValue rawdelegatestake(const JSONRPCRequest& request)
 
             "\nArguments:\n"
             "1. \"staking_addr\"      (string, required) The hemis staking address to delegate.\n"
-            "2. \"amount\"            (numeric, required) The amount in PIV to delegate for staking. eg 100\n"
+            "2. \"amount\"            (numeric, required) The amount in HMS to delegate for staking. eg 100\n"
             "3. \"owner_addr\"        (string, optional) The hemis address corresponding to the key that will be able to spend the stake.\n"
             "                               If not provided, or empty string, a new wallet address is generated.\n"
             "4. \"ext_owner\"         (boolean, optional, default = false) use the provided 'owneraddress' anyway, even if not present in this wallet.\n"
@@ -1842,7 +1842,7 @@ UniValue shieldsendmany(const JSONRPCRequest& request)
                 "2. \"amounts\"             (array, required) An array of json objects representing the amounts to send.\n"
                 "    [{\n"
                 "      \"address\":address  (string, required) The address is a transparent addr or shield addr\n"
-                "      \"amount\":amount    (numeric, required) The numeric amount in " + "PIV" + " is the value\n"
+                "      \"amount\":amount    (numeric, required) The numeric amount in " + "HMS" + " is the value\n"
                 "      \"memo\":memo        (string, optional) If the address is a shield addr, message string of max 512 bytes\n"
                 "    }, ... ]\n"
                 "3. minconf               (numeric, optional, default=1) Only use funds confirmed at least this many times.\n"
@@ -1851,7 +1851,7 @@ UniValue shieldsendmany(const JSONRPCRequest& request)
                 "                            based on the expected transaction size and the current value of -minRelayTxFee.\n"
                 "5. subtract_fee_from     (array, optional) A json array with addresses.\n"
                 "                           The fee will be equally deducted from the amount of each selected address.\n"
-                "                           Those recipients will receive less PIV than you enter in their corresponding amount field.\n"
+                "                           Those recipients will receive less HMS than you enter in their corresponding amount field.\n"
                 "                           If no addresses are specified here, the sender pays the fee.\n"
                 "    [\n"
                 "      \"address\"          (string) Subtract fee from this address\n"
@@ -1905,7 +1905,7 @@ UniValue rawshieldsendmany(const JSONRPCRequest& request)
                 "2. \"amounts\"             (array, required) An array of json objects representing the amounts to send.\n"
                 "    [{\n"
                 "      \"address\":address  (string, required) The address is a transparent addr or shield addr\n"
-                "      \"amount\":amount    (numeric, required) The numeric amount in " + "PIV" + " is the value\n"
+                "      \"amount\":amount    (numeric, required) The numeric amount in " + "HMS" + " is the value\n"
                 "      \"memo\":memo        (string, optional) If the address is a shield addr, message string of max 512 bytes\n"
                 "    }, ... ]\n"
                 "3. minconf               (numeric, optional, default=1) Only use funds confirmed at least this many times.\n"
@@ -1951,7 +1951,7 @@ UniValue listaddressgroupings(const JSONRPCRequest& request)
             "  [\n"
             "    [\n"
             "      \"hemisaddress\",     (string) The hemis address\n"
-            "      amount,                 (numeric) The amount in PIV\n"
+            "      amount,                 (numeric) The amount in HMS\n"
             "      \"label\"             (string, optional) The label\n"
             "    ]\n"
             "    ,...\n"
@@ -2061,7 +2061,7 @@ UniValue getreceivedbyaddress(const JSONRPCRequest& request)
             "2. minconf        (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
 
             "\nResult:\n"
-            "amount   (numeric) The total amount in PIV received at this address.\n"
+            "amount   (numeric) The total amount in HMS received at this address.\n"
 
             "\nExamples:\n"
             "\nThe amount from transactions with at least 1 confirmation\n" +
@@ -2127,7 +2127,7 @@ UniValue getreceivedbylabel(const JSONRPCRequest& request)
             "2. minconf          (numeric, optional, default=1) Only include transactions confirmed at least this many times.\n"
 
             "\nResult:\n"
-            "amount              (numeric) The total amount in PIV received for this label.\n"
+            "amount              (numeric) The total amount in HMS received for this label.\n"
 
             "\nExamples:\n"
             "\nAmount received by the default label with at least 1 confirmation\n" +
@@ -2194,7 +2194,7 @@ UniValue getbalance(const JSONRPCRequest& request)
             "4. include_shield    (bool, optional, default=true) Also include shield balance\n"
 
             "\nResult:\n"
-            "amount              (numeric) The total amount in PIV received for this wallet.\n"
+            "amount              (numeric) The total amount in HMS received for this wallet.\n"
 
             "\nExamples:\n"
             "\nThe total amount in the wallet\n" +
@@ -2236,7 +2236,7 @@ UniValue getcoldstakingbalance(const JSONRPCRequest& request)
             "\nReturns the server's total available cold balance.\n"
 
             "\nResult:\n"
-            "amount              (numeric) The total amount in PIV received for this wallet in P2CS contracts.\n"
+            "amount              (numeric) The total amount in HMS received for this wallet in P2CS contracts.\n"
 
             "\nExamples:\n"
             "\nThe total amount in the wallet\n" +
@@ -2267,7 +2267,7 @@ UniValue getdelegatedbalance(const JSONRPCRequest& request)
             "to a cold staking address to stake on behalf of addresses of this wallet).\n"
 
             "\nResult:\n"
-            "amount              (numeric) The total amount in PIV received for this wallet in P2CS contracts.\n"
+            "amount              (numeric) The total amount in HMS received for this wallet in P2CS contracts.\n"
 
             "\nExamples:\n"
             "\nThe total amount in the wallet\n" +
@@ -2405,7 +2405,7 @@ UniValue sendmany(const JSONRPCRequest& request)
             "2. \"amounts\"             (string, required) A json object with addresses and amounts\n"
             "    {\n"
             "      \"address\":amount   (numeric) The hemis address (either transparent or shield) is the key,\n"
-            "                                     the numeric amount in PIV is the value\n"
+            "                                     the numeric amount in HMS is the value\n"
             "      ,...\n"
             "    }\n"
             "3. minconf                 (numeric, optional, default=1) Only use the balance confirmed at least this many times.\n"
@@ -2413,7 +2413,7 @@ UniValue sendmany(const JSONRPCRequest& request)
             "5. include_delegated       (bool, optional, default=false) Also include balance delegated to cold stakers\n"
             "6. subtract_fee_from       (array, optional) A json array with addresses.\n"
             "                           The fee will be equally deducted from the amount of each selected address.\n"
-            "                           Those recipients will receive less PIV than you enter in their corresponding amount field.\n"
+            "                           Those recipients will receive less HMS than you enter in their corresponding amount field.\n"
             "                           If no addresses are specified here, the sender pays the fee.\n"
             "    [\n"
             "      \"address\"          (string) Subtract fee from this address\n"
@@ -2703,7 +2703,7 @@ UniValue listreceivedbyaddress(const JSONRPCRequest& request)
             "  {\n"
             "    \"involvesWatchonly\" : \"true\",    (bool) Only returned if imported addresses were involved in transaction\n"
             "    \"address\" : \"receivingaddress\",  (string) The receiving address\n"
-            "    \"amount\" : x.xxx,                  (numeric) The total amount in PIV received by the address\n"
+            "    \"amount\" : x.xxx,                  (numeric) The total amount in HMS received by the address\n"
             "    \"confirmations\" : n                (numeric) The number of confirmations of the most recent transaction included\n"
             "    \"bcconfirmations\" : n,             (numeric) DEPRECATED: Will be removed in a future release\n"
             "    \"label\" : \"label\",               (string) The label of the receiving address. The default label is \"\".\n"
@@ -3049,10 +3049,10 @@ UniValue listtransactions(const JSONRPCRequest& request)
             "  {\n"
             "    \"address\":\"hemisaddress\",    (string) The hemis address of the transaction.\n"
             "    \"category\":\"category\",      (string) The transaction category (send|receive|orphan|immature|generate).\n"
-            "    \"amount\": x.xxx,          (numeric) The amount in PIV. This is negative for the 'send' category, and positive\n"
+            "    \"amount\": x.xxx,          (numeric) The amount in HMS. This is negative for the 'send' category, and positive\n"
             "                                         for the 'receive' category,\n"
             "    \"vout\" : n,               (numeric) the vout value\n"
-            "    \"fee\": x.xxx,             (numeric) The amount of the fee in PIV. This is negative and only available for the \n"
+            "    \"fee\": x.xxx,             (numeric) The amount of the fee in HMS. This is negative and only available for the \n"
             "                                         'send' category of transactions.\n"
             "    \"confirmations\": n,     (numeric) The number of blockchain confirmations for the transaction. Available for 'send'\n"
             "                                         'receive' category of transactions. Negative confirmations indicate the\n"
@@ -3167,10 +3167,10 @@ UniValue listsinceblock(const JSONRPCRequest& request)
             "  \"transactions\": [\n"
             "    \"address\":\"hemisaddress\",    (string) The hemis address of the transaction. Not present for move transactions (category = move).\n"
             "    \"category\":\"send|receive\",     (string) The transaction category. 'send' has negative amounts, 'receive' has positive amounts.\n"
-            "    \"amount\": x.xxx,          (numeric) The amount in PIV. This is negative for the 'send' category, and for the 'move' category for moves \n"
+            "    \"amount\": x.xxx,          (numeric) The amount in HMS. This is negative for the 'send' category, and for the 'move' category for moves \n"
             "                                          outbound. It is positive for the 'receive' category, and for the 'move' category for inbound funds.\n"
             "    \"vout\" : n,               (numeric) the vout value\n"
-            "    \"fee\": x.xxx,             (numeric) The amount of the fee in PIV. This is negative and only available for the 'send' category of transactions.\n"
+            "    \"fee\": x.xxx,             (numeric) The amount of the fee in HMS. This is negative and only available for the 'send' category of transactions.\n"
             "    \"confirmations\": n,       (numeric) The number of confirmations for the transaction. Available for 'send' and 'receive' category of transactions.\n"
             "    \"bcconfirmations\" : n,             (numeric) DEPRECATED: Will be removed in a future release\n"
             "    \"blockhash\": \"hashvalue\",     (string) The block hash containing the transaction. Available for 'send' and 'receive' category of transactions.\n"
@@ -3256,7 +3256,7 @@ UniValue gettransaction(const JSONRPCRequest& request)
 
             "\nResult:\n"
             "{\n"
-            "  \"amount\" : x.xxx,        (numeric) The transaction amount in PIV\n"
+            "  \"amount\" : x.xxx,        (numeric) The transaction amount in HMS\n"
             "  \"confirmations\" : n,     (numeric) The number of confirmations\n"
             "  \"bcconfirmations\" : n,             (numeric) DEPRECATED: Will be removed in a future release\n"
             "  \"blockhash\" : \"hash\",  (string) The block hash\n"
@@ -3269,7 +3269,7 @@ UniValue gettransaction(const JSONRPCRequest& request)
             "    {\n"
             "      \"address\" : \"hemisaddress\",   (string) The hemis address involved in the transaction\n"
             "      \"category\" : \"send|receive\",    (string) The category, either 'send' or 'receive'\n"
-            "      \"amount\" : x.xxx                  (numeric) The amount in PIV\n"
+            "      \"amount\" : x.xxx                  (numeric) The amount in HMS\n"
             "      \"label\" : \"label\",              (string) A comment for the address/transaction, if any\n"
             "      \"vout\" : n,                       (numeric) the vout value\n"
             "    }\n"
@@ -3456,7 +3456,7 @@ UniValue walletpassphrase(const JSONRPCRequest& request)
         throw std::runtime_error(
             "walletpassphrase \"passphrase\" timeout ( staking_only )\n"
             "\nStores the wallet decryption key in memory for 'timeout' seconds.\n"
-            "This is needed prior to performing transactions related to private keys such as sending PIVs\n"
+            "This is needed prior to performing transactions related to private keys such as sending HMSs\n"
 
             "\nArguments:\n"
             "1. \"passphrase\"     (string, required) The wallet passphrase\n"
@@ -3639,7 +3639,7 @@ UniValue encryptwallet(const JSONRPCRequest& request)
             "\nExamples:\n"
             "\nEncrypt you wallet\n" +
             HelpExampleCli("encryptwallet", "\"my pass phrase\"") +
-            "\nNow set the passphrase to use the wallet, such as for signing or sending PIVs\n" +
+            "\nNow set the passphrase to use the wallet, such as for signing or sending HMSs\n" +
             HelpExampleCli("walletpassphrase", "\"my pass phrase\"") +
             "\nNow we can so something like sign\n" +
             HelpExampleCli("signmessage", "\"hemisaddress\" \"test message\"") +
@@ -3718,7 +3718,7 @@ UniValue listunspent(const JSONRPCRequest& request)
                 "    \"label\" : \"label\",      (string) The associated label, or \"\" for the default label\n"
                 "    \"scriptPubKey\" : \"key\", (string) the script key\n"
                 "    \"redeemScript\" : \"key\", (string) the redeemscript key\n"
-                "    \"amount\" : x.xxx,         (numeric) the transaction amount in PIV\n"
+                "    \"amount\" : x.xxx,         (numeric) the transaction amount in HMS\n"
                 "    \"confirmations\" : n,      (numeric) The number of confirmations\n"
                 "    \"spendable\" : true|false  (boolean) Whether we have the private keys to spend this output\n"
                 "    \"solvable\" : xxx          (boolean) Whether we know how to spend this output, ignoring the lack of keys\n"
@@ -3881,11 +3881,11 @@ UniValue fundrawtransaction(const JSONRPCRequest& request)
             "     \"changePosition\"    (numeric, optional, default random) The index of the change output\n"
             "     \"includeWatching\"   (boolean, optional, default false) Also select inputs which are watch only\n"
             "     \"lockUnspents\"      (boolean, optional, default false) Lock selected unspent outputs\n"
-            "     \"feeRate\"           (numeric, optional, default 0=estimate) Set a specific feerate (PIV per KB)\n"
+            "     \"feeRate\"           (numeric, optional, default 0=estimate) Set a specific feerate (HMS per KB)\n"
             "     \"subtractFeeFromOutputs\" (array, optional) A json array of integers.\n"
             "                              The fee will be equally deducted from the amount of each specified output.\n"
             "                              The outputs are specified by their zero-based index, before any change output is added.\n"
-            "                              Those recipients will receive less PIV than you enter in their corresponding amount field.\n"
+            "                              Those recipients will receive less HMS than you enter in their corresponding amount field.\n"
             "                              If no outputs are specified here, the sender pays the fee.\n"
             "                                  [vout_index,...]\n"
             "   }\n"
@@ -4013,7 +4013,7 @@ UniValue lockunspent(const JSONRPCRequest& request)
             "lockunspent unlock transparent [{\"txid\":\"txid\",\"vout\":n},...]\n"
             "\nUpdates list of temporarily unspendable outputs.\n"
             "Temporarily lock (unlock=false) or unlock (unlock=true) specified transparent (transparent=true) or shielded (transparent=false) transaction outputs.\n"
-            "A locked transaction output will not be chosen by automatic coin selection, when spending PIVs.\n"
+            "A locked transaction output will not be chosen by automatic coin selection, when spending HMSs.\n"
             "Locks are stored in memory only. Nodes start with zero locked outputs, and the locked output list\n"
             "is always cleared (by virtue of process exit) when a node stops or fails.\n"
             "Also see the listunspent call\n"
@@ -4230,7 +4230,7 @@ UniValue settxfee(const JSONRPCRequest& request)
             "\nSet the transaction fee per kB.\n"
 
             "\nArguments:\n"
-            "1. amount         (numeric, required) The transaction fee in PIV/kB rounded to the nearest 0.00000001\n"
+            "1. amount         (numeric, required) The transaction fee in HMS/kB rounded to the nearest 0.00000001\n"
 
             "\nResult\n"
             "true|false        (boolean) Returns true if successful\n"
@@ -4264,22 +4264,22 @@ UniValue getwalletinfo(const JSONRPCRequest& request)
             "{\n"
             "  \"walletname\": xxxxx,                     (string) the wallet name\n"
             "  \"walletversion\": xxxxx,                  (numeric) the wallet version\n"
-            "  \"balance\": xxxxxxx,                      (numeric) the total PIV balance of the wallet (cold balance excluded)\n"
-            "  \"delegated_balance\": xxxxx,              (numeric) the PIV balance held in P2CS (cold staking) contracts\n"
-            "  \"cold_staking_balance\": xx,              (numeric) the PIV balance held in cold staking addresses\n"
-            "  \"unconfirmed_balance\": xxx,              (numeric) the total unconfirmed balance of the wallet in PIV\n"
-            "  \"immature_delegated_balance\": xxxxxx,    (numeric) the delegated immature balance of the wallet in PIV\n"
-            "  \"immature_cold_staking_balance\": xxxxxx, (numeric) the cold-staking immature balance of the wallet in PIV\n"
-            "  \"immature_balance\": xxxxxx,              (numeric) the total immature balance of the wallet in PIV\n"
+            "  \"balance\": xxxxxxx,                      (numeric) the total HMS balance of the wallet (cold balance excluded)\n"
+            "  \"delegated_balance\": xxxxx,              (numeric) the HMS balance held in P2CS (cold staking) contracts\n"
+            "  \"cold_staking_balance\": xx,              (numeric) the HMS balance held in cold staking addresses\n"
+            "  \"unconfirmed_balance\": xxx,              (numeric) the total unconfirmed balance of the wallet in HMS\n"
+            "  \"immature_delegated_balance\": xxxxxx,    (numeric) the delegated immature balance of the wallet in HMS\n"
+            "  \"immature_cold_staking_balance\": xxxxxx, (numeric) the cold-staking immature balance of the wallet in HMS\n"
+            "  \"immature_balance\": xxxxxx,              (numeric) the total immature balance of the wallet in HMS\n"
             "  \"txcount\": xxxxxxx,                      (numeric) the total number of transactions in the wallet\n"
             "  \"autocombine_enabled\": true|false,       (boolean) true if autocombine is enabled, otherwise false\n"
-            "  \"autocombine_threshold\": x.xxx,          (numeric) the current autocombine threshold in PIV\n"
+            "  \"autocombine_threshold\": x.xxx,          (numeric) the current autocombine threshold in HMS\n"
             "  \"keypoololdest\": xxxxxx,                 (numeric) the timestamp (seconds since GMT epoch) of the oldest pre-generated key in the key pool\n"
             "  \"keypoolsize\": xxxx,                     (numeric) how many new keys are pre-generated (only counts external keys)\n"
             "  \"keypoolsize_hd_internal\": xxxx,         (numeric) how many new keys are pre-generated for internal use (used for change outputs, only appears if the wallet is using this feature, otherwise external keys are used)\n"
             "  \"keypoolsize_hd_staking\": xxxx,          (numeric) how many new keys are pre-generated for staking use (used for staking contracts, only appears if the wallet is using this feature)\n"
             "  \"unlocked_until\": ttt,                   (numeric) the timestamp in seconds since epoch (midnight Jan 1 1970 GMT) that the wallet is unlocked for transfers, or 0 if the wallet is locked\n"
-            "  \"paytxfee\": x.xxxx                       (numeric) the transaction fee configuration, set in PIV/kB\n"
+            "  \"paytxfee\": x.xxxx                       (numeric) the transaction fee configuration, set in HMS/kB\n"
             "  \"hdseedid\": \"<hash160>\"                (string, optional) the Hash160 of the HD seed (only present when HD is enabled)\n"
             "  \"last_processed_block\": xxxxx,          (numeric) the last block processed block height\n"
             "}\n"
@@ -4386,7 +4386,7 @@ UniValue getstakingstatus(const JSONRPCRequest& request)
             "  \"mnsync\": true|false,              (boolean) whether the required masternode/spork data is synced\n"
             "  \"walletunlocked\": true|false,      (boolean) whether the wallet is unlocked\n"
             "  \"stakeablecoins\": n                (numeric) number of stakeable UTXOs\n"
-            "  \"stakingbalance\": d                (numeric) PIV value of the stakeable coins (minus reserve balance, if any)\n"
+            "  \"stakingbalance\": d                (numeric) HMS value of the stakeable coins (minus reserve balance, if any)\n"
             "  \"stakesplitthreshold\": d           (numeric) value of the current threshold for stake split\n"
             "  \"lastattempt_age\": n               (numeric) seconds since last stake attempt\n"
             "  \"lastattempt_depth\": n             (numeric) depth of the block on top of which the last stake attempt was made\n"
@@ -4442,11 +4442,11 @@ UniValue setstakesplitthreshold(const JSONRPCRequest& request)
             "Whenever a successful stake is found, the stake amount is split across as many outputs (each with a value\n"
             "higher than the threshold) as possible.\n"
             "E.g. If the coinstake input + the block reward is 2000, and the split threshold is 499, the corresponding\n"
-            "coinstake transaction will have 4 outputs (of 500 PIV each)."
+            "coinstake transaction will have 4 outputs (of 500 HMS each)."
             + HelpRequiringPassphrase(pwallet) + "\n"
 
             "\nArguments:\n"
-            "1. value                   (numeric, required) Threshold value (in PIV).\n"
+            "1. value                   (numeric, required) Threshold value (in HMS).\n"
             "                                     Set to 0 to disable stake-splitting\n"
             "                                     If > 0, it must be >= " + FormatMoney(CWallet::minStakeSplitThreshold) + "\n"
 
@@ -4513,7 +4513,7 @@ UniValue setautocombinethreshold(const JSONRPCRequest& request)
             "\nResult:\n"
             "{\n"
             "  \"enabled\": true|false,      (boolean) true if auto-combine is enabled, otherwise false\n"
-            "  \"threshold\": n.nnn,         (numeric) auto-combine threshold in PIV\n"
+            "  \"threshold\": n.nnn,         (numeric) auto-combine threshold in HMS\n"
             "  \"frequency\": n.nnn,         (numeric) auto-combine frequency in blocks\n"
             "  \"saved\": true|false         (boolean) true if setting was saved to the database, otherwise false\n"
             "}\n"
@@ -4579,7 +4579,7 @@ UniValue getautocombinethreshold(const JSONRPCRequest& request)
             "\nResult:\n"
             "{\n"
             "  \"enabled\": true|false,        (boolean) true if auto-combine is enabled, otherwise false\n"
-            "  \"threshold\": n.nnn            (numeric) the auto-combine threshold amount in PIV\n"
+            "  \"threshold\": n.nnn            (numeric) the auto-combine threshold amount in HMS\n"
             "  \"frequency\": n.nnn            (numeric) the auto-combine frequency in blocks\n"
             "}\n"
 

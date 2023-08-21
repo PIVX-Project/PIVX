@@ -7,7 +7,7 @@
 from decimal import Decimal
 import threading
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     get_rpc_proxy,
     random_transaction
@@ -27,7 +27,7 @@ class LongpollThread(threading.Thread):
     def run(self):
         self.node.getblocktemplate({'longpollid':int(self.longpollid)})
 
-class GetBlockTemplateLPTest(PivxTestFramework):
+class GetBlockTemplateLPTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
 

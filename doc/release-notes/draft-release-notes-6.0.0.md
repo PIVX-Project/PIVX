@@ -28,7 +28,7 @@ Deterministic Masternode lists are lists of masternodes, built at every block, r
 All nodes derive (and verify) their masternode lists independently, from the same on-chain transactions, thus they immediately reach consensus on the tier-two state (number of masternodes, properties and status of each one).
 
 Masternodes are "registered" by special transactions called ProTx, and removed only by spending the collateral.
-A ProTx either creates a 10000-PIV collateral as tx output, or includes a reference to an unspent 10000-PIV utxo on chain (and a proof of ownership).
+A ProTx either creates a 10000-HMS collateral as tx output, or includes a reference to an unspent 10000-HMS utxo on chain (and a proof of ownership).
 See PR [#2267](https://github.com/hemis-Project/hemis/pull/2267) for more information.
 
 Upgrade instructions: !TODO
@@ -89,7 +89,7 @@ Upgrade instructions: !TODO
     ```
     protx_register_fund "collateralAddress" "ipAndPort" "ownerAddress" "operatorPubKey" "votingAddress" "payoutAddress" (operatorReward "operatorPayoutAddress")
 
-    Creates, funds and sends a ProTx to the network. The resulting transaction will move 10000 PIV
+    Creates, funds and sends a ProTx to the network. The resulting transaction will move 10000 HMS
     to the address specified by collateralAddress and will then function as masternode collateral.
 
     Arguments:

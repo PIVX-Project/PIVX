@@ -307,7 +307,7 @@ The `stop` RPC no longer accepts the (already deprecated, ignored, and undocumen
   sendtoaddress "addr1" 0.1 "test" "" true
   ```
 
-In all cases the selected recipients will receive less PIV than their corresponding amount set.
+In all cases the selected recipients will receive less HMS than their corresponding amount set.
 If no outputs/addresses are specified, the sender pays the fee as usual. ([PR #2341](https://github.com/hemis-Project/hemis/pull/2341))
 
 ### New output fields in `getmempoolinfo`
@@ -354,7 +354,7 @@ The `autocombine` RPC command has been replaced ([PR #2248](https://github.com/h
     Result:
     {
       "enabled": true|false,     (boolean) true if auto-combine is enabled, otherwise false
-      "threshold": n.nnn,        (numeric) auto-combine threshold in PIV
+      "threshold": n.nnn,        (numeric) auto-combine threshold in HMS
       "saved": true|false        (boolean) true if setting was saved to the database, otherwise false
     }
     ```
@@ -367,7 +367,7 @@ The `autocombine` RPC command has been replaced ([PR #2248](https://github.com/h
     Result:
     {
       "enabled": true|false,    (boolean) true if auto-combine is enabled, otherwise false
-      "threshold": n.nnn        (numeric) the auto-combine threshold amount in PIV
+      "threshold": n.nnn        (numeric) the auto-combine threshold amount in HMS
     }
     ```
 
@@ -508,7 +508,7 @@ The `autocombine` RPC command has been replaced ([PR #2248](https://github.com/h
     Mine blocks immediately to a specified address (before the RPC call returns)
     Arguments:
     1. nblocks          (numeric, required) How many blocks are generated immediately.
-    2. "address"        (string, required) The address to send the newly generated PIVs to.
+    2. "address"        (string, required) The address to send the newly generated HMSs to.
     Result:
     [ blockhashes ]     (array) hashes of blocks generated
     ```
@@ -647,7 +647,7 @@ v5.3.0 Change log
 - #2372 RPC-Console nested commands documentation (random-zebra)
 - #2388 Ensure that all UI error/warning texts pass through translation (Fuzzbawls)
 - #2403 transaction model, cleanup unused hasZcTxes flag (furszy)
-- #2397 Fix invalid MN collateral amount and align every static 10k PIV strings (furszy)
+- #2397 Fix invalid MN collateral amount and align every static 10k HMS strings (furszy)
 - #2380 [Cleanup] guiutils cleanup + fix memory mismanagement (furszy)
 - #2347 Add GUI controls for subtract-fee-from-amount (random-zebra)
 - #2490 [BugFix] fix app always triggering the tutorial dialog if no manual '-wallet' arg is provided (furszy)

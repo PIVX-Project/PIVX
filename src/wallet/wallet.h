@@ -735,7 +735,7 @@ public:
     // Staker status (last hashed block and time)
     CStakerStatus* pStakerStatus = nullptr;
 
-    // User-defined fee PIV/kb
+    // User-defined fee HMS/kb
     bool fUseCustomFee;
     CAmount nCustomFee;
 
@@ -852,7 +852,7 @@ public:
      */
     std::map<libzcash::SaplingPaymentAddress, std::vector<SaplingNoteEntry>> ListNotes() const;
 
-    /// Get 10000 PIV output and keys which can be used for the Masternode
+    /// Get 10000 HMS output and keys which can be used for the Masternode
     bool GetMasternodeVinAndKeys(CPubKey& pubKeyRet,
                                  CKey& keyRet,
                                  const COutPoint& collateralOut,

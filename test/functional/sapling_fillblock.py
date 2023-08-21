@@ -5,7 +5,7 @@
 
 import time
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_greater_than,
     assert_greater_than_or_equal,
@@ -23,7 +23,7 @@ def timed(f):
 
 MAX_SHIELDED_BLOCKSIZE = 750000
 
-class SaplingFillBlockTest(PivxTestFramework):
+class SaplingFillBlockTest(HemisTestFramework):
 
     def set_test_params(self):
         self.num_nodes = 2
@@ -39,7 +39,7 @@ class SaplingFillBlockTest(PivxTestFramework):
         sorted(utxos, key=lambda utxo: utxo["amount"], reverse=True)
         # pick the first N
         utxos = utxos[:n_inputs]
-        # split each one in 100 (use fixed 0.05 PIV fee)
+        # split each one in 100 (use fixed 0.05 HMS fee)
         for u in utxos:
             prevout = [{"txid": u["txid"], "vout": u["vout"]}]
             output_amt = satoshi_round((u["amount"] - Decimal("0.05")) / 100)
@@ -90,7 +90,7 @@ class SaplingFillBlockTest(PivxTestFramework):
 
         # -- First check that the miner never produces blocks with more than 750kB of shielded txes
 
-        # Split 10 utxos (of 250 PIV each) in 1000 new utxos of ~2.5 PIV each (to alice)
+        # Split 10 utxos (of 250 HMS each) in 1000 new utxos of ~2.5 HMS each (to alice)
         UTXOS_TO_SPLIT = 10
         UTXOS_TO_SHIELD = UTXOS_TO_SPLIT * 100
         self.log.info("Creating %d utxos..." % UTXOS_TO_SHIELD)
@@ -101,7 +101,7 @@ class SaplingFillBlockTest(PivxTestFramework):
         new_utxos = alice.listunspent()
         assert_equal(len(new_utxos), UTXOS_TO_SHIELD)
 
-        # Now alice shields the new utxos individually (fixed 0.2 PIV fee --> ~2.3 PIV notes)
+        # Now alice shields the new utxos individually (fixed 0.2 HMS fee --> ~2.3 HMS notes)
         self.log.info("Shielding utxos...")
         alice_z_addr = alice.getnewshieldaddress()
         shield_to = [{"address": alice_z_addr, "amount": new_utxos[0]["amount"] - Decimal("0.2")}]

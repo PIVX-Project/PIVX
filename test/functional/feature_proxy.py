@@ -34,7 +34,7 @@ import socket
 
 from test_framework.netutil import test_ipv6_local
 from test_framework.socks5 import Socks5Configuration, Socks5Command, Socks5Server, AddressType
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     PORT_MIN,
     PORT_RANGE,
@@ -54,7 +54,7 @@ NET_ONION = "onion"
 NETWORKS = frozenset({NET_IPV4, NET_IPV6, NET_ONION})
 
 
-class ProxyTest(PivxTestFramework):
+class ProxyTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 4
 

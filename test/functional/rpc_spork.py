@@ -5,11 +5,11 @@
 
 from time import sleep
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import set_node_times, assert_equal
 
 
-class hemis_RPCSporkTest(PivxTestFramework):
+class hemis_RPCSporkTest(HemisTestFramework):
 
     def set_test_params(self):
         self.setup_clean_chain = True

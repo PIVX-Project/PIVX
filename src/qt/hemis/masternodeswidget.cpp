@@ -370,7 +370,7 @@ void MasterNodesWidget::onCreateMNClicked()
     CAmount mnCollateralAmount = mnModel->getMNCollateralRequiredAmount();
     if (walletModel->getBalance() <= mnCollateralAmount) {
         inform(tr("Not enough balance to create a masternode, %1 required.")
-            .arg(GUIUtil::formatBalance(mnCollateralAmount, BitcoinUnits::PIV)));
+            .arg(GUIUtil::formatBalance(mnCollateralAmount, BitcoinUnits::HMS)));
         return;
     }
 
@@ -383,7 +383,7 @@ void MasterNodesWidget::onCreateMNClicked()
         }
         if (selectedBalance <= mnCollateralAmount) {
             inform(tr("Not enough coins selected to create a masternode, %1 required.")
-                       .arg(GUIUtil::formatBalance(mnCollateralAmount, BitcoinUnits::PIV)));
+                       .arg(GUIUtil::formatBalance(mnCollateralAmount, BitcoinUnits::HMS)));
             return;
         }
         mnModel->setCoinControl(coinControlDialog->coinControl);

@@ -38,7 +38,7 @@
   <true/>
 
   <key>CFBundleIdentifier</key>
-  <string>io.hemis.Pivx-Qt</string>
+  <string>io.hemis.Hemis-Qt</string>
 
   <key>CFBundleURLTypes</key>
   <array>
@@ -46,7 +46,7 @@
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleURLName</key>
-      <string>io.hemis.PivxPayment</string>
+      <string>io.hemis.HemisPayment</string>
       <key>CFBundleURLSchemes</key>
       <array>
         <string>hemis</string>

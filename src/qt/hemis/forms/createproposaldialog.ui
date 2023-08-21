@@ -742,7 +742,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Make sure you have 50 PIV for the proposal fee</string>
+                <string>Make sure you have 50 HMS for the proposal fee</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -1159,7 +1159,7 @@
                     <item>
                      <widget class="QLabel" name="labelResultAmount">
                       <property name="text">
-                       <string notr="true">5500 PIV</string>
+                       <string notr="true">5500 HMS</string>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

@@ -9,9 +9,9 @@
 
 namespace libzerocoin {
     enum SpendType : uint8_t {
-        SPEND, // Used for a typical spend transaction, zPIV should be unusable after
+        SPEND, // Used for a typical spend transaction, zHMS should be unusable after
         STAKE, // Used for a spend that occurs as a stake
-        MN_COLLATERAL, // Used when proving ownership of zPIV that will be used for masternodes (future)
+        MN_COLLATERAL, // Used when proving ownership of zHMS that will be used for masternodes (future)
         SIGN_MESSAGE // Used to sign messages that do not belong above (future)
     };
 }

@@ -87,7 +87,7 @@ from test_framework.messages import (
     msg_sendheaders
 )
 from test_framework.mininode import mininode_lock, NetworkThread, P2PInterface
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal, wait_until, connect_nodes, p2p_port
 
 
@@ -233,7 +233,7 @@ class TestNode(BaseNode):
     def __init__(self):
         BaseNode.__init__(self)
 
-class SendHeadersTest(PivxTestFramework):
+class SendHeadersTest(HemisTestFramework):
     def __init__(self):
         super().__init__()
         self.setup_clean_chain = True

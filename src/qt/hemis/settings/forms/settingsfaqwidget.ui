@@ -177,7 +177,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="pushButton_UnspendablePIV">
+                    <widget class="QPushButton" name="pushButton_UnspendableHMS">
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
@@ -194,7 +194,7 @@
                       <enum>Qt::NoFocus</enum>
                      </property>
                      <property name="text">
-                      <string>2) Why are my PIV unspendable?</string>
+                      <string>2) Why are my HMS unspendable?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -216,7 +216,7 @@
                       <enum>Qt::NoFocus</enum>
                      </property>
                      <property name="text">
-                      <string>3) How do I stake PIV?</string>
+                      <string>3) How do I stake HMS?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -550,10 +550,10 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QWidget" name="widget_UnspendablePIV" native="true">
-                   <layout class="QHBoxLayout" name="horizontalPage_UnspendablePIV" stretch="0,1">
+                  <widget class="QWidget" name="widget_UnspendableHMS" native="true">
+                   <layout class="QHBoxLayout" name="horizontalPage_UnspendableHMS" stretch="0,1">
                     <item alignment="Qt::AlignTop">
-                     <widget class="QLabel" name="labelNumber_UnspendablePIV">
+                     <widget class="QLabel" name="labelNumber_UnspendableHMS">
                       <property name="minimumSize">
                        <size>
                         <width>24</width>
@@ -575,7 +575,7 @@
                      </widget>
                     </item>
                     <item>
-                     <layout class="QVBoxLayout" name="verticalLayout_UnspendablePIV">
+                     <layout class="QVBoxLayout" name="verticalLayout_UnspendableHMS">
                       <property name="spacing">
                        <number>0</number>
                       </property>
@@ -586,9 +586,9 @@
                        <number>20</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="labelSubtitle_UnspendablePIV">
+                       <widget class="QLabel" name="labelSubtitle_UnspendableHMS">
                         <property name="text">
-                         <string>Why are my PIV unspendable?</string>
+                         <string>Why are my HMS unspendable?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -596,7 +596,7 @@
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer1_UnspendablePIV">
+                       <spacer name="verticalSpacer1_UnspendableHMS">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -612,7 +612,7 @@
                        </spacer>
                       </item>
                       <item>
-                       <widget class="QLabel" name="labelContent_UnspendablePIV">
+                       <widget class="QLabel" name="labelContent_UnspendableHMS">
                         <property name="text">
                          <string notr="true">N/A</string>
                         </property>
@@ -625,7 +625,7 @@
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer2_UnspendablePIV">
+                       <spacer name="verticalSpacer2_UnspendableHMS">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -678,7 +678,7 @@
                       <item>
                        <widget class="QLabel" name="labelSubtitle_Stake">
                         <property name="text">
-                         <string>How do I stake PIV?</string>
+                         <string>How do I stake HMS?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>

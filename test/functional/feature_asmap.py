@@ -24,7 +24,7 @@ The tests are order-independent.
 import os
 import shutil
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 
 DEFAULT_ASMAP_FILENAME = 'ip_asn.map' # defined in src/init.cpp
 ASMAP = '../../src/test/data/asmap.raw' # path to unit test skeleton asmap
@@ -34,7 +34,7 @@ def expected_messages(filename):
     return ['Opened asmap file "{}" (59 bytes) from disk'.format(filename),
             'Using asmap version {} for IP bucketing'.format(VERSION)]
 
-class AsmapTest(PivxTestFramework):
+class AsmapTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
 

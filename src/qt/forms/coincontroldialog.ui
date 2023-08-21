@@ -98,7 +98,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Select PIV Outputs to Spend</string>
+           <string>Select HMS Outputs to Spend</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -268,7 +268,7 @@ padding-right:4px;</string>
            <item>
             <widget class="QLabel" name="labelCoinControlFee">
              <property name="text">
-              <string>0.00 PIV</string>
+              <string>0.00 HMS</string>
              </property>
             </widget>
            </item>
@@ -729,7 +729,7 @@ padding-right:4px;</string>
            <item>
             <widget class="QLabel" name="labelCoinControlAfterFee">
              <property name="text">
-              <string>0.00 PIV</string>
+              <string>0.00 HMS</string>
              </property>
             </widget>
            </item>

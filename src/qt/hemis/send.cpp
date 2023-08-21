@@ -127,8 +127,8 @@ SendWidget::SendWidget(PIVXGUI* parent) :
     setCustomFeeSelected(false);
 
     // Connect
-    connect(ui->pushLeft, &QPushButton::clicked, [this](){onPIVSelected(true);});
-    connect(ui->pushRight,  &QPushButton::clicked, [this](){onPIVSelected(false);});
+    connect(ui->pushLeft, &QPushButton::clicked, [this](){onHMSSelected(true);});
+    connect(ui->pushRight,  &QPushButton::clicked, [this](){onHMSSelected(false);});
     connect(ui->pushButtonSave, &QPushButton::clicked, this, &SendWidget::onSendClicked);
     connect(ui->pushButtonAddRecipient, &QPushButton::clicked, this, &SendWidget::onAddEntryClicked);
     connect(ui->pushButtonClear, &QPushButton::clicked, [this](){clearAll(true);});
@@ -361,7 +361,7 @@ void SendWidget::setFocusOnLastEntry()
 void SendWidget::showHideCheckBoxDelegations(CAmount delegationBalance)
 {
     // Show checkbox only when there is any available owned delegation and
-    // coincontrol is not selected, and we are trying to spend transparent PIVs.
+    // coincontrol is not selected, and we are trying to spend transparent HMSs.
     const bool isCControl = coinControlDialog ? coinControlDialog->coinControl->HasSelected() : false;
     const bool hasDel = delegationBalance > 0;
 
@@ -762,7 +762,7 @@ void SendWidget::onShieldCoinsClicked()
         ProcessSend(recipients, true, [this](QList<SendCoinsRecipient>& recipients) {
             auto res = walletModel->getNewShieldedAddress("");
             if (!res) {
-                inform(tr("Error generating address to shield PIVs"));
+                inform(tr("Error generating address to shield HMSs"));
                 return false;
             }
             recipients.back().address = QString::fromStdString(res.getObjResult()->ToString());
@@ -770,7 +770,7 @@ void SendWidget::onShieldCoinsClicked()
             return true;
         });
     } else {
-        inform(tr("You don't have any transparent PIVs to shield."));
+        inform(tr("You don't have any transparent HMSs to shield."));
     }
 }
 
@@ -799,7 +799,7 @@ void SendWidget::onCheckBoxChanged()
     }
 }
 
-void SendWidget::onPIVSelected(bool _isTransparent)
+void SendWidget::onHMSSelected(bool _isTransparent)
 {
     if (isTransparent != _isTransparent) {
         isTransparent = _isTransparent;

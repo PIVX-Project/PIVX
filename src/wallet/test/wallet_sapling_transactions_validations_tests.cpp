@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(test_in_block_and_mempool_notes_double_spend)
     BOOST_CHECK_EQUAL(pwalletMain->GetAvailableBalance(), CAmount(250 * COIN * 10)); // 10 blocks available
     BOOST_CHECK_EQUAL(pwalletMain->GetImmatureBalance(), CAmount(250 * COIN * 100)); // 100 blocks immature
 
-    // Now that we have the chain, let's shield 100 PIVs
+    // Now that we have the chain, let's shield 100 HMSs
     // single recipient
     std::vector<SendManyRecipient> recipients;
     libzcash::SaplingPaymentAddress pa = pwalletMain->GenerateNewSaplingZKey("sapling1");
@@ -117,8 +117,8 @@ BOOST_AUTO_TEST_CASE(test_in_block_and_mempool_notes_double_spend)
         CreateAndProcessBlock({}, scriptPubKey, false /*fNoMempoolTx*/);
     }
     SyncWithValidationInterfaceQueue();
-    BOOST_CHECK_EQUAL(pwalletMain->GetAvailableShieldedBalance(), CAmount(100 * COIN)); // 100 shield PIVs
-    BOOST_CHECK_EQUAL(pwalletMain->GetUnconfirmedShieldedBalance(), CAmount(0)); // 0 shield PIVs
+    BOOST_CHECK_EQUAL(pwalletMain->GetAvailableShieldedBalance(), CAmount(100 * COIN)); // 100 shield HMSs
+    BOOST_CHECK_EQUAL(pwalletMain->GetUnconfirmedShieldedBalance(), CAmount(0)); // 0 shield HMSs
 
     // ##############################################
     // Context set!

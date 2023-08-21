@@ -57,7 +57,7 @@ New SHIELD Protocol Implemented!
 --------------------------------
 
 #### Overview
-Users will be able to protect their financial information by sending and receiving PIVs privately, as well as sending and receiving encrypted messages attached to the shield transactions.
+Users will be able to protect their financial information by sending and receiving HMSs privately, as well as sending and receiving encrypted messages attached to the shield transactions.
 More visual information about the protocol can be found at https://hemis.org .
 
 #### GUI features
@@ -65,7 +65,7 @@ New set of functionalities for the interaction with the SHIELD protocol:
 
 * Receive screen modified to show, generate and set label of wallet's shield addresses.
 * Dashboard transactions list including shield transactions.
-* Top bar showing shield PIV balances.
+* Top bar showing shield HMS balances.
 * Send screen modified, implementing shield transaction crafting and broadcast.
 * New encrypted memo functionality.
 * Transaction detail dialog presenting shield transaction information.
@@ -76,7 +76,7 @@ New set of functionalities for the interaction with the SHIELD protocol:
 A brand new manager encapsulating all Sapling related capabilities inside the wallet has been implemented:
 
 * New address type: shield addresses (using bech32 format).
-* New derivation path for Sapling keys: Shield addresses are derived from the same wallet master seed used for the deterministic derivation of all other keys. The same seed, therefore, can be used to restore both transparent and Shield addresses, recovering both transparent and Shield PIV balance.
+* New derivation path for Sapling keys: Shield addresses are derived from the same wallet master seed used for the deterministic derivation of all other keys. The same seed, therefore, can be used to restore both transparent and Shield addresses, recovering both transparent and Shield HMS balance.
 * Support for Sapling extended full viewing keys, incoming viewing keys, outgoing viewing keys and spending keys.
 * Sapling notes management:
     - Notes decryption.
@@ -231,7 +231,7 @@ Several new RPC commands have been introduced to support SHIELD address and tran
 | `rawshieldsendmany` | Creates a transaction sending to many recipients (without committing it), and returns the hex string. | Yes |
 | `shieldsendmany` | Send to many recipients (Either transparent or SHIELD) | Yes |
 | `viewshieldtransaction` | Get detailed SHIELD information about an in-wallet transaction | Yes |
-| `getsupplyinfo` | Returns detailed PIV supply information | No |
+| `getsupplyinfo` | Returns detailed HMS supply information | No |
 | `initmasternode` | Manually initialize the client as a masternode | No |
 | `getcachedblockhashes` | Return the block hashes cached in the masternode manager | No |
 
@@ -415,7 +415,7 @@ Each new command is detailed below:
   2. "amounts"            (array, required) An array of json objects representing the amounts to send.
      [{
        "address":address  (string, required) The address is a transparent addr or shield addr
-       "amount":amount    (numeric, required) The numeric amount in PIV is the value
+       "amount":amount    (numeric, required) The numeric amount in HMS is the value
        "memo":memo        (string, optional) If the address is a shield addr, message string of max 512 bytes
      }, ... ]
   3. minconf              (numeric, optional, default=1) Only use funds confirmed at least this many times.
@@ -442,7 +442,7 @@ Each new command is detailed below:
   2. "amounts"             (array, required) An array of json objects representing the amounts to send.
      [{
        "address":address  (string, required) The address is a transparent addr or shield addr
-       "amount":amount    (numeric, required) The numeric amount in PIV is the value
+       "amount":amount    (numeric, required) The numeric amount in HMS is the value
        "memo":memo        (string, optional) If the address is a shield addr, message string of max 512 bytes
      }, ... ]
   3. minconf               (numeric, optional, default=1) Only use funds confirmed at least this many times.
@@ -465,14 +465,14 @@ Each new command is detailed below:
   Result:
   {
     "txid" : "transactionid",   (string) The transaction id
-    "fee"  : x.xxx,             (numeric) The transaction fee in PIV
+    "fee"  : x.xxx,             (numeric) The transaction fee in HMS
     "spends" : [
       {
         "spend" : n,                    (numeric, sapling) the index of the spend within vShieldedSpend
         "txidPrev" : "transactionid",   (string) The id for the transaction this note was created in
         "outputPrev" : n,               (numeric, sapling) the index of the output within the vShieldedOutput
         "address" : "hemisaddress",      (string) The hemis address involved in the transaction
-        "value" : x.xxx                 (numeric) The amount in PIV
+        "value" : x.xxx                 (numeric) The amount in HMS
         "valueSat" : xxxx               (numeric) The amount in satoshis
       }
       ,...
@@ -482,7 +482,7 @@ Each new command is detailed below:
         "output" : n,                   (numeric, sapling) the index of the output within the vShieldedOutput
         "address" : "hemisaddress",      (string) The hemis address involved in the transaction
         "outgoing" : true|false         (boolean, sapling) True if the output is not for an address in the wallet
-        "value" : x.xxx                 (numeric) The amount in PIV
+        "value" : x.xxx                 (numeric) The amount in HMS
         "valueSat" : xxxx               (numeric) The amount in satoshis
         "memo" : "hexmemo",             (string) Hexademical string representation of the memo field
         "memoStr" : "memo",             (string) Only returned if memo contains valid UTF-8 text.
@@ -591,9 +591,9 @@ Several RPC commands have had changes to their input arguments or output fields 
   The `nlastdsq` JSON return entry has been removed. This was a remnant from pre-zerocoin "CoinJoin" mixing.
 
 * `getinfo`
-  The `zerocoinbalance` JSON return entry and the `zPIVsupply` return JSON object have been removed due to zerocoin deprecation.
-  The `balance` JSON return entry is now all inclusive (the sum of all transparent and shield PIV)
-  The `moneysupply` JSON return entry is the total PIV supply (the sum of all transparent and shield PIV)
+  The `zerocoinbalance` JSON return entry and the `zHMSsupply` return JSON object have been removed due to zerocoin deprecation.
+  The `balance` JSON return entry is now all inclusive (the sum of all transparent and shield HMS)
+  The `moneysupply` JSON return entry is the total HMS supply (the sum of all transparent and shield HMS)
   A new JSON return entry (`transparentsupply`) has been added to return the sum of the value of all unspent outputs when the chainstate was last flushed to disk.
   A new JSON return entry (`shieldsupply`) has been added to return the shield supply at the chain tip.
   Integrators should switch to the newly added `getsupplyinfo` RPC command for the purpose of obtaining supply information as it is more robust and does not rely on information caching.
@@ -671,24 +671,24 @@ The table below details RPC commands that have now been fully removed. These com
 | `listreceivedbyaccount` | List received transactions by account | Account system removal |
 | `listaccounts` | List internal account names and balances | Account system removal |
 | `multisend` | Configure sending a portion of stake rewards to a hemis address | Pending a full rewrite |
-| `getzerocoinbalance` | Returned the wallet's total zPIV balance | Zerocoin deprecation |
-| `listmintedzerocoins` | List all zPIV mints in the wallet | Zerocoin deprecation |
+| `getzerocoinbalance` | Returned the wallet's total zHMS balance | Zerocoin deprecation |
+| `listmintedzerocoins` | List all zHMS mints in the wallet | Zerocoin deprecation |
 | `listzerocoinamounts` | List information about your zerocoin amounts | Zerocoin deprecation |
-| `listspentzerocoins` | List all the spent zPIV mints in the wallet | Zerocoin deprecation |
-| `mintzerocoin` | Mint the specified zPIV amount | Zerocoin deprecation |
-| `spendzerocoin` | Spend zPIV to a PIV address | Zerocoin deprecation |
-| `spendzerocoinmints` | Spend specific zPIV mints to a PIV address | Zerocoin deprecation |
+| `listspentzerocoins` | List all the spent zHMS mints in the wallet | Zerocoin deprecation |
+| `mintzerocoin` | Mint the specified zHMS amount | Zerocoin deprecation |
+| `spendzerocoin` | Spend zHMS to a HMS address | Zerocoin deprecation |
+| `spendzerocoinmints` | Spend specific zHMS mints to a HMS address | Zerocoin deprecation |
 | `resetmintzerocoin` | Scan the chain for zerocoin mints held in the wallet DB and refresh their status | Zerocoin deprecation |
 | `resetspentzerocoin` | Scan the chain for all zerocoin spends held in the wallet DB and refresh their status | Zerocoin deprecation |
 | `getarchivedzerocoin` | Display zerocoins that were archived because they were believed to be orphans | Zerocoin deprecation |
 | `exportzerocoins` | Export zerocoin mints that are held in the wallet DB | Zerocoin deprecation |
 | `importzerocoins` | Import zerocoin mints | Zerocoin deprecation |
-| `reconsiderzerocoins` | Check archived zPIVs to see if any mints were added to the chain | Zerocoin deprecation |
-| `setzpivseed` | Set the wallet's deterministic zPIV seed to a specific value | Zerocoin deprecation |
-| `getzpivseed` | Return the current deterministic zPIV seed | Zerocoin deprecation |
-| `generatemintlist` | Show mints that are derived from the deterministic zPIV seed | Zerocoin deprecation |
+| `reconsiderzerocoins` | Check archived zHMSs to see if any mints were added to the chain | Zerocoin deprecation |
+| `setzpivseed` | Set the wallet's deterministic zHMS seed to a specific value | Zerocoin deprecation |
+| `getzpivseed` | Return the current deterministic zHMS seed | Zerocoin deprecation |
+| `generatemintlist` | Show mints that are derived from the deterministic zHMS seed | Zerocoin deprecation |
 | `dzpivstate` | Show the current state of the mintpool of the wallet | Zerocoin deprecation |
-| `searchdzpiv` | Do a search for deterministically generated zPIV that have not yet added to the wallet | Zerocoin deprecation |
+| `searchdzpiv` | Do a search for deterministically generated zHMS that have not yet added to the wallet | Zerocoin deprecation |
 | `spendrawzerocoin` | Create and broadcast a TX spending the provided zericoin | Zerocoin deprecation |
 
 

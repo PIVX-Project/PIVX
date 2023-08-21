@@ -13,7 +13,7 @@ from test_framework.mininode import (
     P2PInterface,
 )
 from test_framework.messages import CTxIn, COutPoint, msg_mnping
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     hex_str_to_bytes,
@@ -55,7 +55,7 @@ class InvReceiver(P2PInterface):
                 self.send_message(self.vec_mnp[inv.hash])
                 self.getdata_count+=1
 
-class InvalidMessagesTest(PivxTestFramework):
+class InvalidMessagesTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True

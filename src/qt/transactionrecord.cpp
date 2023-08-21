@@ -39,7 +39,7 @@ bool TransactionRecord::decomposeCoinStake(const CWallet* wallet, const CWalletT
             sub.debit = -nDebit;
             loadHotOrColdStakeOrContract(wallet, wtx, sub);
         } else {
-            // PIV stake reward
+            // HMS stake reward
             CTxDestination address;
             if (!ExtractDestination(wtx.tx->vout[1].scriptPubKey, address))
                 return true;
@@ -339,7 +339,7 @@ bool TransactionRecord::decomposeDebitTransaction(const CWallet* wallet, const C
             sub.address = getValueOrReturnEmpty(wtx.mapValue, "to");
             if (sub.address.empty() && txout.scriptPubKey.StartsWithOpcode(OP_RETURN)) {
                 sub.type = TransactionRecord::SendToNobody;
-                // Burned PIVs, op_return could be for a kind of data stored there. For now, support UTF8 comments.
+                // Burned HMSs, op_return could be for a kind of data stored there. For now, support UTF8 comments.
                 std::string comment = wtx.GetComment();
                 if (!comment.empty() && IsValidUTF8(comment)) {
                     sub.address = comment;
@@ -618,7 +618,7 @@ void TransactionRecord::updateStatus(const CWalletTx& wtx, int chainHeight)
     // For generated transactions, determine maturity
     else if (type == TransactionRecord::Generated ||
             type == TransactionRecord::StakeMint ||
-            type == TransactionRecord::StakeZPIV ||
+            type == TransactionRecord::StakeZHMS ||
             type == TransactionRecord::MNReward ||
             type == TransactionRecord::BudgetPayment ||
             type == TransactionRecord::StakeDelegated ||
@@ -661,7 +661,7 @@ int TransactionRecord::getOutputIndex() const
 
 bool TransactionRecord::isCoinStake() const
 {
-    return type == TransactionRecord::StakeMint || type == TransactionRecord::Generated || type == TransactionRecord::StakeZPIV;
+    return type == TransactionRecord::StakeMint || type == TransactionRecord::Generated || type == TransactionRecord::StakeZHMS;
 }
 
 bool TransactionRecord::isMNReward() const

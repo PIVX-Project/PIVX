@@ -23,7 +23,7 @@ import collections
 import enum
 import itertools
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_raises_rpc_error,
     connect_nodes,
@@ -113,7 +113,7 @@ IMPORT_NODES = [ImportNode(*fields) for fields in itertools.product((False, True
 TIMESTAMP_WINDOW = 2 * 60 * 60
 
 
-class ImportRescanTest(PivxTestFramework):
+class ImportRescanTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 2 + len(IMPORT_NODES)
 

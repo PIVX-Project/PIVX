@@ -619,7 +619,7 @@ UniValue protx_register_fund(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 6 || request.params.size() > 8) {
         throw std::runtime_error(
                 "protx_register_fund \"collateralAddress\" \"ipAndPort\" \"ownerAddress\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (operatorReward \"operatorPayoutAddress\")\n"
-                "\nCreates, funds and sends a ProTx to the network. The resulting transaction will move 10000 PIV\n"
+                "\nCreates, funds and sends a ProTx to the network. The resulting transaction will move 10000 HMS\n"
                 "to the address specified by collateralAddress and will then function as masternode collateral.\n"
                 + HelpRequiringPassphrase(pwallet) + "\n"
                 "\nArguments:\n"

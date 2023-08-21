@@ -121,7 +121,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 
 ### Wallet
  - #939 `37ad934ad8` [Wallet] Remove (explicitely) unused tx comparator (warrows)
- - #971 `bbeabc4d63` [Wallet][zPIV] zc public spend parse crash in wallet startup. (furszy)
+ - #971 `bbeabc4d63` [Wallet][zHMS] zc public spend parse crash in wallet startup. (furszy)
  - #980 `8b81d8f6f9` [Wallet] Remove Bitcoin Core 0.8 block hardlinking (JSKitty)
  - #982 `a0a1af9f78` [Miner] Don't create new keys when generating PoS blocks (random-zebra)
 

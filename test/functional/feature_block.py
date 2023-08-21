@@ -44,7 +44,7 @@ from test_framework.script import (
     SignatureHash,
     hash160,
 )
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_equal
 
 MAX_BLOCK_SIGOPS = MAX_BLOCK_BASE_SIZE // 50
@@ -75,7 +75,7 @@ class CBrokenBlock(CBlock):
     def normal_serialize(self):
         return super().serialize()
 
-class FullBlockTest(PivxTestFramework):
+class FullBlockTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
         self.setup_clean_chain = True

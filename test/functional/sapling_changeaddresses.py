@@ -6,12 +6,12 @@
 
 from decimal import Decimal
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import assert_greater_than_or_equal, get_coinstake_address
 
 
 # Test wallet change address behaviour
-class WalletChangeAddressesTest(PivxTestFramework):
+class WalletChangeAddressesTest(HemisTestFramework):
 
     def set_test_params(self):
         self.num_nodes = 1

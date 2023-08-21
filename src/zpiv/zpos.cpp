@@ -67,12 +67,12 @@ CLegacyZPivStake* CLegacyZPivStake::NewZPivStake(const CTxIn& txin, int nHeight)
     const Consensus::Params& consensus = Params().GetConsensus();
     if (!consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_ZC_V2) ||
             nHeight >= consensus.height_last_ZC_AccumCheckpoint) {
-        LogPrint(BCLog::LEGACYZC, "%s : zPIV stake block: height %d outside range", __func__, nHeight);
+        LogPrint(BCLog::LEGACYZC, "%s : zHMS stake block: height %d outside range", __func__, nHeight);
         return nullptr;
     }
 
     // Check spend type
-    libzerocoin::CoinSpend spend = ZPIVModule::TxInToZerocoinSpend(txin);
+    libzerocoin::CoinSpend spend = ZHMSModule::TxInToZerocoinSpend(txin);
     if (spend.getSpendType() != libzerocoin::SpendType::STAKE) {
         LogPrintf("%s : spend is using the wrong SpendType (%d)", __func__, (int)spend.getSpendType());
         return nullptr;

@@ -20,7 +20,7 @@ Tests correspond to code in rpc/blockchain.cpp.
 
 from decimal import Decimal
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
     assert_greater_than_or_equal,
@@ -29,7 +29,7 @@ from test_framework.util import (
     assert_is_hash_string,
 )
 
-class BlockchainTest(PivxTestFramework):
+class BlockchainTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 1
 

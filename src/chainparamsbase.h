@@ -12,7 +12,7 @@
 
 /**
  * CBaseChainParams defines the base parameters (shared between hemis-cli and hemisd)
- * of a given instance of the Pivx system.
+ * of a given instance of the Hemis system.
  */
 class CBaseChainParams
 {

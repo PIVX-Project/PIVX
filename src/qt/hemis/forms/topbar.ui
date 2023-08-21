@@ -119,7 +119,7 @@
                <string notr="true">padding:0px;margin:0px;</string>
               </property>
               <property name="text">
-               <string notr="true">480.0685 PIV</string>
+               <string notr="true">480.0685 HMS</string>
               </property>
              </widget>
             </item>
@@ -195,7 +195,7 @@ border:none;</string>
                </size>
               </property>
               <property name="text">
-               <string notr="true">1.000 PIV</string>
+               <string notr="true">1.000 HMS</string>
               </property>
              </widget>
             </item>
@@ -474,7 +474,7 @@ border:none;</string>
              <item>
               <widget class="QLabel" name="labelAmountPiv">
                <property name="text">
-                <string notr="true">480.0685 PIV</string>
+                <string notr="true">480.0685 HMS</string>
                </property>
               </widget>
              </item>
@@ -529,7 +529,7 @@ border:none;</string>
                  <item>
                   <widget class="QLabel" name="labelPendingPiv">
                    <property name="text">
-                    <string notr="true">6.943 PIV</string>
+                    <string notr="true">6.943 HMS</string>
                    </property>
                   </widget>
                  </item>
@@ -583,7 +583,7 @@ border:none;</string>
                  <item>
                   <widget class="QLabel" name="labelImmaturePiv">
                    <property name="text">
-                    <string notr="true">10 PIV</string>
+                    <string notr="true">10 HMS</string>
                    </property>
                   </widget>
                  </item>

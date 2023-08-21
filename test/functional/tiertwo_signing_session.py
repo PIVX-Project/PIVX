@@ -4,13 +4,13 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test a generic LLQM signing session"""
 
-from test_framework.test_framework import PivxDMNTestFramework
+from test_framework.test_framework import HemisDMNTestFramework
 from test_framework.util import (
     assert_equal,
 )
 import time
 
-class SigningSessionTest(PivxDMNTestFramework):
+class SigningSessionTest(HemisDMNTestFramework):
 
     def set_test_params(self):
         self.set_base_test_params()

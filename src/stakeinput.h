@@ -24,7 +24,7 @@ public:
     virtual const CBlockIndex* GetIndexFrom() const = 0;
     virtual bool GetTxOutFrom(CTxOut& out) const = 0;
     virtual CAmount GetValue() const = 0;
-    virtual bool IsZPIV() const = 0;
+    virtual bool IsZHMS() const = 0;
     virtual CDataStream GetUniqueness() const = 0;
 };
 
@@ -46,7 +46,7 @@ public:
     CAmount GetValue() const override;
     CDataStream GetUniqueness() const override;
     CTxIn GetTxIn() const;
-    bool IsZPIV() const override { return false; }
+    bool IsZHMS() const override { return false; }
 };
 
 

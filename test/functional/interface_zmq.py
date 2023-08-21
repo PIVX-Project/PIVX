@@ -11,7 +11,7 @@ import struct
 import time
 
 from test_framework.messages import CTransaction
-from test_framework.test_framework import PivxTestFramework, SkipTest
+from test_framework.test_framework import HemisTestFramework, SkipTest
 from test_framework.util import (
     assert_equal,
     bytes_to_hex_str,
@@ -38,7 +38,7 @@ class ZMQSubscriber:
         return body
 
 
-class ZMQTest (PivxTestFramework):
+class ZMQTest (HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 2
 

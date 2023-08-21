@@ -32,12 +32,12 @@ Test is as follows:
 
 from decimal import Decimal
 
-from test_framework.test_framework import PivxTestFramework
+from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal
 )
 
-class MempoolPersistTest(PivxTestFramework):
+class MempoolPersistTest(HemisTestFramework):
     def set_test_params(self):
         self.num_nodes = 3
         self.extra_args = [[], ["-persistmempool=0"], []]

@@ -7,14 +7,14 @@
 import time
 
 from test_framework.authproxy import JSONRPCException
-from test_framework.test_framework import PivxDMNTestFramework, ExpectedDKGMessages
+from test_framework.test_framework import HemisDMNTestFramework, ExpectedDKGMessages
 from test_framework.util import (
     assert_equal,
     wait_until,
 )
 
 
-class DkgPoseTest(PivxDMNTestFramework):
+class DkgPoseTest(HemisDMNTestFramework):
 
     def set_test_params(self):
         self.set_base_test_params()
