@@ -225,31 +225,31 @@ extern const char* SPORK;
  */
 extern const char* GETSPORKS;
 /**
- * The mnbroadcast message is used to broadcast masternode startup data to connected peers
+ * The gmbroadcast message is used to broadcast gamemaster startup data to connected peers
  */
-extern const char* MNBROADCAST;
+extern const char* GMBROADCAST;
 /**
- * The mnbroadcast2 message is used to broadcast masternode startup data to connected peers
+ * The gmbroadcast2 message is used to broadcast gamemaster startup data to connected peers
  * Supporting BIP155 node addresses.
  */
-extern const char* MNBROADCAST2;
+extern const char* GMBROADCAST2;
 /**
- * The mnping message is used to ensure a masternode is still active
+ * The gmping message is used to ensure a gamemaster is still active
  */
-extern const char* MNPING;
+extern const char* GMPING;
 /**
- * The mnwinner message is used to relay and distribute consensus for masternode
+ * The gmwinner message is used to relay and distribute consensus for gamemaster
  * payout ordering
  */
-extern const char* MNWINNER;
+extern const char* GMWINNER;
 /**
- * The getmnwinners message is used to request winning masternode data from connected peers
+ * The getgmwinners message is used to request winning gamemaster data from connected peers
  */
-extern const char* GETMNWINNERS;
+extern const char* GETGMWINNERS;
 /**
-* The dseg message is used to request the Masternode list or an specific entry
+* The dseg message is used to request the Gamemaster list or an specific entry
 */
-extern const char* GETMNLIST;
+extern const char* GETGMLIST;
 /**
  * The budgetproposal message is used to broadcast or relay budget proposal metadata to connected peers
  */
@@ -283,9 +283,9 @@ extern const char* QFCOMMITMENT;
  */
 extern const char* QSENDRECSIGS;
 /**
- * The mnauth message is used authenticate MN connections
+ * The gmauth message is used authenticate GM connections
  */
-extern const char* MNAUTH;
+extern const char* GMAUTH;
 /*
  * Messages for LLMQ-DKG inter-quorum communication
  */
@@ -318,9 +318,9 @@ enum ServiceFlags : uint64_t {
     // NODE_BLOOM means the node is capable and willing to handle bloom-filtered connections.
     NODE_BLOOM = (1 << 2),
 
-    // NODE_BLOOM_WITHOUT_MN means the node has the same features as NODE_BLOOM with the only difference
+    // NODE_BLOOM_WITHOUT_GM means the node has the same features as NODE_BLOOM with the only difference
     // that the node doesn't want to receive master nodes messages. (the 1<<3 was not picked as constant because on bitcoin 0.14 is witness and we want that update here )
-    NODE_BLOOM_WITHOUT_MN = (1 << 4),
+    NODE_BLOOM_WITHOUT_GM = (1 << 4),
 
     // Bits 24-31 are reserved for temporary experiments. Just pick a bit that
     // isn't getting used, or one not being used much, and notify the
@@ -439,15 +439,15 @@ enum GetDataMsg {
     MSG_TXLOCK_REQUEST, // Deprecated
     MSG_TXLOCK_VOTE,    // Deprecated
     MSG_SPORK,
-    MSG_MASTERNODE_WINNER,
-    MSG_MASTERNODE_SCANNING_ERROR,
+    MSG_GAMEMASTER_WINNER,
+    MSG_GAMEMASTER_SCANNING_ERROR,
     MSG_BUDGET_VOTE,
     MSG_BUDGET_PROPOSAL,
     MSG_BUDGET_FINALIZED,
     MSG_BUDGET_FINALIZED_VOTE,
-    MSG_MASTERNODE_QUORUM,
-    MSG_MASTERNODE_ANNOUNCE,
-    MSG_MASTERNODE_PING,
+    MSG_GAMEMASTER_QUORUM,
+    MSG_GAMEMASTER_ANNOUNCE,
+    MSG_GAMEMASTER_PING,
     MSG_DSTX, // Deprecated
     MSG_QUORUM_FINAL_COMMITMENT,
     MSG_QUORUM_CONTRIB,

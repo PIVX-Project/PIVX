@@ -25,7 +25,7 @@ static const size_t PROP_NAME_MAX_SIZE = 20;
 class CBudgetManager;
 
 //
-// Budget Proposal : Contains the masternode votes for each budget
+// Budget Proposal : Contains the gamemaster votes for each budget
 //
 
 class CBudgetProposal
@@ -37,7 +37,7 @@ private:
     std::string strInvalid;
 
     // Functions used inside UpdateValid()/IsWellFormed - setting strInvalid
-    bool IsHeavilyDownvoted(int mnCount);
+    bool IsHeavilyDownvoted(int gmCount);
     bool updateExpired(int nCurrentHeight);
     bool CheckStartEnd();
     bool CheckAmount(const CAmount& nTotalBudget);
@@ -69,7 +69,7 @@ public:
     void SyncVotes(CNode* pfrom, bool fPartial, int& nInvCount) const;
 
     // sets fValid and strInvalid, returns fValid
-    bool UpdateValid(int nHeight, int mnCount);
+    bool UpdateValid(int nHeight, int gmCount);
     // Static checks that should be done only once - sets strInvalid
     bool IsWellFormed(const CAmount& nTotalBudget);
     bool IsValid() const  { return fValid; }
@@ -78,7 +78,7 @@ public:
     std::string IsInvalidLogStr() const { return strprintf("[%s]: %s", GetName(), IsInvalidReason()); }
 
     bool IsEstablished() const;
-    bool IsPassing(int nBlockStartBudget, int nBlockEndBudget, int mnCount) const;
+    bool IsPassing(int nBlockStartBudget, int nBlockEndBudget, int gmCount) const;
     bool IsExpired(int nCurrentHeight) const;
 
     std::string GetName() const { return strProposalName; }

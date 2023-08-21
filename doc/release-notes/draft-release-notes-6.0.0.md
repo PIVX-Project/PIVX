@@ -18,16 +18,16 @@ Notable Changes
 (Developers: add your notes here as part of your pull requests whenever possible)
 
 
-Deterministic Masternode Lists
+Deterministic Gamemaster Lists
 ------------------------------
 
-hemis v6.0.0 introduces on-chain consensus for masternode lists, which allow for deterministic quorum derivation, implementing Dash's [DIP-0003](https://github.com/dashpay/dips/blob/master/dip-0003.md).
+hemis v6.0.0 introduces on-chain consensus for gamemaster lists, which allow for deterministic quorum derivation, implementing Dash's [DIP-0003](https://github.com/dashpay/dips/blob/master/dip-0003.md).
 
-In the previous masternode system, each node needed to maintain their own individual masternode list with P2P messages, thus discrepancies might occur, for example, due to a different order of message reception.
-Deterministic Masternode lists are lists of masternodes, built at every block, relying only on on-chain data (previous list, and transactions included in the current block).
-All nodes derive (and verify) their masternode lists independently, from the same on-chain transactions, thus they immediately reach consensus on the tier-two state (number of masternodes, properties and status of each one).
+In the previous gamemaster system, each node needed to maintain their own individual gamemaster list with P2P messages, thus discrepancies might occur, for example, due to a different order of message reception.
+Deterministic Gamemaster lists are lists of gamemasters, built at every block, relying only on on-chain data (previous list, and transactions included in the current block).
+All nodes derive (and verify) their gamemaster lists independently, from the same on-chain transactions, thus they immediately reach consensus on the tier-two state (number of gamemasters, properties and status of each one).
 
-Masternodes are "registered" by special transactions called ProTx, and removed only by spending the collateral.
+Gamemasters are "registered" by special transactions called ProTx, and removed only by spending the collateral.
 A ProTx either creates a 10000-HMS collateral as tx output, or includes a reference to an unspent 10000-HMS utxo on chain (and a proof of ownership).
 See PR [#2267](https://github.com/hemis-Project/hemis/pull/2267) for more information.
 
@@ -59,7 +59,7 @@ Upgrade instructions: !TODO
     protx_register "collateralHash" collateralIndex "ipAndPort" "ownerAddress" "operatorPubKey" "votingAddress" "payoutAddress" (operatorReward "operatorPayoutAddress")
 
     Creates and sends a ProTx to the network. The collateral is specified through "collateralHash" and collateralIndex, and must be an unspent
-    transaction output spendable by this wallet. It must also not be used by any other masternode.
+    transaction output spendable by this wallet. It must also not be used by any other gamemaster.
 
     Arguments:
     1. "collateralHash"        (string, required) The collateral transaction hash.
@@ -70,11 +70,11 @@ Upgrade instructions: !TODO
                                   The private key belonging to this address must be known in your wallet, in order to send updates.
                                   The address must not be already registered, and must differ from the collateralAddress
     5. "operatorPubKey"        (string, required) The operator BLS public key. The private BLS key does not have to be known.
-                                  It has to match the BLS private key which is later used when operating the masternode.
+                                  It has to match the BLS private key which is later used when operating the gamemaster.
     6. "votingAddress"         (string, required) The voting key address. The private key does not have to be known by your wallet.
                                   It has to match the private key which is later used when voting on proposals.
                                   If set to an empty string, ownerAddress will be used.
-    7. "payoutAddress"         (string, required) The hemis address to use for masternode reward payments.
+    7. "payoutAddress"         (string, required) The hemis address to use for gamemaster reward payments.
     8. "operatorReward"        (numeric, optional) The fraction in % to share with the operator. The value must be
                                   between 0.00 and 100.00. If not set, it takes the default value of 0.0
     9. "operatorPayoutAddress" (string, optional) The address used for operator reward payments.
@@ -90,7 +90,7 @@ Upgrade instructions: !TODO
     protx_register_fund "collateralAddress" "ipAndPort" "ownerAddress" "operatorPubKey" "votingAddress" "payoutAddress" (operatorReward "operatorPayoutAddress")
 
     Creates, funds and sends a ProTx to the network. The resulting transaction will move 10000 HMS
-    to the address specified by collateralAddress and will then function as masternode collateral.
+    to the address specified by collateralAddress and will then function as gamemaster collateral.
 
     Arguments:
     1. "collateralAddress"     (string, required) The hemis address to send the collateral to.
@@ -100,11 +100,11 @@ Upgrade instructions: !TODO
                                   The private key belonging to this address must be known in your wallet, in order to send updates.
                                   The address must not be already registered, and must differ from the collateralAddress
     4. "operatorPubKey"        (string, required) The operator BLS public key. The private BLS key does not have to be known.
-                                  It has to match the BLS private key which is later used when operating the masternode.
+                                  It has to match the BLS private key which is later used when operating the gamemaster.
     5. "votingAddress"         (string, required) The voting key address. The private key does not have to be known by your wallet.
                                   It has to match the private key which is later used when voting on proposals.
                                   If set to an empty string, ownerAddress will be used.
-    6. "payoutAddress"         (string, required) The hemis address to use for masternode reward payments.
+    6. "payoutAddress"         (string, required) The hemis address to use for gamemaster reward payments.
     7. "operatorReward"        (numeric, optional) The fraction in % to share with the operator. The value must be
                                   between 0.00 and 100.00. If not set, it takes the default value of 0.0
     8. "operatorPayoutAddress" (string, optional) The address used for operator reward payments.
@@ -132,11 +132,11 @@ Upgrade instructions: !TODO
                                   The private key belonging to this address must be known in your wallet, in order to send updates.
                                   The address must not be already registered, and must differ from the collateralAddress
     5. "operatorPubKey"         (string, required) The operator BLS public key. The private BLS key does not have to be known.
-                                  It has to match the BLS private key which is later used when operating the masternode.
+                                  It has to match the BLS private key which is later used when operating the gamemaster.
     6. "votingAddress"          (string, required) The voting key address. The private key does not have to be known by your wallet.
                                   It has to match the private key which is later used when voting on proposals.
                                   If set to an empty string, ownerAddress will be used.
-    7. "payoutAddress"          (string, required) The hemis address to use for masternode reward payments.
+    7. "payoutAddress"          (string, required) The hemis address to use for gamemaster reward payments.
     8. "operatorReward"         (numeric, optional) The fraction in % to share with the operator. The value must be
                                   between 0.00 and 100.00. If not set, it takes the default value of 0.0
     9. "operatorPayoutAddress"  (string, optional) The address used for operator reward payments.
@@ -170,17 +170,17 @@ Upgrade instructions: !TODO
     ```
     protx_revoke \"proTxHash\" (\"operatorKey\" reason)\n"
 
-    Creates and sends a ProUpRevTx to the network. This will revoke the operator key of the masternode and
-    put it into the PoSe-banned state. It will also set the service field of the masternode
+    Creates and sends a ProUpRevTx to the network. This will revoke the operator key of the gamemaster and
+    put it into the PoSe-banned state. It will also set the service field of the gamemaster
     to zero. Use this in case your operator key got compromised or you want to stop providing your service
-    to the masternode owner.
+    to the gamemaster owner.
 
     Arguments:
     1. "proTxHash"    (string, required) The hash of the initial ProRegTx.
     2. "operatorKey"  (string, optional) The operator BLS private key associated with the registered operator public key.
                          If not specified, or set to an empty string, then this command must be performed on the active
-                         masternode with the corresponding operator key.
-    3 reason          (numeric, optional) The reason for masternode service revocation. Default: 0.
+                         gamemaster with the corresponding operator key.
+    3 reason          (numeric, optional) The reason for gamemaster service revocation. Default: 0.
                          0=not_specified, 1=service_termination, 2=compromised_keys, 3=keys_change.
 
     Result:
@@ -192,25 +192,25 @@ Upgrade instructions: !TODO
     protx update_registrar \"proTxHash\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (\"ownerKey\")
 
     Creates and sends a ProUpRegTx to the network. This will update the operator key, voting key and payout
-    address of the masternode specified by \"proTxHash\".
-    The owner key of this masternode must be known to your wallet.
+    address of the gamemaster specified by \"proTxHash\".
+    The owner key of this gamemaster must be known to your wallet.
 
     Creates and sends a ProUpServTx to the network. This will update the IP address
-    of a masternode, and/or the operator payout address.
-    If the IP is changed for a masternode that got PoSe-banned, the ProUpServTx will also revive this masternode.
+    of a gamemaster, and/or the operator payout address.
+    If the IP is changed for a gamemaster that got PoSe-banned, the ProUpServTx will also revive this gamemaster.
 
     Arguments:
     1. "proTxHash"             (string, required) The hash of the initial ProRegTx.
     2. "operatorPubKey         (string, required) The operator BLS public key. The private BLS key does not have to be known.
-                                  It has to match the BLS private key which is later used when operating the masternode.
+                                  It has to match the BLS private key which is later used when operating the gamemaster.
                                   If set to an empty string, the currently active operator BLS public key is reused.
     3. "votingAddress"         (string, required) The voting key address. The private key does not have to be known by your wallet.
                                   It has to match the private key which is later used when voting on proposals.
                                   If set to an empty string, the currently active voting key address is reused.
-    4. "payoutAddress"         (string, required) The hemis address to use for masternode reward payments.
+    4. "payoutAddress"         (string, required) The hemis address to use for gamemaster reward payments.
                                   If set to an empty string, the currently active payout address is reused.
-    5. "ownerKey"              (string, optional) The owner key associated with the operator address of the masternode.
-                                  If not specified, or set to an empty string, then the mn key must be known by your wallet,
+    5. "ownerKey"              (string, optional) The owner key associated with the operator address of the gamemaster.
+                                  If not specified, or set to an empty string, then the gm key must be known by your wallet,
                                   in order to sign the tx.
     Result:
     "txid"                        (string) The transaction id.
@@ -221,8 +221,8 @@ Upgrade instructions: !TODO
     protx_update_service "proTxHash" "ipAndPort" ("operatorPayoutAddress" "operatorKey")
 
     Creates and sends a ProUpServTx to the network. This will update the IP address
-    of a masternode, and/or the operator payout address.
-    If the IP is changed for a masternode that got PoSe-banned, the ProUpServTx will also revive this masternode.
+    of a gamemaster, and/or the operator payout address.
+    If the IP is changed for a gamemaster that got PoSe-banned, the ProUpServTx will also revive this gamemaster.
 
     Arguments:
     1. "proTxHash"             (string, required) The hash of the initial ProRegTx.
@@ -233,7 +233,7 @@ Upgrade instructions: !TODO
                                  If set to an empty string, the currently active one is reused.
     4. "operatorKey"           (string, optional) The operator BLS private key associated with the registered operator public key.
                                  If not specified, or set to an empty string, then this command must be performed on the active
-                                 masternode with the corresponding operator key.
+                                 gamemaster with the corresponding operator key.
     Result:
     "txid"                        (string) The transaction id.
     ```
@@ -244,7 +244,7 @@ Upgrade instructions: !TODO
 
 #### Protocol changes
 
-Starting with the enforcement block, masternode rewards and budget payments are paid as outputs of the coinbase transaction, instead of the coinstake transaction.
+Starting with the enforcement block, gamemaster rewards and budget payments are paid as outputs of the coinbase transaction, instead of the coinstake transaction.
 With this rule, a new opcode (`0xd2`) is introduced (see PR [#2275](https://github.com/hemis-Project/hemis/pull/2275)).
 It enforces the same rules as the legacy cold-staking opcode, but without allowing a "free" script for the last output of the transaction.
 The new opcode takes the name of `OP_CHECKCOLDSTAKEVERIFY`, and the legacy opcode (`0xd1`) is renamed to `OP_CHECKCOLDSTAKEVERIFY_LOF` (last-output-free).

@@ -19,7 +19,7 @@ protected:
     // CValidationInterface
     void AcceptedBlockHeader(const CBlockIndex* pindexNew) override;
     void UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload) override;
-    void NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff) override;
+    void NotifyGamemasterListChanged(bool undo, const CDeterministicGMList& oldGMList, const CDeterministicGMListDiff& diff) override;
 };
 
 #endif // EVONOTIFICATIONINTERFACE_H

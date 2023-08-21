@@ -50,7 +50,7 @@ void CDKGSessionManager::UpdatedBlockTip(const CBlockIndex* pindexNew, bool fIni
 
     if (fInitialDownload)
         return;
-    if (!deterministicMNManager->IsDIP3Enforced(pindexNew->nHeight))
+    if (!deterministicGMManager->IsDIP3Enforced(pindexNew->nHeight))
         return;
 
     LOCK(cs_main);
@@ -170,7 +170,7 @@ void CDKGSessionManager::WriteVerifiedSkContribution(Consensus::LLMQType llmqTyp
 
 bool CDKGSessionManager::GetVerifiedContributions(Consensus::LLMQType llmqType, const CBlockIndex* pindexQuorum, const std::vector<bool>& validMembers, std::vector<uint16_t>& memberIndexesRet, std::vector<BLSVerificationVectorPtr>& vvecsRet, BLSSecretKeyVector& skContributionsRet)
 {
-    auto members = deterministicMNManager->GetAllQuorumMembers(llmqType, pindexQuorum);
+    auto members = deterministicGMManager->GetAllQuorumMembers(llmqType, pindexQuorum);
 
     memberIndexesRet.clear();
     vvecsRet.clear();

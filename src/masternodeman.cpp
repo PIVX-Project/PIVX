@@ -3,14 +3,14 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "masternodeman.h"
+#include "gamemasterman.h"
 
 #include "addrman.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "fs.h"
-#include "masternode-payments.h"
-#include "masternode-sync.h"
-#include "masternode.h"
+#include "gamemaster-payments.h"
+#include "gamemaster-sync.h"
+#include "gamemaster.h"
 #include "messagesigner.h"
 #include "netbase.h"
 #include "netmessagemaker.h"
@@ -21,14 +21,14 @@
 
 #include <boost/thread/thread.hpp>
 
-#define MN_WINNER_MINIMUM_AGE 8000    // Age in seconds. This should be > MASTERNODE_REMOVAL_SECONDS to avoid misconfigured new nodes in the list.
+#define GM_WINNER_MINIMUM_AGE 8000    // Age in seconds. This should be > GAMEMASTER_REMOVAL_SECONDS to avoid misconfigured new nodes in the list.
 
-/** Masternode manager */
-CMasternodeMan mnodeman;
-/** Keep track of the active Masternode */
-CActiveMasternode activeMasternode;
+/** Gamemaster manager */
+CGamemasterMan gamemasterman;
+/** Keep track of the active Gamemaster */
+CActiveGamemaster activeGamemaster;
 
-struct CompareScoreMN {
+struct CompareScoreGM {
     template <typename T>
     bool operator()(const std::pair<int64_t, T>& t1,
         const std::pair<int64_t, T>& t2) const
@@ -38,66 +38,66 @@ struct CompareScoreMN {
 };
 
 //
-// CMasternodeDB
+// CGamemasterDB
 //
 
-static const int MASTERNODE_DB_VERSION_BIP155 = 2;
+static const int GAMEMASTER_DB_VERSION_BIP155 = 2;
 
-CMasternodeDB::CMasternodeDB()
+CGamemasterDB::CGamemasterDB()
 {
-    pathMN = GetDataDir() / "mncache.dat";
-    strMagicMessage = "MasternodeCache";
+    pathGM = GetDataDir() / "gmcache.dat";
+    strMagicMessage = "GamemasterCache";
 }
 
-bool CMasternodeDB::Write(const CMasternodeMan& mnodemanToSave)
+bool CGamemasterDB::Write(const CGamemasterMan& gamemastermanToSave)
 {
     int64_t nStart = GetTimeMillis();
     const auto& params = Params();
 
     // serialize, checksum data up to that point, then append checksum
     // Always done in the latest format.
-    CDataStream ssMasternodes(SER_DISK, CLIENT_VERSION | ADDRV2_FORMAT);
-    ssMasternodes << MASTERNODE_DB_VERSION_BIP155;
-    ssMasternodes << strMagicMessage;                   // masternode cache file specific magic message
-    ssMasternodes << params.MessageStart(); // network specific magic number
-    ssMasternodes << mnodemanToSave;
-    uint256 hash = Hash(ssMasternodes.begin(), ssMasternodes.end());
-    ssMasternodes << hash;
+    CDataStream ssGamemasters(SER_DISK, CLIENT_VERSION | ADDRV2_FORMAT);
+    ssGamemasters << GAMEMASTER_DB_VERSION_BIP155;
+    ssGamemasters << strMagicMessage;                   // gamemaster cache file specific magic message
+    ssGamemasters << params.MessageStart(); // network specific magic number
+    ssGamemasters << gamemastermanToSave;
+    uint256 hash = Hash(ssGamemasters.begin(), ssGamemasters.end());
+    ssGamemasters << hash;
 
     // open output file, and associate with CAutoFile
-    FILE* file = fsbridge::fopen(pathMN, "wb");
+    FILE* file = fsbridge::fopen(pathGM, "wb");
     CAutoFile fileout(file, SER_DISK, CLIENT_VERSION);
     if (fileout.IsNull())
-        return error("%s : Failed to open file %s", __func__, pathMN.string());
+        return error("%s : Failed to open file %s", __func__, pathGM.string());
 
     // Write and commit header, data
     try {
-        fileout << ssMasternodes;
+        fileout << ssGamemasters;
     } catch (const std::exception& e) {
         return error("%s : Serialize or I/O error - %s", __func__, e.what());
     }
     //    FileCommit(fileout);
     fileout.fclose();
 
-    LogPrint(BCLog::MASTERNODE,"Written info to mncache.dat  %dms\n", GetTimeMillis() - nStart);
-    LogPrint(BCLog::MASTERNODE,"  %s\n", mnodemanToSave.ToString());
+    LogPrint(BCLog::GAMEMASTER,"Written info to gmcache.dat  %dms\n", GetTimeMillis() - nStart);
+    LogPrint(BCLog::GAMEMASTER,"  %s\n", gamemastermanToSave.ToString());
 
     return true;
 }
 
-CMasternodeDB::ReadResult CMasternodeDB::Read(CMasternodeMan& mnodemanToLoad)
+CGamemasterDB::ReadResult CGamemasterDB::Read(CGamemasterMan& gamemastermanToLoad)
 {
     int64_t nStart = GetTimeMillis();
     // open input file, and associate with CAutoFile
-    FILE* file = fsbridge::fopen(pathMN, "rb");
+    FILE* file = fsbridge::fopen(pathGM, "rb");
     CAutoFile filein(file, SER_DISK, CLIENT_VERSION);
     if (filein.IsNull()) {
-        error("%s : Failed to open file %s", __func__, pathMN.string());
+        error("%s : Failed to open file %s", __func__, pathGM.string());
         return FileError;
     }
 
     // use file size to size memory buffer
-    int fileSize = fs::file_size(pathMN);
+    int fileSize = fs::file_size(pathGM);
     int dataSize = fileSize - sizeof(uint256);
     // Don't try to resize to a negative number if file is small
     if (dataSize < 0)
@@ -118,10 +118,10 @@ CMasternodeDB::ReadResult CMasternodeDB::Read(CMasternodeMan& mnodemanToLoad)
 
     const auto& params = Params();
     // serialize, checksum data up to that point, then append checksum
-    CDataStream ssMasternodes(vchData, SER_DISK,  CLIENT_VERSION);
+    CDataStream ssGamemasters(vchData, SER_DISK,  CLIENT_VERSION);
 
     // verify stored checksum matches input data
-    uint256 hashTmp = Hash(ssMasternodes.begin(), ssMasternodes.end());
+    uint256 hashTmp = Hash(ssGamemasters.begin(), ssGamemasters.end());
     if (hashIn != hashTmp) {
         error("%s : Checksum mismatch, data corrupted", __func__);
         return IncorrectHash;
@@ -131,235 +131,235 @@ CMasternodeDB::ReadResult CMasternodeDB::Read(CMasternodeMan& mnodemanToLoad)
     std::string strMagicMessageTmp;
     try {
         // de-serialize file header
-        ssMasternodes >> version;
-        ssMasternodes >> strMagicMessageTmp;
+        ssGamemasters >> version;
+        ssGamemasters >> strMagicMessageTmp;
 
         // ... verify the message matches predefined one
         if (strMagicMessage != strMagicMessageTmp) {
-            error("%s : Invalid masternode cache magic message", __func__);
+            error("%s : Invalid gamemaster cache magic message", __func__);
             return IncorrectMagicMessage;
         }
 
         // de-serialize file header (network specific magic number) and ..
         std::vector<unsigned char> pchMsgTmp(4);
-        ssMasternodes >> MakeSpan(pchMsgTmp);
+        ssGamemasters >> MakeSpan(pchMsgTmp);
 
         // ... verify the network matches ours
         if (memcmp(pchMsgTmp.data(), params.MessageStart(), pchMsgTmp.size()) != 0) {
             error("%s : Invalid network magic number", __func__);
             return IncorrectMagicNumber;
         }
-        // de-serialize data into CMasternodeMan object.
-        if (version == MASTERNODE_DB_VERSION_BIP155) {
-            OverrideStream<CDataStream> s(&ssMasternodes, ssMasternodes.GetType(), ssMasternodes.GetVersion() | ADDRV2_FORMAT);
-            s >> mnodemanToLoad;
+        // de-serialize data into CGamemasterMan object.
+        if (version == GAMEMASTER_DB_VERSION_BIP155) {
+            OverrideStream<CDataStream> s(&ssGamemasters, ssGamemasters.GetType(), ssGamemasters.GetVersion() | ADDRV2_FORMAT);
+            s >> gamemastermanToLoad;
         } else {
             // Old format
-            ssMasternodes >> mnodemanToLoad;
+            ssGamemasters >> gamemastermanToLoad;
         }
     } catch (const std::exception& e) {
-        mnodemanToLoad.Clear();
+        gamemastermanToLoad.Clear();
         error("%s : Deserialize or I/O error - %s", __func__, e.what());
         return IncorrectFormat;
     }
 
-    LogPrint(BCLog::MASTERNODE,"Loaded info from mncache.dat (dbversion=%d) %dms\n", version, GetTimeMillis() - nStart);
-    LogPrint(BCLog::MASTERNODE,"  %s\n", mnodemanToLoad.ToString());
+    LogPrint(BCLog::GAMEMASTER,"Loaded info from gmcache.dat (dbversion=%d) %dms\n", version, GetTimeMillis() - nStart);
+    LogPrint(BCLog::GAMEMASTER,"  %s\n", gamemastermanToLoad.ToString());
 
     return Ok;
 }
 
-void DumpMasternodes()
+void DumpGamemasters()
 {
     int64_t nStart = GetTimeMillis();
 
-    CMasternodeDB mndb;
-    LogPrint(BCLog::MASTERNODE,"Writing info to mncache.dat...\n");
-    mndb.Write(mnodeman);
+    CGamemasterDB gmdb;
+    LogPrint(BCLog::GAMEMASTER,"Writing info to gmcache.dat...\n");
+    gmdb.Write(gamemasterman);
 
-    LogPrint(BCLog::MASTERNODE,"Masternode dump finished  %dms\n", GetTimeMillis() - nStart);
+    LogPrint(BCLog::GAMEMASTER,"Gamemaster dump finished  %dms\n", GetTimeMillis() - nStart);
 }
 
-CMasternodeMan::CMasternodeMan():
+CGamemasterMan::CGamemasterMan():
         cvLastBlockHashes(CACHED_BLOCK_HASHES, UINT256_ZERO),
         nDsqCount(0)
 {}
 
-bool CMasternodeMan::Add(CMasternode& mn)
+bool CGamemasterMan::Add(CGamemaster& gm)
 {
-    // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
-    if (deterministicMNManager->LegacyMNObsolete()) {
+    // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
+    if (deterministicGMManager->LegacyGMObsolete()) {
         return false;
     }
 
-    if (deterministicMNManager->GetListAtChainTip().HasMNByCollateral(mn.vin.prevout)) {
-        LogPrint(BCLog::MASTERNODE, "ERROR: Not Adding Masternode %s as the collateral is already registered with a DMN\n",
-                mn.vin.prevout.ToString());
+    if (deterministicGMManager->GetListAtChainTip().HasGMByCollateral(gm.vin.prevout)) {
+        LogPrint(BCLog::GAMEMASTER, "ERROR: Not Adding Gamemaster %s as the collateral is already registered with a DGM\n",
+                gm.vin.prevout.ToString());
         return false;
     }
 
     LOCK(cs);
 
-    if (!mn.IsAvailableState())
+    if (!gm.IsAvailableState())
         return false;
 
-    const auto& it = mapMasternodes.find(mn.vin.prevout);
-    if (it == mapMasternodes.end()) {
-        LogPrint(BCLog::MASTERNODE, "Adding new Masternode %s\n", mn.vin.prevout.ToString());
-        mapMasternodes.emplace(mn.vin.prevout, std::make_shared<CMasternode>(mn));
-        LogPrint(BCLog::MASTERNODE, "Masternode added. New total count: %d\n", mapMasternodes.size());
+    const auto& it = mapGamemasters.find(gm.vin.prevout);
+    if (it == mapGamemasters.end()) {
+        LogPrint(BCLog::GAMEMASTER, "Adding new Gamemaster %s\n", gm.vin.prevout.ToString());
+        mapGamemasters.emplace(gm.vin.prevout, std::make_shared<CGamemaster>(gm));
+        LogPrint(BCLog::GAMEMASTER, "Gamemaster added. New total count: %d\n", mapGamemasters.size());
         return true;
     }
 
     return false;
 }
 
-void CMasternodeMan::AskForMN(CNode* pnode, const CTxIn& vin)
+void CGamemasterMan::AskForGM(CNode* pnode, const CTxIn& vin)
 {
-    // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
-    if (deterministicMNManager->LegacyMNObsolete()) {
+    // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
+    if (deterministicGMManager->LegacyGMObsolete()) {
         return;
     }
 
-    std::map<COutPoint, int64_t>::iterator i = mWeAskedForMasternodeListEntry.find(vin.prevout);
-    if (i != mWeAskedForMasternodeListEntry.end()) {
+    std::map<COutPoint, int64_t>::iterator i = mWeAskedForGamemasterListEntry.find(vin.prevout);
+    if (i != mWeAskedForGamemasterListEntry.end()) {
         int64_t t = (*i).second;
         if (GetTime() < t) return; // we've asked recently
     }
 
-    // ask for the mnb info once from the node that sent mnp
+    // ask for the gmb info once from the node that sent gmp
 
-    LogPrint(BCLog::MASTERNODE, "CMasternodeMan::AskForMN - Asking node for missing entry, vin: %s\n", vin.prevout.hash.ToString());
-    g_connman->PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::GETMNLIST, vin));
-    int64_t askAgain = GetTime() + MasternodeMinPingSeconds();
-    mWeAskedForMasternodeListEntry[vin.prevout] = askAgain;
+    LogPrint(BCLog::GAMEMASTER, "CGamemasterMan::AskForGM - Asking node for missing entry, vin: %s\n", vin.prevout.hash.ToString());
+    g_connman->PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::GETGMLIST, vin));
+    int64_t askAgain = GetTime() + GamemasterMinPingSeconds();
+    mWeAskedForGamemasterListEntry[vin.prevout] = askAgain;
 }
 
-int CMasternodeMan::CheckAndRemove(bool forceExpiredRemoval)
+int CGamemasterMan::CheckAndRemove(bool forceExpiredRemoval)
 {
-    // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
-    if (deterministicMNManager->LegacyMNObsolete()) {
-        LogPrint(BCLog::MASTERNODE, "Removing all legacy mn due to SPORK 21\n");
+    // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
+    if (deterministicGMManager->LegacyGMObsolete()) {
+        LogPrint(BCLog::GAMEMASTER, "Removing all legacy gm due to SPORK 21\n");
         Clear();
         return 0;
     }
 
     LOCK(cs);
 
-    //remove inactive and outdated (or replaced by DMN)
-    auto it = mapMasternodes.begin();
-    while (it != mapMasternodes.end()) {
-        MasternodeRef& mn = it->second;
-        auto activeState = mn->GetActiveState();
-        if (activeState == CMasternode::MASTERNODE_REMOVE ||
-            activeState == CMasternode::MASTERNODE_VIN_SPENT ||
-            (forceExpiredRemoval && activeState == CMasternode::MASTERNODE_EXPIRED) ||
-            mn->protocolVersion < ActiveProtocol()) {
-            LogPrint(BCLog::MASTERNODE, "Removing inactive (legacy) Masternode %s\n", it->first.ToString());
+    //remove inactive and outdated (or replaced by DGM)
+    auto it = mapGamemasters.begin();
+    while (it != mapGamemasters.end()) {
+        GamemasterRef& gm = it->second;
+        auto activeState = gm->GetActiveState();
+        if (activeState == CGamemaster::GAMEMASTER_REMOVE ||
+            activeState == CGamemaster::GAMEMASTER_VIN_SPENT ||
+            (forceExpiredRemoval && activeState == CGamemaster::GAMEMASTER_EXPIRED) ||
+            gm->protocolVersion < ActiveProtocol()) {
+            LogPrint(BCLog::GAMEMASTER, "Removing inactive (legacy) Gamemaster %s\n", it->first.ToString());
             //erase all of the broadcasts we've seen from this vin
             // -- if we missed a few pings and the node was removed, this will allow is to get it back without them
-            //    sending a brand new mnb
-            std::map<uint256, CMasternodeBroadcast>::iterator it3 = mapSeenMasternodeBroadcast.begin();
-            while (it3 != mapSeenMasternodeBroadcast.end()) {
+            //    sending a brand new gmb
+            std::map<uint256, CGamemasterBroadcast>::iterator it3 = mapSeenGamemasterBroadcast.begin();
+            while (it3 != mapSeenGamemasterBroadcast.end()) {
                 if (it3->second.vin.prevout == it->first) {
-                    g_tiertwo_sync_state.EraseSeenMNB((*it3).first);
-                    it3 = mapSeenMasternodeBroadcast.erase(it3);
+                    g_tiertwo_sync_state.EraseSeenGMB((*it3).first);
+                    it3 = mapSeenGamemasterBroadcast.erase(it3);
                 } else {
                     ++it3;
                 }
             }
 
-            // allow us to ask for this masternode again if we see another ping
-            std::map<COutPoint, int64_t>::iterator it2 = mWeAskedForMasternodeListEntry.begin();
-            while (it2 != mWeAskedForMasternodeListEntry.end()) {
+            // allow us to ask for this gamemaster again if we see another ping
+            std::map<COutPoint, int64_t>::iterator it2 = mWeAskedForGamemasterListEntry.begin();
+            while (it2 != mWeAskedForGamemasterListEntry.end()) {
                 if (it2->first == it->first) {
-                    it2 = mWeAskedForMasternodeListEntry.erase(it2);
+                    it2 = mWeAskedForGamemasterListEntry.erase(it2);
                 } else {
                     ++it2;
                 }
             }
 
-            // clean MN pings right away.
-            auto itPing = mapSeenMasternodePing.begin();
-            while (itPing != mapSeenMasternodePing.end()) {
+            // clean GM pings right away.
+            auto itPing = mapSeenGamemasterPing.begin();
+            while (itPing != mapSeenGamemasterPing.end()) {
                 if (itPing->second.GetVin().prevout == it->first) {
-                    itPing = mapSeenMasternodePing.erase(itPing);
+                    itPing = mapSeenGamemasterPing.erase(itPing);
                 } else {
                     ++itPing;
                 }
             }
 
-            it = mapMasternodes.erase(it);
-            LogPrint(BCLog::MASTERNODE, "Masternode removed.\n");
+            it = mapGamemasters.erase(it);
+            LogPrint(BCLog::GAMEMASTER, "Gamemaster removed.\n");
         } else {
             ++it;
         }
     }
-    LogPrint(BCLog::MASTERNODE, "New total masternode count: %d\n", mapMasternodes.size());
+    LogPrint(BCLog::GAMEMASTER, "New total gamemaster count: %d\n", mapGamemasters.size());
 
-    // check who's asked for the Masternode list
-    std::map<CNetAddr, int64_t>::iterator it1 = mAskedUsForMasternodeList.begin();
-    while (it1 != mAskedUsForMasternodeList.end()) {
+    // check who's asked for the Gamemaster list
+    std::map<CNetAddr, int64_t>::iterator it1 = mAskedUsForGamemasterList.begin();
+    while (it1 != mAskedUsForGamemasterList.end()) {
         if ((*it1).second < GetTime()) {
-            it1 = mAskedUsForMasternodeList.erase(it1);
+            it1 = mAskedUsForGamemasterList.erase(it1);
         } else {
             ++it1;
         }
     }
 
-    // check who we asked for the Masternode list
-    it1 = mWeAskedForMasternodeList.begin();
-    while (it1 != mWeAskedForMasternodeList.end()) {
+    // check who we asked for the Gamemaster list
+    it1 = mWeAskedForGamemasterList.begin();
+    while (it1 != mWeAskedForGamemasterList.end()) {
         if ((*it1).second < GetTime()) {
-            it1 = mWeAskedForMasternodeList.erase(it1);
+            it1 = mWeAskedForGamemasterList.erase(it1);
         } else {
             ++it1;
         }
     }
 
-    // check which Masternodes we've asked for
-    std::map<COutPoint, int64_t>::iterator it2 = mWeAskedForMasternodeListEntry.begin();
-    while (it2 != mWeAskedForMasternodeListEntry.end()) {
+    // check which Gamemasters we've asked for
+    std::map<COutPoint, int64_t>::iterator it2 = mWeAskedForGamemasterListEntry.begin();
+    while (it2 != mWeAskedForGamemasterListEntry.end()) {
         if ((*it2).second < GetTime()) {
-            it2 = mWeAskedForMasternodeListEntry.erase(it2);
+            it2 = mWeAskedForGamemasterListEntry.erase(it2);
         } else {
             ++it2;
         }
     }
 
-    // remove expired mapSeenMasternodeBroadcast
-    std::map<uint256, CMasternodeBroadcast>::iterator it3 = mapSeenMasternodeBroadcast.begin();
-    while (it3 != mapSeenMasternodeBroadcast.end()) {
-        if ((*it3).second.lastPing.sigTime < GetTime() - (MasternodeRemovalSeconds() * 2)) {
-            g_tiertwo_sync_state.EraseSeenMNB((*it3).second.GetHash());
-            it3 = mapSeenMasternodeBroadcast.erase(it3);
+    // remove expired mapSeenGamemasterBroadcast
+    std::map<uint256, CGamemasterBroadcast>::iterator it3 = mapSeenGamemasterBroadcast.begin();
+    while (it3 != mapSeenGamemasterBroadcast.end()) {
+        if ((*it3).second.lastPing.sigTime < GetTime() - (GamemasterRemovalSeconds() * 2)) {
+            g_tiertwo_sync_state.EraseSeenGMB((*it3).second.GetHash());
+            it3 = mapSeenGamemasterBroadcast.erase(it3);
         } else {
             ++it3;
         }
     }
 
-    // remove expired mapSeenMasternodePing
-    std::map<uint256, CMasternodePing>::iterator it4 = mapSeenMasternodePing.begin();
-    while (it4 != mapSeenMasternodePing.end()) {
-        if ((*it4).second.sigTime < GetTime() - (MasternodeRemovalSeconds() * 2)) {
-            it4 = mapSeenMasternodePing.erase(it4);
+    // remove expired mapSeenGamemasterPing
+    std::map<uint256, CGamemasterPing>::iterator it4 = mapSeenGamemasterPing.begin();
+    while (it4 != mapSeenGamemasterPing.end()) {
+        if ((*it4).second.sigTime < GetTime() - (GamemasterRemovalSeconds() * 2)) {
+            it4 = mapSeenGamemasterPing.erase(it4);
         } else {
             ++it4;
         }
     }
 
-    return mapMasternodes.size();
+    return mapGamemasters.size();
 }
 
-void CMasternodeMan::Clear()
+void CGamemasterMan::Clear()
 {
     LOCK(cs);
-    mapMasternodes.clear();
-    mAskedUsForMasternodeList.clear();
-    mWeAskedForMasternodeList.clear();
-    mWeAskedForMasternodeListEntry.clear();
-    mapSeenMasternodeBroadcast.clear();
-    mapSeenMasternodePing.clear();
+    mapGamemasters.clear();
+    mAskedUsForGamemasterList.clear();
+    mWeAskedForGamemasterList.clear();
+    mWeAskedForGamemasterListEntry.clear();
+    mapSeenGamemasterBroadcast.clear();
+    mapSeenGamemasterPing.clear();
     nDsqCount = 0;
 }
 
@@ -385,38 +385,38 @@ static void CountNetwork(const CService& addr, int& ipv4, int& ipv6, int& onion)
     }
 }
 
-CMasternodeMan::MNsInfo CMasternodeMan::getMNsInfo() const
+CGamemasterMan::GMsInfo CGamemasterMan::getGMsInfo() const
 {
-    MNsInfo info;
+    GMsInfo info;
     int nMinProtocol = ActiveProtocol();
-    bool spork_8_active = sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT);
+    bool spork_8_active = sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT);
 
-    // legacy masternodes
+    // legacy gamemasters
     {
         LOCK(cs);
-        for (const auto& it : mapMasternodes) {
-            const MasternodeRef& mn = it.second;
+        for (const auto& it : mapGamemasters) {
+            const GamemasterRef& gm = it.second;
             info.total++;
-            CountNetwork(mn->addr, info.ipv4, info.ipv6, info.onion);
-            if (mn->protocolVersion < nMinProtocol || !mn->IsEnabled()) {
+            CountNetwork(gm->addr, info.ipv4, info.ipv6, info.onion);
+            if (gm->protocolVersion < nMinProtocol || !gm->IsEnabled()) {
                 continue;
             }
             info.enabledSize++;
             // Eligible for payments
-            if (spork_8_active && (GetAdjustedTime() - mn->sigTime < MN_WINNER_MINIMUM_AGE)) {
-                continue; // Skip masternodes younger than (default) 8000 sec (MUST be > MASTERNODE_REMOVAL_SECONDS)
+            if (spork_8_active && (GetAdjustedTime() - gm->sigTime < GM_WINNER_MINIMUM_AGE)) {
+                continue; // Skip gamemasters younger than (default) 8000 sec (MUST be > GAMEMASTER_REMOVAL_SECONDS)
             }
             info.stableSize++;
         }
     }
 
-    // deterministic masternodes
-    if (deterministicMNManager->IsDIP3Enforced()) {
-        auto mnList = deterministicMNManager->GetListAtChainTip();
-        mnList.ForEachMN(false, [&](const CDeterministicMNCPtr& dmn) {
+    // deterministic gamemasters
+    if (deterministicGMManager->IsDIP3Enforced()) {
+        auto gmList = deterministicGMManager->GetListAtChainTip();
+        gmList.ForEachGM(false, [&](const CDeterministicGMCPtr& dgm) {
             info.total++;
-            CountNetwork(dmn->pdmnState->addr, info.ipv4, info.ipv6, info.onion);
-            if (!dmn->IsPoSeBanned()) {
+            CountNetwork(dgm->pdgmState->addr, info.ipv4, info.ipv6, info.onion);
+            if (!dgm->IsPoSeBanned()) {
                 info.enabledSize++;
                 info.stableSize++;
             }
@@ -426,122 +426,122 @@ CMasternodeMan::MNsInfo CMasternodeMan::getMNsInfo() const
     return info;
 }
 
-int CMasternodeMan::CountEnabled(bool only_legacy) const
+int CGamemasterMan::CountEnabled(bool only_legacy) const
 {
     int count_enabled = 0;
     int protocolVersion = ActiveProtocol();
 
     {
         LOCK(cs);
-        for (const auto& it : mapMasternodes) {
-            const MasternodeRef& mn = it.second;
-            if (mn->protocolVersion < protocolVersion || !mn->IsEnabled()) continue;
+        for (const auto& it : mapGamemasters) {
+            const GamemasterRef& gm = it.second;
+            if (gm->protocolVersion < protocolVersion || !gm->IsEnabled()) continue;
             count_enabled++;
         }
     }
 
-    if (!only_legacy && deterministicMNManager->IsDIP3Enforced()) {
-        count_enabled += deterministicMNManager->GetListAtChainTip().GetValidMNsCount();
+    if (!only_legacy && deterministicGMManager->IsDIP3Enforced()) {
+        count_enabled += deterministicGMManager->GetListAtChainTip().GetValidGMsCount();
     }
 
     return count_enabled;
 }
 
-bool CMasternodeMan::RequestMnList(CNode* pnode)
+bool CGamemasterMan::RequestMnList(CNode* pnode)
 {
-    // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
-    if (deterministicMNManager->LegacyMNObsolete()) {
+    // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
+    if (deterministicGMManager->LegacyGMObsolete()) {
         return false;
     }
 
     LOCK(cs);
     if (Params().NetworkIDString() == CBaseChainParams::MAIN) {
         if (!(pnode->addr.IsRFC1918() || pnode->addr.IsLocal())) {
-            std::map<CNetAddr, int64_t>::iterator it = mWeAskedForMasternodeList.find(pnode->addr);
-            if (it != mWeAskedForMasternodeList.end()) {
+            std::map<CNetAddr, int64_t>::iterator it = mWeAskedForGamemasterList.find(pnode->addr);
+            if (it != mWeAskedForGamemasterList.end()) {
                 if (GetTime() < (*it).second) {
-                    LogPrint(BCLog::MASTERNODE, "dseg - we already asked peer %i for the list; skipping...\n", pnode->GetId());
+                    LogPrint(BCLog::GAMEMASTER, "dseg - we already asked peer %i for the list; skipping...\n", pnode->GetId());
                     return false;
                 }
             }
         }
     }
 
-    g_connman->PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::GETMNLIST, CTxIn()));
-    int64_t askAgain = GetTime() + MASTERNODES_REQUEST_SECONDS;
-    mWeAskedForMasternodeList[pnode->addr] = askAgain;
+    g_connman->PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::GETGMLIST, CTxIn()));
+    int64_t askAgain = GetTime() + GAMEMASTERS_REQUEST_SECONDS;
+    mWeAskedForGamemasterList[pnode->addr] = askAgain;
     return true;
 }
 
-CMasternode* CMasternodeMan::Find(const COutPoint& collateralOut)
+CGamemaster* CGamemasterMan::Find(const COutPoint& collateralOut)
 {
     LOCK(cs);
-    auto it = mapMasternodes.find(collateralOut);
-    return it != mapMasternodes.end() ? it->second.get() : nullptr;
+    auto it = mapGamemasters.find(collateralOut);
+    return it != mapGamemasters.end() ? it->second.get() : nullptr;
 }
 
-const CMasternode* CMasternodeMan::Find(const COutPoint& collateralOut) const
+const CGamemaster* CGamemasterMan::Find(const COutPoint& collateralOut) const
 {
     LOCK(cs);
-    auto const& it = mapMasternodes.find(collateralOut);
-    return it != mapMasternodes.end() ? it->second.get() : nullptr;
+    auto const& it = mapGamemasters.find(collateralOut);
+    return it != mapGamemasters.end() ? it->second.get() : nullptr;
 }
 
-CMasternode* CMasternodeMan::Find(const CPubKey& pubKeyMasternode)
+CGamemaster* CGamemasterMan::Find(const CPubKey& pubKeyGamemaster)
 {
     LOCK(cs);
 
-    for (auto& it : mapMasternodes) {
-        MasternodeRef& mn = it.second;
-        if (mn->pubKeyMasternode == pubKeyMasternode)
-            return mn.get();
+    for (auto& it : mapGamemasters) {
+        GamemasterRef& gm = it.second;
+        if (gm->pubKeyGamemaster == pubKeyGamemaster)
+            return gm.get();
     }
     return nullptr;
 }
 
-void CMasternodeMan::CheckSpentCollaterals(const std::vector<CTransactionRef>& vtx)
+void CGamemasterMan::CheckSpentCollaterals(const std::vector<CTransactionRef>& vtx)
 {
-    // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
-    if (deterministicMNManager->LegacyMNObsolete()) {
+    // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
+    if (deterministicGMManager->LegacyGMObsolete()) {
         return;
     }
 
     LOCK(cs);
     for (const auto& tx : vtx) {
         for (const auto& in : tx->vin) {
-            auto it = mapMasternodes.find(in.prevout);
-            if (it != mapMasternodes.end()) {
+            auto it = mapGamemasters.find(in.prevout);
+            if (it != mapGamemasters.end()) {
                 it->second->SetSpent();
             }
         }
     }
 }
 
-static bool canScheduleMN(bool fFilterSigTime, const MasternodeRef& mn, int minProtocol,
+static bool canScheduleGM(bool fFilterSigTime, const GamemasterRef& gm, int minProtocol,
                           int nMnCount, int nBlockHeight)
 {
     // check protocol version
-    if (mn->protocolVersion < minProtocol) return false;
+    if (gm->protocolVersion < minProtocol) return false;
 
     // it's in the list (up to 8 entries ahead of current block to allow propagation) -- so let's skip it
-    if (masternodePayments.IsScheduled(*mn, nBlockHeight)) return false;
+    if (gamemasterPayments.IsScheduled(*gm, nBlockHeight)) return false;
 
     // it's too new, wait for a cycle
-    if (fFilterSigTime && mn->sigTime + (nMnCount * 2.6 * 60) > GetAdjustedTime()) return false;
+    if (fFilterSigTime && gm->sigTime + (nMnCount * 2.6 * 60) > GetAdjustedTime()) return false;
 
-    // make sure it has as many confirmations as there are masternodes
-    if (pcoinsTip->GetCoinDepthAtHeight(mn->vin.prevout, nBlockHeight) < nMnCount) return false;
+    // make sure it has as many confirmations as there are gamemasters
+    if (pcoinsTip->GetCoinDepthAtHeight(gm->vin.prevout, nBlockHeight) < nMnCount) return false;
 
     return true;
 }
 
 //
-// Deterministically select the oldest/best masternode to pay on the network
+// Deterministically select the oldest/best gamemaster to pay on the network
 //
-MasternodeRef CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeight, bool fFilterSigTime, int& nCount, const CBlockIndex* pChainTip) const
+GamemasterRef CGamemasterMan::GetNextGamemasterInQueueForPayment(int nBlockHeight, bool fFilterSigTime, int& nCount, const CBlockIndex* pChainTip) const
 {
-    // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
-    if (deterministicMNManager->LegacyMNObsolete(nBlockHeight)) {
+    // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
+    if (deterministicGMManager->LegacyGMObsolete(nBlockHeight)) {
         LogPrintf("%s: ERROR - called after legacy system disabled\n", __func__);
         return nullptr;
     }
@@ -550,8 +550,8 @@ MasternodeRef CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeigh
     const CBlockIndex* BlockReading = (pChainTip == nullptr ? GetChainTip() : pChainTip);
     if (!BlockReading) return nullptr;
 
-    MasternodeRef pBestMasternode = nullptr;
-    std::vector<std::pair<int64_t, MasternodeRef> > vecMasternodeLastPaid;
+    GamemasterRef pBestGamemaster = nullptr;
+    std::vector<std::pair<int64_t, GamemasterRef> > vecGamemasterLastPaid;
 
     /*
         Make a vector with all of the last paid times
@@ -560,31 +560,31 @@ MasternodeRef CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeigh
     int count_enabled = CountEnabled();
     {
         LOCK(cs);
-        for (const auto& it : mapMasternodes) {
+        for (const auto& it : mapGamemasters) {
             if (!it.second->IsEnabled()) continue;
-            if (canScheduleMN(fFilterSigTime, it.second, minProtocol, count_enabled, nBlockHeight)) {
-                vecMasternodeLastPaid.emplace_back(SecondsSincePayment(it.second, count_enabled, BlockReading), it.second);
+            if (canScheduleGM(fFilterSigTime, it.second, minProtocol, count_enabled, nBlockHeight)) {
+                vecGamemasterLastPaid.emplace_back(SecondsSincePayment(it.second, count_enabled, BlockReading), it.second);
             }
         }
     }
-    // Add deterministic masternodes to the vector
-    if (deterministicMNManager->IsDIP3Enforced()) {
-        CDeterministicMNList mnList = deterministicMNManager->GetListAtChainTip();
-        mnList.ForEachMN(true, [&](const CDeterministicMNCPtr& dmn) {
-            const MasternodeRef mn = MakeMasternodeRefForDMN(dmn);
-            if (canScheduleMN(fFilterSigTime, mn, minProtocol, count_enabled, nBlockHeight)) {
-                vecMasternodeLastPaid.emplace_back(SecondsSincePayment(mn, count_enabled, BlockReading), mn);
+    // Add deterministic gamemasters to the vector
+    if (deterministicGMManager->IsDIP3Enforced()) {
+        CDeterministicGMList gmList = deterministicGMManager->GetListAtChainTip();
+        gmList.ForEachGM(true, [&](const CDeterministicGMCPtr& dgm) {
+            const GamemasterRef gm = MakeGamemasterRefForDGM(dgm);
+            if (canScheduleGM(fFilterSigTime, gm, minProtocol, count_enabled, nBlockHeight)) {
+                vecGamemasterLastPaid.emplace_back(SecondsSincePayment(gm, count_enabled, BlockReading), gm);
             }
         });
     }
 
-    nCount = (int)vecMasternodeLastPaid.size();
+    nCount = (int)vecGamemasterLastPaid.size();
 
     //when the network is in the process of upgrading, don't penalize nodes that recently restarted
-    if (fFilterSigTime && nCount < count_enabled / 3) return GetNextMasternodeInQueueForPayment(nBlockHeight, false, nCount, BlockReading);
+    if (fFilterSigTime && nCount < count_enabled / 3) return GetNextGamemasterInQueueForPayment(nBlockHeight, false, nCount, BlockReading);
 
     // Sort them high to low
-    sort(vecMasternodeLastPaid.rbegin(), vecMasternodeLastPaid.rend(), CompareScoreMN());
+    sort(vecGamemasterLastPaid.rbegin(), vecGamemasterLastPaid.rend(), CompareScoreGM());
 
     // Look at 1/10 of the oldest nodes (by last payment), calculate their scores and pay the best one
     //  -- This doesn't look at who is being paid in the +8-10 blocks, allowing for double payments very rarely
@@ -594,51 +594,51 @@ MasternodeRef CMasternodeMan::GetNextMasternodeInQueueForPayment(int nBlockHeigh
     int nCountTenth = 0;
     arith_uint256 nHigh = ARITH_UINT256_ZERO;
     const uint256& hash = GetHashAtHeight(nBlockHeight - 101);
-    for (const auto& s: vecMasternodeLastPaid) {
-        const MasternodeRef pmn = s.second;
-        if (!pmn) break;
+    for (const auto& s: vecGamemasterLastPaid) {
+        const GamemasterRef pgm = s.second;
+        if (!pgm) break;
 
-        const arith_uint256& n = pmn->CalculateScore(hash);
+        const arith_uint256& n = pgm->CalculateScore(hash);
         if (n > nHigh) {
             nHigh = n;
-            pBestMasternode = pmn;
+            pBestGamemaster = pgm;
         }
         nCountTenth++;
         if (nCountTenth >= nTenthNetwork) break;
     }
-    return pBestMasternode;
+    return pBestGamemaster;
 }
 
-MasternodeRef CMasternodeMan::GetCurrentMasterNode(const uint256& hash) const
+GamemasterRef CGamemasterMan::GetCurrentMasterNode(const uint256& hash) const
 {
     int minProtocol = ActiveProtocol();
     int64_t score = 0;
-    MasternodeRef winner = nullptr;
+    GamemasterRef winner = nullptr;
 
     // scan for winner
-    for (const auto& it : mapMasternodes) {
-        const MasternodeRef& mn = it.second;
-        if (mn->protocolVersion < minProtocol || !mn->IsEnabled()) continue;
-        // calculate the score of the masternode
-        const int64_t n = mn->CalculateScore(hash).GetCompact(false);
+    for (const auto& it : mapGamemasters) {
+        const GamemasterRef& gm = it.second;
+        if (gm->protocolVersion < minProtocol || !gm->IsEnabled()) continue;
+        // calculate the score of the gamemaster
+        const int64_t n = gm->CalculateScore(hash).GetCompact(false);
         // determine the winner
         if (n > score) {
             score = n;
-            winner = mn;
+            winner = gm;
         }
     }
 
-    // scan also dmns
-    if (deterministicMNManager->IsDIP3Enforced()) {
-        auto mnList = deterministicMNManager->GetListAtChainTip();
-        mnList.ForEachMN(true, [&](const CDeterministicMNCPtr& dmn) {
-            const MasternodeRef mn = MakeMasternodeRefForDMN(dmn);
-            // calculate the score of the masternode
-            const int64_t n = mn->CalculateScore(hash).GetCompact(false);
+    // scan also dgms
+    if (deterministicGMManager->IsDIP3Enforced()) {
+        auto gmList = deterministicGMManager->GetListAtChainTip();
+        gmList.ForEachGM(true, [&](const CDeterministicGMCPtr& dgm) {
+            const GamemasterRef gm = MakeGamemasterRefForDGM(dgm);
+            // calculate the score of the gamemaster
+            const int64_t n = gm->CalculateScore(hash).GetCompact(false);
             // determine the winner
             if (n > score) {
                 score = n;
-                winner = mn;
+                winner = gm;
             }
         });
     }
@@ -646,15 +646,15 @@ MasternodeRef CMasternodeMan::GetCurrentMasterNode(const uint256& hash) const
     return winner;
 }
 
-std::vector<std::pair<MasternodeRef, int>> CMasternodeMan::GetMnScores(int nLast) const
+std::vector<std::pair<GamemasterRef, int>> CGamemasterMan::GetMnScores(int nLast) const
 {
-    std::vector<std::pair<MasternodeRef, int>> ret;
+    std::vector<std::pair<GamemasterRef, int>> ret;
     int nChainHeight = GetBestHeight();
     if (nChainHeight < 0) return ret;
 
     for (int nHeight = nChainHeight - nLast; nHeight < nChainHeight + 20; nHeight++) {
         const uint256& hash = GetHashAtHeight(nHeight - 101);
-        MasternodeRef winner = GetCurrentMasterNode(hash);
+        GamemasterRef winner = GetCurrentMasterNode(hash);
         if (winner) {
             ret.emplace_back(winner, nHeight);
         }
@@ -662,7 +662,7 @@ std::vector<std::pair<MasternodeRef, int>> CMasternodeMan::GetMnScores(int nLast
     return ret;
 }
 
-int CMasternodeMan::GetMasternodeRank(const CTxIn& vin, int64_t nBlockHeight) const
+int CGamemasterMan::GetGamemasterRank(const CTxIn& vin, int64_t nBlockHeight) const
 {
     const uint256& hash = GetHashAtHeight(nBlockHeight - 1);
     // height outside range
@@ -670,39 +670,39 @@ int CMasternodeMan::GetMasternodeRank(const CTxIn& vin, int64_t nBlockHeight) co
 
     // scan for winner
     int minProtocol = ActiveProtocol();
-    std::vector<std::pair<int64_t, CTxIn> > vecMasternodeScores;
+    std::vector<std::pair<int64_t, CTxIn> > vecGamemasterScores;
     {
         LOCK(cs);
-        for (const auto& it : mapMasternodes) {
-            const MasternodeRef& mn = it.second;
-            if (!mn->IsEnabled()) {
+        for (const auto& it : mapGamemasters) {
+            const GamemasterRef& gm = it.second;
+            if (!gm->IsEnabled()) {
                 continue; // Skip not enabled
             }
-            if (mn->protocolVersion < minProtocol) {
-                LogPrint(BCLog::MASTERNODE,"Skipping Masternode with obsolete version %d\n", mn->protocolVersion);
+            if (gm->protocolVersion < minProtocol) {
+                LogPrint(BCLog::GAMEMASTER,"Skipping Gamemaster with obsolete version %d\n", gm->protocolVersion);
                 continue; // Skip obsolete versions
             }
-            if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT) &&
-                    GetAdjustedTime() - mn->sigTime < MN_WINNER_MINIMUM_AGE) {
-                continue; // Skip masternodes younger than (default) 1 hour
+            if (sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT) &&
+                    GetAdjustedTime() - gm->sigTime < GM_WINNER_MINIMUM_AGE) {
+                continue; // Skip gamemasters younger than (default) 1 hour
             }
-            vecMasternodeScores.emplace_back(mn->CalculateScore(hash).GetCompact(false), mn->vin);
+            vecGamemasterScores.emplace_back(gm->CalculateScore(hash).GetCompact(false), gm->vin);
         }
     }
 
-    // scan also dmns
-    if (deterministicMNManager->IsDIP3Enforced()) {
-        auto mnList = deterministicMNManager->GetListAtChainTip();
-        mnList.ForEachMN(true, [&](const CDeterministicMNCPtr& dmn) {
-            const MasternodeRef mn = MakeMasternodeRefForDMN(dmn);
-            vecMasternodeScores.emplace_back(mn->CalculateScore(hash).GetCompact(false), mn->vin);
+    // scan also dgms
+    if (deterministicGMManager->IsDIP3Enforced()) {
+        auto gmList = deterministicGMManager->GetListAtChainTip();
+        gmList.ForEachGM(true, [&](const CDeterministicGMCPtr& dgm) {
+            const GamemasterRef gm = MakeGamemasterRefForDGM(dgm);
+            vecGamemasterScores.emplace_back(gm->CalculateScore(hash).GetCompact(false), gm->vin);
         });
     }
 
-    sort(vecMasternodeScores.rbegin(), vecMasternodeScores.rend(), CompareScoreMN());
+    sort(vecGamemasterScores.rbegin(), vecGamemasterScores.rend(), CompareScoreGM());
 
     int rank = 0;
-    for (std::pair<int64_t, CTxIn> & s : vecMasternodeScores) {
+    for (std::pair<int64_t, CTxIn> & s : vecGamemasterScores) {
         rank++;
         if (s.second.prevout == vin.prevout) {
             return rank;
@@ -712,92 +712,92 @@ int CMasternodeMan::GetMasternodeRank(const CTxIn& vin, int64_t nBlockHeight) co
     return -1;
 }
 
-std::vector<std::pair<int64_t, MasternodeRef>> CMasternodeMan::GetMasternodeRanks(int nBlockHeight) const
+std::vector<std::pair<int64_t, GamemasterRef>> CGamemasterMan::GetGamemasterRanks(int nBlockHeight) const
 {
-    std::vector<std::pair<int64_t, MasternodeRef>> vecMasternodeScores;
+    std::vector<std::pair<int64_t, GamemasterRef>> vecGamemasterScores;
     const uint256& hash = GetHashAtHeight(nBlockHeight - 1);
     // height outside range
-    if (hash == UINT256_ZERO) return vecMasternodeScores;
+    if (hash == UINT256_ZERO) return vecGamemasterScores;
     {
         LOCK(cs);
         // scan for winner
-        for (const auto& it : mapMasternodes) {
-            const MasternodeRef mn = it.second;
-            const uint32_t score = mn->IsEnabled() ? mn->CalculateScore(hash).GetCompact(false) : 9999;
+        for (const auto& it : mapGamemasters) {
+            const GamemasterRef gm = it.second;
+            const uint32_t score = gm->IsEnabled() ? gm->CalculateScore(hash).GetCompact(false) : 9999;
 
-            vecMasternodeScores.emplace_back(score, mn);
+            vecGamemasterScores.emplace_back(score, gm);
         }
     }
-    // scan also dmns
-    if (deterministicMNManager->IsDIP3Enforced()) {
-        auto mnList = deterministicMNManager->GetListAtChainTip();
-        mnList.ForEachMN(false, [&](const CDeterministicMNCPtr& dmn) {
-            const MasternodeRef mn = MakeMasternodeRefForDMN(dmn);
-            const uint32_t score = dmn->IsPoSeBanned() ? 9999 : mn->CalculateScore(hash).GetCompact(false);
+    // scan also dgms
+    if (deterministicGMManager->IsDIP3Enforced()) {
+        auto gmList = deterministicGMManager->GetListAtChainTip();
+        gmList.ForEachGM(false, [&](const CDeterministicGMCPtr& dgm) {
+            const GamemasterRef gm = MakeGamemasterRefForDGM(dgm);
+            const uint32_t score = dgm->IsPoSeBanned() ? 9999 : gm->CalculateScore(hash).GetCompact(false);
 
-            vecMasternodeScores.emplace_back(score, mn);
+            vecGamemasterScores.emplace_back(score, gm);
         });
     }
-    sort(vecMasternodeScores.rbegin(), vecMasternodeScores.rend(), CompareScoreMN());
-    return vecMasternodeScores;
+    sort(vecGamemasterScores.rbegin(), vecGamemasterScores.rend(), CompareScoreGM());
+    return vecGamemasterScores;
 }
 
-bool CMasternodeMan::CheckInputs(CMasternodeBroadcast& mnb, int nChainHeight, int& nDoS)
+bool CGamemasterMan::CheckInputs(CGamemasterBroadcast& gmb, int nChainHeight, int& nDoS)
 {
     const auto& consensus = Params().GetConsensus();
     // incorrect ping or its sigTime
-    if(mnb.lastPing.IsNull() || !mnb.lastPing.CheckAndUpdate(nDoS, false, true)) {
+    if(gmb.lastPing.IsNull() || !gmb.lastPing.CheckAndUpdate(nDoS, false, true)) {
         return false;
     }
 
-    // search existing Masternode list
-    CMasternode* pmn = Find(mnb.vin.prevout);
-    if (pmn != nullptr) {
-        // nothing to do here if we already know about this masternode and it's enabled
-        if (pmn->IsEnabled()) return true;
-        // if it's not enabled, remove old MN first and continue
+    // search existing Gamemaster list
+    CGamemaster* pgm = Find(gmb.vin.prevout);
+    if (pgm != nullptr) {
+        // nothing to do here if we already know about this gamemaster and it's enabled
+        if (pgm->IsEnabled()) return true;
+        // if it's not enabled, remove old GM first and continue
         else
-            mnodeman.Remove(pmn->vin.prevout);
+            gamemasterman.Remove(pgm->vin.prevout);
     }
 
-    const Coin& collateralUtxo = pcoinsTip->AccessCoin(mnb.vin.prevout);
+    const Coin& collateralUtxo = pcoinsTip->AccessCoin(gmb.vin.prevout);
     if (collateralUtxo.IsSpent()) {
-        LogPrint(BCLog::MASTERNODE,"mnb - vin %s spent\n", mnb.vin.prevout.ToString());
+        LogPrint(BCLog::GAMEMASTER,"gmb - vin %s spent\n", gmb.vin.prevout.ToString());
         return false;
     }
 
     // Check collateral value
-    if (collateralUtxo.out.nValue != consensus.nMNCollateralAmt) {
-        LogPrint(BCLog::MASTERNODE,"mnb - invalid amount for mnb collateral %s\n", mnb.vin.prevout.ToString());
+    if (collateralUtxo.out.nValue != consensus.nGMCollateralAmt) {
+        LogPrint(BCLog::GAMEMASTER,"gmb - invalid amount for gmb collateral %s\n", gmb.vin.prevout.ToString());
         nDoS = 33;
         return false;
     }
 
-    // Check collateral association with mnb pubkey
-    CScript payee = GetScriptForDestination(mnb.pubKeyCollateralAddress.GetID());
+    // Check collateral association with gmb pubkey
+    CScript payee = GetScriptForDestination(gmb.pubKeyCollateralAddress.GetID());
     if (collateralUtxo.out.scriptPubKey != payee) {
-        LogPrint(BCLog::MASTERNODE,"mnb - collateral %s not associated with mnb pubkey\n", mnb.vin.prevout.ToString());
+        LogPrint(BCLog::GAMEMASTER,"gmb - collateral %s not associated with gmb pubkey\n", gmb.vin.prevout.ToString());
         nDoS = 33;
         return false;
     }
 
-    LogPrint(BCLog::MASTERNODE, "mnb - Accepted Masternode entry\n");
+    LogPrint(BCLog::GAMEMASTER, "gmb - Accepted Gamemaster entry\n");
     const int utxoHeight = (int) collateralUtxo.nHeight;
     int collateralUtxoDepth = nChainHeight - utxoHeight + 1;
-    if (collateralUtxoDepth < consensus.MasternodeCollateralMinConf()) {
-        LogPrint(BCLog::MASTERNODE,"mnb - Input must have at least %d confirmations\n", consensus.MasternodeCollateralMinConf());
-        // maybe we miss few blocks, let this mnb to be checked again later
-        mapSeenMasternodeBroadcast.erase(mnb.GetHash());
-        g_tiertwo_sync_state.EraseSeenMNB(mnb.GetHash());
+    if (collateralUtxoDepth < consensus.GamemasterCollateralMinConf()) {
+        LogPrint(BCLog::GAMEMASTER,"gmb - Input must have at least %d confirmations\n", consensus.GamemasterCollateralMinConf());
+        // maybe we miss few blocks, let this gmb to be checked again later
+        mapSeenGamemasterBroadcast.erase(gmb.GetHash());
+        g_tiertwo_sync_state.EraseSeenGMB(gmb.GetHash());
         return false;
     }
 
     // verify that sig time is legit in past
-    // should be at least not earlier than block when 1000 HMS tx got MASTERNODE_MIN_CONFIRMATIONS
-    CBlockIndex* pConfIndex = WITH_LOCK(cs_main, return chainActive[utxoHeight + consensus.MasternodeCollateralMinConf() - 1]); // block where tx got MASTERNODE_MIN_CONFIRMATIONS
-    if (pConfIndex->GetBlockTime() > mnb.sigTime) {
-        LogPrint(BCLog::MASTERNODE,"mnb - Bad sigTime %d for Masternode %s (%i conf block is at %d)\n",
-                 mnb.sigTime, mnb.vin.prevout.hash.ToString(), consensus.MasternodeCollateralMinConf(), pConfIndex->GetBlockTime());
+    // should be at least not earlier than block when 1000 HMS tx got GAMEMASTER_MIN_CONFIRMATIONS
+    CBlockIndex* pConfIndex = WITH_LOCK(cs_main, return chainActive[utxoHeight + consensus.GamemasterCollateralMinConf() - 1]); // block where tx got GAMEMASTER_MIN_CONFIRMATIONS
+    if (pConfIndex->GetBlockTime() > gmb.sigTime) {
+        LogPrint(BCLog::GAMEMASTER,"gmb - Bad sigTime %d for Gamemaster %s (%i conf block is at %d)\n",
+                 gmb.sigTime, gmb.vin.prevout.hash.ToString(), consensus.GamemasterCollateralMinConf(), pConfIndex->GetBlockTime());
         return false;
     }
 
@@ -805,268 +805,268 @@ bool CMasternodeMan::CheckInputs(CMasternodeBroadcast& mnb, int nChainHeight, in
     return true;
 }
 
-int CMasternodeMan::ProcessMNBroadcast(CNode* pfrom, CMasternodeBroadcast& mnb)
+int CGamemasterMan::ProcessGMBroadcast(CNode* pfrom, CGamemasterBroadcast& gmb)
 {
-    const uint256& mnbHash = mnb.GetHash();
-    if (mapSeenMasternodeBroadcast.count(mnbHash)) { //seen
-        g_tiertwo_sync_state.AddedMasternodeList(mnbHash);
+    const uint256& gmbHash = gmb.GetHash();
+    if (mapSeenGamemasterBroadcast.count(gmbHash)) { //seen
+        g_tiertwo_sync_state.AddedGamemasterList(gmbHash);
         return 0;
     }
 
     int chainHeight = GetBestHeight();
     int nDoS = 0;
-    if (!mnb.CheckAndUpdate(nDoS)) {
+    if (!gmb.CheckAndUpdate(nDoS)) {
         return nDoS;
     }
 
     // make sure it's still unspent
-    if (!CheckInputs(mnb, chainHeight, nDoS)) {
+    if (!CheckInputs(gmb, chainHeight, nDoS)) {
         return nDoS; // error set internally
     }
 
-    // now that did the mnb checks, can add it.
-    mapSeenMasternodeBroadcast.emplace(mnbHash, mnb);
+    // now that did the gmb checks, can add it.
+    mapSeenGamemasterBroadcast.emplace(gmbHash, gmb);
 
     // All checks performed, add it
-    LogPrint(BCLog::MASTERNODE,"%s - Got NEW Masternode entry - %s - %lli \n", __func__,
-             mnb.vin.prevout.hash.ToString(), mnb.sigTime);
-    CMasternode mn(mnb);
-    if (!Add(mn)) {
-        LogPrint(BCLog::MASTERNODE, "%s - Rejected Masternode entry %s\n", __func__,
-                 mnb.vin.prevout.hash.ToString());
+    LogPrint(BCLog::GAMEMASTER,"%s - Got NEW Gamemaster entry - %s - %lli \n", __func__,
+             gmb.vin.prevout.hash.ToString(), gmb.sigTime);
+    CGamemaster gm(gmb);
+    if (!Add(gm)) {
+        LogPrint(BCLog::GAMEMASTER, "%s - Rejected Gamemaster entry %s\n", __func__,
+                 gmb.vin.prevout.hash.ToString());
         return 0;
     }
 
-    // if it matches our MN pubkey, then we've been remotely activated
-    if (mnb.pubKeyMasternode == activeMasternode.pubKeyMasternode && mnb.protocolVersion == PROTOCOL_VERSION) {
-        activeMasternode.EnableHotColdMasterNode(mnb.vin, mnb.addr);
+    // if it matches our GM pubkey, then we've been remotely activated
+    if (gmb.pubKeyGamemaster == activeGamemaster.pubKeyGamemaster && gmb.protocolVersion == PROTOCOL_VERSION) {
+        activeGamemaster.EnableHotColdMasterNode(gmb.vin, gmb.addr);
     }
 
-    // Relay only if we are synchronized and if the mnb address is not local.
-    // Makes no sense to relay MNBs to the peers from where we are syncing them.
-    bool isLocal = (mnb.addr.IsRFC1918() || mnb.addr.IsLocal()) && !Params().IsRegTestNet();
-    if (!isLocal && g_tiertwo_sync_state.IsSynced()) mnb.Relay();
+    // Relay only if we are synchronized and if the gmb address is not local.
+    // Makes no sense to relay GMBs to the peers from where we are syncing them.
+    bool isLocal = (gmb.addr.IsRFC1918() || gmb.addr.IsLocal()) && !Params().IsRegTestNet();
+    if (!isLocal && g_tiertwo_sync_state.IsSynced()) gmb.Relay();
 
     // Add it as a peer
-    g_connman->AddNewAddress(CAddress(mnb.addr, NODE_NETWORK), pfrom->addr, 2 * 60 * 60);
+    g_connman->AddNewAddress(CAddress(gmb.addr, NODE_NETWORK), pfrom->addr, 2 * 60 * 60);
 
     // Update sync status
-    g_tiertwo_sync_state.AddedMasternodeList(mnbHash);
+    g_tiertwo_sync_state.AddedGamemasterList(gmbHash);
 
     // All good
     return 0;
 }
 
-int CMasternodeMan::ProcessMNPing(CNode* pfrom, CMasternodePing& mnp)
+int CGamemasterMan::ProcessGMPing(CNode* pfrom, CGamemasterPing& gmp)
 {
-    const uint256& mnpHash = mnp.GetHash();
-    if (mapSeenMasternodePing.count(mnpHash)) return 0; //seen
+    const uint256& gmpHash = gmp.GetHash();
+    if (mapSeenGamemasterPing.count(gmpHash)) return 0; //seen
 
     int nDoS = 0;
-    if (mnp.CheckAndUpdate(nDoS)) return 0;
+    if (gmp.CheckAndUpdate(nDoS)) return 0;
 
     if (nDoS > 0) {
         // if anything significant failed, mark that node
         return nDoS;
     } else {
-        // if nothing significant failed, search existing Masternode list
-        CMasternode* pmn = Find(mnp.vin.prevout);
-        // if it's known, don't ask for the mnb, just return
-        if (pmn != nullptr) return 0;
+        // if nothing significant failed, search existing Gamemaster list
+        CGamemaster* pgm = Find(gmp.vin.prevout);
+        // if it's known, don't ask for the gmb, just return
+        if (pgm != nullptr) return 0;
     }
 
-    // something significant is broken or mn is unknown,
-    // we might have to ask for the mn entry (while we aren't syncing).
+    // something significant is broken or gm is unknown,
+    // we might have to ask for the gm entry (while we aren't syncing).
     if (g_tiertwo_sync_state.IsSynced()) {
-        AskForMN(pfrom, mnp.vin);
+        AskForGM(pfrom, gmp.vin);
     }
 
     // All good
     return 0;
 }
 
-void CMasternodeMan::BroadcastInvMN(CMasternode* mn, CNode* pfrom)
+void CGamemasterMan::BroadcastInvGM(CGamemaster* gm, CNode* pfrom)
 {
-    CMasternodeBroadcast mnb = CMasternodeBroadcast(*mn);
-    const uint256& hash = mnb.GetHash();
-    pfrom->PushInventory(CInv(MSG_MASTERNODE_ANNOUNCE, hash));
+    CGamemasterBroadcast gmb = CGamemasterBroadcast(*gm);
+    const uint256& hash = gmb.GetHash();
+    pfrom->PushInventory(CInv(MSG_GAMEMASTER_ANNOUNCE, hash));
 
-    // Add to mapSeenMasternodeBroadcast in case that isn't there for some reason.
-    if (!mapSeenMasternodeBroadcast.count(hash)) mapSeenMasternodeBroadcast.emplace(hash, mnb);
+    // Add to mapSeenGamemasterBroadcast in case that isn't there for some reason.
+    if (!mapSeenGamemasterBroadcast.count(hash)) mapSeenGamemasterBroadcast.emplace(hash, gmb);
 }
 
-int CMasternodeMan::ProcessGetMNList(CNode* pfrom, CTxIn& vin)
+int CGamemasterMan::ProcessGetGMList(CNode* pfrom, CTxIn& vin)
 {
-    // Single MN request
+    // Single GM request
     if (!vin.IsNull()) {
-        CMasternode* mn = Find(vin.prevout);
-        if (!mn || !mn->IsEnabled()) return 0; // Nothing to return.
+        CGamemaster* gm = Find(vin.prevout);
+        if (!gm || !gm->IsEnabled()) return 0; // Nothing to return.
 
-        // Relay the MN.
-        BroadcastInvMN(mn, pfrom);
-        LogPrint(BCLog::MASTERNODE, "dseg - Sent 1 Masternode entry to peer %i\n", pfrom->GetId());
+        // Relay the GM.
+        BroadcastInvGM(gm, pfrom);
+        LogPrint(BCLog::GAMEMASTER, "dseg - Sent 1 Gamemaster entry to peer %i\n", pfrom->GetId());
         return 0;
     }
 
-    // Check if the node asked for mn list sync before.
+    // Check if the node asked for gm list sync before.
     bool isLocal = (pfrom->addr.IsRFC1918() || pfrom->addr.IsLocal());
     if (!isLocal) {
-        auto itAskedUsMNList = mAskedUsForMasternodeList.find(pfrom->addr);
-        if (itAskedUsMNList != mAskedUsForMasternodeList.end()) {
-            int64_t t = (*itAskedUsMNList).second;
+        auto itAskedUsGMList = mAskedUsForGamemasterList.find(pfrom->addr);
+        if (itAskedUsGMList != mAskedUsForGamemasterList.end()) {
+            int64_t t = (*itAskedUsGMList).second;
             if (GetTime() < t) {
-                LogPrintf("CMasternodeMan::ProcessMessage() : dseg - peer already asked me for the list\n");
+                LogPrintf("CGamemasterMan::ProcessMessage() : dseg - peer already asked me for the list\n");
                 return 20;
             }
         }
-        int64_t askAgain = GetTime() + MASTERNODES_REQUEST_SECONDS;
-        mAskedUsForMasternodeList[pfrom->addr] = askAgain;
+        int64_t askAgain = GetTime() + GAMEMASTERS_REQUEST_SECONDS;
+        mAskedUsForGamemasterList[pfrom->addr] = askAgain;
     }
 
     int nInvCount = 0;
     {
         LOCK(cs);
-        for (auto& it : mapMasternodes) {
-            MasternodeRef& mn = it.second;
-            if (mn->addr.IsRFC1918()) continue; //local network
-            if (mn->IsEnabled()) {
-                LogPrint(BCLog::MASTERNODE, "dseg - Sending Masternode entry - %s \n", mn->vin.prevout.hash.ToString());
-                BroadcastInvMN(mn.get(), pfrom);
+        for (auto& it : mapGamemasters) {
+            GamemasterRef& gm = it.second;
+            if (gm->addr.IsRFC1918()) continue; //local network
+            if (gm->IsEnabled()) {
+                LogPrint(BCLog::GAMEMASTER, "dseg - Sending Gamemaster entry - %s \n", gm->vin.prevout.hash.ToString());
+                BroadcastInvGM(gm.get(), pfrom);
                 nInvCount++;
             }
         }
     }
 
-    g_connman->PushMessage(pfrom, CNetMsgMaker(pfrom->GetSendVersion()).Make(NetMsgType::SYNCSTATUSCOUNT, MASTERNODE_SYNC_LIST, nInvCount));
-    LogPrint(BCLog::MASTERNODE, "dseg - Sent %d Masternode entries to peer %i\n", nInvCount, pfrom->GetId());
+    g_connman->PushMessage(pfrom, CNetMsgMaker(pfrom->GetSendVersion()).Make(NetMsgType::SYNCSTATUSCOUNT, GAMEMASTER_SYNC_LIST, nInvCount));
+    LogPrint(BCLog::GAMEMASTER, "dseg - Sent %d Gamemaster entries to peer %i\n", nInvCount, pfrom->GetId());
 
     // All good
     return 0;
 }
 
-bool CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataStream& vRecv, int& dosScore)
+bool CGamemasterMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataStream& vRecv, int& dosScore)
 {
     dosScore = ProcessMessageInner(pfrom, strCommand, vRecv);
     return dosScore == 0;
 }
 
-int CMasternodeMan::ProcessMessageInner(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
+int CGamemasterMan::ProcessMessageInner(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
 {
     if (!g_tiertwo_sync_state.IsBlockchainSynced()) return 0;
 
-    // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
-    if (deterministicMNManager->LegacyMNObsolete()) {
-        LogPrint(BCLog::MASTERNODE, "%s: skip obsolete message %s\n", __func__, strCommand);
+    // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
+    if (deterministicGMManager->LegacyGMObsolete()) {
+        LogPrint(BCLog::GAMEMASTER, "%s: skip obsolete message %s\n", __func__, strCommand);
         return 0;
     }
 
     LOCK(cs_process_message);
 
-    if (strCommand == NetMsgType::MNBROADCAST) {
-        CMasternodeBroadcast mnb;
-        vRecv >> mnb;
+    if (strCommand == NetMsgType::GMBROADCAST) {
+        CGamemasterBroadcast gmb;
+        vRecv >> gmb;
         {
             // Clear inv request
             LOCK(cs_main);
-            g_connman->RemoveAskFor(mnb.GetHash(), MSG_MASTERNODE_ANNOUNCE);
+            g_connman->RemoveAskFor(gmb.GetHash(), MSG_GAMEMASTER_ANNOUNCE);
         }
-        return ProcessMNBroadcast(pfrom, mnb);
+        return ProcessGMBroadcast(pfrom, gmb);
 
-    } else if (strCommand == NetMsgType::MNBROADCAST2) {
-        CMasternodeBroadcast mnb;
+    } else if (strCommand == NetMsgType::GMBROADCAST2) {
+        CGamemasterBroadcast gmb;
         OverrideStream<CDataStream> s(&vRecv, vRecv.GetType(), vRecv.GetVersion() | ADDRV2_FORMAT);
-        s >> mnb;
+        s >> gmb;
         {
             // Clear inv request
             LOCK(cs_main);
-            g_connman->RemoveAskFor(mnb.GetHash(), MSG_MASTERNODE_ANNOUNCE);
+            g_connman->RemoveAskFor(gmb.GetHash(), MSG_GAMEMASTER_ANNOUNCE);
         }
 
-        // For now, let's not process mnb2 with pre-BIP155 node addr format.
-        if (mnb.addr.IsAddrV1Compatible()) {
-            LogPrint(BCLog::MASTERNODE, "%s: mnb2 with pre-BIP155 node addr format rejected\n", __func__);
+        // For now, let's not process gmb2 with pre-BIP155 node addr format.
+        if (gmb.addr.IsAddrV1Compatible()) {
+            LogPrint(BCLog::GAMEMASTER, "%s: gmb2 with pre-BIP155 node addr format rejected\n", __func__);
             return 30;
         }
 
-        return ProcessMNBroadcast(pfrom, mnb);
+        return ProcessGMBroadcast(pfrom, gmb);
 
-    } else if (strCommand == NetMsgType::MNPING) {
-        //Masternode Ping
-        CMasternodePing mnp;
-        vRecv >> mnp;
-        LogPrint(BCLog::MNPING, "mnp - Masternode ping, vin: %s\n", mnp.vin.prevout.hash.ToString());
+    } else if (strCommand == NetMsgType::GMPING) {
+        //Gamemaster Ping
+        CGamemasterPing gmp;
+        vRecv >> gmp;
+        LogPrint(BCLog::GMPING, "gmp - Gamemaster ping, vin: %s\n", gmp.vin.prevout.hash.ToString());
         {
             // Clear inv request
             LOCK(cs_main);
-            g_connman->RemoveAskFor(mnp.GetHash(), MSG_MASTERNODE_PING);
+            g_connman->RemoveAskFor(gmp.GetHash(), MSG_GAMEMASTER_PING);
         }
-        return ProcessMNPing(pfrom, mnp);
+        return ProcessGMPing(pfrom, gmp);
 
-    } else if (strCommand == NetMsgType::GETMNLIST) {
-        //Get Masternode list or specific entry
+    } else if (strCommand == NetMsgType::GETGMLIST) {
+        //Get Gamemaster list or specific entry
         CTxIn vin;
         vRecv >> vin;
-        return ProcessGetMNList(pfrom, vin);
+        return ProcessGetGMList(pfrom, vin);
     }
     // Nothing to report
     return 0;
 }
 
-void CMasternodeMan::Remove(const COutPoint& collateralOut)
+void CGamemasterMan::Remove(const COutPoint& collateralOut)
 {
     LOCK(cs);
-    const auto it = mapMasternodes.find(collateralOut);
-    if (it != mapMasternodes.end()) {
-        mapMasternodes.erase(it);
+    const auto it = mapGamemasters.find(collateralOut);
+    if (it != mapGamemasters.end()) {
+        mapGamemasters.erase(it);
     }
 }
 
-void CMasternodeMan::UpdateMasternodeList(CMasternodeBroadcast& mnb)
+void CGamemasterMan::UpdateGamemasterList(CGamemasterBroadcast& gmb)
 {
-    // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
-    if (deterministicMNManager->LegacyMNObsolete()) {
+    // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
+    if (deterministicGMManager->LegacyGMObsolete()) {
         return;
     }
 
-    mapSeenMasternodePing.emplace(mnb.lastPing.GetHash(), mnb.lastPing);
-    mapSeenMasternodeBroadcast.emplace(mnb.GetHash(), mnb);
-    g_tiertwo_sync_state.AddedMasternodeList(mnb.GetHash());
+    mapSeenGamemasterPing.emplace(gmb.lastPing.GetHash(), gmb.lastPing);
+    mapSeenGamemasterBroadcast.emplace(gmb.GetHash(), gmb);
+    g_tiertwo_sync_state.AddedGamemasterList(gmb.GetHash());
 
-    LogPrint(BCLog::MASTERNODE,"%s -- masternode=%s\n", __func__, mnb.vin.prevout.ToString());
+    LogPrint(BCLog::GAMEMASTER,"%s -- gamemaster=%s\n", __func__, gmb.vin.prevout.ToString());
 
-    CMasternode* pmn = Find(mnb.vin.prevout);
-    if (pmn == nullptr) {
-        CMasternode mn(mnb);
-        Add(mn);
+    CGamemaster* pgm = Find(gmb.vin.prevout);
+    if (pgm == nullptr) {
+        CGamemaster gm(gmb);
+        Add(gm);
     } else {
-        pmn->UpdateFromNewBroadcast(mnb);
+        pgm->UpdateFromNewBroadcast(gmb);
     }
 }
 
-int64_t CMasternodeMan::SecondsSincePayment(const MasternodeRef& mn, int count_enabled, const CBlockIndex* BlockReading) const
+int64_t CGamemasterMan::SecondsSincePayment(const GamemasterRef& gm, int count_enabled, const CBlockIndex* BlockReading) const
 {
-    int64_t sec = (GetAdjustedTime() - GetLastPaid(mn, count_enabled, BlockReading));
+    int64_t sec = (GetAdjustedTime() - GetLastPaid(gm, count_enabled, BlockReading));
     int64_t month = 60 * 60 * 24 * 30;
     if (sec < month) return sec; //if it's less than 30 days, give seconds
 
     CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
-    ss << mn->vin;
-    ss << mn->sigTime;
+    ss << gm->vin;
+    ss << gm->sigTime;
     const arith_uint256& hash = UintToArith256(ss.GetHash());
 
     // return some deterministic value for unknown/unpaid but force it to be more than 30 days old
     return month + hash.GetCompact(false);
 }
 
-int64_t CMasternodeMan::GetLastPaid(const MasternodeRef& mn, int count_enabled, const CBlockIndex* BlockReading) const
+int64_t CGamemasterMan::GetLastPaid(const GamemasterRef& gm, int count_enabled, const CBlockIndex* BlockReading) const
 {
     if (BlockReading == nullptr) return false;
 
-    const CScript& mnpayee = mn->GetPayeeScript();
+    const CScript& gmpayee = gm->GetPayeeScript();
 
     CHashWriter ss(SER_GETHASH, PROTOCOL_VERSION);
-    ss << mn->vin;
-    ss << mn->sigTime;
+    ss << gm->vin;
+    ss << gm->sigTime;
     const uint256& hash = ss.GetHash();
 
     // use a deterministic offset to break a tie -- 2.5 minutes
@@ -1074,11 +1074,11 @@ int64_t CMasternodeMan::GetLastPaid(const MasternodeRef& mn, int count_enabled, 
 
     int max_depth = count_enabled * 1.25;
     for (int n = 0; n < max_depth; n++) {
-        const auto& it = masternodePayments.mapMasternodeBlocks.find(BlockReading->nHeight);
-        if (it != masternodePayments.mapMasternodeBlocks.end()) {
+        const auto& it = gamemasterPayments.mapGamemasterBlocks.find(BlockReading->nHeight);
+        if (it != gamemasterPayments.mapGamemasterBlocks.end()) {
             // Search for this payee, with at least 2 votes. This will aid in consensus
             // allowing the network to converge on the same payees quickly, then keep the same schedule.
-            if (it->second.HasPayeeWithVotes(mnpayee, 2))
+            if (it->second.HasPayeeWithVotes(gmpayee, 2))
                 return BlockReading->nTime + nOffset;
         }
         BlockReading = BlockReading->pprev;
@@ -1091,36 +1091,36 @@ int64_t CMasternodeMan::GetLastPaid(const MasternodeRef& mn, int count_enabled, 
     return 0;
 }
 
-std::string CMasternodeMan::ToString() const
+std::string CGamemasterMan::ToString() const
 {
     std::ostringstream info;
-    info << "Masternodes: " << (int)mapMasternodes.size()
-         << ", peers who asked us for Masternode list: " << (int)mAskedUsForMasternodeList.size()
-         << ", peers we asked for Masternode list: " << (int)mWeAskedForMasternodeList.size()
-         << ", entries in Masternode list we asked for: " << (int)mWeAskedForMasternodeListEntry.size();
+    info << "Gamemasters: " << (int)mapGamemasters.size()
+         << ", peers who asked us for Gamemaster list: " << (int)mAskedUsForGamemasterList.size()
+         << ", peers we asked for Gamemaster list: " << (int)mWeAskedForGamemasterList.size()
+         << ", entries in Gamemaster list we asked for: " << (int)mWeAskedForGamemasterListEntry.size();
     return info.str();
 }
 
-void CMasternodeMan::CacheBlockHash(const CBlockIndex* pindex)
+void CGamemasterMan::CacheBlockHash(const CBlockIndex* pindex)
 {
     cvLastBlockHashes.Set(pindex->nHeight, pindex->GetBlockHash());
 }
 
-void CMasternodeMan::UncacheBlockHash(const CBlockIndex* pindex)
+void CGamemasterMan::UncacheBlockHash(const CBlockIndex* pindex)
 {
     cvLastBlockHashes.Set(pindex->nHeight, UINT256_ZERO);
 }
 
-uint256 CMasternodeMan::GetHashAtHeight(int nHeight) const
+uint256 CGamemasterMan::GetHashAtHeight(int nHeight) const
 {
     // return zero if outside bounds
     if (nHeight < 0) {
-        LogPrint(BCLog::MASTERNODE, "%s: Negative height. Returning 0\n",  __func__);
+        LogPrint(BCLog::GAMEMASTER, "%s: Negative height. Returning 0\n",  __func__);
         return UINT256_ZERO;
     }
     int nCurrentHeight = GetBestHeight();
     if (nHeight > nCurrentHeight) {
-        LogPrint(BCLog::MASTERNODE, "%s: height %d over current height %d. Returning 0\n",
+        LogPrint(BCLog::GAMEMASTER, "%s: height %d over current height %d. Returning 0\n",
                 __func__, nHeight, nCurrentHeight);
         return UINT256_ZERO;
     }
@@ -1135,7 +1135,7 @@ uint256 CMasternodeMan::GetHashAtHeight(int nHeight) const
     }
 }
 
-bool CMasternodeMan::IsWithinDepth(const uint256& nHash, int depth) const
+bool CGamemasterMan::IsWithinDepth(const uint256& nHash, int depth) const
 {
     // Sanity checks
     if (nHash.IsNull()) {
@@ -1154,26 +1154,26 @@ bool CMasternodeMan::IsWithinDepth(const uint256& nHash, int depth) const
     return false;
 }
 
-void ThreadCheckMasternodes()
+void ThreadCheckGamemasters()
 {
     // Make this thread recognisable as the wallet flushing thread
-    util::ThreadRename("hemis-masternodeman");
-    LogPrintf("Masternodes thread started\n");
+    util::ThreadRename("hemis-gamemasterman");
+    LogPrintf("Gamemasters thread started\n");
 
     unsigned int c = 0;
 
     try {
-        // first clean up stale masternode payments data
-        masternodePayments.CleanPaymentList(mnodeman.CheckAndRemove(), mnodeman.GetBestHeight());
+        // first clean up stale gamemaster payments data
+        gamemasterPayments.CleanPaymentList(gamemasterman.CheckAndRemove(), gamemasterman.GetBestHeight());
 
-        // Startup-only, clean any stored seen MN broadcast with an invalid service that
+        // Startup-only, clean any stored seen GM broadcast with an invalid service that
         // could have been invalidly stored on a previous release
-        auto itSeenMNB = mnodeman.mapSeenMasternodeBroadcast.begin();
-        while (itSeenMNB != mnodeman.mapSeenMasternodeBroadcast.end()) {
-            if (!itSeenMNB->second.addr.IsValid()) {
-                itSeenMNB = mnodeman.mapSeenMasternodeBroadcast.erase(itSeenMNB);
+        auto itSeenGMB = gamemasterman.mapSeenGamemasterBroadcast.begin();
+        while (itSeenGMB != gamemasterman.mapSeenGamemasterBroadcast.end()) {
+            if (!itSeenGMB->second.addr.IsValid()) {
+                itSeenGMB = gamemasterman.mapSeenGamemasterBroadcast.erase(itSeenGMB);
             } else {
-                itSeenMNB++;
+                itSeenGMB++;
             }
         }
 
@@ -1187,18 +1187,18 @@ void ThreadCheckMasternodes()
             boost::this_thread::interruption_point();
 
             // try to sync from all available nodes, one step at a time
-            masternodeSync.Process();
+            gamemasterSync.Process();
 
             if (g_tiertwo_sync_state.IsBlockchainSynced()) {
                 c++;
 
                 // check if we should activate or ping every few minutes,
                 // start right after sync is considered to be done
-                if (c % (MasternodePingSeconds()/2) == 0)
-                    activeMasternode.ManageStatus();
+                if (c % (GamemasterPingSeconds()/2) == 0)
+                    activeGamemaster.ManageStatus();
 
-                if (c % (MasternodePingSeconds()/5) == 0) {
-                    masternodePayments.CleanPaymentList(mnodeman.CheckAndRemove(), mnodeman.GetBestHeight());
+                if (c % (GamemasterPingSeconds()/5) == 0) {
+                    gamemasterPayments.CleanPaymentList(gamemasterman.CheckAndRemove(), gamemasterman.GetBestHeight());
                 }
             }
         }

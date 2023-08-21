@@ -176,7 +176,7 @@ RPC Changes
 ### Modified input/output for existing commands
 
 - "CoinStake" JSON object in `getblock` output is removed, and replaced with the strings "stakeModifier" and "hashProofOfStake"
-- "obfcompat" JSON field in `getmasternodecount` output is removed as it is/was redundant with the `enabled` field.
+- "obfcompat" JSON field in `getgamemastercount` output is removed as it is/was redundant with the `enabled` field.
 - "moneysupply" and "zpivSupply" attributes in `getblock` output are removed.
 - "isPublicSpend" boolean (optional) input parameter is removed from the following commands:
   - `createrawzerocoinspend`
@@ -203,7 +203,7 @@ RPC Changes
      "staking_enabled": true|false,      (boolean) whether staking is enabled/disabled in hemis.conf
      "coldstaking_enabled": true|false,  (boolean) whether cold-staking is enabled/disabled in hemis.conf
      "haveconnections": true|false,      (boolean) whether network connections are present
-     "mnsync": true|false,               (boolean) whether masternode data is synced
+     "gmsync": true|false,               (boolean) whether gamemaster data is synced
      "walletunlocked": true|false,       (boolean) whether the wallet is unlocked
      "stakeablecoins": n,                (numeric) number of stakeable UTXOs
      "stakingbalance": d,                (numeric) HMS value of the stakeable coins (minus reserve balance, if any)
@@ -261,11 +261,11 @@ Detailed release notes follow. For convenience in locating the code changes and 
  - #1385 `be05f52000` [GUI] Don't change selected address after editing its label (random-zebra)
  - #1387 `cc072687db` [GUI] Add Unlock/Relock context flow (random-zebra)
  - #1388 `c80688e02a` [GUI] Customize the timeout of the SnackBar based on its message length (random-zebra)
- - #1389 `f80888b770` [GUI] MasternodeWidget-Wizard bugfixes (random-zebra)
+ - #1389 `f80888b770` [GUI] GamemasterWidget-Wizard bugfixes (random-zebra)
  - #1391 `2bdc9f8689` [GUI] Spend cold-stake delegations (random-zebra)
  - #1392 `da2f6e56f8` [GUI] Accept dialogs with ENTER (random-zebra)
  - #1393 `541a688bee` [GUI] Customizable sorting for address books (random-zebra)
- - #1396 `b56172a01b` [GUI] Topbar MNs sync phase status. (furszy)
+ - #1396 `b56172a01b` [GUI] Topbar GMs sync phase status. (furszy)
  - #1400 `f1206ed87d` [Trivial] Rewording of Custom Fee dialog text (NoobieDev12)
  - #1402 `023e7719f2` [GUI][Bug] Fix max decimals in sendcustomfeedialog (random-zebra)
  - #1403 `de5fb73775` [GUI] SendWidget: automatically set focus on last recipient entry (random-zebra)
@@ -281,7 +281,7 @@ Detailed release notes follow. For convenience in locating the code changes and 
  - #1429 `623821c799` [GUI] Dark theme (furszy)
  - #1430 `1907a80938` [Trivial][GUI] Fix capsLabel color (make it text-warning) (random-zebra)
  - #1431 `01651b6c63` [GUI] Automatic wallet backup after upgrade to HD (random-zebra)
- - #1436 `98e6867e0c` [Trivial] Rewording of remote masternode data export notification (NoobieDev12)
+ - #1436 `98e6867e0c` [Trivial] Rewording of remote gamemaster data export notification (NoobieDev12)
  - #1443 `0b0c8267a6` [GUI] Removing unused DenomGenerationDialog. (furszy)
  - #1447 `ec666ec8d8` [GUI] Add address-label to sendconfirm-popup (random-zebra)
  - #1454 `110aa9c83d` [GUI] Settings widget (furszy)
@@ -292,26 +292,26 @@ Detailed release notes follow. For convenience in locating the code changes and 
  - #1473 `ca7f351350` [GUI] Hide charts container when not USE_QTCHARTS (random-zebra)
  - #1475 `3dddd25def` [GUI] Hide charts at startup or at runtime (random-zebra)
  - #1477 `6879786153` [GUI][Trivial] ColdStakingWidget: fix containerSend margins (random-zebra)
- - #1479 `c9c618e365` [BUG][GUI] Fix MasternodeWidget StartAll (furszy)
+ - #1479 `c9c618e365` [BUG][GUI] Fix GamemasterWidget StartAll (furszy)
  - #1481 `8e9214014b` [GUI][BugFix] Tor topbar button text. (furszy)
  - #1487 `ac7a5b302f` [GUI] ClientModel cacheTip sync with back-end. (furszy)
  - #1489 `e4d6c26f61` [GUI] Add missing error notification in encrypt wallet. (furszy)
  - #1494 `3ea8c577d4` [Qt] Convert leftover connects to Qt5 syntax (Fuzzbawls)
  - #1499 `5e6c05305e` [GUI] Settings console (furszy)
- - #1501 `417e8cb73c` [GUI] Update MNs count every 40 seconds. (furszy)
+ - #1501 `417e8cb73c` [GUI] Update GMs count every 40 seconds. (furszy)
  - #1503 `66f523d46f` [GUI] Fix cold staking owner dropdown position. (furszy)
- - #1508 `104db7d7f3` [BUG] Prevent StartAll from starting mns with immature collateral (random-zebra)
+ - #1508 `104db7d7f3` [BUG] Prevent StartAll from starting gms with immature collateral (random-zebra)
  - #1509 `13c4302087` [GUI] Correct the reference to ColdStakingWidget address (PWRB-Project)
  - #1510 `5a4b0f9a70` [GUI] Fix text cut-off in sendchangeaddressdialog (JSKitty)
  - #1515 `24bc866346` [GUI] Back port latest MacOS dock icon handler. (furszy)
  - #1522 `ab353d9848` [Qt] Fixup filter dropdown localizations (Fuzzbawls)
- - #1523 `e92c8ed86a` [Trivial] [GUI] Fix masternodeswidget snackbar typos (JSKitty)
+ - #1523 `e92c8ed86a` [Trivial] [GUI] Fix gamemasterswidget snackbar typos (JSKitty)
  - #1527 `6e1745be85` [GUI] Warn about change address not belonging to the wallet. (furszy)
  - #1529 `f05a451021` [Trivial] Fix compiler warning in mousePressEvent. (furszy)
  - #1530 `b7c0c0e31d` [GUI] Don't log to console by default. (furszy)
- - #1535 `7d25604239` [Qt] Don't translate dummy strings in mnrow (Fuzzbawls)
+ - #1535 `7d25604239` [Qt] Don't translate dummy strings in gmrow (Fuzzbawls)
  - #1543 `440c8f514b` [GUI][Bug] CoinControl: mark delegated after setting checked state (random-zebra)
- - #1545 `7fdf25b4f7` [GUI] MasternodeWizard validations (random-zebra)
+ - #1545 `7fdf25b4f7` [GUI] GamemasterWizard validations (random-zebra)
  - #1551 `8b25a1eaf5` [GUI][Bug] Reset custom change address (random-zebra)
  - #1556 `5ba10f0d58` [GUI] CoinControlDialog remove duplicate esc button (furszy)
  - #1574 `18bce1bfaf` [Bug][GUI] SendCustomFee: reset checkbox on clearAll (random-zebra)
@@ -331,7 +331,7 @@ Detailed release notes follow. For convenience in locating the code changes and 
  - #1321 `d382a249be` [RPC][Tests] Don't throw when generate doesn't create all blocks (PoS) (random-zebra)
  - #1343 `735d8ddb4d` [Bug] nStakeSplitThreshold: division by zero (random-zebra)
  - #1368 `d610d013dd` [RPC] Expand getstakingstatus output (random-zebra)
- - #1381 `88256004a3` [RPC][Bug] Fix masternodecurrent: return next winner, not rank-1 mn (random-zebra)
+ - #1381 `88256004a3` [RPC][Bug] Fix gamemastercurrent: return next winner, not rank-1 gm (random-zebra)
  - #1399 `eb8cb624f9` [RPC] Upgrade to HD wallet. (furszy)
  - #1451 `1fa5156a97` [RPC] Add logging RPC (random-zebra)
  - #1497 `fd77102258` [Trivial][RPC] Remove references to old command list-conf (random-zebra)
@@ -353,7 +353,7 @@ Detailed release notes follow. For convenience in locating the code changes and 
  - #1495 `caa91b08fd` [Wallet] Clean wrong pwalletMain inside wallet class. (furszy)
  - #1498 `ebfa5979a6` [Wallet] Initialize zwalletMain to prevent memory access violations. (furszy)
  - #1520 `b92584a482` [Wallet] remove unused code, remove cs_main lock requirement (furszy)
- - #1537 `dabb5168f1` [Wallet] Cleanup invalid IsMasternodeReward method in OutPoint primitive. (furszy)
+ - #1537 `dabb5168f1` [Wallet] Cleanup invalid IsGamemasterReward method in OutPoint primitive. (furszy)
  - #1565 `7fb724ffe4` [Bug] Simpler nTimeSmart computation (random-zebra)
  - #1575 `f16125b83d` [Bug][Wallet] Fix insane fees (random-zebra)
 
@@ -366,7 +366,7 @@ Detailed release notes follow. For convenience in locating the code changes and 
  - #1320 `563d5c2515` [Refactor] Move transaction checks out to consensus/tx_verify.cpp (barrystyle)
  - #1325 `91566195ee` Add WITH_LOCK macro: run code while locking a mutex. (furszy)
  - #1328 `6143e95f98` [Refactor] Introduce Consensus namespace (barrystyle)
- - #1331 `484a98673f` [Core] CheckColdStakeFreeOutput: skip SPORK checks if mnsync incomplete (random-zebra)
+ - #1331 `484a98673f` [Core] CheckColdStakeFreeOutput: skip SPORK checks if gmsync incomplete (random-zebra)
  - #1333 `6bb09adfbb` [Backport] Wait locking for genesis connection. (furszy)
  - #1335 `535baaacd7` Inlining sync.cpp with latest upstream (furszy)
  - #1336 `f30074a123` Sync Upgrades, part 2 (furszy)
@@ -380,8 +380,8 @@ Detailed release notes follow. For convenience in locating the code changes and 
  - #1375 `41aae2d589` [Init] Do parameter interaction before creating the UI model (Jonas Schnelli)
  - #1376 `ac4ab94dd8` [Init] Combine common error strings so translations can be shared (Luke Dashjr)
  - #1395 `b3fcbea5b1` Replace uint256/uint160 with opaque blobs where possible (First) (furszy)
- - #1407 `678d3ed933` [Consensus] CheckColdStakeFreeOutput when mnsync not complete (random-zebra)
- - #1409 `8c112d3ac0` [MN] Refactor to the `mapMasternodesLastVote` map. (furszy)
+ - #1407 `678d3ed933` [Consensus] CheckColdStakeFreeOutput when gmsync not complete (random-zebra)
+ - #1409 `8c112d3ac0` [GM] Refactor to the `mapGamemastersLastVote` map. (furszy)
  - #1418 `87e3dcddef` [Consensus] Remove IsSuperMajority (random-zebra)
  - #1445 `9896879fff` [Refactor] Init wallet parameters interaction (furszy)
  - #1450 `cb6d15a6ac` [Util] Buffer log messages and explicitly open logs (random-zebra)
@@ -460,7 +460,7 @@ Detailed release notes follow. For convenience in locating the code changes and 
  - #1467 `aa50351b18` [Cleanup] Remove redundant and unused code (Fuzzbawls)
  - #1490 `dfda1b80af` [Cleanup] Nuke obfuscation from orbit (Fuzzbawls)
  - #1507 `172387aad5` [Trivial] Remove leftover temporary comment (random-zebra)
- - #1513 `ae4fde3b3a` [Trivial] Remove CMasternode::SliceHash (random-zebra)
+ - #1513 `ae4fde3b3a` [Trivial] Remove CGamemaster::SliceHash (random-zebra)
 
 ### Documentation
  - #1573 `f973fb6fd6` [Doc] Note that v3 onion addresses are not supported (Fuzzbawls)

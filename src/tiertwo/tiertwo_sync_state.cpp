@@ -12,7 +12,7 @@ static void UpdateLastTime(const uint256& hash, int64_t& last, std::map<uint256,
 {
     auto it = mapSeen.find(hash);
     if (it != mapSeen.end()) {
-        if (it->second < MASTERNODE_SYNC_THRESHOLD) {
+        if (it->second < GAMEMASTER_SYNC_THRESHOLD) {
             last = GetTime();
             it->second++;
         }
@@ -22,14 +22,14 @@ static void UpdateLastTime(const uint256& hash, int64_t& last, std::map<uint256,
     }
 }
 
-void TierTwoSyncState::AddedMasternodeList(const uint256& hash)
+void TierTwoSyncState::AddedGamemasterList(const uint256& hash)
 {
-    UpdateLastTime(hash, lastMasternodeList, mapSeenSyncMNB);
+    UpdateLastTime(hash, lastGamemasterList, mapSeenSyncGMB);
 }
 
-void TierTwoSyncState::AddedMasternodeWinner(const uint256& hash)
+void TierTwoSyncState::AddedGamemasterWinner(const uint256& hash)
 {
-    UpdateLastTime(hash, lastMasternodeWinner, mapSeenSyncMNW);
+    UpdateLastTime(hash, lastGamemasterWinner, mapSeenSyncGMW);
 }
 
 void TierTwoSyncState::AddedBudgetItem(const uint256& hash)
@@ -39,10 +39,10 @@ void TierTwoSyncState::AddedBudgetItem(const uint256& hash)
 
 void TierTwoSyncState::ResetData()
 {
-    lastMasternodeList = 0;
-    lastMasternodeWinner = 0;
+    lastGamemasterList = 0;
+    lastGamemasterWinner = 0;
     lastBudgetItem = 0;
-    mapSeenSyncMNB.clear();
-    mapSeenSyncMNW.clear();
+    mapSeenSyncGMB.clear();
+    mapSeenSyncGMW.clear();
     mapSeenSyncBudget.clear();
 }

@@ -23,7 +23,7 @@ public:
         UNSPENDABLE,
         STAKE,
         SUPPORT,
-        MASTERNODE,
+        GAMEMASTER,
         MNCONTROLLER
     };
 

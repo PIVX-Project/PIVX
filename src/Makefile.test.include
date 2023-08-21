@@ -109,7 +109,7 @@ BITCOIN_TESTS =\
   test/crypto_tests.cpp \
   test/cuckoocache_tests.cpp \
   test/DoS_tests.cpp \
-  test/evo_deterministicmns_tests.cpp \
+  test/evo_deterministicgms_tests.cpp \
   test/evo_specialtx_tests.cpp \
   test/flatfile_tests.cpp \
   test/fs_tests.cpp \
@@ -119,7 +119,7 @@ BITCOIN_TESTS =\
   test/dbwrapper_tests.cpp \
   test/validation_tests.cpp \
   test/main_tests.cpp \
-  test/mnpayments_tests.cpp \
+  test/gmpayments_tests.cpp \
   test/mempool_tests.cpp \
   test/merkle_tests.cpp \
   test/merkleblock_tests.cpp \

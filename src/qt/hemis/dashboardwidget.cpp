@@ -518,7 +518,7 @@ void DashboardWidget::updateStakeFilter()
     }
 }
 
-// pair HMS, MN Reward
+// pair HMS, GM Reward
 QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy()
 {
     if (filterUpdateNeeded) {
@@ -577,7 +577,7 @@ bool DashboardWidget::loadChartData(bool withMonthNames)
     }
 
     chartData = new ChartData();
-    chartData->amountsByCache = getAmountBy(); // pair HMS, MN Reward
+    chartData->amountsByCache = getAmountBy(); // pair HMS, GM Reward
 
     std::pair<int,int> range = getChartRange(chartData->amountsByCache);
     if (range.first == 0 && range.second == 0) {
@@ -665,7 +665,7 @@ void DashboardWidget::onChartRefreshed()
     }
     // init sets
     set0 = new QBarSet(tr("Stakes"));
-    set1 = new QBarSet(tr("MN"));
+    set1 = new QBarSet(tr("GM"));
     set0->setColor(QColor(92,75,125));
     set1->setColor(QColor(176,136,255));
 

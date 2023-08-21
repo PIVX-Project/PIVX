@@ -5,9 +5,9 @@
 #include "qt/pivx/mnmodel.h"
 
 #include "coincontrol.h"
-#include "masternode.h"
-#include "masternodeman.h"
-#include "net.h" // for validateMasternodeIP
+#include "gamemaster.h"
+#include "gamemasterman.h"
+#include "net.h" // for validateGamemasterIP
 #include "primitives/transaction.h"
 #include "qt/bitcoinunits.h"
 #include "qt/optionsmodel.h"
@@ -29,19 +29,19 @@ void MNModel::init()
 
 void MNModel::updateMNList()
 {
-    int mnMinConf = getMasternodeCollateralMinConf();
+    int mnMinConf = getGamemasterCollateralMinConf();
     int end = nodes.size();
     nodes.clear();
     collateralTxAccepted.clear();
-    for (const CMasternodeConfig::CMasternodeEntry& mne : masternodeConfig.getEntries()) {
+    for (const CGamemasterConfig::CGamemasterEntry& mne : gamemasterConfig.getEntries()) {
         int nIndex;
         if (!mne.castOutputIndex(nIndex))
             continue;
         const uint256& txHash = uint256S(mne.getTxHash());
         CTxIn txIn(txHash, uint32_t(nIndex));
-        CMasternode* pmn = mnodeman.Find(txIn.prevout);
+        CGamemaster* pmn = mnodeman.Find(txIn.prevout);
         if (!pmn) {
-            pmn = new CMasternode();
+            pmn = new CGamemaster();
             pmn->vin = txIn;
         }
         nodes.insert(QString::fromStdString(mne.getAlias()), std::make_pair(QString::fromStdString(mne.getIp()), pmn));
@@ -73,7 +73,7 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
             return QVariant();
 
     // rec could be null, always verify it.
-    CMasternode* rec = static_cast<CMasternode*>(index.internalPointer());
+    CGamemaster* rec = static_cast<CGamemaster*>(index.internalPointer());
     bool isAvailable = rec;
     int row = index.row();
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
@@ -83,21 +83,21 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
             case ADDRESS:
                 return nodes.values().value(row).first;
             case PUB_KEY:
-                return (isAvailable) ? QString::fromStdString(nodes.values().value(row).second->pubKeyMasternode.GetHash().GetHex()) : "Not available";
+                return (isAvailable) ? QString::fromStdString(nodes.values().value(row).second->pubKeyGamemaster.GetHash().GetHex()) : "Not available";
             case COLLATERAL_ID:
                 return (isAvailable) ? QString::fromStdString(rec->vin.prevout.hash.GetHex()) : "Not available";
             case COLLATERAL_OUT_INDEX:
                 return (isAvailable) ? QString::number(rec->vin.prevout.n) : "Not available";
             case STATUS: {
-                std::pair<QString, CMasternode*> pair = nodes.values().value(row);
+                std::pair<QString, CGamemaster*> pair = nodes.values().value(row);
                 std::string status = "MISSING";
                 if (pair.second) {
                     status = pair.second->Status();
-                    // Quick workaround to the current Masternode status types.
-                    // If the status is REMOVE and there is no pubkey associated to the Masternode
-                    // means that the MN is not in the network list and was created in
-                    // updateMNList(). Which.. denotes a not started masternode.
-                    // This will change in the future with the MasternodeWrapper introduction.
+                    // Quick workaround to the current Gamemaster status types.
+                    // If the status is REMOVE and there is no pubkey associated to the Gamemaster
+                    // means that the GM is not in the network list and was created in
+                    // updateMNList(). Which.. denotes a not started gamemaster.
+                    // This will change in the future with the GamemasterWrapper introduction.
                     if (status == "REMOVE" && !pair.second->pubKeyCollateralAddress.IsValid()) {
                         return "MISSING";
                     }
@@ -106,7 +106,7 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
             }
             case PRIV_KEY: {
                 if (isAvailable) {
-                    for (CMasternodeConfig::CMasternodeEntry mne : masternodeConfig.getEntries()) {
+                    for (CGamemasterConfig::CGamemasterEntry mne : gamemasterConfig.getEntries()) {
                         if (mne.getTxHash().compare(rec->vin.prevout.hash.GetHex()) == 0) {
                             return QString::fromStdString(mne.getPrivKey());
                         }
@@ -125,8 +125,8 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
 QModelIndex MNModel::index(int row, int column, const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    std::pair<QString, CMasternode*> pair = nodes.values().value(row);
-    CMasternode* data = pair.second;
+    std::pair<QString, CGamemaster*> pair = nodes.values().value(row);
+    CGamemaster* data = pair.second;
     if (data) {
         return createIndex(row, column, data);
     } else if (!pair.first.isEmpty()) {
@@ -148,14 +148,14 @@ bool MNModel::removeMn(const QModelIndex& modelIndex)
     return true;
 }
 
-bool MNModel::addMn(CMasternodeConfig::CMasternodeEntry* mne)
+bool MNModel::addMn(CGamemasterConfig::CGamemasterEntry* mne)
 {
     beginInsertRows(QModelIndex(), nodes.size(), nodes.size());
     int nIndex;
     if (!mne->castOutputIndex(nIndex))
         return false;
 
-    CMasternode* pmn = mnodeman.Find(COutPoint(uint256S(mne->getTxHash()), uint32_t(nIndex)));
+    CGamemaster* pmn = mnodeman.Find(COutPoint(uint256S(mne->getTxHash()), uint32_t(nIndex)));
     nodes.insert(QString::fromStdString(mne->getAlias()), std::make_pair(QString::fromStdString(mne->getIp()), pmn));
     endInsertRows();
     return true;
@@ -163,28 +163,28 @@ bool MNModel::addMn(CMasternodeConfig::CMasternodeEntry* mne)
 
 int MNModel::getMNState(const QString& mnAlias)
 {
-    QMap<QString, std::pair<QString, CMasternode*>>::const_iterator it = nodes.find(mnAlias);
+    QMap<QString, std::pair<QString, CGamemaster*>>::const_iterator it = nodes.find(mnAlias);
     if (it != nodes.end()) return it.value().second->GetActiveState();
-    throw std::runtime_error(std::string("Masternode alias not found"));
+    throw std::runtime_error(std::string("Gamemaster alias not found"));
 }
 
 bool MNModel::isMNInactive(const QString& mnAlias)
 {
     int activeState = getMNState(mnAlias);
-    return activeState == CMasternode::MASTERNODE_EXPIRED || activeState == CMasternode::MASTERNODE_REMOVE;
+    return activeState == CGamemaster::GAMEMASTER_EXPIRED || activeState == CGamemaster::GAMEMASTER_REMOVE;
 }
 
 bool MNModel::isMNActive(const QString& mnAlias)
 {
     int activeState = getMNState(mnAlias);
-    return activeState == CMasternode::MASTERNODE_PRE_ENABLED || activeState == CMasternode::MASTERNODE_ENABLED;
+    return activeState == CGamemaster::GAMEMASTER_PRE_ENABLED || activeState == CGamemaster::GAMEMASTER_ENABLED;
 }
 
 bool MNModel::isMNCollateralMature(const QString& mnAlias)
 {
-    QMap<QString, std::pair<QString, CMasternode*>>::const_iterator it = nodes.find(mnAlias);
+    QMap<QString, std::pair<QString, CGamemaster*>>::const_iterator it = nodes.find(mnAlias);
     if (it != nodes.end()) return collateralTxAccepted.value(it.value().second->vin.prevout.hash.GetHex());
-    throw std::runtime_error(std::string("Masternode alias not found"));
+    throw std::runtime_error(std::string("Gamemaster alias not found"));
 }
 
 bool MNModel::isMNsNetworkSynced()
@@ -194,7 +194,7 @@ bool MNModel::isMNsNetworkSynced()
 
 bool MNModel::validateMNIP(const QString& addrStr)
 {
-    return validateMasternodeIP(addrStr.toStdString());
+    return validateGamemasterIP(addrStr.toStdString());
 }
 
 CAmount MNModel::getMNCollateralRequiredAmount()
@@ -202,9 +202,9 @@ CAmount MNModel::getMNCollateralRequiredAmount()
     return Params().GetConsensus().nMNCollateralAmt;
 }
 
-int MNModel::getMasternodeCollateralMinConf()
+int MNModel::getGamemasterCollateralMinConf()
 {
-    return Params().GetConsensus().MasternodeCollateralMinConf();
+    return Params().GetConsensus().GamemasterCollateralMinConf();
 }
 
 bool MNModel::createMNCollateral(
@@ -269,15 +269,15 @@ bool MNModel::createMNCollateral(
     return true;
 }
 
-bool MNModel::startLegacyMN(const CMasternodeConfig::CMasternodeEntry& mne, int chainHeight, std::string& strError)
+bool MNModel::startLegacyMN(const CGamemasterConfig::CGamemasterEntry& mne, int chainHeight, std::string& strError)
 {
-    CMasternodeBroadcast mnb;
-    if (!CMasternodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strError, mnb, false, chainHeight))
+    CGamemasterBroadcast mnb;
+    if (!CGamemasterBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strError, mnb, false, chainHeight))
         return false;
 
-    mnodeman.UpdateMasternodeList(mnb);
-    if (activeMasternode.pubKeyMasternode == mnb.GetPubKey()) {
-        activeMasternode.EnableHotColdMasterNode(mnb.vin, mnb.addr);
+    mnodeman.UpdateGamemasterList(mnb);
+    if (activeGamemaster.pubKeyGamemaster == mnb.GetPubKey()) {
+        activeGamemaster.EnableHotColdMasterNode(mnb.vin, mnb.addr);
     }
     mnb.Relay();
     return true;
@@ -286,7 +286,7 @@ bool MNModel::startLegacyMN(const CMasternodeConfig::CMasternodeEntry& mne, int 
 void MNModel::startAllLegacyMNs(bool onlyMissing, int& amountOfMnFailed, int& amountOfMnStarted,
                                 std::string* aliasFilter, std::string* error_ret)
 {
-    for (const auto& mne : masternodeConfig.getEntries()) {
+    for (const auto& mne : gamemasterConfig.getEntries()) {
         if (!aliasFilter) {
             // Check for missing only
             QString mnAlias = QString::fromStdString(mne.getAlias());
@@ -315,7 +315,7 @@ void MNModel::startAllLegacyMNs(bool onlyMissing, int& amountOfMnFailed, int& am
 }
 
 // Future: remove after v6.0
-CMasternodeConfig::CMasternodeEntry* MNModel::createLegacyMN(COutPoint& collateralOut,
+CGamemasterConfig::CGamemasterEntry* MNModel::createLegacyMN(COutPoint& collateralOut,
                              const std::string& alias,
                              std::string& serviceAddr,
                              const std::string& port,
@@ -323,7 +323,7 @@ CMasternodeConfig::CMasternodeEntry* MNModel::createLegacyMN(COutPoint& collater
                              QString& ret_error)
 {
     // Update the conf file
-    QString strConfFileQt(PIVX_MASTERNODE_CONF_FILENAME);
+    QString strConfFileQt(hemis_GAMEMASTER_CONF_FILENAME);
     std::string strConfFile = strConfFileQt.toStdString();
     std::string strDataDir = GetDataDir().string();
     fs::path conf_file_path(strConfFile);
@@ -337,8 +337,8 @@ CMasternodeConfig::CMasternodeEntry* MNModel::createLegacyMN(COutPoint& collater
         return nullptr;
     }
 
-    fs::path pathMasternodeConfigFile = GetMasternodeConfigFile();
-    fsbridge::ifstream streamConfig(pathMasternodeConfigFile);
+    fs::path pathGamemasterConfigFile = GetGamemasterConfigFile();
+    fsbridge::ifstream streamConfig(pathGamemasterConfigFile);
 
     if (!streamConfig.good()) {
         ret_error = tr("Invalid %1 file").arg(strConfFileQt);
@@ -372,8 +372,8 @@ CMasternodeConfig::CMasternodeEntry* MNModel::createLegacyMN(COutPoint& collater
     }
 
     if (lineCopy.empty()) {
-        lineCopy = "# Masternode config file\n"
-                   "# Format: alias IP:port masternodeprivkey collateral_output_txid collateral_output_index\n"
+        lineCopy = "# Gamemaster config file\n"
+                   "# Format: alias IP:port gamemasterprivkey collateral_output_txid collateral_output_index\n"
                    "# Example: mn1 127.0.0.2:49165 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0"
                    "#";
     }
@@ -391,22 +391,22 @@ CMasternodeConfig::CMasternodeEntry* MNModel::createLegacyMN(COutPoint& collater
         serviceAddr = "["+serviceAddr+"]";
     }
 
-    fs::path pathConfigFile = AbsPathForConfigVal(fs::path("masternode_temp.conf"));
+    fs::path pathConfigFile = AbsPathForConfigVal(fs::path("gamemaster_temp.conf"));
     FILE* configFile = fopen(pathConfigFile.string().c_str(), "w");
     lineCopy += alias+" "+serviceAddr+":"+port+" "+mnKeyString+" "+txID+" "+indexOutStr+"\n";
     fwrite(lineCopy.c_str(), std::strlen(lineCopy.c_str()), 1, configFile);
     fclose(configFile);
 
-    fs::path pathOldConfFile = AbsPathForConfigVal(fs::path("old_masternode.conf"));
+    fs::path pathOldConfFile = AbsPathForConfigVal(fs::path("old_gamemaster.conf"));
     if (fs::exists(pathOldConfFile)) {
         fs::remove(pathOldConfFile);
     }
-    rename(pathMasternodeConfigFile, pathOldConfFile);
+    rename(pathGamemasterConfigFile, pathOldConfFile);
 
     fs::path pathNewConfFile = AbsPathForConfigVal(fs::path(strConfFile));
     rename(pathConfigFile, pathNewConfFile);
 
-    auto ret_mn_entry = masternodeConfig.add(alias, serviceAddr+":"+port, mnKeyString, txID, indexOutStr);
+    auto ret_mn_entry = gamemasterConfig.add(alias, serviceAddr+":"+port, mnKeyString, txID, indexOutStr);
 
     // Lock collateral output
     walletModel->lockCoin(collateralOut.hash, collateralOut.n);
@@ -416,7 +416,7 @@ CMasternodeConfig::CMasternodeEntry* MNModel::createLegacyMN(COutPoint& collater
 // Future: remove after v6.0
 bool MNModel::removeLegacyMN(const std::string& alias_to_remove, const std::string& tx_id, unsigned int out_index, QString& ret_error)
 {
-    QString strConfFileQt(PIVX_MASTERNODE_CONF_FILENAME);
+    QString strConfFileQt(hemis_GAMEMASTER_CONF_FILENAME);
     std::string strConfFile = strConfFileQt.toStdString();
     std::string strDataDir = GetDataDir().string();
     fs::path conf_file_path(strConfFile);
@@ -430,8 +430,8 @@ bool MNModel::removeLegacyMN(const std::string& alias_to_remove, const std::stri
         return false;
     }
 
-    fs::path pathMasternodeConfigFile = GetMasternodeConfigFile();
-    fsbridge::ifstream streamConfig(pathMasternodeConfigFile);
+    fs::path pathGamemasterConfigFile = GetGamemasterConfigFile();
+    fsbridge::ifstream streamConfig(pathGamemasterConfigFile);
 
     if (!streamConfig.good()) {
         ret_error = tr("Invalid %1 file").arg(strConfFileQt);
@@ -471,29 +471,29 @@ bool MNModel::removeLegacyMN(const std::string& alias_to_remove, const std::stri
     }
 
     if (lineCopy.empty()) {
-        lineCopy = "# Masternode config file\n"
-                   "# Format: alias IP:port masternodeprivkey collateral_output_txid collateral_output_index\n"
+        lineCopy = "# Gamemaster config file\n"
+                   "# Format: alias IP:port gamemasterprivkey collateral_output_txid collateral_output_index\n"
                    "# Example: mn1 127.0.0.2:49165 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0\n";
     }
 
     streamConfig.close();
 
     if (lineNumToRemove == -1) {
-        ret_error = tr("MN alias %1 not found in %2 file").arg(QString::fromStdString(alias_to_remove)).arg(strConfFileQt);
+        ret_error = tr("GM alias %1 not found in %2 file").arg(QString::fromStdString(alias_to_remove)).arg(strConfFileQt);
         return false;
     }
 
     // Update file
-    fs::path pathConfigFile = AbsPathForConfigVal(fs::path("masternode_temp.conf"));
+    fs::path pathConfigFile = AbsPathForConfigVal(fs::path("gamemaster_temp.conf"));
     FILE* configFile = fsbridge::fopen(pathConfigFile, "w");
     fwrite(lineCopy.c_str(), std::strlen(lineCopy.c_str()), 1, configFile);
     fclose(configFile);
 
-    fs::path pathOldConfFile = AbsPathForConfigVal(fs::path("old_masternode.conf"));
+    fs::path pathOldConfFile = AbsPathForConfigVal(fs::path("old_gamemaster.conf"));
     if (fs::exists(pathOldConfFile)) {
         fs::remove(pathOldConfFile);
     }
-    rename(pathMasternodeConfigFile, pathOldConfFile);
+    rename(pathGamemasterConfigFile, pathOldConfFile);
 
     fs::path pathNewConfFile = AbsPathForConfigVal(fs::path(strConfFile));
     rename(pathConfigFile, pathNewConfFile);
@@ -501,7 +501,7 @@ bool MNModel::removeLegacyMN(const std::string& alias_to_remove, const std::stri
     // Unlock collateral
     walletModel->unlockCoin(uint256S(tx_id), out_index);
     // Remove alias
-    masternodeConfig.remove(alias_to_remove);
+    gamemasterConfig.remove(alias_to_remove);
     return true;
 }
 

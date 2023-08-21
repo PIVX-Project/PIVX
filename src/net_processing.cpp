@@ -9,15 +9,15 @@
 
 #include "budget/budgetmanager.h"
 #include "chain.h"
-#include "evo/deterministicmns.h"
-#include "evo/mnauth.h"
+#include "evo/deterministicgms.h"
+#include "evo/gmauth.h"
 #include "llmq/quorums_blockprocessor.h"
 #include "llmq/quorums_chainlocks.h"
 #include "llmq/quorums_dkgsessionmgr.h"
 #include "llmq/quorums_signing.h"
-#include "masternode-payments.h"
-#include "masternode-sync.h"
-#include "masternodeman.h"
+#include "gamemaster-payments.h"
+#include "gamemaster-sync.h"
+#include "gamemasterman.h"
 #include "merkleblock.h"
 #include "netbase.h"
 #include "netmessagemaker.h"
@@ -283,12 +283,12 @@ void PushNodeVersion(CNode* pnode, CConnman* connman, int64_t nTime)
     auto version_msg = CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::VERSION, PROTOCOL_VERSION, (uint64_t)nLocalNodeServices, nTime, addrYou, addrMe,
                                           nonce, strSubVersion, nNodeStartingHeight, true);
 
-    // DMN-to-DMN, set auth connection type and create challenge.
-    if (pnode->m_masternode_connection) {
-        uint256 mnauthChallenge;
-        GetRandBytes(mnauthChallenge.begin(), (int) mnauthChallenge.size());
-        WITH_LOCK(pnode->cs_mnauth, pnode->sentMNAuthChallenge = mnauthChallenge);
-        CVectorWriter{SER_NETWORK, 0 | INIT_PROTO_VERSION, version_msg.data, version_msg.data.size(), pnode->sentMNAuthChallenge};
+    // DGM-to-DGM, set auth connection type and create challenge.
+    if (pnode->m_gamemaster_connection) {
+        uint256 gmauthChallenge;
+        GetRandBytes(gmauthChallenge.begin(), (int) gmauthChallenge.size());
+        WITH_LOCK(pnode->cs_gmauth, pnode->sentGMAuthChallenge = gmauthChallenge);
+        CVectorWriter{SER_NETWORK, 0 | INIT_PROTO_VERSION, version_msg.data, version_msg.data.size(), pnode->sentGMAuthChallenge};
     }
 
     connman->PushMessage(pnode, std::move(version_msg));
@@ -748,7 +748,7 @@ void PeerLogicValidation::UpdatedBlockTip(const CBlockIndex* pindexNew, const CB
         const uint256& hashNewTip = pindexNew->GetBlockHash();
         // Relay inventory, but don't relay old inventory during initial block download.
         connman->ForEachNode([nNewHeight, hashNewTip](CNode* pnode) {
-            // Don't sync from MN only connections.
+            // Don't sync from GM only connections.
             if (!pnode->CanRelay()) {
                 return;
             }
@@ -825,9 +825,9 @@ bool static AlreadyHave(const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
         return true;
     case MSG_SPORK:
         return mapSporks.count(inv.hash);
-    case MSG_MASTERNODE_WINNER:
-        if (masternodePayments.mapMasternodePayeeVotes.count(inv.hash)) {
-            g_tiertwo_sync_state.AddedMasternodeWinner(inv.hash);
+    case MSG_GAMEMASTER_WINNER:
+        if (gamemasterPayments.mapGamemasterPayeeVotes.count(inv.hash)) {
+            g_tiertwo_sync_state.AddedGamemasterWinner(inv.hash);
             return true;
         }
         return false;
@@ -855,14 +855,14 @@ bool static AlreadyHave(const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
             return true;
         }
         return false;
-    case MSG_MASTERNODE_ANNOUNCE:
-        if (mnodeman.mapSeenMasternodeBroadcast.count(inv.hash)) {
-            g_tiertwo_sync_state.AddedMasternodeList(inv.hash);
+    case MSG_GAMEMASTER_ANNOUNCE:
+        if (gamemasterman.mapSeenGamemasterBroadcast.count(inv.hash)) {
+            g_tiertwo_sync_state.AddedGamemasterList(inv.hash);
             return true;
         }
         return false;
-    case MSG_MASTERNODE_PING:
-        return mnodeman.mapSeenMasternodePing.count(inv.hash);
+    case MSG_GAMEMASTER_PING:
+        return gamemasterman.mapSeenGamemasterPing.count(inv.hash);
     case MSG_QUORUM_FINAL_COMMITMENT:
         return llmq::quorumBlockProcessor->HasMinableCommitment(inv.hash);
     case MSG_QUORUM_CONTRIB:
@@ -940,7 +940,7 @@ bool static PushTierTwoGetDataRequest(const CInv& inv,
 
     if (inv.type == MSG_QUORUM_FINAL_COMMITMENT) {
         // Only respond if v6.0.0 is enforced and SPORK 22 is not active
-        if (!deterministicMNManager->IsDIP3Enforced()) return false;
+        if (!deterministicGMManager->IsDIP3Enforced()) return false;
         if (sporkManager.IsSporkActive(SPORK_22_LLMQ_DKG_MAINTENANCE)) return false;
         llmq::CFinalCommitment o;
         if (llmq::quorumBlockProcessor->GetMinableCommitmentByHash(inv.hash, o)) {
@@ -951,7 +951,7 @@ bool static PushTierTwoGetDataRequest(const CInv& inv,
 
     if (inv.type == MSG_QUORUM_CONTRIB) {
         // Only respond if v6.0.0 is enforced.
-        if (!deterministicMNManager->IsDIP3Enforced()) return false;
+        if (!deterministicGMManager->IsDIP3Enforced()) return false;
         llmq::CDKGContribution o;
         if (llmq::quorumDKGSessionManager->GetContribution(inv.hash, o)) {
             connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::QCONTRIB, o));
@@ -961,7 +961,7 @@ bool static PushTierTwoGetDataRequest(const CInv& inv,
 
     if (inv.type == MSG_QUORUM_COMPLAINT) {
         // Only respond if v6.0.0 is enforced.
-        if (!deterministicMNManager->IsDIP3Enforced()) return false;
+        if (!deterministicGMManager->IsDIP3Enforced()) return false;
         llmq::CDKGComplaint o;
         if (llmq::quorumDKGSessionManager->GetComplaint(inv.hash, o)) {
             connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::QCOMPLAINT, o));
@@ -971,7 +971,7 @@ bool static PushTierTwoGetDataRequest(const CInv& inv,
 
     if (inv.type == MSG_QUORUM_JUSTIFICATION) {
         // Only respond if v6.0.0 is enforced.
-        if (!deterministicMNManager->IsDIP3Enforced()) return false;
+        if (!deterministicGMManager->IsDIP3Enforced()) return false;
         llmq::CDKGJustification o;
         if (llmq::quorumDKGSessionManager->GetJustification(inv.hash, o)) {
             connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::QJUSTIFICATION, o));
@@ -981,7 +981,7 @@ bool static PushTierTwoGetDataRequest(const CInv& inv,
 
     if (inv.type == MSG_QUORUM_PREMATURE_COMMITMENT) {
         // Only respond if v6.0.0 is enforced.
-        if (!deterministicMNManager->IsDIP3Enforced()) return false;
+        if (!deterministicGMManager->IsDIP3Enforced()) return false;
         llmq::CDKGPrematureCommitment o;
         if (llmq::quorumDKGSessionManager->GetPrematureCommitment(inv.hash, o)) {
             connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::QPCOMMITMENT, o));
@@ -989,13 +989,13 @@ bool static PushTierTwoGetDataRequest(const CInv& inv,
         }
     }
 
-    // !TODO: remove when transition to DMN is complete
-    if (inv.type == MSG_MASTERNODE_WINNER && !deterministicMNManager->LegacyMNObsolete()) {
-        if (masternodePayments.mapMasternodePayeeVotes.count(inv.hash)) {
+    // !TODO: remove when transition to DGM is complete
+    if (inv.type == MSG_GAMEMASTER_WINNER && !deterministicGMManager->LegacyGMObsolete()) {
+        if (gamemasterPayments.mapGamemasterPayeeVotes.count(inv.hash)) {
             CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
             ss.reserve(1000);
-            ss << masternodePayments.mapMasternodePayeeVotes[inv.hash];
-            connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::MNWINNER, ss));
+            ss << gamemasterPayments.mapGamemasterPayeeVotes[inv.hash];
+            connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::GMWINNER, ss));
             return true;
         }
     }
@@ -1028,34 +1028,34 @@ bool static PushTierTwoGetDataRequest(const CInv& inv,
         }
     }
 
-    // !TODO: remove when transition to DMN is complete
-    if (inv.type == MSG_MASTERNODE_ANNOUNCE && !deterministicMNManager->LegacyMNObsolete()) {
-        auto it = mnodeman.mapSeenMasternodeBroadcast.find(inv.hash);
-        if (it != mnodeman.mapSeenMasternodeBroadcast.end()) {
-            const auto& mnb = it->second;
+    // !TODO: remove when transition to DGM is complete
+    if (inv.type == MSG_GAMEMASTER_ANNOUNCE && !deterministicGMManager->LegacyGMObsolete()) {
+        auto it = gamemasterman.mapSeenGamemasterBroadcast.find(inv.hash);
+        if (it != gamemasterman.mapSeenGamemasterBroadcast.end()) {
+            const auto& gmb = it->second;
 
-            int version = !mnb.addr.IsAddrV1Compatible() ? PROTOCOL_VERSION | ADDRV2_FORMAT : PROTOCOL_VERSION;
+            int version = !gmb.addr.IsAddrV1Compatible() ? PROTOCOL_VERSION | ADDRV2_FORMAT : PROTOCOL_VERSION;
             CDataStream ss(SER_NETWORK, version);
             ss.reserve(1000);
-            ss << mnb;
-            std::string msgType = !mnb.addr.IsAddrV1Compatible() ? NetMsgType::MNBROADCAST2 : NetMsgType::MNBROADCAST;
+            ss << gmb;
+            std::string msgType = !gmb.addr.IsAddrV1Compatible() ? NetMsgType::GMBROADCAST2 : NetMsgType::GMBROADCAST;
             connman->PushMessage(pfrom, msgMaker.Make(msgType, ss));
             return true;
         }
     }
 
-    // !TODO: remove when transition to DMN is complete
-    if (inv.type == MSG_MASTERNODE_PING && !deterministicMNManager->LegacyMNObsolete()) {
-        if (mnodeman.mapSeenMasternodePing.count(inv.hash)) {
+    // !TODO: remove when transition to DGM is complete
+    if (inv.type == MSG_GAMEMASTER_PING && !deterministicGMManager->LegacyGMObsolete()) {
+        if (gamemasterman.mapSeenGamemasterPing.count(inv.hash)) {
             CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
             ss.reserve(1000);
-            ss << mnodeman.mapSeenMasternodePing[inv.hash];
-            connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::MNPING, ss));
+            ss << gamemasterman.mapSeenGamemasterPing[inv.hash];
+            connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::GMPING, ss));
             return true;
         }
     }
     if (inv.type == MSG_QUORUM_RECOVERED_SIG) {
-        if (!deterministicMNManager->IsDIP3Enforced()) return false;
+        if (!deterministicGMManager->IsDIP3Enforced()) return false;
         llmq::CRecoveredSig o;
         if (llmq::quorumSigningManager->GetRecoveredSigForGetData(inv.hash, o)) {
             connman->PushMessage(pfrom, msgMaker.Make(NetMsgType::QSIGREC, o));
@@ -1144,13 +1144,13 @@ void static ProcessGetBlockData(CNode* pfrom, const CInv& inv, CConnman* connman
 bool static IsTierTwoInventoryTypeKnown(int type)
 {
     return type == MSG_SPORK ||
-           type == MSG_MASTERNODE_WINNER ||
+           type == MSG_GAMEMASTER_WINNER ||
            type == MSG_BUDGET_VOTE ||
            type == MSG_BUDGET_PROPOSAL ||
            type == MSG_BUDGET_FINALIZED ||
            type == MSG_BUDGET_FINALIZED_VOTE ||
-           type == MSG_MASTERNODE_ANNOUNCE ||
-           type == MSG_MASTERNODE_PING ||
+           type == MSG_GAMEMASTER_ANNOUNCE ||
+           type == MSG_GAMEMASTER_PING ||
            type == MSG_QUORUM_FINAL_COMMITMENT ||
            type == MSG_QUORUM_CONTRIB ||
            type == MSG_QUORUM_COMPLAINT ||
@@ -1289,14 +1289,14 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
         }
         // Check if this is a quorum connection
         if (!vRecv.empty()) {
-            WITH_LOCK(pfrom->cs_mnauth, vRecv >> pfrom->receivedMNAuthChallenge;);
-            bool fOtherMasternode = !pfrom->receivedMNAuthChallenge.IsNull();
+            WITH_LOCK(pfrom->cs_gmauth, vRecv >> pfrom->receivedGMAuthChallenge;);
+            bool fOtherGamemaster = !pfrom->receivedGMAuthChallenge.IsNull();
             if (pfrom->fInbound) {
-                pfrom->m_masternode_connection = fOtherMasternode;
-                if (fOtherMasternode) {
-                    LogPrint(BCLog::NET, "peer=%d is an inbound masternode connection, not relaying anything to it\n", pfrom->GetId());
-                    if (!fMasterNode) { // global MN flag
-                        LogPrint(BCLog::NET, "but we're not a masternode, disconnecting\n");
+                pfrom->m_gamemaster_connection = fOtherGamemaster;
+                if (fOtherGamemaster) {
+                    LogPrint(BCLog::NET, "peer=%d is an inbound gamemaster connection, not relaying anything to it\n", pfrom->GetId());
+                    if (!fMasterNode) { // global GM flag
+                        LogPrint(BCLog::NET, "but we're not a gamemaster, disconnecting\n");
                         pfrom->fDisconnect = true;
                         return true;
                     }
@@ -1445,9 +1445,9 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
             State(pfrom->GetId())->fCurrentlyConnected = true;
         }
 
-        if (pfrom->nVersion >= MNAUTH_NODE_VER_VERSION && !pfrom->m_masternode_probe_connection) {
-            // Only relayed if this is a mn connection
-            CMNAuth::PushMNAUTH(pfrom, *connman);
+        if (pfrom->nVersion >= GMAUTH_NODE_VER_VERSION && !pfrom->m_gamemaster_probe_connection) {
+            // Only relayed if this is a gm connection
+            CGMAuth::PushGMAUTH(pfrom, *connman);
         }
 
         pfrom->fSuccessfullyConnected = true;
@@ -1496,9 +1496,9 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
         !pfrom->fFirstMessageReceived.exchange(true)) {
         // First message after VERSION/VERACK (without counting the GETSPORKS/SPORK messages)
         pfrom->fFirstMessageReceived = true;
-        pfrom->fFirstMessageIsMNAUTH = strCommand == NetMsgType::MNAUTH;
-        if (pfrom->m_masternode_probe_connection && !pfrom->fFirstMessageIsMNAUTH) {
-            LogPrint(BCLog::NET, "masternode probe connection first received message is not a MNAUTH, disconnecting peer=%d\n", pfrom->GetId());
+        pfrom->fFirstMessageIsGMAUTH = strCommand == NetMsgType::GMAUTH;
+        if (pfrom->m_gamemaster_probe_connection && !pfrom->fFirstMessageIsGMAUTH) {
+            LogPrint(BCLog::NET, "gamemaster probe connection first received message is not a GMAUTH, disconnecting peer=%d\n", pfrom->GetId());
             pfrom->fDisconnect = true;
             return false;
         }
@@ -1632,7 +1632,7 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
                         MSG_QUORUM_FINAL_COMMITMENT
                 };
                 if (disallowedRequestsUntilV6.count(inv.type) &&
-                    !deterministicMNManager->IsDIP3Enforced()) {
+                    !deterministicGMManager->IsDIP3Enforced()) {
                     continue; // Move to next inv
                 }
 
@@ -1685,9 +1685,9 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
 
     else if (strCommand == NetMsgType::GETBLOCKS || strCommand == NetMsgType::GETHEADERS) {
 
-        // Don't relay blocks inv to masternode-only connections
+        // Don't relay blocks inv to gamemaster-only connections
         if (!pfrom->CanRelay()) {
-            LogPrint(BCLog::NET, "getblocks, don't relay blocks inv to masternode connection. peer=%d\n", pfrom->GetId());
+            LogPrint(BCLog::NET, "getblocks, don't relay blocks inv to gamemaster connection. peer=%d\n", pfrom->GetId());
             return true;
         }
 
@@ -2192,10 +2192,10 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
         const std::vector<std::string>& allMessages = getTierTwoNetMessageTypes();
         if (std::find(allMessages.begin(), allMessages.end(), strCommand) != allMessages.end()) {
             // Check if the dispatcher can process this message first. If not, try going with the old flow.
-            if (!masternodeSync.MessageDispatcher(pfrom, strCommand, vRecv)) {
+            if (!gamemasterSync.MessageDispatcher(pfrom, strCommand, vRecv)) {
                 // Probably one the extensions, future: encapsulate all of this inside tiertwo_networksync.
                 int dosScore{0};
-                if (!mnodeman.ProcessMessage(pfrom, strCommand, vRecv, dosScore)) {
+                if (!gamemasterman.ProcessMessage(pfrom, strCommand, vRecv, dosScore)) {
                     WITH_LOCK(cs_main, Misbehaving(pfrom->GetId(), dosScore));
                     return false;
                 }
@@ -2204,7 +2204,7 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
                     return false;
                 }
                 CValidationState state_payments;
-                if (!masternodePayments.ProcessMessageMasternodePayments(pfrom, strCommand, vRecv, state_payments)) {
+                if (!gamemasterPayments.ProcessMessageGamemasterPayments(pfrom, strCommand, vRecv, state_payments)) {
                     if (state_payments.IsInvalid(dosScore)) {
                         WITH_LOCK(cs_main, Misbehaving(pfrom->GetId(), dosScore));
                     }
@@ -2215,12 +2215,12 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
                     return false;
                 }
 
-                CValidationState mnauthState;
-                if (!CMNAuth::ProcessMessage(pfrom, strCommand, vRecv, *connman, mnauthState)) {
+                CValidationState gmauthState;
+                if (!CGMAuth::ProcessMessage(pfrom, strCommand, vRecv, *connman, gmauthState)) {
                     int dosScore{0};
-                    if (mnauthState.IsInvalid(dosScore) && dosScore > 0) {
+                    if (gmauthState.IsInvalid(dosScore) && dosScore > 0) {
                         LOCK(cs_main);
-                        Misbehaving(pfrom->GetId(), dosScore, mnauthState.GetRejectReason());
+                        Misbehaving(pfrom->GetId(), dosScore, gmauthState.GetRejectReason());
                     }
                 }
             }

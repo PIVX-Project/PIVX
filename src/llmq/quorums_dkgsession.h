@@ -9,7 +9,7 @@
 #include "bls/bls_ies.h"
 #include "bls/bls_worker.h"
 #include "consensus/params.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "evo/evodb.h"
 #include "net.h"
 #include "llmq/quorums_utils.h"
@@ -194,9 +194,9 @@ public:
 class CDKGMember
 {
 public:
-    CDKGMember(CDeterministicMNCPtr _dmn, size_t _idx);
+    CDKGMember(CDeterministicGMCPtr _dgm, size_t _idx);
 
-    CDeterministicMNCPtr dmn;
+    CDeterministicGMCPtr dgm;
     size_t idx;
     CBLSId id;
 
@@ -280,7 +280,7 @@ public:
     CDKGSession(const Consensus::LLMQParams& _params, CEvoDB& _evoDb, CBLSWorker& _blsWorker, CDKGSessionManager& _dkgManager) :
         params(_params), evoDb(_evoDb), blsWorker(_blsWorker), cache(_blsWorker), dkgManager(_dkgManager) {}
 
-    bool Init(const CBlockIndex* _pindexQuorum, const std::vector<CDeterministicMNCPtr>& mns, const uint256& _myProTxHash);
+    bool Init(const CBlockIndex* _pindexQuorum, const std::vector<CDeterministicGMCPtr>& gms, const uint256& _myProTxHash);
 
     size_t GetMyMemberIndex() const { return myIdx; }
 

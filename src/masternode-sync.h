@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MASTERNODE_SYNC_H
-#define MASTERNODE_SYNC_H
+#ifndef GAMEMASTER_SYNC_H
+#define GAMEMASTER_SYNC_H
 
 #include "net.h"    // for NodeId
 #include "uint256.h"
@@ -13,10 +13,10 @@
 #include <string>
 #include <map>
 
-#define MASTERNODE_SYNC_TIMEOUT 5
+#define GAMEMASTER_SYNC_TIMEOUT 5
 
-class CMasternodeSync;
-extern CMasternodeSync masternodeSync;
+class CGamemasterSync;
+extern CGamemasterSync gamemasterSync;
 
 struct TierTwoPeerData {
     // map of message --> last request timestamp, bool hasResponseArrived.
@@ -24,10 +24,10 @@ struct TierTwoPeerData {
 };
 
 //
-// CMasternodeSync : Sync masternode assets in stages
+// CGamemasterSync : Sync gamemaster assets in stages
 //
 
-class CMasternodeSync
+class CGamemasterSync
 {
 public:
     int64_t lastFailure;
@@ -36,23 +36,23 @@ public:
     std::atomic<int64_t> lastProcess;
 
     // sum of all counts
-    int sumMasternodeList;
-    int sumMasternodeWinner;
+    int sumGamemasterList;
+    int sumGamemasterWinner;
     int sumBudgetItemProp;
     int sumBudgetItemFin;
     // peers that reported counts
-    int countMasternodeList;
-    int countMasternodeWinner;
+    int countGamemasterList;
+    int countGamemasterWinner;
     int countBudgetItemProp;
     int countBudgetItemFin;
 
     // Count peers we've requested the list from
-    int RequestedMasternodeAttempt;
+    int RequestedGamemasterAttempt;
 
-    // Time when current masternode asset sync started
+    // Time when current gamemaster asset sync started
     int64_t nAssetSyncStarted;
 
-    CMasternodeSync();
+    CGamemasterSync();
 
     void SwitchToNextAsset();
     std::string GetSyncStatus();

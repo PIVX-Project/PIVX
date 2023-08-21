@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MASTERNODE_H
-#define MASTERNODE_H
+#ifndef GAMEMASTER_H
+#define GAMEMASTER_H
 
 #include "key_io.h"
 #include "key.h"
@@ -16,39 +16,39 @@
 #include "timedata.h"
 #include "util/system.h"
 
-/* Depth of the block pinged by masternodes */
-static const unsigned int MNPING_DEPTH = 12;
+/* Depth of the block pinged by gamemasters */
+static const unsigned int GMPING_DEPTH = 12;
 
-class CMasternode;
-class CMasternodeBroadcast;
-class CMasternodePing;
+class CGamemaster;
+class CGamemasterBroadcast;
+class CGamemasterPing;
 
-typedef std::shared_ptr<CMasternode> MasternodeRef;
+typedef std::shared_ptr<CGamemaster> GamemasterRef;
 
-class CDeterministicMN;
-typedef std::shared_ptr<const CDeterministicMN> CDeterministicMNCPtr;
+class CDeterministicGM;
+typedef std::shared_ptr<const CDeterministicGM> CDeterministicGMCPtr;
 
-int MasternodeMinPingSeconds();
-int MasternodeBroadcastSeconds();
-int MasternodePingSeconds();
-int MasternodeExpirationSeconds();
-int MasternodeRemovalSeconds();
+int GamemasterMinPingSeconds();
+int GamemasterBroadcastSeconds();
+int GamemasterPingSeconds();
+int GamemasterExpirationSeconds();
+int GamemasterRemovalSeconds();
 
 //
-// The Masternode Ping Class : Contains a different serialize method for sending pings from masternodes throughout the network
+// The Gamemaster Ping Class : Contains a different serialize method for sending pings from gamemasters throughout the network
 //
 
-class CMasternodePing : public CSignedMessage
+class CGamemasterPing : public CSignedMessage
 {
 public:
     CTxIn vin;
     uint256 blockHash;
-    int64_t sigTime; //mnb message times
+    int64_t sigTime; //gmb message times
 
-    CMasternodePing();
-    CMasternodePing(const CTxIn& newVin, const uint256& nBlockHash, uint64_t _sigTime);
+    CGamemasterPing();
+    CGamemasterPing(const CTxIn& newVin, const uint256& nBlockHash, uint64_t _sigTime);
 
-    SERIALIZE_METHODS(CMasternodePing, obj) { READWRITE(obj.vin, obj.blockHash, obj.sigTime, obj.vchSig, obj.nMessVersion); }
+    SERIALIZE_METHODS(CGamemasterPing, obj) { READWRITE(obj.vin, obj.blockHash, obj.sigTime, obj.vchSig, obj.nMessVersion); }
 
     uint256 GetHash() const;
 
@@ -61,23 +61,23 @@ public:
     bool CheckAndUpdate(int& nDos, bool fRequireAvailable = true, bool fCheckSigTimeOnly = false);
     void Relay();
 
-    CMasternodePing& operator=(const CMasternodePing& other) = default;
+    CGamemasterPing& operator=(const CGamemasterPing& other) = default;
 
-    friend bool operator==(const CMasternodePing& a, const CMasternodePing& b)
+    friend bool operator==(const CGamemasterPing& a, const CGamemasterPing& b)
     {
         return a.vin == b.vin && a.blockHash == b.blockHash;
     }
-    friend bool operator!=(const CMasternodePing& a, const CMasternodePing& b)
+    friend bool operator!=(const CGamemasterPing& a, const CGamemasterPing& b)
     {
         return !(a == b);
     }
 };
 
 //
-// The Masternode Class. It contains the input of the 10000 HMS, signature to prove
+// The Gamemaster Class. It contains the input of the 10000 HMS, signature to prove
 // it's the one who own that ip address and code for calculating the payment election.
 //
-class CMasternode : public CSignedMessage
+class CGamemaster : public CSignedMessage
 {
 private:
     // critical section to protect the inner data structures
@@ -86,45 +86,45 @@ private:
 
 public:
     enum state {
-        MASTERNODE_PRE_ENABLED,
-        MASTERNODE_ENABLED,
-        MASTERNODE_EXPIRED,
-        MASTERNODE_REMOVE,
-        MASTERNODE_VIN_SPENT,
+        GAMEMASTER_PRE_ENABLED,
+        GAMEMASTER_ENABLED,
+        GAMEMASTER_EXPIRED,
+        GAMEMASTER_REMOVE,
+        GAMEMASTER_VIN_SPENT,
     };
 
     CTxIn vin;
     CService addr;
     CPubKey pubKeyCollateralAddress;
-    CPubKey pubKeyMasternode;
-    int64_t sigTime; //mnb message time
+    CPubKey pubKeyGamemaster;
+    int64_t sigTime; //gmb message time
     int protocolVersion;
     int nScanningErrorCount;
     int nLastScanningErrorBlockHeight;
-    CMasternodePing lastPing;
+    CGamemasterPing lastPing;
 
-    explicit CMasternode();
-    CMasternode(const CMasternode& other);
+    explicit CGamemaster();
+    CGamemaster(const CGamemaster& other);
 
-    // Initialize from DMN. Used by the compatibility code.
-    CMasternode(const CDeterministicMNCPtr& dmn, int64_t registeredTime, const uint256& registeredHash);
+    // Initialize from DGM. Used by the compatibility code.
+    CGamemaster(const CDeterministicGMCPtr& dgm, int64_t registeredTime, const uint256& registeredHash);
 
     // override CSignedMessage functions
     uint256 GetSignatureHash() const override;
     std::string GetStrMessage() const override;
     const CTxIn GetVin() const { return vin; };
-    CPubKey GetPubKey() const { return pubKeyMasternode; }
+    CPubKey GetPubKey() const { return pubKeyGamemaster; }
 
-    void SetLastPing(const CMasternodePing& _lastPing) { WITH_LOCK(cs, lastPing = _lastPing;); }
+    void SetLastPing(const CGamemasterPing& _lastPing) { WITH_LOCK(cs, lastPing = _lastPing;); }
 
-    CMasternode& operator=(const CMasternode& other)
+    CGamemaster& operator=(const CGamemaster& other)
     {
         nMessVersion = other.nMessVersion;
         vchSig = other.vchSig;
         vin = other.vin;
         addr = other.addr;
         pubKeyCollateralAddress = other.pubKeyCollateralAddress;
-        pubKeyMasternode = other.pubKeyMasternode;
+        pubKeyGamemaster = other.pubKeyGamemaster;
         sigTime = other.sigTime;
         lastPing = other.lastPing;
         protocolVersion = other.protocolVersion;
@@ -133,22 +133,22 @@ public:
         return *this;
     }
 
-    friend bool operator==(const CMasternode& a, const CMasternode& b)
+    friend bool operator==(const CGamemaster& a, const CGamemaster& b)
     {
         return a.vin == b.vin;
     }
-    friend bool operator!=(const CMasternode& a, const CMasternode& b)
+    friend bool operator!=(const CGamemaster& a, const CGamemaster& b)
     {
         return !(a.vin == b.vin);
     }
 
     arith_uint256 CalculateScore(const uint256& hash) const;
 
-    SERIALIZE_METHODS(CMasternode, obj)
+    SERIALIZE_METHODS(CGamemaster, obj)
     {
         LOCK(obj.cs);
         READWRITE(obj.vin, obj.addr, obj.pubKeyCollateralAddress);
-        READWRITE(obj.pubKeyMasternode, obj.vchSig, obj.sigTime, obj.protocolVersion);
+        READWRITE(obj.pubKeyGamemaster, obj.vchSig, obj.sigTime, obj.protocolVersion);
         READWRITE(obj.lastPing, obj.nScanningErrorCount, obj.nLastScanningErrorBlockHeight);
 
         if (obj.protocolVersion == MIN_BIP155_PROTOCOL_VERSION) {
@@ -158,13 +158,13 @@ public:
     }
 
     template <typename Stream>
-    CMasternode(deserialize_type, Stream& s) {
+    CGamemaster(deserialize_type, Stream& s) {
         Unserialize(s);
     }
 
-    bool UpdateFromNewBroadcast(CMasternodeBroadcast& mnb);
+    bool UpdateFromNewBroadcast(CGamemasterBroadcast& gmb);
 
-    CMasternode::state GetActiveState() const;
+    CGamemaster::state GetActiveState() const;
 
     bool IsBroadcastedWithin(int seconds)
     {
@@ -187,64 +187,64 @@ public:
     {
         LOCK(cs);
         sigTime = 0;
-        lastPing = CMasternodePing();
+        lastPing = CGamemasterPing();
     }
 
     bool IsEnabled() const
     {
-        return GetActiveState() == MASTERNODE_ENABLED;
+        return GetActiveState() == GAMEMASTER_ENABLED;
     }
 
     bool IsPreEnabled() const
     {
-        return GetActiveState() == MASTERNODE_PRE_ENABLED;
+        return GetActiveState() == GAMEMASTER_PRE_ENABLED;
     }
 
     bool IsAvailableState() const
     {
         state s = GetActiveState();
-        return s == MASTERNODE_ENABLED || s == MASTERNODE_PRE_ENABLED;
+        return s == GAMEMASTER_ENABLED || s == GAMEMASTER_PRE_ENABLED;
     }
 
     std::string Status() const
     {
         auto activeState = GetActiveState();
-        if (activeState == CMasternode::MASTERNODE_PRE_ENABLED) return "PRE_ENABLED";
-        if (activeState == CMasternode::MASTERNODE_ENABLED)     return "ENABLED";
-        if (activeState == CMasternode::MASTERNODE_EXPIRED)     return "EXPIRED";
-        if (activeState == CMasternode::MASTERNODE_VIN_SPENT)   return "VIN_SPENT";
-        if (activeState == CMasternode::MASTERNODE_REMOVE)      return "REMOVE";
+        if (activeState == CGamemaster::GAMEMASTER_PRE_ENABLED) return "PRE_ENABLED";
+        if (activeState == CGamemaster::GAMEMASTER_ENABLED)     return "ENABLED";
+        if (activeState == CGamemaster::GAMEMASTER_EXPIRED)     return "EXPIRED";
+        if (activeState == CGamemaster::GAMEMASTER_VIN_SPENT)   return "VIN_SPENT";
+        if (activeState == CGamemaster::GAMEMASTER_REMOVE)      return "REMOVE";
         return strprintf("INVALID_%d", activeState);
     }
 
     bool IsValidNetAddr() const;
 
     /*
-     * This is used only by the compatibility code for DMN, which don't share the public key (but the keyid).
-     * Used by the payment-logic to include the necessary information in a temporary MasternodeRef object
+     * This is used only by the compatibility code for DGM, which don't share the public key (but the keyid).
+     * Used by the payment-logic to include the necessary information in a temporary GamemasterRef object
      * (which is not indexed in the maps of the legacy manager).
-     * A non-empty mnPayeeScript identifies this object as a "deterministic" masternode.
-     * Note: this is the single payout for the masternode (if the dmn is configured to pay a portion of the reward
+     * A non-empty gmPayeeScript identifies this object as a "deterministic" gamemaster.
+     * Note: this is the single payout for the gamemaster (if the dgm is configured to pay a portion of the reward
      * to the operator, this is done only after the disabling of the legacy system).
      */
-    CScript mnPayeeScript{};
+    CScript gmPayeeScript{};
     CScript GetPayeeScript() const {
-        return mnPayeeScript.empty() ? GetScriptForDestination(pubKeyCollateralAddress.GetID())
-                                     : mnPayeeScript;
+        return gmPayeeScript.empty() ? GetScriptForDestination(pubKeyCollateralAddress.GetID())
+                                     : gmPayeeScript;
     }
 };
 
 
 //
-// The Masternode Broadcast Class : Contains a different serialize method for sending masternodes through the network
+// The Gamemaster Broadcast Class : Contains a different serialize method for sending gamemasters through the network
 //
 
-class CMasternodeBroadcast : public CMasternode
+class CGamemasterBroadcast : public CGamemaster
 {
 public:
-    CMasternodeBroadcast();
-    CMasternodeBroadcast(CService newAddr, CTxIn newVin, CPubKey newPubkey, CPubKey newPubkey2, int protocolVersionIn, const CMasternodePing& _lastPing);
-    CMasternodeBroadcast(const CMasternode& mn);
+    CGamemasterBroadcast();
+    CGamemasterBroadcast(CService newAddr, CTxIn newVin, CPubKey newPubkey, CPubKey newPubkey2, int protocolVersionIn, const CGamemasterPing& _lastPing);
+    CGamemasterBroadcast(const CGamemaster& gm);
 
     bool CheckAndUpdate(int& nDoS);
 
@@ -256,12 +256,12 @@ public:
     bool Sign(const CKey& key, const CPubKey& pubKey);
     bool CheckSignature() const;
 
-    SERIALIZE_METHODS(CMasternodeBroadcast, obj)
+    SERIALIZE_METHODS(CGamemasterBroadcast, obj)
     {
         READWRITE(obj.vin);
         READWRITE(obj.addr);
         READWRITE(obj.pubKeyCollateralAddress);
-        READWRITE(obj.pubKeyMasternode);
+        READWRITE(obj.pubKeyGamemaster);
         READWRITE(obj.vchSig);
         READWRITE(obj.sigTime);
         READWRITE(obj.protocolVersion);
@@ -269,14 +269,14 @@ public:
         READWRITE(obj.nMessVersion);
     }
 
-    /// Create Masternode broadcast, needs to be relayed manually after that
-    static bool Create(const CTxIn& vin, const CService& service, const CKey& keyCollateralAddressNew, const CPubKey& pubKeyCollateralAddressNew, const CKey& keyMasternodeNew, const CPubKey& pubKeyMasternodeNew, std::string& strErrorRet, CMasternodeBroadcast& mnbRet);
-    static bool Create(const std::string& strService, const std::string& strKey, const std::string& strTxHash, const std::string& strOutputIndex, std::string& strErrorRet, CMasternodeBroadcast& mnbRet, bool fOffline, int chainHeight);
+    /// Create Gamemaster broadcast, needs to be relayed manually after that
+    static bool Create(const CTxIn& vin, const CService& service, const CKey& keyCollateralAddressNew, const CPubKey& pubKeyCollateralAddressNew, const CKey& keyGamemasterNew, const CPubKey& pubKeyGamemasterNew, std::string& strErrorRet, CGamemasterBroadcast& gmbRet);
+    static bool Create(const std::string& strService, const std::string& strKey, const std::string& strTxHash, const std::string& strOutputIndex, std::string& strErrorRet, CGamemasterBroadcast& gmbRet, bool fOffline, int chainHeight);
     static bool CheckDefaultPort(CService service, std::string& strErrorRet, const std::string& strContext);
 };
 
 // Temporary function used for payment compatibility code.
-// Returns a shared pointer to a masternode object initialized from a DMN.
-MasternodeRef MakeMasternodeRefForDMN(const CDeterministicMNCPtr& dmn);
+// Returns a shared pointer to a gamemaster object initialized from a DGM.
+GamemasterRef MakeGamemasterRefForDGM(const CDeterministicGMCPtr& dgm);
 
 #endif

@@ -54,7 +54,7 @@ from .util import (
     bytes_to_hex_str,
     initialize_datadir,
     is_coin_locked_by,
-    create_new_dmn,
+    create_new_dgm,
     p2p_port,
     set_node_times,
     SPORK_ACTIVATION_TIME,
@@ -953,19 +953,19 @@ class HemisTestFramework():
         return self.nodes[node_id].spork("active")[sporkName]
 
 
-    def get_mn_lastseen(self, node, mnTxHash):
-        mnData = node.listmasternodes(mnTxHash)
-        if len(mnData) == 0:
+    def get_gm_lastseen(self, node, gmTxHash):
+        gmData = node.listgamemasters(gmTxHash)
+        if len(gmData) == 0:
             return -1
-        return mnData[0]["lastseen"]
+        return gmData[0]["lastseen"]
 
 
-    def get_mn_status(self, node, mnTxHash):
-        mnData = node.listmasternodes(mnTxHash)
-        if len(mnData) == 0:
+    def get_gm_status(self, node, gmTxHash):
+        gmData = node.listgamemasters(gmTxHash)
+        if len(gmData) == 0:
             return ""
-        assert_equal(len(mnData), 1)
-        return mnData[0]["status"]
+        assert_equal(len(gmData), 1)
+        return gmData[0]["status"]
 
 
     def advance_mocktime(self, secs):
@@ -974,7 +974,7 @@ class HemisTestFramework():
         time.sleep(1)
 
 
-    def wait_until_mnsync_finished(self):
+    def wait_until_gmsync_finished(self):
         SYNC_FINISHED = [999] * self.num_nodes
         synced = [-1] * self.num_nodes
         time.sleep(2)
@@ -982,15 +982,15 @@ class HemisTestFramework():
         while synced != SYNC_FINISHED and time.time() < timeout:
             for i in range(self.num_nodes):
                 if synced[i] != SYNC_FINISHED[i]:
-                    synced[i] = self.nodes[i].mnsync("status")["RequestedMasternodeAssets"]
+                    synced[i] = self.nodes[i].gmsync("status")["RequestedGamemasterAssets"]
             if synced != SYNC_FINISHED:
                 self.advance_mocktime(2)
                 time.sleep(5)
         if synced != SYNC_FINISHED:
-            raise AssertionError("Unable to complete mnsync: %s" % str(synced))
+            raise AssertionError("Unable to complete gmsync: %s" % str(synced))
 
 
-    def wait_until_mn_status(self, status, mnTxHash, _timeout, orEmpty=False, with_ping_mns=[]):
+    def wait_until_gm_status(self, status, gmTxHash, _timeout, orEmpty=False, with_ping_gms=[]):
         nodes_status = [None] * self.num_nodes
 
         def node_synced(i):
@@ -1007,46 +1007,46 @@ class HemisTestFramework():
         while not all_synced() and time.time() < timeout:
             for i in range(self.num_nodes):
                 if not node_synced(i):
-                    nodes_status[i] = self.get_mn_status(self.nodes[i], mnTxHash)
+                    nodes_status[i] = self.get_gm_status(self.nodes[i], gmTxHash)
             if not all_synced():
                 time.sleep(2)
-                self.send_pings(with_ping_mns)
+                self.send_pings(with_ping_gms)
         if not all_synced():
-            strErr = "Unable to get get status \"%s\" on all nodes for mnode %s. Current: %s" % (
-                    status, mnTxHash, str(nodes_status))
+            strErr = "Unable to get get status \"%s\" on all nodes for gmode %s. Current: %s" % (
+                    status, gmTxHash, str(nodes_status))
             raise AssertionError(strErr)
 
 
-    def wait_until_mn_enabled(self, mnTxHash, _timeout, _with_ping_mns=[]):
-        self.wait_until_mn_status("ENABLED", mnTxHash, _timeout, with_ping_mns=_with_ping_mns)
+    def wait_until_gm_enabled(self, gmTxHash, _timeout, _with_ping_gms=[]):
+        self.wait_until_gm_status("ENABLED", gmTxHash, _timeout, with_ping_gms=_with_ping_gms)
 
 
-    def wait_until_mn_preenabled(self, mnTxHash, _timeout, _with_ping_mns=[]):
-        self.wait_until_mn_status("PRE_ENABLED", mnTxHash, _timeout, with_ping_mns=_with_ping_mns)
+    def wait_until_gm_preenabled(self, gmTxHash, _timeout, _with_ping_gms=[]):
+        self.wait_until_gm_status("PRE_ENABLED", gmTxHash, _timeout, with_ping_gms=_with_ping_gms)
 
 
-    def wait_until_mn_vinspent(self, mnTxHash, _timeout, _with_ping_mns=[]):
-        self.wait_until_mn_status("VIN_SPENT", mnTxHash, _timeout, orEmpty=True, with_ping_mns=_with_ping_mns)
+    def wait_until_gm_vinspent(self, gmTxHash, _timeout, _with_ping_gms=[]):
+        self.wait_until_gm_status("VIN_SPENT", gmTxHash, _timeout, orEmpty=True, with_ping_gms=_with_ping_gms)
 
 
-    def controller_start_masternode(self, mnOwner, masternodeAlias):
-        ret = mnOwner.startmasternode("alias", False, masternodeAlias, True)
+    def controller_start_gamemaster(self, gmOwner, gamemasterAlias):
+        ret = gmOwner.startgamemaster("alias", False, gamemasterAlias, True)
         assert_equal(ret["result"], "success")
         time.sleep(1)
 
 
-    def controller_start_masternodes(self, mnOwner, aliases=[]):
-        ret = mnOwner.startmasternode(set="all", lock_wallet=False, reload_conf=True)
+    def controller_start_gamemasters(self, gmOwner, aliases=[]):
+        ret = gmOwner.startgamemaster(set="all", lock_wallet=False, reload_conf=True)
         for i in range(len(aliases)):
             assert_equal(ret["detail"][i]["alias"], aliases[i])
             assert_equal(ret["detail"][i]["result"], "success")
         time.sleep(1)
 
 
-    def send_pings(self, mnodes):
-        for node in mnodes:
+    def send_pings(self, gmodes):
+        for node in gmodes:
             try:
-                node.mnping()["sent"]
+                node.gmping()["sent"]
             except:
                 pass
             time.sleep(1)
@@ -1059,44 +1059,44 @@ class HemisTestFramework():
         time.sleep(1)
 
 
-    def stake_and_ping(self, node_id, num_blocks, with_ping_mns=[]):
-        # stake blocks and send mn pings in between
+    def stake_and_ping(self, node_id, num_blocks, with_ping_gms=[]):
+        # stake blocks and send gm pings in between
         for i in range(num_blocks):
             self.stake_and_sync(node_id, 1)
-            if len(with_ping_mns) > 0:
-                self.send_pings(with_ping_mns)
+            if len(with_ping_gms) > 0:
+                self.send_pings(with_ping_gms)
 
     # !TODO: remove after obsoleting legacy system
-    def setupDMN(self,
-                 mnOwner,
+    def setupDGM(self,
+                 gmOwner,
                  miner,
-                 mnRemotePos,
+                 gmRemotePos,
                  strType,           # "fund"|"internal"|"external"
                  outpoint=None):    # COutPoint, only for "external"
-        self.log.info("Creating%s proRegTx for deterministic masternode..." % (
+        self.log.info("Creating%s proRegTx for deterministic gamemaster..." % (
                       " and funding" if strType == "fFund" else ""))
-        collateralAdd = mnOwner.getnewaddress("dmn")
-        ipport = "127.0.0.1:" + str(p2p_port(mnRemotePos))
-        ownerAdd = mnOwner.getnewaddress("dmn_owner")
-        bls_keypair = mnOwner.generateblskeypair()
-        votingAdd = mnOwner.getnewaddress("dmn_voting")
+        collateralAdd = gmOwner.getnewaddress("dgm")
+        ipport = "127.0.0.1:" + str(p2p_port(gmRemotePos))
+        ownerAdd = gmOwner.getnewaddress("dgm_owner")
+        bls_keypair = gmOwner.generateblskeypair()
+        votingAdd = gmOwner.getnewaddress("dgm_voting")
         if strType == "fund":
             # send to the owner the collateral tx cost + some dust for the ProReg and fee
             fundingTxId = miner.sendtoaddress(collateralAdd, Decimal('101'))
             # confirm and verify reception
             self.stake_and_sync(self.nodes.index(miner), 1)
-            assert_greater_than(mnOwner.getrawtransaction(fundingTxId, 1)["confirmations"], 0)
+            assert_greater_than(gmOwner.getrawtransaction(fundingTxId, 1)["confirmations"], 0)
             # create and send the ProRegTx funding the collateral
-            proTxId = mnOwner.protx_register_fund(collateralAdd, ipport, ownerAdd,
+            proTxId = gmOwner.protx_register_fund(collateralAdd, ipport, ownerAdd,
                                                   bls_keypair["public"], votingAdd, collateralAdd)
         elif strType == "internal":
-            mnOwner.getnewaddress("dust")
+            gmOwner.getnewaddress("dust")
             # send to the owner the collateral tx cost + some dust for the ProReg and fee
             collateralTxId = miner.sendtoaddress(collateralAdd, Decimal('100'))
             miner.sendtoaddress(collateralAdd, Decimal('1'))
             # confirm and verify reception
             self.stake_and_sync(self.nodes.index(miner), 1)
-            json_tx = mnOwner.getrawtransaction(collateralTxId, True)
+            json_tx = gmOwner.getrawtransaction(collateralTxId, True)
             collateralTxId_n = -1
             for o in json_tx["vout"]:
                 if o["value"] == Decimal('100'):
@@ -1104,44 +1104,44 @@ class HemisTestFramework():
                     break
             assert_greater_than(collateralTxId_n, -1)
             assert_greater_than(json_tx["confirmations"], 0)
-            proTxId = mnOwner.protx_register(collateralTxId, collateralTxId_n, ipport, ownerAdd,
+            proTxId = gmOwner.protx_register(collateralTxId, collateralTxId_n, ipport, ownerAdd,
                                              bls_keypair["public"], votingAdd, collateralAdd)
         elif strType == "external":
             self.log.info("Setting up ProRegTx with collateral externally-signed...")
             # send the tx from the miner
-            payoutAdd = mnOwner.getnewaddress("payout")
+            payoutAdd = gmOwner.getnewaddress("payout")
             register_res = miner.protx_register_prepare(outpoint.hash, outpoint.n, ipport, ownerAdd,
                                                         bls_keypair["public"], votingAdd, payoutAdd)
             self.log.info("ProTx prepared")
             message_to_sign = register_res["signMessage"]
             collateralAdd = register_res["collateralAddress"]
-            signature = mnOwner.signmessage(collateralAdd, message_to_sign)
+            signature = gmOwner.signmessage(collateralAdd, message_to_sign)
             self.log.info("ProTx signed")
             proTxId = miner.protx_register_submit(register_res["tx"], signature)
         else:
             raise Exception("Type %s not available" % strType)
 
-        self.sync_mempools([mnOwner, miner])
+        self.sync_mempools([gmOwner, miner])
         # confirm and verify inclusion in list
         self.stake_and_sync(self.nodes.index(miner), 1)
-        assert_greater_than(self.nodes[mnRemotePos].getrawtransaction(proTxId, 1)["confirmations"], 0)
-        assert proTxId in self.nodes[mnRemotePos].protx_list(False)
+        assert_greater_than(self.nodes[gmRemotePos].getrawtransaction(proTxId, 1)["confirmations"], 0)
+        assert proTxId in self.nodes[gmRemotePos].protx_list(False)
         return proTxId, bls_keypair["secret"]
 
-    def setupMasternode(self,
-                        mnOwner,
+    def setupGamemaster(self,
+                        gmOwner,
                         miner,
-                        masternodeAlias,
-                        mnOwnerDirPath,
-                        mnRemotePos,
-                        masternodePrivKey):
-        self.log.info("adding balance to the mn owner for " + masternodeAlias + "..")
-        mnAddress = mnOwner.getnewaddress(masternodeAlias)
+                        gamemasterAlias,
+                        gmOwnerDirPath,
+                        gmRemotePos,
+                        gamemasterPrivKey):
+        self.log.info("adding balance to the gm owner for " + gamemasterAlias + "..")
+        gmAddress = gmOwner.getnewaddress(gamemasterAlias)
         # send to the owner the collateral tx cost
-        collateralTxId = miner.sendtoaddress(mnAddress, Decimal('100'))
+        collateralTxId = miner.sendtoaddress(gmAddress, Decimal('100'))
         # confirm and verify reception
         self.stake_and_sync(self.nodes.index(miner), 1)
-        json_tx = mnOwner.getrawtransaction(collateralTxId, True)
+        json_tx = gmOwner.getrawtransaction(collateralTxId, True)
         collateralTxId_n = -1
         for o in json_tx["vout"]:
             if o["value"] == Decimal('100'):
@@ -1149,25 +1149,25 @@ class HemisTestFramework():
                 break
         assert_greater_than(collateralTxId_n, -1)
         assert_greater_than(json_tx["confirmations"], 0)
-        # update masternode file
-        self.log.info("collateral accepted for " + masternodeAlias + ". Updating masternode.conf...")
-        confData = "%s 127.0.0.1:%d %s %s %d" % (masternodeAlias,
-                                                 p2p_port(mnRemotePos),
-                                                 masternodePrivKey,
+        # update gamemaster file
+        self.log.info("collateral accepted for " + gamemasterAlias + ". Updating gamemaster.conf...")
+        confData = "%s 127.0.0.1:%d %s %s %d" % (gamemasterAlias,
+                                                 p2p_port(gmRemotePos),
+                                                 gamemasterPrivKey,
                                                  collateralTxId,
                                                  collateralTxId_n)
-        destPath = os.path.join(mnOwnerDirPath, "masternode.conf")
+        destPath = os.path.join(gmOwnerDirPath, "gamemaster.conf")
         with open(destPath, "a+", encoding="utf8") as file_object:
             file_object.write("\n")
             file_object.write(confData)
 
         # lock collateral
-        mnOwner.lockunspent(False, True, [{"txid": collateralTxId, "vout": collateralTxId_n}])
+        gmOwner.lockunspent(False, True, [{"txid": collateralTxId, "vout": collateralTxId_n}])
 
         # return the collateral outpoint
         return COutPoint(collateralTxId, collateralTxId_n)
 
-    # ----- DMN setup ------
+    # ----- DGM setup ------
     def connect_to_all(self, nodePos):
         for i in range(self.num_nodes):
             if i != nodePos and self.nodes[i] is not None:
@@ -1183,7 +1183,7 @@ class HemisTestFramework():
     """
     Create a ProReg tx, which has the collateral as one of its outputs
     """
-    def protx_register_fund(self, miner, controller, dmn, collateral_addr, op_rew=None):
+    def protx_register_fund(self, miner, controller, dgm, collateral_addr, op_rew=None):
         # send to the owner the collateral tx + some dust for the ProReg and fee
         funding_txid = miner.sendtoaddress(collateral_addr, Decimal('101'))
         # confirm and verify reception
@@ -1192,20 +1192,20 @@ class HemisTestFramework():
         assert_greater_than(controller.getrawtransaction(funding_txid, True)["confirmations"], 0)
         # create and send the ProRegTx funding the collateral
         if op_rew is None:
-            dmn.proTx = controller.protx_register_fund(collateral_addr, dmn.ipport, dmn.owner,
-                                                       dmn.operator_pk, dmn.voting, dmn.payee)
+            dgm.proTx = controller.protx_register_fund(collateral_addr, dgm.ipport, dgm.owner,
+                                                       dgm.operator_pk, dgm.voting, dgm.payee)
         else:
-            dmn.proTx = controller.protx_register_fund(collateral_addr, dmn.ipport, dmn.owner,
-                                                       dmn.operator_pk, dmn.voting, dmn.payee,
+            dgm.proTx = controller.protx_register_fund(collateral_addr, dgm.ipport, dgm.owner,
+                                                       dgm.operator_pk, dgm.voting, dgm.payee,
                                                        op_rew["reward"], op_rew["address"])
-        dmn.collateral = COutPoint(int(dmn.proTx, 16),
-                                   get_collateral_vout(controller.getrawtransaction(dmn.proTx, True)))
+        dgm.collateral = COutPoint(int(dgm.proTx, 16),
+                                   get_collateral_vout(controller.getrawtransaction(dgm.proTx, True)))
 
     """
     Create a ProReg tx, which references an 100 HMS UTXO as collateral.
     The controller node owns the collateral and creates the ProReg tx.
     """
-    def protx_register(self, miner, controller, dmn, collateral_addr):
+    def protx_register(self, miner, controller, dgm, collateral_addr):
         # send to the owner the exact collateral tx amount
         funding_txid = miner.sendtoaddress(collateral_addr, Decimal('100'))
         # send another output to be used for the fee of the proReg tx
@@ -1216,15 +1216,15 @@ class HemisTestFramework():
         json_tx = controller.getrawtransaction(funding_txid, True)
         assert_greater_than(json_tx["confirmations"], 0)
         # create and send the ProRegTx
-        dmn.collateral = COutPoint(int(funding_txid, 16), get_collateral_vout(json_tx))
-        dmn.proTx = controller.protx_register(funding_txid, dmn.collateral.n, dmn.ipport, dmn.owner,
-                                              dmn.operator_pk, dmn.voting, dmn.payee)
+        dgm.collateral = COutPoint(int(funding_txid, 16), get_collateral_vout(json_tx))
+        dgm.proTx = controller.protx_register(funding_txid, dgm.collateral.n, dgm.ipport, dgm.owner,
+                                              dgm.operator_pk, dgm.voting, dgm.payee)
 
     """
     Create a ProReg tx, referencing a collateral signed externally (eg. HW wallets).
     Here the controller node owns the collateral (and signs), but the miner creates the ProReg tx.
     """
-    def protx_register_ext(self, miner, controller, dmn, outpoint, fSubmit):
+    def protx_register_ext(self, miner, controller, dgm, outpoint, fSubmit):
         # send to the owner the collateral tx if the outpoint is not specified
         if outpoint is None:
             funding_txid = miner.sendtoaddress(controller.getnewaddress("collateral"), Decimal('100'))
@@ -1234,17 +1234,17 @@ class HemisTestFramework():
             json_tx = controller.getrawtransaction(funding_txid, True)
             assert_greater_than(json_tx["confirmations"], 0)
             outpoint = COutPoint(int(funding_txid, 16), get_collateral_vout(json_tx))
-        dmn.collateral = outpoint
+        dgm.collateral = outpoint
         # Prepare the message to be signed externally by the owner of the collateral (the controller)
-        reg_tx = miner.protx_register_prepare("%064x" % outpoint.hash, outpoint.n, dmn.ipport, dmn.owner,
-                                              dmn.operator_pk, dmn.voting, dmn.payee)
+        reg_tx = miner.protx_register_prepare("%064x" % outpoint.hash, outpoint.n, dgm.ipport, dgm.owner,
+                                              dgm.operator_pk, dgm.voting, dgm.payee)
         sig = controller.signmessage(reg_tx["collateralAddress"], reg_tx["signMessage"])
         if fSubmit:
-            dmn.proTx = miner.protx_register_submit(reg_tx["tx"], sig)
+            dgm.proTx = miner.protx_register_submit(reg_tx["tx"], sig)
         else:
             return reg_tx["tx"], sig
 
-    """ Create and register new deterministic masternode
+    """ Create and register new deterministic gamemaster
     :param   idx:              (int) index of the (remote) node in self.nodes
              miner_idx:        (int) index of the miner in self.nodes
              controller_idx:   (int) index of the controller in self.nodes
@@ -1255,32 +1255,32 @@ class HemisTestFramework():
                                  If not provided, a new utxo is created, sending it from the miner.
              op_blskeys:      (list of strings) List with two entries, operator public (0) and private (1) key.
                                  If not provided, a new address-key pair is generated.
-    :return: dmn:              (Masternode) the deterministic masternode object
+    :return: dgm:              (Gamemaster) the deterministic gamemaster object
     """
-    def register_new_dmn(self, idx, miner_idx, controller_idx, strType,
+    def register_new_dgm(self, idx, miner_idx, controller_idx, strType,
                          payout_addr=None, outpoint=None, op_blskeys=None):
         # Prepare remote node
         assert idx != miner_idx
         assert idx != controller_idx
         miner_node = self.nodes[miner_idx]
         controller_node = self.nodes[controller_idx]
-        mn_node = self.nodes[idx]
+        gm_node = self.nodes[idx]
 
         # Generate ip and addresses/keys
-        collateral_addr = controller_node.getnewaddress("mncollateral-%d" % idx)
+        collateral_addr = controller_node.getnewaddress("gmcollateral-%d" % idx)
         if payout_addr is None:
             payout_addr = collateral_addr
-        dmn = create_new_dmn(idx, controller_node, payout_addr, op_blskeys)
+        dgm = create_new_dgm(idx, controller_node, payout_addr, op_blskeys)
 
         # Create ProRegTx
-        self.log.info("Creating%s proRegTx for deterministic masternode idx=%d..." % (
+        self.log.info("Creating%s proRegTx for deterministic gamemaster idx=%d..." % (
             " and funding" if strType == "fund" else "", idx))
         if strType == "fund":
-            self.protx_register_fund(miner_node, controller_node, dmn, collateral_addr)
+            self.protx_register_fund(miner_node, controller_node, dgm, collateral_addr)
         elif strType == "internal":
-            self.protx_register(miner_node, controller_node, dmn, collateral_addr)
+            self.protx_register(miner_node, controller_node, dgm, collateral_addr)
         elif strType == "external":
-            self.protx_register_ext(miner_node, controller_node, dmn, outpoint, True)
+            self.protx_register_ext(miner_node, controller_node, dgm, outpoint, True)
         else:
             raise Exception("Type %s not available" % strType)
         time.sleep(1)
@@ -1289,58 +1289,58 @@ class HemisTestFramework():
         # confirm and verify inclusion in list
         miner_node.generate(1)
         self.sync_blocks()
-        json_tx = mn_node.getrawtransaction(dmn.proTx, 1)
+        json_tx = gm_node.getrawtransaction(dgm.proTx, 1)
         assert_greater_than(json_tx["confirmations"], 0)
-        assert dmn.proTx in mn_node.protx_list(False)
+        assert dgm.proTx in gm_node.protx_list(False)
 
         # check coin locking
-        assert is_coin_locked_by(controller_node, dmn.collateral)
+        assert is_coin_locked_by(controller_node, dgm.collateral)
 
-        # check json payload against local dmn object
-        self.check_proreg_payload(dmn, json_tx)
+        # check json payload against local dgm object
+        self.check_proreg_payload(dgm, json_tx)
 
-        return dmn
+        return dgm
 
-    def check_mn_list_on_node(self, idx, mns):
+    def check_gm_list_on_node(self, idx, gms):
         self.nodes[idx].syncwithvalidationinterfacequeue()
-        mnlist = self.nodes[idx].listmasternodes()
-        if len(mnlist) != len(mns):
-            mnlist_l = [[x['proTxHash'], x['dmnstate']['service']] for x in mnlist]
-            mns_l = [[x.proTx, x.ipport] for x in mns]
+        gmlist = self.nodes[idx].listgamemasters()
+        if len(gmlist) != len(gms):
+            gmlist_l = [[x['proTxHash'], x['dgmstate']['service']] for x in gmlist]
+            gms_l = [[x.proTx, x.ipport] for x in gms]
             strErr = ""
-            for x in [x for x in mnlist_l if x not in mns_l]:
+            for x in [x for x in gmlist_l if x not in gms_l]:
                 strErr += "Mn %s is not expected\n" % str(x)
-            for x in [x for x in mns_l if x not in mnlist_l]:
+            for x in [x for x in gms_l if x not in gmlist_l]:
                 strErr += "Expect Mn %s not found\n" % str(x)
-            raise Exception("Invalid mn list on node %d:\n%s" % (idx, strErr))
-        protxs = {x["proTxHash"]: x for x in mnlist}
-        for mn in mns:
-            if mn.proTx not in protxs:
-                raise Exception("ProTx for mn %d (%s) not found in the list of node %d" % (mn.idx, mn.proTx, idx))
-            mn2 = protxs[mn.proTx]
-            collateral = mn.collateral.to_json()
-            assert_equal(mn.owner, mn2["dmnstate"]["ownerAddress"])
-            assert_equal(mn.operator_pk, mn2["dmnstate"]["operatorPubKey"])
-            assert_equal(mn.voting, mn2["dmnstate"]["votingAddress"])
-            assert_equal(mn.ipport, mn2["dmnstate"]["service"])
-            assert_equal(mn.payee, mn2["dmnstate"]["payoutAddress"])
-            assert_equal(collateral["txid"], mn2["collateralHash"])
-            assert_equal(collateral["vout"], mn2["collateralIndex"])
+            raise Exception("Invalid gm list on node %d:\n%s" % (idx, strErr))
+        protxs = {x["proTxHash"]: x for x in gmlist}
+        for gm in gms:
+            if gm.proTx not in protxs:
+                raise Exception("ProTx for gm %d (%s) not found in the list of node %d" % (gm.idx, gm.proTx, idx))
+            gm2 = protxs[gm.proTx]
+            collateral = gm.collateral.to_json()
+            assert_equal(gm.owner, gm2["dgmstate"]["ownerAddress"])
+            assert_equal(gm.operator_pk, gm2["dgmstate"]["operatorPubKey"])
+            assert_equal(gm.voting, gm2["dgmstate"]["votingAddress"])
+            assert_equal(gm.ipport, gm2["dgmstate"]["service"])
+            assert_equal(gm.payee, gm2["dgmstate"]["payoutAddress"])
+            assert_equal(collateral["txid"], gm2["collateralHash"])
+            assert_equal(collateral["vout"], gm2["collateralIndex"])
 
-    def check_proreg_payload(self, dmn, json_tx):
+    def check_proreg_payload(self, dgm, json_tx):
         assert "payload" in json_tx
         # null hash if funding collateral
-        collateral_hash = 0 if int(json_tx["txid"], 16) == dmn.collateral.hash \
-                            else dmn.collateral.hash
+        collateral_hash = 0 if int(json_tx["txid"], 16) == dgm.collateral.hash \
+                            else dgm.collateral.hash
         pl = json_tx["payload"]
         assert_equal(pl["version"], 1)
         assert_equal(pl["collateralHash"], "%064x" % collateral_hash)
-        assert_equal(pl["collateralIndex"], dmn.collateral.n)
-        assert_equal(pl["service"], dmn.ipport)
-        assert_equal(pl["ownerAddress"], dmn.owner)
-        assert_equal(pl["votingAddress"], dmn.voting)
-        assert_equal(pl["operatorPubKey"], dmn.operator_pk)
-        assert_equal(pl["payoutAddress"], dmn.payee)
+        assert_equal(pl["collateralIndex"], dgm.collateral.n)
+        assert_equal(pl["service"], dgm.ipport)
+        assert_equal(pl["ownerAddress"], dgm.owner)
+        assert_equal(pl["votingAddress"], dgm.voting)
+        assert_equal(pl["operatorPubKey"], dgm.operator_pk)
+        assert_equal(pl["payoutAddress"], dgm.payee)
 
 # ------------------------------------------------------
 
@@ -1367,56 +1367,56 @@ class ExpectedDKGMessages:
         self.recv_justif = r_justif
         self.recv_commit = r_commit
 
-class HemisDMNTestFramework(HemisTestFramework):
+class HemisDGMTestFramework(HemisTestFramework):
 
     def set_base_test_params(self):
-        # 1 miner, 1 controller, 6 remote mns
+        # 1 miner, 1 controller, 6 remote gms
         self.num_nodes = 8
         self.minerPos = 0
         self.controllerPos = 1
         self.setup_clean_chain = True
 
-    def add_new_dmn(self, strType, op_keys=None, from_out=None):
-        self.mns.append(self.register_new_dmn(2 + len(self.mns),
+    def add_new_dgm(self, strType, op_keys=None, from_out=None):
+        self.gms.append(self.register_new_dgm(2 + len(self.gms),
                                              self.minerPos,
                                              self.controllerPos,
                                              strType,
                                              outpoint=from_out,
                                              op_blskeys=op_keys))
 
-    def check_mn_list(self):
+    def check_gm_list(self):
         for i in range(self.num_nodes):
-            self.check_mn_list_on_node(i, self.mns)
-        self.log.info("Deterministic list contains %d masternodes for all peers." % len(self.mns))
+            self.check_gm_list_on_node(i, self.gms)
+        self.log.info("Deterministic list contains %d gamemasters for all peers." % len(self.gms))
 
-    def check_mn_enabled_count(self, enabled, total):
+    def check_gm_enabled_count(self, enabled, total):
         for node in self.nodes:
-            node_count = node.getmasternodecount()
+            node_count = node.getgamemastercount()
             assert_equal(node_count['enabled'], enabled)
             assert_equal(node_count['total'], total)
 
-    def wait_until_mnsync_completed(self):
+    def wait_until_gmsync_completed(self):
         SYNC_FINISHED = [999] * self.num_nodes
         synced = [-1] * self.num_nodes
         timeout = time.time() + 120
         while synced != SYNC_FINISHED and time.time() < timeout:
-            synced = [node.mnsync("status")["RequestedMasternodeAssets"]
+            synced = [node.gmsync("status")["RequestedGamemasterAssets"]
                       for node in self.nodes]
             if synced != SYNC_FINISHED:
                 time.sleep(5)
         if synced != SYNC_FINISHED:
-            raise AssertionError("Unable to complete mnsync: %s" % str(synced))
+            raise AssertionError("Unable to complete gmsync: %s" % str(synced))
 
     def setup_test(self):
-        self.mns = []
+        self.gms = []
         self.disable_mocktime()
         connect_nodes_clique(self.nodes)
 
-        # Enforce mn payments and reject legacy mns at block 131
-        self.activate_spork(0, "SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT")
-        assert_equal("success", self.set_spork(self.minerPos, "SPORK_21_LEGACY_MNS_MAX_HEIGHT", 130))
+        # Enforce gm payments and reject legacy gms at block 131
+        self.activate_spork(0, "SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT")
+        assert_equal("success", self.set_spork(self.minerPos, "SPORK_21_LEGACY_GMS_MAX_HEIGHT", 130))
         time.sleep(1)
-        assert_equal([130] * self.num_nodes, [self.get_spork(x, "SPORK_21_LEGACY_MNS_MAX_HEIGHT")
+        assert_equal([130] * self.num_nodes, [self.get_spork(x, "SPORK_21_LEGACY_GMS_MAX_HEIGHT")
                                               for x in range(self.num_nodes)])
 
         # Enforce chainlocks activation at block 131
@@ -1429,61 +1429,61 @@ class HemisDMNTestFramework(HemisTestFramework):
         self.log.info("Mining...")
         self.nodes[self.minerPos].generate(10)
         self.sync_blocks()
-        self.wait_until_mnsync_completed()
+        self.wait_until_gmsync_completed()
         self.nodes[self.minerPos].generate(120)
         self.sync_blocks()
         self.assert_equal_for_all(130, "getblockcount")
 
-        # enabled/total masternodes: 0/0
-        self.check_mn_enabled_count(0, 0)
+        # enabled/total gamemasters: 0/0
+        self.check_gm_enabled_count(0, 0)
 
-        # Create 6 DMNs and init the remote nodes
-        self.log.info("Initializing masternodes...")
+        # Create 6 DGMs and init the remote nodes
+        self.log.info("Initializing gamemasters...")
         for _ in range(2):
-            self.add_new_dmn("internal")
-            self.add_new_dmn("external")
-            self.add_new_dmn("fund")
-        assert_equal(len(self.mns), 6)
-        for mn in self.mns:
-            self.nodes[mn.idx].initmasternode(mn.operator_sk)
+            self.add_new_dgm("internal")
+            self.add_new_dgm("external")
+            self.add_new_dgm("fund")
+        assert_equal(len(self.gms), 6)
+        for gm in self.gms:
+            self.nodes[gm.idx].initgamemaster(gm.operator_sk)
             time.sleep(1)
         self.nodes[self.minerPos].generate(1)
         self.sync_blocks()
 
-        # enabled/total masternodes: 6/6
-        self.check_mn_enabled_count(6, 6)
-        self.check_mn_list()
+        # enabled/total gamemasters: 6/6
+        self.check_gm_enabled_count(6, 6)
+        self.check_gm_list()
 
         # Check status from remote nodes
-        assert_equal([self.nodes[idx].getmasternodestatus()['status'] for idx in range(2, self.num_nodes)],
+        assert_equal([self.nodes[idx].getgamemasterstatus()['status'] for idx in range(2, self.num_nodes)],
                      ["Ready"] * (self.num_nodes - 2))
-        self.log.info("All masternodes ready.")
+        self.log.info("All gamemasters ready.")
 
     # LLMQ functions
 
     def get_quorum_connections(self, node, members):
         conn = []
-        for peer in [p for p in node.getpeerinfo() if p["masternode"]]:
-            x = [m for m in members if m.proTx == peer["verif_mn_proreg_tx_hash"]]
+        for peer in [p for p in node.getpeerinfo() if p["gamemaster"]]:
+            x = [m for m in members if m.proTx == peer["verif_gm_proreg_tx_hash"]]
             if len(x) > 0:
                 conn.append(x[0].idx)
         return conn
 
-    def wait_for_mn_connections(self, members):
-        def count_mn_conn(n):
+    def wait_for_gm_connections(self, members):
+        def count_gm_conn(n):
             return len(self.get_quorum_connections(n, members))
         ql = len(members)
-        wait_until(lambda: [count_mn_conn(self.nodes[mn.idx]) for mn in members] == [ql - 1] * ql)
-        for mn in members:
-            conn = self.get_quorum_connections(self.nodes[mn.idx], members)
-            self.log.info("Authenticated connections to node %d: %s" % (mn.idx, conn))
+        wait_until(lambda: [count_gm_conn(self.nodes[gm.idx]) for gm in members] == [ql - 1] * ql)
+        for gm in members:
+            conn = self.get_quorum_connections(self.nodes[gm.idx], members)
+            self.log.info("Authenticated connections to node %d: %s" % (gm.idx, conn))
 
     def wait_for_dkg_phase(self, phase, quorum_hash, quorum_height, members_online, expected_msgs_list):
         assert_equal(len(members_online), len(expected_msgs_list))
 
         def check_phase():
-            status = [self.nodes[mn.idx].quorumdkgstatus()["session"]
-                      for mn in members_online]
+            status = [self.nodes[gm.idx].quorumdkgstatus()["session"]
+                      for gm in members_online]
             for i, s in enumerate(status):
                 if "llmq_test" not in s:
                     return False
@@ -1535,7 +1535,7 @@ class HemisDMNTestFramework(HemisTestFramework):
         members = []
         # preserve getquorummembers order
         for protx in self.nodes[self.minerPos].getquorummembers(100, quorum_hash):
-            members.append(next(mn for mn in self.mns if mn.proTx == protx))
+            members.append(next(gm for gm in self.gms if gm.proTx == protx))
         return members
 
     def check_final_commitment(self, qfc, valid, signers):
@@ -1561,7 +1561,7 @@ class HemisDMNTestFramework(HemisTestFramework):
     """
     Returns pair (qfc, bad_member)
     qfc        : quorum final commitment json object
-    bad_member : Masternode object for non participating node
+    bad_member : Gamemaster object for non participating node
                  (or None if all members participated)
     """
     def mine_quorum(self, invalidate_func=None, invalidated_idx=None, skip_bad_member_sync=False,
@@ -1596,11 +1596,11 @@ class HemisDMNTestFramework(HemisTestFramework):
             self.log.info("Node %d selected as bad" % bad_member.idx)
         else:
             # No bad member selected with invalidated_idx set (the invalidated
-            # masternode is not part of the current quorum): reset expected messages
+            # gamemaster is not part of the current quorum): reset expected messages
             if invalidated_idx is not None:
                 expected_messages = [ExpectedDKGMessages() for _ in range(len(members))]
 
-        self.wait_for_mn_connections(members)
+        self.wait_for_gm_connections(members)
         phase_string = [
             "1 (Initialization)",
             "2 (Contribution)",
@@ -1639,66 +1639,66 @@ class HemisTier2TestFramework(HemisTestFramework):
         self.ownerTwoPos = 2
         self.remoteTwoPos = 3
         self.minerPos = 4
-        self.remoteDMN1Pos = 5
+        self.remoteDGM1Pos = 5
 
         self.extra_args = [["-nuparams=v5_shield:249", "-nuparams=hemis_v5.5:250", "-nuparams=v6_evo:250", "-whitelist=127.0.0.1"]] * self.num_nodes
-        for i in [self.remoteOnePos, self.remoteTwoPos, self.remoteDMN1Pos]:
+        for i in [self.remoteOnePos, self.remoteTwoPos, self.remoteDGM1Pos]:
             self.extra_args[i] += ["-listen", "-externalip=127.0.0.1"]
         self.extra_args[self.minerPos].append("-sporkkey=932HEevBSujW2ud7RfB1YF91AFygbBRQj3de3LyaCRqNzKKgWXi")
 
-        self.masternodeOneAlias = "mnOne"
-        self.masternodeTwoAlias = "mntwo"
+        self.gamemasterOneAlias = "gmOne"
+        self.gamemasterTwoAlias = "gmtwo"
 
-        self.mnOnePrivkey = "9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK"
-        self.mnTwoPrivkey = "92Hkebp3RHdDidGZ7ARgS4orxJAGyFUPDXNqtsYsiwho1HGVRbF"
+        self.gmOnePrivkey = "9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK"
+        self.gmTwoPrivkey = "92Hkebp3RHdDidGZ7ARgS4orxJAGyFUPDXNqtsYsiwho1HGVRbF"
 
-        # Updated in setup_3_masternodes_network() to be called at the start of run_test
+        # Updated in setup_3_gamemasters_network() to be called at the start of run_test
         self.ownerOne = None        # self.nodes[self.ownerOnePos]
         self.remoteOne = None       # self.nodes[self.remoteOnePos]
         self.ownerTwo = None        # self.nodes[self.ownerTwoPos]
         self.remoteTwo = None       # self.nodes[self.remoteTwoPos]
         self.miner = None           # self.nodes[self.minerPos]
-        self.remoteDMN1 = None       # self.nodes[self.remoteDMN1Pos]
-        self.mnOneCollateral = COutPoint()
-        self.mnTwoCollateral = COutPoint()
+        self.remoteDGM1 = None       # self.nodes[self.remoteDGM1Pos]
+        self.gmOneCollateral = COutPoint()
+        self.gmTwoCollateral = COutPoint()
         self.proRegTx1 = None       # hash of provider-register-tx
 
 
     def send_3_pings(self):
-        mns = [self.remoteOne, self.remoteTwo]
+        gms = [self.remoteOne, self.remoteTwo]
         self.advance_mocktime(30)
-        self.send_pings(mns)
-        self.stake(1, mns)
+        self.send_pings(gms)
+        self.stake(1, gms)
         self.advance_mocktime(30)
-        self.send_pings(mns)
+        self.send_pings(gms)
         time.sleep(2)
 
-    def stake(self, num_blocks, with_ping_mns=[]):
-        self.stake_and_ping(self.minerPos, num_blocks, with_ping_mns)
+    def stake(self, num_blocks, with_ping_gms=[]):
+        self.stake_and_ping(self.minerPos, num_blocks, with_ping_gms)
 
-    def controller_start_all_masternodes(self):
-        self.controller_start_masternode(self.ownerOne, self.masternodeOneAlias)
-        self.controller_start_masternode(self.ownerTwo, self.masternodeTwoAlias)
-        self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)
-        self.wait_until_mn_preenabled(self.mnTwoCollateral.hash, 40)
-        self.log.info("masternodes started, waiting until both get enabled..")
+    def controller_start_all_gamemasters(self):
+        self.controller_start_gamemaster(self.ownerOne, self.gamemasterOneAlias)
+        self.controller_start_gamemaster(self.ownerTwo, self.gamemasterTwoAlias)
+        self.wait_until_gm_preenabled(self.gmOneCollateral.hash, 40)
+        self.wait_until_gm_preenabled(self.gmTwoCollateral.hash, 40)
+        self.log.info("gamemasters started, waiting until both get enabled..")
         self.send_3_pings()
-        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [self.remoteOne, self.remoteTwo])
-        self.wait_until_mn_enabled(self.mnTwoCollateral.hash, 120, [self.remoteOne, self.remoteTwo])
-        self.log.info("masternodes enabled and running properly!")
+        self.wait_until_gm_enabled(self.gmOneCollateral.hash, 120, [self.remoteOne, self.remoteTwo])
+        self.wait_until_gm_enabled(self.gmTwoCollateral.hash, 120, [self.remoteOne, self.remoteTwo])
+        self.log.info("gamemasters enabled and running properly!")
 
     def advance_mocktime_and_stake(self, secs_to_add):
         self.advance_mocktime(secs_to_add - 60 + 1)
         self.mocktime = self.generate_pos(self.minerPos, self.mocktime)
         time.sleep(2)
 
-    def setup_3_masternodes_network(self):
+    def setup_3_gamemasters_network(self):
         self.ownerOne = self.nodes[self.ownerOnePos]
         self.remoteOne = self.nodes[self.remoteOnePos]
         self.ownerTwo = self.nodes[self.ownerTwoPos]
         self.remoteTwo = self.nodes[self.remoteTwoPos]
         self.miner = self.nodes[self.minerPos]
-        self.remoteDMN1 = self.nodes[self.remoteDMN1Pos]
+        self.remoteDGM1 = self.nodes[self.remoteDGM1Pos]
         ownerOneDir = os.path.join(self.options.tmpdir, "node%d" % self.ownerOnePos)
         ownerTwoDir = os.path.join(self.options.tmpdir, "node%d" % self.ownerTwoPos)
 
@@ -1710,58 +1710,58 @@ class HemisTier2TestFramework(HemisTestFramework):
         # Then start staking
         self.stake(6)
 
-        self.log.info("masternodes setup..")
-        # setup first masternode node, corresponding to nodeOne
-        self.mnOneCollateral = self.setupMasternode(
+        self.log.info("gamemasters setup..")
+        # setup first gamemaster node, corresponding to nodeOne
+        self.gmOneCollateral = self.setupGamemaster(
             self.ownerOne,
             self.miner,
-            self.masternodeOneAlias,
+            self.gamemasterOneAlias,
             os.path.join(ownerOneDir, "regtest"),
             self.remoteOnePos,
-            self.mnOnePrivkey)
-        # setup second masternode node, corresponding to nodeTwo
-        self.mnTwoCollateral = self.setupMasternode(
+            self.gmOnePrivkey)
+        # setup second gamemaster node, corresponding to nodeTwo
+        self.gmTwoCollateral = self.setupGamemaster(
             self.ownerTwo,
             self.miner,
-            self.masternodeTwoAlias,
+            self.gamemasterTwoAlias,
             os.path.join(ownerTwoDir, "regtest"),
             self.remoteTwoPos,
-            self.mnTwoPrivkey)
-        # setup deterministic masternode
-        self.proRegTx1, self.dmn1Privkey = self.setupDMN(
+            self.gmTwoPrivkey)
+        # setup deterministic gamemaster
+        self.proRegTx1, self.dgm1Privkey = self.setupDGM(
             self.ownerOne,
             self.miner,
-            self.remoteDMN1Pos,
+            self.remoteDGM1Pos,
             "fund"
         )
 
-        self.log.info("masternodes setup completed, initializing them..")
+        self.log.info("gamemasters setup completed, initializing them..")
 
-        # now both are configured, let's activate the masternodes
+        # now both are configured, let's activate the gamemasters
         self.stake(1)
         time.sleep(3)
         self.advance_mocktime(10)
         remoteOnePort = p2p_port(self.remoteOnePos)
         remoteTwoPort = p2p_port(self.remoteTwoPos)
-        self.remoteOne.initmasternode(self.mnOnePrivkey, "127.0.0.1:"+str(remoteOnePort))
-        self.remoteTwo.initmasternode(self.mnTwoPrivkey, "127.0.0.1:"+str(remoteTwoPort))
-        self.remoteDMN1.initmasternode(self.dmn1Privkey)
+        self.remoteOne.initgamemaster(self.gmOnePrivkey, "127.0.0.1:"+str(remoteOnePort))
+        self.remoteTwo.initgamemaster(self.gmTwoPrivkey, "127.0.0.1:"+str(remoteTwoPort))
+        self.remoteDGM1.initgamemaster(self.dgm1Privkey)
 
-        # wait until mnsync complete on all nodes
+        # wait until gmsync complete on all nodes
         self.stake(1)
-        self.wait_until_mnsync_finished()
-        self.log.info("tier two synced! starting masternodes..")
+        self.wait_until_gmsync_finished()
+        self.log.info("tier two synced! starting gamemasters..")
 
-        # Now everything is set, can start both masternodes
-        self.controller_start_all_masternodes()
+        # Now everything is set, can start both gamemasters
+        self.controller_start_all_gamemasters()
 
-    def spend_collateral(self, mnOwner, collateralOutpoint, miner):
+    def spend_collateral(self, gmOwner, collateralOutpoint, miner):
         send_value = satoshi_round(100 - 0.001)
         inputs = [{'txid': collateralOutpoint.hash, 'vout': collateralOutpoint.n}]
         outputs = {}
-        outputs[mnOwner.getnewaddress()] = float(send_value)
-        rawtx = mnOwner.createrawtransaction(inputs, outputs)
-        signedtx = mnOwner.signrawtransaction(rawtx)
+        outputs[gmOwner.getnewaddress()] = float(send_value)
+        rawtx = gmOwner.createrawtransaction(inputs, outputs)
+        signedtx = gmOwner.signrawtransaction(rawtx)
         txid = miner.sendrawtransaction(signedtx['hex'])
         self.sync_mempools()
         self.log.info("Collateral spent in %s" % txid)

@@ -7,7 +7,7 @@
 #include "quorums_signing_shares.h"
 #include "quorums_utils.h"
 
-#include "activemasternode.h"
+#include "activegamemaster.h"
 #include "bls/bls_batchverifier.h"
 #include "cxxtimer.h"
 #include "net_processing.h"
@@ -417,7 +417,7 @@ void CSigningManager::ProcessRecoveredSig(NodeId nodeId, const CRecoveredSig& re
             signHash.ToString(), recoveredSig.id.ToString(), recoveredSig.msgHash.ToString(), nodeId);
 
         if (db.HasRecoveredSigForId(llmqType, recoveredSig.id)) {
-            // this should really not happen, as each masternode is participating in only one vote,
+            // this should really not happen, as each gamemaster is participating in only one vote,
             // even if it's a member of multiple quorums. so a majority is only possible on one quorum and one msgHash per id
             LogPrintf("CSigningManager::%s -- conflicting recoveredSig for id=%s, msgHash=%s\n", __func__,
                 recoveredSig.id.ToString(), recoveredSig.msgHash.ToString());
@@ -465,7 +465,7 @@ bool CSigningManager::AsyncSignIfMember(Consensus::LLMQType llmqType, const uint
 {
     auto& params = Params().GetConsensus().llmqs.at(llmqType);
 
-    if (!activeMasternodeManager) {
+    if (!activeGamemasterManager) {
         return false;
     }
 
@@ -504,7 +504,7 @@ bool CSigningManager::AsyncSignIfMember(Consensus::LLMQType llmqType, const uint
         return false;
     }
 
-    if (!quorum->IsValidMember(activeMasternodeManager->GetProTx())) {
+    if (!quorum->IsValidMember(activeGamemasterManager->GetProTx())) {
         // LogPrintf("CSigningManager::%s -- we're not a valid member of quorum %s\n", __func__, quorum->quorumHash.ToString());
         return false;
     }

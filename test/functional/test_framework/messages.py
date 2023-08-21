@@ -282,15 +282,15 @@ class CInv:
         4: "MSG_TXLOCK_REQUEST",
         5: "MSG_TXLOCK_VOTE",
         6: "MSG_SPORK",
-        7: "MSG_MASTERNODE_WINNER",
-        8: "MSG_MASTERNODE_SCANNING_ERROR",
+        7: "MSG_GAMEMASTER_WINNER",
+        8: "MSG_GAMEMASTER_SCANNING_ERROR",
         9: "MSG_BUDGET_VOTE",
         10: "MSG_BUDGET_PROPOSAL",
         11: "MSG_BUDGET_FINALIZED",
         12: "MSG_BUDGET_FINALIZED_VOTE",
-        13: "MSG_MASTERNODE_QUORUM",
-        15: "MSG_MASTERNODE_ANNOUNCE",
-        16: "MSG_MASTERNODE_PING",
+        13: "MSG_GAMEMASTER_QUORUM",
+        15: "MSG_GAMEMASTER_ANNOUNCE",
+        16: "MSG_GAMEMASTER_PING",
         17: "MSG_DSTX"
     }
 
@@ -959,7 +959,7 @@ class CMerkleBlock:
 class msg_version:
     command = b"version"
 
-    def __init__(self, mn_auth_challenge=0):
+    def __init__(self, gm_auth_challenge=0):
         self.nVersion = MY_VERSION
         self.nServices = NODE_NETWORK
         self.nTime = int(time.time())
@@ -969,7 +969,7 @@ class msg_version:
         self.strSubVer = MY_SUBVERSION
         self.nStartingHeight = -1
         self.nRelay = MY_RELAY
-        self.mn_auth_challenge = mn_auth_challenge
+        self.gm_auth_challenge = gm_auth_challenge
 
     def deserialize(self, f):
         self.nVersion = struct.unpack("<i", f.read(4))[0]
@@ -1007,9 +1007,9 @@ class msg_version:
 
         if self.nVersion >= 70925:
             try:
-                self.mn_auth_challenge = deser_uint256(f)
+                self.gm_auth_challenge = deser_uint256(f)
             except:
-                self.mn_auth_challenge = 0
+                self.gm_auth_challenge = 0
 
 
     def serialize(self):
@@ -1023,8 +1023,8 @@ class msg_version:
         r += ser_string(self.strSubVer.encode('utf-8'))
         r += struct.pack("<i", self.nStartingHeight)
         r += struct.pack("<b", self.nRelay)
-        if self.mn_auth_challenge != 0:
-            r += ser_uint256(self.mn_auth_challenge)
+        if self.gm_auth_challenge != 0:
+            r += ser_uint256(self.gm_auth_challenge)
         return r
 
     def __repr__(self):
@@ -1155,8 +1155,8 @@ class msg_getblocks:
         return "msg_getblocks(locator=%s hashstop=%064x)" \
             % (repr(self.locator), self.hashstop)
 
-class msg_mnping:
-    command = b"mnp"
+class msg_gmping:
+    command = b"gmp"
 
     def __init__(self, _vin, _blockhash, _sigtime):
         self.vin = _vin
@@ -1188,7 +1188,7 @@ class msg_mnping:
         return self.cached_hash
 
     def __repr__(self):
-        return "msg_mnping(vin=%s blockhash=%064x)" \
+        return "msg_gmping(vin=%s blockhash=%064x)" \
                % (repr(self.vin), self.blockhash)
 
 class msg_tx:
@@ -1478,7 +1478,7 @@ class msg_witness_blocktxn(msg_blocktxn):
 
 
 # hemis Classes
-class Masternode(object):
+class Gamemaster(object):
     def __init__(self, idx, owner_addr, operator_pk, voting_addr, ipport, payout_addr, operator_sk):
         self.idx = idx
         self.owner = owner_addr
@@ -1496,7 +1496,7 @@ class Masternode(object):
         self.operator_sk = None
 
     def __repr__(self):
-        return "Masternode(idx=%d, owner=%s, operator=%s, voting=%s, ip=%s, payee=%s, opkey=%s, protx=%s, collateral=%s)" % (
+        return "Gamemaster(idx=%d, owner=%s, operator=%s, voting=%s, ip=%s, payee=%s, opkey=%s, protx=%s, collateral=%s)" % (
             self.idx, str(self.owner), str(self.operator_pk), str(self.voting), str(self.ipport),
             str(self.payee), str(self.operator_sk), str(self.proTx), str(self.collateral)
         )

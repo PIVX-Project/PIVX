@@ -18,7 +18,7 @@
 #include "walletmodel.h"
 #include "addresstablemodel.h"
 
-#include "masternode-sync.h" // for MASTERNODE_SYNC_THRESHOLD
+#include "gamemaster-sync.h" // for GAMEMASTER_SYNC_THRESHOLD
 #include "tiertwo/tiertwo_sync_state.h"
 
 #include <QPixmap>
@@ -499,15 +499,15 @@ void TopBar::setNumBlocks(int count)
         } else {
 
             // TODO: Show out of sync warning
-            int RequestedMasternodeAssets = g_tiertwo_sync_state.GetSyncPhase();
-            int nAttempt = masternodeSync.RequestedMasternodeAttempt < MASTERNODE_SYNC_THRESHOLD ?
-                           masternodeSync.RequestedMasternodeAttempt + 1 :
-                           MASTERNODE_SYNC_THRESHOLD;
-            int progress = nAttempt + (RequestedMasternodeAssets - 1) * MASTERNODE_SYNC_THRESHOLD;
+            int RequestedGamemasterAssets = g_tiertwo_sync_state.GetSyncPhase();
+            int nAttempt = gamemasterSync.RequestedGamemasterAttempt < GAMEMASTER_SYNC_THRESHOLD ?
+                           gamemasterSync.RequestedGamemasterAttempt + 1 :
+                           GAMEMASTER_SYNC_THRESHOLD;
+            int progress = nAttempt + (RequestedGamemasterAssets - 1) * GAMEMASTER_SYNC_THRESHOLD;
             if (progress >= 0) {
-                // todo: MN progress..
-                text = strprintf("%s - Block: %d", masternodeSync.GetSyncStatus(), count);
-                //progressBar->setMaximum(4 * MASTERNODE_SYNC_THRESHOLD);
+                // todo: GM progress..
+                text = strprintf("%s - Block: %d", gamemasterSync.GetSyncStatus(), count);
+                //progressBar->setMaximum(4 * GAMEMASTER_SYNC_THRESHOLD);
                 //progressBar->setValue(progress);
                 needState = false;
             }

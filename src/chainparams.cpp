@@ -313,10 +313,10 @@ public:
         consensus.nFutureTimeDriftPoW = 7200;
         consensus.nFutureTimeDriftPoS = 180;
         consensus.nMaxMoneyOut = 10000000 * COIN;
-        consensus.nMNCollateralAmt = 1000 * COIN;
-        consensus.nMNBlockReward = 3 * COIN;
-        consensus.nNewMNBlockReward = 6 * COIN;
-        consensus.nMNCollateralMinConf = 15;
+        consensus.nGMCollateralAmt = 1000 * COIN;
+        consensus.nGMBlockReward = 3 * COIN;
+        consensus.nNewGMBlockReward = 6 * COIN;
+        consensus.nGMCollateralMinConf = 15;
         consensus.nProposalEstablishmentTime = 60 * 60 * 24;    // must be at least a day old to make it into a budget
         consensus.nStakeMinAge = 60 * 60;
         consensus.nStakeMinDepth = 600;
@@ -328,9 +328,6 @@ public:
 
         // spork keys
         consensus.strSporkPubKey = "04a47ab30df33aad81929a2704ae1ba2d5d5d26c26549940c3126fd0941856088e2c0d57b65a32c46f19dd855cd999eb3a675c7a01e20ca0ba3ca0f32a225fcb1e";
-        consensus.strSporkPubKeyOld = "040F129DE6546FE405995329A887329BED4321325B1A73B0A257423C05C1FCFE9E40EF0678AEF59036A22C42E61DFD29DF7EFB09F56CC73CADF64E05741880E3E7";
-        consensus.nTime_EnforceNewSporkKey = 1808512400;    //!> December 21, 2020 01:00:00 AM GMT
-        consensus.nTime_RejectOldSporkKey = 1814560400;     //!> March 1, 2021 01:00:00 AM GMT
 
         // height-based activations
         consensus.height_last_invalid_UTXO = 1;
@@ -477,10 +474,10 @@ public:
         consensus.nFutureTimeDriftPoW = 7200;
         consensus.nFutureTimeDriftPoS = 180;
         consensus.nMaxMoneyOut = 21000000 * COIN;
-        consensus.nMNCollateralAmt = 10000 * COIN;
-        consensus.nMNBlockReward = 3 * COIN;
-        consensus.nNewMNBlockReward = 6 * COIN;
-        consensus.nMNCollateralMinConf = 15;
+        consensus.nGMCollateralAmt = 10000 * COIN;
+        consensus.nGMBlockReward = 3 * COIN;
+        consensus.nNewGMBlockReward = 6 * COIN;
+        consensus.nGMCollateralMinConf = 15;
         consensus.nProposalEstablishmentTime = 60 * 5;  // at least 5 min old to make it into a budget
         consensus.nStakeMinAge = 60 * 60;
         consensus.nStakeMinDepth = 100;
@@ -492,9 +489,6 @@ public:
 
         // spork keys
         consensus.strSporkPubKey = "04a47ab30df33aad81929a2704ae1ba2d5d5d26c26549940c3126fd0941856088e2c0d57b65a32c46f19dd855cd999eb3a675c7a01e20ca0ba3ca0f32a225fcb1e";
-        consensus.strSporkPubKeyOld = "04E88BB455E2A04E65FCC41D88CD367E9CCE1F5A409BE94D8C2B4B35D223DED9C8E2F4E061349BA3A38839282508066B6DC4DB72DD432AC4067991E6BF20176127";
-        consensus.nTime_EnforceNewSporkKey = 1608512400;    //!> December 21, 2020 01:00:00 AM GMT
-        consensus.nTime_RejectOldSporkKey = 1614560400;     //!> March 1, 2021 01:00:00 AM GMT
 
         // height based activations
         consensus.height_last_invalid_UTXO = -1;
@@ -621,10 +615,10 @@ public:
         consensus.nFutureTimeDriftPoW = 7200;
         consensus.nFutureTimeDriftPoS = 180;
         consensus.nMaxMoneyOut = 43199500 * COIN;
-        consensus.nMNCollateralAmt = 100 * COIN;
-        consensus.nMNBlockReward = 3 * COIN;
-        consensus.nNewMNBlockReward = 6 * COIN;
-        consensus.nMNCollateralMinConf = 1;
+        consensus.nGMCollateralAmt = 100 * COIN;
+        consensus.nGMBlockReward = 3 * COIN;
+        consensus.nNewGMBlockReward = 6 * COIN;
+        consensus.nGMCollateralMinConf = 1;
         consensus.nProposalEstablishmentTime = 60 * 5;  // at least 5 min old to make it into a budget
         consensus.nStakeMinAge = 0;
         consensus.nStakeMinDepth = 20;
@@ -640,9 +634,6 @@ public:
         Address: yCvUVd72w7xpimf981m114FSFbmAmne7j9
         */
         consensus.strSporkPubKey = "043969b1b0e6f327de37f297a015d37e2235eaaeeb3933deecd8162c075cee0207b13537618bde640879606001a8136091c62ec272dd0133424a178704e6e75bb7";
-        consensus.strSporkPubKeyOld = "";
-        consensus.nTime_EnforceNewSporkKey = 0;
-        consensus.nTime_RejectOldSporkKey = 0;
 
         // height based activations
         consensus.height_last_invalid_UTXO = -1;

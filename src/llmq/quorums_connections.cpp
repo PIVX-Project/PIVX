@@ -5,11 +5,11 @@
 
 #include "llmq/quorums_connections.h"
 
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "llmq/quorums.h"
 #include "net.h"
-#include "tiertwo/masternode_meta_manager.h" // for g_mmetaman
-#include "tiertwo/net_masternodes.h"
+#include "tiertwo/gamemaster_meta_manager.h" // for g_mmetaman
+#include "tiertwo/net_gamemasters.h"
 #include "validation.h"
 
 #include <vector>
@@ -21,7 +21,7 @@ namespace llmq
 uint256 DeterministicOutboundConnection(const uint256& proTxHash1, const uint256& proTxHash2)
 {
     // We need to deterministically select who is going to initiate the connection. The naive way would be to simply
-    // return the min(proTxHash1, proTxHash2), but this would create a bias towards MNs with a numerically low
+    // return the min(proTxHash1, proTxHash2), but this would create a bias towards GMs with a numerically low
     // hash. To fix this, we return the proTxHash that has the lowest value of:
     //   hash(min(proTxHash1, proTxHash2), max(proTxHash1, proTxHash2), proTxHashX)
     // where proTxHashX is the proTxHash to compare
@@ -40,14 +40,14 @@ uint256 DeterministicOutboundConnection(const uint256& proTxHash1, const uint256
     return proTxHash2;
 }
 
-std::set<uint256> GetQuorumRelayMembers(const std::vector<CDeterministicMNCPtr>& mnList,
+std::set<uint256> GetQuorumRelayMembers(const std::vector<CDeterministicGMCPtr>& gmList,
                                         unsigned int forMemberIndex)
 {
-    assert(forMemberIndex < mnList.size());
+    assert(forMemberIndex < gmList.size());
 
     // Special case
-    if (mnList.size() == 2) {
-        return {mnList[1 - forMemberIndex]->proTxHash};
+    if (gmList.size() == 2) {
+        return {gmList[1 - forMemberIndex]->proTxHash};
     }
 
     // Relay to nodes at indexes (i+2^k)%n, where
@@ -55,30 +55,30 @@ std::set<uint256> GetQuorumRelayMembers(const std::vector<CDeterministicMNCPtr>&
     //   n: size of the quorum/ring
     std::set<uint256> r;
     int gap = 1;
-    int gap_max = (int)mnList.size() - 1;
+    int gap_max = (int)gmList.size() - 1;
     int k = 0;
     while ((gap_max >>= 1) || k <= 1) {
-        size_t idx = (forMemberIndex + gap) % mnList.size();
-        r.emplace(mnList[idx]->proTxHash);
+        size_t idx = (forMemberIndex + gap) % gmList.size();
+        r.emplace(gmList[idx]->proTxHash);
         gap <<= 1;
         k++;
     }
     return r;
 }
 
-static std::set<uint256> GetQuorumConnections(const std::vector<CDeterministicMNCPtr>& mns, const uint256& forMember, bool onlyOutbound)
+static std::set<uint256> GetQuorumConnections(const std::vector<CDeterministicGMCPtr>& gms, const uint256& forMember, bool onlyOutbound)
 {
     std::set<uint256> result;
-    for (auto& dmn : mns) {
-        if (dmn->proTxHash == forMember) {
+    for (auto& dgm : gms) {
+        if (dgm->proTxHash == forMember) {
             continue;
         }
-        // Determine which of the two MNs (forMember vs dmn) should initiate the outbound connection and which
+        // Determine which of the two GMs (forMember vs dgm) should initiate the outbound connection and which
         // one should wait for the inbound connection. We do this in a deterministic way, so that even when we
         // end up with both connecting to each other, we know which one to disconnect
-        uint256 deterministicOutbound = DeterministicOutboundConnection(forMember, dmn->proTxHash);
-        if (!onlyOutbound || deterministicOutbound == dmn->proTxHash) {
-            result.emplace(dmn->proTxHash);
+        uint256 deterministicOutbound = DeterministicOutboundConnection(forMember, dgm->proTxHash);
+        if (!onlyOutbound || deterministicOutbound == dgm->proTxHash) {
+            result.emplace(dgm->proTxHash);
         }
     }
     return result;
@@ -133,7 +133,7 @@ void EnsureLatestQuorumConnections(Consensus::LLMQType llmqType, const CBlockInd
     }
 
     for (auto& qh : connmanQuorumsToDelete) {
-        LogPrintf("CQuorumManager::%s -- removing masternodes quorum connections for quorum %s:\n", __func__, qh.ToString());
+        LogPrintf("CQuorumManager::%s -- removing gamemasters quorum connections for quorum %s:\n", __func__, qh.ToString());
         connman->removeQuorumNodes(llmqType, qh);
     }
 }
@@ -141,8 +141,8 @@ void EnsureLatestQuorumConnections(Consensus::LLMQType llmqType, const CBlockInd
 // ensure connection to a given quorum
 void EnsureQuorumConnections(Consensus::LLMQType llmqType, const CBlockIndex* pindexQuorum, const uint256& myProTxHash)
 {
-    const auto& members = deterministicMNManager->GetAllQuorumMembers(llmqType, pindexQuorum);
-    auto itMember = std::find_if(members.begin(), members.end(), [&](const CDeterministicMNCPtr& dmn) { return dmn->proTxHash == myProTxHash; });
+    const auto& members = deterministicGMManager->GetAllQuorumMembers(llmqType, pindexQuorum);
+    auto itMember = std::find_if(members.begin(), members.end(), [&](const CDeterministicGMCPtr& dgm) { return dgm->proTxHash == myProTxHash; });
     bool isMember = itMember != members.end();
 
     if (!isMember) { // && !CLLMQUtils::IsWatchQuorumsEnabled()) {
@@ -165,14 +165,14 @@ void EnsureQuorumConnections(Consensus::LLMQType llmqType, const CBlockIndex* pi
     if (!connections.empty()) {
         auto connman = g_connman->GetTierTwoConnMan();
         if (!connman->hasQuorumNodes(llmqType, pindexQuorum->GetBlockHash()) && LogAcceptCategory(BCLog::LLMQ)) {
-            auto mnList = deterministicMNManager->GetListAtChainTip();
-            std::string debugMsg = strprintf("CLLMQUtils::%s -- adding masternodes quorum connections for quorum %s:\n", __func__, pindexQuorum->GetBlockHash().ToString());
+            auto gmList = deterministicGMManager->GetListAtChainTip();
+            std::string debugMsg = strprintf("CLLMQUtils::%s -- adding gamemasters quorum connections for quorum %s:\n", __func__, pindexQuorum->GetBlockHash().ToString());
             for (auto& c : connections) {
-                auto dmn = mnList.GetValidMN(c);
-                if (!dmn) {
-                    debugMsg += strprintf("  %s (not in valid MN set anymore)\n", c.ToString());
+                auto dgm = gmList.GetValidGM(c);
+                if (!dgm) {
+                    debugMsg += strprintf("  %s (not in valid GM set anymore)\n", c.ToString());
                 } else {
-                    debugMsg += strprintf("  %s (%s)\n", c.ToString(), dmn->pdmnState->addr.ToString());
+                    debugMsg += strprintf("  %s (%s)\n", c.ToString(), dgm->pdgmState->addr.ToString());
                 }
             }
             LogPrint(BCLog::LLMQ, debugMsg.c_str()); /* Continued */
@@ -181,38 +181,38 @@ void EnsureQuorumConnections(Consensus::LLMQType llmqType, const CBlockIndex* pi
     }
     if (!relayMembers.empty()) {
         auto connman = g_connman->GetTierTwoConnMan();
-        connman->setMasternodeQuorumRelayMembers(llmqType, pindexQuorum->GetBlockHash(), relayMembers);
+        connman->setGamemasterQuorumRelayMembers(llmqType, pindexQuorum->GetBlockHash(), relayMembers);
     }
 }
 
 void AddQuorumProbeConnections(Consensus::LLMQType llmqType, const CBlockIndex *pindexQuorum, const uint256 &myProTxHash)
 {
-    auto members = deterministicMNManager->GetAllQuorumMembers(llmqType, pindexQuorum);
+    auto members = deterministicGMManager->GetAllQuorumMembers(llmqType, pindexQuorum);
     auto curTime = GetAdjustedTime();
 
     std::set<uint256> probeConnections;
-    for (auto& dmn : members) {
-        if (dmn->proTxHash == myProTxHash) {
+    for (auto& dgm : members) {
+        if (dgm->proTxHash == myProTxHash) {
             continue;
         }
-        auto lastOutbound = g_mmetaman.GetMetaInfo(dmn->proTxHash)->GetLastOutboundSuccess();
+        auto lastOutbound = g_mmetaman.GetMetaInfo(dgm->proTxHash)->GetLastOutboundSuccess();
         // re-probe after 50 minutes so that the "good connection" check in the DKG doesn't fail just because we're on
         // the brink of timeout
         if (curTime - lastOutbound > 50 * 60) {
-            probeConnections.emplace(dmn->proTxHash);
+            probeConnections.emplace(dgm->proTxHash);
         }
     }
 
     if (!probeConnections.empty()) {
         if (LogAcceptCategory(BCLog::LLMQ)) {
-            auto mnList = deterministicMNManager->GetListAtChainTip();
-            std::string debugMsg = strprintf("CLLMQUtils::%s -- adding masternodes probes for quorum %s:\n", __func__, pindexQuorum->GetBlockHash().ToString());
+            auto gmList = deterministicGMManager->GetListAtChainTip();
+            std::string debugMsg = strprintf("CLLMQUtils::%s -- adding gamemasters probes for quorum %s:\n", __func__, pindexQuorum->GetBlockHash().ToString());
             for (auto& c : probeConnections) {
-                auto dmn = mnList.GetValidMN(c);
-                if (!dmn) {
-                    debugMsg += strprintf("  %s (not in valid MN set anymore)\n", c.ToString());
+                auto dgm = gmList.GetValidGM(c);
+                if (!dgm) {
+                    debugMsg += strprintf("  %s (not in valid GM set anymore)\n", c.ToString());
                 } else {
-                    debugMsg += strprintf("  %s (%s)\n", c.ToString(), dmn->pdmnState->addr.ToString());
+                    debugMsg += strprintf("  %s (%s)\n", c.ToString(), dgm->pdgmState->addr.ToString());
                 }
             }
             LogPrint(BCLog::LLMQ, debugMsg.c_str()); /* Continued */

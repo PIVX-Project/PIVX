@@ -2,13 +2,13 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MASTERNODEWIZARDDIALOG_H
-#define MASTERNODEWIZARDDIALOG_H
+#ifndef GAMEMASTERWIZARDDIALOG_H
+#define GAMEMASTERWIZARDDIALOG_H
 
-#include "qt/pivx/focuseddialog.h"
-#include "qt/pivx/snackbar.h"
-#include "masternodeconfig.h"
-#include "qt/pivx/pwidget.h"
+#include "qt/hemis/focuseddialog.h"
+#include "qt/hemis/snackbar.h"
+#include "gamemasterconfig.h"
+#include "qt/hemis/pwidget.h"
 
 class MNModel;
 class WalletModel;
@@ -32,7 +32,7 @@ public:
 
     QString returnStr = "";
     bool isOk = false;
-    CMasternodeConfig::CMasternodeEntry* mnEntry = nullptr;
+    CGamemasterConfig::CGamemasterEntry* mnEntry = nullptr;
 
 private Q_SLOTS:
     void accept() override;
@@ -51,4 +51,4 @@ private:
     void inform(const QString& text);
 };
 
-#endif // MASTERNODEWIZARDDIALOG_H
+#endif // GAMEMASTERWIZARDDIALOG_H

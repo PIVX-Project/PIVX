@@ -139,7 +139,7 @@ void MnSelectionDialog::appendItem(QFlags<Qt::ItemFlag> flgCheckbox,
     itemOutput->setCheckState(COLUMN_CHECKBOX, Qt::Unchecked);
     itemOutput->setText(COLUMN_NAME, mnName);
     itemOutput->setText(COLUMN_STATUS, mnStatus);
-    itemOutput->setToolTip(COLUMN_STATUS, "Masternode status"); // future: add status description
+    itemOutput->setToolTip(COLUMN_STATUS, "Gamemaster status"); // future: add status description
     itemOutput->setTextAlignment(COLUMN_STATUS, Qt::AlignHCenter);
     itemOutput->setTextAlignment(COLUMN_VOTE, Qt::AlignHCenter);
     if (ptrVoteInfo) {
@@ -147,7 +147,7 @@ void MnSelectionDialog::appendItem(QFlags<Qt::ItemFlag> flgCheckbox,
         itemOutput->setToolTip(COLUMN_VOTE, tr("The direction of the already broadcasted vote"));
     } else {
         itemOutput->setText(COLUMN_VOTE, "-");
-        itemOutput->setToolTip(COLUMN_VOTE, tr("No vote has been emitted from this Masternode"));
+        itemOutput->setToolTip(COLUMN_VOTE, tr("No vote has been emitted from this Gamemaster"));
     }
 
     if (std::find(selectedMnList.begin(), selectedMnList.end(), mnName.toStdString()) != selectedMnList.end()) {

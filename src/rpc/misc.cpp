@@ -9,11 +9,11 @@
 #include "httpserver.h"
 #include "key_io.h"
 #include "sapling/key_io_sapling.h"
-#include "masternode-sync.h"
+#include "gamemaster-sync.h"
 #include "messagesigner.h"
 #include "net.h"
 #include "netbase.h"
-#include "tiertwo/net_masternodes.h"
+#include "tiertwo/net_gamemasters.h"
 #include "rpc/server.h"
 #include "spork.h"
 #include "timedata.h"
@@ -101,7 +101,7 @@ UniValue getinfo(const JSONRPCRequest& request)
                     services+= "NETWORK/";
                     break;
                 case NODE_BLOOM:
-                case NODE_BLOOM_WITHOUT_MN:
+                case NODE_BLOOM_WITHOUT_GM:
                     services+= "BLOOM/";
                     break;
                 default:
@@ -154,7 +154,7 @@ UniValue getinfo(const JSONRPCRequest& request)
     return obj;
 }
 
-UniValue mnsync(const JSONRPCRequest& request)
+UniValue gmsync(const JSONRPCRequest& request)
 {
     std::string strMode;
     if (request.params.size() == 1)
@@ -162,7 +162,7 @@ UniValue mnsync(const JSONRPCRequest& request)
 
     if (request.fHelp || request.params.size() != 1 || (strMode != "status" && strMode != "reset")) {
         throw std::runtime_error(
-            "mnsync \"status|reset\"\n"
+            "gmsync \"status|reset\"\n"
             "\nReturns the sync status or resets sync.\n"
 
             "\nArguments:\n"
@@ -171,55 +171,55 @@ UniValue mnsync(const JSONRPCRequest& request)
             "\nResult ('status' mode):\n"
             "{\n"
             "  \"IsBlockchainSynced\": true|false,    (boolean) 'true' if blockchain is synced\n"
-            "  \"lastMasternodeList\": xxxx,        (numeric) Timestamp of last MN list message\n"
-            "  \"lastMasternodeWinner\": xxxx,      (numeric) Timestamp of last MN winner message\n"
-            "  \"lastBudgetItem\": xxxx,            (numeric) Timestamp of last MN budget message\n"
+            "  \"lastGamemasterList\": xxxx,        (numeric) Timestamp of last GM list message\n"
+            "  \"lastGamemasterWinner\": xxxx,      (numeric) Timestamp of last GM winner message\n"
+            "  \"lastBudgetItem\": xxxx,            (numeric) Timestamp of last GM budget message\n"
             "  \"lastFailure\": xxxx,           (numeric) Timestamp of last failed sync\n"
             "  \"nCountFailures\": n,           (numeric) Number of failed syncs (total)\n"
-            "  \"sumMasternodeList\": n,        (numeric) Number of MN list messages (total)\n"
-            "  \"sumMasternodeWinner\": n,      (numeric) Number of MN winner messages (total)\n"
-            "  \"sumBudgetItemProp\": n,        (numeric) Number of MN budget messages (total)\n"
-            "  \"sumBudgetItemFin\": n,         (numeric) Number of MN budget finalization messages (total)\n"
-            "  \"countMasternodeList\": n,      (numeric) Number of MN list messages (local)\n"
-            "  \"countMasternodeWinner\": n,    (numeric) Number of MN winner messages (local)\n"
-            "  \"countBudgetItemProp\": n,      (numeric) Number of MN budget messages (local)\n"
-            "  \"countBudgetItemFin\": n,       (numeric) Number of MN budget finalization messages (local)\n"
-            "  \"RequestedMasternodeAssets\": n, (numeric) Status code of last sync phase\n"
-            "  \"RequestedMasternodeAttempt\": n, (numeric) Status code of last sync attempt\n"
+            "  \"sumGamemasterList\": n,        (numeric) Number of GM list messages (total)\n"
+            "  \"sumGamemasterWinner\": n,      (numeric) Number of GM winner messages (total)\n"
+            "  \"sumBudgetItemProp\": n,        (numeric) Number of GM budget messages (total)\n"
+            "  \"sumBudgetItemFin\": n,         (numeric) Number of GM budget finalization messages (total)\n"
+            "  \"countGamemasterList\": n,      (numeric) Number of GM list messages (local)\n"
+            "  \"countGamemasterWinner\": n,    (numeric) Number of GM winner messages (local)\n"
+            "  \"countBudgetItemProp\": n,      (numeric) Number of GM budget messages (local)\n"
+            "  \"countBudgetItemFin\": n,       (numeric) Number of GM budget finalization messages (local)\n"
+            "  \"RequestedGamemasterAssets\": n, (numeric) Status code of last sync phase\n"
+            "  \"RequestedGamemasterAttempt\": n, (numeric) Status code of last sync attempt\n"
             "}\n"
 
             "\nResult ('reset' mode):\n"
             "\"status\"     (string) 'success'\n"
 
             "\nExamples:\n" +
-            HelpExampleCli("mnsync", "\"status\"") + HelpExampleRpc("mnsync", "\"status\""));
+            HelpExampleCli("gmsync", "\"status\"") + HelpExampleRpc("gmsync", "\"status\""));
     }
 
     if (strMode == "status") {
         UniValue obj(UniValue::VOBJ);
 
         obj.pushKV("IsBlockchainSynced", g_tiertwo_sync_state.IsBlockchainSynced());
-        obj.pushKV("lastMasternodeList", g_tiertwo_sync_state.GetlastMasternodeList());
-        obj.pushKV("lastMasternodeWinner", g_tiertwo_sync_state.GetlastMasternodeWinner());
+        obj.pushKV("lastGamemasterList", g_tiertwo_sync_state.GetlastGamemasterList());
+        obj.pushKV("lastGamemasterWinner", g_tiertwo_sync_state.GetlastGamemasterWinner());
         obj.pushKV("lastBudgetItem", g_tiertwo_sync_state.GetlastBudgetItem());
-        obj.pushKV("lastFailure", masternodeSync.lastFailure);
-        obj.pushKV("nCountFailures", masternodeSync.nCountFailures);
-        obj.pushKV("sumMasternodeList", masternodeSync.sumMasternodeList);
-        obj.pushKV("sumMasternodeWinner", masternodeSync.sumMasternodeWinner);
-        obj.pushKV("sumBudgetItemProp", masternodeSync.sumBudgetItemProp);
-        obj.pushKV("sumBudgetItemFin", masternodeSync.sumBudgetItemFin);
-        obj.pushKV("countMasternodeList", masternodeSync.countMasternodeList);
-        obj.pushKV("countMasternodeWinner", masternodeSync.countMasternodeWinner);
-        obj.pushKV("countBudgetItemProp", masternodeSync.countBudgetItemProp);
-        obj.pushKV("countBudgetItemFin", masternodeSync.countBudgetItemFin);
-        obj.pushKV("RequestedMasternodeAssets", g_tiertwo_sync_state.GetSyncPhase());
-        obj.pushKV("RequestedMasternodeAttempt", masternodeSync.RequestedMasternodeAttempt);
+        obj.pushKV("lastFailure", gamemasterSync.lastFailure);
+        obj.pushKV("nCountFailures", gamemasterSync.nCountFailures);
+        obj.pushKV("sumGamemasterList", gamemasterSync.sumGamemasterList);
+        obj.pushKV("sumGamemasterWinner", gamemasterSync.sumGamemasterWinner);
+        obj.pushKV("sumBudgetItemProp", gamemasterSync.sumBudgetItemProp);
+        obj.pushKV("sumBudgetItemFin", gamemasterSync.sumBudgetItemFin);
+        obj.pushKV("countGamemasterList", gamemasterSync.countGamemasterList);
+        obj.pushKV("countGamemasterWinner", gamemasterSync.countGamemasterWinner);
+        obj.pushKV("countBudgetItemProp", gamemasterSync.countBudgetItemProp);
+        obj.pushKV("countBudgetItemFin", gamemasterSync.countBudgetItemFin);
+        obj.pushKV("RequestedGamemasterAssets", g_tiertwo_sync_state.GetSyncPhase());
+        obj.pushKV("RequestedGamemasterAttempt", gamemasterSync.RequestedGamemasterAttempt);
 
         return obj;
     }
 
     if (strMode == "reset") {
-        masternodeSync.Reset();
+        gamemasterSync.Reset();
         return "success";
     }
     return "failure";
@@ -755,45 +755,45 @@ UniValue echo(const JSONRPCRequest& request)
     return request.params;
 }
 
-// mnconnect command operation types
+// gmconnect command operation types
 const char* SINGLE_CONN = "single_conn";
 const char* QUORUM_MEMBERS_CONN = "quorum_members_conn";
 const char* IQR_MEMBERS_CONN = "iqr_members_conn";
 const char* PROBE_CONN = "probe_conn";
 const char* CLEAR_CONN = "clear_conn";
 
-/* What essentially does is add a pending MN connection
+/* What essentially does is add a pending GM connection
  * Can be in the following forms:
- * 1) Direct single DMN connection.
- * 2) Quorum members connection (set of DMNs to connect).
- * 3) Quorum relay members connections (set of DMNs to connect and relay intra-quorum messages).
- * 4) Probe DMN connection.
+ * 1) Direct single DGM connection.
+ * 2) Quorum members connection (set of DGMs to connect).
+ * 3) Quorum relay members connections (set of DGMs to connect and relay intra-quorum messages).
+ * 4) Probe DGM connection.
  * 5) Clear tier two net connections cache
 **/
-UniValue mnconnect(const JSONRPCRequest& request)
+UniValue gmconnect(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.empty() || request.params.size() > 4) {
         throw std::runtime_error(
-                "mnconnect \"op_type\" (\"[pro_tx_hash, pro_tx_hash,..]\" llmq_type \"quorum_hash\")\n"
+                "gmconnect \"op_type\" (\"[pro_tx_hash, pro_tx_hash,..]\" llmq_type \"quorum_hash\")\n"
                 "\nAdd manual quorum members connections for internal testing purposes of the tier two p2p network layer\n"
         );
     }
 
     const auto& chainparams = Params();
     if (!chainparams.IsRegTestNet())
-        throw std::runtime_error("mnconnect for regression testing (-regtest mode) only");
+        throw std::runtime_error("gmconnect for regression testing (-regtest mode) only");
 
     // Connection type
     RPCTypeCheck(request.params, {UniValue::VSTR});
     const std::string& op_type = request.params[0].get_str();
 
-    // DMNs pro_tx list
-    std::set<uint256> set_dmn_protxhash;
+    // DGMs pro_tx list
+    std::set<uint256> set_dgm_protxhash;
     if (request.params.size() > 1) {
         RPCTypeCheckArgument(request.params[1], UniValue::VARR);
         const auto& array{request.params[1].get_array()};
         for (unsigned int i = 0; i < array.size(); i++) {
-            set_dmn_protxhash.emplace(ParseHashV(array[i], strprintf("pro_tx_hash (index %d)", i)));
+            set_dgm_protxhash.emplace(ParseHashV(array[i], strprintf("pro_tx_hash (index %d)", i)));
         }
     }
 
@@ -808,25 +808,25 @@ UniValue mnconnect(const JSONRPCRequest& request)
         quorum_hash = ParseHashV(request.params[3], "quorum_hash");
     }
 
-    const auto& mn_connan =  g_connman->GetTierTwoConnMan();
+    const auto& gm_connan =  g_connman->GetTierTwoConnMan();
     if (op_type == SINGLE_CONN) {
-        for (const auto& protxhash : set_dmn_protxhash) {
-            // if the connection exist or if the dmn doesn't exist,
+        for (const auto& protxhash : set_dgm_protxhash) {
+            // if the connection exist or if the dgm doesn't exist,
             // it will simply not even try to connect to it.
-            mn_connan->addPendingMasternode(protxhash);
+            gm_connan->addPendingGamemaster(protxhash);
         }
         return true;
     } else if (op_type == QUORUM_MEMBERS_CONN) {
-        mn_connan->setQuorumNodes(llmq_type, quorum_hash, set_dmn_protxhash);
+        gm_connan->setQuorumNodes(llmq_type, quorum_hash, set_dgm_protxhash);
         return true;
     } else if (op_type == IQR_MEMBERS_CONN) {
-        mn_connan->setMasternodeQuorumRelayMembers(llmq_type, quorum_hash, set_dmn_protxhash);
+        gm_connan->setGamemasterQuorumRelayMembers(llmq_type, quorum_hash, set_dgm_protxhash);
         return true;
     } else if (op_type == PROBE_CONN) {
-        mn_connan->addPendingProbeConnections(set_dmn_protxhash);
+        gm_connan->addPendingProbeConnections(set_dgm_protxhash);
         return true;
     } else if (op_type == CLEAR_CONN) {
-        mn_connan->clear();
+        gm_connan->clear();
         return true;
     }
     return false;
@@ -838,7 +838,7 @@ static const CRPCCommand commands[] =
   //  --------------------- ------------------------  -----------------------  ------ --------
     { "control",            "getinfo",                &getinfo,                true,  {} }, /* uses wallet if enabled */
     { "control",            "getmemoryinfo",          &getmemoryinfo,          true,  {} },
-    { "control",            "mnsync",                 &mnsync,                 true,  {"mode"} },
+    { "control",            "gmsync",                 &gmsync,                 true,  {"mode"} },
     { "control",            "spork",                  &spork,                  true,  {"name","value"} },
 
     { "util",               "createmultisig",         &createmultisig,         true,  {"nrequired","keys"} },
@@ -850,7 +850,7 @@ static const CRPCCommand commands[] =
     { "hidden",             "echo",                   &echo,                   true,  {"arg0","arg1","arg2","arg3","arg4","arg5","arg6","arg7","arg8","arg9"} },
     { "hidden",             "echojson",               &echo,                   true,  {"arg0","arg1","arg2","arg3","arg4","arg5","arg6","arg7","arg8","arg9"} },
     { "hidden",             "setmocktime",            &setmocktime,            true,  {"timestamp"} },
-    { "hidden",             "mnconnect",              &mnconnect,              true,  {"op_type", "mn_list", "llmq_type", "quorum_hash"} },
+    { "hidden",             "gmconnect",              &gmconnect,              true,  {"op_type", "gm_list", "llmq_type", "quorum_hash"} },
 };
 // clang-format on
 

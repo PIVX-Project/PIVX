@@ -30,8 +30,8 @@
 #include "kernel.h"
 #include "legacy/validation_zerocoin_legacy.h"
 #include "llmq/quorums_chainlocks.h"
-#include "masternode-payments.h"
-#include "masternodeman.h"
+#include "gamemaster-payments.h"
+#include "gamemasterman.h"
 #include "policy/policy.h"
 #include "pow.h"
 #include "reverse_iterate.h"
@@ -840,18 +840,18 @@ CAmount GetBlockValue(int nHeight)
     if (nHeight > 151200) return 45 * COIN;
     if (nHeight > 86400) return 225 * COIN;
     if (nHeight != 1) return 250 * COIN;
-    // Premine for 6 masternodes at block 1
+    // Premine for 6 gamemasters at block 1
     return 60001 * COIN;
 }
 
-int64_t GetMasternodePayment(int nHeight)
+int64_t GetGamemasterPayment(int nHeight)
 {
     if (nHeight > Params().GetConsensus().vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight) {
-        return Params().GetConsensus().nNewMNBlockReward;
+        return Params().GetConsensus().nNewGMBlockReward;
     }
 
     // Future: refactor function callers to use this line directly.
-    return Params().GetConsensus().nMNBlockReward;
+    return Params().GetConsensus().nGMBlockReward;
 }
 
 bool IsInitialBlockDownload()
@@ -1636,12 +1636,12 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                          REJECT_INVALID, "bad-blk-amount");
     }
 
-    // Masternode/Budget payments
-    // !TODO: after transition to DMN is complete, check this also during IBD
+    // Gamemaster/Budget payments
+    // !TODO: after transition to DGM is complete, check this also during IBD
     if (!fInitialBlockDownload) {
         if (!IsBlockPayeeValid(block, pindex->pprev)) {
             mapRejectedBlocks.emplace(block.GetHash(), GetTime());
-            return state.DoS(0, false, REJECT_INVALID, "bad-cb-payee", false, "Couldn't find masternode/budget payment");
+            return state.DoS(0, false, REJECT_INVALID, "bad-cb-payee", false, "Couldn't find gamemaster/budget payment");
         }
     }
 
@@ -1953,14 +1953,14 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
     // 0-confirmed or conflicted:
     GetMainSignals().BlockDisconnected(pblock, pindexDelete->GetBlockHash(), pindexDelete->nHeight, pindexDelete->GetBlockTime());
 
-    // Update MN manager cache
-    deterministicMNManager->SetTipIndex(pindexDelete->pprev);
+    // Update GM manager cache
+    deterministicGMManager->SetTipIndex(pindexDelete->pprev);
     // replace the cached hash of pindexDelete with the hash of the block
     // at depth CACHED_BLOCK_HASHES if it exists, or empty hash otherwise.
     if ((unsigned) pindexDelete->nHeight >= CACHED_BLOCK_HASHES) {
-        mnodeman.CacheBlockHash(chainActive[pindexDelete->nHeight - CACHED_BLOCK_HASHES]);
+        gamemasterman.CacheBlockHash(chainActive[pindexDelete->nHeight - CACHED_BLOCK_HASHES]);
     } else {
-        mnodeman.UncacheBlockHash(pindexDelete);
+        gamemasterman.UncacheBlockHash(pindexDelete);
     }
 
     return true;
@@ -2080,12 +2080,12 @@ bool static ConnectTip(CValidationState& state, CBlockIndex* pindexNew, const st
     // Update chainActive & related variables.
     UpdateTip(pindexNew);
     // Update TierTwo managers
-    mnodeman.SetBestHeight(pindexNew->nHeight);
+    gamemasterman.SetBestHeight(pindexNew->nHeight);
     g_budgetman.SetBestHeight(pindexNew->nHeight);
-    // Update MN manager cache
-    mnodeman.CacheBlockHash(pindexNew);
-    mnodeman.CheckSpentCollaterals(blockConnecting.vtx);
-    deterministicMNManager->SetTipIndex(pindexNew);
+    // Update GM manager cache
+    gamemasterman.CacheBlockHash(pindexNew);
+    gamemasterman.CheckSpentCollaterals(blockConnecting.vtx);
+    deterministicGMManager->SetTipIndex(pindexNew);
 
     int64_t nTime6 = GetTimeMicros();
     nTimePostConnect += nTime6 - nTime5;
@@ -2634,19 +2634,19 @@ bool CheckColdStakeFreeOutput(const CTransaction& tx, const int nHeight)
     if (!tx.vout[1].scriptPubKey.IsPayToColdStakingLOF()) {
         return true;
     }
-    // If the last output is different, then it can be either a masternode
+    // If the last output is different, then it can be either a gamemaster
     // or a budget proposal payment
     const unsigned int outs = tx.vout.size();
     const CTxOut& lastOut = tx.vout[outs-1];
     if (outs >=3 && lastOut.scriptPubKey != tx.vout[outs-2].scriptPubKey) {
         if (Params().GetConsensus().NetworkUpgradeActive(nHeight, Consensus::UPGRADE_V6_0)) {
-            // after v6.0, masternode and budgets are paid in the coinbase. No more free outputs allowed.
+            // after v6.0, gamemaster and budgets are paid in the coinbase. No more free outputs allowed.
             return false;
         }
-        if (lastOut.nValue == GetMasternodePayment(nHeight))
+        if (lastOut.nValue == GetGamemasterPayment(nHeight))
             return true;
 
-        // if mnsync is incomplete, we cannot verify if this is a budget block.
+        // if gmsync is incomplete, we cannot verify if this is a budget block.
         // so we check that the staker is not transferring value to the free output
         if (!g_tiertwo_sync_state.IsSynced()) {
             // First try finding the previous transaction in database
@@ -2749,7 +2749,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
     // Cold Staking enforcement (true during sync - reject P2CS outputs when false)
     bool fColdStakingActive = true;
 
-    // masternode payments / budgets
+    // gamemaster payments / budgets
     CBlockIndex* pindexPrev = chainActive.Tip();
     int nHeight = 0;
     if (pindexPrev != nullptr && block.hashPrevBlock != UINT256_ZERO) {
@@ -2779,7 +2779,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
             fColdStakingActive = !sporkManager.IsSporkActive(SPORK_19_COLDSTAKING_MAINTENANCE);
 
         } else {
-            LogPrintf("%s: Masternode/Budget payment checks skipped on sync\n", __func__);
+            LogPrintf("%s: Gamemaster/Budget payment checks skipped on sync\n", __func__);
         }
     }
 

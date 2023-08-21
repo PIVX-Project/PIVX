@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef hemis_NET_MASTERNODES_H
-#define hemis_NET_MASTERNODES_H
+#ifndef hemis_NET_GAMEMASTERS_H
+#define hemis_NET_GAMEMASTERS_H
 
 #include "consensus/params.h"
 #include "net.h"
@@ -44,49 +44,49 @@ public:
     // Return true if the quorum was already registered
     bool hasQuorumNodes(Consensus::LLMQType llmqType, const uint256& quorumHash);
 
-    // Remove the registered quorum from the pending/protected MN connections
+    // Remove the registered quorum from the pending/protected GM connections
     void removeQuorumNodes(Consensus::LLMQType llmqType, const uint256& quorumHash);
 
-    // Add MNs to the active quorum relay members map and push QSENDRECSIGS to the verified connected peers that are part of this new quorum.
-    void setMasternodeQuorumRelayMembers(Consensus::LLMQType llmqType, const uint256& quorumHash, const std::set<uint256>& proTxHashes);
+    // Add GMs to the active quorum relay members map and push QSENDRECSIGS to the verified connected peers that are part of this new quorum.
+    void setGamemasterQuorumRelayMembers(Consensus::LLMQType llmqType, const uint256& quorumHash, const std::set<uint256>& proTxHashes);
 
-    // Returns true if the node has the same address as a MN.
-    bool isMasternodeQuorumNode(const CNode* pnode);
+    // Returns true if the node has the same address as a GM.
+    bool isGamemasterQuorumNode(const CNode* pnode);
 
     // Whether protxHash an active quorum relay member
-    bool isMasternodeQuorumRelayMember(const uint256& protxHash);
+    bool isGamemasterQuorumRelayMember(const uint256& protxHash);
 
-    // Add DMN to the pending connection list
-    bool addPendingMasternode(const uint256& proTxHash);
+    // Add DGM to the pending connection list
+    bool addPendingGamemaster(const uint256& proTxHash);
 
-    // Adds the DMNs to the pending to probe list
+    // Adds the DGMs to the pending to probe list
     void addPendingProbeConnections(const std::set<uint256>& proTxHashes);
 
-    // Set the local DMN so the node does not try to connect to himself
-    void setLocalDMN(const uint256& pro_tx_hash) { WITH_LOCK(cs_vPendingMasternodes, local_dmn_pro_tx_hash = pro_tx_hash;); }
+    // Set the local DGM so the node does not try to connect to himself
+    void setLocalDGM(const uint256& pro_tx_hash) { WITH_LOCK(cs_vPendingGamemasters, local_dgm_pro_tx_hash = pro_tx_hash;); }
 
     // Clear connections cache
     void clear();
 
-    // Manages the MN connections
-    void ThreadOpenMasternodeConnections();
+    // Manages the GM connections
+    void ThreadOpenGamemasterConnections();
     void start(CScheduler& scheduler, const TierTwoConnMan::Options& options);
     void stop();
     void interrupt();
 
 private:
     CThreadInterrupt interruptNet;
-    std::thread threadOpenMasternodeConnections;
+    std::thread threadOpenGamemasterConnections;
 
-    mutable RecursiveMutex cs_vPendingMasternodes;
-    std::vector<uint256> vPendingMasternodes GUARDED_BY(cs_vPendingMasternodes);
+    mutable RecursiveMutex cs_vPendingGamemasters;
+    std::vector<uint256> vPendingGamemasters GUARDED_BY(cs_vPendingGamemasters);
     typedef std::pair<Consensus::LLMQType, uint256> QuorumTypeAndHash;
-    std::map<QuorumTypeAndHash, std::set<uint256>> masternodeQuorumNodes GUARDED_BY(cs_vPendingMasternodes);
-    std::map<QuorumTypeAndHash, std::set<uint256>> masternodeQuorumRelayMembers GUARDED_BY(cs_vPendingMasternodes);
-    std::set<uint256> masternodePendingProbes GUARDED_BY(cs_vPendingMasternodes);
+    std::map<QuorumTypeAndHash, std::set<uint256>> gamemasterQuorumNodes GUARDED_BY(cs_vPendingGamemasters);
+    std::map<QuorumTypeAndHash, std::set<uint256>> gamemasterQuorumRelayMembers GUARDED_BY(cs_vPendingGamemasters);
+    std::set<uint256> gamemasterPendingProbes GUARDED_BY(cs_vPendingGamemasters);
 
-    // The local DMN
-    Optional<uint256> local_dmn_pro_tx_hash GUARDED_BY(cs_vPendingMasternodes){nullopt};
+    // The local DGM
+    Optional<uint256> local_dgm_pro_tx_hash GUARDED_BY(cs_vPendingGamemasters){nullopt};
 
     // parent connections manager
     CConnman* connman;
@@ -95,4 +95,4 @@ private:
     void doMaintenance();
 };
 
-#endif //hemis_NET_MASTERNODES_H
+#endif //hemis_NET_GAMEMASTERS_H

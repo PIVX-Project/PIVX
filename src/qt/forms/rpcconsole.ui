@@ -209,14 +209,14 @@
         </widget>
        </item>
        <item row="9" column="0">
-        <widget class="QLabel" name="masternodeCountLabel">
+        <widget class="QLabel" name="gamemasterCountLabel">
          <property name="text">
-          <string>Number of Masternodes</string>
+          <string>Number of Gamemasters</string>
          </property>
         </widget>
        </item>
        <item row="9" column="1">
-        <widget class="QLabel" name="masternodeCount">
+        <widget class="QLabel" name="gamemasterCount">
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>

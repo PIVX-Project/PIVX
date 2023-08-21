@@ -3,23 +3,23 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "activemasternode.h"
+#include "activegamemaster.h"
 
 #include "addrman.h"
 #include "bls/key_io.h"
 #include "bls/bls_wrapper.h"
-#include "masternode.h"
-#include "masternodeconfig.h"
-#include "masternodeman.h"
+#include "gamemaster.h"
+#include "gamemasterconfig.h"
+#include "gamemasterman.h"
 #include "messagesigner.h"
 #include "netbase.h"
 #include "protocol.h"
-#include "tiertwo/net_masternodes.h"
+#include "tiertwo/net_gamemasters.h"
 #include "tiertwo/tiertwo_sync_state.h"
 #include "validation.h"
 
-// Keep track of the active Masternode
-CActiveDeterministicMasternodeManager* activeMasternodeManager{nullptr};
+// Keep track of the active Gamemaster
+CActiveDeterministicGamemasterManager* activeGamemasterManager{nullptr};
 
 static bool GetLocalAddress(CService& addrRet)
 {
@@ -30,7 +30,7 @@ static bool GetLocalAddress(CService& addrRet)
     CNetAddr addrDummyPeer;
     bool fFound{false};
     if (LookupHost("8.8.8.8", addrDummyPeer, false)) {
-        fFound = GetLocal(addrRet, &addrDummyPeer) && CActiveDeterministicMasternodeManager::IsValidNetAddr(addrRet);
+        fFound = GetLocal(addrRet, &addrDummyPeer) && CActiveDeterministicGamemasterManager::IsValidNetAddr(addrRet);
     }
     if (!fFound && Params().IsRegTestNet()) {
         if (Lookup("127.0.0.1", addrRet, GetListenPort(), false)) {
@@ -41,71 +41,71 @@ static bool GetLocalAddress(CService& addrRet)
         // If we have some peers, let's try to find our local address from one of them
         g_connman->ForEachNodeContinueIf([&fFound, &addrRet](CNode* pnode) {
             if (pnode->addr.IsIPv4())
-                fFound = GetLocal(addrRet, &pnode->addr) && CActiveDeterministicMasternodeManager::IsValidNetAddr(addrRet);
+                fFound = GetLocal(addrRet, &pnode->addr) && CActiveDeterministicGamemasterManager::IsValidNetAddr(addrRet);
             return !fFound;
         });
     }
     return fFound;
 }
 
-std::string CActiveDeterministicMasternodeManager::GetStatus() const
+std::string CActiveDeterministicGamemasterManager::GetStatus() const
 {
     switch (state) {
-        case MASTERNODE_WAITING_FOR_PROTX:    return "Waiting for ProTx to appear on-chain";
-        case MASTERNODE_POSE_BANNED:          return "Masternode was PoSe banned";
-        case MASTERNODE_REMOVED:              return "Masternode removed from list";
-        case MASTERNODE_OPERATOR_KEY_CHANGED: return "Operator key changed or revoked";
-        case MASTERNODE_PROTX_IP_CHANGED:     return "IP address specified in ProTx changed";
-        case MASTERNODE_READY:                return "Ready";
-        case MASTERNODE_ERROR:                return "Error. " + strError;
+        case GAMEMASTER_WAITING_FOR_PROTX:    return "Waiting for ProTx to appear on-chain";
+        case GAMEMASTER_POSE_BANNED:          return "Gamemaster was PoSe banned";
+        case GAMEMASTER_REMOVED:              return "Gamemaster removed from list";
+        case GAMEMASTER_OPERATOR_KEY_CHANGED: return "Operator key changed or revoked";
+        case GAMEMASTER_PROTX_IP_CHANGED:     return "IP address specified in ProTx changed";
+        case GAMEMASTER_READY:                return "Ready";
+        case GAMEMASTER_ERROR:                return "Error. " + strError;
         default:                              return "Unknown";
     }
 }
 
-OperationResult CActiveDeterministicMasternodeManager::SetOperatorKey(const std::string& strMNOperatorPrivKey)
+OperationResult CActiveDeterministicGamemasterManager::SetOperatorKey(const std::string& strGMOperatorPrivKey)
 {
-    LOCK(cs_main); // Lock cs_main so the node doesn't perform any action while we setup the Masternode
-    LogPrintf("Initializing deterministic masternode...\n");
-    if (strMNOperatorPrivKey.empty()) {
-        return errorOut("ERROR: Masternode operator priv key cannot be empty.");
+    LOCK(cs_main); // Lock cs_main so the node doesn't perform any action while we setup the Gamemaster
+    LogPrintf("Initializing deterministic gamemaster...\n");
+    if (strGMOperatorPrivKey.empty()) {
+        return errorOut("ERROR: Gamemaster operator priv key cannot be empty.");
     }
 
-    auto opSk = bls::DecodeSecret(Params(), strMNOperatorPrivKey);
+    auto opSk = bls::DecodeSecret(Params(), strGMOperatorPrivKey);
     if (!opSk) {
-        return errorOut(_("Invalid mnoperatorprivatekey. Please see the documentation."));
+        return errorOut(_("Invalid gmoperatorprivatekey. Please see the documentation."));
     }
     info.keyOperator = *opSk;
     info.pubKeyOperator = info.keyOperator.GetPublicKey();
     return {true};
 }
 
-OperationResult CActiveDeterministicMasternodeManager::GetOperatorKey(CBLSSecretKey& key, CDeterministicMNCPtr& dmn) const
+OperationResult CActiveDeterministicGamemasterManager::GetOperatorKey(CBLSSecretKey& key, CDeterministicGMCPtr& dgm) const
 {
     if (!IsReady()) {
-        return errorOut("Active masternode not ready");
+        return errorOut("Active gamemaster not ready");
     }
-    dmn = deterministicMNManager->GetListAtChainTip().GetValidMN(info.proTxHash);
-    if (!dmn) {
-        return errorOut(strprintf("Active masternode %s not registered or PoSe banned", info.proTxHash.ToString()));
+    dgm = deterministicGMManager->GetListAtChainTip().GetValidGM(info.proTxHash);
+    if (!dgm) {
+        return errorOut(strprintf("Active gamemaster %s not registered or PoSe banned", info.proTxHash.ToString()));
     }
-    if (info.pubKeyOperator != dmn->pdmnState->pubKeyOperator.Get()) {
-        return errorOut("Active masternode operator key changed or revoked");
+    if (info.pubKeyOperator != dgm->pdgmState->pubKeyOperator.Get()) {
+        return errorOut("Active gamemaster operator key changed or revoked");
     }
     // return key
     key = info.keyOperator;
     return {true};
 }
 
-void CActiveDeterministicMasternodeManager::Init(const CBlockIndex* pindexTip)
+void CActiveDeterministicGamemasterManager::Init(const CBlockIndex* pindexTip)
 {
-    // set masternode arg if called from RPC
+    // set gamemaster arg if called from RPC
     if (!fMasterNode) {
-        gArgs.ForceSetArg("-masternode", "1");
+        gArgs.ForceSetArg("-gamemaster", "1");
         fMasterNode = true;
     }
 
-    if (!deterministicMNManager->IsDIP3Enforced(pindexTip->nHeight)) {
-        state = MASTERNODE_ERROR;
+    if (!deterministicGMManager->IsDIP3Enforced(pindexTip->nHeight)) {
+        state = GAMEMASTER_ERROR;
         strError = "Evo upgrade is not active yet.";
         LogPrintf("%s -- ERROR: %s\n", __func__, strError);
         return;
@@ -116,38 +116,38 @@ void CActiveDeterministicMasternodeManager::Init(const CBlockIndex* pindexTip)
     // Check that our local network configuration is correct
     if (!fListen) {
         // listen option is probably overwritten by smth else, no good
-        state = MASTERNODE_ERROR;
-        strError = "Masternode must accept connections from outside. Make sure listen configuration option is not overwritten by some another parameter.";
+        state = GAMEMASTER_ERROR;
+        strError = "Gamemaster must accept connections from outside. Make sure listen configuration option is not overwritten by some another parameter.";
         LogPrintf("%s ERROR: %s\n", __func__, strError);
         return;
     }
 
     if (!GetLocalAddress(info.service)) {
-        state = MASTERNODE_ERROR;
+        state = GAMEMASTER_ERROR;
         strError = "Can't detect valid external address. Please consider using the externalip configuration option if problem persists. Make sure to use IPv4 address only.";
         LogPrintf("%s ERROR: %s\n", __func__, strError);
         return;
     }
 
-    CDeterministicMNList mnList = deterministicMNManager->GetListForBlock(pindexTip);
+    CDeterministicGMList gmList = deterministicGMManager->GetListForBlock(pindexTip);
 
-    CDeterministicMNCPtr dmn = mnList.GetMNByOperatorKey(info.pubKeyOperator);
-    if (!dmn) {
-        // MN not appeared on the chain yet
+    CDeterministicGMCPtr dgm = gmList.GetGMByOperatorKey(info.pubKeyOperator);
+    if (!dgm) {
+        // GM not appeared on the chain yet
         return;
     }
 
-    if (dmn->IsPoSeBanned()) {
-        state = MASTERNODE_POSE_BANNED;
+    if (dgm->IsPoSeBanned()) {
+        state = GAMEMASTER_POSE_BANNED;
         return;
     }
 
-    LogPrintf("%s: proTxHash=%s, proTx=%s\n", __func__, dmn->proTxHash.ToString(), dmn->ToString());
+    LogPrintf("%s: proTxHash=%s, proTx=%s\n", __func__, dgm->proTxHash.ToString(), dgm->ToString());
 
-    if (info.service != dmn->pdmnState->addr) {
-        state = MASTERNODE_ERROR;
+    if (info.service != dgm->pdgmState->addr) {
+        state = GAMEMASTER_ERROR;
         strError = strprintf("Local address %s does not match the address from ProTx (%s)",
-                             info.service.ToStringIPPort(), dmn->pdmnState->addr.ToStringIPPort());
+                             info.service.ToStringIPPort(), dgm->pdgmState->addr.ToStringIPPort());
         LogPrintf("%s ERROR: %s\n", __func__, strError);
         return;
     }
@@ -157,8 +157,8 @@ void CActiveDeterministicMasternodeManager::Init(const CBlockIndex* pindexTip)
     LogPrintf("%s: Checking inbound connection to '%s'\n", __func__, strService);
     SOCKET hSocket = CreateSocket(info.service);
     if (hSocket == INVALID_SOCKET) {
-        state = MASTERNODE_ERROR;
-        strError = "DMN connectivity check failed, could not create socket to DMN running at " + strService;
+        state = GAMEMASTER_ERROR;
+        strError = "DGM connectivity check failed, could not create socket to DGM running at " + strService;
         LogPrintf("%s -- ERROR: %s\n", __func__, strError);
         return;
     }
@@ -166,69 +166,69 @@ void CActiveDeterministicMasternodeManager::Init(const CBlockIndex* pindexTip)
     CloseSocket(hSocket);
 
     if (!fConnected) {
-        state = MASTERNODE_ERROR;
-        strError = "DMN connectivity check failed, could not connect to DMN running at " + strService;
+        state = GAMEMASTER_ERROR;
+        strError = "DGM connectivity check failed, could not connect to DGM running at " + strService;
         LogPrintf("%s ERROR: %s\n", __func__, strError);
         return;
     }
 
-    info.proTxHash = dmn->proTxHash;
-    g_connman->GetTierTwoConnMan()->setLocalDMN(info.proTxHash);
-    state = MASTERNODE_READY;
-    LogPrintf("Deterministic Masternode initialized\n");
+    info.proTxHash = dgm->proTxHash;
+    g_connman->GetTierTwoConnMan()->setLocalDGM(info.proTxHash);
+    state = GAMEMASTER_READY;
+    LogPrintf("Deterministic Gamemaster initialized\n");
 }
 
-void CActiveDeterministicMasternodeManager::Reset(masternode_state_t _state, const CBlockIndex* pindexTip)
+void CActiveDeterministicGamemasterManager::Reset(gamemaster_state_t _state, const CBlockIndex* pindexTip)
 {
     state = _state;
     SetNullProTx();
-    // MN might have reappeared in same block with a new ProTx
+    // GM might have reappeared in same block with a new ProTx
     Init(pindexTip);
 }
 
-void CActiveDeterministicMasternodeManager::UpdatedBlockTip(const CBlockIndex* pindexNew, const CBlockIndex* pindexFork, bool fInitialDownload)
+void CActiveDeterministicGamemasterManager::UpdatedBlockTip(const CBlockIndex* pindexNew, const CBlockIndex* pindexFork, bool fInitialDownload)
 {
     if (fInitialDownload)
         return;
 
-    if (!fMasterNode || !deterministicMNManager->IsDIP3Enforced(pindexNew->nHeight))
+    if (!fMasterNode || !deterministicGMManager->IsDIP3Enforced(pindexNew->nHeight))
         return;
 
-    if (state == MASTERNODE_READY) {
-        auto newDmn = deterministicMNManager->GetListForBlock(pindexNew).GetValidMN(info.proTxHash);
-        if (newDmn == nullptr) {
-            // MN disappeared from MN list
-            Reset(MASTERNODE_REMOVED, pindexNew);
+    if (state == GAMEMASTER_READY) {
+        auto newDgm = deterministicGMManager->GetListForBlock(pindexNew).GetValidGM(info.proTxHash);
+        if (newDgm == nullptr) {
+            // GM disappeared from GM list
+            Reset(GAMEMASTER_REMOVED, pindexNew);
             return;
         }
 
-        auto oldDmn = deterministicMNManager->GetListForBlock(pindexNew->pprev).GetMN(info.proTxHash);
-        if (oldDmn == nullptr) {
-            // should never happen if state is MASTERNODE_READY
-            LogPrintf("%s: WARNING: unable to find active mn %s in prev block list %s\n",
+        auto oldDgm = deterministicGMManager->GetListForBlock(pindexNew->pprev).GetGM(info.proTxHash);
+        if (oldDgm == nullptr) {
+            // should never happen if state is GAMEMASTER_READY
+            LogPrintf("%s: WARNING: unable to find active gm %s in prev block list %s\n",
                       __func__, info.proTxHash.ToString(), pindexNew->pprev->GetBlockHash().ToString());
             return;
         }
 
-        if (newDmn->pdmnState->pubKeyOperator != oldDmn->pdmnState->pubKeyOperator) {
-            // MN operator key changed or revoked
-            Reset(MASTERNODE_OPERATOR_KEY_CHANGED, pindexNew);
+        if (newDgm->pdgmState->pubKeyOperator != oldDgm->pdgmState->pubKeyOperator) {
+            // GM operator key changed or revoked
+            Reset(GAMEMASTER_OPERATOR_KEY_CHANGED, pindexNew);
             return;
         }
 
-        if (newDmn->pdmnState->addr != oldDmn->pdmnState->addr) {
-            // MN IP changed
-            Reset(MASTERNODE_PROTX_IP_CHANGED, pindexNew);
+        if (newDgm->pdgmState->addr != oldDgm->pdgmState->addr) {
+            // GM IP changed
+            Reset(GAMEMASTER_PROTX_IP_CHANGED, pindexNew);
             return;
         }
     } else {
-        // MN might have (re)appeared with a new ProTx or we've found some peers
+        // GM might have (re)appeared with a new ProTx or we've found some peers
         // and figured out our local address
         Init(pindexNew);
     }
 }
 
-bool CActiveDeterministicMasternodeManager::IsValidNetAddr(const CService& addrIn)
+bool CActiveDeterministicGamemasterManager::IsValidNetAddr(const CService& addrIn)
 {
     // TODO: check IPv6 and TOR addresses
     return Params().IsRegTestNet() || (addrIn.IsIPv4() && IsReachable(addrIn) && addrIn.IsRoutable());
@@ -237,21 +237,21 @@ bool CActiveDeterministicMasternodeManager::IsValidNetAddr(const CService& addrI
 
 /********* LEGACY *********/
 
-OperationResult initMasternode(const std::string& _strMasterNodePrivKey, const std::string& _strMasterNodeAddr, bool isFromInit)
+OperationResult initGamemaster(const std::string& _strMasterNodePrivKey, const std::string& _strMasterNodeAddr, bool isFromInit)
 {
     if (!isFromInit && fMasterNode) {
-        return errorOut( "ERROR: Masternode already initialized.");
+        return errorOut( "ERROR: Gamemaster already initialized.");
     }
 
-    LOCK(cs_main); // Lock cs_main so the node doesn't perform any action while we setup the Masternode
-    LogPrintf("Initializing masternode, addr %s..\n", _strMasterNodeAddr.c_str());
+    LOCK(cs_main); // Lock cs_main so the node doesn't perform any action while we setup the Gamemaster
+    LogPrintf("Initializing gamemaster, addr %s..\n", _strMasterNodeAddr.c_str());
 
     if (_strMasterNodePrivKey.empty()) {
-        return errorOut("ERROR: Masternode priv key cannot be empty.");
+        return errorOut("ERROR: Gamemaster priv key cannot be empty.");
     }
 
     if (_strMasterNodeAddr.empty()) {
-        return errorOut("ERROR: Empty masternodeaddr");
+        return errorOut("ERROR: Empty gamemasteraddr");
     }
 
     // Address parsing.
@@ -265,99 +265,99 @@ OperationResult initMasternode(const std::string& _strMasterNodePrivKey, const s
     // that if a port is supplied, it matches the required default port.
     if (nPort == 0) nPort = nDefaultPort;
     if (nPort != nDefaultPort && !params.IsRegTestNet()) {
-        return errorOut(strprintf(_("Invalid -masternodeaddr port %d, only %d is supported on %s-net."),
+        return errorOut(strprintf(_("Invalid -gamemasteraddr port %d, only %d is supported on %s-net."),
                                            nPort, nDefaultPort, Params().NetworkIDString()));
     }
     CService addrTest(LookupNumeric(strHost, nPort));
     if (!addrTest.IsValid()) {
-        return errorOut(strprintf(_("Invalid -masternodeaddr address: %s"), _strMasterNodeAddr));
+        return errorOut(strprintf(_("Invalid -gamemasteraddr address: %s"), _strMasterNodeAddr));
     }
 
-    // Peer port needs to match the masternode public one for IPv4 and IPv6.
+    // Peer port needs to match the gamemaster public one for IPv4 and IPv6.
     // Onion can run in other ports because those are behind a hidden service which has the public port fixed to the default port.
     if (nPort != GetListenPort() && !addrTest.IsTor()) {
-        return errorOut(strprintf(_("Invalid -masternodeaddr port %d, isn't the same as the peer port %d"),
+        return errorOut(strprintf(_("Invalid -gamemasteraddr port %d, isn't the same as the peer port %d"),
                                   nPort, GetListenPort()));
     }
 
     CKey key;
     CPubKey pubkey;
     if (!CMessageSigner::GetKeysFromSecret(_strMasterNodePrivKey, key, pubkey)) {
-        return errorOut(_("Invalid masternodeprivkey. Please see the documentation."));
+        return errorOut(_("Invalid gamemasterprivkey. Please see the documentation."));
     }
 
-    activeMasternode.pubKeyMasternode = pubkey;
-    activeMasternode.privKeyMasternode = key;
-    activeMasternode.service = addrTest;
+    activeGamemaster.pubKeyGamemaster = pubkey;
+    activeGamemaster.privKeyGamemaster = key;
+    activeGamemaster.service = addrTest;
     fMasterNode = true;
 
     if (g_tiertwo_sync_state.IsBlockchainSynced()) {
-        // Check if the masternode already exists in the list
-        CMasternode* pmn = mnodeman.Find(pubkey);
-        if (pmn) activeMasternode.EnableHotColdMasterNode(pmn->vin, pmn->addr);
+        // Check if the gamemaster already exists in the list
+        CGamemaster* pgm = gamemasterman.Find(pubkey);
+        if (pgm) activeGamemaster.EnableHotColdMasterNode(pgm->vin, pgm->addr);
     }
 
     return {true};
 }
 
 //
-// Bootup the Masternode, look for a 10000 hemis input and register on the network
+// Bootup the Gamemaster, look for a 10000 hemis input and register on the network
 //
-void CActiveMasternode::ManageStatus()
+void CActiveGamemaster::ManageStatus()
 {
     if (!fMasterNode) return;
-    if (activeMasternodeManager != nullptr) {
-        // Deterministic masternode
+    if (activeGamemasterManager != nullptr) {
+        // Deterministic gamemaster
         return;
     }
 
-    // !TODO: Legacy masternodes - remove after enforcement
-    LogPrint(BCLog::MASTERNODE, "CActiveMasternode::ManageStatus() - Begin\n");
+    // !TODO: Legacy gamemasters - remove after enforcement
+    LogPrint(BCLog::GAMEMASTER, "CActiveGamemaster::ManageStatus() - Begin\n");
 
-    // If a DMN has been registered with same collateral, disable me.
-    CMasternode* pmn = mnodeman.Find(pubKeyMasternode);
-    if (pmn && deterministicMNManager->GetListAtChainTip().HasMNByCollateral(pmn->vin.prevout)) {
-        LogPrintf("%s: Disabling active legacy Masternode %s as the collateral is now registered with a DMN\n",
-                         __func__, pmn->vin.prevout.ToString());
-        status = ACTIVE_MASTERNODE_NOT_CAPABLE;
-        notCapableReason = "Collateral registered with DMN";
+    // If a DGM has been registered with same collateral, disable me.
+    CGamemaster* pgm = gamemasterman.Find(pubKeyGamemaster);
+    if (pgm && deterministicGMManager->GetListAtChainTip().HasGMByCollateral(pgm->vin.prevout)) {
+        LogPrintf("%s: Disabling active legacy Gamemaster %s as the collateral is now registered with a DGM\n",
+                         __func__, pgm->vin.prevout.ToString());
+        status = ACTIVE_GAMEMASTER_NOT_CAPABLE;
+        notCapableReason = "Collateral registered with DGM";
         return;
     }
 
     //need correct blocks to send ping
     if (!Params().IsRegTestNet() && !g_tiertwo_sync_state.IsBlockchainSynced()) {
-        status = ACTIVE_MASTERNODE_SYNC_IN_PROCESS;
-        LogPrintf("CActiveMasternode::ManageStatus() - %s\n", GetStatusMessage());
+        status = ACTIVE_GAMEMASTER_SYNC_IN_PROCESS;
+        LogPrintf("CActiveGamemaster::ManageStatus() - %s\n", GetStatusMessage());
         return;
     }
 
-    if (status == ACTIVE_MASTERNODE_SYNC_IN_PROCESS) status = ACTIVE_MASTERNODE_INITIAL;
+    if (status == ACTIVE_GAMEMASTER_SYNC_IN_PROCESS) status = ACTIVE_GAMEMASTER_INITIAL;
 
-    if (status == ACTIVE_MASTERNODE_INITIAL || (pmn && status == ACTIVE_MASTERNODE_NOT_CAPABLE)) {
-        if (pmn) {
-            if (pmn->protocolVersion != PROTOCOL_VERSION) {
-                LogPrintf("%s: ERROR Trying to start a masternode running an old protocol version, "
-                          "the controller and masternode wallets need to be running the latest release version.\n", __func__);
+    if (status == ACTIVE_GAMEMASTER_INITIAL || (pgm && status == ACTIVE_GAMEMASTER_NOT_CAPABLE)) {
+        if (pgm) {
+            if (pgm->protocolVersion != PROTOCOL_VERSION) {
+                LogPrintf("%s: ERROR Trying to start a gamemaster running an old protocol version, "
+                          "the controller and gamemaster wallets need to be running the latest release version.\n", __func__);
                 return;
             }
             // Update vin and service
-            EnableHotColdMasterNode(pmn->vin, pmn->addr);
+            EnableHotColdMasterNode(pgm->vin, pgm->addr);
         }
     }
 
-    if (status != ACTIVE_MASTERNODE_STARTED) {
+    if (status != ACTIVE_GAMEMASTER_STARTED) {
         // Set defaults
-        status = ACTIVE_MASTERNODE_NOT_CAPABLE;
+        status = ACTIVE_GAMEMASTER_NOT_CAPABLE;
         notCapableReason = "";
 
-        LogPrintf("%s - Checking inbound connection for masternode to '%s'\n", __func__ , service.ToString());
+        LogPrintf("%s - Checking inbound connection for gamemaster to '%s'\n", __func__ , service.ToString());
 
         CAddress addr(service, NODE_NETWORK);
         if (!g_connman->IsNodeConnected(addr)) {
             CNode* node = g_connman->ConnectNode(addr);
             if (!node) {
                 notCapableReason =
-                        "Masternode address:port connection availability test failed, could not open a connection to the public masternode address (" +
+                        "Gamemaster address:port connection availability test failed, could not open a connection to the public gamemaster address (" +
                         service.ToString() + ")";
                 LogPrintf("%s - not capable: %s\n", __func__, notCapableReason);
             } else {
@@ -373,149 +373,149 @@ void CActiveMasternode::ManageStatus()
 
     //send to all peers
     std::string errorMessage;
-    if (!SendMasternodePing(errorMessage)) {
-        LogPrintf("CActiveMasternode::ManageStatus() - Error on Ping: %s\n", errorMessage);
+    if (!SendGamemasterPing(errorMessage)) {
+        LogPrintf("CActiveGamemaster::ManageStatus() - Error on Ping: %s\n", errorMessage);
     }
 }
 
-void CActiveMasternode::ResetStatus()
+void CActiveGamemaster::ResetStatus()
 {
-    status = ACTIVE_MASTERNODE_INITIAL;
+    status = ACTIVE_GAMEMASTER_INITIAL;
     ManageStatus();
 }
 
-std::string CActiveMasternode::GetStatusMessage() const
+std::string CActiveGamemaster::GetStatusMessage() const
 {
     switch (status) {
-    case ACTIVE_MASTERNODE_INITIAL:
+    case ACTIVE_GAMEMASTER_INITIAL:
         return "Node just started, not yet activated";
-    case ACTIVE_MASTERNODE_SYNC_IN_PROCESS:
-        return "Sync in progress. Must wait until sync is complete to start Masternode";
-    case ACTIVE_MASTERNODE_NOT_CAPABLE:
-        return "Not capable masternode: " + notCapableReason;
-    case ACTIVE_MASTERNODE_STARTED:
-        return "Masternode successfully started";
+    case ACTIVE_GAMEMASTER_SYNC_IN_PROCESS:
+        return "Sync in progress. Must wait until sync is complete to start Gamemaster";
+    case ACTIVE_GAMEMASTER_NOT_CAPABLE:
+        return "Not capable gamemaster: " + notCapableReason;
+    case ACTIVE_GAMEMASTER_STARTED:
+        return "Gamemaster successfully started";
     default:
         return "unknown";
     }
 }
 
-bool CActiveMasternode::SendMasternodePing(std::string& errorMessage)
+bool CActiveGamemaster::SendGamemasterPing(std::string& errorMessage)
 {
     if (vin == nullopt) {
-        errorMessage = "Active Masternode not initialized";
+        errorMessage = "Active Gamemaster not initialized";
         return false;
     }
 
-    if (status != ACTIVE_MASTERNODE_STARTED) {
-        errorMessage = "Masternode is not in a running status";
+    if (status != ACTIVE_GAMEMASTER_STARTED) {
+        errorMessage = "Gamemaster is not in a running status";
         return false;
     }
 
-    if (!privKeyMasternode.IsValid() || !pubKeyMasternode.IsValid()) {
-        errorMessage = "Error upon masternode key.\n";
+    if (!privKeyGamemaster.IsValid() || !pubKeyGamemaster.IsValid()) {
+        errorMessage = "Error upon gamemaster key.\n";
         return false;
     }
 
-    LogPrintf("CActiveMasternode::SendMasternodePing() - Relay Masternode Ping vin = %s\n", vin->ToString());
+    LogPrintf("CActiveGamemaster::SendGamemasterPing() - Relay Gamemaster Ping vin = %s\n", vin->ToString());
 
-    const uint256& nBlockHash = mnodeman.GetBlockHashToPing();
-    CMasternodePing mnp(*vin, nBlockHash, GetAdjustedTime());
-    if (!mnp.Sign(privKeyMasternode, pubKeyMasternode.GetID())) {
-        errorMessage = "Couldn't sign Masternode Ping";
+    const uint256& nBlockHash = gamemasterman.GetBlockHashToPing();
+    CGamemasterPing gmp(*vin, nBlockHash, GetAdjustedTime());
+    if (!gmp.Sign(privKeyGamemaster, pubKeyGamemaster.GetID())) {
+        errorMessage = "Couldn't sign Gamemaster Ping";
         return false;
     }
 
-    // Update lastPing for our masternode in Masternode list
-    CMasternode* pmn = mnodeman.Find(vin->prevout);
-    if (pmn != nullptr) {
-        if (pmn->IsPingedWithin(MasternodePingSeconds(), mnp.sigTime)) {
-            errorMessage = "Too early to send Masternode Ping";
+    // Update lastPing for our gamemaster in Gamemaster list
+    CGamemaster* pgm = gamemasterman.Find(vin->prevout);
+    if (pgm != nullptr) {
+        if (pgm->IsPingedWithin(GamemasterPingSeconds(), gmp.sigTime)) {
+            errorMessage = "Too early to send Gamemaster Ping";
             return false;
         }
 
-        // SetLastPing locks the masternode cs, be careful with the lock order.
-        pmn->SetLastPing(mnp);
-        mnodeman.mapSeenMasternodePing.emplace(mnp.GetHash(), mnp);
+        // SetLastPing locks the gamemaster cs, be careful with the lock order.
+        pgm->SetLastPing(gmp);
+        gamemasterman.mapSeenGamemasterPing.emplace(gmp.GetHash(), gmp);
 
-        //mnodeman.mapSeenMasternodeBroadcast.lastPing is probably outdated, so we'll update it
-        CMasternodeBroadcast mnb(*pmn);
-        uint256 hash = mnb.GetHash();
-        if (mnodeman.mapSeenMasternodeBroadcast.count(hash)) {
-            // SetLastPing locks the masternode cs, be careful with the lock order.
+        //gamemasterman.mapSeenGamemasterBroadcast.lastPing is probably outdated, so we'll update it
+        CGamemasterBroadcast gmb(*pgm);
+        uint256 hash = gmb.GetHash();
+        if (gamemasterman.mapSeenGamemasterBroadcast.count(hash)) {
+            // SetLastPing locks the gamemaster cs, be careful with the lock order.
             // TODO: check why are we double setting the last ping here..
-            mnodeman.mapSeenMasternodeBroadcast[hash].SetLastPing(mnp);
+            gamemasterman.mapSeenGamemasterBroadcast[hash].SetLastPing(gmp);
         }
 
-        mnp.Relay();
+        gmp.Relay();
         return true;
 
     } else {
-        // Seems like we are trying to send a ping while the Masternode is not registered in the network
-        errorMessage = "Masternode List doesn't include our Masternode, shutting down Masternode pinging service! " + vin->ToString();
-        status = ACTIVE_MASTERNODE_NOT_CAPABLE;
+        // Seems like we are trying to send a ping while the Gamemaster is not registered in the network
+        errorMessage = "Gamemaster List doesn't include our Gamemaster, shutting down Gamemaster pinging service! " + vin->ToString();
+        status = ACTIVE_GAMEMASTER_NOT_CAPABLE;
         notCapableReason = errorMessage;
         return false;
     }
 }
 
-// when starting a Masternode, this can enable to run as a hot wallet with no funds
-bool CActiveMasternode::EnableHotColdMasterNode(CTxIn& newVin, CService& newService)
+// when starting a Gamemaster, this can enable to run as a hot wallet with no funds
+bool CActiveGamemaster::EnableHotColdMasterNode(CTxIn& newVin, CService& newService)
 {
     if (!fMasterNode) return false;
 
-    status = ACTIVE_MASTERNODE_STARTED;
+    status = ACTIVE_GAMEMASTER_STARTED;
 
-    //The values below are needed for signing mnping messages going forward
+    //The values below are needed for signing gmping messages going forward
     vin = newVin;
     service = newService;
 
-    LogPrintf("CActiveMasternode::EnableHotColdMasterNode() - Enabled! You may shut down the cold daemon.\n");
+    LogPrintf("CActiveGamemaster::EnableHotColdMasterNode() - Enabled! You may shut down the cold daemon.\n");
 
     return true;
 }
 
-void CActiveMasternode::GetKeys(CKey& _privKeyMasternode, CPubKey& _pubKeyMasternode) const
+void CActiveGamemaster::GetKeys(CKey& _privKeyGamemaster, CPubKey& _pubKeyGamemaster) const
 {
-    if (!privKeyMasternode.IsValid() || !pubKeyMasternode.IsValid()) {
-        throw std::runtime_error("Error trying to get masternode keys");
+    if (!privKeyGamemaster.IsValid() || !pubKeyGamemaster.IsValid()) {
+        throw std::runtime_error("Error trying to get gamemaster keys");
     }
-    _privKeyMasternode = privKeyMasternode;
-    _pubKeyMasternode = pubKeyMasternode;
+    _privKeyGamemaster = privKeyGamemaster;
+    _pubKeyGamemaster = pubKeyGamemaster;
 }
 
-bool GetActiveDMNKeys(CBLSSecretKey& key, CTxIn& vin)
+bool GetActiveDGMKeys(CBLSSecretKey& key, CTxIn& vin)
 {
-    if (activeMasternodeManager == nullptr) {
-        return error("%s: Active Masternode not initialized", __func__);
+    if (activeGamemasterManager == nullptr) {
+        return error("%s: Active Gamemaster not initialized", __func__);
     }
-    CDeterministicMNCPtr dmn;
-    auto res = activeMasternodeManager->GetOperatorKey(key, dmn);
+    CDeterministicGMCPtr dgm;
+    auto res = activeGamemasterManager->GetOperatorKey(key, dgm);
     if (!res) {
         return error("%s: %s", __func__, res.getError());
     }
-    vin = CTxIn(dmn->collateralOutpoint);
+    vin = CTxIn(dgm->collateralOutpoint);
     return true;
 }
 
-bool GetActiveMasternodeKeys(CTxIn& vin, Optional<CKey>& key, CBLSSecretKey& blsKey)
+bool GetActiveGamemasterKeys(CTxIn& vin, Optional<CKey>& key, CBLSSecretKey& blsKey)
 {
-    if (activeMasternodeManager != nullptr) {
-        // deterministic mn
+    if (activeGamemasterManager != nullptr) {
+        // deterministic gm
         key = nullopt;
-        return GetActiveDMNKeys(blsKey, vin);
+        return GetActiveDGMKeys(blsKey, vin);
     }
-    // legacy mn
-    if (activeMasternode.vin == nullopt) {
-        return error("%s: Active Masternode not initialized", __func__);
+    // legacy gm
+    if (activeGamemaster.vin == nullopt) {
+        return error("%s: Active Gamemaster not initialized", __func__);
     }
-    if (activeMasternode.GetStatus() != ACTIVE_MASTERNODE_STARTED) {
-        return error("%s: MN not started (%s)", __func__, activeMasternode.GetStatusMessage());
+    if (activeGamemaster.GetStatus() != ACTIVE_GAMEMASTER_STARTED) {
+        return error("%s: GM not started (%s)", __func__, activeGamemaster.GetStatusMessage());
     }
-    vin = *activeMasternode.vin;
+    vin = *activeGamemaster.vin;
     CKey sk;
     CPubKey pk;
-    activeMasternode.GetKeys(sk, pk);
+    activeGamemaster.GetKeys(sk, pk);
     key = Optional<CKey>(sk);
     blsKey.Reset();
     return true;

@@ -1672,8 +1672,8 @@ min-height: 24px;
 min-width: 24px;
 }
 
-/**************************** MASTERNODE LIST *******************************************/
-QWidget#MasternodeList .QFrame#frameList {
+/**************************** GAMEMASTER LIST *******************************************/
+QWidget#GamemasterList .QFrame#frameList {
 background-color:#ffffff;
 }
 

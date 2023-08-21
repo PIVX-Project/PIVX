@@ -8,18 +8,18 @@
 #include <atomic>
 #include <map>
 
-#define MASTERNODE_SYNC_INITIAL 0
-#define MASTERNODE_SYNC_SPORKS 1
-#define MASTERNODE_SYNC_LIST 2
-#define MASTERNODE_SYNC_MNW 3
-#define MASTERNODE_SYNC_BUDGET 4
-#define MASTERNODE_SYNC_BUDGET_PROP 10
-#define MASTERNODE_SYNC_BUDGET_FIN 11
-#define MASTERNODE_SYNC_FAILED 998
-#define MASTERNODE_SYNC_FINISHED 999
+#define GAMEMASTER_SYNC_INITIAL 0
+#define GAMEMASTER_SYNC_SPORKS 1
+#define GAMEMASTER_SYNC_LIST 2
+#define GAMEMASTER_SYNC_GMW 3
+#define GAMEMASTER_SYNC_BUDGET 4
+#define GAMEMASTER_SYNC_BUDGET_PROP 10
+#define GAMEMASTER_SYNC_BUDGET_FIN 11
+#define GAMEMASTER_SYNC_FAILED 998
+#define GAMEMASTER_SYNC_FINISHED 999
 
 // Sync threshold
-#define MASTERNODE_SYNC_THRESHOLD 2
+#define GAMEMASTER_SYNC_THRESHOLD 2
 
 // Chain sync update window.
 // Be careful with this value. The smaller the value is, the more the tiertwo sync locks 'g_best_block_mutex'.
@@ -30,29 +30,29 @@ class uint256;
 class TierTwoSyncState {
 public:
     bool IsBlockchainSynced() const { return fBlockchainSynced; };
-    bool IsSynced() const { return m_current_sync_phase == MASTERNODE_SYNC_FINISHED; }
-    bool IsSporkListSynced() const { return m_current_sync_phase > MASTERNODE_SYNC_SPORKS; }
-    bool IsMasternodeListSynced() const { return m_current_sync_phase > MASTERNODE_SYNC_LIST; }
+    bool IsSynced() const { return m_current_sync_phase == GAMEMASTER_SYNC_FINISHED; }
+    bool IsSporkListSynced() const { return m_current_sync_phase > GAMEMASTER_SYNC_SPORKS; }
+    bool IsGamemasterListSynced() const { return m_current_sync_phase > GAMEMASTER_SYNC_LIST; }
 
     // Update seen maps
-    void AddedMasternodeList(const uint256& hash);
-    void AddedMasternodeWinner(const uint256& hash);
+    void AddedGamemasterList(const uint256& hash);
+    void AddedGamemasterWinner(const uint256& hash);
     void AddedBudgetItem(const uint256& hash);
 
-    int64_t GetlastMasternodeList() const { return lastMasternodeList; }
-    int64_t GetlastMasternodeWinner() const { return lastMasternodeWinner; }
+    int64_t GetlastGamemasterList() const { return lastGamemasterList; }
+    int64_t GetlastGamemasterWinner() const { return lastGamemasterWinner; }
     int64_t GetlastBudgetItem() const { return lastBudgetItem; }
 
     void ResetLastBudgetItem() { lastBudgetItem = 0; }
 
-    void EraseSeenMNB(const uint256& hash) { mapSeenSyncMNB.erase(hash); }
-    void EraseSeenMNW(const uint256& hash) { mapSeenSyncMNW.erase(hash); }
+    void EraseSeenGMB(const uint256& hash) { mapSeenSyncGMB.erase(hash); }
+    void EraseSeenGMW(const uint256& hash) { mapSeenSyncGMW.erase(hash); }
     void EraseSeenSyncBudget(const uint256& hash) { mapSeenSyncBudget.erase(hash); }
 
     // Reset seen data
     void ResetData();
 
-    // Only called from masternodesync and unit tests.
+    // Only called from gamemastersync and unit tests.
     void SetBlockchainSync(bool f, int64_t cur_time) {
         fBlockchainSynced = f;
         last_blockchain_sync_update_time = cur_time;
@@ -69,12 +69,12 @@ private:
     std::atomic<int> m_current_sync_phase{0};
 
     // Seen elements
-    std::map<uint256, int> mapSeenSyncMNB;
-    std::map<uint256, int> mapSeenSyncMNW;
+    std::map<uint256, int> mapSeenSyncGMB;
+    std::map<uint256, int> mapSeenSyncGMW;
     std::map<uint256, int> mapSeenSyncBudget;
     // Last seen time
-    int64_t lastMasternodeList{0};
-    int64_t lastMasternodeWinner{0};
+    int64_t lastGamemasterList{0};
+    int64_t lastGamemasterWinner{0};
     int64_t lastBudgetItem{0};
 };
 

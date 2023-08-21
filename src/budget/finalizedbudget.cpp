@@ -5,7 +5,7 @@
 
 #include "budget/finalizedbudget.h"
 
-#include "masternodeman.h"
+#include "gamemasterman.h"
 #include "validation.h"
 
 CFinalizedBudget::CFinalizedBudget() :
@@ -53,28 +53,28 @@ bool CFinalizedBudget::ParseBroadcast(CDataStream& broadcast)
 
 bool CFinalizedBudget::AddOrUpdateVote(const CFinalizedBudgetVote& vote, std::string& strError)
 {
-    const COutPoint& mnId = vote.GetVin().prevout;
+    const COutPoint& gmId = vote.GetVin().prevout;
     const int64_t voteTime = vote.GetTime();
     std::string strAction = "New vote inserted:";
 
-    if (mapVotes.count(mnId)) {
-        const int64_t oldTime = mapVotes[mnId].GetTime();
+    if (mapVotes.count(gmId)) {
+        const int64_t oldTime = mapVotes[gmId].GetTime();
         if (oldTime > voteTime) {
             strError = strprintf("new vote older than existing vote - %s\n", vote.GetHash().ToString());
-            LogPrint(BCLog::MNBUDGET, "%s: %s\n", __func__, strError);
+            LogPrint(BCLog::GMBUDGET, "%s: %s\n", __func__, strError);
             return false;
         }
         if (voteTime - oldTime < BUDGET_VOTE_UPDATE_MIN) {
             strError = strprintf("time between votes is too soon - %s - %lli sec < %lli sec\n",
                     vote.GetHash().ToString(), voteTime - oldTime, BUDGET_VOTE_UPDATE_MIN);
-            LogPrint(BCLog::MNBUDGET, "%s: %s\n", __func__, strError);
+            LogPrint(BCLog::GMBUDGET, "%s: %s\n", __func__, strError);
             return false;
         }
         strAction = "Existing vote updated:";
     }
 
-    mapVotes[mnId] = vote;
-    LogPrint(BCLog::MNBUDGET, "%s: %s %s\n", __func__, strAction.c_str(), vote.GetHash().ToString().c_str());
+    mapVotes[gmId] = vote;
+    LogPrint(BCLog::GMBUDGET, "%s: %s %s\n", __func__, strAction.c_str(), vote.GetHash().ToString().c_str());
     return true;
 }
 
@@ -103,48 +103,48 @@ void CFinalizedBudget::SetSynced(bool synced)
 bool CFinalizedBudget::CheckProposals(const std::map<uint256, CBudgetProposal>& mapWinningProposals) const
 {
     if (mapWinningProposals.empty()) {
-        LogPrint(BCLog::MNBUDGET,"%s: No Budget-Proposals found, aborting\n", __func__);
+        LogPrint(BCLog::GMBUDGET,"%s: No Budget-Proposals found, aborting\n", __func__);
         return false;
     }
 
     if (mapWinningProposals.size() != vecBudgetPayments.size()) {
-        LogPrint(BCLog::MNBUDGET,"%s: Budget-Proposal length (%ld) doesn't match Budget-Payment length (%ld).\n",
+        LogPrint(BCLog::GMBUDGET,"%s: Budget-Proposal length (%ld) doesn't match Budget-Payment length (%ld).\n",
                 __func__, mapWinningProposals.size(), vecBudgetPayments.size());
         return false;
     }
 
     for (unsigned int i = 0; i < vecBudgetPayments.size(); i++) {
-        LogPrint(BCLog::MNBUDGET,"%s: Budget-Payments - nProp %d %s\n", __func__, i, vecBudgetPayments[i].nProposalHash.ToString());
-        LogPrint(BCLog::MNBUDGET,"%s: Budget-Payments - Payee %d %s\n", __func__, i, HexStr(vecBudgetPayments[i].payee));
-        LogPrint(BCLog::MNBUDGET,"%s: Budget-Payments - nAmount %d %lli\n", __func__, i, vecBudgetPayments[i].nAmount);
+        LogPrint(BCLog::GMBUDGET,"%s: Budget-Payments - nProp %d %s\n", __func__, i, vecBudgetPayments[i].nProposalHash.ToString());
+        LogPrint(BCLog::GMBUDGET,"%s: Budget-Payments - Payee %d %s\n", __func__, i, HexStr(vecBudgetPayments[i].payee));
+        LogPrint(BCLog::GMBUDGET,"%s: Budget-Payments - nAmount %d %lli\n", __func__, i, vecBudgetPayments[i].nAmount);
     }
 
     for (const auto& it: mapWinningProposals) {
-        LogPrint(BCLog::MNBUDGET,"%s: Budget-Proposals - nProp %s\n", __func__, (it.first).ToString());
-        LogPrint(BCLog::MNBUDGET,"%s: Budget-Proposals - Payee %s\n", __func__, HexStr((it.second).GetPayee()));
-        LogPrint(BCLog::MNBUDGET,"%s: Budget-Proposals - nAmount %lli\n", __func__, (it.second).GetAmount());
+        LogPrint(BCLog::GMBUDGET,"%s: Budget-Proposals - nProp %s\n", __func__, (it.first).ToString());
+        LogPrint(BCLog::GMBUDGET,"%s: Budget-Proposals - Payee %s\n", __func__, HexStr((it.second).GetPayee()));
+        LogPrint(BCLog::GMBUDGET,"%s: Budget-Proposals - nAmount %lli\n", __func__, (it.second).GetAmount());
     }
 
     for (const CTxBudgetPayment& p : vecBudgetPayments) {
         const auto& it = mapWinningProposals.find(p.nProposalHash);
         if (it == mapWinningProposals.end()) {
-            LogPrint(BCLog::MNBUDGET,"%s: Proposal %s not found\n", __func__, p.nProposalHash.ToString());
+            LogPrint(BCLog::GMBUDGET,"%s: Proposal %s not found\n", __func__, p.nProposalHash.ToString());
             return false;
         }
 
         const CBudgetProposal& prop = it->second;
         if (p.payee != prop.GetPayee()) {
-            LogPrint(BCLog::MNBUDGET,"%s: payee doesn't match %s != %s\n", __func__, HexStr(p.payee), HexStr(prop.GetPayee()));
+            LogPrint(BCLog::GMBUDGET,"%s: payee doesn't match %s != %s\n", __func__, HexStr(p.payee), HexStr(prop.GetPayee()));
             return false;
         }
 
         if (p.nAmount != prop.GetAmount()) {
-            LogPrint(BCLog::MNBUDGET,"%s: payee amount doesn't match %lli != %lli\n", __func__, p.nAmount, prop.GetAmount());
+            LogPrint(BCLog::GMBUDGET,"%s: payee amount doesn't match %lli != %lli\n", __func__, p.nAmount, prop.GetAmount());
             return false;
         }
     }
 
-    LogPrint(BCLog::MNBUDGET,"%s: Finalized Budget Matches! Submitting Vote.\n", __func__);
+    LogPrint(BCLog::GMBUDGET,"%s: Finalized Budget Matches! Submitting Vote.\n", __func__);
     return true;
 }
 
@@ -286,7 +286,7 @@ bool CFinalizedBudget::IsPaidAlready(const uint256& nProposalHash, const uint256
         nPaidBlockHeight = (*it).second.second;
         if((nPaidBlockHeight < GetBlockStart()) || (nPaidBlockHeight > GetBlockEnd())) {
             nOldProposalHash = (*it).first;
-            LogPrint(BCLog::MNBUDGET, "%s: Budget Proposal %s, Block %d from old cycle deleted\n",
+            LogPrint(BCLog::GMBUDGET, "%s: Budget Proposal %s, Block %d from old cycle deleted\n",
                     __func__, nOldProposalHash.ToString().c_str(), nPaidBlockHeight);
             it = mapPayment_History.erase(it);
         } else {
@@ -300,7 +300,7 @@ bool CFinalizedBudget::IsPaidAlready(const uint256& nProposalHash, const uint256
         mapPayment_History.emplace(std::piecewise_construct,
                                    std::forward_as_tuple(nProposalHash),
                                    std::forward_as_tuple(nBlockHash, nBlockHeight));
-        LogPrint(BCLog::MNBUDGET, "%s: Budget Proposal %s, Block %d (%s) added to payment history (size=%d)\n",
+        LogPrint(BCLog::GMBUDGET, "%s: Budget Proposal %s, Block %d (%s) added to payment history (size=%d)\n",
                 __func__, nProposalHash.ToString(), nBlockHeight, nBlockHash.ToString(), mapPayment_History.size());
         return false;
     }
@@ -308,7 +308,7 @@ bool CFinalizedBudget::IsPaidAlready(const uint256& nProposalHash, const uint256
     const uint256& nPaidBlockHash = mapPayment_History.at(nProposalHash).first;
 
     // If we are checking a different block, and the paid one is on chain
-    // -> reject transaction so it gets paid to a masternode instead
+    // -> reject transaction so it gets paid to a gamemaster instead
     if (nBlockHash != nPaidBlockHash) {
         LOCK(cs_main);
         CBlockIndex* pindex = LookupBlockIndex(nPaidBlockHash);
@@ -323,24 +323,24 @@ TrxValidationStatus CFinalizedBudget::IsTransactionValid(const CTransaction& txN
 {
     const int nBlockEnd = GetBlockEnd();
     if (nBlockHeight > nBlockEnd) {
-        LogPrint(BCLog::MNBUDGET,"%s: Invalid block - height: %d end: %d\n", __func__, nBlockHeight, nBlockEnd);
+        LogPrint(BCLog::GMBUDGET,"%s: Invalid block - height: %d end: %d\n", __func__, nBlockHeight, nBlockEnd);
         return TrxValidationStatus::InValid;
     }
     if (nBlockHeight < nBlockStart) {
-        LogPrint(BCLog::MNBUDGET,"%s: Invalid block - height: %d start: %d\n", __func__, nBlockHeight, nBlockStart);
+        LogPrint(BCLog::GMBUDGET,"%s: Invalid block - height: %d start: %d\n", __func__, nBlockHeight, nBlockStart);
         return TrxValidationStatus::InValid;
     }
 
     const int nCurrentBudgetPayment = nBlockHeight - nBlockStart;
     if (nCurrentBudgetPayment > (int)vecBudgetPayments.size() - 1) {
-        LogPrint(BCLog::MNBUDGET,"%s: Invalid last block - current budget payment: %d of %d\n",
+        LogPrint(BCLog::GMBUDGET,"%s: Invalid last block - current budget payment: %d of %d\n",
                 __func__, nCurrentBudgetPayment + 1, (int)vecBudgetPayments.size());
         return TrxValidationStatus::InValid;
     }
 
-    // Check if this proposal was paid already. If so, pay a masternode instead
+    // Check if this proposal was paid already. If so, pay a gamemaster instead
     if(IsPaidAlready(vecBudgetPayments[nCurrentBudgetPayment].nProposalHash, nBlockHash, nBlockHeight)) {
-        LogPrint(BCLog::MNBUDGET,"%s: Double Budget Payment of %d for proposal %d detected. Paying a masternode instead.\n",
+        LogPrint(BCLog::GMBUDGET,"%s: Double Budget Payment of %d for proposal %d detected. Paying a gamemaster instead.\n",
                 __func__, vecBudgetPayments[nCurrentBudgetPayment].nAmount, vecBudgetPayments[nCurrentBudgetPayment].nProposalHash.GetHex());
         // No matter what we've found before, stop all checks here. In future releases there might be more than one budget payment
         // per block, so even if the first one was not paid yet this one disables all budget payments for this block.
@@ -352,11 +352,11 @@ TrxValidationStatus CFinalizedBudget::IsTransactionValid(const CTransaction& txN
     const CAmount& amountExpected = vecBudgetPayments[nCurrentBudgetPayment].nAmount;
     // Budget payment is usually the last output of coinstake txes, iterate backwords
     for (auto out = txNew.vout.rbegin(); out != txNew.vout.rend(); ++out) {
-        LogPrint(BCLog::MNBUDGET,"%s: nCurrentBudgetPayment=%d, payee=%s == out.scriptPubKey=%s, amount=%ld == out.nValue=%ld\n",
+        LogPrint(BCLog::GMBUDGET,"%s: nCurrentBudgetPayment=%d, payee=%s == out.scriptPubKey=%s, amount=%ld == out.nValue=%ld\n",
                 __func__, nCurrentBudgetPayment, HexStr(scriptExpected), HexStr(out->scriptPubKey), amountExpected, out->nValue);
         if (scriptExpected == out->scriptPubKey && amountExpected == out->nValue) {
             // payment found
-            LogPrint(BCLog::MNBUDGET,"%s: Found valid Budget Payment of %d for proposal %d\n",
+            LogPrint(BCLog::GMBUDGET,"%s: Found valid Budget Payment of %d for proposal %d\n",
                     __func__, amountExpected, vecBudgetPayments[nCurrentBudgetPayment].nProposalHash.GetHex());
             return TrxValidationStatus::Valid;
         }
@@ -365,7 +365,7 @@ TrxValidationStatus CFinalizedBudget::IsTransactionValid(const CTransaction& txN
     // payment not found
     CTxDestination address1;
     ExtractDestination(scriptExpected, address1);
-    LogPrint(BCLog::MNBUDGET,"%s: Missing required payment - %s: %d c: %d\n",
+    LogPrint(BCLog::GMBUDGET,"%s: Missing required payment - %s: %d c: %d\n",
             __func__, EncodeDestination(address1), amountExpected, nCurrentBudgetPayment);
     return TrxValidationStatus::InValid;
 }

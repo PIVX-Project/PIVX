@@ -79,11 +79,11 @@
 #endif
 
 const char * const hemis_CONF_FILENAME = "hemis.conf";
-const char * const hemis_MASTERNODE_CONF_FILENAME = "masternode.conf";
+const char * const hemis_GAMEMASTER_CONF_FILENAME = "gamemaster.conf";
 
 
 // hemis only features
-// Masternode
+// Gamemaster
 std::atomic<bool> fMasterNode{false};
 
 ArgsManager gArgs;
@@ -773,9 +773,9 @@ fs::path GetConfigFile(const std::string& confPath)
     return AbsPathForConfigVal(pathConfigFile, false);
 }
 
-fs::path GetMasternodeConfigFile()
+fs::path GetGamemasterConfigFile()
 {
-    fs::path pathConfigFile(gArgs.GetArg("-mnconf", hemis_MASTERNODE_CONF_FILENAME));
+    fs::path pathConfigFile(gArgs.GetArg("-gmconf", hemis_GAMEMASTER_CONF_FILENAME));
     return AbsPathForConfigVal(pathConfigFile);
 }
 

@@ -82,7 +82,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #2197 Close DB on error (Fuzzbawls)
 - #2195 Solve an incorrect MakeTransactionRef usage for ATMP call inside the wallet and unit tests (furszy)
 - #2201 CTransactionRef migration + CWalletTx/CMerkleTx refactor (furszy)
-- #2218 Guarding wallet access from init and print error for unknown MN collaterals (furszy)
+- #2218 Guarding wallet access from init and print error for unknown GM collaterals (furszy)
 - #2232 Berkeley DB v6 compatibility fix (random-zebra)
 - #2225 Rescan chain for wallet transactions process re-written (furszy)
 - #2209 Killing wallet and GUI cs_main locks (furszy)
@@ -91,7 +91,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #2141 Fix argument parsing and example for getbalance (Fuzzbawls)
 - #2147 fix getbalance transparent watch-only amount (furszy)
 - #2154 `validateaddress` remove duplicate return address value (furszy)
-- #2157 mnbudgetvote generalized, duplicated code cleaned (furszy)
+- #2157 gmbudgetvote generalized, duplicated code cleaned (furszy)
 - #2177 [BUG] Fix getblockindexstats-getfeeinfo with shield txes (random-zebra)
 - #2283 `getwalletinfo`: Add last_processed_block return value (furszy)
 
@@ -138,10 +138,10 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #2227 fixing gitian build fail with checksum mismatch (furszy)
 - #2230 [GA] Dont run the feature_dbcrash test in GA (Fuzzbawls)
 
-### Tier Two Network (Masternodes / Budget)
-- #2143 [BUG] Fix deadlock in GetNextMasternodeInQueueForPayment (random-zebra)
-- #2170 Better hemis.conf Masternode data error notification (furszy)
-- #2186 Improving masternode check inputs and add process (furszy)
+### Tier Two Network (Gamemasters / Budget)
+- #2143 [BUG] Fix deadlock in GetNextGamemasterInQueueForPayment (random-zebra)
+- #2170 Better hemis.conf Gamemaster data error notification (furszy)
+- #2186 Improving gamemaster check inputs and add process (furszy)
 
 ### Miscellaneous
 - #2082 Generic event handler interface (furszy)
@@ -167,7 +167,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #2092 [Core] Migrate uint160 (CKeyID/CScriptID) to opaque blobs (random-zebra)
 - #1974 [Refactoring] Use c++11 list initialization for maps/vectors (Fuzzbawls)
 - #2168 [Tests] Fix tests order on test_runner --all (random-zebra)
-- #2135 [Masternode] Manage status cleanup (furszy)
+- #2135 [Gamemaster] Manage status cleanup (furszy)
 - #2184 Grouping misbehaving / cs_main lock calls into a single place (furszy)
 - #2175 [Refactoring] Remove g_IsSapling active flag (random-zebra)
 - #2164 Several updates to the base chain params structure (furszy)

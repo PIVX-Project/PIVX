@@ -15,7 +15,7 @@ Update enforcement goes into effect at the following times:
     Testnet: Tuesday, August 27, 2019 7:00:00 PM GMT
     Mainnet: Friday, August 30, 2019 4:00:00 PM GMT
 
-Masternodes will need to be restarted once both the masternode daemon and the controller wallet have been upgraded.
+Gamemasters will need to be restarted once both the gamemaster daemon and the controller wallet have been upgraded.
 
 How to Upgrade
 ==============

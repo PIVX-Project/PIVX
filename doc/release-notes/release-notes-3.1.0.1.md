@@ -1,6 +1,6 @@
 hemis Core version *3.1.0.1* is now available from:  <https://github.com/hemis-project/hemis/releases>
 
-This is a new bugfix release, specifically addressing a bug with windows OS masternode control wallets. Users upgrading to this version are encouraged to also read the detailed release notes for the previous [3.1.0](https://github.com/hemis-Project/hemis/releases/tag/v3.1.0) release as information will not be duplicated here.
+This is a new bugfix release, specifically addressing a bug with windows OS gamemaster control wallets. Users upgrading to this version are encouraged to also read the detailed release notes for the previous [3.1.0](https://github.com/hemis-Project/hemis/releases/tag/v3.1.0) release as information will not be duplicated here.
 
 Please report bugs using the issue tracker at github: <https://github.com/hemis-project/hemis/issues>
 
@@ -27,10 +27,10 @@ hemis Core should also work on most other Unix-like systems but is not frequentl
 Notable Changes
 ==============
 
-Windows masternode.conf bug
+Windows gamemaster.conf bug
 --------------
 
-Windows Masternode Controller wallets were experiencing an issue with reading the `masternode.conf` file during startup that prevented the wallet from opening properly. 
+Windows Gamemaster Controller wallets were experiencing an issue with reading the `gamemaster.conf` file during startup that prevented the wallet from opening properly. 
 
 Windows file icons
 -------------
@@ -43,7 +43,7 @@ The Windows program icons and installer images were of less than ideal quality, 
 Detailed release notes follow. This overview includes changes that affect behavior, not code moves, refactors and string updates. For convenience in locating the code changes and accompanying discussion, both the pull request and git merge commit are mentioned.
 
 ### Miscellaneous
-- #586 `fc211bfdf` [Bug] Fix CMasternodeConfig::read (Fuzzbawls)
+- #586 `fc211bfdf` [Bug] Fix CGamemasterConfig::read (Fuzzbawls)
 - #587 `69498104f` [Bug] Fix Windows icon files (Fuzzbawls)
 
 ## Credits

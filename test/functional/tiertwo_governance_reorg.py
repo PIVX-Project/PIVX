@@ -22,8 +22,8 @@ class GovernanceReorgTest(HemisTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         # 4 nodes:
-        # - 1 miner/mncontroller
-        # - 2 remote mns
+        # - 1 miner/gmcontroller
+        # - 2 remote gms
         # - 1 other node to stake a forked chain
         self.num_nodes = 4
         self.extra_args = [["-sporkkey=932HEevBSujW2ud7RfB1YF91AFygbBRQj3de3LyaCRqNzKKgWXi"],
@@ -38,17 +38,17 @@ class GovernanceReorgTest(HemisTestFramework):
         self.remoteOnePos = 1
         self.remoteTwoPos = 2
 
-        self.masternodeOneAlias = "mnOne"
-        self.masternodeTwoAlias = "mntwo"
+        self.gamemasterOneAlias = "gmOne"
+        self.gamemasterTwoAlias = "gmtwo"
 
-        self.mnOnePrivkey = "9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK"
-        self.mnTwoPrivkey = "92Hkebp3RHdDidGZ7ARgS4orxJAGyFUPDXNqtsYsiwho1HGVRbF"
+        self.gmOnePrivkey = "9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK"
+        self.gmTwoPrivkey = "92Hkebp3RHdDidGZ7ARgS4orxJAGyFUPDXNqtsYsiwho1HGVRbF"
 
     def run_test(self):
-        minerA = self.nodes[self.minerAPos]     # also controller of mn1 and mn2
+        minerA = self.nodes[self.minerAPos]     # also controller of gm1 and gm2
         minerB = self.nodes[self.minerBPos]
-        mn1 = self.nodes[self.remoteOnePos]
-        mn2 = self.nodes[self.remoteTwoPos]
+        gm1 = self.nodes[self.remoteOnePos]
+        gm2 = self.nodes[self.remoteTwoPos]
 
         # First mine 250 PoW blocks (50 with minerB, 200 with minerA)
         self.log.info("Generating 259 blocks...")
@@ -64,36 +64,36 @@ class GovernanceReorgTest(HemisTestFramework):
         for n in self.nodes:
             assert_equal(n.getblockcount(), 259)
 
-        # Setup Masternodes
-        self.log.info("Masternodes setup...")
+        # Setup Gamemasters
+        self.log.info("Gamemasters setup...")
         ownerdir = os.path.join(self.options.tmpdir, "node%d" % self.minerAPos, "regtest")
-        self.mnOneCollateral = self.setupMasternode(minerA, minerA, self.masternodeOneAlias,
-                                                    ownerdir, self.remoteOnePos, self.mnOnePrivkey)
-        self.mnTwoCollateral = self.setupMasternode(minerA, minerA, self.masternodeTwoAlias,
-                                                    ownerdir, self.remoteTwoPos, self.mnTwoPrivkey)
+        self.gmOneCollateral = self.setupGamemaster(minerA, minerA, self.gamemasterOneAlias,
+                                                    ownerdir, self.remoteOnePos, self.gmOnePrivkey)
+        self.gmTwoCollateral = self.setupGamemaster(minerA, minerA, self.gamemasterTwoAlias,
+                                                    ownerdir, self.remoteTwoPos, self.gmTwoPrivkey)
 
-        # Activate masternodes
-        self.log.info("Masternodes activation...")
+        # Activate gamemasters
+        self.log.info("Gamemasters activation...")
         self.stake_and_ping(self.minerAPos, 1, [])
         time.sleep(3)
         self.advance_mocktime(10)
         remoteOnePort = p2p_port(self.remoteOnePos)
         remoteTwoPort = p2p_port(self.remoteTwoPos)
-        mn1.initmasternode(self.mnOnePrivkey, "127.0.0.1:"+str(remoteOnePort))
-        mn2.initmasternode(self.mnTwoPrivkey, "127.0.0.1:"+str(remoteTwoPort))
+        gm1.initgamemaster(self.gmOnePrivkey, "127.0.0.1:"+str(remoteOnePort))
+        gm2.initgamemaster(self.gmTwoPrivkey, "127.0.0.1:"+str(remoteTwoPort))
         self.stake_and_ping(self.minerAPos, 1, [])
-        self.wait_until_mnsync_finished()
-        self.controller_start_masternodes(minerA, [self.masternodeOneAlias, self.masternodeTwoAlias])
-        self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)
-        self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)
-        self.send_3_pings([mn1, mn2])
-        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [mn1, mn2])
-        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [mn1, mn2])
+        self.wait_until_gmsync_finished()
+        self.controller_start_gamemasters(minerA, [self.gamemasterOneAlias, self.gamemasterTwoAlias])
+        self.wait_until_gm_preenabled(self.gmOneCollateral.hash, 40)
+        self.wait_until_gm_preenabled(self.gmOneCollateral.hash, 40)
+        self.send_3_pings([gm1, gm2])
+        self.wait_until_gm_enabled(self.gmOneCollateral.hash, 120, [gm1, gm2])
+        self.wait_until_gm_enabled(self.gmOneCollateral.hash, 120, [gm1, gm2])
 
         # activate sporks
-        self.log.info("Masternodes enabled. Activating sporks.")
-        self.activate_spork(self.minerAPos, "SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT")
-        self.activate_spork(self.minerAPos, "SPORK_9_MASTERNODE_BUDGET_ENFORCEMENT")
+        self.log.info("Gamemasters enabled. Activating sporks.")
+        self.activate_spork(self.minerAPos, "SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT")
+        self.activate_spork(self.minerAPos, "SPORK_9_GAMEMASTER_BUDGET_ENFORCEMENT")
         self.activate_spork(self.minerAPos, "SPORK_13_ENABLE_SUPERBLOCKS")
 
         # Create a proposal and vote on it
@@ -102,16 +102,16 @@ class GovernanceReorgTest(HemisTestFramework):
         self.log.info("Creating a proposal to be paid at block %d" % next_superblock)
         proposalFeeTxId = minerA.preparebudget("test1", "https://test1.org", 2,
                                                next_superblock, payee, 300)
-        self.stake_and_ping(self.minerAPos, 3, [mn1, mn2])
+        self.stake_and_ping(self.minerAPos, 3, [gm1, gm2])
         proposalHash = minerA.submitbudget("test1", "https://test1.org", 2,
                                            next_superblock, payee, 300, proposalFeeTxId)
         time.sleep(1)
-        self.stake_and_ping(self.minerAPos, 7, [mn1, mn2])
+        self.stake_and_ping(self.minerAPos, 7, [gm1, gm2])
         self.log.info("Vote for the proposal and check projection...")
-        minerA.mnbudgetvote("alias", proposalHash, "yes", self.masternodeOneAlias)
-        minerA.mnbudgetvote("alias", proposalHash, "yes", self.masternodeTwoAlias)
+        minerA.gmbudgetvote("alias", proposalHash, "yes", self.gamemasterOneAlias)
+        minerA.gmbudgetvote("alias", proposalHash, "yes", self.gamemasterTwoAlias)
         time.sleep(1)
-        self.stake_and_ping(self.minerAPos, 1, [mn1, mn2])
+        self.stake_and_ping(self.minerAPos, 1, [gm1, gm2])
         projection = minerB.getbudgetprojection()[0]
         assert_equal(projection["Name"], "test1")
         assert_equal(projection["Hash"], proposalHash)
@@ -119,22 +119,22 @@ class GovernanceReorgTest(HemisTestFramework):
 
         # Create the finalized budget and vote on it
         self.log.info("Finalizing the budget...")
-        self.stake_and_ping(self.minerAPos, 5, [mn1, mn2])
-        assert (minerA.mnfinalbudgetsuggest() is not None)
+        self.stake_and_ping(self.minerAPos, 5, [gm1, gm2])
+        assert (minerA.gmfinalbudgetsuggest() is not None)
         time.sleep(1)
-        self.stake_and_ping(self.minerAPos, 4, [mn1, mn2])
-        budgetFinHash = minerA.mnfinalbudgetsuggest()
+        self.stake_and_ping(self.minerAPos, 4, [gm1, gm2])
+        budgetFinHash = minerA.gmfinalbudgetsuggest()
         assert (budgetFinHash != "")
         time.sleep(1)
-        minerA.mnfinalbudget("vote-many", budgetFinHash)
-        self.stake_and_ping(self.minerAPos, 2, [mn1, mn2])
-        budFin = minerB.mnfinalbudget("show")
+        minerA.gmfinalbudget("vote-many", budgetFinHash)
+        self.stake_and_ping(self.minerAPos, 2, [gm1, gm2])
+        budFin = minerB.gmfinalbudget("show")
         budget = budFin[next(iter(budFin))]
         assert_equal(budget["VoteCount"], 2)
 
         # Stake up until the block before the superblock.
         skip_blocks = next_superblock - minerA.getblockcount() - 1
-        self.stake_and_ping(self.minerAPos, skip_blocks, [mn1, mn2])
+        self.stake_and_ping(self.minerAPos, skip_blocks, [gm1, gm2])
 
         # Split the network.
         self.log.info("Splitting the chain at block %d" % minerA.getblockcount())
@@ -147,7 +147,7 @@ class GovernanceReorgTest(HemisTestFramework):
         self.create_and_check_superblock(minerA, next_superblock, payee)
         # Add 10 blocks on top
         self.log.info("Staking 10 blocks...")
-        self.stake_and_ping(self.nodes.index(minerA), 10, [mn1, mn2])
+        self.stake_and_ping(self.nodes.index(minerA), 10, [gm1, gm2])
 
         # --- Chain B ---
         other_nodes = self.nodes.copy()
@@ -172,12 +172,12 @@ class GovernanceReorgTest(HemisTestFramework):
         self.log.info("All good.")
 
 
-    def send_3_pings(self, mn_list):
+    def send_3_pings(self, gm_list):
         self.advance_mocktime(30)
-        self.send_pings(mn_list)
-        self.stake_and_ping(self.minerAPos, 1, mn_list)
+        self.send_pings(gm_list)
+        self.stake_and_ping(self.minerAPos, 1, gm_list)
         self.advance_mocktime(30)
-        self.send_pings(mn_list)
+        self.send_pings(gm_list)
         time.sleep(2)
 
     def split_network(self):

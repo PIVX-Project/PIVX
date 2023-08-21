@@ -65,7 +65,7 @@
             <item>
              <widget class="QLabel" name="labelTitle">
               <property name="text">
-               <string>Masternodes</string>
+               <string>Gamemasters</string>
               </property>
              </widget>
             </item>
@@ -227,7 +227,7 @@ and vote on the treasury system receiving a periodic reward.</string>
                  <string notr="true"/>
                 </property>
                 <property name="text">
-                 <string>No active Masternode yet</string>
+                 <string>No active Gamemaster yet</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -279,7 +279,7 @@ and vote on the treasury system receiving a periodic reward.</string>
              <enum>Qt::NoFocus</enum>
             </property>
             <property name="text">
-             <string>Create Masternode Controller</string>
+             <string>Create Gamemaster Controller</string>
             </property>
            </widget>
           </item>

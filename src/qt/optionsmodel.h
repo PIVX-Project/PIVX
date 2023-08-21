@@ -51,7 +51,7 @@ public:
         HideZeroBalances,    // bool
         HideOrphans,    // bool
         AnonymizeHemisAmount, //int
-        ShowMasternodesTab,  // bool
+        ShowGamemastersTab,  // bool
         Listen,              // bool
         ShowColdStakingScreen,  // bool
         OptionIDRowCount,

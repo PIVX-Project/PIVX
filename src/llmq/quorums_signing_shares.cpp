@@ -4,7 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "quorums_signing_shares.h"
-#include "activemasternode.h"
+#include "activegamemaster.h"
 #include "bls/bls_batchverifier.h"
 #include "cxxtimer.h"
 #include "init.h"
@@ -15,8 +15,8 @@
 #include "quorums_utils.h"
 #include "random.h"
 #include "shutdown.h"
-#include "tiertwo/masternode_meta_manager.h" // for g_mmetaman
-#include "tiertwo/net_masternodes.h"
+#include "tiertwo/gamemaster_meta_manager.h" // for g_mmetaman
+#include "tiertwo/net_gamemasters.h"
 #include "validation.h"
 
 namespace llmq
@@ -207,8 +207,8 @@ void CSigSharesManager::StopWorkerThread()
 
 void CSigSharesManager::ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
 {
-    // non-masternodes are not interested in sigshares
-    if (!activeMasternodeManager) {
+    // non-gamemasters are not interested in sigshares
+    if (!activeGamemasterManager) {
         return;
     }
 
@@ -235,7 +235,7 @@ bool CSigSharesManager::VerifySigSharesInv(NodeId from, const CSigSharesInv& inv
         return false;
     }
 
-    if (!activeMasternodeManager) {
+    if (!activeGamemasterManager) {
         return false;
     }
 
@@ -364,7 +364,7 @@ bool CSigSharesManager::PreVerifyBatchedSigShares(NodeId nodeId, const CBatchedS
             // quorum is too old
             return false;
         }
-        if (!quorum->IsMember(activeMasternodeManager->GetProTx())) {
+        if (!quorum->IsMember(activeGamemasterManager->GetProTx())) {
             // we're not a member so we can't verify it (we actually shouldn't have received it)
             return false;
         }
@@ -554,7 +554,7 @@ void CSigSharesManager::ProcessSigShare(NodeId nodeId, const CSigShare& sigShare
 
     // prepare node set for direct-push in case this is our sig share
     std::set<NodeId> quorumNodes;
-    if (sigShare.quorumMember == quorum->GetMemberIndex(activeMasternodeManager->GetProTx())) {
+    if (sigShare.quorumMember == quorum->GetMemberIndex(activeGamemasterManager->GetProTx())) {
         quorumNodes = connman.GetTierTwoConnMan()->getQuorumNodes((Consensus::LLMQType)sigShare.llmqType, sigShare.quorumHash);
         // make sure node states are created for these nodes (we might have not received any message from these yet)
         for (auto otherNodeId : quorumNodes) {
@@ -1140,7 +1140,7 @@ void CSigSharesManager::Sign(const CQuorumCPtr& quorum, const uint256& id, const
 {
     cxxtimer::Timer t(true);
 
-    if (!quorum->IsValidMember(activeMasternodeManager->GetProTx())) {
+    if (!quorum->IsValidMember(activeGamemasterManager->GetProTx())) {
         return;
     }
 
@@ -1150,7 +1150,7 @@ void CSigSharesManager::Sign(const CQuorumCPtr& quorum, const uint256& id, const
         return;
     }
 
-    int memberIdx = quorum->GetMemberIndex(activeMasternodeManager->GetProTx());
+    int memberIdx = quorum->GetMemberIndex(activeGamemasterManager->GetProTx());
     if (memberIdx == -1) {
         // this should really not happen (IsValidMember gave true)
         return;

@@ -127,7 +127,7 @@ set(BITCOIN_TESTS
         ${CMAKE_CURRENT_SOURCE_DIR}/crypto_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/cuckoocache_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/DoS_tests.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/evo_deterministicmns_tests.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/evo_deterministicgms_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/evo_specialtx_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/flatfile_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/fs_tests.cpp
@@ -136,7 +136,7 @@ set(BITCOIN_TESTS
         ${CMAKE_CURRENT_SOURCE_DIR}/key_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/dbwrapper_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/main_tests.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/mnpayments_tests.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/gmpayments_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/mempool_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/merkle_tests.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/merkleblock_tests.cpp

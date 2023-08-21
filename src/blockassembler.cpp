@@ -15,7 +15,7 @@
 #include "consensus/upgrades.h"
 #include "consensus/validation.h"
 #include "llmq/quorums_blockprocessor.h"
-#include "masternode-payments.h"
+#include "gamemaster-payments.h"
 #include "policy/policy.h"
 #include "pow.h"
 #include "primitives/transaction.h"
@@ -91,7 +91,7 @@ bool SolveProofOfStake(CBlock* pblock, CBlockIndex* pindexPrev, CWallet* pwallet
     }
     // Stake found
 
-    // Create coinbase tx and add masternode/budget payments
+    // Create coinbase tx and add gamemaster/budget payments
     CMutableTransaction txCoinbase = NewCoinbase(pindexPrev->nHeight + 1);
     FillBlockPayee(txCoinbase, txCoinStake, pindexPrev, true);
 
@@ -115,7 +115,7 @@ CMutableTransaction CreateCoinbaseTx(const CScript& scriptPubKeyIn, CBlockIndex*
     // Create coinbase tx
     CMutableTransaction txCoinbase = NewCoinbase(nHeight, &scriptPubKeyIn);
 
-    //Masternode and general budget payments
+    //Gamemaster and general budget payments
     CMutableTransaction txDummy;    // POW blocks have no coinstake
     FillBlockPayee(txCoinbase, txDummy, pindexPrev, false);
 

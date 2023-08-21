@@ -8,7 +8,7 @@
 
 #include "clientversion.h"
 #include "bls/bls_wrapper.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "evo/specialtx_validation.h"
 #include "evo/providertx.h"
 #include "policy/fees.h"
@@ -747,7 +747,7 @@ void CTxMemPool::removeProTxCollateralConflicts(const CTransaction &tx, const CO
 
 void CTxMemPool::removeProTxReferences(const uint256& proTxHash, MemPoolRemovalReason reason)
 {
-    // Remove TXs that refer to a certain MN
+    // Remove TXs that refer to a certain GM
     while (true) {
         auto it = mapProTxRefs.find(proTxHash);
         if (it == mapProTxRefs.end()) {
@@ -767,17 +767,17 @@ void CTxMemPool::removeProTxReferences(const uint256& proTxHash, MemPoolRemovalR
 
 void CTxMemPool::removeProTxSpentCollateralConflicts(const CTransaction &tx)
 {
-    auto mnList = deterministicMNManager->GetListAtChainTip();
+    auto gmList = deterministicGMManager->GetListAtChainTip();
     for (const auto& in : tx.vin) {
         auto collateralIt = mapProTxCollaterals.find(in.prevout);
         if (collateralIt != mapProTxCollaterals.end()) {
             // These are not yet mined ProRegTxs
             removeProTxReferences(collateralIt->second, MemPoolRemovalReason::CONFLICT);
         }
-        auto dmn = mnList.GetMNByCollateral(in.prevout);
-        if (dmn) {
+        auto dgm = gmList.GetGMByCollateral(in.prevout);
+        if (dgm) {
             // These are updates refering to a mined ProRegTx
-            removeProTxReferences(dmn->proTxHash, MemPoolRemovalReason::CONFLICT);
+            removeProTxReferences(dgm->proTxHash, MemPoolRemovalReason::CONFLICT);
         }
     }
 }

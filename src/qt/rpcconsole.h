@@ -85,8 +85,8 @@ public Q_SLOTS:
     void setNetworkActive(bool networkActive);
     /** Set number of blocks shown in the UI */
     void setNumBlocks(int count);
-    /** Set number of masternodes shown in the UI */
-    void setMasternodeCount(const QString& strMasternodes);
+    /** Set number of gamemasters shown in the UI */
+    void setGamemasterCount(const QString& strGamemasters);
     /** Go forward or back in history */
     void browseHistory(int offset);
     /** Scroll console view to end */
@@ -103,7 +103,7 @@ public Q_SLOTS:
     void showRepair();
     /** Open external (default) editor with hemis.conf */
     void showConfEditor();
-    /** Open external (default) editor with masternode.conf */
+    /** Open external (default) editor with gamemaster.conf */
     void showMNConfEditor();
     /** Handle selection of peer in peers list */
     void peerSelected(const QItemSelection& selected, const QItemSelection& deselected);

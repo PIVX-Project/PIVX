@@ -102,13 +102,13 @@ public:
     //! Set the automatic port mapping options
     static void mapPort(bool use_upnp, bool use_natpmp);
 
-    // Start/Stop the masternode polling timer
-    void startMasternodesTimer();
-    void stopMasternodesTimer();
-    // Force a MN count update calling mnmanager directly locking its internal mutex.
+    // Start/Stop the gamemaster polling timer
+    void startGamemastersTimer();
+    void stopGamemastersTimer();
+    // Force a GM count update calling mnmanager directly locking its internal mutex.
     // Future todo: implement an event based update and remove the lock requirement.
-    QString getMasternodesCountString();
-    int getMasternodesCount() const { return m_cached_masternodes_count; }
+    QString getGamemastersCountString();
+    int getGamemastersCount() const { return m_cached_gamemasters_count; }
 
 private:
     // Listeners
@@ -119,13 +119,13 @@ private:
     std::unique_ptr<interfaces::Handler> m_handler_banned_list_changed;
     std::unique_ptr<interfaces::Handler> m_handler_notify_block_tip;
 
-    QString getMasternodeCountString();
+    QString getGamemasterCountString();
     OptionsModel* optionsModel;
     PeerTableModel* peerTableModel;
     BanTableModel *banTableModel;
 
     const CBlockIndex* cacheTip{nullptr};
-    QString cachedMasternodeCountString;
+    QString cachedGamemasterCountString;
     bool cachedReindexing;
     bool cachedImporting;
     std::atomic<bool> cachedInitialSync{false};
@@ -135,7 +135,7 @@ private:
     QTimer* pollTimer;
     QTimer* pollMnTimer;
 
-    std::atomic_int m_cached_masternodes_count{0};
+    std::atomic_int m_cached_gamemasters_count{0};
 
     void subscribeToCoreSignals();
     void unsubscribeFromCoreSignals();
@@ -144,7 +144,7 @@ Q_SIGNALS:
     void numConnectionsChanged(int count);
     void numBlocksChanged(int count);
     void networkActiveChanged(bool networkActive);
-    void strMasternodesChanged(const QString& strMasternodes);
+    void strGamemastersChanged(const QString& strGamemasters);
     void alertsChanged(const QString& warnings);
     void bytesChanged(quint64 totalBytesIn, quint64 totalBytesOut);
 

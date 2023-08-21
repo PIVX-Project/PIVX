@@ -6,7 +6,7 @@
 #include "llmq/quorums_debug.h"
 
 #include "chainparams.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "llmq/quorums_utils.h"
 #include "utiltime.h"
 #include "validation.h"
@@ -24,11 +24,11 @@ UniValue CDKGDebugSessionStatus::ToJson(int detailLevel) const
         return ret;
     }
 
-    std::vector<CDeterministicMNCPtr> dmnMembers;
+    std::vector<CDeterministicGMCPtr> dgmMembers;
     if (detailLevel == 2) {
         const CBlockIndex* pindexQuorum = WITH_LOCK(cs_main, return LookupBlockIndex(quorumHash));
         if (pindexQuorum != nullptr) {
-            dmnMembers = deterministicMNManager->GetAllQuorumMembers((Consensus::LLMQType) llmqType, pindexQuorum);
+            dgmMembers = deterministicGMManager->GetAllQuorumMembers((Consensus::LLMQType) llmqType, pindexQuorum);
         }
     }
 
@@ -65,8 +65,8 @@ UniValue CDKGDebugSessionStatus::ToJson(int detailLevel) const
             } else if (detailLevel == 2) {
                 UniValue a(UniValue::VOBJ);
                 a.pushKV("memberIndex", (int)idx);
-                if (idx < dmnMembers.size()) {
-                    a.pushKV("proTxHash", dmnMembers[idx]->proTxHash.ToString());
+                if (idx < dgmMembers.size()) {
+                    a.pushKV("proTxHash", dgmMembers[idx]->proTxHash.ToString());
                 }
                 v.arr.push_back(a);
             }
@@ -99,8 +99,8 @@ UniValue CDKGDebugSessionStatus::ToJson(int detailLevel) const
 
     if (detailLevel == 2) {
         UniValue arr(UniValue::VARR);
-        for (const auto& dmn : dmnMembers) {
-            arr.push_back(dmn->proTxHash.ToString());
+        for (const auto& dgm : dgmMembers) {
+            arr.push_back(dgm->proTxHash.ToString());
         }
         ret.pushKV("allMembers", arr);
     }

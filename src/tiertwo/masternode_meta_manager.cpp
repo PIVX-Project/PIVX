@@ -3,14 +3,14 @@
 // Distributed under the X11 software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#include "tiertwo/masternode_meta_manager.h"
+#include "tiertwo/gamemaster_meta_manager.h"
 #include <sstream>
 
-CMasternodeMetaMan g_mmetaman;
+CGamemasterMetaMan g_mmetaman;
 
-const std::string CMasternodeMetaMan::SERIALIZATION_VERSION_STRING = "CMasternodeMetaMan-Version-2";
+const std::string CGamemasterMetaMan::SERIALIZATION_VERSION_STRING = "CGamemasterMetaMan-Version-2";
 
-CMasternodeMetaInfoPtr CMasternodeMetaMan::GetMetaInfo(const uint256& proTxHash, bool fCreate)
+CGamemasterMetaInfoPtr CGamemasterMetaMan::GetMetaInfo(const uint256& proTxHash, bool fCreate)
 {
     LOCK(cs_metaman);
     auto it = metaInfos.find(proTxHash);
@@ -20,22 +20,22 @@ CMasternodeMetaInfoPtr CMasternodeMetaMan::GetMetaInfo(const uint256& proTxHash,
     if (!fCreate) {
         return nullptr;
     }
-    it = metaInfos.emplace(proTxHash, std::make_shared<CMasternodeMetaInfo>(proTxHash)).first;
+    it = metaInfos.emplace(proTxHash, std::make_shared<CGamemasterMetaInfo>(proTxHash)).first;
     return it->second;
 }
 
 
-void CMasternodeMetaMan::Clear()
+void CGamemasterMetaMan::Clear()
 {
     LOCK(cs_metaman);
     metaInfos.clear();
 }
 
-std::string CMasternodeMetaMan::ToString()
+std::string CGamemasterMetaMan::ToString()
 {
     LOCK(cs_metaman);
     std::ostringstream info;
 
-    info << "Masternodes: meta infos object count: " << (int)metaInfos.size();
+    info << "Gamemasters: meta infos object count: " << (int)metaInfos.size();
     return info.str();
 }

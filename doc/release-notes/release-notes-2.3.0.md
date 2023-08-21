@@ -35,8 +35,8 @@ Notable Changes
 RPC changes
 --------------
 
-#### masternode command
-The `masternode` RPC command has been re-worked to ease it's usage and return valid JSON in it's results. The following is an overview of the changed command parameters:
+#### gamemaster command
+The `gamemaster` RPC command has been re-worked to ease it's usage and return valid JSON in it's results. The following is an overview of the changed command parameters:
 
 | Command Parameter | Changes |
 | --- | --- |
@@ -47,7 +47,7 @@ The `masternode` RPC command has been re-worked to ease it's usage and return va
 | `outputs` | Result is now an array of objects instead of a list of *n* objects |
 | `status` | Added additional fields for txhash, outputidx, netaddr, and message |
 | `winners` | Result is now an array of objects instead of a list of *n* objects. See below |
-| `list` | Remove all optional "modes" and standardized the results. Note: `masternode list` is the same as `masternodelist`. See below |
+| `list` | Remove all optional "modes" and standardized the results. Note: `gamemaster list` is the same as `gamemasterlist`. See below |
 
 For the `winners` parameter, the results are now in a standard JSON format as follows:
 
@@ -56,7 +56,7 @@ For the `winners` parameter, the results are now in a standard JSON format as fo
   {
     nHeight: n,           (int) block height
     winner: {
-        address: addr,    (string) hemis MN Address,
+        address: addr,    (string) hemis GM Address,
         nVotes: n,        (int) Number of votes for winner,
     }
   },
@@ -72,7 +72,7 @@ In the case of multiple winners being associated with a single block, the result
     nHeight: n,           (int) block height,
     winner: [
       {
-        address: addr,    (string) hemis MN Address,
+        address: addr,    (string) hemis GM Address,
         nVotes: n,        (int) Number of votes for winner,
       },
       ...
@@ -82,30 +82,30 @@ In the case of multiple winners being associated with a single block, the result
 ]
 ```
 
-For the `list` (aka `masternodelist`) parameter, the various "modes" have been removed in favor of a unified and standardized result format. The result is now an array of objects instead of an object of objects. Further, the individual objects now have a standard JSON format. The result format is as follows:
+For the `list` (aka `gamemasterlist`) parameter, the various "modes" have been removed in favor of a unified and standardized result format. The result is now an array of objects instead of an object of objects. Further, the individual objects now have a standard JSON format. The result format is as follows:
 
 ```
 [
   {
-    "rank": n,         (numeric) Masternode rank (or 0 if not enabled)
+    "rank": n,         (numeric) Gamemaster rank (or 0 if not enabled)
     "txhash": hash,    (string) Collateral transaction hash
     "outidx": n,       (numeric) Collateral transaction output index
     "status": s,       (string) Status (ENABLED/EXPIRED/REMOVE/etc)
-    "addr": addr,      (string) Masternode hemis address
-    "version": v,      (numeric) Masternode Protocol version
-    "lastseen": ttt,   (numeric) The time in seconds since epoch (Jan 1 1970 GMT) the masternode was last seen
-    "activetime": ttt, (numeric) The time in seconds since epoch (Jan 1 1970 GMT) masternode has been active
-    "lastpaid": ttt,   (numeric) The time in seconds since epoch (Jan 1 1970 GMT) masternode was last paid
+    "addr": addr,      (string) Gamemaster hemis address
+    "version": v,      (numeric) Gamemaster Protocol version
+    "lastseen": ttt,   (numeric) The time in seconds since epoch (Jan 1 1970 GMT) the gamemaster was last seen
+    "activetime": ttt, (numeric) The time in seconds since epoch (Jan 1 1970 GMT) gamemaster has been active
+    "lastpaid": ttt,   (numeric) The time in seconds since epoch (Jan 1 1970 GMT) gamemaster was last paid
   },
   ...
 ]
 ```
 
-#### mnbudget command
+#### gmbudget command
 
-An additional parameter has been added to `mnbudget` to allow a controller wallet to issue per-MN votes. The new parameter is `vote-alias` and it's use format is as follows:
+An additional parameter has been added to `gmbudget` to allow a controller wallet to issue per-GM votes. The new parameter is `vote-alias` and it's use format is as follows:
 
-`mnbudget vote-alias <proposal-hash> <yes|no> <alias>`
+`gmbudget vote-alias <proposal-hash> <yes|no> <alias>`
 
 All fields are required to successfully vote.
 
@@ -122,12 +122,12 @@ ZeroMQ (ZMQ) Notifications
 
 hemisd can now (optionally) asynchronously notify clients through a ZMQ-based PUB socket of the arrival of new transactions and blocks. This feature requires installation of the ZMQ C API library 4.x and configuring its use through the command line or configuration file. Please see [docs/zmq.md](/doc/zmq.md) for details of operation.
 
-**All** Masternodes List GUI Removal
+**All** Gamemasters List GUI Removal
 --------------
 
-With the standardization and reformatting of the `masternode list` (`masternodelist`) RPC command, there is no real use case to keep the full list of masternodes in the GUI. This GUI element causes a great deal of extra overhead, even when it is not being actively displayed. The removal of this list has also proven to resolve a number of linux-based errors
+With the standardization and reformatting of the `gamemaster list` (`gamemasterlist`) RPC command, there is no real use case to keep the full list of gamemasters in the GUI. This GUI element causes a great deal of extra overhead, even when it is not being actively displayed. The removal of this list has also proven to resolve a number of linux-based errors
 
-Note that the GUI list of masternodes associated with a controller wallet remains intact.
+Note that the GUI list of gamemasters associated with a controller wallet remains intact.
 
 SPV Client Support
 --------------
@@ -147,7 +147,7 @@ git merge commit are mentioned.
 - #183 `dc77b86` [RPC] Add proposal name to removal log (Mrs-X)
 - #189 `6dd8146` [RPC] Add missing 'vote-alias' implementation (Mrs-X)
 - #195 `aee05fe` [ZMQ] ZMQ integration for hemis (Mrs-X)
-- #211 `b8c110b` [RPC] Refactor & JSONify results from masternode command(s) (Fuzzbawls)
+- #211 `b8c110b` [RPC] Refactor & JSONify results from gamemaster command(s) (Fuzzbawls)
 - #201 `f0e87b1` [RPC] Add active/incative flag to getstakingstatus RPC call (Mrs-X)
 
 ### Configuration and command-line options
@@ -163,13 +163,13 @@ git merge commit are mentioned.
 
 ### P2P Protocol and Network Code
 - #219 `d2c3fdf` [P2P] Enable Bloom filter and add new nService for light clients. (furszy)
-- #234 `ed99e7b` [Consensus/Net] Ignore newly activated MNs in ranking/seesaw (Mrs-X Fuzzbawls presstab)
+- #234 `ed99e7b` [Consensus/Net] Ignore newly activated GMs in ranking/seesaw (Mrs-X Fuzzbawls presstab)
 
 ### GUI
 - #200 `bb1f255` [UI] Improved unlock usability (Mrs-X)
 - #207 `7a41f46` [Qt] Adjust size of splash screen image. (Fuzzbawls)
-- #206 `9c675ee` [Qt] Remove the All Masternodes UI tab/list (Fuzzbawls)
-- #220 `b80bc29` [Qt] Add "NODE_BLOOM" and "NODE_BLOOM_WITHOUT_MN" to guiutil (Fuzzbawls)
+- #206 `9c675ee` [Qt] Remove the All Gamemasters UI tab/list (Fuzzbawls)
+- #220 `b80bc29` [Qt] Add "NODE_BLOOM" and "NODE_BLOOM_WITHOUT_GM" to guiutil (Fuzzbawls)
 - #225 `02209ec` [Qt] Add autocomplete to Qt client's debug console (Fuzzbawls)
 - #233 `2921a4d` [Qt] Enable support for Qt's HighDpiScaling (Fuzzbawls)
 
@@ -180,7 +180,7 @@ git merge commit are mentioned.
 ### Miscellaneous
 - #231 `af0aa68` [Utils] Fix update-translations.py to allow % end of string (Fuzzbawls)
 - #175 `8727f1c` [Docs] Reformat main README.md (Fuzzbawls)
-- #213 `ddd8994` [Trivial] Reduce debug.log spam for masternode messages (Fuzzbawls)
+- #213 `ddd8994` [Trivial] Reduce debug.log spam for gamemaster messages (Fuzzbawls)
 
 Credits
 =======

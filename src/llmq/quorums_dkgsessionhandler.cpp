@@ -5,7 +5,7 @@
 
 #include "llmq/quorums_dkgsessionhandler.h"
 
-#include "activemasternode.h"
+#include "activegamemaster.h"
 #include "chainparams.h"
 #include "llmq/quorums_blockprocessor.h"
 #include "llmq/quorums_connections.h"
@@ -164,14 +164,14 @@ bool CDKGSessionHandler::InitNewQuorum(const CBlockIndex* pindexQuorum)
 {
     curSession = std::make_shared<CDKGSession>(params, evoDb, blsWorker, dkgManager);
 
-    if (!deterministicMNManager->IsDIP3Enforced(pindexQuorum->nHeight) ||
-            !activeMasternodeManager) {
+    if (!deterministicGMManager->IsDIP3Enforced(pindexQuorum->nHeight) ||
+            !activeGamemasterManager) {
         return false;
     }
 
-    auto mns = deterministicMNManager->GetAllQuorumMembers(params.type, pindexQuorum);
+    auto gms = deterministicGMManager->GetAllQuorumMembers(params.type, pindexQuorum);
 
-    if (!curSession->Init(pindexQuorum, mns, activeMasternodeManager->GetProTx())) {
+    if (!curSession->Init(pindexQuorum, gms, activeGamemasterManager->GetProTx())) {
         LogPrintf("CDKGSessionHandler::%s -- quorum initialiation failed for %s\n", __func__, curSession->params.name);
         return false;
     }
@@ -379,7 +379,7 @@ std::set<NodeId> BatchVerifyMessageSigs(CDKGSession& session, const std::vector<
             break;
         }
 
-        pubKeys.emplace_back(member->dmn->pdmnState->pubKeyOperator.Get());
+        pubKeys.emplace_back(member->dgm->pdgmState->pubKeyOperator.Get());
         messageHashes.emplace_back(msgHash);
     }
     if (!revertToSingleVerification) {
@@ -419,7 +419,7 @@ std::set<NodeId> BatchVerifyMessageSigs(CDKGSession& session, const std::vector<
 
         const auto& msg = *p.second;
         auto member = session.GetMember(msg.proTxHash);
-        bool valid = msg.sig.VerifyInsecure(member->dmn->pdmnState->pubKeyOperator.Get(), msg.GetSignHash());
+        bool valid = msg.sig.VerifyInsecure(member->dgm->pdgmState->pubKeyOperator.Get(), msg.GetSignHash());
         if (!valid) {
             ret.emplace(p.first);
         }

@@ -274,7 +274,7 @@ void GovernanceWidget::loadWalletModel()
 
 void GovernanceWidget::showEvent(QShowEvent *event)
 {
-    clientModel->startMasternodesTimer();
+    clientModel->startGamemastersTimer();
     tryGridRefresh(true); // future: move to background worker
     if (!refreshTimer) refreshTimer = new QTimer(this);
     if (!refreshTimer->isActive()) {
@@ -286,7 +286,7 @@ void GovernanceWidget::showEvent(QShowEvent *event)
 void GovernanceWidget::hideEvent(QHideEvent *event)
 {
     refreshTimer->stop();
-    clientModel->stopMasternodesTimer();
+    clientModel->stopGamemastersTimer();
 }
 
 void GovernanceWidget::wheelEvent(QWheelEvent* event)

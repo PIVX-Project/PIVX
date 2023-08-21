@@ -74,9 +74,9 @@ void CBudgetProposal::SyncVotes(CNode* pfrom, bool fPartial, int& nInvCount) con
     }
 }
 
-bool CBudgetProposal::IsHeavilyDownvoted(int mnCount)
+bool CBudgetProposal::IsHeavilyDownvoted(int gmCount)
 {
-    if (GetNays() - GetYeas() > 3 * mnCount / 10) {
+    if (GetNays() - GetYeas() > 3 * gmCount / 10) {
         strInvalid = "Heavily Downvoted";
         return true;
     }
@@ -174,12 +174,12 @@ bool CBudgetProposal::updateExpired(int nCurrentHeight)
     return false;
 }
 
-bool CBudgetProposal::UpdateValid(int nCurrentHeight, int mnCount)
+bool CBudgetProposal::UpdateValid(int nCurrentHeight, int gmCount)
 {
     fValid = false;
 
     // Never kill a proposal before the first superblock
-    if (nCurrentHeight > nBlockStart && IsHeavilyDownvoted(mnCount)) {
+    if (nCurrentHeight > nBlockStart && IsHeavilyDownvoted(gmCount)) {
         return false;
     }
 
@@ -197,7 +197,7 @@ bool CBudgetProposal::IsEstablished() const
     return nTime < GetAdjustedTime() - Params().GetConsensus().nProposalEstablishmentTime;
 }
 
-bool CBudgetProposal::IsPassing(int nBlockStartBudget, int nBlockEndBudget, int mnCount) const
+bool CBudgetProposal::IsPassing(int nBlockStartBudget, int nBlockEndBudget, int gmCount) const
 {
     if (!fValid)
         return false;
@@ -208,7 +208,7 @@ bool CBudgetProposal::IsPassing(int nBlockStartBudget, int nBlockEndBudget, int 
     if (this->nBlockEnd < nBlockEndBudget)
         return false;
 
-    if (GetYeas() - GetNays() <= mnCount / 10)
+    if (GetYeas() - GetNays() <= gmCount / 10)
         return false;
 
     if (!IsEstablished())
@@ -225,27 +225,27 @@ bool CBudgetProposal::IsExpired(int nCurrentHeight) const
 bool CBudgetProposal::AddOrUpdateVote(const CBudgetVote& vote, std::string& strError)
 {
     std::string strAction = "New vote inserted:";
-    const COutPoint& mnId = vote.GetVin().prevout;
+    const COutPoint& gmId = vote.GetVin().prevout;
     const int64_t voteTime = vote.GetTime();
 
-    if (mapVotes.count(mnId)) {
-        const int64_t& oldTime = mapVotes[mnId].GetTime();
+    if (mapVotes.count(gmId)) {
+        const int64_t& oldTime = mapVotes[gmId].GetTime();
         if (oldTime > voteTime) {
             strError = strprintf("new vote older than existing vote - %s\n", vote.GetHash().ToString());
-            LogPrint(BCLog::MNBUDGET, "%s: %s\n", __func__, strError);
+            LogPrint(BCLog::GMBUDGET, "%s: %s\n", __func__, strError);
             return false;
         }
         if (voteTime - oldTime < BUDGET_VOTE_UPDATE_MIN) {
             strError = strprintf("time between votes is too soon - %s - %lli sec < %lli sec\n",
                     vote.GetHash().ToString(), voteTime - oldTime, BUDGET_VOTE_UPDATE_MIN);
-            LogPrint(BCLog::MNBUDGET, "%s: %s\n", __func__, strError);
+            LogPrint(BCLog::GMBUDGET, "%s: %s\n", __func__, strError);
             return false;
         }
         strAction = "Existing vote updated:";
     }
 
-    mapVotes[mnId] = vote;
-    LogPrint(BCLog::MNBUDGET, "%s: %s %s\n", __func__, strAction.c_str(), vote.GetHash().ToString().c_str());
+    mapVotes[gmId] = vote;
+    LogPrint(BCLog::GMBUDGET, "%s: %s %s\n", __func__, strAction.c_str(), vote.GetHash().ToString().c_str());
 
     return true;
 }

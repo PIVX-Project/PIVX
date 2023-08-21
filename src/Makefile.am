@@ -140,7 +140,7 @@ LIBSAPLING_H = \
 .PHONY: FORCE cargo-build check-symbols check-security
 # hemis core #
 BITCOIN_CORE_H = \
-  activemasternode.h \
+  activegamemaster.h \
   addrdb.h \
   addrman.h \
   attributes.h \
@@ -185,9 +185,9 @@ BITCOIN_CORE_H = \
   crypter.h \
   ctpl_stl.h \
   cyclingvector.h \
-  evo/deterministicmns.h \
+  evo/deterministicgms.h \
   evo/evodb.h \
-  evo/mnauth.h \
+  evo/gmauth.h \
   evo/evonotificationinterface.h \
   evo/providertx.h \
   evo/specialtx_validation.h \
@@ -205,8 +205,8 @@ BITCOIN_CORE_H = \
   llmq/quorums_utils.h \
   llmq/quorums_signing.h \
   llmq/quorums_signing_shares.h \
-  tiertwo/masternode_meta_manager.h \
-  tiertwo/net_masternodes.h \
+  tiertwo/gamemaster_meta_manager.h \
+  tiertwo/net_gamemasters.h \
   addressbook.h \
   wallet/db.h \
   flatfile.h \
@@ -240,11 +240,11 @@ BITCOIN_CORE_H = \
   budget/budgetutil.h \
   mapport.h \
   memusage.h \
-  masternode.h \
-  masternode-payments.h \
-  masternode-sync.h \
-  masternodeman.h \
-  masternodeconfig.h \
+  gamemaster.h \
+  gamemaster-payments.h \
+  gamemaster-sync.h \
+  gamemasterman.h \
+  gamemasterconfig.h \
   merkleblock.h \
   messagesigner.h \
   blockassembler.h \
@@ -366,10 +366,10 @@ libbitcoin_server_a_SOURCES = \
   consensus/tx_verify.cpp \
   flatfile.cpp \
   consensus/zerocoin_verify.cpp \
-  evo/deterministicmns.cpp \
+  evo/deterministicgms.cpp \
   evo/evodb.cpp \
   evo/evonotificationinterface.cpp \
-  evo/mnauth.cpp \
+  evo/gmauth.cpp \
   evo/providertx.cpp \
   evo/specialtx_validation.cpp \
   llmq/quorums.cpp \
@@ -385,8 +385,8 @@ libbitcoin_server_a_SOURCES = \
   llmq/quorums_utils.cpp \
   llmq/quorums_signing.cpp \
   llmq/quorums_signing_shares.cpp \
-  tiertwo/masternode_meta_manager.cpp \
-  tiertwo/net_masternodes.cpp \
+  tiertwo/gamemaster_meta_manager.cpp \
+  tiertwo/net_gamemasters.cpp \
   httprpc.cpp \
   httpserver.cpp \
   init.cpp \
@@ -406,7 +406,7 @@ libbitcoin_server_a_SOURCES = \
   pow.cpp \
   rest.cpp \
   rpc/blockchain.cpp \
-  rpc/masternode.cpp \
+  rpc/gamemaster.cpp \
   rpc/budget.cpp \
   rpc/mining.cpp \
   rpc/misc.cpp \
@@ -537,7 +537,7 @@ libzerocoin_libbitcoin_zerocoin_a_SOURCES = \
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_common_a_SOURCES = \
-  activemasternode.cpp \
+  activegamemaster.cpp \
   base58.cpp \
   bip38.cpp \
   budget/budgetdb.cpp \
@@ -561,11 +561,11 @@ libbitcoin_common_a_SOURCES = \
   invalid.cpp \
   key.cpp \
   keystore.cpp \
-  masternode.cpp \
-  masternode-payments.cpp \
-  masternode-sync.cpp \
-  masternodeconfig.cpp \
-  masternodeman.cpp \
+  gamemaster.cpp \
+  gamemaster-payments.cpp \
+  gamemaster-sync.cpp \
+  gamemasterconfig.cpp \
+  gamemasterman.cpp \
   messagesigner.cpp \
   netaddress.cpp \
   netbase.cpp \

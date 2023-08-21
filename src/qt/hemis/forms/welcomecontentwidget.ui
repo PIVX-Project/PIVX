@@ -739,7 +739,7 @@
                      <enum>Qt::NoFocus</enum>
                     </property>
                     <property name="text">
-                     <string>Masternodes</string>
+                     <string>Gamemasters</string>
                     </property>
                     <property name="checkable">
                      <bool>true</bool>
@@ -1116,7 +1116,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>What is a Masternode?</string>
+                   <string>What is a Gamemaster?</string>
                   </property>
                  </widget>
                 </item>
@@ -1139,7 +1139,7 @@
                 <item>
                  <widget class="QLabel" name="labelMessage4">
                   <property name="text">
-                   <string>The masternode network is hemis's second layer network on top of the blockchain that enables our DAO to provide decentralized governance and a treasury.</string>
+                   <string>The gamemaster network is hemis's second layer network on top of the blockchain that enables our DAO to provide decentralized governance and a treasury.</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>

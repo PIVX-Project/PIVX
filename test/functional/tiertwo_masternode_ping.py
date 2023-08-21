@@ -3,10 +3,10 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php.
 """
-Test checking masternode ping thread
+Test checking gamemaster ping thread
 Does not use functions of HemisTier2TestFramework as we don't want to send
 pings on demand. Here, instead, mocktime is disabled, and we just wait with
-time.sleep to verify that masternodes send pings correctly.
+time.sleep to verify that gamemasters send pings correctly.
 """
 
 import os
@@ -22,11 +22,11 @@ from test_framework.util import (
 )
 
 
-class MasternodePingTest(HemisTestFramework):
+class GamemasterPingTest(HemisTestFramework):
 
     def set_test_params(self):
         self.setup_clean_chain = True
-        # 0=miner 1=mn_owner 2=mn_remote
+        # 0=miner 1=gm_owner 2=gm_remote
         self.num_nodes = 3
 
 
@@ -34,17 +34,17 @@ class MasternodePingTest(HemisTestFramework):
         miner = self.nodes[0]
         owner = self.nodes[1]
         remote = self.nodes[2]
-        mnPrivkey = "9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK"
+        gmPrivkey = "9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK"
 
         self.log.info("generating 141 blocks...")
         miner.generate(141)
         self.sync_blocks()
 
         # Create collateral
-        self.log.info("funding masternode controller...")
-        masternodeAlias = "mnode"
-        mnAddress = owner.getnewaddress(masternodeAlias)
-        collateralTxId = miner.sendtoaddress(mnAddress, Decimal('100'))
+        self.log.info("funding gamemaster controller...")
+        gamemasterAlias = "gmode"
+        gmAddress = owner.getnewaddress(gamemasterAlias)
+        collateralTxId = miner.sendtoaddress(gmAddress, Decimal('100'))
         miner.generate(2)
         self.sync_blocks()
         time.sleep(1)
@@ -60,21 +60,21 @@ class MasternodePingTest(HemisTestFramework):
 
         # Setup controller
         self.log.info("controller setup...")
-        o = owner.getmasternodeoutputs()
+        o = owner.getgamemasteroutputs()
         assert_equal(len(o), 1)
         assert_equal(o[0]["txhash"], collateralTxId)
         vout = o[0]["outputidx"]
-        self.log.info("collateral accepted for "+ masternodeAlias +". Updating masternode.conf...")
-        confData = masternodeAlias + " 127.0.0.1:" + str(p2p_port(2)) + " " + \
-                   str(mnPrivkey) +  " " + str(collateralTxId) + " " + str(vout)
-        destPath = os.path.join(self.options.tmpdir, "node1", "regtest", "masternode.conf")
+        self.log.info("collateral accepted for "+ gamemasterAlias +". Updating gamemaster.conf...")
+        confData = gamemasterAlias + " 127.0.0.1:" + str(p2p_port(2)) + " " + \
+                   str(gmPrivkey) +  " " + str(collateralTxId) + " " + str(vout)
+        destPath = os.path.join(self.options.tmpdir, "node1", "regtest", "gamemaster.conf")
         with open(destPath, "a+", encoding="utf8") as file_object:
             file_object.write("\n")
             file_object.write(confData)
 
         # Init remote
-        self.log.info("initializing remote masternode...")
-        remote.initmasternode(mnPrivkey, "127.0.0.1:" + str(p2p_port(2)))
+        self.log.info("initializing remote gamemaster...")
+        remote.initgamemaster(gmPrivkey, "127.0.0.1:" + str(p2p_port(2)))
 
         # sanity check, verify that we are not in IBD
         for i in range(0, len(self.nodes)):
@@ -82,44 +82,44 @@ class MasternodePingTest(HemisTestFramework):
             if (node.getblockchaininfo()['initial_block_downloading']):
                 raise AssertionError("Error, node(%s) shouldn't be in IBD." % str(i))
 
-        # Wait until mnsync is complete (max 120 seconds)
-        self.log.info("waiting to complete mnsync...")
+        # Wait until gmsync is complete (max 120 seconds)
+        self.log.info("waiting to complete gmsync...")
         start_time = time.time()
-        self.wait_until_mnsync_finished()
+        self.wait_until_gmsync_finished()
         self.log.info("MnSync completed in %d seconds" % (time.time() - start_time))
         miner.generate(1)
         self.sync_blocks()
         time.sleep(1)
 
-        # Exercise invalid startmasternode methods
-        self.log.info("exercising invalid startmasternode methods...")
-        assert_raises_rpc_error(-8, "Local start is deprecated.", remote.startmasternode, "local", False)
-        assert_raises_rpc_error(-8, "Many set is deprecated.", owner.startmasternode, "many", False)
-        assert_raises_rpc_error(-8, "Invalid set name", owner.startmasternode, "foo", False)
+        # Exercise invalid startgamemaster methods
+        self.log.info("exercising invalid startgamemaster methods...")
+        assert_raises_rpc_error(-8, "Local start is deprecated.", remote.startgamemaster, "local", False)
+        assert_raises_rpc_error(-8, "Many set is deprecated.", owner.startgamemaster, "many", False)
+        assert_raises_rpc_error(-8, "Invalid set name", owner.startgamemaster, "foo", False)
 
         # Send Start message
-        self.log.info("sending masternode broadcast...")
-        self.controller_start_masternode(owner, masternodeAlias)
+        self.log.info("sending gamemaster broadcast...")
+        self.controller_start_gamemaster(owner, gamemasterAlias)
         miner.generate(1)
         self.sync_blocks()
         time.sleep(1)
 
-        # Wait until masternode is enabled everywhere (max 180 secs)
-        self.log.info("waiting till masternode gets enabled...")
+        # Wait until gamemaster is enabled everywhere (max 180 secs)
+        self.log.info("waiting till gamemaster gets enabled...")
         start_time = time.time()
         time.sleep(5)
-        self.wait_until_mn_enabled(collateralTxId, 180)
-        self.log.info("Masternode enabled in %d seconds" % (time.time() - start_time))
-        self.log.info("Good. Masternode enabled")
+        self.wait_until_gm_enabled(collateralTxId, 180)
+        self.log.info("Gamemaster enabled in %d seconds" % (time.time() - start_time))
+        self.log.info("Good. Gamemaster enabled")
         miner.generate(1)
         self.sync_blocks()
         time.sleep(1)
 
-        last_seen = [self.get_mn_lastseen(node, collateralTxId) for node in self.nodes]
+        last_seen = [self.get_gm_lastseen(node, collateralTxId) for node in self.nodes]
         self.log.info("Current lastseen: %s" % str(last_seen))
         self.log.info("Waiting 2 * 25 seconds and check new lastseen...")
         time.sleep(50)
-        new_last_seen = [self.get_mn_lastseen(node, collateralTxId) for node in self.nodes]
+        new_last_seen = [self.get_gm_lastseen(node, collateralTxId) for node in self.nodes]
         self.log.info("New lastseen: %s" % str(new_last_seen))
         for i in range(self.num_nodes):
             assert_greater_than(new_last_seen[i], last_seen[i])
@@ -127,4 +127,4 @@ class MasternodePingTest(HemisTestFramework):
 
 
 if __name__ == '__main__':
-    MasternodePingTest().main()
+    GamemasterPingTest().main()

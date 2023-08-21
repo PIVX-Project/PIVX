@@ -40,12 +40,12 @@ private:
     Ui::MnSelectionDialog *ui;
     MNModel* mnModel{nullptr};
     // Consensus param, the minimum time that need to pass
-    // to be able to broadcast another vote with the same MN.
+    // to be able to broadcast another vote with the same GM.
     int minVoteUpdateTimeInSecs{0};
     int colCheckBoxWidth_treeMode{50};
     // selected MNs alias
     std::vector<std::string> selectedMnList;
-    // MN alias -> VoteInfo for a certain proposal
+    // GM alias -> VoteInfo for a certain proposal
     std::map<std::string, VoteInfo> votes;
 
     enum {

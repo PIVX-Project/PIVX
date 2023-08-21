@@ -92,7 +92,7 @@ UniValue getpeerinfo(const JSONRPCRequest& request)
             "    \"subver\": \"/Hemis Core:x.x.x.x/\",  (string) The string version\n"
             "    \"inbound\": true|false,     (boolean) Inbound (true) or Outbound (false)\n"
             "    \"addnode\": true|false,     (boolean) Whether connection was due to addnode and is using an addnode slot\n"
-            "    \"masternode\": true|false,  (boolean) Whether the connection is only for masternode quorums related messages\n"
+            "    \"gamemaster\": true|false,  (boolean) Whether the connection is only for gamemaster quorums related messages\n"
             "    \"startingheight\": n,       (numeric) The starting height (block) of the peer\n"
             "    \"banscore\": n,             (numeric) The ban score\n"
             "    \"synced_headers\": n,       (numeric) The last header we have in common with this peer\n"
@@ -111,9 +111,9 @@ UniValue getpeerinfo(const JSONRPCRequest& request)
             "       \"addr\": n,             (numeric) The total bytes received aggregated by message type\n"
             "       ...\n"
             "    }\n"
-            "   \"masternode_iqr_conn\": true|false,          (boolean) Whether the connection is an intra-quorum relay connection or not\n"
-            "   \"verif_mn_proreg_tx_hash\": \"hex\",         (string) The MN provider register tx hash (if the connection is verified)\n"
-            "   \"verif_mn_operator_pubkey_hash\": \"hex\",   (string) The MN operator pubkey hash (if the connection is verified)\n"
+            "   \"gamemaster_iqr_conn\": true|false,          (boolean) Whether the connection is an intra-quorum relay connection or not\n"
+            "   \"verif_gm_proreg_tx_hash\": \"hex\",         (string) The GM provider register tx hash (if the connection is verified)\n"
+            "   \"verif_gm_operator_pubkey_hash\": \"hex\",   (string) The GM operator pubkey hash (if the connection is verified)\n"
             "  }\n"
             "  ,...\n"
             "]\n"
@@ -157,7 +157,7 @@ UniValue getpeerinfo(const JSONRPCRequest& request)
         obj.pushKV("subver", stats.cleanSubVer);
         obj.pushKV("inbound", stats.fInbound);
         obj.pushKV("addnode", stats.fAddnode);
-        obj.pushKV("masternode", stats.m_masternode_connection);
+        obj.pushKV("gamemaster", stats.m_gamemaster_connection);
         obj.pushKV("startingheight", stats.nStartingHeight);
         if (fStateStats) {
             obj.pushKV("banscore", statestats.nMisbehavior);
@@ -187,11 +187,11 @@ UniValue getpeerinfo(const JSONRPCRequest& request)
         }
         obj.pushKV("bytesrecv_per_msg", recvPerMsgCmd);
 
-        // DMN data
-        if (stats.m_masternode_connection) {
-            obj.pushKV("masternode_iqr_conn", stats.m_masternode_iqr_connection);
-            obj.pushKV("verif_mn_proreg_tx_hash", stats.verifiedProRegTxHash.GetHex());
-            obj.pushKV("verif_mn_operator_pubkey_hash", stats.verifiedPubKeyHash.GetHex());
+        // DGM data
+        if (stats.m_gamemaster_connection) {
+            obj.pushKV("gamemaster_iqr_conn", stats.m_gamemaster_iqr_connection);
+            obj.pushKV("verif_gm_proreg_tx_hash", stats.verifiedProRegTxHash.GetHex());
+            obj.pushKV("verif_gm_operator_pubkey_hash", stats.verifiedPubKeyHash.GetHex());
         }
 
         ret.push_back(obj);

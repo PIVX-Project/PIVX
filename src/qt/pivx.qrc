@@ -142,10 +142,12 @@
         <file alias="ic-transaction-warning">hemis/res/img/ic-transaction-warning.svg</file>
         <file alias="ic-transaction-mint">hemis/res/img/ic-transaction-mint.svg</file>
         <file alias="ic-transaction-received">hemis/res/img/ic-transaction-received.svg</file>
+        <file alias="ic-transaction-received-memo">hemis/res/img/ic-transaction-received-memo.svg</file>
         <file alias="ic-transaction-sent">hemis/res/img/ic-transaction-sent.svg</file>
         <file alias="ic-transaction-staked">hemis/res/img/ic-transaction-staked.svg</file>
         <file alias="ic-transaction-mint-dark">hemis/res/img/dark/ic-transaction-mint.svg</file>
         <file alias="ic-transaction-received-dark">hemis/res/img/dark/ic-transaction-received.svg</file>
+        <file alias="ic-transaction-received-memo-dark">hemis/res/img/dark/ic-transaction-received-memo.svg</file>
         <file alias="ic-transaction-sent-dark">hemis/res/img/dark/ic-transaction-sent.svg</file>
         <file alias="ic-transaction-staked-dark">hemis/res/img/dark/ic-transaction-staked.svg</file>
         <file alias="ic-transaction-mint-inactive">hemis/res/img/ic-transaction-mint-inactive.svg</file>

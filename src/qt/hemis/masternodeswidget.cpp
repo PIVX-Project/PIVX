@@ -2,14 +2,14 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "qt/pivx/masternodeswidget.h"
+#include "qt/hemis/gamemasterswidget.h"
 #include "coincontrol.h"
-#include "qt/pivx/forms/ui_masternodeswidget.h"
+#include "qt/hemis/forms/ui_gamemasterswidget.h"
 
-#include "qt/pivx/qtutils.h"
-#include "qt/pivx/mnrow.h"
-#include "qt/pivx/mninfodialog.h"
-#include "qt/pivx/masternodewizarddialog.h"
+#include "qt/hemis/qtutils.h"
+#include "qt/hemis/mnrow.h"
+#include "qt/hemis/mninfodialog.h"
+#include "qt/hemis/gamemasterwizarddialog.h"
 
 #include "clientmodel.h"
 #include "guiutil.h"
@@ -93,12 +93,12 @@ MasterNodesWidget::MasterNodesWidget(PIVXGUI *parent) :
     this->coinControlDialog = new CoinControlDialog();
 
     /* Options */
-    ui->btnAbout->setTitleClassAndText("btn-title-grey", tr("What is a Masternode?"));
-    ui->btnAbout->setSubTitleClassAndText("text-subtitle", tr("FAQ explaining what Masternodes are"));
+    ui->btnAbout->setTitleClassAndText("btn-title-grey", tr("What is a Gamemaster?"));
+    ui->btnAbout->setSubTitleClassAndText("text-subtitle", tr("FAQ explaining what Gamemasters are"));
     ui->btnAboutController->setTitleClassAndText("btn-title-grey", tr("What is a Controller?"));
-    ui->btnAboutController->setSubTitleClassAndText("text-subtitle", tr("FAQ explaining what is a Masternode Controller"));
+    ui->btnAboutController->setSubTitleClassAndText("text-subtitle", tr("FAQ explaining what is a Gamemaster Controller"));
     ui->btnCoinControl->setTitleClassAndText("btn-title-grey", "Coin Control");
-    ui->btnCoinControl->setSubTitleClassAndText("text-subtitle", "Select the source of coins to create a Masternode");
+    ui->btnCoinControl->setSubTitleClassAndText("text-subtitle", "Select the source of coins to create a Gamemaster");
 
     setCssProperty(ui->listMn, "container");
     ui->listMn->setItemDelegate(delegate);
@@ -119,7 +119,7 @@ MasterNodesWidget::MasterNodesWidget(PIVXGUI *parent) :
         onStartAllClicked(REQUEST_START_MISSING);
     });
     connect(ui->listMn, &QListView::clicked, this, &MasterNodesWidget::onMNClicked);
-    connect(ui->btnAbout, &OptionButton::clicked, [this](){window->openFAQ(SettingsFaqWidget::Section::MASTERNODE);});
+    connect(ui->btnAbout, &OptionButton::clicked, [this](){window->openFAQ(SettingsFaqWidget::Section::GAMEMASTER);});
     connect(ui->btnAboutController, &OptionButton::clicked, [this](){window->openFAQ(SettingsFaqWidget::Section::MNCONTROLLER);});
     connect(ui->btnCoinControl, &OptionButton::clicked, this, &MasterNodesWidget::onCoinControlClicked);
 }
@@ -197,20 +197,20 @@ void MasterNodesWidget::onEditMNClicked()
     if (walletModel) {
         if (!walletModel->isRegTestNetwork() && !checkMNsNetwork()) return;
         if (index.sibling(index.row(), MNModel::WAS_COLLATERAL_ACCEPTED).data(Qt::DisplayRole).toBool()) {
-            // Start MN
+            // Start GM
             QString strAlias = this->index.data(Qt::DisplayRole).toString();
-            if (ask(tr("Start Masternode"), tr("Are you sure you want to start masternode %1?\n").arg(strAlias))) {
+            if (ask(tr("Start Gamemaster"), tr("Are you sure you want to start gamemaster %1?\n").arg(strAlias))) {
                 WalletModel::UnlockContext ctx(walletModel->requestUnlock());
                 if (!ctx.isValid()) {
                     // Unlock wallet was cancelled
-                    inform(tr("Cannot edit masternode, wallet locked"));
+                    inform(tr("Cannot edit gamemaster, wallet locked"));
                     return;
                 }
                 startAlias(strAlias);
             }
         } else {
-            inform(tr("Cannot start masternode, the collateral transaction has not been confirmed by the network yet.\n"
-                    "Please wait few more minutes (masternode collaterals require %1 confirmations).").arg(mnModel->getMasternodeCollateralMinConf()));
+            inform(tr("Cannot start gamemaster, the collateral transaction has not been confirmed by the network yet.\n"
+                    "Please wait few more minutes (gamemaster collaterals require %1 confirmations).").arg(mnModel->getGamemasterCollateralMinConf()));
         }
     }
 }
@@ -249,13 +249,13 @@ void MasterNodesWidget::onStartAllClicked(int type)
     } else {
         std::unique_ptr<WalletModel::UnlockContext> pctx = std::make_unique<WalletModel::UnlockContext>(walletModel->requestUnlock());
         if (!pctx->isValid()) {
-            warn(tr("Start ALL masternodes failed"), tr("Wallet unlock cancelled"));
+            warn(tr("Start ALL gamemasters failed"), tr("Wallet unlock cancelled"));
             return;
         }
         isLoading = true;
         if (!execute(type, std::move(pctx))) {
             isLoading = false;
-            inform(tr("Cannot perform Masternodes start"));
+            inform(tr("Cannot perform Gamemasters start"));
         }
     }
 }
@@ -266,7 +266,7 @@ bool MasterNodesWidget::startAll(QString& failText, bool onlyMissing)
     int amountOfMnStarted = 0;
     mnModel->startAllLegacyMNs(onlyMissing, amountOfMnFailed, amountOfMnStarted);
     if (amountOfMnFailed > 0) {
-        failText = tr("%1 Masternodes failed to start, %2 started").arg(amountOfMnFailed).arg(amountOfMnStarted);
+        failText = tr("%1 Gamemasters failed to start, %2 started").arg(amountOfMnFailed).arg(amountOfMnStarted);
         return false;
     }
     return true;
@@ -277,7 +277,7 @@ void MasterNodesWidget::run(int type)
     bool isStartMissing = type == REQUEST_START_MISSING;
     if (type == REQUEST_START_ALL || isStartMissing) {
         QString failText;
-        QString inform = startAll(failText, isStartMissing) ? tr("All Masternodes started!") : failText;
+        QString inform = startAll(failText, isStartMissing) ? tr("All Gamemasters started!") : failText;
         QMetaObject::invokeMethod(this, "updateModelAndInform", Qt::QueuedConnection,
                                   Q_ARG(QString, inform));
     }
@@ -289,7 +289,7 @@ void MasterNodesWidget::onError(QString error, int type)
 {
     if (type == REQUEST_START_ALL) {
         QMetaObject::invokeMethod(this, "inform", Qt::QueuedConnection,
-                                  Q_ARG(QString, "Error starting all Masternodes"));
+                                  Q_ARG(QString, "Error starting all Gamemasters"));
     }
 }
 
@@ -298,7 +298,7 @@ void MasterNodesWidget::onInfoMNClicked()
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (!ctx.isValid()) {
         // Unlock wallet was cancelled
-        inform(tr("Cannot show Masternode information, wallet locked"));
+        inform(tr("Cannot show Gamemaster information, wallet locked"));
         return;
     }
     showHideOp(true);
@@ -313,18 +313,18 @@ void MasterNodesWidget::onInfoMNClicked()
     dialog->adjustSize();
     showDialog(dialog, 3, 17);
     if (dialog->exportMN) {
-        if (ask(tr("Remote Masternode Data"),
-                tr("You are just about to export the required data to run a Masternode\non a remote server to your clipboard.\n\n\n"
-                   "You will only have to paste the data in the pivx.conf file\nof your remote server and start it, "
-                   "then start the Masternode using\nthis controller wallet (select the Masternode in the list and press \"start\").\n"
+        if (ask(tr("Remote Gamemaster Data"),
+                tr("You are just about to export the required data to run a Gamemaster\non a remote server to your clipboard.\n\n\n"
+                   "You will only have to paste the data in the hemis.conf file\nof your remote server and start it, "
+                   "then start the Gamemaster using\nthis controller wallet (select the Gamemaster in the list and press \"start\").\n"
                 ))) {
             // export data
-            QString exportedMN = "masternode=1\n"
+            QString exportedMN = "gamemaster=1\n"
                                  "externalip=" + address.left(address.lastIndexOf(":")) + "\n" +
-                                 "masternodeaddr=" + address + + "\n" +
-                                 "masternodeprivkey=" + index.sibling(index.row(), MNModel::PRIV_KEY).data(Qt::DisplayRole).toString() + "\n";
+                                 "gamemasteraddr=" + address + + "\n" +
+                                 "gamemasterprivkey=" + index.sibling(index.row(), MNModel::PRIV_KEY).data(Qt::DisplayRole).toString() + "\n";
             GUIUtil::setClipboard(exportedMN);
-            inform(tr("Masternode data copied to the clipboard."));
+            inform(tr("Gamemaster data copied to the clipboard."));
         }
     }
 
@@ -344,7 +344,7 @@ void MasterNodesWidget::onDeleteMNClicked()
         return;
     }
 
-    if (!ask(tr("Delete Masternode"), tr("You are just about to delete Masternode:\n%1\n\nAre you sure?").arg(qAliasString))) {
+    if (!ask(tr("Delete Gamemaster"), tr("You are just about to delete Gamemaster:\n%1\n\nAre you sure?").arg(qAliasString))) {
         return;
     }
 
@@ -363,13 +363,13 @@ void MasterNodesWidget::onCreateMNClicked()
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (!ctx.isValid()) {
         // Unlock wallet was cancelled
-        inform(tr("Cannot create Masternode controller, wallet locked"));
+        inform(tr("Cannot create Gamemaster controller, wallet locked"));
         return;
     }
 
     CAmount mnCollateralAmount = mnModel->getMNCollateralRequiredAmount();
     if (walletModel->getBalance() <= mnCollateralAmount) {
-        inform(tr("Not enough balance to create a masternode, %1 required.")
+        inform(tr("Not enough balance to create a gamemaster, %1 required.")
             .arg(GUIUtil::formatBalance(mnCollateralAmount, BitcoinUnits::HMS)));
         return;
     }
@@ -382,7 +382,7 @@ void MasterNodesWidget::onCreateMNClicked()
             selectedBalance += coin.value;
         }
         if (selectedBalance <= mnCollateralAmount) {
-            inform(tr("Not enough coins selected to create a masternode, %1 required.")
+            inform(tr("Not enough coins selected to create a gamemaster, %1 required.")
                        .arg(GUIUtil::formatBalance(mnCollateralAmount, BitcoinUnits::HMS)));
             return;
         }
@@ -399,7 +399,7 @@ void MasterNodesWidget::onCreateMNClicked()
             // add mn
             inform(dialog->returnStr);
         } else {
-            warn(tr("Error creating masternode"), dialog->returnStr);
+            warn(tr("Error creating gamemaster"), dialog->returnStr);
         }
     }
     dialog->deleteLater();

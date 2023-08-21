@@ -5,10 +5,10 @@
 
 #include "quorums.h"
 
-#include "activemasternode.h"
+#include "activegamemaster.h"
 #include "chainparams.h"
 #include "cxxtimer.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "llmq/quorums_connections.h"
 #include "logging.h"
 #include "quorums_blockprocessor.h"
@@ -33,8 +33,8 @@ static uint256 MakeQuorumKey(const CQuorum& q)
     CHashWriter hw(SER_NETWORK, 0);
     hw << (uint8_t)q.params.type;
     hw << q.pindexQuorum->GetBlockHash();
-    for (const auto& dmn : q.members) {
-        hw << dmn->proTxHash;
+    for (const auto& dgm : q.members) {
+        hw << dgm->proTxHash;
     }
     return hw.GetHash();
 }
@@ -48,7 +48,7 @@ CQuorum::~CQuorum()
     }
 }
 
-void CQuorum::Init(const uint256& _minedBlockHash, const CBlockIndex* _pindexQuorum, const std::vector<CDeterministicMNCPtr>& _members, const std::vector<bool>& _validMembers, const CBLSPublicKey& _quorumPublicKey)
+void CQuorum::Init(const uint256& _minedBlockHash, const CBlockIndex* _pindexQuorum, const std::vector<CDeterministicGMCPtr>& _members, const std::vector<bool>& _validMembers, const CBLSPublicKey& _quorumPublicKey)
 {
     minedBlockHash = _minedBlockHash;
     pindexQuorum = _pindexQuorum;
@@ -59,8 +59,8 @@ void CQuorum::Init(const uint256& _minedBlockHash, const CBlockIndex* _pindexQuo
 
 bool CQuorum::IsMember(const uint256& proTxHash) const
 {
-    for (auto& dmn : members) {
-        if (dmn->proTxHash == proTxHash) {
+    for (auto& dgm : members) {
+        if (dgm->proTxHash == proTxHash) {
             return true;
         }
     }
@@ -160,7 +160,7 @@ CQuorumManager::CQuorumManager(CEvoDB& _evoDb, CBLSWorker& _blsWorker, CDKGSessi
 
 void CQuorumManager::UpdatedBlockTip(const CBlockIndex* pindexNew, const CBlockIndex* pindexFork, bool fInitialDownload)
 {
-    if (fInitialDownload || !activeMasternodeManager || !deterministicMNManager->IsDIP3Enforced(pindexNew->nHeight)) {
+    if (fInitialDownload || !activeGamemasterManager || !deterministicGMManager->IsDIP3Enforced(pindexNew->nHeight)) {
         return;
     }
 
@@ -171,7 +171,7 @@ void CQuorumManager::UpdatedBlockTip(const CBlockIndex* pindexNew, const CBlockI
 
         auto lastQuorums = ScanQuorums(p.first, (size_t)params.keepOldConnections);
 
-        llmq::EnsureLatestQuorumConnections(p.first, pindexNew, activeMasternodeManager->GetProTx(), lastQuorums);
+        llmq::EnsureLatestQuorumConnections(p.first, pindexNew, activeGamemasterManager->GetProTx(), lastQuorums);
     }
 }
 
@@ -186,7 +186,7 @@ bool CQuorumManager::BuildQuorumFromCommitment(const CFinalCommitment& qc, const
     }
     auto& params = Params().GetConsensus().llmqs.at((Consensus::LLMQType)qc.llmqType);
     auto quorumIndex = mapBlockIndex[qc.quorumHash];
-    auto members = deterministicMNManager->GetAllQuorumMembers((Consensus::LLMQType)qc.llmqType, pindexQuorum);
+    auto members = deterministicGMManager->GetAllQuorumMembers((Consensus::LLMQType)qc.llmqType, pindexQuorum);
     quorum->Init(minedBlockHash, pindexQuorum, members, qc.validMembers, qc.quorumPublicKey);
 
     bool hasValidVvec = false;
@@ -271,7 +271,7 @@ std::vector<CQuorumCPtr> CQuorumManager::ScanQuorums(Consensus::LLMQType llmqTyp
 
     CBlockIndex* pindex = mapBlockIndex[startBlock];
 
-    while (pindex != NULL && result.size() < maxCount && deterministicMNManager->IsDIP3Enforced(pindex->nHeight)) {
+    while (pindex != NULL && result.size() < maxCount && deterministicGMManager->IsDIP3Enforced(pindex->nHeight)) {
         if (HasQuorum(llmqType, pindex->GetBlockHash())) {
             auto quorum = GetQuorum(llmqType, pindex->GetBlockHash());
             if (quorum) {

@@ -4,8 +4,8 @@
 
 #include "evo/evonotificationinterface.h"
 
-#include "evo/deterministicmns.h"
-#include "evo/mnauth.h"
+#include "evo/deterministicgms.h"
+#include "evo/gmauth.h"
 #include "llmq/quorums.h"
 #include "llmq/quorums_chainlocks.h"
 #include "llmq/quorums_dkgsessionmgr.h"
@@ -14,7 +14,7 @@
 void EvoNotificationInterface::InitializeCurrentBlockTip()
 {
     LOCK(cs_main);
-    deterministicMNManager->SetTipIndex(chainActive.Tip());
+    deterministicGMManager->SetTipIndex(chainActive.Tip());
 }
 
 void EvoNotificationInterface::AcceptedBlockHeader(const CBlockIndex* pindexNew)
@@ -30,7 +30,7 @@ void EvoNotificationInterface::UpdatedBlockTip(const CBlockIndex *pindexNew, con
     llmq::quorumManager->UpdatedBlockTip(pindexNew, pindexFork, fInitialDownload);
 }
 
-void EvoNotificationInterface::NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff)
+void EvoNotificationInterface::NotifyGamemasterListChanged(bool undo, const CDeterministicGMList& oldGMList, const CDeterministicGMListDiff& diff)
 {
-    CMNAuth::NotifyMasternodeListChanged(undo, oldMNList, diff);
+    CGMAuth::NotifyGamemasterListChanged(undo, oldGMList, diff);
 }

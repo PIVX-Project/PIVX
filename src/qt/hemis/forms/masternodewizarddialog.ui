@@ -690,7 +690,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Create New Masternode Controller</string>
+             <string>Create New Gamemaster Controller</string>
             </property>
            </widget>
           </item>
@@ -799,7 +799,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Set Masternode Name</string>
+             <string>Set Gamemaster Name</string>
             </property>
            </widget>
           </item>
@@ -822,7 +822,7 @@
              <number>25</number>
             </property>
             <property name="placeholderText">
-             <string notr="true">e.g. user_masternode</string>
+             <string notr="true">e.g. user_gamemaster</string>
             </property>
            </widget>
           </item>
@@ -886,7 +886,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Set Masternode IP and Port</string>
+             <string>Set Gamemaster IP and Port</string>
             </property>
            </widget>
           </item>

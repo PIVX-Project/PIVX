@@ -17,8 +17,8 @@ class GovernanceInvalidBudgetTest(HemisTestFramework):
     def set_test_params(self):
         self.setup_clean_chain = True
         # 3 nodes:
-        # - 1 miner/mncontroller
-        # - 2 remote mns
+        # - 1 miner/gmcontroller
+        # - 2 remote gms
         self.num_nodes = 3
         self.extra_args = [["-sporkkey=932HEevBSujW2ud7RfB1YF91AFygbBRQj3de3LyaCRqNzKKgWXi"],
                            [],
@@ -30,16 +30,16 @@ class GovernanceInvalidBudgetTest(HemisTestFramework):
         self.remoteOnePos = 1
         self.remoteTwoPos = 2
 
-        self.masternodeOneAlias = "mnOne"
-        self.masternodeTwoAlias = "mntwo"
+        self.gamemasterOneAlias = "gmOne"
+        self.gamemasterTwoAlias = "gmtwo"
 
-        self.mnOnePrivkey = "9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK"
-        self.mnTwoPrivkey = "92Hkebp3RHdDidGZ7ARgS4orxJAGyFUPDXNqtsYsiwho1HGVRbF"
+        self.gmOnePrivkey = "9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK"
+        self.gmTwoPrivkey = "92Hkebp3RHdDidGZ7ARgS4orxJAGyFUPDXNqtsYsiwho1HGVRbF"
 
     def run_test(self):
-        self.minerA = self.nodes[self.minerAPos]     # also controller of mn1 and mn2
-        self.mn1 = self.nodes[self.remoteOnePos]
-        self.mn2 = self.nodes[self.remoteTwoPos]
+        self.minerA = self.nodes[self.minerAPos]     # also controller of gm1 and gm2
+        self.gm1 = self.nodes[self.remoteOnePos]
+        self.gm2 = self.nodes[self.remoteTwoPos]
         self.setupContext()
 
         # Create a valid proposal and vote on it
@@ -48,24 +48,24 @@ class GovernanceInvalidBudgetTest(HemisTestFramework):
         self.log.info("Creating a proposal to be paid at block %d" % next_superblock)
         proposalFeeTxId = self.minerA.preparebudget("test1", "https://test1.org", 2,
                                                next_superblock, payee, 300)
-        self.stake_and_ping(self.minerAPos, 3, [self.mn1, self.mn2])
+        self.stake_and_ping(self.minerAPos, 3, [self.gm1, self.gm2])
         proposalHash = self.minerA.submitbudget("test1", "https://test1.org", 2,
                                            next_superblock, payee, 300, proposalFeeTxId)
         time.sleep(1)
-        self.stake_and_ping(self.minerAPos, 7, [self.mn1, self.mn2])
+        self.stake_and_ping(self.minerAPos, 7, [self.gm1, self.gm2])
         self.log.info("Vote for the proposal and check projection...")
-        self.minerA.mnbudgetvote("alias", proposalHash, "yes", self.masternodeOneAlias)
-        self.minerA.mnbudgetvote("alias", proposalHash, "yes", self.masternodeTwoAlias)
+        self.minerA.gmbudgetvote("alias", proposalHash, "yes", self.gamemasterOneAlias)
+        self.minerA.gmbudgetvote("alias", proposalHash, "yes", self.gamemasterTwoAlias)
         time.sleep(1)
-        self.stake_and_ping(self.minerAPos, 1, [self.mn1, self.mn2])
-        projection = self.mn1.getbudgetprojection()[0]
+        self.stake_and_ping(self.minerAPos, 1, [self.gm1, self.gm2])
+        projection = self.gm1.getbudgetprojection()[0]
         assert_equal(projection["Name"], "test1")
         assert_equal(projection["Hash"], proposalHash)
         assert_equal(projection["Yeas"], 2)
 
         # Try to create an invalid finalized budget, paying to an nonexistent proposal
         self.log.info("Creating invalid budget finalization...")
-        self.stake_and_ping(self.minerAPos, 5, [self.mn1, self.mn2])
+        self.stake_and_ping(self.minerAPos, 5, [self.gm1, self.gm2])
 
         budgetname = "invalid finalization"
         blockstart = self.minerA.getnextsuperblock()
@@ -74,22 +74,22 @@ class GovernanceInvalidBudgetTest(HemisTestFramework):
         badPropPayee = "8c988f1a4a4de2161e0f50aac7f17e7f9555caa4"
         badPropAmount = 500
         proposals.append({"proposalid": badPropId, "payee": badPropPayee, "amount": badPropAmount})
-        res = self.minerA.createrawmnfinalbudget(budgetname, blockstart, proposals)
+        res = self.minerA.createrawgmfinalbudget(budgetname, blockstart, proposals)
         assert(res["result"] == "tx_fee_sent")
         feeBudgetId = res["id"]
         time.sleep(1)
-        self.stake_and_ping(self.minerAPos, 4, [self.mn1, self.mn2])
-        res = self.minerA.createrawmnfinalbudget(budgetname, blockstart, proposals, feeBudgetId)
+        self.stake_and_ping(self.minerAPos, 4, [self.gm1, self.gm2])
+        res = self.minerA.createrawgmfinalbudget(budgetname, blockstart, proposals, feeBudgetId)
         assert(res["result"] == "error") # not accepted
 
         self.log.info("Good, invalid budget not accepted.")
 
-    def send_3_pings(self, mn_list):
+    def send_3_pings(self, gm_list):
         self.advance_mocktime(30)
-        self.send_pings(mn_list)
-        self.stake_and_ping(self.minerAPos, 1, mn_list)
+        self.send_pings(gm_list)
+        self.stake_and_ping(self.minerAPos, 1, gm_list)
         self.advance_mocktime(30)
-        self.send_pings(mn_list)
+        self.send_pings(gm_list)
         time.sleep(2)
 
     def setupContext(self):
@@ -103,37 +103,37 @@ class GovernanceInvalidBudgetTest(HemisTestFramework):
         for n in self.nodes:
             assert_equal(n.getblockcount(), 259)
 
-        # Setup Masternodes
-        self.log.info("Masternodes setup...")
+        # Setup Gamemasters
+        self.log.info("Gamemasters setup...")
         ownerdir = os.path.join(self.options.tmpdir, "node%d" % self.minerAPos, "regtest")
-        self.mnOneCollateral = self.setupMasternode(self.minerA, self.minerA, self.masternodeOneAlias,
-                                                    ownerdir, self.remoteOnePos, self.mnOnePrivkey)
-        self.mnTwoCollateral = self.setupMasternode(self.minerA, self.minerA, self.masternodeTwoAlias,
-                                                    ownerdir, self.remoteTwoPos, self.mnTwoPrivkey)
+        self.gmOneCollateral = self.setupGamemaster(self.minerA, self.minerA, self.gamemasterOneAlias,
+                                                    ownerdir, self.remoteOnePos, self.gmOnePrivkey)
+        self.gmTwoCollateral = self.setupGamemaster(self.minerA, self.minerA, self.gamemasterTwoAlias,
+                                                    ownerdir, self.remoteTwoPos, self.gmTwoPrivkey)
 
-        # Activate masternodes
-        self.log.info("Masternodes activation...")
+        # Activate gamemasters
+        self.log.info("Gamemasters activation...")
         self.stake_and_ping(self.minerAPos, 1, [])
         time.sleep(3)
         self.advance_mocktime(10)
         remoteOnePort = p2p_port(self.remoteOnePos)
         remoteTwoPort = p2p_port(self.remoteTwoPos)
-        self.mn1.initmasternode(self.mnOnePrivkey, "127.0.0.1:"+str(remoteOnePort))
-        self.mn2.initmasternode(self.mnTwoPrivkey, "127.0.0.1:"+str(remoteTwoPort))
+        self.gm1.initgamemaster(self.gmOnePrivkey, "127.0.0.1:"+str(remoteOnePort))
+        self.gm2.initgamemaster(self.gmTwoPrivkey, "127.0.0.1:"+str(remoteTwoPort))
         self.stake_and_ping(self.minerAPos, 1, [])
-        self.wait_until_mnsync_finished()
-        self.controller_start_masternode(self.minerA, self.masternodeOneAlias)
-        self.controller_start_masternode(self.minerA, self.masternodeTwoAlias)
-        self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)
-        self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)
-        self.send_3_pings([self.mn1, self.mn2])
-        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [self.mn1, self.mn2])
-        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [self.mn1, self.mn2])
+        self.wait_until_gmsync_finished()
+        self.controller_start_gamemaster(self.minerA, self.gamemasterOneAlias)
+        self.controller_start_gamemaster(self.minerA, self.gamemasterTwoAlias)
+        self.wait_until_gm_preenabled(self.gmOneCollateral.hash, 40)
+        self.wait_until_gm_preenabled(self.gmOneCollateral.hash, 40)
+        self.send_3_pings([self.gm1, self.gm2])
+        self.wait_until_gm_enabled(self.gmOneCollateral.hash, 120, [self.gm1, self.gm2])
+        self.wait_until_gm_enabled(self.gmOneCollateral.hash, 120, [self.gm1, self.gm2])
 
         # activate sporks
-        self.log.info("Masternodes enabled. Activating sporks.")
-        self.activate_spork(self.minerAPos, "SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT")
-        self.activate_spork(self.minerAPos, "SPORK_9_MASTERNODE_BUDGET_ENFORCEMENT")
+        self.log.info("Gamemasters enabled. Activating sporks.")
+        self.activate_spork(self.minerAPos, "SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT")
+        self.activate_spork(self.minerAPos, "SPORK_9_GAMEMASTER_BUDGET_ENFORCEMENT")
         self.activate_spork(self.minerAPos, "SPORK_13_ENABLE_SUPERBLOCKS")
 
 

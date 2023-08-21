@@ -512,14 +512,14 @@
                </size>
               </property>
               <property name="text">
-               <string>Staking/MN Rewards</string>
+               <string>Staking/GM Rewards</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLabel" name="labelMessage">
               <property name="text">
-               <string>Amount of HMS stakes and masternodes rewards.</string>
+               <string>Amount of HMS stakes and gamemasters rewards.</string>
               </property>
              </widget>
             </item>
@@ -577,7 +577,7 @@
           <item>
            <widget class="QLabel" name="labelAmountMN">
             <property name="text">
-             <string notr="true">0 MN</string>
+             <string notr="true">0 GM</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -736,7 +736,7 @@
                 <item>
                  <widget class="QLabel" name="labelMN">
                   <property name="text">
-                   <string>Masternode</string>
+                   <string>Gamemaster</string>
                   </property>
                  </widget>
                 </item>

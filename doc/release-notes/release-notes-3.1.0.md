@@ -65,18 +65,18 @@ Users will now have the ability to search the blockchain for a specific serial #
 
 
 
-HMS/zHMS Staking and Masternode Rewards
+HMS/zHMS Staking and Gamemaster Rewards
 --------------
 
-### HMS, zHMS and Masternode Payment Schedule
+### HMS, zHMS and Gamemaster Payment Schedule
 
 To encourage the use of zHMS and increase the hemis zerocoin anonymity set, the hemis payment schedule has been changed to the following:
 
 If a user staking zHMS wins the reward for their block, the following zHMS reward will be: 
-- 3 zHMS (3 x 1 denominations) rewarded to the staker, 2 HMS rewarded to the masternode owner and 1 HMS available for the budget. This is a total block reward of 6 HMS, up from 5.
+- 3 zHMS (3 x 1 denominations) rewarded to the staker, 2 HMS rewarded to the gamemaster owner and 1 HMS available for the budget. This is a total block reward of 6 HMS, up from 5.
 
 If a user staking HMS wins the reward, the following amounts will be rewarded: 
-- 2 HMS to the HMS staker, 3 HMS to the Masternode owner and 1 HMS available for the budget. This is a total block reward of 6 HMS, up from 5.
+- 2 HMS to the HMS staker, 3 HMS to the Gamemaster owner and 1 HMS available for the budget. This is a total block reward of 6 HMS, up from 5.
 
 
 ### Return change to sender when minting zHMS
@@ -192,13 +192,13 @@ Search the zerocoin database for a zerocoinspend transaction that contains the g
 
 
 ### New RPC commands 
-`createmasternodebroadcast`
+`creategamemasterbroadcast`
 
-`decodemasternodebroadcast`
+`decodegamemasterbroadcast`
 
-`relaymasternodebroadcast`
+`relaygamemasterbroadcast`
 
-A new set of rpc commands masternodebroadcast to create masternode broadcast messages offline and relay them from online node later (messages expire in ~1 hour). 
+A new set of rpc commands gamemasterbroadcast to create gamemaster broadcast messages offline and relay them from online node later (messages expire in ~1 hour). 
 
 
 Network Layer 2 Changes (Proposals / Budgets / SwiftX)
@@ -206,7 +206,7 @@ Network Layer 2 Changes (Proposals / Budgets / SwiftX)
 
 ### Monthly Budget Increase
 
-As voted on by the hemis masternodes, the monthly budget available to be utilised has been increased to 42,000 HMS / month. This HMS only has the opportunity to be raised once per month (paid to winning proposals) with any unused HMS not created by the blockchain.
+As voted on by the hemis gamemasters, the monthly budget available to be utilised has been increased to 42,000 HMS / month. This HMS only has the opportunity to be raised once per month (paid to winning proposals) with any unused HMS not created by the blockchain.
 
 ### Budget Finalization Fee
 
@@ -251,7 +251,7 @@ Minor Enhancements
 -	Enforced v1 zHMS spends to require a security level of 100
 -	Updates to zHMS spends to avoid segfaults
 -	Updates to configuration will now reflect on the privacy tab
--	Fixed a  bug that would not start masternodes from the hemis-Qt masternodes tab
+-	Fixed a  bug that would not start gamemasters from the hemis-Qt gamemasters tab
 -	Updated hemis-Qt tooltips
 -	Icon added to the wallet GUI to reflect the status of autominting (active / inactive)
 -	Updated errors causing the blockchain to corrupt when experiencing unexpected wallet shutdowns
@@ -299,7 +299,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #523 `926c073ea` [Core] Give high priority to zerocoinspends to make it into the next block. (presstab)
  - #535 `5e8875feb` [Core] Minor refacturing + unused variable removed (Mrs-X)
  - #526 `0e034d62f` [Core] Refactor ConnectBlock() to segregate state tracking items (presstab)
- - #513 `27cdf61f2` [Core] Fix masternode broadcast for networks != MAINNET (Mrs-X)
+ - #513 `27cdf61f2` [Core] Fix gamemaster broadcast for networks != MAINNET (Mrs-X)
  - #261 `29611a5fd` [Core] Switch from local to main signals for the validation interface (Nitya Sattva)
  - #460 `ae4b6a135` [Core] (testnet-) blockchain stuck at block 325000 (Mrs-X)
  - #428 `3de6b6f3e` [Core] Wipe zerocoin DB on reindex. (presstab)
@@ -382,7 +382,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #530 `fd8aa8991` [Docs] Update README.md (Warrows)
  - #528 `1c1412246` [Docs] Readme changes (Sieres)
  - #471 `18e5accb6` [Docs] Readme SeeSaw reward mechanism reference. (Dexaran)
- - #426 `3418a64d2` [Docs] Use mainnet port for example in masternode.conf file (Fuzzbawls)
+ - #426 `3418a64d2` [Docs] Use mainnet port for example in gamemaster.conf file (Fuzzbawls)
  
  
 ## Credits

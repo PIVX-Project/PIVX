@@ -9,7 +9,7 @@
 #include "bls/bls_worker.h"
 #include "bls/bls_wrapper.h"
 #include "consensus/params.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "evo/evodb.h"
 #include "validationinterface.h"
 
@@ -35,7 +35,7 @@ public:
     const Consensus::LLMQParams& params;
     uint256 minedBlockHash;
     const CBlockIndex* pindexQuorum;
-    std::vector<CDeterministicMNCPtr> members;
+    std::vector<CDeterministicGMCPtr> members;
     std::vector<bool> validMembers;
     CBLSPublicKey quorumPublicKey;
 
@@ -53,7 +53,7 @@ private:
 public:
     CQuorum(const Consensus::LLMQParams& _params, CBLSWorker& _blsWorker) : params(_params), blsCache(_blsWorker), stopCachePopulatorThread(false) {}
     ~CQuorum();
-    void Init(const uint256& minedBlockHash, const CBlockIndex* pindexQuorum, const std::vector<CDeterministicMNCPtr>& members, const std::vector<bool>& validMembers, const CBLSPublicKey& quorumPublicKey);
+    void Init(const uint256& minedBlockHash, const CBlockIndex* pindexQuorum, const std::vector<CDeterministicGMCPtr>& members, const std::vector<bool>& validMembers, const CBLSPublicKey& quorumPublicKey);
 
     bool IsMember(const uint256& proTxHash) const;
     bool IsValidMember(const uint256& proTxHash) const;

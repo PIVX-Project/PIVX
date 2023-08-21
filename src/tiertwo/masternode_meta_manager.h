@@ -3,8 +3,8 @@
 // Distributed under the X11 software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef hemis_MASTERNODE_META_MANAGER_H
-#define hemis_MASTERNODE_META_MANAGER_H
+#ifndef hemis_GAMEMASTER_META_MANAGER_H
+#define hemis_GAMEMASTER_META_MANAGER_H
 
 #include "serialize.h"
 #include "sync.h"
@@ -12,14 +12,14 @@
 
 #include <memory>
 
-static const std::string MN_META_CACHE_FILENAME = "mnmetacache.dat";
-static const std::string MN_META_CACHE_FILE_ID = "magicMasternodeMetaCache";
+static const std::string GM_META_CACHE_FILENAME = "gmmetacache.dat";
+static const std::string GM_META_CACHE_FILE_ID = "magicGamemasterMetaCache";
 
-// Holds extra (non-deterministic) information about masternodes
+// Holds extra (non-deterministic) information about gamemasters
 // This is mostly local information, e.g. last connection attempt
-class CMasternodeMetaInfo
+class CGamemasterMetaInfo
 {
-    friend class CMasternodeMetaMan;
+    friend class CGamemasterMetaMan;
 private:
     mutable Mutex cs;
     uint256 proTxHash;
@@ -28,14 +28,14 @@ private:
     int64_t lastOutboundSuccess{0};
 
 public:
-    CMasternodeMetaInfo() = default;
-    explicit CMasternodeMetaInfo(const uint256& _proTxHash) : proTxHash(_proTxHash) {}
-    CMasternodeMetaInfo(const CMasternodeMetaInfo& ref) :
+    CGamemasterMetaInfo() = default;
+    explicit CGamemasterMetaInfo(const uint256& _proTxHash) : proTxHash(_proTxHash) {}
+    CGamemasterMetaInfo(const CGamemasterMetaInfo& ref) :
             proTxHash(ref.proTxHash),
             lastOutboundAttempt(ref.lastOutboundAttempt),
             lastOutboundSuccess(ref.lastOutboundSuccess) {}
 
-    SERIALIZE_METHODS(CMasternodeMetaInfo, obj) {
+    SERIALIZE_METHODS(CGamemasterMetaInfo, obj) {
         READWRITE(obj.proTxHash, obj.lastOutboundAttempt, obj.lastOutboundSuccess);
     }
 
@@ -46,18 +46,18 @@ public:
     int64_t GetLastOutboundSuccess() const { LOCK(cs); return lastOutboundSuccess; }
 };
 
-typedef std::shared_ptr<CMasternodeMetaInfo> CMasternodeMetaInfoPtr;
+typedef std::shared_ptr<CGamemasterMetaInfo> CGamemasterMetaInfoPtr;
 
-class CMasternodeMetaMan
+class CGamemasterMetaMan
 {
 private:
     static const std::string SERIALIZATION_VERSION_STRING;
     mutable RecursiveMutex cs_metaman;
-    std::map<uint256, CMasternodeMetaInfoPtr> metaInfos;
+    std::map<uint256, CGamemasterMetaInfoPtr> metaInfos;
 
 public:
-    // Return the stored metadata info from an specific MN
-    CMasternodeMetaInfoPtr GetMetaInfo(const uint256& proTxHash, bool fCreate = true);
+    // Return the stored metadata info from an specific GM
+    CGamemasterMetaInfoPtr GetMetaInfo(const uint256& proTxHash, bool fCreate = true);
     void Clear();
     std::string ToString();
 
@@ -65,7 +65,7 @@ public:
     inline void Serialize(Stream& s) const {
         LOCK(cs_metaman);
         s << SERIALIZATION_VERSION_STRING;
-        std::vector<CMasternodeMetaInfo> tmpMetaInfo;
+        std::vector<CGamemasterMetaInfo> tmpMetaInfo;
         for (auto& p : metaInfos) {
             tmpMetaInfo.emplace_back(*p.second);
         }
@@ -82,14 +82,14 @@ public:
             return;
         }
 
-        std::vector<CMasternodeMetaInfo> tmpMetaInfo;
+        std::vector<CGamemasterMetaInfo> tmpMetaInfo;
         s >> tmpMetaInfo;
         for (auto& mm : tmpMetaInfo) {
-            metaInfos.emplace(mm.GetProTxHash(), std::make_shared<CMasternodeMetaInfo>(std::move(mm)));
+            metaInfos.emplace(mm.GetProTxHash(), std::make_shared<CGamemasterMetaInfo>(std::move(mm)));
         }
     }
 };
 
-extern CMasternodeMetaMan g_mmetaman;
+extern CGamemasterMetaMan g_mmetaman;
 
-#endif //hemis_MASTERNODE_META_MANAGER_H
+#endif //hemis_GAMEMASTER_META_MANAGER_H

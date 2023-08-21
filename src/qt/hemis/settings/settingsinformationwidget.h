@@ -35,7 +35,7 @@ private Q_SLOTS:
 
 public Q_SLOTS:
     void openNetworkMonitor();
-    void setMasternodeCount(const QString& strMasternodes);
+    void setGamemasterCount(const QString& strGamemasters);
 
 private:
     Ui::SettingsInformationWidget *ui;

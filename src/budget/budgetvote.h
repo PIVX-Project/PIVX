@@ -12,7 +12,7 @@
 #include <univalue.h>
 
 //
-// CBudgetVote - Allow a masternode node to vote and broadcast throughout the network
+// CBudgetVote - Allow a gamemaster node to vote and broadcast throughout the network
 //
 
 class CBudgetVote : public CSignedMessage

@@ -22,7 +22,7 @@
 #include "optional.h"
 #include "primitives/transaction.h"
 #include "scheduler.h"
-#include "tiertwo/net_masternodes.h"
+#include "tiertwo/net_gamemasters.h"
 #include "validation.h"
 
 #ifdef WIN32
@@ -692,11 +692,11 @@ void CNode::copyStats(CNodeStats& stats, const std::vector<bool>& m_asmap)
         X(nRecvBytes);
     }
     X(fWhitelisted);
-    X(m_masternode_connection);
-    X(m_masternode_iqr_connection);
-    X(m_masternode_probe_connection);
+    X(m_gamemaster_connection);
+    X(m_gamemaster_iqr_connection);
+    X(m_gamemaster_probe_connection);
     {
-        LOCK(cs_mnauth);
+        LOCK(cs_gmauth);
         X(verifiedProRegTxHash);
         X(verifiedPubKeyHash);
     }
@@ -984,17 +984,17 @@ bool CConnman::AttemptToEvictConnection(bool fPreferNewConnection)
             if (node->fDisconnect)
                 continue;
 
-            // Protect verified MN-only connections
+            // Protect verified GM-only connections
             if (fMasterNode) {
                 // This handles eviction protected nodes. Nodes are always protected for a short time after the connection
-                // was accepted. This short time is meant for the VERSION/VERACK exchange and the possible MNAUTH that might
-                // follow when the incoming connection is from another masternode. When a message other than MNAUTH
+                // was accepted. This short time is meant for the VERSION/VERACK exchange and the possible GMAUTH that might
+                // follow when the incoming connection is from another gamemaster. When a message other than GMAUTH
                 // is received after VERSION/VERACK, the protection is lifted immediately.
                 bool isProtected = GetSystemTimeInSeconds() - node->nTimeConnected < INBOUND_EVICTION_PROTECTION_TIME;
-                if (node->fFirstMessageReceived && !node->fFirstMessageIsMNAUTH) {
+                if (node->fFirstMessageReceived && !node->fFirstMessageIsGMAUTH) {
                     isProtected = false;
                 }
-                // if MNAUTH was valid, the node is always protected (and at the same time not accounted when
+                // if GMAUTH was valid, the node is always protected (and at the same time not accounted when
                 // checking incoming connection limits)
                 if (!node->verifiedProRegTxHash.IsNull()) {
                     isProtected = true;
@@ -1078,7 +1078,7 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
     SOCKET hSocket = accept(hListenSocket.socket, (struct sockaddr*)&sockaddr, &len);
     CAddress addr;
     int nInbound = 0;
-    int nVerifiedInboundMasternodes = 0;
+    int nVerifiedInboundGamemasters = 0;
 
     if (hSocket != INVALID_SOCKET)
         if (!addr.SetSockAddr((const struct sockaddr*)&sockaddr))
@@ -1091,7 +1091,7 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
             if (pnode->fInbound) {
                 nInbound++;
                 if (!pnode->verifiedProRegTxHash.IsNull()) {
-                    nVerifiedInboundMasternodes++;
+                    nVerifiedInboundGamemasters++;
                 }
             }
         }
@@ -1125,10 +1125,10 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
     // TODO: pending review.
     // Evict connections until we are below nMaxInbound. In case eviction protection resulted in nodes to not be evicted
     // before, they might get evicted in batches now (after the protection timeout).
-    // We don't evict verified MN connections and also don't take them into account when checking limits. We can do this
-    // because we know that such connections are naturally limited by the total number of MNs, so this is not usable
+    // We don't evict verified GM connections and also don't take them into account when checking limits. We can do this
+    // because we know that such connections are naturally limited by the total number of GMs, so this is not usable
     // for attacks.
-    while (nInbound - nVerifiedInboundMasternodes >= nMaxConnections - MAX_OUTBOUND_CONNECTIONS) {
+    while (nInbound - nVerifiedInboundGamemasters >= nMaxConnections - MAX_OUTBOUND_CONNECTIONS) {
         if (!AttemptToEvictConnection(whitelisted)) {
             // No connection to evict, disconnect the new connection
             LogPrint(BCLog::NET, "failed to find an eviction candidate - connection dropped (full)\n");
@@ -1567,7 +1567,7 @@ void CConnman::ThreadDNSAddressSeed()
         LOCK(cs_vNodes);
         int nRelevant = 0;
         for (auto pnode : vNodes) {
-            nRelevant += pnode->fSuccessfullyConnected && !pnode->fFeeler && !pnode->fOneShot && !pnode->fAddnode && !pnode->fInbound && !pnode->m_masternode_probe_connection;
+            nRelevant += pnode->fSuccessfullyConnected && !pnode->fFeeler && !pnode->fOneShot && !pnode->fAddnode && !pnode->fInbound && !pnode->m_gamemaster_probe_connection;
         }
         if (nRelevant >= 2) {
             LogPrintf("P2P peers available. Skipped DNS seeding.\n");
@@ -1714,7 +1714,7 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
         {
             LOCK(cs_vNodes);
             for (const CNode* pnode : vNodes) {
-                if (!pnode->fInbound && !pnode->fAddnode && !pnode->m_masternode_connection) {
+                if (!pnode->fInbound && !pnode->fAddnode && !pnode->m_gamemaster_connection) {
                     // Netgroups for inbound and addnode peers are not excluded because our goal here
                     // is to not use multiple of our limited outbound slots on a single netgroup
                     // but inbound and addnode peers do not use our outbound slots. Inbound peers
@@ -1892,7 +1892,7 @@ void CConnman::ThreadOpenAddedConnections()
 }
 
 // if successful, this moves the passed grant to the constructed node
-void CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFailure, CSemaphoreGrant* grantOutbound, const char* pszDest, bool fOneShot, bool fFeeler, bool fAddnode, bool masternode_connection, bool masternode_probe_connection)
+void CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFailure, CSemaphoreGrant* grantOutbound, const char* pszDest, bool fOneShot, bool fFeeler, bool fAddnode, bool gamemaster_connection, bool gamemaster_probe_connection)
 {
     //
     // Initiate outbound network connection
@@ -1908,9 +1908,9 @@ void CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFai
     } else {
         CNode* pnode = FindNode(pszDest);
         if (pnode) {
-            // If this is a mnauth connection and the node is already connected normally,
+            // If this is a gmauth connection and the node is already connected normally,
             // disconnect it and open a new connection
-            if (masternode_connection && !pnode->m_masternode_connection) {
+            if (gamemaster_connection && !pnode->m_gamemaster_connection) {
                 pnode->fDisconnect = true;
             } else {
                 return;
@@ -1930,10 +1930,10 @@ void CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFai
         pnode->fFeeler = true;
     if (fAddnode)
         pnode->fAddnode = true;
-    if (masternode_connection)
-        pnode->m_masternode_connection = true;
-    if (masternode_probe_connection)
-        pnode->m_masternode_probe_connection = true;
+    if (gamemaster_connection)
+        pnode->m_gamemaster_connection = true;
+    if (gamemaster_probe_connection)
+        pnode->m_gamemaster_probe_connection = true;
 
     m_msgproc->InitializeNode(pnode);
     {
@@ -1944,7 +1944,7 @@ void CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFai
 
 void CConnman::ThreadMessageHandler()
 {
-    int64_t nLastSendMessagesTimeMasternodes = 0;
+    int64_t nLastSendMessagesTimeGamemasters = 0;
 
     while (!flagInterruptMsgProc) {
         std::vector<CNode*> vNodesCopy;
@@ -1959,10 +1959,10 @@ void CConnman::ThreadMessageHandler()
         bool fMoreWork = false;
 
         // Don't send other messages to quorum nodes too often
-        bool fSkipSendMessagesForMasternodes = true;
-        if (GetTimeMillis() - nLastSendMessagesTimeMasternodes >= 100) {
-            fSkipSendMessagesForMasternodes = false;
-            nLastSendMessagesTimeMasternodes = GetTimeMillis();
+        bool fSkipSendMessagesForGamemasters = true;
+        if (GetTimeMillis() - nLastSendMessagesTimeGamemasters >= 100) {
+            fSkipSendMessagesForGamemasters = false;
+            nLastSendMessagesTimeGamemasters = GetTimeMillis();
         }
 
         for (CNode* pnode : vNodesCopy) {
@@ -1976,7 +1976,7 @@ void CConnman::ThreadMessageHandler()
                 return;
 
             // Send messages
-            if (!fSkipSendMessagesForMasternodes || !pnode->m_masternode_connection) {
+            if (!fSkipSendMessagesForGamemasters || !pnode->m_gamemaster_connection) {
                 LOCK(pnode->cs_sendProcessing);
                 m_msgproc->SendMessages(pnode, flagInterruptMsgProc);
             }
@@ -2522,7 +2522,7 @@ void CConnman::RelayInv(CInv& inv)
     LOCK(cs_vNodes);
     for (CNode* pnode : vNodes){
         if (!pnode->fSuccessfullyConnected) continue;
-        if ((pnode->nServices == NODE_BLOOM_WITHOUT_MN) && inv.IsMasterNodeType()) continue;
+        if ((pnode->nServices == NODE_BLOOM_WITHOUT_GM) && inv.IsMasterNodeType()) continue;
         if (!pnode->CanRelay()) continue;
         if (pnode->nVersion >= ActiveProtocol())
             pnode->PushInventory(inv);
@@ -2541,9 +2541,9 @@ void CConnman::RemoveAskFor(const uint256& invHash, int invType)
 
 void CConnman::UpdateQuorumRelayMemberIfNeeded(CNode* pnode)
 {
-    if (!pnode->m_masternode_iqr_connection && pnode->m_masternode_connection &&
-        m_tiertwo_conn_man->isMasternodeQuorumRelayMember(WITH_LOCK(pnode->cs_mnauth, return pnode->verifiedProRegTxHash))) {
-        pnode->m_masternode_iqr_connection = true;
+    if (!pnode->m_gamemaster_iqr_connection && pnode->m_gamemaster_connection &&
+        m_tiertwo_conn_man->isGamemasterQuorumRelayMember(WITH_LOCK(pnode->cs_gmauth, return pnode->verifiedProRegTxHash))) {
+        pnode->m_gamemaster_iqr_connection = true;
     }
 }
 
@@ -2617,7 +2617,7 @@ CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn
     fWhitelisted = false;
     fOneShot = false;
     fAddnode = false;
-    m_masternode_connection = false;
+    m_gamemaster_connection = false;
     fClient = false; // set by version message
     fFeeler = false;
     fSuccessfullyConnected = false;
@@ -2782,7 +2782,7 @@ CNode* CConnman::ConnectNode(const CAddress& addrConnect)
 }
 
 // valid, reachable and routable address (except for RegTest)
-bool validateMasternodeIP(const std::string& addrStr)
+bool validateGamemasterIP(const std::string& addrStr)
 {
     CNetAddr resolved;
     if (LookupHost(addrStr, resolved, false)) {

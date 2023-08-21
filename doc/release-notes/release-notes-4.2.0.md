@@ -144,7 +144,7 @@ and are affected by this change: RPC `getrawtransaction`, RPC `decoderawtransact
 
 ### Removed commands
 
-- `masternodedebug`. Use `getmasternodestatus` instead. ([#1698](https://github.com/hemis-Project/hemis/pull/1698)).
+- `gamemasterdebug`. Use `getgamemasterstatus` instead. ([#1698](https://github.com/hemis-Project/hemis/pull/1698)).
 
 *4.2.0* Change log
 ==============
@@ -232,7 +232,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #1708 `f3b54df58d` [BUG][GUI] Non-static coinControl object in CoinControlDialogs (random-zebra)
  - #1715 `37c01cf359` [GUI][Trivial] Update settingsfaqwidget.ui (Jeffrey)
  - #1724 `c178aab2fe` [GUI] Return early in pollBalanceChanged (Fuzzbawls)
- - #1732 `be99df3342` [GUI] Better start single MN error description. (furszy)
+ - #1732 `be99df3342` [GUI] Better start single GM error description. (furszy)
  - #1737 `78ed084999` [GUI] Replace more deprecated Qt methods (Fuzzbawls)
  - #1740 `141141c9cf` [GUI] Periodic make translate (Fuzzbawls)
  - #1741 `ffae965fad` [GUI] Settings console message moved to read only. (furszy)
@@ -250,7 +250,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 ### Wallet
  - #1586 `73c3ecc388` [Wallet] Minimum value for stake split threshold (random-zebra)
  - #1695 `98cf582557` [Wallet] Abandon tx in CommitTransaction if ATMP fails (random-zebra)
- - #1698 `ccecffd144` [Wallet] Masternodes start performance boost (furszy)
+ - #1698 `ccecffd144` [Wallet] Gamemasters start performance boost (furszy)
  - #1713 `f31b51f08e` [Refactor] zerocoin code moved from wallet.cpp to wallet_zerocoin.cpp (furszy)
  - #1717 `f928674bf7` [Wallet] AddToWallet split in AddToWallet and LoadToWallet (furszy)
  - #1734 `78a4f68ab2` [Wallet][BUG] fix detection of wallet conflicts in CWallet::AddToWallet (random-zebra)
@@ -270,7 +270,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #1692 `1221efd5d6` [Cleanup] Don't sign MESS_VER_STRMESS network msgs anymore (random-zebra)
  - #1705 `2d6835e734` [Doc] Add/Update some release notes for 4.2 (random-zebra)
  - #1718 `5e75d4c344` [Trivial] Spelling Error (Yuurin Bee)
- - #1719 `b72ec2ff52` [Cleanup] remove masternode broadcast from CActiveMasternode class (random-zebra)
+ - #1719 `b72ec2ff52` [Cleanup] remove gamemaster broadcast from CActiveGamemaster class (random-zebra)
  - #1722 `f68acbe01e` Unused methods cleanup (furszy)
  - #1736 `fc5d36ac77` [Cleanup] Transaction primitive unused methods cleanup. (furszy)
  - #1751 `dbcbf8a995` [Miner] Unused reserveKey cleanup (furszy)

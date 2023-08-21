@@ -103,7 +103,7 @@ public:
     bool isRefreshNeeded() { return refreshNeeded; }
     // Return the number of blocks per budget cycle
     int getNumBlocksPerBudgetCycle() const;
-    // Return the minimum time when an MN can update a vote for a proposal
+    // Return the minimum time when an GM can update a vote for a proposal
     int getProposalVoteUpdateMinTime() const;
     // Return the budget maximum available amount for the running chain
     CAmount getMaxAvailableBudgetAmount() const;
@@ -115,7 +115,7 @@ public:
     // Returns the sum of all of the passing proposals
     CAmount getBudgetAllocatedAmount() const { return allocatedAmount; };
     CAmount getBudgetAvailableAmount() const { return getMaxAvailableBudgetAmount() - allocatedAmount; };
-    // Return the votes that the local masternodes did for the inputted proposal
+    // Return the votes that the local gamemasters did for the inputted proposal
     std::vector<VoteInfo> getLocalMNsVotesForProposal(const ProposalInfo& propInfo);
     // Check if the URL is valid.
     OperationResult validatePropURL(const QString& url) const;

@@ -9,11 +9,11 @@
 #include "consensus/merkle.h"
 #include "consensus/params.h"
 #include "evo/specialtx_validation.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "llmq/quorums_blockprocessor.h"
 #include "llmq/quorums_commitment.h"
 #include "llmq/quorums_utils.h"
-#include "masternode-payments.h"
+#include "gamemaster-payments.h"
 #include "messagesigner.h"
 #include "netbase.h"
 #include "policy/policy.h"
@@ -159,7 +159,7 @@ static CMutableTransaction CreateProRegTx(Optional<COutPoint> optCollateralOut,
     tx.nType = CTransaction::TxType::PROREG;
     FundTransaction(tx, utxos, scriptPayout,
                     GetScriptForDestination(coinbaseKey.GetPubKey().GetID()),
-                    (optCollateralOut ? 0 : Params().GetConsensus().nMNCollateralAmt - (fInvalidCollateral ? 1 : 0)));
+                    (optCollateralOut ? 0 : Params().GetConsensus().nGMCollateralAmt - (fInvalidCollateral ? 1 : 0)));
 
     pl.inputsHash = CalcTxInputsHash(tx);
     SetTxPayload(tx, pl);
@@ -297,7 +297,7 @@ static bool CheckTransactionSignature(const CMutableTransaction& tx)
     return true;
 }
 
-static bool IsMNPayeeInBlock(const CBlock& block, const CScript& expected)
+static bool IsGMPayeeInBlock(const CBlock& block, const CScript& expected)
 {
     for (const auto& txout : block.vtx[0]->vout) {
         if (txout.scriptPubKey == expected) return true;
@@ -310,12 +310,12 @@ static void CheckPayments(const std::map<uint256, int>& mp, size_t mapSize, int 
     BOOST_CHECK_EQUAL(mp.size(), mapSize);
     for (const auto& it : mp) {
         BOOST_CHECK_MESSAGE(it.second >= minCount,
-                strprintf("MN %s didn't receive expected num of payments (%d<%d)",it.first.ToString(), it.second, minCount)
+                strprintf("GM %s didn't receive expected num of payments (%d<%d)",it.first.ToString(), it.second, minCount)
         );
     }
 }
 
-BOOST_AUTO_TEST_SUITE(deterministicmns_tests)
+BOOST_AUTO_TEST_SUITE(deterministicgms_tests)
 
 BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
 {
@@ -334,26 +334,26 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     chainTip = chainActive.Tip();
     BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
 
-    // force mnsync complete and enable spork 8
-    g_tiertwo_sync_state.SetCurrentSyncPhase(MASTERNODE_SYNC_FINISHED);
+    // force gmsync complete and enable spork 8
+    g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_FINISHED);
     int64_t nTime = GetTime() - 10;
-    const CSporkMessage& sporkMnPayment = CSporkMessage(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT, nTime + 1, nTime);
+    const CSporkMessage& sporkMnPayment = CSporkMessage(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT, nTime + 1, nTime);
     sporkManager.AddOrUpdateSporkMessage(sporkMnPayment);
-    BOOST_CHECK(sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT));
+    BOOST_CHECK(sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT));
 
     int port = 1;
 
-    std::vector<uint256> dmnHashes;
+    std::vector<uint256> dgmHashes;
     std::map<uint256, CKey> ownerKeys;
     std::map<uint256, CBLSSecretKey> operatorKeys;
 
-    // register one MN per block
+    // register one GM per block
     for (size_t i = 0; i < 6; i++) {
         const CKey& ownerKey = GetRandomKey();
         const CBLSSecretKey& operatorKey = GetRandomBLSKey();
         auto tx = CreateProRegTx(nullopt, utxos, port++, GenerateRandomAddress(), coinbaseKey, ownerKey, operatorKey.GetPublicKey());
         const uint256& txid = tx.GetHash();
-        dmnHashes.emplace_back(txid);
+        dgmHashes.emplace_back(txid);
         ownerKeys.emplace(txid, ownerKey);
         operatorKeys.emplace(txid, operatorKey);
 
@@ -374,7 +374,7 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         CreateAndProcessBlock({tx}, coinbaseKey);
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, nHeight + 1);
-        BOOST_CHECK(deterministicMNManager->GetListAtChainTip().HasMN(txid));
+        BOOST_CHECK(deterministicGMManager->GetListAtChainTip().HasGM(txid));
 
         // Add change to the utxos map
         if (tx.vout.size() > 1) {
@@ -385,27 +385,27 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     }
 
     // enable SPORK_21
-    const CSporkMessage& spork = CSporkMessage(SPORK_21_LEGACY_MNS_MAX_HEIGHT, nHeight, GetTime());
+    const CSporkMessage& spork = CSporkMessage(SPORK_21_LEGACY_GMS_MAX_HEIGHT, nHeight, GetTime());
     sporkManager.AddOrUpdateSporkMessage(spork);
-    BOOST_CHECK(deterministicMNManager->LegacyMNObsolete(nHeight + 1));
+    BOOST_CHECK(deterministicGMManager->LegacyGMObsolete(nHeight + 1));
 
-    // Mine 20 blocks, checking MN reward payments
+    // Mine 20 blocks, checking GM reward payments
     std::map<uint256, int> mapPayments;
     for (size_t i = 0; i < 20; i++) {
-        auto mnList = deterministicMNManager->GetListAtChainTip();
-        BOOST_CHECK_EQUAL(mnList.GetValidMNsCount(), 6);
-        BOOST_CHECK_EQUAL(mnList.GetHeight(), nHeight);
+        auto gmList = deterministicGMManager->GetListAtChainTip();
+        BOOST_CHECK_EQUAL(gmList.GetValidGMsCount(), 6);
+        BOOST_CHECK_EQUAL(gmList.GetHeight(), nHeight);
 
         // get next payee
-        auto dmnExpectedPayee = mnList.GetMNPayee();
+        auto dgmExpectedPayee = gmList.GetGMPayee();
         CBlock block = CreateAndProcessBlock({}, coinbaseKey);
         chainTip = chainActive.Tip();
         BOOST_ASSERT(!block.vtx.empty());
-        BOOST_CHECK(IsMNPayeeInBlock(block, dmnExpectedPayee->pdmnState->scriptPayout));
-        mapPayments[dmnExpectedPayee->proTxHash]++;
+        BOOST_CHECK(IsGMPayeeInBlock(block, dgmExpectedPayee->pdgmState->scriptPayout));
+        mapPayments[dgmExpectedPayee->proTxHash]++;
         BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
     }
-    // 20 blocks, 6 masternodes. Must have been paid at least 3 times each.
+    // 20 blocks, 6 gamemasters. Must have been paid at least 3 times each.
     CheckPayments(mapPayments, 6, 3);
 
 
@@ -421,13 +421,13 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     {
         // create an output of value 1 sat less than the required collateral amount
         CMutableTransaction mtx;
-        const COutPoint& coll_out = CreateNewUTXO(utxos, mtx, coinbaseKey, Params().GetConsensus().nMNCollateralAmt-1);
+        const COutPoint& coll_out = CreateNewUTXO(utxos, mtx, coinbaseKey, Params().GetConsensus().nGMCollateralAmt-1);
         CreateAndProcessBlock({mtx}, coinbaseKey);
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
         Coin coll_coin;
         BOOST_CHECK(view->GetUTXOCoin(coll_out, coll_coin));
-        BOOST_CHECK_EQUAL(coll_coin.out.nValue, Params().GetConsensus().nMNCollateralAmt-1);
+        BOOST_CHECK_EQUAL(coll_coin.out.nValue, Params().GetConsensus().nGMCollateralAmt-1);
 
         // create the ProReg tx referencing the invalid collateral
         auto tx = CreateProRegTx(Optional<COutPoint>(coll_out), utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey());
@@ -442,18 +442,18 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     {
         // create an output of collateral amount
         CMutableTransaction mtx;
-        const COutPoint& coll_out = CreateNewUTXO(utxos, mtx, coinbaseKey, Params().GetConsensus().nMNCollateralAmt);
+        const COutPoint& coll_out = CreateNewUTXO(utxos, mtx, coinbaseKey, Params().GetConsensus().nGMCollateralAmt);
         CreateAndProcessBlock({mtx}, coinbaseKey);
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
         Coin coll_coin;
         BOOST_CHECK(view->GetUTXOCoin(coll_out, coll_coin));
-        BOOST_CHECK_EQUAL(coll_coin.out.nValue, Params().GetConsensus().nMNCollateralAmt);
+        BOOST_CHECK_EQUAL(coll_coin.out.nValue, Params().GetConsensus().nGMCollateralAmt);
 
         // spend it
         CMutableTransaction spendTx;
         spendTx.vin.emplace_back(coll_out);
-        spendTx.vout.emplace_back(Params().GetConsensus().nMNCollateralAmt - 1000,
+        spendTx.vout.emplace_back(Params().GetConsensus().nGMCollateralAmt - 1000,
                                   GetScriptForDestination(coinbaseKey.GetPubKey().GetID()));
         SignTransaction(spendTx, coinbaseKey);
         CreateAndProcessBlock({spendTx}, coinbaseKey);
@@ -479,14 +479,14 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         const CKey& coll_key = GetRandomKey();
         // create a valid collateral
         CMutableTransaction mtx;
-        const COutPoint& coll_out = CreateNewUTXO(utxos, mtx, coinbaseKey, Params().GetConsensus().nMNCollateralAmt,
+        const COutPoint& coll_out = CreateNewUTXO(utxos, mtx, coinbaseKey, Params().GetConsensus().nGMCollateralAmt,
                                     GetScriptForDestination(coll_key.GetPubKey().GetID()));
         CreateAndProcessBlock({mtx}, coinbaseKey);
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
         Coin coll_coin;
         BOOST_CHECK(view->GetUTXOCoin(coll_out, coll_coin));
-        BOOST_CHECK_EQUAL(coll_coin.out.nValue, Params().GetConsensus().nMNCollateralAmt);
+        BOOST_CHECK_EQUAL(coll_coin.out.nValue, Params().GetConsensus().nGMCollateralAmt);
 
         // create the ProReg tx reusing the collateral key
         auto tx = CreateProRegTx(Optional<COutPoint>(coll_out), utxos, port, GenerateRandomAddress(), coinbaseKey, coll_key, GetRandomBLSKey().GetPublicKey());
@@ -496,7 +496,7 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     }
     // Try to register used owner key
     {
-        const CKey& ownerKey = ownerKeys.at(dmnHashes[InsecureRandRange(dmnHashes.size())]);
+        const CKey& ownerKey = ownerKeys.at(dgmHashes[InsecureRandRange(dgmHashes.size())]);
         auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, ownerKey, GetRandomBLSKey().GetPublicKey());
         CValidationState state;
         BOOST_CHECK(!WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state); ));
@@ -504,7 +504,7 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     }
     // Try to register used operator key
     {
-        const CBLSSecretKey& operatorKey = operatorKeys.at(dmnHashes[InsecureRandRange(dmnHashes.size())]);
+        const CBLSSecretKey& operatorKey = operatorKeys.at(dgmHashes[InsecureRandRange(dgmHashes.size())]);
         auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), operatorKey.GetPublicKey());
         CValidationState state;
         BOOST_CHECK(!WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state); ));
@@ -566,7 +566,7 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         BOOST_CHECK_EQUAL(WITH_LOCK(cs_main, return chainActive.Height(); ), nHeight);   // bad block not connected
     }
 
-    // register multiple MNs per block
+    // register multiple GMs per block
     for (size_t i = 0; i < 3; i++) {
         std::vector<CMutableTransaction> txns;
         for (size_t j = 0; j < 3; j++) {
@@ -574,7 +574,7 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
             const CBLSSecretKey& operatorKey = GetRandomBLSKey();
             auto tx = CreateProRegTx(nullopt, utxos, port++, GenerateRandomAddress(), coinbaseKey, ownerKey, operatorKey.GetPublicKey());
             const uint256& txid = tx.GetHash();
-            dmnHashes.emplace_back(txid);
+            dgmHashes.emplace_back(txid);
             ownerKeys.emplace(txid, ownerKey);
             operatorKeys.emplace(txid, operatorKey);
 
@@ -586,47 +586,47 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         CreateAndProcessBlock(txns, coinbaseKey);
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, nHeight + 1);
-        auto mnList = deterministicMNManager->GetListAtChainTip();
+        auto gmList = deterministicGMManager->GetListAtChainTip();
         for (size_t j = 0; j < 3; j++) {
-            BOOST_CHECK(mnList.HasMN(txns[j].GetHash()));
+            BOOST_CHECK(gmList.HasGM(txns[j].GetHash()));
         }
 
         nHeight++;
     }
 
-    // Mine 30 blocks, checking MN reward payments
+    // Mine 30 blocks, checking GM reward payments
     mapPayments.clear();
     for (size_t i = 0; i < 30; i++) {
-        auto mnList = deterministicMNManager->GetListAtChainTip();
-        auto dmnExpectedPayee = mnList.GetMNPayee();
+        auto gmList = deterministicGMManager->GetListAtChainTip();
+        auto dgmExpectedPayee = gmList.GetGMPayee();
         CBlock block = CreateAndProcessBlock({}, coinbaseKey);
         chainTip = chainActive.Tip();
         BOOST_ASSERT(!block.vtx.empty());
-        BOOST_CHECK(IsMNPayeeInBlock(block, dmnExpectedPayee->pdmnState->scriptPayout));
-        mapPayments[dmnExpectedPayee->proTxHash]++;
+        BOOST_CHECK(IsGMPayeeInBlock(block, dgmExpectedPayee->pdgmState->scriptPayout));
+        mapPayments[dgmExpectedPayee->proTxHash]++;
 
         nHeight++;
     }
-    // 30 blocks, 15 masternodes. Must have been paid exactly 2 times each.
+    // 30 blocks, 15 gamemasters. Must have been paid exactly 2 times each.
     CheckPayments(mapPayments, 15, 2);
 
-    // Check that the prev DMN winner is different that the tip one
+    // Check that the prev DGM winner is different that the tip one
     std::vector<CTxOut> vecMnOutsPrev;
-    BOOST_CHECK(masternodePayments.GetMasternodeTxOuts(chainTip->pprev, vecMnOutsPrev));
+    BOOST_CHECK(gamemasterPayments.GetGamemasterTxOuts(chainTip->pprev, vecMnOutsPrev));
     std::vector<CTxOut> vecMnOutsNow;
-    BOOST_CHECK(masternodePayments.GetMasternodeTxOuts(chainTip, vecMnOutsNow));
+    BOOST_CHECK(gamemasterPayments.GetGamemasterTxOuts(chainTip, vecMnOutsNow));
     BOOST_CHECK(vecMnOutsPrev != vecMnOutsNow);
 
-    // Craft an invalid block paying to the previous block DMN again
+    // Craft an invalid block paying to the previous block DGM again
     CBlock invalidBlock = CreateBlock({}, coinbaseKey);
     std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>(invalidBlock);
     CMutableTransaction invalidCoinbaseTx = CreateCoinbaseTx(CScript(), chainTip);
     invalidCoinbaseTx.vout.clear();
-    for (const CTxOut& mnOut: vecMnOutsPrev) {
-        invalidCoinbaseTx.vout.emplace_back(mnOut);
+    for (const CTxOut& gmOut: vecMnOutsPrev) {
+        invalidCoinbaseTx.vout.emplace_back(gmOut);
     }
     invalidCoinbaseTx.vout.emplace_back(
-        CTxOut(GetBlockValue(nHeight + 1) - GetMasternodePayment(nHeight + 1),
+        CTxOut(GetBlockValue(nHeight + 1) - GetGamemasterPayment(nHeight + 1),
             GetScriptForDestination(coinbaseKey.GetPubKey().GetID())));
     pblock->vtx[0] = MakeTransactionRef(invalidCoinbaseTx);
     pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
@@ -636,9 +636,9 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     BOOST_CHECK(chainTip->nHeight == nHeight);
     BOOST_CHECK(chainTip->GetBlockHash() != pblock->GetHash());
 
-    // ProUpServ: change masternode IP
+    // ProUpServ: change gamemaster IP
     {
-        const uint256& proTx = dmnHashes[InsecureRandRange(dmnHashes.size())];  // pick one at random
+        const uint256& proTx = dgmHashes[InsecureRandRange(dgmHashes.size())];  // pick one at random
         auto tx = CreateProUpServTx(utxos, proTx, operatorKeys.at(proTx), 1000, CScript(), coinbaseKey);
 
         CValidationState dummyState;
@@ -653,20 +653,20 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, nHeight + 1);
 
-        auto dmn = deterministicMNManager->GetListAtChainTip().GetMN(proTx);
-        BOOST_ASSERT(dmn != nullptr);
-        BOOST_CHECK_EQUAL(dmn->pdmnState->addr.GetPort(), 1000);
+        auto dgm = deterministicGMManager->GetListAtChainTip().GetGM(proTx);
+        BOOST_ASSERT(dgm != nullptr);
+        BOOST_CHECK_EQUAL(dgm->pdgmState->addr.GetPort(), 1000);
 
         nHeight++;
     }
 
-    // ProUpServ: Try to change the IP of a masternode to the one of another registered masternode
+    // ProUpServ: Try to change the IP of a gamemaster to the one of another registered gamemaster
     {
-        int randomIdx = InsecureRandRange(dmnHashes.size());
+        int randomIdx = InsecureRandRange(dgmHashes.size());
         int randomIdx2 = 0;
-        do { randomIdx2 = InsecureRandRange(dmnHashes.size()); } while (randomIdx2 == randomIdx);
-        const uint256& proTx = dmnHashes[randomIdx];    // mn to update
-        int new_port = deterministicMNManager->GetListAtChainTip().GetMN(dmnHashes[randomIdx2])->pdmnState->addr.GetPort();
+        do { randomIdx2 = InsecureRandRange(dgmHashes.size()); } while (randomIdx2 == randomIdx);
+        const uint256& proTx = dgmHashes[randomIdx];    // gm to update
+        int new_port = deterministicGMManager->GetListAtChainTip().GetGM(dgmHashes[randomIdx2])->pdgmState->addr.GetPort();
 
         auto tx = CreateProUpServTx(utxos, proTx, operatorKeys.at(proTx), new_port, CScript(), coinbaseKey);
 
@@ -675,7 +675,7 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-dup-addr");
     }
 
-    // ProUpServ: Try to change the IP of a masternode that doesn't exist
+    // ProUpServ: Try to change the IP of a gamemaster that doesn't exist
     {
         const CBLSSecretKey& operatorKey = GetRandomBLSKey();
         auto tx = CreateProUpServTx(utxos, GetRandHash(), operatorKey, port, CScript(), coinbaseKey);
@@ -685,7 +685,7 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-hash");
     }
 
-    // ProUpServ: Change masternode operator payout. (new masternode created here)
+    // ProUpServ: Change gamemaster operator payout. (new gamemaster created here)
     {
         // first create a ProRegTx with 5% reward for the operator, and mine it
         const CKey& ownerKey = GetRandomKey();
@@ -695,11 +695,11 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         CreateAndProcessBlock({tx}, coinbaseKey);
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
-        auto mnList = deterministicMNManager->GetListAtChainTip();
-        BOOST_CHECK(mnList.HasMN(txid));
-        auto dmn = mnList.GetMN(txid);
-        BOOST_CHECK(dmn->pdmnState->scriptOperatorPayout.empty());
-        BOOST_CHECK_EQUAL(dmn->nOperatorReward, 500);
+        auto gmList = deterministicGMManager->GetListAtChainTip();
+        BOOST_CHECK(gmList.HasGM(txid));
+        auto dgm = gmList.GetGM(txid);
+        BOOST_CHECK(dgm->pdgmState->scriptOperatorPayout.empty());
+        BOOST_CHECK_EQUAL(dgm->nOperatorReward, 500);
 
         // then send the ProUpServTx and check the operator payee
         const CScript& operatorPayee = GenerateRandomAddress();
@@ -707,26 +707,26 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         CreateAndProcessBlock({tx2}, coinbaseKey);
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
-        dmn = deterministicMNManager->GetListAtChainTip().GetMN(txid);
-        BOOST_ASSERT(dmn != nullptr);
-        BOOST_CHECK(dmn->pdmnState->scriptOperatorPayout == operatorPayee);
+        dgm = deterministicGMManager->GetListAtChainTip().GetGM(txid);
+        BOOST_ASSERT(dgm != nullptr);
+        BOOST_CHECK(dgm->pdgmState->scriptOperatorPayout == operatorPayee);
     }
 
-    // ProUpServ: Try to change masternode operator payout when the operator reward is zero
+    // ProUpServ: Try to change gamemaster operator payout when the operator reward is zero
     {
         const CScript& operatorPayee = GenerateRandomAddress();
-        auto tx = CreateProUpServTx(utxos, dmnHashes[0], operatorKeys.at(dmnHashes[0]), 1, operatorPayee, coinbaseKey);
+        auto tx = CreateProUpServTx(utxos, dgmHashes[0], operatorKeys.at(dgmHashes[0]), 1, operatorPayee, coinbaseKey);
         CValidationState state;
         BOOST_CHECK(!WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state); ));
         BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-operator-payee");
     }
 
     // Block including
-    // - (1) ProRegTx registering a masternode
-    // - (2) ProUpServTx changing the IP of another masternode, to the one used by (1)
+    // - (1) ProRegTx registering a gamemaster
+    // - (2) ProUpServTx changing the IP of another gamemaster, to the one used by (1)
     {
         auto tx1 = CreateProRegTx(nullopt, utxos, port++, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey());
-        const uint256& proTx = dmnHashes[InsecureRandRange(dmnHashes.size())];    // pick one at random
+        const uint256& proTx = dgmHashes[InsecureRandRange(dgmHashes.size())];    // pick one at random
         auto tx2 = CreateProUpServTx(utxos, proTx, operatorKeys.at(proTx), (port-1), CScript(), coinbaseKey);
         CBlock block = CreateBlock({tx1, tx2}, coinbaseKey);
         CBlockIndex indexFake(block);
@@ -741,7 +741,7 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
 
     // ProUpReg: change voting key, operator key and payout address
     {
-        const uint256& proTx = dmnHashes[InsecureRandRange(dmnHashes.size())];            // pick one at random
+        const uint256& proTx = dgmHashes[InsecureRandRange(dgmHashes.size())];            // pick one at random
         CBLSSecretKey new_operatorKey = GetRandomBLSKey();
         const CKey& new_votingKey = GetRandomKey();
         const CScript& new_payee = GenerateRandomAddress();
@@ -764,49 +764,49 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
 
-        auto dmn = deterministicMNManager->GetListAtChainTip().GetMN(proTx);
-        BOOST_ASSERT(dmn != nullptr);
-        BOOST_CHECK_MESSAGE(dmn->pdmnState->pubKeyOperator.Get() == new_operatorKey.GetPublicKey(), "mn operator key not changed");
-        BOOST_CHECK_MESSAGE(dmn->pdmnState->keyIDVoting == new_votingKey.GetPubKey().GetID(), "mn voting key not changed");
-        BOOST_CHECK_MESSAGE(dmn->pdmnState->scriptPayout == new_payee, "mn script payout not changed");
+        auto dgm = deterministicGMManager->GetListAtChainTip().GetGM(proTx);
+        BOOST_ASSERT(dgm != nullptr);
+        BOOST_CHECK_MESSAGE(dgm->pdgmState->pubKeyOperator.Get() == new_operatorKey.GetPublicKey(), "gm operator key not changed");
+        BOOST_CHECK_MESSAGE(dgm->pdgmState->keyIDVoting == new_votingKey.GetPubKey().GetID(), "gm voting key not changed");
+        BOOST_CHECK_MESSAGE(dgm->pdgmState->scriptPayout == new_payee, "gm script payout not changed");
 
         operatorKeys[proTx] = std::move(new_operatorKey);
 
-        // check that changing the operator key puts the MN in PoSe banned state
-        BOOST_CHECK_MESSAGE(dmn->pdmnState->addr == CService(), "IP address not cleared after changing operator");
-        BOOST_CHECK_MESSAGE(dmn->pdmnState->scriptOperatorPayout.empty(), "operator payee not empty after changing operator");
-        BOOST_CHECK(dmn->IsPoSeBanned());
-        BOOST_CHECK_EQUAL(dmn->pdmnState->nPoSeBanHeight, nHeight);
+        // check that changing the operator key puts the GM in PoSe banned state
+        BOOST_CHECK_MESSAGE(dgm->pdgmState->addr == CService(), "IP address not cleared after changing operator");
+        BOOST_CHECK_MESSAGE(dgm->pdgmState->scriptOperatorPayout.empty(), "operator payee not empty after changing operator");
+        BOOST_CHECK(dgm->IsPoSeBanned());
+        BOOST_CHECK_EQUAL(dgm->pdgmState->nPoSeBanHeight, nHeight);
 
-        // revive the MN
+        // revive the GM
         auto tx3 = CreateProUpServTx(utxos, proTx, operatorKeys.at(proTx), 2000, CScript(), coinbaseKey);
         CreateAndProcessBlock({tx3}, coinbaseKey);
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
-        dmn = deterministicMNManager->GetListAtChainTip().GetMN(proTx);
+        dgm = deterministicGMManager->GetListAtChainTip().GetGM(proTx);
 
-        // check updated dmn state
-        BOOST_CHECK_EQUAL(dmn->pdmnState->addr.GetPort(), 2000);
-        BOOST_CHECK_EQUAL(dmn->pdmnState->nPoSeBanHeight, -1);
-        BOOST_CHECK(!dmn->IsPoSeBanned());
-        BOOST_CHECK_EQUAL(dmn->pdmnState->nPoSeRevivedHeight, nHeight);
+        // check updated dgm state
+        BOOST_CHECK_EQUAL(dgm->pdgmState->addr.GetPort(), 2000);
+        BOOST_CHECK_EQUAL(dgm->pdgmState->nPoSeBanHeight, -1);
+        BOOST_CHECK(!dgm->IsPoSeBanned());
+        BOOST_CHECK_EQUAL(dgm->pdgmState->nPoSeRevivedHeight, nHeight);
 
-        // Mine 32 blocks, checking MN reward payments
+        // Mine 32 blocks, checking GM reward payments
         mapPayments.clear();
         for (size_t i = 0; i < 32; i++) {
-            auto dmnExpectedPayee = deterministicMNManager->GetListAtChainTip().GetMNPayee();
+            auto dgmExpectedPayee = deterministicGMManager->GetListAtChainTip().GetGMPayee();
             CBlock block = CreateAndProcessBlock({}, coinbaseKey);
             chainTip = chainActive.Tip();
             BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
             BOOST_ASSERT(!block.vtx.empty());
-            BOOST_CHECK(IsMNPayeeInBlock(block, dmnExpectedPayee->pdmnState->scriptPayout));
-            mapPayments[dmnExpectedPayee->proTxHash]++;
+            BOOST_CHECK(IsGMPayeeInBlock(block, dgmExpectedPayee->pdgmState->scriptPayout));
+            mapPayments[dgmExpectedPayee->proTxHash]++;
         }
-        // 16 masternodes: 2 rewards each
+        // 16 gamemasters: 2 rewards each
         CheckPayments(mapPayments, 16, 2);
     }
 
-    // ProUpReg: Try to change the voting key of a masternode that doesn't exist
+    // ProUpReg: Try to change the voting key of a gamemaster that doesn't exist
     {
         const CKey& votingKey = GetRandomKey();
         const CBLSSecretKey& operatorKey = GetRandomBLSKey();
@@ -817,13 +817,13 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-hash");
     }
 
-    // ProUpReg: Try to change the operator key of a masternode to the one of another registered masternode
+    // ProUpReg: Try to change the operator key of a gamemaster to the one of another registered gamemaster
     {
-        int randomIdx = InsecureRandRange(dmnHashes.size());
+        int randomIdx = InsecureRandRange(dgmHashes.size());
         int randomIdx2 = 0;
-        do { randomIdx2 = InsecureRandRange(dmnHashes.size()); } while (randomIdx2 == randomIdx);
-        const uint256& proTx = dmnHashes[randomIdx];    // mn to update
-        const CBLSSecretKey& new_operatorKey = operatorKeys.at(dmnHashes[randomIdx2]);
+        do { randomIdx2 = InsecureRandRange(dgmHashes.size()); } while (randomIdx2 == randomIdx);
+        const uint256& proTx = dgmHashes[randomIdx];    // gm to update
+        const CBLSSecretKey& new_operatorKey = operatorKeys.at(dgmHashes[randomIdx2]);
 
         auto tx = CreateProUpRegTx(utxos, proTx, ownerKeys.at(proTx), new_operatorKey.GetPublicKey(), GetRandomKey(), GenerateRandomAddress(), coinbaseKey);
 
@@ -834,11 +834,11 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
 
     // Block with two ProUpReg txes using same operator key
     {
-        int randomIdx1 = InsecureRandRange(dmnHashes.size());
+        int randomIdx1 = InsecureRandRange(dgmHashes.size());
         int randomIdx2 = 0;
-        do { randomIdx2 = InsecureRandRange(dmnHashes.size()); } while (randomIdx2 == randomIdx1);
-        const uint256& proTx1 = dmnHashes[randomIdx1];
-        const uint256& proTx2 = dmnHashes[randomIdx2];
+        do { randomIdx2 = InsecureRandRange(dgmHashes.size()); } while (randomIdx2 == randomIdx1);
+        const uint256& proTx1 = dgmHashes[randomIdx1];
+        const uint256& proTx2 = dgmHashes[randomIdx2];
         BOOST_ASSERT(proTx1 != proTx2);
         const CBLSSecretKey& new_operatorKey = GetRandomBLSKey();
         const CKey& new_votingKey = GetRandomKey();
@@ -858,12 +858,12 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     }
 
     // Block including
-    // - (1) ProRegTx registering a masternode
-    // - (2) ProUpRegTx changing the operator key of another masternode, to the one used by (1)
+    // - (1) ProRegTx registering a gamemaster
+    // - (2) ProUpRegTx changing the operator key of another gamemaster, to the one used by (1)
     {
         const CBLSSecretKey& new_operatorKey = GetRandomBLSKey();
         auto tx1 = CreateProRegTx(nullopt, utxos, port++, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), new_operatorKey.GetPublicKey());
-        const uint256& proTx = dmnHashes[InsecureRandRange(dmnHashes.size())];    // pick one at random
+        const uint256& proTx = dgmHashes[InsecureRandRange(dgmHashes.size())];    // pick one at random
         auto tx2 = CreateProUpRegTx(utxos, proTx, ownerKeys.at(proTx), new_operatorKey.GetPublicKey(), GetRandomKey(), GenerateRandomAddress(), coinbaseKey);
         CBlock block = CreateBlock({tx1, tx2}, coinbaseKey);
         CBlockIndex indexFake(block);
@@ -877,9 +877,9 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         BOOST_CHECK_EQUAL(WITH_LOCK(cs_main, return chainActive.Height(); ), nHeight);   // bad block not connected
     }
 
-    // ProUpRev: revoke masternode service
+    // ProUpRev: revoke gamemaster service
     {
-        const uint256& proTx = dmnHashes[InsecureRandRange(dmnHashes.size())];            // pick one at random
+        const uint256& proTx = dgmHashes[InsecureRandRange(dgmHashes.size())];            // pick one at random
         ProUpRevPL::RevocationReason reason = ProUpRevPL::RevocationReason::REASON_TERMINATION_OF_SERVICE;
         // try first with wrong operator key
         CValidationState state;
@@ -900,14 +900,14 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
 
-        auto dmn = deterministicMNManager->GetListAtChainTip().GetMN(proTx);
-        BOOST_ASSERT(dmn != nullptr);
-        BOOST_CHECK_MESSAGE(!dmn->pdmnState->pubKeyOperator.Get().IsValid(), "mn operator key not removed");
-        BOOST_CHECK_MESSAGE(dmn->pdmnState->addr == CService(), "mn IP address not removed");
-        BOOST_CHECK_MESSAGE(dmn->pdmnState->scriptOperatorPayout.empty(), "mn operator payout not removed");
-        BOOST_CHECK_EQUAL(dmn->pdmnState->nRevocationReason, reason);
-        BOOST_CHECK(dmn->IsPoSeBanned());
-        BOOST_CHECK_EQUAL(dmn->pdmnState->nPoSeBanHeight, nHeight);
+        auto dgm = deterministicGMManager->GetListAtChainTip().GetGM(proTx);
+        BOOST_ASSERT(dgm != nullptr);
+        BOOST_CHECK_MESSAGE(!dgm->pdgmState->pubKeyOperator.Get().IsValid(), "gm operator key not removed");
+        BOOST_CHECK_MESSAGE(dgm->pdgmState->addr == CService(), "gm IP address not removed");
+        BOOST_CHECK_MESSAGE(dgm->pdgmState->scriptOperatorPayout.empty(), "gm operator payout not removed");
+        BOOST_CHECK_EQUAL(dgm->pdgmState->nRevocationReason, reason);
+        BOOST_CHECK(dgm->IsPoSeBanned());
+        BOOST_CHECK_EQUAL(dgm->pdgmState->nPoSeBanHeight, nHeight);
     }
 
     UpdateNetworkUpgradeParameters(Consensus::UPGRADE_V6_0, Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT);
@@ -1004,38 +1004,38 @@ BOOST_FIXTURE_TEST_CASE(dkg_pose_and_qfc_invalid_paths, TestChain400Setup)
     chainTip = chainActive.Tip();
     BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
 
-    // force mnsync complete and enable spork 8
-    g_tiertwo_sync_state.SetCurrentSyncPhase(MASTERNODE_SYNC_FINISHED);
+    // force gmsync complete and enable spork 8
+    g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_FINISHED);
     int64_t nTime = GetTime() - 10;
-    const CSporkMessage& sporkMnPayment = CSporkMessage(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT, nTime + 1, nTime);
+    const CSporkMessage& sporkMnPayment = CSporkMessage(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT, nTime + 1, nTime);
     sporkManager.AddOrUpdateSporkMessage(sporkMnPayment);
-    BOOST_CHECK(sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT));
+    BOOST_CHECK(sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT));
 
     int port = 1;
 
-    std::vector<uint256> dmnHashes;
+    std::vector<uint256> dgmHashes;
     std::map<uint256, CKey> ownerKeys;
     std::map<uint256, CBLSSecretKey> operatorKeys;
 
-    // register one MN per block
+    // register one GM per block
     for (size_t i = 0; i < 6; i++) {
         const CKey& ownerKey = GetRandomKey();
         const CBLSSecretKey& operatorKey = GetRandomBLSKey();
         auto tx = CreateProRegTx(nullopt, utxos, port++, GenerateRandomAddress(), coinbaseKey, ownerKey, operatorKey.GetPublicKey());
         const uint256& txid = tx.GetHash();
-        dmnHashes.emplace_back(txid);
+        dgmHashes.emplace_back(txid);
         ownerKeys.emplace(txid, ownerKey);
         operatorKeys.emplace(txid, operatorKey);
         CreateAndProcessBlock({tx}, coinbaseKey);
         chainTip = chainActive.Tip();
         BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
-        BOOST_CHECK(deterministicMNManager->GetListAtChainTip().HasMN(txid));
+        BOOST_CHECK(deterministicGMManager->GetListAtChainTip().HasGM(txid));
     }
 
     // enable SPORK_21
-    const CSporkMessage& spork = CSporkMessage(SPORK_21_LEGACY_MNS_MAX_HEIGHT, nHeight, GetTime());
+    const CSporkMessage& spork = CSporkMessage(SPORK_21_LEGACY_GMS_MAX_HEIGHT, nHeight, GetTime());
     sporkManager.AddOrUpdateSporkMessage(spork);
-    BOOST_CHECK(deterministicMNManager->LegacyMNObsolete(nHeight + 1));
+    BOOST_CHECK(deterministicGMManager->LegacyGMObsolete(nHeight + 1));
 
     // Mine 20 blocks
     for (size_t i = 0; i < 20; i++) {
@@ -1050,15 +1050,15 @@ BOOST_FIXTURE_TEST_CASE(dkg_pose_and_qfc_invalid_paths, TestChain400Setup)
     uint256 quorumHash = chainActive[nHeight - (nHeight % params.dkgInterval)]->GetBlockHash();
     const CBlockIndex* quorumIndex = mapBlockIndex.at(quorumHash);
 
-    // get quorum mns
-    auto members = deterministicMNManager->GetAllQuorumMembers(Consensus::LLMQ_TEST, quorumIndex);
+    // get quorum gms
+    auto members = deterministicGMManager->GetAllQuorumMembers(Consensus::LLMQ_TEST, quorumIndex);
     std::vector<CBLSPublicKey> pkeys;
     std::vector<CBLSSecretKey> skeys;
     for (size_t i = 0; i < members.size()-1; i++) {             // all, except the last one...
-        pkeys.emplace_back(members[i]->pdmnState->pubKeyOperator.Get());
+        pkeys.emplace_back(members[i]->pdgmState->pubKeyOperator.Get());
         skeys.emplace_back(operatorKeys.at(members[i]->proTxHash));
     }
-    const uint256& invalidmn_proTx = members.back()->proTxHash; // ...which must be punished.
+    const uint256& invalidgm_proTx = members.back()->proTxHash; // ...which must be punished.
 
     // create final commitment
     llmq::CFinalCommitment qfc = CreateFinalCommitment(pkeys, skeys, quorumHash);
@@ -1071,7 +1071,7 @@ BOOST_FIXTURE_TEST_CASE(dkg_pose_and_qfc_invalid_paths, TestChain400Setup)
 
     // verify that it fails changing the key of one of the signers
     std::vector<CBLSPublicKey> allkeys(pkeys);
-    allkeys.emplace_back(members.back()->pdmnState->pubKeyOperator.Get());
+    allkeys.emplace_back(members.back()->pdgmState->pubKeyOperator.Get());
     BOOST_CHECK(qfc.Verify(allkeys, params));   // already checked with VerifyLLMQCommitment
     allkeys[0] = GetRandomBLSKey().GetPublicKey();
     BOOST_CHECK(!qfc.Verify(allkeys, params));
@@ -1206,16 +1206,16 @@ BOOST_FIXTURE_TEST_CASE(dkg_pose_and_qfc_invalid_paths, TestChain400Setup)
     BOOST_CHECK(qfc.quorumSig == ret.quorumSig);
     BOOST_CHECK(qfc.membersSig == ret.membersSig);
 
-    // non-participating mn has been punished
-    auto punished_mn = deterministicMNManager->GetListAtChainTip().GetMN(invalidmn_proTx);
-    BOOST_CHECK_EQUAL(punished_mn->pdmnState->nPoSePenalty, 66);
+    // non-participating gm has been punished
+    auto punished_gm = deterministicGMManager->GetListAtChainTip().GetGM(invalidgm_proTx);
+    BOOST_CHECK_EQUAL(punished_gm->pdgmState->nPoSePenalty, 66);
 
     // penalty is decreased each block
     CreateAndProcessBlock({}, coinbaseKey);
     chainTip = chainActive.Tip();
     BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
-    punished_mn = deterministicMNManager->GetListAtChainTip().GetMN(invalidmn_proTx);
-    BOOST_CHECK_EQUAL(punished_mn->pdmnState->nPoSePenalty, 65);
+    punished_gm = deterministicGMManager->GetListAtChainTip().GetGM(invalidgm_proTx);
+    BOOST_CHECK_EQUAL(punished_gm->pdgmState->nPoSePenalty, 65);
 
     // New DKG starts at block 440. Mine till block 441 and create another valid 2-of-3 commitment
     for (size_t i = 0; i < 8; i++) {
@@ -1226,11 +1226,11 @@ BOOST_FIXTURE_TEST_CASE(dkg_pose_and_qfc_invalid_paths, TestChain400Setup)
     BOOST_CHECK_EQUAL(nHeight, 441);
     quorumHash = chainActive[nHeight - (nHeight % params.dkgInterval)]->GetBlockHash();
     quorumIndex = mapBlockIndex.at(quorumHash);
-    members = deterministicMNManager->GetAllQuorumMembers(Consensus::LLMQ_TEST, quorumIndex);
+    members = deterministicGMManager->GetAllQuorumMembers(Consensus::LLMQ_TEST, quorumIndex);
     pkeys.clear();
     skeys.clear();
     for (size_t i = 0; i < members.size(); i++) {
-        pkeys.emplace_back(members[i]->pdmnState->pubKeyOperator.Get());
+        pkeys.emplace_back(members[i]->pdgmState->pubKeyOperator.Get());
         skeys.emplace_back(operatorKeys.at(members[i]->proTxHash));
     }
     std::vector<CBLSPublicKey> pkeys2(pkeys.begin(), pkeys.end()-1);    // remove the last one.
@@ -1293,11 +1293,11 @@ BOOST_FIXTURE_TEST_CASE(dkg_pose_and_qfc_invalid_paths, TestChain400Setup)
         quorumHash = chainActive[nHeight - (nHeight % params.dkgInterval)]->GetBlockHash();
         quorumIndex = mapBlockIndex.at(quorumHash);
     }
-    members = deterministicMNManager->GetAllQuorumMembers(Consensus::LLMQ_TEST, quorumIndex);
+    members = deterministicGMManager->GetAllQuorumMembers(Consensus::LLMQ_TEST, quorumIndex);
     pkeys.clear();
     skeys.clear();
     for (size_t i = 0; i < members.size(); i++) {
-        pkeys.emplace_back(members[i]->pdmnState->pubKeyOperator.Get());
+        pkeys.emplace_back(members[i]->pdgmState->pubKeyOperator.Get());
         skeys.emplace_back(operatorKeys.at(members[i]->proTxHash));
     }
     llmq::CFinalCommitment qfc3 = CreateFinalCommitment(pkeys, skeys, quorumHash);

@@ -852,8 +852,8 @@ public:
      */
     std::map<libzcash::SaplingPaymentAddress, std::vector<SaplingNoteEntry>> ListNotes() const;
 
-    /// Get 10000 HMS output and keys which can be used for the Masternode
-    bool GetMasternodeVinAndKeys(CPubKey& pubKeyRet,
+    /// Get 10000 HMS output and keys which can be used for the Gamemaster
+    bool GetGamemasterVinAndKeys(CPubKey& pubKeyRet,
                                  CKey& keyRet,
                                  const COutPoint& collateralOut,
                                  bool fValidateCollateral,

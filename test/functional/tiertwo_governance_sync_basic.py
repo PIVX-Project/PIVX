@@ -4,7 +4,7 @@
 # file COPYING or https://www.opensource.org/licenses/mit-license.php.
 """
 Test checking:
- 1) Masternodes setup/creation.
+ 1) Gamemasters setup/creation.
  2) Proposal creation.
  3) Vote creation.
  4) Proposal and vote broadcast.
@@ -35,45 +35,45 @@ class Proposal:
         self.feeTxId = ""
         self.proposalHash = ""
 
-class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
+class GamemasterGovernanceBasicTest(HemisTier2TestFramework):
 
-    def check_mns_status_legacy(self, node, txhash):
-        status = node.getmasternodestatus()
+    def check_gms_status_legacy(self, node, txhash):
+        status = node.getgamemasterstatus()
         assert_equal(status["txhash"], txhash)
-        assert_equal(status["message"], "Masternode successfully started")
+        assert_equal(status["message"], "Gamemaster successfully started")
 
-    def check_mns_status(self, node, txhash):
-        status = node.getmasternodestatus()
+    def check_gms_status(self, node, txhash):
+        status = node.getgamemasterstatus()
         assert_equal(status["proTxHash"], txhash)
-        assert_equal(status["dmnstate"]["PoSePenalty"], 0)
+        assert_equal(status["dgmstate"]["PoSePenalty"], 0)
         assert_equal(status["status"], "Ready")
 
-    def check_mn_list(self, node, txHashSet):
-        # check masternode list from node
-        mnlist = node.listmasternodes()
-        assert_equal(len(mnlist), 3)
-        foundHashes = set([mn["txhash"] for mn in mnlist if mn["txhash"] in txHashSet])
+    def check_gm_list(self, node, txHashSet):
+        # check gamemaster list from node
+        gmlist = node.listgamemasters()
+        assert_equal(len(gmlist), 3)
+        foundHashes = set([gm["txhash"] for gm in gmlist if gm["txhash"] in txHashSet])
         assert_equal(len(foundHashes), len(txHashSet))
 
     def check_budget_finalization_sync(self, votesCount, status):
         for i in range(0, len(self.nodes)):
             node = self.nodes[i]
-            budFin = node.mnfinalbudget("show")
-            assert_true(len(budFin) == 1, "MN budget finalization not synced in node" + str(i))
+            budFin = node.gmfinalbudget("show")
+            assert_true(len(budFin) == 1, "GM budget finalization not synced in node" + str(i))
             budget = budFin[next(iter(budFin))]
             assert_equal(budget["VoteCount"], votesCount)
             assert_equal(budget["Status"], status)
 
-    def broadcastbudgetfinalization(self, node, with_ping_mns=[]):
+    def broadcastbudgetfinalization(self, node, with_ping_gms=[]):
         self.log.info("suggesting the budget finalization..")
-        assert (node.mnfinalbudgetsuggest() is not None)
+        assert (node.gmfinalbudgetsuggest() is not None)
 
         self.log.info("confirming the budget finalization..")
         time.sleep(1)
-        self.stake(4, with_ping_mns)
+        self.stake(4, with_ping_gms)
 
         self.log.info("broadcasting the budget finalization..")
-        return node.mnfinalbudgetsuggest()
+        return node.gmfinalbudgetsuggest()
 
     def check_proposal_existence(self, proposalName, proposalHash):
         for node in self.nodes:
@@ -81,7 +81,7 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
             assert(len(proposals) > 0)
             assert_equal(proposals[0]["Hash"], proposalHash)
 
-    def check_vote_existence(self, proposalName, mnCollateralHash, voteType, voteValid):
+    def check_vote_existence(self, proposalName, gmCollateralHash, voteType, voteValid):
         for i in range(0, len(self.nodes)):
             node = self.nodes[i]
             node.syncwithvalidationinterfacequeue()
@@ -89,7 +89,7 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
             assert(len(votesInfo) > 0)
             found = False
             for voteInfo in votesInfo:
-                if (voteInfo["mnId"].split("-")[0] == mnCollateralHash) :
+                if (voteInfo["gmId"].split("-")[0] == gmCollateralHash) :
                     assert_equal(voteInfo["Vote"], voteType)
                     assert_equal(voteInfo["fValid"], voteValid)
                     found = True
@@ -161,7 +161,7 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
 
     def submit_proposals(self, props):
         props = self.create_proposals_tx(props)
-        # generate 3 blocks to confirm the tx (and update the mnping)
+        # generate 3 blocks to confirm the tx (and update the gmping)
         self.stake(3, [self.remoteOne, self.remoteTwo])
         # check fee tx existence
         for entry in props:
@@ -178,22 +178,22 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
 
     def run_test(self):
         self.enable_mocktime()
-        self.setup_3_masternodes_network()
-        txHashSet = set([self.mnOneCollateral.hash, self.mnTwoCollateral.hash, self.proRegTx1])
-        # check mn list from miner
-        self.check_mn_list(self.miner, txHashSet)
+        self.setup_3_gamemasters_network()
+        txHashSet = set([self.gmOneCollateral.hash, self.gmTwoCollateral.hash, self.proRegTx1])
+        # check gm list from miner
+        self.check_gm_list(self.miner, txHashSet)
 
-        # check status of masternodes
-        self.check_mns_status_legacy(self.remoteOne, self.mnOneCollateral.hash)
-        self.log.info("MN1 active")
-        self.check_mns_status_legacy(self.remoteTwo, self.mnTwoCollateral.hash)
-        self.log.info("MN2 active")
-        self.check_mns_status(self.remoteDMN1, self.proRegTx1)
-        self.log.info("DMN1 active")
+        # check status of gamemasters
+        self.check_gms_status_legacy(self.remoteOne, self.gmOneCollateral.hash)
+        self.log.info("GM1 active")
+        self.check_gms_status_legacy(self.remoteTwo, self.gmTwoCollateral.hash)
+        self.log.info("GM2 active")
+        self.check_gms_status(self.remoteDGM1, self.proRegTx1)
+        self.log.info("DGM1 active")
 
         # activate sporks
-        self.activate_spork(self.minerPos, "SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT")
-        self.activate_spork(self.minerPos, "SPORK_9_MASTERNODE_BUDGET_ENFORCEMENT")
+        self.activate_spork(self.minerPos, "SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT")
+        self.activate_spork(self.minerPos, "SPORK_9_GAMEMASTER_BUDGET_ENFORCEMENT")
         self.activate_spork(self.minerPos, "SPORK_13_ENABLE_SUPERBLOCKS")
         nextSuperBlockHeight = self.miner.getnextsuperblock()
 
@@ -225,15 +225,15 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
         for i in range(self.num_nodes):
             assert_equal(len(self.nodes[i].getbudgetinfo()), 16)
 
-        # now let's vote for the proposal with the first MN
-        self.log.info("Voting with MN1...")
-        voteResult = self.ownerOne.mnbudgetvote("alias", firstProposal.proposalHash, "yes", self.masternodeOneAlias, True)
+        # now let's vote for the proposal with the first GM
+        self.log.info("Voting with GM1...")
+        voteResult = self.ownerOne.gmbudgetvote("alias", firstProposal.proposalHash, "yes", self.gamemasterOneAlias, True)
         assert_equal(voteResult["detail"][0]["result"], "success")
 
         # check that the vote was accepted everywhere
         self.stake(1, [self.remoteOne, self.remoteTwo])
-        self.check_vote_existence(firstProposal.name, self.mnOneCollateral.hash, "YES", True)
-        self.log.info("all good, MN1 vote accepted everywhere!")
+        self.check_vote_existence(firstProposal.name, self.gmOneCollateral.hash, "YES", True)
+        self.log.info("all good, GM1 vote accepted everywhere!")
 
         # before broadcast the second vote, let's drop the budget data of ownerOne.
         # so the node is forced to send a single proposal sync when the, now orphan, proposal vote is received.
@@ -242,32 +242,32 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
         assert_equal(self.ownerOne.getbudgetprojection(), []) # empty
         assert_equal(self.ownerOne.getbudgetinfo(), [])
 
-        # now let's vote for the proposal with the second MN
-        self.log.info("Voting with MN2...")
-        voteResult = self.ownerTwo.mnbudgetvote("alias", firstProposal.proposalHash, "yes", self.masternodeTwoAlias, True)
+        # now let's vote for the proposal with the second GM
+        self.log.info("Voting with GM2...")
+        voteResult = self.ownerTwo.gmbudgetvote("alias", firstProposal.proposalHash, "yes", self.gamemasterTwoAlias, True)
         assert_equal(voteResult["detail"][0]["result"], "success")
 
         # check orphan vote proposal re-sync
         self.log.info("checking orphan vote based proposal re-sync...")
         time.sleep(5) # wait a bit before check it
         self.check_proposal_existence(firstProposal.name, firstProposal.proposalHash)
-        self.check_vote_existence(firstProposal.name, self.mnOneCollateral.hash, "YES", True)
+        self.check_vote_existence(firstProposal.name, self.gmOneCollateral.hash, "YES", True)
         self.log.info("all good, orphan vote based proposal re-sync succeeded")
 
         # check that the vote was accepted everywhere
         self.stake(1, [self.remoteOne, self.remoteTwo])
-        self.check_vote_existence(firstProposal.name, self.mnTwoCollateral.hash, "YES", True)
-        self.log.info("all good, MN2 vote accepted everywhere!")
+        self.check_vote_existence(firstProposal.name, self.gmTwoCollateral.hash, "YES", True)
+        self.log.info("all good, GM2 vote accepted everywhere!")
 
-        # now let's vote for the proposal with the first DMN
-        self.log.info("Voting with DMN1...")
-        voteResult = self.ownerOne.mnbudgetvote("alias", firstProposal.proposalHash, "yes", self.proRegTx1)
+        # now let's vote for the proposal with the first DGM
+        self.log.info("Voting with DGM1...")
+        voteResult = self.ownerOne.gmbudgetvote("alias", firstProposal.proposalHash, "yes", self.proRegTx1)
         assert_equal(voteResult["detail"][0]["result"], "success")
 
         # check that the vote was accepted everywhere
         self.stake(1, [self.remoteOne, self.remoteTwo])
         self.check_vote_existence(firstProposal.name, self.proRegTx1, "YES", True)
-        self.log.info("all good, DMN1 vote accepted everywhere!")
+        self.log.info("all good, DGM1 vote accepted everywhere!")
 
         # Now check the budget
         blockStart = nextSuperBlockHeight
@@ -290,11 +290,11 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
         self.stake(2, [self.remoteOne, self.remoteTwo])
 
         # assert that there is no budget finalization first.
-        assert_equal(len(self.ownerOne.mnfinalbudget("show")), 0)
+        assert_equal(len(self.ownerOne.gmfinalbudget("show")), 0)
 
         # suggest the budget finalization and confirm the tx (+4 blocks).
         budgetFinHash = self.broadcastbudgetfinalization(self.miner,
-                                                         with_ping_mns=[self.remoteOne, self.remoteTwo])
+                                                         with_ping_gms=[self.remoteOne, self.remoteTwo])
         assert (budgetFinHash != "")
         time.sleep(2)
 
@@ -305,7 +305,7 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
         # Connecting owner to all the other nodes.
         self.connect_to_all(self.ownerOnePos)
 
-        voteResult = self.ownerOne.mnfinalbudget("vote-many", budgetFinHash, True)
+        voteResult = self.ownerOne.gmfinalbudget("vote-many", budgetFinHash, True)
         assert_equal(voteResult["detail"][0]["result"], "success")
         time.sleep(2) # wait a bit
         self.stake(2, [self.remoteOne, self.remoteTwo])
@@ -319,13 +319,13 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
         assert_equal(self.remoteOne.getbudgetprojection(), []) # empty
         assert_equal(self.remoteOne.getbudgetinfo(), [])
 
-        # vote for finalization with MN2 and the DMN
-        voteResult = self.ownerTwo.mnfinalbudget("vote-many", budgetFinHash, True)
+        # vote for finalization with GM2 and the DGM
+        voteResult = self.ownerTwo.gmfinalbudget("vote-many", budgetFinHash, True)
         assert_equal(voteResult["detail"][0]["result"], "success")
         self.log.info("Remote Two voted successfully.")
-        voteResult = self.remoteDMN1.mnfinalbudget("vote", budgetFinHash)
+        voteResult = self.remoteDGM1.gmfinalbudget("vote", budgetFinHash)
         assert_equal(voteResult["detail"][0]["result"], "success")
-        self.log.info("DMN voted successfully.")
+        self.log.info("DGM voted successfully.")
         time.sleep(2) # wait a bit
         self.stake(2, [self.remoteOne, self.remoteTwo])
 
@@ -348,12 +348,12 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
         self.log.info("checking resync (1): cleaning budget data only..")
         # now let's drop budget data and try to re-sync it.
         self.remoteOne.cleanbudget(True)
-        assert_equal(self.remoteOne.mnsync("status")["RequestedMasternodeAssets"], 0)
+        assert_equal(self.remoteOne.gmsync("status")["RequestedGamemasterAssets"], 0)
         assert_equal(self.remoteOne.getbudgetprojection(), []) # empty
         assert_equal(self.remoteOne.getbudgetinfo(), [])
 
         self.log.info("budget cleaned, starting resync")
-        self.wait_until_mnsync_finished()
+        self.wait_until_gmsync_finished()
         self.check_budgetprojection(expected_budget)
         for i in range(self.num_nodes):
             assert_equal(len(self.nodes[i].getbudgetinfo()), 16)
@@ -364,7 +364,7 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
         # stop and remove everything
         self.stop_node(self.ownerTwoPos)
         ownerTwoDir = os.path.join(get_datadir_path(self.options.tmpdir, self.ownerTwoPos), "regtest")
-        for entry in ['chainstate', 'blocks', 'sporks', 'evodb', 'zerocoin', "mncache.dat", "budget.dat", "mnpayments.dat", "peers.dat"]:
+        for entry in ['chainstate', 'blocks', 'sporks', 'evodb', 'zerocoin', "gmcache.dat", "budget.dat", "gmpayments.dat", "peers.dat"]:
             rem_path = os.path.join(ownerTwoDir, entry)
             shutil.rmtree(rem_path) if os.path.isdir(rem_path) else os.remove(rem_path)
 
@@ -375,7 +375,7 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
         self.stake(2, [self.remoteOne, self.remoteTwo])
 
         self.log.info("syncing node..")
-        self.wait_until_mnsync_finished()
+        self.wait_until_gmsync_finished()
         for i in range(self.num_nodes):
             assert_equal(len(self.nodes[i].getbudgetinfo()), 16)
         self.log.info("resync (2): budget data resynchronized successfully!")
@@ -384,55 +384,55 @@ class MasternodeGovernanceBasicTest(HemisTier2TestFramework):
         # Drop the budget data and generate blocks until someone incrementally sync us
         # (this is done once every 28 blocks on regtest).
         self.log.info("Testing incremental sync from peers, dropping budget data...")
-        self.remoteDMN1.cleanbudget(try_sync=False)
-        assert_equal(self.remoteDMN1.getbudgetprojection(), []) # empty
-        assert_equal(self.remoteDMN1.getbudgetinfo(), [])
+        self.remoteDGM1.cleanbudget(try_sync=False)
+        assert_equal(self.remoteDGM1.getbudgetprojection(), []) # empty
+        assert_equal(self.remoteDGM1.getbudgetinfo(), [])
         self.log.info("Generating blocks until someone syncs the node..")
         self.stake(40, [self.remoteOne, self.remoteTwo])
         time.sleep(5) # wait a little bit
         self.log.info("Checking budget sync..")
         for i in range(self.num_nodes):
             assert_equal(len(self.nodes[i].getbudgetinfo()), 16)
-        self.check_vote_existence(firstProposal.name, self.mnOneCollateral.hash, "YES", True)
-        self.check_vote_existence(firstProposal.name, self.mnTwoCollateral.hash, "YES", True)
+        self.check_vote_existence(firstProposal.name, self.gmOneCollateral.hash, "YES", True)
+        self.check_vote_existence(firstProposal.name, self.gmTwoCollateral.hash, "YES", True)
         self.check_vote_existence(firstProposal.name, self.proRegTx1, "YES", True)
         self.check_budget_finalization_sync(3, "OK")
         self.log.info("Remote incremental sync succeeded")
 
         # now let's verify that votes expire properly.
-        # Drop one MN and one DMN
-        self.log.info("expiring MN1..")
-        self.spend_collateral(self.ownerOne, self.mnOneCollateral, self.miner)
-        self.wait_until_mn_vinspent(self.mnOneCollateral.hash, 30, [self.remoteTwo])
+        # Drop one GM and one DGM
+        self.log.info("expiring GM1..")
+        self.spend_collateral(self.ownerOne, self.gmOneCollateral, self.miner)
+        self.wait_until_gm_vinspent(self.gmOneCollateral.hash, 30, [self.remoteTwo])
         self.stake(15, [self.remoteTwo]) # create blocks to remove staled votes
         time.sleep(2) # wait a little bit
-        self.check_vote_existence(firstProposal.name, self.mnOneCollateral.hash, "YES", False)
+        self.check_vote_existence(firstProposal.name, self.gmOneCollateral.hash, "YES", False)
         self.check_budget_finalization_sync(2, "OK") # budget finalization vote removal
-        self.log.info("MN1 vote expired after collateral spend, all good")
+        self.log.info("GM1 vote expired after collateral spend, all good")
 
-        self.log.info("expiring DMN1..")
-        lm = self.ownerOne.listmasternodes(self.proRegTx1)[0]
+        self.log.info("expiring DGM1..")
+        lm = self.ownerOne.listgamemasters(self.proRegTx1)[0]
         self.spend_collateral(self.ownerOne, COutPoint(lm["collateralHash"], lm["collateralIndex"]), self.miner)
-        self.wait_until_mn_vinspent(self.proRegTx1, 30, [self.remoteTwo])
+        self.wait_until_gm_vinspent(self.proRegTx1, 30, [self.remoteTwo])
         self.stake(15, [self.remoteTwo]) # create blocks to remove staled votes
         time.sleep(2) # wait a little bit
         self.check_vote_existence(firstProposal.name, self.proRegTx1, "YES", False)
         self.check_budget_finalization_sync(1, "OK") # budget finalization vote removal
-        self.log.info("DMN vote expired after collateral spend, all good")
+        self.log.info("DGM vote expired after collateral spend, all good")
 
         # Check that the budget is removed 200 blocks after the last payment
-        assert_equal(len(self.miner.mnfinalbudget("show")), 1)
+        assert_equal(len(self.miner.gmfinalbudget("show")), 1)
         blocks_to_mine = nextSuperBlockHeight + 200 - self.miner.getblockcount()
         self.log.info("Mining %d more blocks to check expired budget removal..." % blocks_to_mine)
         self.stake(blocks_to_mine - 1, [self.remoteTwo])
         # finalized budget must still be there
         self.miner.checkbudgets()
-        assert_equal(len(self.miner.mnfinalbudget("show")), 1)
+        assert_equal(len(self.miner.gmfinalbudget("show")), 1)
         # after one more block it must be removed
         self.stake(1, [self.remoteTwo])
         self.miner.checkbudgets()
-        assert_equal(len(self.miner.mnfinalbudget("show")), 0)
+        assert_equal(len(self.miner.gmfinalbudget("show")), 0)
         self.log.info("All good.")
 
 if __name__ == '__main__':
-    MasternodeGovernanceBasicTest().main()
+    GamemasterGovernanceBasicTest().main()

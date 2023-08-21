@@ -4,14 +4,14 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test errors during DKG phases"""
 
-from test_framework.test_framework import HemisDMNTestFramework, ExpectedDKGMessages
+from test_framework.test_framework import HemisDGMTestFramework, ExpectedDKGMessages
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
 )
 
 
-class DkgErrorsTest(HemisDMNTestFramework):
+class DkgErrorsTest(HemisDGMTestFramework):
 
     def set_test_params(self):
         self.set_base_test_params()
@@ -50,25 +50,25 @@ class DkgErrorsTest(HemisDMNTestFramework):
     def invalid_commit(self, node):
         node.quorumdkgsimerror("commit-lie", 1)
 
-    def repair_mn(self, mnode, blocks=None):
+    def repair_gm(self, gmode, blocks=None):
         if blocks is None:
-            blocks = self.nodes[0].listmasternodes(mnode.proTx)[0]["dmnstate"]["PoSePenalty"]
-        self.log.info("Mining %d blocks to repair MN (node %d)..." % (blocks, mnode.idx))
+            blocks = self.nodes[0].listgamemasters(gmode.proTx)[0]["dgmstate"]["PoSePenalty"]
+        self.log.info("Mining %d blocks to repair GM (node %d)..." % (blocks, gmode.idx))
         self.nodes[0].generate(blocks)
         self.sync_blocks()
 
     def is_punished(self, proTx, expected_penalty):
-        return self.nodes[0].listmasternodes(proTx)[0]["dmnstate"]["PoSePenalty"] == expected_penalty
+        return self.nodes[0].listgamemasters(proTx)[0]["dgmstate"]["PoSePenalty"] == expected_penalty
 
     def is_not_punished(self, proTx):
-        return self.nodes[0].listmasternodes(proTx)[0]["dmnstate"]["PoSePenalty"] == 0
+        return self.nodes[0].listgamemasters(proTx)[0]["dgmstate"]["PoSePenalty"] == 0
 
     def run_test(self):
         miner = self.nodes[self.minerPos]
 
-        # initialize and start masternodes
+        # initialize and start gamemasters
         self.setup_test()
-        assert_equal(len(self.mns), 6)
+        assert_equal(len(self.gms), 6)
 
         # Mine a LLMQ final commitment regularly with 3 signers
         self.log.info("----------------------------------")
@@ -91,87 +91,87 @@ class DkgErrorsTest(HemisDMNTestFramework):
         self.log.info("-------------------------------------")
         dkg_msgs = [ExpectedDKGMessages(s_contrib=(i != 2), s_complaint=True, s_justif=False, s_commit=True,
                                         r_contrib=2, r_complaint=3, r_justif=0, r_commit=3) for i in range(3)]
-        qfc, bad_mnode = self.mine_quorum(invalidate_func=self.no_contrib,
+        qfc, bad_gmode = self.mine_quorum(invalidate_func=self.no_contrib,
                                           expected_messages=dkg_msgs)
         self.check_final_commitment(qfc, valid=[1, 1, 0], signers=[1, 1, 1])
-        assert self.is_punished(bad_mnode.proTx, 66)
-        self.log.info("Node %d punished." % bad_mnode.idx)
-        self.reset_simerror(self.nodes[bad_mnode.idx])
-        self.repair_mn(bad_mnode, 66)
+        assert self.is_punished(bad_gmode.proTx, 66)
+        self.log.info("Node %d punished." % bad_gmode.idx)
+        self.reset_simerror(self.nodes[bad_gmode.idx])
+        self.repair_gm(bad_gmode, 66)
 
         self.log.info("-------------------------------------------------------------")
         self.log.info("----- (2) Lie on contribution but provide justification -----")
         self.log.info("-------------------------------------------------------------")
         dkg_msgs = [ExpectedDKGMessages(s_contrib=True, s_complaint=(i != 2), s_justif=(i == 2), s_commit=True,
                                         r_contrib=3, r_complaint=2, r_justif=1, r_commit=3) for i in range(3)]
-        qfc, bad_mnode = self.mine_quorum(invalidate_func=self.invalid_contrib,
+        qfc, bad_gmode = self.mine_quorum(invalidate_func=self.invalid_contrib,
                                           expected_messages=dkg_msgs)
         self.check_final_commitment(qfc, valid=[1, 1, 1], signers=[1, 1, 1])
-        assert self.is_not_punished(bad_mnode.proTx)
-        self.log.info("Node %d justified." % bad_mnode.idx)
-        self.reset_simerror(self.nodes[bad_mnode.idx])
+        assert self.is_not_punished(bad_gmode.proTx)
+        self.log.info("Node %d justified." % bad_gmode.idx)
+        self.reset_simerror(self.nodes[bad_gmode.idx])
 
         self.log.info("----------------------------------------------------------")
         self.log.info("----- (3) Lie on contribution and omit justification -----")
         self.log.info("----------------------------------------------------------")
         dkg_msgs = [ExpectedDKGMessages(s_contrib=True, s_complaint=(i != 2), s_justif=False, s_commit=True,
                                         r_contrib=3, r_complaint=2, r_justif=0, r_commit=3) for i in range(3)]
-        qfc, bad_mnode = self.mine_quorum(invalidate_func=self.invalid_contrib_no_justif,
+        qfc, bad_gmode = self.mine_quorum(invalidate_func=self.invalid_contrib_no_justif,
                                           expected_messages=dkg_msgs)
         self.check_final_commitment(qfc, valid=[1, 1, 0], signers=[1, 1, 1])
-        assert self.is_punished(bad_mnode.proTx, 66)
-        self.log.info("Node %d punished." % bad_mnode.idx)
-        self.reset_simerror(self.nodes[bad_mnode.idx])
-        self.repair_mn(bad_mnode, 66)
+        assert self.is_punished(bad_gmode.proTx, 66)
+        self.log.info("Node %d punished." % bad_gmode.idx)
+        self.reset_simerror(self.nodes[bad_gmode.idx])
+        self.repair_gm(bad_gmode, 66)
 
         self.log.info("------------------------------------------------------------")
         self.log.info("----- (4) Lie on contribution and lie on justification -----")
         self.log.info("------------------------------------------------------------")
         dkg_msgs = [ExpectedDKGMessages(s_contrib=True, s_complaint=(i != 2), s_justif=(i == 2), s_commit=True,
                                         r_contrib=3, r_complaint=2, r_justif=1, r_commit=3) for i in range(3)]
-        qfc, bad_mnode = self.mine_quorum(invalidate_func=self.invalid_contrib_invalid_justif,
+        qfc, bad_gmode = self.mine_quorum(invalidate_func=self.invalid_contrib_invalid_justif,
                                           expected_messages=dkg_msgs)
         self.check_final_commitment(qfc, valid=[1, 1, 0], signers=[1, 1, 1])
-        assert self.is_punished(bad_mnode.proTx, 66)
-        self.log.info("Node %d punished." % bad_mnode.idx)
-        self.reset_simerror(self.nodes[bad_mnode.idx])
-        self.repair_mn(bad_mnode, 66)
+        assert self.is_punished(bad_gmode.proTx, 66)
+        self.log.info("Node %d punished." % bad_gmode.idx)
+        self.reset_simerror(self.nodes[bad_gmode.idx])
+        self.repair_gm(bad_gmode, 66)
 
         self.log.info("---------------------------------------------------")
         self.log.info("----- (5) Lie on complaints for other members -----")
         self.log.info("---------------------------------------------------")
         dkg_msgs = [ExpectedDKGMessages(s_contrib=True, s_complaint=(i == 2), s_justif=(i != 2), s_commit=True,
                                         r_contrib=3, r_complaint=1, r_justif=2, r_commit=3) for i in range(3)]
-        qfc, bad_mnode = self.mine_quorum(invalidate_func=self.invalid_complaint,
+        qfc, bad_gmode = self.mine_quorum(invalidate_func=self.invalid_complaint,
                                           expected_messages=dkg_msgs)
         self.check_final_commitment(qfc, valid=[1, 1, 1], signers=[1, 1, 1])
-        assert self.is_not_punished(bad_mnode.proTx)
-        self.log.info("Invalid complaint from %d justified." % bad_mnode.idx)
-        self.reset_simerror(self.nodes[bad_mnode.idx])
+        assert self.is_not_punished(bad_gmode.proTx)
+        self.log.info("Invalid complaint from %d justified." % bad_gmode.idx)
+        self.reset_simerror(self.nodes[bad_gmode.idx])
 
         self.log.info("---------------------------------------------")
         self.log.info("----- (6) Omit the premature commitment -----")
         self.log.info("---------------------------------------------")
         dkg_msgs = [ExpectedDKGMessages(s_contrib=True, s_complaint=False, s_justif=False, s_commit=(i != 2),
                                         r_contrib=3, r_complaint=0, r_justif=0, r_commit=2) for i in range(3)]
-        qfc, bad_mnode = self.mine_quorum(invalidate_func=self.no_commit,
+        qfc, bad_gmode = self.mine_quorum(invalidate_func=self.no_commit,
                                           expected_messages=dkg_msgs)
         self.check_final_commitment(qfc, valid=[1, 1, 1], signers=[1, 1, 0])
-        assert self.is_not_punished(bad_mnode.proTx)
-        self.log.info("Mined final commitment without node %d signature" % bad_mnode.idx)
-        self.reset_simerror(self.nodes[bad_mnode.idx])
+        assert self.is_not_punished(bad_gmode.proTx)
+        self.log.info("Mined final commitment without node %d signature" % bad_gmode.idx)
+        self.reset_simerror(self.nodes[bad_gmode.idx])
 
         self.log.info("-------------------------------------------")
         self.log.info("----- (7) Lie on premature commitment -----")
         self.log.info("-------------------------------------------")
         dkg_msgs = [ExpectedDKGMessages(s_contrib=True, s_complaint=False, s_justif=False, s_commit=True,
                                         r_contrib=3, r_complaint=0, r_justif=0, r_commit=2) for _ in range(3)]
-        qfc, bad_mnode = self.mine_quorum(invalidate_func=self.invalid_commit,
+        qfc, bad_gmode = self.mine_quorum(invalidate_func=self.invalid_commit,
                                           expected_messages=dkg_msgs)
         self.check_final_commitment(qfc, valid=[1, 1, 1], signers=[1, 1, 0])
-        assert self.is_not_punished(bad_mnode.proTx)
-        self.log.info("Mined final commitment without node %d signature" % bad_mnode.idx)
-        self.reset_simerror(self.nodes[bad_mnode.idx])
+        assert self.is_not_punished(bad_gmode.proTx)
+        self.log.info("Mined final commitment without node %d signature" % bad_gmode.idx)
+        self.reset_simerror(self.nodes[bad_gmode.idx])
 
 
 if __name__ == '__main__':

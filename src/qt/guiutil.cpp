@@ -422,7 +422,7 @@ bool openConfigfile()
 
 bool openMNConfigfile()
 {
-    return openFile(GetMasternodeConfigFile(), true);
+    return openFile(GetGamemasterConfigFile(), true);
 }
 
 bool showBackups()

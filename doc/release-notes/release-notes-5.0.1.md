@@ -10,7 +10,7 @@ This release also contains a protocol upgrade (to 70921).
 Users will need to update their clients before enforcement of this update goes into effect.
 Update enforcement is currently scheduled to go into effect at the same block height that was scheduled for v5.0.0: 2700500
 
-Masternodes will need to be restarted once both the masternode daemon and the controller wallet have been upgraded.
+Gamemasters will need to be restarted once both the gamemaster daemon and the controller wallet have been upgraded.
 
 Important Note
 ----

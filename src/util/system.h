@@ -49,7 +49,7 @@ public:
 
 extern const char * const hemis_CONF_FILENAME;
 extern const char * const hemis_PID_FILENAME;
-extern const char * const hemis_MASTERNODE_CONF_FILENAME;
+extern const char * const hemis_GAMEMASTER_CONF_FILENAME;
 extern const char * const DEFAULT_DEBUGLOGFILE;
 
 //hemis only features
@@ -108,7 +108,7 @@ const fs::path &ZC_GetParamsDir();
 void initZKSNARKS();
 void ClearDatadirCache();
 fs::path GetConfigFile(const std::string& confPath);
-fs::path GetMasternodeConfigFile();
+fs::path GetGamemasterConfigFile();
 #ifdef WIN32
 fs::path GetSpecialFolderPath(int nFolder, bool fCreate = true);
 #endif

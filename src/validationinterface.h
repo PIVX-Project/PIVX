@@ -18,8 +18,8 @@ class CBlock;
 struct CBlockLocator;
 class CBlockIndex;
 class CConnman;
-class CDeterministicMNList;
-class CDeterministicMNListDiff;
+class CDeterministicGMList;
+class CDeterministicGMListDiff;
 class CValidationInterface;
 class CValidationState;
 class uint256;
@@ -150,8 +150,8 @@ protected:
     friend void ::RegisterValidationInterface(CValidationInterface*);
     friend void ::UnregisterValidationInterface(CValidationInterface*);
     friend void ::UnregisterAllValidationInterfaces();
-    /** Notifies listeners of updated deterministic masternode list */
-    virtual void NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff) {}
+    /** Notifies listeners of updated deterministic gamemaster list */
+    virtual void NotifyGamemasterListChanged(bool undo, const CDeterministicGMList& oldGMList, const CDeterministicGMListDiff& diff) {}
 };
 
 struct MainSignalsInstance;
@@ -183,7 +183,7 @@ public:
     void SetBestChain(const CBlockLocator &);
     void Broadcast(CConnman* connman);
     void BlockChecked(const CBlock&, const CValidationState&);
-    void NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff);
+    void NotifyGamemasterListChanged(bool undo, const CDeterministicGMList& oldGMList, const CDeterministicGMListDiff& diff);
 };
 
 CMainSignals& GetMainSignals();

@@ -191,8 +191,8 @@ public:
                                bool fOneShot = false,
                                bool fFeeler = false,
                                bool fAddnode = false,
-                               bool masternode_connection = false,
-                               bool masternode_probe_connection = false);
+                               bool gamemaster_connection = false,
+                               bool gamemaster_probe_connection = false);
     bool CheckIncomingNonce(uint64_t nonce);
 
     struct CFullyConnectedOnly {
@@ -535,7 +535,7 @@ bool IsLocal(const CService& addr);
 bool GetLocal(CService& addr, const CNetAddr* paddrPeer = nullptr);
 CAddress GetLocalAddress(const CNetAddr* paddrPeer, ServiceFlags nLocalServices);
 
-bool validateMasternodeIP(const std::string& addrStr);          // valid, reachable and routable address
+bool validateGamemasterIP(const std::string& addrStr);          // valid, reachable and routable address
 
 
 extern bool fDiscover;
@@ -579,15 +579,15 @@ public:
     double dPingWait;
     std::string addrLocal;
     uint32_t m_mapped_as;
-    // In case this is a MN-only connection.
-    bool m_masternode_connection{false};
-    // If 'true' this node will be disconnected after MNAUTH
-    bool m_masternode_probe_connection{false};
+    // In case this is a GM-only connection.
+    bool m_gamemaster_connection{false};
+    // If 'true' this node will be disconnected after GMAUTH
+    bool m_gamemaster_probe_connection{false};
     // If 'true', we identified it as an intra-quorum relay connection
-    bool m_masternode_iqr_connection{false};
-    // In case this is a verified MN, this value is the proTx of the MN
+    bool m_gamemaster_iqr_connection{false};
+    // In case this is a verified GM, this value is the proTx of the GM
     uint256 verifiedProRegTxHash;
-    // In case this is a verified MN, this value is the hashed operator pubkey of the MN
+    // In case this is a verified GM, this value is the hashed operator pubkey of the GM
     uint256 verifiedPubKeyHash;
 };
 
@@ -680,9 +680,9 @@ public:
     bool fFeeler;      // If true this node is being used as a short lived feeler.
     bool fOneShot;
     bool fAddnode;
-    std::atomic<bool> m_masternode_connection{false}; // If true this node is only used for quorum related messages.
-    std::atomic<bool> m_masternode_probe_connection{false}; // If true this will be disconnected right after the verack.
-    std::atomic<bool> m_masternode_iqr_connection{false}; // If 'true', we identified it as an intra-quorum relay connection.
+    std::atomic<bool> m_gamemaster_connection{false}; // If true this node is only used for quorum related messages.
+    std::atomic<bool> m_gamemaster_probe_connection{false}; // If true this will be disconnected right after the verack.
+    std::atomic<bool> m_gamemaster_iqr_connection{false}; // If 'true', we identified it as an intra-quorum relay connection.
     std::atomic<int64_t> m_last_wants_recsigs_recv{0}; // the last time that a recsigs msg was received, used to avoid spam.
     bool fClient;
     const bool fInbound;
@@ -711,8 +711,8 @@ public:
     std::atomic<bool> m_wants_recsigs{false};
     // True when the first message after the verack is received
     std::atomic<bool> fFirstMessageReceived{false};
-    // True only if the first message received after verack is a mnauth
-    std::atomic<bool> fFirstMessageIsMNAUTH{false};
+    // True only if the first message received after verack is a gmauth
+    std::atomic<bool> fFirstMessageIsGMAUTH{false};
 protected:
     mapMsgCmdSize mapSendBytesPerMsgCmd;
     mapMsgCmdSize mapRecvBytesPerMsgCmd;
@@ -768,12 +768,12 @@ public:
     // Whether a ping is requested.
     std::atomic<bool> fPingQueued;
 
-    // Challenge sent in VERSION to be answered with MNAUTH (only happens between MNs)
-    mutable Mutex cs_mnauth;
-    uint256 sentMNAuthChallenge;
-    uint256 receivedMNAuthChallenge;
-    uint256 verifiedProRegTxHash; // MN provider register tx hash
-    uint256 verifiedPubKeyHash; // MN operator pubkey hash
+    // Challenge sent in VERSION to be answered with GMAUTH (only happens between GMs)
+    mutable Mutex cs_gmauth;
+    uint256 sentGMAuthChallenge;
+    uint256 receivedGMAuthChallenge;
+    uint256 verifiedProRegTxHash; // GM provider register tx hash
+    uint256 verifiedPubKeyHash; // GM operator pubkey hash
 
     CNode(NodeId id, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn, SOCKET hSocketIn, const CAddress& addrIn, uint64_t nKeyedNetGroupIn, uint64_t nLocalHostNonceIn, const std::string& addrNameIn = "", bool fInboundIn = false);
     ~CNode();
@@ -916,7 +916,7 @@ public:
     //! Sets the addrName only if it was not previously set
     void MaybeSetAddrName(const std::string& addrNameIn);
 
-    bool CanRelay() const { return !m_masternode_connection || m_masternode_iqr_connection; }
+    bool CanRelay() const { return !m_gamemaster_connection || m_gamemaster_iqr_connection; }
 };
 
 class CExplicitNetCleanup

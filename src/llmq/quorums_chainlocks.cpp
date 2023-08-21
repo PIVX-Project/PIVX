@@ -107,7 +107,7 @@ void CChainLocksHandler::ProcessNewChainLock(NodeId from, const llmq::CChainLock
         LOCK2(cs_main, cs);
 
         if (InternalHasConflictingChainLock(clsig.nHeight, clsig.blockHash)) {
-            // This should not happen. If it happens, it means that a malicious entity controls a large part of the MN
+            // This should not happen. If it happens, it means that a malicious entity controls a large part of the GM
             // network. In this case, we don't allow him to reorg older chainlocks.
             LogPrintf("CChainLocksHandler::%s -- new CLSIG (%s) tries to reorg previous CLSIG (%s), peer=%d\n",
                       __func__, clsig.ToString(), bestChainLock.ToString(), from);

@@ -10,7 +10,7 @@ Mandatory Update
 
 hemis Core v3.3.0 is a mandatory update for all users. This release contains new consensus rules and improvements that are not backwards compatible with older versions. Users will have a grace period of approximately one week to update their clients before enforcement of this update goes into effect.
 
-Masternodes will need to be restarted once both the masternode daemon and the controller wallet have been upgraded.
+Gamemasters will need to be restarted once both the gamemaster daemon and the controller wallet have been upgraded.
 
 How to Upgrade
 ==============
@@ -63,7 +63,7 @@ Notice text has been added to the privacy tab indicating that zHMS minting is di
 
 ### Removal of Deprecated Commands
 
-The `masternode` and `mnbudget` RPC commands, which were marked as deprecated in hemis Core v2.3.1 (September 19, 2017), have now been completely removed from hemis Core.
+The `gamemaster` and `gmbudget` RPC commands, which were marked as deprecated in hemis Core v2.3.1 (September 19, 2017), have now been completely removed from hemis Core.
 
 Several new commands were added in v2.3.1 to replace the two aforementioned commands, reference the [v2.3.1 Release Notes](https://github.com/hemis-Project/hemis/blob/master/doc/release-notes/release-notes-2.3.1.md#rpc-changes) for further details.
 
@@ -170,7 +170,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #928 `2482572f89` [Qt] Update Translations (Fuzzbawls)
 
 ### RPC/REST
- - #877 `54c8832d80` [RPC] Remove deprecated masternode/budget RPC commands (Fuzzbawls)
+ - #877 `54c8832d80` [RPC] Remove deprecated gamemaster/budget RPC commands (Fuzzbawls)
  - #901 `be3aab4a00` [RPC] Fix typos and oversights in listunspent (CaveSpectre11)
  - #911 `484c070b22` [RPC] add 'getblockindexstats' function (random-zebra)
 

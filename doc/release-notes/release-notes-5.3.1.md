@@ -1,6 +1,6 @@
 hemis Core version v5.3.1 is now available from: https://github.com/hemis-project/hemis/releases
 
-This is an important release for stakers and Masternodes: including several tier two synchronization, GUI and build system bug fixes.
+This is an important release for stakers and Gamemasters: including several tier two synchronization, GUI and build system bug fixes.
 We recommend everyone to update your node/wallet.
 
 Please report bugs using the issue tracker at github: https://github.com/hemis-project/hemis/issues
@@ -31,7 +31,7 @@ Notable Changes
 ==============
 
 ### GUI
-- #2530 [GUI][BUG] remove duplicated coll. confirmation check in MNModel::data (random-zebra)
+- #2530 [GUI][BUG] remove duplicated coll. confirmation check in GMModel::data (random-zebra)
 - #2491 [GUI] Translation cleanup (Fuzzbawls)
 - #2551 [BUG][GUI] Fix random double/triple transaction record issue (random-zebra)
 - #2557 [Trivial] Update labelSubtitleAddress text in send widget ui (random-zebra)
@@ -42,7 +42,7 @@ Notable Changes
 
 ### Tier Two Network
 - #2553 [BUG] Spork signer doesn't persist new spork value to DB (random-zebra)
-- #2559 [BUG][TierTwo] Clear fulfilled requests when mnsync fails (random-zebra)
+- #2559 [BUG][TierTwo] Clear fulfilled requests when gmsync fails (random-zebra)
 - #2560 [Bug][TierTwo] Mark peer sync request msg fulfilled only if the broadcast was performed (furszy)
 
 ### Build system

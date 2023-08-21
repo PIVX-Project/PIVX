@@ -116,7 +116,7 @@ git merge commit are mentioned.
 - #242 `0ecd77f` [P2P] Improve TOR service connectivity (Fuzzbawls)
 
 ### GUI
-- #251 `79af8d2` [Qt] Adjust masternode count in information UI (Mrs-X)
+- #251 `79af8d2` [Qt] Adjust gamemaster count in information UI (Mrs-X)
 
 ### Miscellaneous
 - #258 `c950765` [Depends] Update Depends with newer versions (Fuzzbawls)

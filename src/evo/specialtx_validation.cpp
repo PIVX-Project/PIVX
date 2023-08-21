@@ -10,7 +10,7 @@
 #include "chainparams.h"
 #include "clientversion.h"
 #include "consensus/validation.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "evo/providertx.h"
 #include "llmq/quorums_blockprocessor.h"
 #include "messagesigner.h"
@@ -99,7 +99,7 @@ static bool CheckCollateralOut(const CTxOut& out, const ProRegPL& pl, CValidatio
         return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral-reuse");
     }
     // check collateral amount
-    if (out.nValue != Params().GetConsensus().nMNCollateralAmt) {
+    if (out.nValue != Params().GetConsensus().nGMCollateralAmt) {
         return state.DoS(100, false, REJECT_INVALID, "bad-protx-collateral-amount");
     }
     return true;
@@ -150,7 +150,7 @@ static bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev,
         return state.DoS(10, false, REJECT_INVALID, "bad-protx-payee-reuse");
     }
 
-    // It's allowed to set addr to 0, which will put the MN into PoSe-banned state and require a ProUpServTx to be issues later
+    // It's allowed to set addr to 0, which will put the GM into PoSe-banned state and require a ProUpServTx to be issues later
     // If any of both is set, it must be valid however
     if (pl.addr != CService() && !CheckService(pl.addr, state)) {
         // pass the state returned by the function above
@@ -209,16 +209,16 @@ static bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev,
     }
 
     if (pindexPrev) {
-        auto mnList = deterministicMNManager->GetListForBlock(pindexPrev);
-        // only allow reusing of addresses when it's for the same collateral (which replaces the old MN)
-        if (mnList.HasUniqueProperty(pl.addr) && mnList.GetUniquePropertyMN(pl.addr)->collateralOutpoint != pl.collateralOutpoint) {
+        auto gmList = deterministicGMManager->GetListForBlock(pindexPrev);
+        // only allow reusing of addresses when it's for the same collateral (which replaces the old GM)
+        if (gmList.HasUniqueProperty(pl.addr) && gmList.GetUniquePropertyGM(pl.addr)->collateralOutpoint != pl.collateralOutpoint) {
             return state.DoS(10, false, REJECT_DUPLICATE, "bad-protx-dup-IP-address");
         }
-        // never allow duplicate keys, even if this ProTx would replace an existing MN
-        if (mnList.HasUniqueProperty(pl.keyIDOwner)) {
+        // never allow duplicate keys, even if this ProTx would replace an existing GM
+        if (gmList.HasUniqueProperty(pl.keyIDOwner)) {
             return state.DoS(10, false, REJECT_DUPLICATE, "bad-protx-dup-owner-key");
         }
-        if (mnList.HasUniqueProperty(pl.pubKeyOperator)) {
+        if (gmList.HasUniqueProperty(pl.pubKeyOperator)) {
             return state.DoS(10, false, REJECT_DUPLICATE, "bad-protx-dup-operator-key");
         }
     }
@@ -251,19 +251,19 @@ static bool CheckProUpServTx(const CTransaction& tx, const CBlockIndex* pindexPr
     }
 
     if (pindexPrev) {
-        auto mnList = deterministicMNManager->GetListForBlock(pindexPrev);
-        auto mn = mnList.GetMN(pl.proTxHash);
-        if (!mn) {
+        auto gmList = deterministicGMManager->GetListForBlock(pindexPrev);
+        auto gm = gmList.GetGM(pl.proTxHash);
+        if (!gm) {
             return state.DoS(100, false, REJECT_INVALID, "bad-protx-hash");
         }
 
-        // don't allow updating to addresses already used by other MNs
-        if (mnList.HasUniqueProperty(pl.addr) && mnList.GetUniquePropertyMN(pl.addr)->proTxHash != pl.proTxHash) {
+        // don't allow updating to addresses already used by other GMs
+        if (gmList.HasUniqueProperty(pl.addr) && gmList.GetUniquePropertyGM(pl.addr)->proTxHash != pl.proTxHash) {
             return state.DoS(10, false, REJECT_DUPLICATE, "bad-protx-dup-addr");
         }
 
         if (!pl.scriptOperatorPayout.empty()) {
-            if (mn->nOperatorReward == 0) {
+            if (gm->nOperatorReward == 0) {
                 // don't allow to set operator reward payee in case no operatorReward was set
                 return state.DoS(10, false, REJECT_INVALID, "bad-protx-operator-payee");
             }
@@ -273,8 +273,8 @@ static bool CheckProUpServTx(const CTransaction& tx, const CBlockIndex* pindexPr
             }
         }
 
-        // we can only check the signature if pindexPrev != nullptr and the MN is known
-        if (!CheckHashSig(pl, mn->pdmnState->pubKeyOperator.Get(), state)) {
+        // we can only check the signature if pindexPrev != nullptr and the GM is known
+        if (!CheckHashSig(pl, gm->pdgmState->pubKeyOperator.Get(), state)) {
             // pass the state returned by the function above
             return false;
         }
@@ -330,25 +330,25 @@ static bool CheckProUpRegTx(const CTransaction& tx, const CBlockIndex* pindexPre
         assert(view != nullptr);
 
         // ProUpReg txes are disabled when the legacy system is still active
-        // !TODO: remove after complete transition to DMN
-        if (!deterministicMNManager->LegacyMNObsolete(pindexPrev->nHeight + 1)) {
+        // !TODO: remove after complete transition to DGM
+        if (!deterministicGMManager->LegacyGMObsolete(pindexPrev->nHeight + 1)) {
             return state.DoS(10, false, REJECT_INVALID, "spork-21-inactive");
         }
 
-        auto mnList = deterministicMNManager->GetListForBlock(pindexPrev);
-        auto dmn = mnList.GetMN(pl.proTxHash);
-        if (!dmn) {
+        auto gmList = deterministicGMManager->GetListForBlock(pindexPrev);
+        auto dgm = gmList.GetGM(pl.proTxHash);
+        if (!dgm) {
             return state.DoS(100, false, REJECT_INVALID, "bad-protx-hash");
         }
 
         // don't allow reuse of payee key for owner key
-        if (payoutDest == CTxDestination(dmn->pdmnState->keyIDOwner)) {
+        if (payoutDest == CTxDestination(dgm->pdgmState->keyIDOwner)) {
             return state.DoS(10, false, REJECT_INVALID, "bad-protx-payee-reuse");
         }
 
         Coin coin;
-        if (!view->GetUTXOCoin(dmn->collateralOutpoint, coin)) {
-            // this should never happen (there would be no dmn otherwise)
+        if (!view->GetUTXOCoin(dgm->collateralOutpoint, coin)) {
+            // this should never happen (there would be no dgm otherwise)
             return state.DoS(100, false, REJECT_INVALID, "bad-protx-collateral");
         }
 
@@ -357,19 +357,19 @@ static bool CheckProUpRegTx(const CTransaction& tx, const CBlockIndex* pindexPre
         if (!ExtractDestination(coin.out.scriptPubKey, collateralTxDest)) {
             return state.DoS(100, false, REJECT_INVALID, "bad-protx-collateral-dest");
         }
-        if (collateralTxDest == CTxDestination(dmn->pdmnState->keyIDOwner) ||
+        if (collateralTxDest == CTxDestination(dgm->pdgmState->keyIDOwner) ||
                 collateralTxDest == CTxDestination(pl.keyIDVoting)) {
             return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral-reuse");
         }
 
-        if (mnList.HasUniqueProperty(pl.pubKeyOperator)) {
-            auto otherDmn = mnList.GetUniquePropertyMN(pl.pubKeyOperator);
-            if (pl.proTxHash != otherDmn->proTxHash) {
+        if (gmList.HasUniqueProperty(pl.pubKeyOperator)) {
+            auto otherDgm = gmList.GetUniquePropertyGM(pl.pubKeyOperator);
+            if (pl.proTxHash != otherDgm->proTxHash) {
                 return state.DoS(10, false, REJECT_DUPLICATE, "bad-protx-dup-key");
             }
         }
 
-        if (!CheckHashSig(pl, dmn->pdmnState->keyIDOwner, state)) {
+        if (!CheckHashSig(pl, dgm->pdgmState->keyIDOwner, state)) {
             // pass the state returned by the function above
             return false;
         }
@@ -405,12 +405,12 @@ static bool CheckProUpRevTx(const CTransaction& tx, const CBlockIndex* pindexPre
     }
 
     if (pindexPrev) {
-        auto mnList = deterministicMNManager->GetListForBlock(pindexPrev);
-        auto dmn = mnList.GetMN(pl.proTxHash);
-        if (!dmn)
+        auto gmList = deterministicGMManager->GetListForBlock(pindexPrev);
+        auto dgm = gmList.GetGM(pl.proTxHash);
+        if (!dgm)
             return state.DoS(100, false, REJECT_INVALID, "bad-protx-hash");
 
-        if (!CheckHashSig(pl, dmn->pdmnState->pubKeyOperator.Get(), state)) {
+        if (!CheckHashSig(pl, dgm->pdgmState->pubKeyOperator.Get(), state)) {
             // pass the state returned by the function above
             return false;
         }
@@ -474,8 +474,8 @@ bool VerifyLLMQCommitment(const llmq::CFinalCommitment& qfc, const CBlockIndex* 
         // Get members and check signatures (for not-null commitments)
         if (!qfc.IsNull()) {
             std::vector<CBLSPublicKey> allkeys;
-            for (const auto& m : deterministicMNManager->GetAllQuorumMembers((Consensus::LLMQType)qfc.llmqType, pindexQuorum)) {
-                allkeys.emplace_back(m->pdmnState->pubKeyOperator.Get());
+            for (const auto& m : deterministicGMManager->GetAllQuorumMembers((Consensus::LLMQType)qfc.llmqType, pindexQuorum)) {
+                allkeys.emplace_back(m->pdgmState->pubKeyOperator.Get());
             }
             if (!qfc.Verify(allkeys, *params)) {
                 return state.DoS(100, false, REJECT_INVALID, "bad-qc-invalid");
@@ -622,7 +622,7 @@ bool ProcessSpecialTxsInBlock(const CBlock& block, const CBlockIndex* pindex, co
         return false;
     }
 
-    if (!deterministicMNManager->ProcessBlock(block, pindex, state, fJustCheck)) {
+    if (!deterministicGMManager->ProcessBlock(block, pindex, state, fJustCheck)) {
         // pass the state returned by the function above
         return false;
     }
@@ -632,7 +632,7 @@ bool ProcessSpecialTxsInBlock(const CBlock& block, const CBlockIndex* pindex, co
 
 bool UndoSpecialTxsInBlock(const CBlock& block, const CBlockIndex* pindex)
 {
-    if (!deterministicMNManager->UndoBlock(block, pindex)) {
+    if (!deterministicGMManager->UndoBlock(block, pindex)) {
         return false;
     }
     if (!llmq::quorumBlockProcessor->UndoBlock(block, pindex)) {

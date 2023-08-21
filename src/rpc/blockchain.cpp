@@ -14,7 +14,7 @@
 #include "kernel.h"
 #include "key_io.h"
 #include "llmq/quorums_chainlocks.h"
-#include "masternodeman.h"
+#include "gamemasterman.h"
 #include "policy/feerate.h"
 #include "policy/policy.h"
 #include "rpc/server.h"
@@ -1238,7 +1238,7 @@ UniValue invalidateblock(const JSONRPCRequest& request)
         ActivateBestChain(state);
         int nHeight = WITH_LOCK(cs_main, return chainActive.Height(); );
         g_budgetman.SetBestHeight(nHeight);
-        mnodeman.SetBestHeight(nHeight);
+        gamemasterman.SetBestHeight(nHeight);
     }
 
     if (!state.IsValid()) {
@@ -1278,7 +1278,7 @@ UniValue reconsiderblock(const JSONRPCRequest& request)
         ActivateBestChain(state);
         int nHeight = WITH_LOCK(cs_main, return chainActive.Height(); );
         g_budgetman.SetBestHeight(nHeight);
-        mnodeman.SetBestHeight(nHeight);
+        gamemasterman.SetBestHeight(nHeight);
     }
 
     if (!state.IsValid()) {

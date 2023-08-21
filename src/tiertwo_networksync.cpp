@@ -2,14 +2,14 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#include "masternode-sync.h"
+#include "gamemaster-sync.h"
 
 #include "llmq/quorums_blockprocessor.h"
 #include "llmq/quorums_chainlocks.h"
 #include "llmq/quorums_dkgsessionmgr.h"
 #include "llmq/quorums_signing.h"
 #include "llmq/quorums_signing_shares.h"
-#include "masternodeman.h"  // for mnodeman
+#include "gamemasterman.h"  // for gamemasterman
 #include "net_processing.h" // for Misbehaving
 #include "netmessagemaker.h"
 #include "spork.h"   // for sporkManager
@@ -18,7 +18,7 @@
 
 
 // Update in-flight message status if needed
-bool CMasternodeSync::UpdatePeerSyncState(const NodeId& id, const char* msg, const int nextSyncStatus)
+bool CGamemasterSync::UpdatePeerSyncState(const NodeId& id, const char* msg, const int nextSyncStatus)
 {
     auto it = peersSyncState.find(id);
     if (it != peersSyncState.end()) {
@@ -44,7 +44,7 @@ bool CMasternodeSync::UpdatePeerSyncState(const NodeId& id, const char* msg, con
     return false;
 }
 
-bool CMasternodeSync::MessageDispatcher(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
+bool CGamemasterSync::MessageDispatcher(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
 {
     if (strCommand == NetMsgType::GETSPORKS) {
         // send sporks
@@ -54,7 +54,7 @@ bool CMasternodeSync::MessageDispatcher(CNode* pfrom, std::string& strCommand, C
 
     if (strCommand == NetMsgType::QFCOMMITMENT) {
         // Only process qfc if v6.0.0 is enforced.
-        if (!deterministicMNManager->IsDIP3Enforced()) return true; // nothing to do.
+        if (!deterministicGMManager->IsDIP3Enforced()) return true; // nothing to do.
         int retMisbehavingScore{0};
         llmq::quorumBlockProcessor->ProcessMessage(pfrom, vRecv, retMisbehavingScore);
         if (retMisbehavingScore > 0) {
@@ -85,11 +85,11 @@ bool CMasternodeSync::MessageDispatcher(CNode* pfrom, std::string& strCommand, C
         llmq::chainLocksHandler->ProcessMessage(pfrom, strCommand, vRecv, *g_connman);
     }
 
-    if (strCommand == NetMsgType::GETMNLIST) {
-        // Get Masternode list or specific entry
+    if (strCommand == NetMsgType::GETGMLIST) {
+        // Get Gamemaster list or specific entry
         CTxIn vin;
         vRecv >> vin;
-        int banScore = mnodeman.ProcessGetMNList(pfrom, vin);
+        int banScore = gamemasterman.ProcessGetGMList(pfrom, vin);
         if (banScore > 0) {
             LOCK(cs_main);
             Misbehaving(pfrom->GetId(), banScore);
@@ -110,13 +110,13 @@ bool CMasternodeSync::MessageDispatcher(CNode* pfrom, std::string& strCommand, C
             return true;
         }
         // All good, Update in-flight message status if needed
-        if (!UpdatePeerSyncState(pfrom->GetId(), NetMsgType::GETSPORKS, GetNextAsset(MASTERNODE_SYNC_SPORKS))) {
+        if (!UpdatePeerSyncState(pfrom->GetId(), NetMsgType::GETSPORKS, GetNextAsset(GAMEMASTER_SYNC_SPORKS))) {
             // This could happen because of the message thread is requesting the sporks alone..
             // So.. for now, can just update the peer status and move it to the next state if the end message arrives
             if (spork.nSporkID == SPORK_INVALID) {
-                if (g_tiertwo_sync_state.GetSyncPhase() < MASTERNODE_SYNC_LIST) {
-                    // future note: use internal cs for RequestedMasternodeAssets.
-                    g_tiertwo_sync_state.SetCurrentSyncPhase(MASTERNODE_SYNC_LIST);
+                if (g_tiertwo_sync_state.GetSyncPhase() < GAMEMASTER_SYNC_LIST) {
+                    // future note: use internal cs for RequestedGamemasterAssets.
+                    g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_LIST);
                 }
             }
         }
@@ -125,7 +125,7 @@ bool CMasternodeSync::MessageDispatcher(CNode* pfrom, std::string& strCommand, C
 
     if (strCommand == NetMsgType::SYNCSTATUSCOUNT) {
         // Nothing to do.
-        if (g_tiertwo_sync_state.GetSyncPhase() >= MASTERNODE_SYNC_FINISHED) return true;
+        if (g_tiertwo_sync_state.GetSyncPhase() >= GAMEMASTER_SYNC_FINISHED) return true;
 
         // Sync status count
         int nItemID;
@@ -137,21 +137,21 @@ bool CMasternodeSync::MessageDispatcher(CNode* pfrom, std::string& strCommand, C
 
         // this means we will receive no further communication on the first sync
         switch (nItemID) {
-            case MASTERNODE_SYNC_LIST: {
-                UpdatePeerSyncState(pfrom->GetId(), NetMsgType::GETMNLIST, GetNextAsset(nItemID));
+            case GAMEMASTER_SYNC_LIST: {
+                UpdatePeerSyncState(pfrom->GetId(), NetMsgType::GETGMLIST, GetNextAsset(nItemID));
                 return true;
             }
-            case MASTERNODE_SYNC_MNW: {
-                UpdatePeerSyncState(pfrom->GetId(), NetMsgType::GETMNWINNERS, GetNextAsset(nItemID));
+            case GAMEMASTER_SYNC_GMW: {
+                UpdatePeerSyncState(pfrom->GetId(), NetMsgType::GETGMWINNERS, GetNextAsset(nItemID));
                 return true;
             }
-            case MASTERNODE_SYNC_BUDGET_PROP: {
-                // TODO: This could be a MASTERNODE_SYNC_BUDGET_FIN as well, possibly should decouple the finalization budget sync
-                //  from the MASTERNODE_SYNC_BUDGET_PROP (both are under the BUDGETVOTESYNC message)
+            case GAMEMASTER_SYNC_BUDGET_PROP: {
+                // TODO: This could be a GAMEMASTER_SYNC_BUDGET_FIN as well, possibly should decouple the finalization budget sync
+                //  from the GAMEMASTER_SYNC_BUDGET_PROP (both are under the BUDGETVOTESYNC message)
                 UpdatePeerSyncState(pfrom->GetId(), NetMsgType::BUDGETVOTESYNC, GetNextAsset(nItemID));
                 return true;
             }
-            case MASTERNODE_SYNC_BUDGET_FIN: {
+            case GAMEMASTER_SYNC_BUDGET_FIN: {
                 // No need to handle this one, is handled by the proposals sync message for now..
                 return true;
             }
@@ -162,13 +162,13 @@ bool CMasternodeSync::MessageDispatcher(CNode* pfrom, std::string& strCommand, C
 }
 
 template <typename... Args>
-void CMasternodeSync::PushMessage(CNode* pnode, const char* msg, Args&&... args)
+void CGamemasterSync::PushMessage(CNode* pnode, const char* msg, Args&&... args)
 {
     g_connman->PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(msg, std::forward<Args>(args)...));
 }
 
 template <typename... Args>
-void CMasternodeSync::RequestDataTo(CNode* pnode, const char* msg, bool forceRequest, Args&&... args)
+void CGamemasterSync::RequestDataTo(CNode* pnode, const char* msg, bool forceRequest, Args&&... args)
 {
     const auto& it = peersSyncState.find(pnode->GetId());
     bool exist = it != peersSyncState.end();
@@ -210,27 +210,27 @@ void CMasternodeSync::RequestDataTo(CNode* pnode, const char* msg, bool forceReq
     }
 }
 
-void CMasternodeSync::SyncRegtest(CNode* pnode)
+void CGamemasterSync::SyncRegtest(CNode* pnode)
 {
-    // skip mn list and winners sync if legacy mn are obsolete
+    // skip gm list and winners sync if legacy gm are obsolete
     int syncPhase = g_tiertwo_sync_state.GetSyncPhase();
-    if (deterministicMNManager->LegacyMNObsolete() &&
-            (syncPhase == MASTERNODE_SYNC_LIST || syncPhase == MASTERNODE_SYNC_MNW)) {
-        g_tiertwo_sync_state.SetCurrentSyncPhase(MASTERNODE_SYNC_BUDGET);
+    if (deterministicGMManager->LegacyGMObsolete() &&
+            (syncPhase == GAMEMASTER_SYNC_LIST || syncPhase == GAMEMASTER_SYNC_GMW)) {
+        g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_BUDGET);
         syncPhase = g_tiertwo_sync_state.GetSyncPhase();
     }
 
     // Initial sync, verify that the other peer answered to all of the messages successfully
-    if (syncPhase == MASTERNODE_SYNC_SPORKS) {
+    if (syncPhase == GAMEMASTER_SYNC_SPORKS) {
         RequestDataTo(pnode, NetMsgType::GETSPORKS, false);
-    } else if (syncPhase == MASTERNODE_SYNC_LIST) {
-        RequestDataTo(pnode, NetMsgType::GETMNLIST, false, CTxIn());
-    } else if (syncPhase == MASTERNODE_SYNC_MNW) {
-        RequestDataTo(pnode, NetMsgType::GETMNWINNERS, false, mnodeman.CountEnabled());
-    } else if (syncPhase == MASTERNODE_SYNC_BUDGET) {
-        // sync masternode votes
+    } else if (syncPhase == GAMEMASTER_SYNC_LIST) {
+        RequestDataTo(pnode, NetMsgType::GETGMLIST, false, CTxIn());
+    } else if (syncPhase == GAMEMASTER_SYNC_GMW) {
+        RequestDataTo(pnode, NetMsgType::GETGMWINNERS, false, gamemasterman.CountEnabled());
+    } else if (syncPhase == GAMEMASTER_SYNC_BUDGET) {
+        // sync gamemaster votes
         RequestDataTo(pnode, NetMsgType::BUDGETVOTESYNC, false, uint256());
-    } else if (syncPhase == MASTERNODE_SYNC_FINISHED) {
+    } else if (syncPhase == GAMEMASTER_SYNC_FINISHED) {
         LogPrintf("REGTEST SYNC FINISHED!\n");
     }
 }

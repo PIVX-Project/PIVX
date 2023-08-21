@@ -149,7 +149,7 @@ public:
     std::string GetRequiredPaymentsString(int nBlockHeight);
     bool FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const int nHeight, bool fProofOfStake) const;
 
-    // Only initialized masternodes: sign and submit votes on valid finalized budgets
+    // Only initialized gamemasters: sign and submit votes on valid finalized budgets
     void VoteOnFinalizedBudgets();
 
     int CountProposals() { LOCK(cs_proposals); return mapProposals.size(); }

@@ -14,7 +14,7 @@
 #include "test/test_hemis.h"
 >>>>>>> 1f345019d (first step)
 
-#include "net.h"    // validateMasternodeIP
+#include "net.h"    // validateGamemasterIP
 #include "netbase.h"
 #include "protocol.h"
 #include "serialize.h"
@@ -322,22 +322,22 @@ BOOST_AUTO_TEST_CASE(validate_test)
     std::list<std::string> validTor = {"5wyqrzbvrdsumnok.onion", "FD87:D87E:EB43:edb1:8e4:3588:e546:35ca"};
 
     for (const std::string& ipStr : validIPv4)
-        BOOST_CHECK_MESSAGE(validateMasternodeIP(ipStr), ipStr);
+        BOOST_CHECK_MESSAGE(validateGamemasterIP(ipStr), ipStr);
     for (const std::string& ipStr : validIPv6)
-        BOOST_CHECK_MESSAGE(validateMasternodeIP(ipStr), ipStr);
+        BOOST_CHECK_MESSAGE(validateGamemasterIP(ipStr), ipStr);
     for (const std::string& ipStr : validTor)
-        BOOST_CHECK_MESSAGE(validateMasternodeIP(ipStr), ipStr);
+        BOOST_CHECK_MESSAGE(validateGamemasterIP(ipStr), ipStr);
 
     std::list<std::string> invalidIPv4 = {"11.12.13.14.15", "11.12.13.330", "30.168.1.255.1", "192.168.1.1", "255.255.255.255"};
     std::list<std::string> invalidIPv6 = {"1111:2222:3333:4444:5555:6666:7777:8888:9999", "2002:cb0a:3cdd::1::1", "1111:2222:3333:::5555:6666:7777:8888"};
     std::list<std::string> invalidTor = {"5wyqrzbvrdsumnok.noonion"};
 
     for (const std::string& ipStr : invalidIPv4)
-        BOOST_CHECK_MESSAGE(!validateMasternodeIP(ipStr), ipStr);
+        BOOST_CHECK_MESSAGE(!validateGamemasterIP(ipStr), ipStr);
     for (const std::string& ipStr : invalidIPv6)
-        BOOST_CHECK_MESSAGE(!validateMasternodeIP(ipStr), ipStr);
+        BOOST_CHECK_MESSAGE(!validateGamemasterIP(ipStr), ipStr);
     for (const std::string& ipStr : invalidTor)
-        BOOST_CHECK_MESSAGE(!validateMasternodeIP(ipStr), ipStr);
+        BOOST_CHECK_MESSAGE(!validateGamemasterIP(ipStr), ipStr);
 }
 
 BOOST_AUTO_TEST_CASE(netbase_getgroup)

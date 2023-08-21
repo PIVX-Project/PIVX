@@ -36,7 +36,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
            ui->labelNumber_UnspendableHMS,
            ui->labelNumber_Stake,
            ui->labelNumber_Support,
-           ui->labelNumber_Masternode,
+           ui->labelNumber_Gamemaster,
            ui->labelNumber_MNController
         }, "container-number-faq");
 
@@ -45,7 +45,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
               ui->labelSubtitle_UnspendableHMS,
               ui->labelSubtitle_Stake,
               ui->labelSubtitle_Support,
-              ui->labelSubtitle_Masternode,
+              ui->labelSubtitle_Gamemaster,
               ui->labelSubtitle_MNController
             }, "text-subtitle-faq");
 
@@ -55,7 +55,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
               ui->labelContent_UnspendableHMS,
               ui->labelContent_Stake,
               ui->labelContent_Support,
-              ui->labelContent_Masternode,
+              ui->labelContent_Gamemaster,
               ui->labelContent_MNController
             }, "text-content-faq");
 
@@ -65,7 +65,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
               ui->pushButton_UnspendableHMS,
               ui->pushButton_Stake,
               ui->pushButton_Support,
-              ui->pushButton_Masternode,
+              ui->pushButton_Gamemaster,
               ui->pushButton_MNController
             }, "btn-faq-options");
 
@@ -83,7 +83,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
             tr("hemis utilizes a Proof of Stake (PoS) consensus system algorithm, "
                "allowing all owners of hemis to participate in earning block rewards "
                "while securing the network with full node wallets, as well as to "
-               "run Masternodes to create and vote on proposals.")));
+               "run Gamemasters to create and vote on proposals.")));
     ui->labelContent_Intro->setText(introContent);
 
     QString unspendableHMSContent = formatFAQContent(
@@ -116,9 +116,9 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
                 .arg("<a style='color: #b088ff' href='https://discord.hemis.org'>" + tr("#support in our Discord") + "</a>.")));
     ui->labelContent_Support->setText(supportContent);
 
-    QString masternodeContent = formatFAQContent(
+    QString gamemasterContent = formatFAQContent(
         formatFAQParagraph(
-            tr("A masternode is a computer running a full node %1 wallet with a "
+            tr("A gamemaster is a computer running a full node %1 wallet with a "
                "requirement of %2 secured collateral to provide extra services "
                "to the network and in return, receive a portion of the block reward "
                "regularly. These services include:")
@@ -130,32 +130,32 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
                 formatFAQListItem(tr("Validation of transactions within each block")) +
                 formatFAQListItem(tr("Act as an additional full node in the network")))) +
         formatFAQParagraph(
-            tr("For providing such services, masternodes are also paid a certain portion "
+            tr("For providing such services, gamemasters are also paid a certain portion "
                "of reward for each block. This can serve as a passive income to the "
-               "masternode owners minus their running cost.")) +
+               "gamemaster owners minus their running cost.")) +
         formatFAQParagraph(
-            tr("Masternode Perks:") +
+            tr("Gamemaster Perks:") +
             formatFAQUnorderedList(
                 formatFAQListItem(tr("Participate in hemis Governance")) +
-                formatFAQListItem(tr("Earn Masternode Rewards")) +
+                formatFAQListItem(tr("Earn Gamemaster Rewards")) +
                 formatFAQListItem(tr("Commodity option for future sale")) +
                 formatFAQListItem(tr("Help secure the hemis network")))) +
         formatFAQParagraph(
             tr("Requirements:") +
             formatFAQUnorderedList(
-                formatFAQListItem(tr("%1 per single Masternode instance")
+                formatFAQListItem(tr("%1 per single Gamemaster instance")
                         .arg(GUIUtil::formatBalance(mnModel->getMNCollateralRequiredAmount(), BitcoinUnits::HMS))) +
                 formatFAQListItem(tr("Must be stored in a core wallet")) +
                 formatFAQListItem(tr("Need dedicated IP address")) +
-                formatFAQListItem(tr("Masternode wallet to remain online")))));
-    ui->labelContent_Masternode->setText(masternodeContent);
+                formatFAQListItem(tr("Gamemaster wallet to remain online")))));
+    ui->labelContent_Gamemaster->setText(gamemasterContent);
 
     QString mNControllerContent = formatFAQContent(
         formatFAQParagraph(
-            tr("A Masternode Controller wallet is where the %1 collateral "
-               "can reside during a Controller-Remote masternode setup. It is a wallet "
-               "that can activate the remote masternode wallet(s) and allows you to keep "
-               "your collateral coins offline while the remote masternode remains online.")
+            tr("A Gamemaster Controller wallet is where the %1 collateral "
+               "can reside during a Controller-Remote gamemaster setup. It is a wallet "
+               "that can activate the remote gamemaster wallet(s) and allows you to keep "
+               "your collateral coins offline while the remote gamemaster remains online.")
                     .arg(GUIUtil::formatBalance(mnModel->getMNCollateralRequiredAmount(), BitcoinUnits::HMS))));
     ui->labelContent_MNController->setText(mNControllerContent);
 
@@ -173,7 +173,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
     connect(ui->pushButton_UnspendableHMS, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_UnspendableHMS);});
     connect(ui->pushButton_Stake, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_Stake);});
     connect(ui->pushButton_Support, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_Support);});
-    connect(ui->pushButton_Masternode, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_Masternode);});
+    connect(ui->pushButton_Gamemaster, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_Gamemaster);});
     connect(ui->pushButton_MNController, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_MNController);});
 
     if (parent)
@@ -211,7 +211,7 @@ std::vector<QPushButton*> SettingsFaqWidget::getButtons()
             ui->pushButton_UnspendableHMS,
             ui->pushButton_Stake,
             ui->pushButton_Support,
-            ui->pushButton_Masternode,
+            ui->pushButton_Gamemaster,
             ui->pushButton_MNController
     };
 }

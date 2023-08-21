@@ -58,10 +58,10 @@ Estimation of "priority" needed for a transaction to be included within a target
 
 The format for fee_estimates.dat has also changed to no longer save these priority estimates. It will automatically be converted to the new format which is not readable by prior versions of the software.
 
-Dedicated mnping logging category
+Dedicated gmping logging category
 ---------------------------------
 
-`mnping` related debug log messages have been moved to their own category of the same name. This is to reduce log spam when debugging with the `masternode` category enabled.
+`gmping` related debug log messages have been moved to their own category of the same name. This is to reduce log spam when debugging with the `gamemaster` category enabled.
 
 RPC Changes
 ------------
@@ -116,7 +116,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 ### GUI
  - #1754 `93d574170d` [Model] Wallet interface refactor + code cleanup. (furszy)
  - #1776 `2ad27b1407` [Model] TransactionRecord decomposeTransaction refactoring (furszy)
- - #1782 `ada4462782` [GUI] Start masternodes polling timer only when is needed. (furszy)
+ - #1782 `ada4462782` [GUI] Start gamemasters polling timer only when is needed. (furszy)
  - #1805 `f0cc6fcc38` [BUG][GUI] Don't append cold-stake records twice (random-zebra)
  - #1863 `ad15bce2f5` [Trivial][GUI] Fix init messages (random-zebra)
 
@@ -161,12 +161,12 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #1813 `259523cdc2` [CMake] Define MAC_OSX for cmake builds on macOS (Fuzzbawls)
  - #1823 `d675fa3a1a` [Travis] Lower the build timeout for the functional tests job (random-zebra)
 
-### Layer 2 (MN/Budget)
- - #1791 `6162df962b` [Masternodes] Missing cs main locks in CalculateScore and GetMasternodeInputAge (furszy)
- - #1803 `69ec4a3fdf` [Cleanup] masternode-budget tiny cleanup. (furszy)
- - #1825 `a06c0fd993` [MN] more cleanup over the tier two area. (furszy)
- - #1826 `961f5373bf` [Refactor] Masternode Budget first refactoring and cleanup (random-zebra)
- - #1843 `f4d5d34bed` [Bug] Update budget manager best height even if mnSync is incomplete (random-zebra)
+### Layer 2 (GM/Budget)
+ - #1791 `6162df962b` [Gamemasters] Missing cs main locks in CalculateScore and GetGamemasterInputAge (furszy)
+ - #1803 `69ec4a3fdf` [Cleanup] gamemaster-budget tiny cleanup. (furszy)
+ - #1825 `a06c0fd993` [GM] more cleanup over the tier two area. (furszy)
+ - #1826 `961f5373bf` [Refactor] Gamemaster Budget first refactoring and cleanup (random-zebra)
+ - #1843 `f4d5d34bed` [Bug] Update budget manager best height even if gmSync is incomplete (random-zebra)
 
 ### Miner/Block Generation
  - #1700 `40742084de` [Miner] Move coinbase & coinstake to P2PKH (furszy)
@@ -185,14 +185,14 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #1806 `b9f30f65f2` [Refactor] Cleanup access to chainActive in a few places (random-zebra)
  - #1808 `948e1a99c0` [Tests][Trivial] Remove mining in rpc_deprecated test (random-zebra)
  - #1820 `846dca7b83` [Cleanup] remove unneeded chainActive access. (furszy)
- - #1821 `4b3fb02dc3` [Cleanup] removing unused GetMasternodeByRank method (furszy)
- - #1822 `48d7475bd4` [Refactor] Dedicated logging category for masternode pings (random-zebra)
+ - #1821 `4b3fb02dc3` [Cleanup] removing unused GetGamemasterByRank method (furszy)
+ - #1822 `48d7475bd4` [Refactor] Dedicated logging category for gamemaster pings (random-zebra)
  - #1824 `6ec609f93d` [Cleanup] IsBlockValueValid refactored properly. (furszy)
  - #1827 `70bf7203ee` [Cleanup] removed null check comparison against a new object. (furszy)
- - #1833 `9c06e5d7ce` [Refactor] Remove GetInputAge and GetMasternodeInputAge (random-zebra)
+ - #1833 `9c06e5d7ce` [Refactor] Remove GetInputAge and GetGamemasterInputAge (random-zebra)
  - #1853 `e8d13ef4b0` [Cleanup] Removing unused and unneeded functions and members (furszy)
  - #1855 `3cd52771f2` [Bug] wrong reserveKey when committing budget/proposal collaterals (random-zebra)
- - #1860 `5aed03f6fe` [Bug] Missing mnping category added to logcategories (furszy)
+ - #1860 `5aed03f6fe` [Bug] Missing gmping category added to logcategories (furszy)
 
 ## Credits
 

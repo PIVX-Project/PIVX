@@ -205,7 +205,7 @@ bool GetTransaction(const uint256& hash, CTransactionRef& tx, uint256& hashBlock
 bool GetOutput(const uint256& hash, unsigned int index, CValidationState& state, CTxOut& out);
 
 double ConvertBitsToDouble(unsigned int nBits);
-int64_t GetMasternodePayment(int nHeight);
+int64_t GetGamemasterPayment(int nHeight);
 
 /** Find the best known block, and make it the tip of the block chain */
 bool ActivateBestChain(CValidationState& state, std::shared_ptr<const CBlock> pblock = std::shared_ptr<const CBlock>());

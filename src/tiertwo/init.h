@@ -8,8 +8,8 @@
 #include <string>
 #include "fs.h"
 
-static const bool DEFAULT_MASTERNODE  = false;
-static const bool DEFAULT_MNCONFLOCK = true;
+static const bool DEFAULT_GAMEMASTER  = false;
+static const bool DEFAULT_GMCONFLOCK = true;
 
 class CScheduler;
 namespace boost {
@@ -44,8 +44,8 @@ void DumpTierTwo();
 
 void SetBudgetFinMode(const std::string& mode);
 
-/** Initialize the active Masternode manager */
-bool InitActiveMN();
+/** Initialize the active Gamemaster manager */
+bool InitActiveGM();
 
 /** Starts tier two threads and jobs */
 void StartTierTwoThreadsAndScheduleJobs(boost::thread_group& threadGroup, CScheduler& scheduler);

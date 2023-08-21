@@ -53,7 +53,7 @@ ProposalInfo GovernanceModel::buildProposalInfo(const CBudgetProposal* prop, boo
     // Calculate status
     int votesYes = prop->GetYeas();
     int votesNo = prop->GetNays();
-    int mnCount = clientModel->getMasternodesCount();
+    int mnCount = clientModel->getGamemastersCount();
     int remainingPayments = prop->GetRemainingPaymentCount(clientModel->getLastBlockProcessedHeight());
     ProposalInfo::Status status;
 
@@ -152,7 +152,7 @@ int GovernanceModel::getNextSuperblockHeight() const
 
 std::vector<VoteInfo> GovernanceModel::getLocalMNsVotesForProposal(const ProposalInfo& propInfo)
 {
-    // First, get the local masternodes
+    // First, get the local gamemasters
     std::vector<std::pair<COutPoint, std::string>> vecLocalMn;
     for (int i = 0; i < mnModel->rowCount(); ++i) {
         vecLocalMn.emplace_back(std::make_pair(
@@ -165,7 +165,7 @@ std::vector<VoteInfo> GovernanceModel::getLocalMNsVotesForProposal(const Proposa
     std::vector<VoteInfo> localVotes;
     {
         LOCK(g_budgetman.cs_proposals); // future: encapsulate this mutex lock.
-        // Get the budget proposal, get the votes, then loop over it and return the ones that correspond to the local masternodes here.
+        // Get the budget proposal, get the votes, then loop over it and return the ones that correspond to the local gamemasters here.
         CBudgetProposal* prop = g_budgetman.FindProposal(propInfo.id);
         const auto& mapVotes = prop->GetVotes();
         for (const auto& it : mapVotes) {

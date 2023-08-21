@@ -14,7 +14,7 @@ Update enforcement is currently scheduled to go into effect at the following blo
 ```
 Mainnet: 2,700,500
 ```
-Masternodes will need to be restarted once both the masternode daemon and the controller wallet have been upgraded.
+Gamemasters will need to be restarted once both the gamemaster daemon and the controller wallet have been upgraded.
 
 Note: In preparation for the enforcement, upgraded peers will start rejecting non-upgraded peers few hours before the enforcement block height, we recommend everyone to be updated at max a day before the final time.
 
@@ -136,9 +136,9 @@ In order to support the Shield features, the wallet must be upgraded to `SAPLING
 
 Tier Two Network
 ----------------
-A large number of performance and stability improvements over the complete tier two network and masternodes sources have been performed. Re-writing, encapsulating and decoupling workflows, cleaning up an extensive number of redundancies and misalignment.
-Plus, tier two and masternodes capabilities have been introduced to regtest, enabling the local testing environment setup and the creation of a functional testing framework for the area.
-This work is directly correlated with a substantial efficiency improvement for the entire software, not only for masternodes, and is one of the building blocks for the new tier two network and sync protocol that will be continued post-v5.
+A large number of performance and stability improvements over the complete tier two network and gamemasters sources have been performed. Re-writing, encapsulating and decoupling workflows, cleaning up an extensive number of redundancies and misalignment.
+Plus, tier two and gamemasters capabilities have been introduced to regtest, enabling the local testing environment setup and the creation of a functional testing framework for the area.
+This work is directly correlated with a substantial efficiency improvement for the entire software, not only for gamemasters, and is one of the building blocks for the new tier two network and sync protocol that will be continued post-v5.
 
 Instant Proposal Removal:
 The threshold was increased to 30% of negative votes.
@@ -232,8 +232,8 @@ Several new RPC commands have been introduced to support SHIELD address and tran
 | `shieldsendmany` | Send to many recipients (Either transparent or SHIELD) | Yes |
 | `viewshieldtransaction` | Get detailed SHIELD information about an in-wallet transaction | Yes |
 | `getsupplyinfo` | Returns detailed HMS supply information | No |
-| `initmasternode` | Manually initialize the client as a masternode | No |
-| `getcachedblockhashes` | Return the block hashes cached in the masternode manager | No |
+| `initgamemaster` | Manually initialize the client as a gamemaster | No |
+| `getcachedblockhashes` | Return the block hashes cached in the gamemaster manager | No |
 
 Each new command is detailed below:
 
@@ -511,20 +511,20 @@ Each new command is detailed below:
     "totalsupply": n          (numeric) The sum of transparentsupply and shieldsupply
   }
   ```
-* `initmasternode`
+* `initgamemaster`
   ```
-  Initialize masternode on demand if it's not already initialized.
+  Initialize gamemaster on demand if it's not already initialized.
 
   Arguments:
-  1. masternodePrivKey          (string, required) The masternode private key.
-  2. masternodeAddr             (string, required) The IP:Port of this masternode.
+  1. gamemasterPrivKey          (string, required) The gamemaster private key.
+  2. gamemasterAddr             (string, required) The IP:Port of this gamemaster.
 
   Result:
-  success                      (string) if the masternode initialization succeeded.
+  success                      (string) if the gamemaster initialization succeeded.
   ```
 * `getcachedblockhashes`
   ```
-  Return the block hashes cached in the masternode manager
+  Return the block hashes cached in the gamemaster manager
 
   Result:
   [
@@ -578,16 +578,16 @@ Several RPC commands have had changes to their input arguments or output fields 
 * `getbudgetprojection`
   A typo in the JSON return fields has been corrected; `Alloted` and `TotalBudgetAlloted` have been renamed to `Allotted` and `TotalBudgetAllotted` respectively.
 
-* `mnfinalbudget show`
+* `gmfinalbudget show`
   The `strName` key of the JSON object, representing a finalized budget in the output list, has now the format `"main" (Hash)`. The object no longer has the `"Hash"` entry.
 
 * `sendtoaddress`/`sendmany`
   Shield addresses can be used as recipients. In this case the request is forwarded to `shieldsendmany` with first parameter set to `from_transparent`.
 
-* `startmasternode`
-  A new optional input argument (`reload_conf`) has been added to reload the client's `masternode.conf` file in real-time. This optional argument is only available when running `startmasternode` with "alias" being specified as the first argument.
+* `startgamemaster`
+  A new optional input argument (`reload_conf`) has been added to reload the client's `gamemaster.conf` file in real-time. This optional argument is only available when running `startgamemaster` with "alias" being specified as the first argument.
 
-* `decodemasternodebroadcast`
+* `decodegamemasterbroadcast`
   The `nlastdsq` JSON return entry has been removed. This was a remnant from pre-zerocoin "CoinJoin" mixing.
 
 * `getinfo`
@@ -719,7 +719,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #2011 `e79fbccc97` [Bug][GUI] memo not reset after hitting reset button (random-zebra)
 - #2017 `0fe1242ee6` [GUI] Guard shielded flows pre-v5 enforcement (furszy)
 - #2025 `2768e98dc6` [GUI] Cold staking screen, hide memo entry button. (furszy)
-- #2030 `f3a753d4c8` [GUI] Workaround to the MN MISSING/REMOVE labeling (furszy)
+- #2030 `f3a753d4c8` [GUI] Workaround to the GM MISSING/REMOVE labeling (furszy)
 - #2033 `5b252c059f` [GUI][Trivial] Adjust CoinControl column widths for readability (Ambassador)
 - #2035 `f06f2cbf24` [Bug][GUI] TxDetail dialog memo: plain text edit + copy button (furszy)
 - #2037 `17a39c0c1e` [GUI] Address generation error on locked wallets fix plus extra corrections. (furszy)
@@ -744,7 +744,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #1814 `2018fca21d` [Core][Wallet] Sapling transaction primitive data. (furszy)
 - #1819 `b6562473aa` [Wallet] Address book encapsulation. (furszy)
 - #1850 `9520ee370b` [wallet] Extra GetTransaction call in stakeable coins selection flow removed. (furszy)
-- #1868 `fb94ca77d4` [wallet] GetMasternodeVinAndKeys wasn't locking cs_wallet to obtain the collateral. (furszy)
+- #1868 `fb94ca77d4` [wallet] GetGamemasterVinAndKeys wasn't locking cs_wallet to obtain the collateral. (furszy)
 - #1884 `ee1be563a2` [Wallet] Sapling keys management final round. (furszy)
 - #1911 `c9f16d09ad` [Wallet] Kill Accounts (Fuzzbawls)
 - #1918 `638c146a8f` [Wallet] Sapling notes, nullifiers and witnesses management. (furszy)
@@ -769,12 +769,12 @@ Detailed release notes follow. This overview includes changes that affect behavi
 ### RPC
 - #1869 `525a45a3a9` [RPC] Update univalue and unify JSON obj pushes (Fuzzbawls)
 - #1878 `7bba3947af` [Core][RPC][Bug] Use sum of utxo values as money supply (random-zebra)
-- #1894 `f02fcc1b9a` [RPC][Bug] Fix 'mnfinalbudget show' returning a single budget (random-zebra)
+- #1894 `f02fcc1b9a` [RPC][Bug] Fix 'gmfinalbudget show' returning a single budget (random-zebra)
 - #1906 `051719e2af` [RPC] Cache money supply on memory. Introduce getsupplyinfo (random-zebra)
 - #1909 `48e3c91e8c` [Bug][RPC] Guard RPC server during warm-up (random-zebra)
 - #1926 `ab460a523f` [RPC][Refactor] Register calls where they are defined (Fuzzbawls)
 - #1927 `bf04df311e` [RPC] Add additional warning to dumpwallet result object (Fuzzbawls)
-- #1930 `2dc9704ba2` [RPC] Speeding up listmasternodes command (furszy)
+- #1930 `2dc9704ba2` [RPC] Speeding up listgamemasters command (furszy)
 - #1949 `d36963415d` [Bug][RPC] Add missing lock in sendrawtransaction (random-zebra)
 - #1964 `a0afd9f625` [RPC] shielded_sendmany from multiple sources + raw_shielded_sendmany (random-zebra)
 - #1965 `56b133f283` [RPC][Tests] Add sapling mempool test + getbestsaplinganchor (random-zebra)
@@ -795,30 +795,30 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #2119 `cf043ad47d` [RPC] Fix inconsistencies in outputs (Fuzzbawls)
 - #2120 `2a736a89a4` [RPC] Update Sapling HD chain seed with sethdseed (random-zebra)
 
-### Masternodes/Budget
-- #1829 `0adce3cbb7` [Masternodes] Tier two network sync new architecture, regtest support + MN activation functional test. (furszy)
-- #1834 `9d5f5952e0` [Masternodes] CActiveMasternode::ManageStatus remove unneded GetAvailableBalance check (furszy)
-- #1842 `41927dfe6c` [Refactoring] Faster mn Check() - remove AcceptableInputs (random-zebra)
+### Gamemasters/Budget
+- #1829 `0adce3cbb7` [Gamemasters] Tier two network sync new architecture, regtest support + GM activation functional test. (furszy)
+- #1834 `9d5f5952e0` [Gamemasters] CActiveGamemaster::ManageStatus remove unneded GetAvailableBalance check (furszy)
+- #1842 `41927dfe6c` [Refactoring] Faster gm Check() - remove AcceptableInputs (random-zebra)
 - #1844 `7196a35651` [Refactoring] Budget, round 2: review locks (random-zebra)
 - #1845 `f152deed36` [Refactoring] Budget, round 3: split UpdateValid checks for proposals / finalized budgets (random-zebra)
 - #1851 `24c9dbf38e` [Refactoring] Budget, round 4: remove Broadcast classes (random-zebra)
 - #1855 `3cd52771f2` [Bug] wrong reserveKey when committing budget/proposal collaterals (random-zebra)
 - #1858 `951470bd43` [Refactoring] Budget, round 5: proposals/budgets FeeTX indexes (random-zebra)
-- #1861 `8f37bcccc3` [Refactoring] Budget, round 6: masternode vote for finalized budgets (random-zebra)
-- #1862 `70c1fd1981` [Refactoring] Budget, round 7: split masternode-budget files (random-zebra)
-- #1886 `db9b0933d5` [Masternodes] dead end over the activation process. (furszy)
+- #1861 `8f37bcccc3` [Refactoring] Budget, round 6: gamemaster vote for finalized budgets (random-zebra)
+- #1862 `70c1fd1981` [Refactoring] Budget, round 7: split gamemaster-budget files (random-zebra)
+- #1886 `db9b0933d5` [Gamemasters] dead end over the activation process. (furszy)
 - #1891 `5b9f25e5f9` [Bug] Set budget best height before reading budget DB during init (random-zebra)
 - #1968 `47916129bc` [TierTwo] Missing misbehaving + ban score not introduced on the new msg dispatcher flow (furszy)
-- #2006 `9ce3fec43c` [Refactor] Masternode activeState on-demand (random-zebra)
+- #2006 `9ce3fec43c` [Refactor] Gamemaster activeState on-demand (random-zebra)
 - #2023 `f9a29a9205` [Bug] Fix lock order issue with CMMan::CheckAndRemove and CMPayments::CleanPaymentList (random-zebra)
 - #2024 `a307a26eb6` [Bug] GetLastPaid/SecondsSincePayment locking cs_main (random-zebra)
-- #2031 `e7fcab0019` [Masternodes] remove recursive lock in CMasternode::Status() (random-zebra)
+- #2031 `e7fcab0019` [Gamemasters] remove recursive lock in CGamemaster::Status() (random-zebra)
 - #2045 `1617f9d347` [TierTwo] Remove unneeded extra logging. (furszy)
-- #2056 `945044c740` [Masternode] Encapsulate global and do not parse privkey redundantly everywhere. (furszy)
-- #2060 `c246834912` [Bug][MN] Immediately detect forked masternodes (random-zebra)
+- #2056 `945044c740` [Gamemaster] Encapsulate global and do not parse privkey redundantly everywhere. (furszy)
+- #2060 `c246834912` [Bug][GM] Immediately detect forked gamemasters (random-zebra)
 - #2068 `6db9e9c189` [Consensus] Budget: Fix instant killing of proposals (random-zebra)
-- #2084 `11606ee0d4` [BUG][Masternode] Miner not paying valid finalized budget if <20 active masternodes (random-zebra)
-- #2103 `7a1837eb58` [Startup] Do not block local peer port selection for Masternodes running over tor. (furszy)
+- #2084 `11606ee0d4` [BUG][Gamemaster] Miner not paying valid finalized budget if <20 active gamemasters (random-zebra)
+- #2103 `7a1837eb58` [Startup] Do not block local peer port selection for Gamemasters running over tor. (furszy)
 
 ### Core
 - #1798 `21fdc49327` [Core][Wallet] Sapling Integration: Chain + Wallet transaction manager. (furszy)
@@ -831,7 +831,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #1888 `d7bb310f0c` [Bug] Fix regression with emplace_back on cold-staking scripts (random-zebra)
 - #1890 `bec361e86f` [Bug][Script] Add fColdStaking boolean argument to IsSolvable (random-zebra)
 - #1903 `f1b9b42046` [Sapling] Anchors and nullifiers integrated into the chain state view layered cache. (furszy)
-- #1904 `92035f80fe` [Validation] Introduce rolling cache for block hashes in masternode manager (random-zebra)
+- #1904 `92035f80fe` [Validation] Introduce rolling cache for block hashes in gamemaster manager (random-zebra)
 - #1910 `d28fef17c7` [Validation] v8 blocks, Sapling merkle tree inclusion. (furszy)
 - #1912 `ba9c3eec06` [Sapling] Sapling transaction: builder, sapData net validation and builder unit tests coverage (furszy)
 - #1913 `0a820797fb` [Mempool] Add tags to mempool's mapTx indices (Suhas Daftuar)
@@ -858,7 +858,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #1993 `e576a1fc99` [Validation] v5 zerocoin final deprecation. (furszy)
 - #1994 `78726e46f3` [Consensus] Bump active protocol version to 70920 (furszy)
 - #1998 `547d60690e` [Bug] g_IsSapling active flag during reindex (random-zebra)
-- #2000 `0756462149` [Core] Masternode collateral index (furszy)
+- #2000 `0756462149` [Core] Gamemaster collateral index (furszy)
 - #2009 `3ec4f66a8b` [Trivial] constant functions in SaplingScriptPubKeyMan (random-zebra)
 - #2034 `5b02228cf4` [SSPKM] Crash fix, external notes witness decrement (furszy)
 - #2038 `27bd2dcd33` [Consensus] Set final enforcement height for V5 on Testnet (random-zebra)
@@ -929,7 +929,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #1898 `4edb8c5d8e` [Refactor] Pass previous index from AcceptBlock to AcceptBlockHeader (random-zebra)
 - #1901 `443318460f` [Backport] test: remove glibc fdelt sanity check (furszy)
 - #1905 `ea5f85e071` [Cleanup] removing unused mapRelay and cs_mapRelay. (furszy)
-- #1922 `2d86a41951` [Refactor] Strip out cs_main lock for misbehaving from Masternodeman:ProcessMessage (furszy)
+- #1922 `2d86a41951` [Refactor] Strip out cs_main lock for misbehaving from Gamemasterman:ProcessMessage (furszy)
 - #1924 `65c493313e` [Cleanup] Remove unconfirmed/immature zerocoin balance calculations (random-zebra)
 - #1932 `f092c28c76` [Trivial] Remove unused var in SaplingSPKM::AddSaplingSpendingKey (random-zebra)
 - #1933 `79f15c6141` [Cleanup] Remove duplicate header includes (Fuzzbawls)
@@ -941,7 +941,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
 - #2061 `7082d8899c` [Trivial] Add Zcash copyright statement (random-zebra)
 
 ### Docs/Output
-- #1860 `5aed03f6fe` [Logs] Missing mnping category added to logcategories (furszy)
+- #1860 `5aed03f6fe` [Logs] Missing gmping category added to logcategories (furszy)
 - #2032 `18a91240f6` [Doc] Windows WSL build recommendation to temporarily disable Win32 PE support (Aaron Clauson)
 - #2095 `b9ed70ea5b` [Doc] Main readme re-written (furszy)
 

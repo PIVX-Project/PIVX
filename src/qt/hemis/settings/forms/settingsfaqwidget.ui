@@ -249,7 +249,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="pushButton_Masternode">
+                    <widget class="QPushButton" name="pushButton_Gamemaster">
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
@@ -260,7 +260,7 @@
                       <enum>Qt::NoFocus</enum>
                      </property>
                      <property name="text">
-                      <string>5) What is a Masternode?</string>
+                      <string>5) What is a Gamemaster?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -282,7 +282,7 @@
                       <enum>Qt::NoFocus</enum>
                      </property>
                      <property name="text">
-                      <string>6) What is a Masternode Controller?</string>
+                      <string>6) What is a Gamemaster Controller?</string>
                      </property>
                      <property name="checkable">
                       <bool>true</bool>
@@ -823,10 +823,10 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QWidget" name="widget_Masternode" native="true">
-                   <layout class="QHBoxLayout" name="horizontalpage_Masternode" stretch="0,1">
+                  <widget class="QWidget" name="widget_Gamemaster" native="true">
+                   <layout class="QHBoxLayout" name="horizontalpage_Gamemaster" stretch="0,1">
                     <item alignment="Qt::AlignTop">
-                     <widget class="QLabel" name="labelNumber_Masternode">
+                     <widget class="QLabel" name="labelNumber_Gamemaster">
                       <property name="minimumSize">
                        <size>
                         <width>24</width>
@@ -848,7 +848,7 @@
                      </widget>
                     </item>
                     <item>
-                     <layout class="QVBoxLayout" name="verticalLayoutpage_Masternode">
+                     <layout class="QVBoxLayout" name="verticalLayoutpage_Gamemaster">
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
@@ -856,9 +856,9 @@
                        <number>20</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="labelSubtitle_Masternode">
+                       <widget class="QLabel" name="labelSubtitle_Gamemaster">
                         <property name="text">
-                         <string>What is a Masternode?</string>
+                         <string>What is a Gamemaster?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>
@@ -866,7 +866,7 @@
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer1_Masternode">
+                       <spacer name="verticalSpacer1_Gamemaster">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -882,7 +882,7 @@
                        </spacer>
                       </item>
                       <item>
-                       <widget class="QLabel" name="labelContent_Masternode">
+                       <widget class="QLabel" name="labelContent_Gamemaster">
                         <property name="text">
                          <string notr="true">N/A</string>
                         </property>
@@ -895,7 +895,7 @@
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer2_Masternode">
+                       <spacer name="verticalSpacer2_Gamemaster">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -948,7 +948,7 @@
                       <item>
                        <widget class="QLabel" name="labelSubtitle_MNController">
                         <property name="text">
-                         <string>What is a Masternode Controller?</string>
+                         <string>What is a Gamemaster Controller?</string>
                         </property>
                         <property name="wordWrap">
                          <bool>true</bool>

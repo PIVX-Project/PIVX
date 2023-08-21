@@ -3,27 +3,27 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MASTERNODE_PAYMENTS_H
-#define MASTERNODE_PAYMENTS_H
+#ifndef GAMEMASTER_PAYMENTS_H
+#define GAMEMASTER_PAYMENTS_H
 
 #include "key.h"
-#include "masternode.h"
+#include "gamemaster.h"
 #include "validationinterface.h"
 
 
 extern RecursiveMutex cs_vecPayments;
-extern RecursiveMutex cs_mapMasternodeBlocks;
-extern RecursiveMutex cs_mapMasternodePayeeVotes;
+extern RecursiveMutex cs_mapGamemasterBlocks;
+extern RecursiveMutex cs_mapGamemasterPayeeVotes;
 
-class CMasternodePayments;
-class CMasternodePaymentWinner;
-class CMasternodeBlockPayees;
+class CGamemasterPayments;
+class CGamemasterPaymentWinner;
+class CGamemasterBlockPayees;
 class CValidationState;
 
-extern CMasternodePayments masternodePayments;
+extern CGamemasterPayments gamemasterPayments;
 
-#define MNPAYMENTS_SIGNATURES_REQUIRED 6
-#define MNPAYMENTS_SIGNATURES_TOTAL 10
+#define GMPAYMENTS_SIGNATURES_REQUIRED 6
+#define GMPAYMENTS_SIGNATURES_TOTAL 10
 
 bool IsBlockPayeeValid(const CBlock& block, const CBlockIndex* pindexPrev);
 std::string GetRequiredPaymentsString(int nBlockHeight);
@@ -32,15 +32,15 @@ void FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoin
 
 /**
  * Check coinbase output value for blocks after v6.0 enforcement.
- * It must pay the masternode for regular blocks and a proposal during superblocks.
+ * It must pay the gamemaster for regular blocks and a proposal during superblocks.
  */
 bool IsCoinbaseValueValid(const CTransactionRef& tx, CAmount nBudgetAmt, CValidationState& _state);
 
-void DumpMasternodePayments();
+void DumpGamemasterPayments();
 
-/** Save Masternode Payment Data (mnpayments.dat)
+/** Save Gamemaster Payment Data (gmpayments.dat)
  */
-class CMasternodePaymentDB
+class CGamemasterPaymentDB
 {
 private:
     fs::path pathDB;
@@ -57,45 +57,45 @@ public:
         IncorrectFormat
     };
 
-    CMasternodePaymentDB();
-    bool Write(const CMasternodePayments& objToSave);
-    ReadResult Read(CMasternodePayments& objToLoad);
+    CGamemasterPaymentDB();
+    bool Write(const CGamemasterPayments& objToSave);
+    ReadResult Read(CGamemasterPayments& objToLoad);
 };
 
-class CMasternodePayee
+class CGamemasterPayee
 {
 public:
     CScript scriptPubKey;
     int nVotes;
 
-    CMasternodePayee()
+    CGamemasterPayee()
     {
         scriptPubKey = CScript();
         nVotes = 0;
     }
 
-    CMasternodePayee(CScript payee, int nVotesIn)
+    CGamemasterPayee(CScript payee, int nVotesIn)
     {
         scriptPubKey = payee;
         nVotes = nVotesIn;
     }
 
-    SERIALIZE_METHODS(CMasternodePayee, obj) { READWRITE(obj.scriptPubKey, obj.nVotes); }
+    SERIALIZE_METHODS(CGamemasterPayee, obj) { READWRITE(obj.scriptPubKey, obj.nVotes); }
 };
 
-// Keep track of votes for payees from masternodes
-class CMasternodeBlockPayees
+// Keep track of votes for payees from gamemasters
+class CGamemasterBlockPayees
 {
 public:
     int nBlockHeight;
-    std::vector<CMasternodePayee> vecPayments;
+    std::vector<CGamemasterPayee> vecPayments;
 
-    CMasternodeBlockPayees()
+    CGamemasterBlockPayees()
     {
         nBlockHeight = 0;
         vecPayments.clear();
     }
-    CMasternodeBlockPayees(int nBlockHeightIn)
+    CGamemasterBlockPayees(int nBlockHeightIn)
     {
         nBlockHeight = nBlockHeightIn;
         vecPayments.clear();
@@ -105,14 +105,14 @@ public:
     {
         LOCK(cs_vecPayments);
 
-        for (CMasternodePayee& payee : vecPayments) {
+        for (CGamemasterPayee& payee : vecPayments) {
             if (payee.scriptPubKey == payeeIn) {
                 payee.nVotes += nIncrement;
                 return;
             }
         }
 
-        CMasternodePayee c(payeeIn, nIncrement);
+        CGamemasterPayee c(payeeIn, nIncrement);
         vecPayments.push_back(c);
     }
 
@@ -121,7 +121,7 @@ public:
         LOCK(cs_vecPayments);
 
         int nVotes = -1;
-        for (const CMasternodePayee& p : vecPayments) {
+        for (const CGamemasterPayee& p : vecPayments) {
             if (p.nVotes > nVotes) {
                 payee = p.scriptPubKey;
                 nVotes = p.nVotes;
@@ -135,7 +135,7 @@ public:
     {
         LOCK(cs_vecPayments);
 
-        for (CMasternodePayee& p : vecPayments) {
+        for (CGamemasterPayee& p : vecPayments) {
             if (p.nVotes >= nVotesReq && p.scriptPubKey == payee) return true;
         }
 
@@ -145,27 +145,27 @@ public:
     bool IsTransactionValid(const CTransaction& txNew, int nBlockHeight);
     std::string GetRequiredPaymentsString();
 
-    SERIALIZE_METHODS(CMasternodeBlockPayees, obj) { READWRITE(obj.nBlockHeight, obj.vecPayments); }
+    SERIALIZE_METHODS(CGamemasterBlockPayees, obj) { READWRITE(obj.nBlockHeight, obj.vecPayments); }
 };
 
 // for storing the winning payments
-class CMasternodePaymentWinner : public CSignedMessage
+class CGamemasterPaymentWinner : public CSignedMessage
 {
 public:
-    CTxIn vinMasternode;
+    CTxIn vinGamemaster;
     int nBlockHeight;
     CScript payee;
 
-    CMasternodePaymentWinner() :
+    CGamemasterPaymentWinner() :
         CSignedMessage(),
-        vinMasternode(),
+        vinGamemaster(),
         nBlockHeight(0),
         payee()
     {}
 
-    CMasternodePaymentWinner(const CTxIn& vinIn, int nHeight):
+    CGamemasterPaymentWinner(const CTxIn& vinIn, int nHeight):
         CSignedMessage(),
-        vinMasternode(vinIn),
+        vinGamemaster(vinIn),
         nBlockHeight(nHeight),
         payee()
     {}
@@ -175,7 +175,7 @@ public:
     // override CSignedMessage functions
     uint256 GetSignatureHash() const override { return GetHash(); }
     std::string GetStrMessage() const override;
-    CTxIn GetVin() const { return vinMasternode; };
+    CTxIn GetVin() const { return vinGamemaster; };
 
     bool IsValid(CNode* pnode, CValidationState& state, int chainHeight);
     void Relay();
@@ -185,12 +185,12 @@ public:
         payee = payeeIn;
     }
 
-    SERIALIZE_METHODS(CMasternodePaymentWinner, obj) { READWRITE(obj.vinMasternode, obj.nBlockHeight, obj.payee, obj.vchSig, obj.nMessVersion); }
+    SERIALIZE_METHODS(CGamemasterPaymentWinner, obj) { READWRITE(obj.vinGamemaster, obj.nBlockHeight, obj.payee, obj.vchSig, obj.nMessVersion); }
 
     std::string ToString()
     {
         std::string ret = "";
-        ret += vinMasternode.ToString();
+        ret += vinGamemaster.ToString();
         ret += ", " + std::to_string(nBlockHeight);
         ret += ", " + HexStr(payee);
         ret += ", " + std::to_string((int)vchSig.size());
@@ -199,63 +199,63 @@ public:
 };
 
 //
-// Masternode Payments Class
+// Gamemaster Payments Class
 // Keeps track of who should get paid for which blocks
 //
 
-class CMasternodePayments : public CValidationInterface
+class CGamemasterPayments : public CValidationInterface
 {
 private:
     int nLastBlockHeight;
 
 public:
-    std::map<uint256, CMasternodePaymentWinner> mapMasternodePayeeVotes;
-    std::map<int, CMasternodeBlockPayees> mapMasternodeBlocks;
+    std::map<uint256, CGamemasterPaymentWinner> mapGamemasterPayeeVotes;
+    std::map<int, CGamemasterBlockPayees> mapGamemasterBlocks;
 
-    CMasternodePayments()
+    CGamemasterPayments()
     {
         nLastBlockHeight = 0;
     }
 
     void Clear()
     {
-        LOCK2(cs_mapMasternodeBlocks, cs_mapMasternodePayeeVotes);
-        mapMasternodeBlocks.clear();
-        mapMasternodePayeeVotes.clear();
+        LOCK2(cs_mapGamemasterBlocks, cs_mapGamemasterPayeeVotes);
+        mapGamemasterBlocks.clear();
+        mapGamemasterPayeeVotes.clear();
     }
 
     void UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload) override;
 
-    void AddWinningMasternode(CMasternodePaymentWinner& winner);
+    void AddWinningGamemaster(CGamemasterPaymentWinner& winner);
     void ProcessBlock(int nBlockHeight);
 
     void Sync(CNode* node, int nCountNeeded);
-    void CleanPaymentList(int mnCount, int nHeight);
+    void CleanPaymentList(int gmCount, int nHeight);
 
-    // get the masternode payment outs for block built on top of pindexPrev
-    bool GetMasternodeTxOuts(const CBlockIndex* pindexPrev, std::vector<CTxOut>& voutMasternodePaymentsRet) const;
+    // get the gamemaster payment outs for block built on top of pindexPrev
+    bool GetGamemasterTxOuts(const CBlockIndex* pindexPrev, std::vector<CTxOut>& voutGamemasterPaymentsRet) const;
 
-    // can be removed after transition to DMN
-    bool GetLegacyMasternodeTxOut(int nHeight, std::vector<CTxOut>& voutMasternodePaymentsRet) const;
+    // can be removed after transition to DGM
+    bool GetLegacyGamemasterTxOut(int nHeight, std::vector<CTxOut>& voutGamemasterPaymentsRet) const;
     bool GetBlockPayee(int nBlockHeight, CScript& payee) const;
 
     bool IsTransactionValid(const CTransaction& txNew, const CBlockIndex* pindexPrev);
-    bool IsScheduled(const CMasternode& mn, int nNotBlockHeight);
+    bool IsScheduled(const CGamemaster& gm, int nNotBlockHeight);
 
-    bool ProcessMNWinner(CMasternodePaymentWinner& winner, CNode* pfrom, CValidationState& state);
-    bool ProcessMessageMasternodePayments(CNode* pfrom, std::string& strCommand, CDataStream& vRecv, CValidationState& state);
+    bool ProcessGMWinner(CGamemasterPaymentWinner& winner, CNode* pfrom, CValidationState& state);
+    bool ProcessMessageGamemasterPayments(CNode* pfrom, std::string& strCommand, CDataStream& vRecv, CValidationState& state);
     std::string GetRequiredPaymentsString(int nBlockHeight);
     void FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const CBlockIndex* pindexPrev, bool fProofOfStake) const;
     std::string ToString() const;
 
-    SERIALIZE_METHODS(CMasternodePayments, obj) { READWRITE(obj.mapMasternodePayeeVotes, obj.mapMasternodeBlocks); }
+    SERIALIZE_METHODS(CGamemasterPayments, obj) { READWRITE(obj.mapGamemasterPayeeVotes, obj.mapGamemasterBlocks); }
 
 private:
-    // keep track of last voted height for mnw signers
-    std::map<COutPoint, int> mapMasternodesLastVote; //prevout, nBlockHeight
+    // keep track of last voted height for gmw signers
+    std::map<COutPoint, int> mapGamemastersLastVote; //prevout, nBlockHeight
 
-    bool CanVote(const COutPoint& outMasternode, int nBlockHeight) const;
-    void RecordWinnerVote(const COutPoint& outMasternode, int nBlockHeight);
+    bool CanVote(const COutPoint& outGamemaster, int nBlockHeight) const;
+    void RecordWinnerVote(const COutPoint& outGamemaster, int nBlockHeight);
 };
 
 

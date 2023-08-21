@@ -13,7 +13,7 @@
 
 
 //
-// CFinalizedBudgetVote - Allow a masternode node to vote and broadcast throughout the network
+// CFinalizedBudgetVote - Allow a gamemaster node to vote and broadcast throughout the network
 //
 
 class CFinalizedBudgetVote : public CSignedMessage

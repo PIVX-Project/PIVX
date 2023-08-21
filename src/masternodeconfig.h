@@ -3,20 +3,20 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SRC_MASTERNODECONFIG_H_
-#define SRC_MASTERNODECONFIG_H_
+#ifndef SRC_GAMEMASTERCONFIG_H_
+#define SRC_GAMEMASTERCONFIG_H_
 
 #include "sync.h"
 #include <string>
 #include <vector>
 
-class CMasternodeConfig;
-extern CMasternodeConfig masternodeConfig;
+class CGamemasterConfig;
+extern CGamemasterConfig gamemasterConfig;
 
-class CMasternodeConfig
+class CGamemasterConfig
 {
 public:
-    class CMasternodeEntry
+    class CGamemasterEntry
     {
     private:
         std::string alias;
@@ -26,7 +26,7 @@ public:
         std::string outputIndex;
 
     public:
-        CMasternodeEntry(std::string& _alias, std::string& _ip, std::string& _privKey, std::string& _txHash, std::string& _outputIndex) :
+        CGamemasterEntry(std::string& _alias, std::string& _ip, std::string& _privKey, std::string& _txHash, std::string& _outputIndex) :
             alias(_alias), ip(_ip), privKey(_privKey), txHash(_txHash), outputIndex(_outputIndex) { }
 
         const std::string& getAlias() const { return alias; }
@@ -37,14 +37,14 @@ public:
         const std::string& getIp() const { return ip; }
     };
 
-    CMasternodeConfig() { entries = std::vector<CMasternodeEntry>(); }
+    CGamemasterConfig() { entries = std::vector<CGamemasterEntry>(); }
 
     void clear() { LOCK(cs_entries); entries.clear(); }
     bool read(std::string& strErr);
-    CMasternodeConfig::CMasternodeEntry* add(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex);
+    CGamemasterConfig::CGamemasterEntry* add(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex);
     void remove(std::string alias);
 
-    std::vector<CMasternodeEntry> getEntries() { LOCK(cs_entries); return entries; }
+    std::vector<CGamemasterEntry> getEntries() { LOCK(cs_entries); return entries; }
 
     int getCount()
     {
@@ -57,9 +57,9 @@ public:
     }
 
 private:
-    std::vector<CMasternodeEntry> entries;
+    std::vector<CGamemasterEntry> entries;
     Mutex cs_entries;
 };
 
 
-#endif /* SRC_MASTERNODECONFIG_H_ */
+#endif /* SRC_GAMEMASTERCONFIG_H_ */

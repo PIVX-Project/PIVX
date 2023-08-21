@@ -32,7 +32,7 @@ class hemis_RPCSporkTest(HemisTestFramework):
     def run_test(self):
         self.log_title()
         set_node_times(self.nodes, self.mocktime)
-        sporkName = "SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT"
+        sporkName = "SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT"
 
         # 0 - check SPORK 8 status from node 1 (must be inactive)
         assert_equal(False, self.is_spork_active(1, sporkName))

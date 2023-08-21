@@ -139,7 +139,7 @@
       <item alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="labelSubtitle">
         <property name="text">
-         <string>Select vote direction and the masternodes that will vote for it</string>
+         <string>Select vote direction and the gamemasters that will vote for it</string>
         </property>
        </widget>
       </item>
@@ -410,12 +410,12 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="btnSelectMasternodes">
+       <widget class="QPushButton" name="btnSelectGamemasters">
         <property name="cursor">
          <cursorShape>PointingHandCursor</cursorShape>
         </property>
         <property name="text">
-         <string>Select Voting Masternodes</string>
+         <string>Select Voting Gamemasters</string>
         </property>
        </widget>
       </item>

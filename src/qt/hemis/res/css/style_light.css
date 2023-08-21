@@ -3541,7 +3541,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
 
 *[cssClass="img-empty-master"] {
-    qproperty-icon: url("://img-empty-masternode");
+    qproperty-icon: url("://img-empty-gamemaster");
     qproperty-iconSize: 100px 100px;
     background-color: transparent;
 }

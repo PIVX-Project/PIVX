@@ -29,11 +29,11 @@ QT_FORMS_UI = \
   qt/hemis/forms/dashboardwidget.ui \
   qt/hemis/forms/addresslabelrow.ui \
   qt/hemis/forms/contactdropdownrow.ui \
-  qt/hemis/forms/mninfodialog.ui \
+  qt/hemis/forms/gminfodialog.ui \
   qt/hemis/forms/optionbutton.ui \
-  qt/hemis/forms/masternodewizarddialog.ui \
-  qt/hemis/forms/mnrow.ui \
-  qt/hemis/forms/masternodeswidget.ui \
+  qt/hemis/forms/gamemasterwizarddialog.ui \
+  qt/hemis/forms/gmrow.ui \
+  qt/hemis/forms/gamemasterswidget.ui \
   qt/hemis/forms/myaddressrow.ui \
   qt/hemis/forms/csrow.ui \
   qt/hemis/forms/sendmemodialog.ui \
@@ -50,7 +50,7 @@ QT_FORMS_UI = \
   qt/hemis/forms/defaultdialog.ui \
   qt/hemis/forms/coldstakingwidget.ui \
   qt/hemis/forms/proposalcard.ui \
-  qt/hemis/forms/mnselectiondialog.ui \
+  qt/hemis/forms/gmselectiondialog.ui \
   qt/hemis/forms/votedialog.ui \
   qt/hemis/forms/createproposaldialog.ui \
   qt/hemis/forms/proposalinfodialog.ui \
@@ -116,13 +116,13 @@ QT_MOC_CPP = \
   qt/hemis/moc_dashboardwidget.cpp \
   qt/hemis/moc_addresslabelrow.cpp \
   qt/hemis/moc_contactdropdownrow.cpp \
-  qt/hemis/moc_mninfodialog.cpp \
+  qt/hemis/moc_gminfodialog.cpp \
   qt/hemis/moc_optionbutton.cpp \
   qt/hemis/moc_coldstakingmodel.cpp \
-  qt/hemis/moc_mnmodel.cpp \
-  qt/hemis/moc_masternodewizarddialog.cpp \
-  qt/hemis/moc_mnrow.cpp \
-  qt/hemis/moc_masternodeswidget.cpp \
+  qt/hemis/moc_gmmodel.cpp \
+  qt/hemis/moc_gamemasterwizarddialog.cpp \
+  qt/hemis/moc_gmrow.cpp \
+  qt/hemis/moc_gamemasterswidget.cpp \
   qt/hemis/moc_myaddressrow.cpp \
   qt/hemis/moc_csrow.cpp \
   qt/hemis/moc_contactsdropdown.cpp \
@@ -140,7 +140,7 @@ QT_MOC_CPP = \
   qt/hemis/moc_defaultdialog.cpp \
   qt/hemis/moc_coldstakingwidget.cpp \
   qt/hemis/moc_proposalcard.cpp \
-  qt/hemis/moc_mnselectiondialog.cpp \
+  qt/hemis/moc_gmselectiondialog.cpp \
   qt/hemis/moc_votedialog.cpp \
   qt/hemis/moc_createproposaldialog.cpp \
   qt/hemis/moc_proposalinfodialog.cpp \
@@ -232,13 +232,13 @@ BITCOIN_QT_H = \
   qt/hemis/dashboardwidget.h \
   qt/hemis/addresslabelrow.h \
   qt/hemis/contactdropdownrow.h \
-  qt/hemis/mninfodialog.h \
+  qt/hemis/gminfodialog.h \
   qt/hemis/optionbutton.h \
   qt/hemis/coldstakingmodel.h \
-  qt/hemis/mnmodel.h \
-  qt/hemis/masternodewizarddialog.h \
-  qt/hemis/mnrow.h \
-  qt/hemis/masternodeswidget.h \
+  qt/hemis/gmmodel.h \
+  qt/hemis/gamemasterwizarddialog.h \
+  qt/hemis/gmrow.h \
+  qt/hemis/gamemasterswidget.h \
   qt/hemis/myaddressrow.h \
   qt/hemis/csrow.h \
   qt/hemis/contactsdropdown.h \
@@ -257,7 +257,7 @@ BITCOIN_QT_H = \
   qt/hemis/coldstakingwidget.h \
   qt/hemis/governancemodel.h \
   qt/hemis/proposalcard.h \
-  qt/hemis/mnselectiondialog.h \
+  qt/hemis/gmselectiondialog.h \
   qt/hemis/votedialog.h \
   qt/hemis/createproposaldialog.h \
   qt/hemis/proposalinfodialog.h \
@@ -346,7 +346,7 @@ RES_ICONS = \
   qt/hemis/res/img/ic-pending.svg \
   qt/hemis/res/img/ic-check-theme-dark.svg \
   qt/hemis/res/img/ic-nav-receive-active.svg \
-  qt/hemis/res/img/img-empty-dark-masternode.svg \
+  qt/hemis/res/img/img-empty-dark-gamemaster.svg \
   qt/hemis/res/img/ic-add-liliac.svg \
   qt/hemis/res/img/ic-check-theme-light.svg \
   qt/hemis/res/img/ic-nav-receive-hover.svg \
@@ -372,7 +372,7 @@ RES_ICONS = \
   qt/hemis/res/img/ic-address-book.svg \
   qt/hemis/res/img/ic-clear-liliac.svg \
   qt/hemis/res/img/ic-nav-settings-active.svg \
-  qt/hemis/res/img/img-empty-masternode.svg \
+  qt/hemis/res/img/img-empty-gamemaster.svg \
   qt/hemis/res/img/ic-address-send-white.svg \
   qt/hemis/res/img/ic-clear-purple.svg \
   qt/hemis/res/img/ic-nav-settings-hover.svg \
@@ -574,12 +574,12 @@ BITCOIN_QT_WALLET_CPP = \
   qt/hemis/contactdropdownrow.cpp \
   qt/hemis/contactsdropdown.cpp \
   qt/hemis/optionbutton.cpp \
-  qt/hemis/mninfodialog.cpp \
+  qt/hemis/gminfodialog.cpp \
   qt/hemis/coldstakingmodel.cpp \
-  qt/hemis/mnmodel.cpp \
-  qt/hemis/masternodewizarddialog.cpp \
-  qt/hemis/mnrow.cpp \
-  qt/hemis/masternodeswidget.cpp \
+  qt/hemis/gmmodel.cpp \
+  qt/hemis/gamemasterwizarddialog.cpp \
+  qt/hemis/gmrow.cpp \
+  qt/hemis/gamemasterswidget.cpp \
   qt/hemis/myaddressrow.cpp \
   qt/hemis/csrow.cpp \
   qt/hemis/sendchangeaddressdialog.cpp \
@@ -597,7 +597,7 @@ BITCOIN_QT_WALLET_CPP = \
   qt/hemis/coldstakingwidget.cpp \
   qt/hemis/governancemodel.cpp \
   qt/hemis/proposalcard.cpp \
-  qt/hemis/mnselectiondialog.cpp \
+  qt/hemis/gmselectiondialog.cpp \
   qt/hemis/votedialog.cpp \
   qt/hemis/createproposaldialog.cpp \
   qt/hemis/proposalinfodialog.cpp \

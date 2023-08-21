@@ -3,7 +3,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "activemasternode.h"
+#include "activegamemaster.h"
 #include "chainparams.h"
 #include "llmq/quorums.h"
 #include "llmq/quorums_blockprocessor.h"
@@ -204,9 +204,9 @@ UniValue getquoruminfo(const JSONRPCRequest& request)
 
     UniValue membersArr(UniValue::VARR);
     for (size_t i = 0; i < quorum->members.size(); i++) {
-        auto& dmn = quorum->members[i];
+        auto& dgm = quorum->members[i];
         UniValue mo(UniValue::VOBJ);
-        mo.pushKV("proTxHash", dmn->proTxHash.ToString());
+        mo.pushKV("proTxHash", dgm->proTxHash.ToString());
         mo.pushKV("valid", quorum->validMembers[i]);
         if (quorum->validMembers[i]) {
             CBLSPublicKey pubKey = quorum->GetPubKeyShare(i);
@@ -289,10 +289,10 @@ UniValue getquorummembers(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "invalid quorum_hash");
     }
 
-    auto mns = deterministicMNManager->GetAllQuorumMembers(llmq_type, pindexQuorum);
+    auto gms = deterministicGMManager->GetAllQuorumMembers(llmq_type, pindexQuorum);
     UniValue ret(UniValue::VARR);
-    for (const auto& dmn : mns) {
-        ret.push_back(dmn->proTxHash.ToString());
+    for (const auto& dgm : gms) {
+        ret.push_back(dgm->proTxHash.ToString());
     }
     return ret;
 }
@@ -302,7 +302,7 @@ UniValue quorumdkgstatus(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() > 1) {
         throw std::runtime_error(
                 "quorumdkgstatus ( detail_level )\n"
-                "Return the status of the current DKG process of the active masternode.\n"
+                "Return the status of the current DKG process of the active gamemaster.\n"
                 "\nArguments:\n"
                 "1. detail_level         (number, optional, default=0) Detail level of output.\n"
                 "                        0=Only show counts. 1=Show member indexes. 2=Show member's ProTxHashes.\n"
@@ -317,8 +317,8 @@ UniValue quorumdkgstatus(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("invalid detail_level %d", detailLevel));
     }
 
-    if (!fMasterNode || !activeMasternodeManager) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "This is not a (deterministic) masternode");
+    if (!fMasterNode || !activeGamemasterManager) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "This is not a (deterministic) gamemaster");
     }
 
     llmq::CDKGDebugStatus status;

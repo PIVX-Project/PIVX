@@ -3,33 +3,33 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#include "evo/mnauth.h"
+#include "evo/gmauth.h"
 
-#include "activemasternode.h"
+#include "activegamemaster.h"
 #include "chainparams.h"
 #include "consensus/validation.h"
 #include "net.h" // for CSerializedNetMsg
 #include "netmessagemaker.h"
 #include "llmq/quorums_connections.h"
-#include "tiertwo/masternode_meta_manager.h"
-#include "tiertwo/net_masternodes.h"
+#include "tiertwo/gamemaster_meta_manager.h"
+#include "tiertwo/net_gamemasters.h"
 #include "tiertwo/tiertwo_sync_state.h"
-#include "util/system.h" // for fMasternode and gArgs access
+#include "util/system.h" // for fGamemaster and gArgs access
 
-#include "version.h" // for MNAUTH_NODE_VER_VERSION
+#include "version.h" // for GMAUTH_NODE_VER_VERSION
 
-void CMNAuth::PushMNAUTH(CNode* pnode, CConnman& connman)
+void CGMAuth::PushGMAUTH(CNode* pnode, CConnman& connman)
 {
-    const CActiveMasternodeInfo* activeMnInfo{nullptr};
-    if (!fMasterNode || !activeMasternodeManager ||
-        (activeMnInfo = activeMasternodeManager->GetInfo())->proTxHash.IsNull()) {
+    const CActiveGamemasterInfo* activeMnInfo{nullptr};
+    if (!fMasterNode || !activeGamemasterManager ||
+        (activeMnInfo = activeGamemasterManager->GetInfo())->proTxHash.IsNull()) {
         return;
     }
 
     uint256 signHash;
     {
-        LOCK(pnode->cs_mnauth);
-        if (pnode->receivedMNAuthChallenge.IsNull()) {
+        LOCK(pnode->cs_gmauth);
+        if (pnode->receivedGMAuthChallenge.IsNull()) {
             return;
         }
         // We include fInbound in signHash to forbid interchanging of challenges by a man in the middle (MITM). This way
@@ -37,100 +37,100 @@ void CMNAuth::PushMNAUTH(CNode* pnode, CConnman& connman)
         //   node1 <- Eve -> node2
         // It does not protect against:
         //   node1 -> Eve -> node2
-        // This is ok as we only use MNAUTH as a DoS protection and not for sensitive stuff
+        // This is ok as we only use GMAUTH as a DoS protection and not for sensitive stuff
         int nOurNodeVersion{PROTOCOL_VERSION};
         if (Params().NetworkIDString() != CBaseChainParams::MAIN && gArgs.IsArgSet("-pushversion")) {
             nOurNodeVersion = (int)gArgs.GetArg("-pushversion", PROTOCOL_VERSION);
         }
-        if (pnode->nVersion < MNAUTH_NODE_VER_VERSION || nOurNodeVersion < MNAUTH_NODE_VER_VERSION) {
-            signHash = ::SerializeHash(std::make_tuple(activeMnInfo->pubKeyOperator, pnode->receivedMNAuthChallenge, pnode->fInbound));
+        if (pnode->nVersion < GMAUTH_NODE_VER_VERSION || nOurNodeVersion < GMAUTH_NODE_VER_VERSION) {
+            signHash = ::SerializeHash(std::make_tuple(activeMnInfo->pubKeyOperator, pnode->receivedGMAuthChallenge, pnode->fInbound));
         } else {
-            signHash = ::SerializeHash(std::make_tuple(activeMnInfo->pubKeyOperator, pnode->receivedMNAuthChallenge, pnode->fInbound, nOurNodeVersion));
+            signHash = ::SerializeHash(std::make_tuple(activeMnInfo->pubKeyOperator, pnode->receivedGMAuthChallenge, pnode->fInbound, nOurNodeVersion));
         }
     }
 
-    CMNAuth mnauth;
-    mnauth.proRegTxHash = activeMnInfo->proTxHash;
-    mnauth.sig = activeMnInfo->keyOperator.Sign(signHash);
+    CGMAuth gmauth;
+    gmauth.proRegTxHash = activeMnInfo->proTxHash;
+    gmauth.sig = activeMnInfo->keyOperator.Sign(signHash);
 
-    LogPrint(BCLog::NET_MN, "CMNAuth::%s -- Sending MNAUTH, peer=%d\n", __func__, pnode->GetId());
-    connman.PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::MNAUTH, mnauth));
+    LogPrint(BCLog::NET_GM, "CGMAuth::%s -- Sending GMAUTH, peer=%d\n", __func__, pnode->GetId());
+    connman.PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::GMAUTH, gmauth));
 }
 
-bool CMNAuth::ProcessMessage(CNode* pnode, const std::string& strCommand, CDataStream& vRecv, CConnman& connman, CValidationState& state)
+bool CGMAuth::ProcessMessage(CNode* pnode, const std::string& strCommand, CDataStream& vRecv, CConnman& connman, CValidationState& state)
 {
     if (!g_tiertwo_sync_state.IsBlockchainSynced()) {
-        // we can't verify MNAUTH messages when we don't have the latest MN list
+        // we can't verify GMAUTH messages when we don't have the latest GM list
         return true;
     }
 
-    if (strCommand == NetMsgType::MNAUTH) {
-        CMNAuth mnauth;
-        vRecv >> mnauth;
-        // only one MNAUTH allowed
-        bool fAlreadyHaveMNAUTH = WITH_LOCK(pnode->cs_mnauth, return !pnode->verifiedProRegTxHash.IsNull(););
-        if (fAlreadyHaveMNAUTH) {
-            return state.DoS(100, false, REJECT_INVALID, "duplicate mnauth");
+    if (strCommand == NetMsgType::GMAUTH) {
+        CGMAuth gmauth;
+        vRecv >> gmauth;
+        // only one GMAUTH allowed
+        bool fAlreadyHaveGMAUTH = WITH_LOCK(pnode->cs_gmauth, return !pnode->verifiedProRegTxHash.IsNull(););
+        if (fAlreadyHaveGMAUTH) {
+            return state.DoS(100, false, REJECT_INVALID, "duplicate gmauth");
         }
 
         if ((~pnode->nServices) & (NODE_NETWORK | NODE_BLOOM)) {
             // either NODE_NETWORK or NODE_BLOOM bit is missing in node's services
-            return state.DoS(100, false, REJECT_INVALID, "mnauth from a node with invalid services");
+            return state.DoS(100, false, REJECT_INVALID, "gmauth from a node with invalid services");
         }
 
-        if (mnauth.proRegTxHash.IsNull()) {
-            return state.DoS(100, false, REJECT_INVALID, "empty mnauth proRegTxHash");
+        if (gmauth.proRegTxHash.IsNull()) {
+            return state.DoS(100, false, REJECT_INVALID, "empty gmauth proRegTxHash");
         }
 
-        if (!mnauth.sig.IsValid()) {
-            return state.DoS(100, false, REJECT_INVALID, "invalid mnauth signature");
+        if (!gmauth.sig.IsValid()) {
+            return state.DoS(100, false, REJECT_INVALID, "invalid gmauth signature");
         }
 
-        auto mnList = deterministicMNManager->GetListAtChainTip();
-        auto dmn = mnList.GetMN(mnauth.proRegTxHash);
-        if (!dmn) {
+        auto gmList = deterministicGMManager->GetListAtChainTip();
+        auto dgm = gmList.GetGM(gmauth.proRegTxHash);
+        if (!dgm) {
             // in case node was unlucky and not up to date, just let it be connected as a regular node, which gives it
-            // a chance to get up-to-date and thus realize that it's not a MN anymore. We still give it a
+            // a chance to get up-to-date and thus realize that it's not a GM anymore. We still give it a
             // low DoS score.
-            return state.DoS(10, false, REJECT_INVALID, "missing mnauth masternode");
+            return state.DoS(10, false, REJECT_INVALID, "missing gmauth gamemaster");
         }
 
         uint256 signHash;
         {
-            LOCK(pnode->cs_mnauth);
+            LOCK(pnode->cs_gmauth);
             int nOurNodeVersion{PROTOCOL_VERSION};
             if (Params().NetworkIDString() != CBaseChainParams::MAIN && gArgs.IsArgSet("-pushversion")) {
                 nOurNodeVersion = gArgs.GetArg("-pushversion", PROTOCOL_VERSION);
             }
-            // See comment in PushMNAUTH (fInbound is negated here as we're on the other side of the connection)
-            if (pnode->nVersion < MNAUTH_NODE_VER_VERSION || nOurNodeVersion < MNAUTH_NODE_VER_VERSION) {
-                signHash = ::SerializeHash(std::make_tuple(dmn->pdmnState->pubKeyOperator, pnode->sentMNAuthChallenge, !pnode->fInbound));
+            // See comment in PushGMAUTH (fInbound is negated here as we're on the other side of the connection)
+            if (pnode->nVersion < GMAUTH_NODE_VER_VERSION || nOurNodeVersion < GMAUTH_NODE_VER_VERSION) {
+                signHash = ::SerializeHash(std::make_tuple(dgm->pdgmState->pubKeyOperator, pnode->sentGMAuthChallenge, !pnode->fInbound));
             } else {
-                signHash = ::SerializeHash(std::make_tuple(dmn->pdmnState->pubKeyOperator, pnode->sentMNAuthChallenge, !pnode->fInbound, pnode->nVersion.load()));
+                signHash = ::SerializeHash(std::make_tuple(dgm->pdgmState->pubKeyOperator, pnode->sentGMAuthChallenge, !pnode->fInbound, pnode->nVersion.load()));
             }
-            LogPrint(BCLog::NET_MN, "CMNAuth::%s -- constructed signHash for nVersion %d, peer=%d\n", __func__, pnode->nVersion, pnode->GetId());
+            LogPrint(BCLog::NET_GM, "CGMAuth::%s -- constructed signHash for nVersion %d, peer=%d\n", __func__, pnode->nVersion, pnode->GetId());
         }
 
-        if (!mnauth.sig.VerifyInsecure(dmn->pdmnState->pubKeyOperator.Get(), signHash)) {
-            // Same as above, MN seems to not know its fate yet, so give it a chance to update. If this is a
+        if (!gmauth.sig.VerifyInsecure(dgm->pdgmState->pubKeyOperator.Get(), signHash)) {
+            // Same as above, GM seems to not know its fate yet, so give it a chance to update. If this is a
             // malicious node (DoSing us), it'll get banned soon.
-            return state.DoS(10, false, REJECT_INVALID, "mnauth signature verification failed");
+            return state.DoS(10, false, REJECT_INVALID, "gmauth signature verification failed");
         }
 
         if (!pnode->fInbound) {
-            g_mmetaman.GetMetaInfo(mnauth.proRegTxHash)->SetLastOutboundSuccess(GetAdjustedTime());
-            if (pnode->m_masternode_probe_connection) {
-                LogPrint(BCLog::NET_MN, "%s -- Masternode probe successful for %s, disconnecting. peer=%d\n",
-                         __func__, mnauth.proRegTxHash.ToString(), pnode->GetId());
+            g_mmetaman.GetMetaInfo(gmauth.proRegTxHash)->SetLastOutboundSuccess(GetAdjustedTime());
+            if (pnode->m_gamemaster_probe_connection) {
+                LogPrint(BCLog::NET_GM, "%s -- Gamemaster probe successful for %s, disconnecting. peer=%d\n",
+                         __func__, gmauth.proRegTxHash.ToString(), pnode->GetId());
                 pnode->fDisconnect = true;
                 return true;
             }
         }
 
         // future: Move this to the first line of this function..
-        const CActiveMasternodeInfo* activeMnInfo{nullptr};
-        if (!fMasterNode || !activeMasternodeManager ||
-            (activeMnInfo = activeMasternodeManager->GetInfo())->proTxHash.IsNull()) {
+        const CActiveGamemasterInfo* activeMnInfo{nullptr};
+        if (!fMasterNode || !activeGamemasterManager ||
+            (activeMnInfo = activeGamemasterManager->GetInfo())->proTxHash.IsNull()) {
             return true;
         }
 
@@ -140,31 +140,31 @@ bool CMNAuth::ProcessMessage(CNode* pnode, const std::string& strCommand, CDataS
                 return;
             }
 
-            if (pnode2->verifiedProRegTxHash == mnauth.proRegTxHash) {
+            if (pnode2->verifiedProRegTxHash == gmauth.proRegTxHash) {
                 if (fMasterNode) {
-                    auto deterministicOutbound = llmq::DeterministicOutboundConnection(activeMnInfo->proTxHash, mnauth.proRegTxHash);
-                    LogPrint(BCLog::NET_MN, "CMNAuth::ProcessMessage -- Masternode %s has already verified as peer %d, deterministicOutbound=%s. peer=%d\n",
-                             mnauth.proRegTxHash.ToString(), pnode2->GetId(), deterministicOutbound.ToString(), pnode->GetId());
+                    auto deterministicOutbound = llmq::DeterministicOutboundConnection(activeMnInfo->proTxHash, gmauth.proRegTxHash);
+                    LogPrint(BCLog::NET_GM, "CGMAuth::ProcessMessage -- Gamemaster %s has already verified as peer %d, deterministicOutbound=%s. peer=%d\n",
+                             gmauth.proRegTxHash.ToString(), pnode2->GetId(), deterministicOutbound.ToString(), pnode->GetId());
                     if (deterministicOutbound == activeMnInfo->proTxHash) {
                         if (pnode2->fInbound) {
-                            LogPrint(BCLog::NET_MN, "CMNAuth::ProcessMessage -- dropping old inbound, peer=%d\n", pnode2->GetId());
+                            LogPrint(BCLog::NET_GM, "CGMAuth::ProcessMessage -- dropping old inbound, peer=%d\n", pnode2->GetId());
                             pnode2->fDisconnect = true;
                         } else if (pnode->fInbound) {
-                            LogPrint(BCLog::NET_MN, "CMNAuth::ProcessMessage -- dropping new inbound, peer=%d\n", pnode->GetId());
+                            LogPrint(BCLog::NET_GM, "CGMAuth::ProcessMessage -- dropping new inbound, peer=%d\n", pnode->GetId());
                             pnode->fDisconnect = true;
                         }
                     } else {
                         if (!pnode2->fInbound) {
-                            LogPrint(BCLog::NET_MN, "CMNAuth::ProcessMessage -- dropping old outbound, peer=%d\n", pnode2->GetId());
+                            LogPrint(BCLog::NET_GM, "CGMAuth::ProcessMessage -- dropping old outbound, peer=%d\n", pnode2->GetId());
                             pnode2->fDisconnect = true;
                         } else if (!pnode->fInbound) {
-                            LogPrint(BCLog::NET_MN, "CMNAuth::ProcessMessage -- dropping new outbound, peer=%d\n", pnode->GetId());
+                            LogPrint(BCLog::NET_GM, "CGMAuth::ProcessMessage -- dropping new outbound, peer=%d\n", pnode->GetId());
                             pnode->fDisconnect = true;
                         }
                     }
                 } else {
-                    LogPrint(BCLog::NET_MN, "CMNAuth::ProcessMessage -- Masternode %s has already verified as peer %d, dropping new connection. peer=%d\n",
-                             mnauth.proRegTxHash.ToString(), pnode2->GetId(), pnode->GetId());
+                    LogPrint(BCLog::NET_GM, "CGMAuth::ProcessMessage -- Gamemaster %s has already verified as peer %d, dropping new connection. peer=%d\n",
+                             gmauth.proRegTxHash.ToString(), pnode2->GetId(), pnode->GetId());
                     pnode->fDisconnect = true;
                 }
             }
@@ -175,56 +175,56 @@ bool CMNAuth::ProcessMessage(CNode* pnode, const std::string& strCommand, CDataS
         }
 
         {
-            LOCK(pnode->cs_mnauth);
-            pnode->verifiedProRegTxHash = mnauth.proRegTxHash;
-            pnode->verifiedPubKeyHash = dmn->pdmnState->pubKeyOperator.GetHash();
+            LOCK(pnode->cs_gmauth);
+            pnode->verifiedProRegTxHash = gmauth.proRegTxHash;
+            pnode->verifiedPubKeyHash = dgm->pdgmState->pubKeyOperator.GetHash();
         }
 
-        if (!pnode->m_masternode_iqr_connection && connman.GetTierTwoConnMan()->isMasternodeQuorumRelayMember(pnode->verifiedProRegTxHash)) {
+        if (!pnode->m_gamemaster_iqr_connection && connman.GetTierTwoConnMan()->isGamemasterQuorumRelayMember(pnode->verifiedProRegTxHash)) {
             // Tell our peer that we're interested in plain LLMQ recovered signatures.
             // Otherwise, the peer would only announce/send messages resulting from QRECSIG,
             // future e.g. tx locks or chainlocks. SPV and regular full nodes should not send
             // this message as they are usually only interested in the higher level messages.
             CNetMsgMaker msgMaker(pnode->GetSendVersion());
             connman.PushMessage(pnode, msgMaker.Make(NetMsgType::QSENDRECSIGS, true));
-            pnode->m_masternode_iqr_connection = true;
+            pnode->m_gamemaster_iqr_connection = true;
         }
 
-        LogPrint(BCLog::NET_MN, "CMNAuth::%s -- Valid MNAUTH for %s, peer=%d\n", __func__, mnauth.proRegTxHash.ToString(), pnode->GetId());
+        LogPrint(BCLog::NET_GM, "CGMAuth::%s -- Valid GMAUTH for %s, peer=%d\n", __func__, gmauth.proRegTxHash.ToString(), pnode->GetId());
     }
     return true;
 }
 
-void CMNAuth::NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff)
+void CGMAuth::NotifyGamemasterListChanged(bool undo, const CDeterministicGMList& oldGMList, const CDeterministicGMListDiff& diff)
 {
-    // we're only interested in updated/removed MNs. Added MNs are of no interest for us
-    if (diff.updatedMNs.empty() && diff.removedMns.empty()) {
+    // we're only interested in updated/removed GMs. Added GMs are of no interest for us
+    if (diff.updatedGMs.empty() && diff.removedMns.empty()) {
         return;
     }
 
     g_connman->ForEachNode([&](CNode* pnode) {
-        LOCK(pnode->cs_mnauth);
+        LOCK(pnode->cs_gmauth);
         if (pnode->verifiedProRegTxHash.IsNull()) {
             return;
         }
-        auto verifiedDmn = oldMNList.GetMN(pnode->verifiedProRegTxHash);
-        if (!verifiedDmn) {
+        auto verifiedDgm = oldGMList.GetGM(pnode->verifiedProRegTxHash);
+        if (!verifiedDgm) {
             return;
         }
         bool doRemove = false;
-        if (diff.removedMns.count(verifiedDmn->GetInternalId())) {
+        if (diff.removedMns.count(verifiedDgm->GetInternalId())) {
             doRemove = true;
         } else {
-            auto it = diff.updatedMNs.find(verifiedDmn->GetInternalId());
-            if (it != diff.updatedMNs.end()) {
-                if ((it->second.fields & CDeterministicMNStateDiff::Field_pubKeyOperator) && it->second.state.pubKeyOperator.GetHash() != pnode->verifiedPubKeyHash) {
+            auto it = diff.updatedGMs.find(verifiedDgm->GetInternalId());
+            if (it != diff.updatedGMs.end()) {
+                if ((it->second.fields & CDeterministicGMStateDiff::Field_pubKeyOperator) && it->second.state.pubKeyOperator.GetHash() != pnode->verifiedPubKeyHash) {
                     doRemove = true;
                 }
             }
         }
 
         if (doRemove) {
-            LogPrint(BCLog::NET_MN, "CMNAuth::NotifyMasternodeListChanged -- Disconnecting MN %s due to key changed/removed, peer=%d\n",
+            LogPrint(BCLog::NET_GM, "CGMAuth::NotifyGamemasterListChanged -- Disconnecting GM %s due to key changed/removed, peer=%d\n",
                      pnode->verifiedProRegTxHash.ToString(), pnode->GetId());
             pnode->fDisconnect = true;
         }

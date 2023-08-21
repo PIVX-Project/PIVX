@@ -526,7 +526,7 @@
         </item>
         <item>
          <widget class="QWidget" name="layoutOptions2" native="true">
-          <layout class="QHBoxLayout" name="horizontalMasternodes" stretch="0,1">
+          <layout class="QHBoxLayout" name="horizontalGamemasters" stretch="0,1">
            <property name="spacing">
              <number>0</number>
            </property>
@@ -543,7 +543,7 @@
             <number>10</number>
            </property>
            <item>
-            <widget class="QLabel" name="labelTitleMasternodes">
+            <widget class="QLabel" name="labelTitleGamemasters">
              <property name="minimumSize">
               <size>
                <width>290</width>
@@ -557,12 +557,12 @@
               </size>
              </property>
              <property name="text">
-              <string>Number of Masternodes:</string>
+              <string>Number of Gamemasters:</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="labelInfoMasternodes">
+            <widget class="QLabel" name="labelInfoGamemasters">
              <property name="cursor">
               <cursorShape>IBeamCursor</cursorShape>
              </property>

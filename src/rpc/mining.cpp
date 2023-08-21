@@ -518,7 +518,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
             "        { ... }                       (json object) vote candidate\n"
             "        ,...\n"
             "  ],\n"
-            "  \"enforce_masternode_payments\" : true|false  (boolean) true, if masternode payments are enforced\n"
+            "  \"enforce_gamemaster_payments\" : true|false  (boolean) true, if gamemaster payments are enforced\n"
             "}\n"
 
             "\nExamples:\n" +
@@ -721,7 +721,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     result.pushKV("bits", strprintf("%08x", pblock->nBits));
     result.pushKV("height", (int64_t)(pindexPrev->nHeight + 1));
     result.pushKV("votes", aVotes);
-    result.pushKV("enforce_masternode_payments", true);
+    result.pushKV("enforce_gamemaster_payments", true);
 
     return result;
 }

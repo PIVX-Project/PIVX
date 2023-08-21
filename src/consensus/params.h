@@ -116,7 +116,7 @@ struct LLMQParams {
     // The threshold required to recover a final signature. Should be at least 50%+1 of the quorum size. This value
     // also controls the size of the public key verification vector and has a large influence on the performance of
     // recovery. It also influences the amount of minimum messages that need to be exchanged for a single signing session.
-    // This value has the most influence on the security of the quorum. The number of total malicious masternodes
+    // This value has the most influence on the security of the quorum. The number of total malicious gamemasters
     // required to negatively influence signing sessions highly correlates to the threshold percentage.
     int threshold;
 
@@ -180,10 +180,10 @@ struct Params {
     int nFutureTimeDriftPoW;
     int nFutureTimeDriftPoS;
     CAmount nMaxMoneyOut;
-    CAmount nMNCollateralAmt;
-    int nMNCollateralMinConf;
-    CAmount nMNBlockReward;
-    CAmount nNewMNBlockReward;
+    CAmount nGMCollateralAmt;
+    int nGMCollateralMinConf;
+    CAmount nGMBlockReward;
+    CAmount nNewGMBlockReward;
     int64_t nProposalEstablishmentTime;
     int nStakeMinAge;
     int nStakeMinDepth;
@@ -215,7 +215,7 @@ struct Params {
     uint256 ProofOfStakeLimit(const bool fV2) const { return fV2 ? posLimitV2 : posLimitV1; }
     bool MoneyRange(const CAmount& nValue) const { return (nValue >= 0 && nValue <= nMaxMoneyOut); }
     bool IsTimeProtocolV2(const int nHeight) const { return NetworkUpgradeActive(nHeight, UPGRADE_V4_0); }
-    int MasternodeCollateralMinConf() const { return nMNCollateralMinConf; }
+    int GamemasterCollateralMinConf() const { return nGMCollateralMinConf; }
 
     int FutureBlockTimeDrift(const int nHeight) const
     {

@@ -8,9 +8,9 @@ Please report bugs using the issue tracker at github: <https://github.com/hemis-
 Mandatory Update
 ==============
 
-hemis Core v3.2.0 is a **mandatory update** for all block creators, masternodes, and integrated services (exchanges). Old version 4 blocks will be rejected once 95% of a rolling 7 days worth of blocks have signaled the new version 5.
+hemis Core v3.2.0 is a **mandatory update** for all block creators, gamemasters, and integrated services (exchanges). Old version 4 blocks will be rejected once 95% of a rolling 7 days worth of blocks have signaled the new version 5.
 
-Masternodes will need to be restarted once both the masternode daemon and the controller wallet have been upgraded.
+Gamemasters will need to be restarted once both the gamemaster daemon and the controller wallet have been upgraded.
 
 How to Upgrade
 ==============
@@ -71,7 +71,7 @@ Creation of these automint addresses is currently only available via the RPC/Con
 
 ### In-wallet Proposal Voting
 
-A new UI wallet tab has been introduced that allows users to view the current budget proposals, their vote counts, and vote on proposals if the wallet is acting as a masternode controller. The visual design is to be considered temporary, and will be undergoing further design and display improvements in the future.
+A new UI wallet tab has been introduced that allows users to view the current budget proposals, their vote counts, and vote on proposals if the wallet is acting as a gamemaster controller. The visual design is to be considered temporary, and will be undergoing further design and display improvements in the future.
 
 ### Zerocoin Lite Node Protocol
 
@@ -117,7 +117,7 @@ The options dialog now contains a checkbox option to hide the display of orphan 
 
 ### Transaction Type Recoloring
 
-The color of various transaction types has been reworked to provide better visual feedback. Staking and masternode rewards are now purple, orphan stakes are now light gray, other rejected transactions are in red, and normal receive/send transactions are black.
+The color of various transaction types has been reworked to provide better visual feedback. Staking and gamemaster rewards are now purple, orphan stakes are now light gray, other rejected transactions are in red, and normal receive/send transactions are black.
 
 ### Receive Tab Changes
 
@@ -218,7 +218,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #798 `a663bccea7` [Net] Improve addrman Select() performance when buckets are nearly empty (Pieter Wuille)
  - #800 `7fa20d69f6` [Net] nLastTry is only used for addrman entries (Pieter Wuille)
  - #740 `5f7cb412a3` [Net] Pull uacomment in from upstream (Fuzzbawls)
- - #774 `167c7fa6d0` [Budget] Make checks for MN-autovoting deterministic (Mrs-X)
+ - #774 `167c7fa6d0` [Budget] Make checks for GM-autovoting deterministic (Mrs-X)
  - #770 `ab9cf3629c` [Main] Do not record zerocoin tx's in ConnectBlock() if it is fJustCheck (presstab)
  - #705 `6a5b64bc21` [Main] Check Lock Time Verify (presstab)
 
@@ -254,7 +254,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #751 `e820cf3816` [RPC] Show the configured/set txfee in getwalletinfo (Fuzzbawls)
  - #750 `25fe72d97d` [RPC] Add mediantime to getblock/getblockheader output (Fuzzbawls)
  - #760 `8b79a3944a` [RPC] Show BIP65 soft-fork progress in getblockchaininfo (Fuzzbawls)
- - #742 `297d67b43a` [RPC] Add masternode's pubkey to listmasternodes RPC (presstab)
+ - #742 `297d67b43a` [RPC] Add gamemaster's pubkey to listgamemasters RPC (presstab)
  - #729 `f84ec3df8b` [RPC] Fix RPCTimerInterface (random-zebra)
  - #727 `08f6e1774b` [RPC] Add 'spendzerocoinmints' RPC call (random-zebra)
  - #726 `8f28b7ad23` [RPC] include mints metadata in 'listmintedzerocoins' output (random-zebra)
@@ -277,7 +277,7 @@ Detailed release notes follow. This overview includes changes that affect behavi
  - #730 `394d48b2c9` [Wallet] fix bug with fWalletUnlockAnonymizeOnly flag setting (random-zebra)
  - #715 `30048cce62` [Refactor] Remove GetCoinAge (Fuzzbawls)
  - #700 `a2d717090f` [Wallet] Avoid autocombine getting stuck (warrows)
- - #656 `5272a4f684` [Wallet] Fix double locked coin when wallet and MN are on same machine (Tim Uy)
+ - #656 `5272a4f684` [Wallet] Fix double locked coin when wallet and GM are on same machine (Tim Uy)
  - #653 `fdf4503b66` [Wallet] change COINBASE_MATURITY to Params().COINBASE_MATURITY() (Alko89)
 
 ### Test Suites

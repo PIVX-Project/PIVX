@@ -15,8 +15,8 @@ enum SporkId : int32_t {
     SPORK_2_SWIFTTX                             = 10001,      // Deprecated in v4.3.99
     SPORK_3_SWIFTTX_BLOCK_FILTERING             = 10002,      // Deprecated in v4.3.99
     SPORK_5_MAX_VALUE                           = 10004,      // Deprecated in v5.2.99
-    SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT      = 10007,
-    SPORK_9_MASTERNODE_BUDGET_ENFORCEMENT       = 10008,
+    SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT      = 10007,
+    SPORK_9_GAMEMASTER_BUDGET_ENFORCEMENT       = 10008,
     SPORK_13_ENABLE_SUPERBLOCKS                 = 10012,
     SPORK_14_NEW_PROTOCOL_ENFORCEMENT           = 10013,
     SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2         = 10014,
@@ -25,7 +25,7 @@ enum SporkId : int32_t {
     SPORK_18_ZEROCOIN_PUBLICSPEND_V4            = 10018,       // Deprecated in 5.2.99
     SPORK_19_COLDSTAKING_MAINTENANCE            = 10019,
     SPORK_20_SAPLING_MAINTENANCE                = 10020,
-    SPORK_21_LEGACY_MNS_MAX_HEIGHT              = 10021,
+    SPORK_21_LEGACY_GMS_MAX_HEIGHT              = 10021,
     SPORK_22_LLMQ_DKG_MAINTENANCE               = 10022,
     SPORK_23_CHAINLOCKS_ENFORCEMENT             = 10023,
 

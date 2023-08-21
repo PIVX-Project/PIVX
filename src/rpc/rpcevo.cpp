@@ -3,16 +3,16 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "activemasternode.h"
+#include "activegamemaster.h"
 #include "bls/key_io.h"
 #include "bls/bls_wrapper.h"
 #include "core_io.h"
 #include "destination_io.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "evo/specialtx_validation.h"
 #include "evo/providertx.h"
 #include "key_io.h"
-#include "masternode.h"
+#include "gamemaster.h"
 #include "messagesigner.h"
 #include "netbase.h"
 #include "operationresult.h"
@@ -20,7 +20,7 @@
 #include "pubkey.h" // COMPACT_SIGNATURE_SIZE
 #include "rpc/server.h"
 #include "script/sign.h"
-#include "tiertwo/masternode_meta_manager.h"
+#include "tiertwo/gamemaster_meta_manager.h"
 #include "util/validation.h"
 #include "utilmoneystr.h"
 
@@ -75,17 +75,17 @@ static const std::map<ProRegParam, std::string> mapParamHelp = {
         },
         {operatorPubKey_register,
             "%d. \"operatorPubKey\"       (string, required) The operator BLS public key. The BLS private key does not have to be known.\n"
-            "                              It has to match the BLS private key which is later used when operating the masternode.\n"
+            "                              It has to match the BLS private key which is later used when operating the gamemaster.\n"
         },
         {operatorPubKey_update,
             "%d. \"operatorPubKey\"       (string, required) The operator BLS public key. The BLS private key does not have to be known.\n"
-            "                                It has to match the BLS private key which is later used when operating the masternode.\n"
+            "                                It has to match the BLS private key which is later used when operating the gamemaster.\n"
             "                                If set to an empty string, the currently active operator BLS public key is reused.\n"
         },
         {operatorKey,
             "%d. \"operatorKey\"           (string, optional) The operator BLS private key associated with the\n"
             "                                 registered operator public key. If not specified, or set to an empty string, then this command must\n"
-            "                                 be performed on the active masternode with the corresponding operator key.\n"
+            "                                 be performed on the active gamemaster with the corresponding operator key.\n"
         },
         {operatorPayoutAddress_register,
             "%d. \"operatorPayoutAddress\" (string, optional) The address used for operator reward payments.\n"
@@ -107,21 +107,21 @@ static const std::map<ProRegParam, std::string> mapParamHelp = {
             "                                The address must not be already registered, and must differ from the collateralAddress\n"
         },
         {ownerKey,
-            "%d. \"ownerKey\"              (string, optional) The owner key associated with the operator address of the masternode.\n"
-            "                                If not specified, or set to an empty string, then the mn key must be known by your wallet, in order to sign the tx.\n"
+            "%d. \"ownerKey\"              (string, optional) The owner key associated with the operator address of the gamemaster.\n"
+            "                                If not specified, or set to an empty string, then the gm key must be known by your wallet, in order to sign the tx.\n"
         },
         {payoutAddress_register,
-            "%d. \"payoutAddress\"          (string, required) The hemis address to use for masternode reward payments.\n"
+            "%d. \"payoutAddress\"          (string, required) The hemis address to use for gamemaster reward payments.\n"
         },
         {payoutAddress_update,
-            "%d. \"payoutAddress\"          (string, required) The hemis address to use for masternode reward payments.\n"
+            "%d. \"payoutAddress\"          (string, required) The hemis address to use for gamemaster reward payments.\n"
             "                                 If set to an empty string, the currently active payout address is reused.\n"
         },
         {proTxHash,
             "%d. \"proTxHash\"              (string, required) The hash of the initial ProRegTx.\n"
         },
         {revocationReason,
-            "%d. reason                     (numeric, optional) The reason for masternode service revocation. Default: 0.\n"
+            "%d. reason                     (numeric, optional) The reason for gamemaster service revocation. Default: 0.\n"
             "                                 0=not_specified, 1=service_termination, 2=compromised_keys, 3=keys_change.\n"
         },
         {votingAddress_register,
@@ -236,20 +236,20 @@ static CBLSSecretKey GetBLSSecretKey(const CChainParams& params, const std::stri
     if (!hexKey.empty()) {
         return ParseBLSSecretKey(params, hexKey);
     }
-    // If empty, get the active masternode key
+    // If empty, get the active gamemaster key
     CBLSSecretKey sk; CTxIn vin;
-    if (!GetActiveDMNKeys(sk, vin)) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "Active masternode key not found. Insert DMN operator private key.");
+    if (!GetActiveDGMKeys(sk, vin)) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Active gamemaster key not found. Insert DGM operator private key.");
     }
     return sk;
 }
 
-static UniValue DmnToJson(const CDeterministicMNCPtr dmn)
+static UniValue DgmToJson(const CDeterministicGMCPtr dgm)
 {
     UniValue ret(UniValue::VOBJ);
-    dmn->ToJson(ret);
+    dgm->ToJson(ret);
     Coin coin;
-    if (!WITH_LOCK(cs_main, return pcoinsTip->GetUTXOCoin(dmn->collateralOutpoint, coin); )) {
+    if (!WITH_LOCK(cs_main, return pcoinsTip->GetUTXOCoin(dgm->collateralOutpoint, coin); )) {
         return ret;
     }
     CTxDestination dest;
@@ -454,7 +454,7 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
                 (fSignAndSend ?
                     "protx_register \"collateralHash\" collateralIndex \"ipAndPort\" \"ownerAddress\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (operatorReward \"operatorPayoutAddress\")\n"
                     "The collateral is specified through \"collateralHash\" and \"collateralIndex\" and must be an unspent\n"
-                    "transaction output spendable by this wallet. It must also not be used by any other masternode.\n"
+                    "transaction output spendable by this wallet. It must also not be used by any other gamemaster.\n"
                         :
                     "protx_register_prepare \"collateralHash\" collateralIndex \"ipAndPort\" \"ownerAddress\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (operatorReward \"operatorPayoutAddress\")\n"
                     "\nCreates an unsigned ProTx and returns it. The ProTx must be signed externally with the collateral\n"
@@ -515,7 +515,7 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
     if (!WITH_LOCK(cs_main, return pcoinsTip->GetUTXOCoin(pl.collateralOutpoint, coin); )) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("collateral not found: %s-%d", collateralHash.ToString(), collateralIndex));
     }
-    if (coin.out.nValue != Params().GetConsensus().nMNCollateralAmt) {
+    if (coin.out.nValue != Params().GetConsensus().nGMCollateralAmt) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("collateral %s-%d with invalid value %d", collateralHash.ToString(), collateralIndex, coin.out.nValue));
     }
     CTxDestination txDest;
@@ -620,7 +620,7 @@ UniValue protx_register_fund(const JSONRPCRequest& request)
         throw std::runtime_error(
                 "protx_register_fund \"collateralAddress\" \"ipAndPort\" \"ownerAddress\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (operatorReward \"operatorPayoutAddress\")\n"
                 "\nCreates, funds and sends a ProTx to the network. The resulting transaction will move 10000 HMS\n"
-                "to the address specified by collateralAddress and will then function as masternode collateral.\n"
+                "to the address specified by collateralAddress and will then function as gamemaster collateral.\n"
                 + HelpRequiringPassphrase(pwallet) + "\n"
                 "\nArguments:\n"
                 + GetHelpString(1, collateralAddress)
@@ -646,7 +646,7 @@ UniValue protx_register_fund(const JSONRPCRequest& request)
 
     const CTxDestination& collateralDest(ParsePubKeyIDFromAddress(request.params[0].get_str()));
     const CScript& collateralScript = GetScriptForDestination(collateralDest);
-    const CAmount collAmt = Params().GetConsensus().nMNCollateralAmt;
+    const CAmount collAmt = Params().GetConsensus().nGMCollateralAmt;
 
     ProRegPL pl = ParseProRegPLParams(request.params, 1);
     pl.nVersion = ProRegPL::CURRENT_VERSION;
@@ -694,7 +694,7 @@ static bool CheckWalletOwnsScript(CWallet* pwallet, const CScript& script)
 #endif
 }
 
-static UniValue ToJson(const CMasternodeMetaInfoPtr& info)
+static UniValue ToJson(const CGamemasterMetaInfoPtr& info)
 {
     UniValue ret(UniValue::VOBJ);
     auto now = GetAdjustedTime();
@@ -707,7 +707,7 @@ static UniValue ToJson(const CMasternodeMetaInfoPtr& info)
     return ret;
 }
 
-static void AddDMNEntryToList(UniValue& ret, CWallet* pwallet, const CDeterministicMNCPtr& dmn, bool fVerbose, bool fFromWallet)
+static void AddDGMEntryToList(UniValue& ret, CWallet* pwallet, const CDeterministicGMCPtr& dgm, bool fVerbose, bool fFromWallet)
 {
     assert(!fFromWallet || pwallet);
     assert(ret.isArray());
@@ -722,13 +722,13 @@ static void AddDMNEntryToList(UniValue& ret, CWallet* pwallet, const CDeterminis
 
     if (pwallet && !skipWalletCheck) {
         LOCK(pwallet->cs_wallet);
-        hasOwnerKey = pwallet->HaveKey(dmn->pdmnState->keyIDOwner);
-        hasVotingKey = pwallet->HaveKey(dmn->pdmnState->keyIDVoting);
-        ownsPayeeScript = CheckWalletOwnsScript(pwallet, dmn->pdmnState->scriptPayout);
+        hasOwnerKey = pwallet->HaveKey(dgm->pdgmState->keyIDOwner);
+        hasVotingKey = pwallet->HaveKey(dgm->pdgmState->keyIDVoting);
+        ownsPayeeScript = CheckWalletOwnsScript(pwallet, dgm->pdgmState->scriptPayout);
         CTransactionRef collTx;
         uint256 hashBlock;
-        if (GetTransaction(dmn->collateralOutpoint.hash, collTx, hashBlock, true)) {
-            ownsCollateral = CheckWalletOwnsScript(pwallet, collTx->vout[dmn->collateralOutpoint.n].scriptPubKey);
+        if (GetTransaction(dgm->collateralOutpoint.hash, collTx, hashBlock, true)) {
+            ownsCollateral = CheckWalletOwnsScript(pwallet, collTx->vout[dgm->collateralOutpoint.n].scriptPubKey);
         }
     }
 
@@ -738,19 +738,19 @@ static void AddDMNEntryToList(UniValue& ret, CWallet* pwallet, const CDeterminis
     }
 
     if (fVerbose) {
-        UniValue o = DmnToJson(dmn);
-        int confs = WITH_LOCK(cs_main, return pcoinsTip->GetCoinDepthAtHeight(dmn->collateralOutpoint, chainActive.Height()); );
+        UniValue o = DgmToJson(dgm);
+        int confs = WITH_LOCK(cs_main, return pcoinsTip->GetCoinDepthAtHeight(dgm->collateralOutpoint, chainActive.Height()); );
         o.pushKV("confirmations", confs);
         o.pushKV("has_owner_key", hasOwnerKey);
         o.pushKV("has_voting_key", hasVotingKey);
         o.pushKV("owns_collateral", ownsCollateral);
         o.pushKV("owns_payee_script", ownsPayeeScript);
         // net info
-        auto metaInfo = g_mmetaman.GetMetaInfo(dmn->proTxHash);
+        auto metaInfo = g_mmetaman.GetMetaInfo(dgm->proTxHash);
         if (metaInfo) o.pushKV("metaInfo", ToJson(metaInfo));
         ret.push_back(o);
     } else {
-        ret.push_back(dmn->proTxHash.ToString());
+        ret.push_back(dgm->proTxHash.ToString());
     }
 }
 
@@ -807,13 +807,13 @@ UniValue protx_list(const JSONRPCRequest& request)
         pindex = mapBlockIndex.at(pindexTip->GetBlockHash());
     }
 
-    // Get the deterministic mn list at the index
-    CDeterministicMNList mnList = deterministicMNManager->GetListForBlock(pindex);
+    // Get the deterministic gm list at the index
+    CDeterministicGMList gmList = deterministicGMManager->GetListForBlock(pindex);
 
     // Build/filter the list
     UniValue ret(UniValue::VARR);
-    mnList.ForEachMN(fValidOnly, [&](const CDeterministicMNCPtr& dmn) {
-        AddDMNEntryToList(ret, pwallet, dmn, fVerbose, fFromWallet);
+    gmList.ForEachGM(fValidOnly, [&](const CDeterministicGMCPtr& dgm) {
+        AddDGMEntryToList(ret, pwallet, dgm, fVerbose, fFromWallet);
     });
     return ret;
 }
@@ -830,8 +830,8 @@ UniValue protx_update_service(const JSONRPCRequest& request)
         throw std::runtime_error(
                 "protx_update_service \"proTxHash\" \"ipAndPort\" (\"operatorPayoutAddress\" \"operatorKey\")\n"
                 "\nCreates and sends a ProUpServTx to the network. This will update the IP address\n"
-                "of a masternode, and/or the operator payout address.\n"
-                "If the IP is changed for a masternode that got PoSe-banned, the ProUpServTx will also revive this masternode.\n"
+                "of a gamemaster, and/or the operator payout address.\n"
+                "If the IP is changed for a gamemaster that got PoSe-banned, the ProUpServTx will also revive this gamemaster.\n"
                 + HelpRequiringPassphrase(pwallet) + "\n"
                 "\nArguments:\n"
                 + GetHelpString(1, proTxHash)
@@ -855,9 +855,9 @@ UniValue protx_update_service(const JSONRPCRequest& request)
     pl.nVersion = ProUpServPL::CURRENT_VERSION;
     pl.proTxHash = ParseHashV(request.params[0], "proTxHash");
 
-    auto dmn = deterministicMNManager->GetListAtChainTip().GetMN(pl.proTxHash);
-    if (!dmn) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("masternode with hash %s not found", pl.proTxHash.ToString()));
+    auto dgm = deterministicGMManager->GetListAtChainTip().GetGM(pl.proTxHash);
+    if (!dgm) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("gamemaster with hash %s not found", pl.proTxHash.ToString()));
     }
     const auto& chainparams = Params();
     const std::string& addrStr = request.params[1].get_str();
@@ -866,13 +866,13 @@ UniValue protx_update_service(const JSONRPCRequest& request)
             throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("invalid network address %s", addrStr));
         }
     } else {
-        pl.addr = dmn->pdmnState->addr;
+        pl.addr = dgm->pdgmState->addr;
     }
-    pl.scriptOperatorPayout = dmn->pdmnState->scriptOperatorPayout;
+    pl.scriptOperatorPayout = dgm->pdgmState->scriptOperatorPayout;
     if (request.params.size() > 2) {
         const std::string& strAddOpPayee = request.params[2].get_str();
         if (!strAddOpPayee.empty()) {
-            if (dmn->nOperatorReward > 0) {
+            if (dgm->nOperatorReward > 0) {
                 pl.scriptOperatorPayout = GetScriptForDestination(CTxDestination(ParsePubKeyIDFromAddress(strAddOpPayee)));
             } else {
                 throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Operator reward is 0. Cannot set operator payout address"));
@@ -904,8 +904,8 @@ UniValue protx_update_registrar(const JSONRPCRequest& request)
         throw std::runtime_error(
                 "protx update_registrar \"proTxHash\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (\"ownerKey\")\n"
                 "\nCreates and sends a ProUpRegTx to the network. This will update the operator key, voting key and payout\n"
-                "address of the masternode specified by \"proTxHash\".\n"
-                "The owner key of this masternode must be known to your wallet.\n"
+                "address of the gamemaster specified by \"proTxHash\".\n"
+                "The owner key of this gamemaster must be known to your wallet.\n"
                 + HelpRequiringPassphrase(pwallet) + "\n"
                 "\nArguments:\n"
                 + GetHelpString(1, proTxHash)
@@ -921,8 +921,8 @@ UniValue protx_update_registrar(const JSONRPCRequest& request)
     }
     CheckEvoUpgradeEnforcement();
 
-    if (!deterministicMNManager->LegacyMNObsolete()) {
-        throw JSONRPCError(RPC_MISC_ERROR, "Legacy masternode system still active. ProUpReg transactions are not accepted yet.");
+    if (!deterministicGMManager->LegacyGMObsolete()) {
+        throw JSONRPCError(RPC_MISC_ERROR, "Legacy gamemaster system still active. ProUpReg transactions are not accepted yet.");
     }
 
     EnsureWalletIsUnlocked(pwallet);
@@ -935,24 +935,24 @@ UniValue protx_update_registrar(const JSONRPCRequest& request)
     pl.nVersion = ProUpServPL::CURRENT_VERSION;
     pl.proTxHash = ParseHashV(request.params[0], "proTxHash");
 
-    auto dmn = deterministicMNManager->GetListAtChainTip().GetMN(pl.proTxHash);
-    if (!dmn) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("masternode with hash %s not found", pl.proTxHash.ToString()));
+    auto dgm = deterministicGMManager->GetListAtChainTip().GetGM(pl.proTxHash);
+    if (!dgm) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("gamemaster with hash %s not found", pl.proTxHash.ToString()));
     }
     const std::string& strPubKeyOperator = request.params[1].get_str();
-    pl.pubKeyOperator = strPubKeyOperator.empty() ? dmn->pdmnState->pubKeyOperator.Get()
+    pl.pubKeyOperator = strPubKeyOperator.empty() ? dgm->pdgmState->pubKeyOperator.Get()
                                                   : ParseBLSPubKey(chainparams, strPubKeyOperator);
 
     const std::string& strVotingAddress = request.params[2].get_str();
-    pl.keyIDVoting = strVotingAddress.empty() ? dmn->pdmnState->keyIDVoting
+    pl.keyIDVoting = strVotingAddress.empty() ? dgm->pdgmState->keyIDVoting
                                               : ParsePubKeyIDFromAddress(strVotingAddress);
 
     const std::string& strPayee = request.params[3].get_str();
-    pl.scriptPayout = strPayee.empty() ? pl.scriptPayout = dmn->pdmnState->scriptPayout
+    pl.scriptPayout = strPayee.empty() ? pl.scriptPayout = dgm->pdgmState->scriptPayout
                                        : GetScriptForDestination(CTxDestination(ParsePubKeyIDFromAddress(strPayee)));
 
     const std::string& strOwnKey = request.params.size() > 4 ? request.params[4].get_str() : "";
-    const CKey& ownerKey = strOwnKey.empty() ? GetKeyFromWallet(pwallet, dmn->pdmnState->keyIDOwner)
+    const CKey& ownerKey = strOwnKey.empty() ? GetKeyFromWallet(pwallet, dgm->pdgmState->keyIDOwner)
                                              : ParsePrivKey(pwallet, strOwnKey, false);
 
     CMutableTransaction tx;
@@ -977,10 +977,10 @@ UniValue protx_revoke(const JSONRPCRequest& request)
     if (request.fHelp || request.params.size() < 1 || request.params.size() > 3) {
         throw std::runtime_error(
                 "protx_update_revoke \"proTxHash\" (\"operatorKey\" reason)\n"
-                "\nCreates and sends a ProUpRevTx to the network. This will revoke the operator key of the masternode and\n"
-                "put it into the PoSe-banned state. It will also set the service field of the masternode\n"
+                "\nCreates and sends a ProUpRevTx to the network. This will revoke the operator key of the gamemaster and\n"
+                "put it into the PoSe-banned state. It will also set the service field of the gamemaster\n"
                 "to zero. Use this in case your operator key got compromised or you want to stop providing your service\n"
-                "to the masternode owner.\n"
+                "to the gamemaster owner.\n"
                 + HelpRequiringPassphrase(pwallet) + "\n"
                 "\nArguments:\n"
                 + GetHelpString(1, proTxHash)
@@ -1005,9 +1005,9 @@ UniValue protx_revoke(const JSONRPCRequest& request)
     pl.nVersion = ProUpServPL::CURRENT_VERSION;
     pl.proTxHash = ParseHashV(request.params[0], "proTxHash");
 
-    auto dmn = deterministicMNManager->GetListAtChainTip().GetMN(pl.proTxHash);
-    if (!dmn) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("masternode with hash %s not found", pl.proTxHash.ToString()));
+    auto dgm = deterministicGMManager->GetListAtChainTip().GetGM(pl.proTxHash);
+    if (!dgm) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("gamemaster with hash %s not found", pl.proTxHash.ToString()));
     }
 
     const std::string& strOpKey = request.params.size() > 1 ? request.params[1].get_str() : "";

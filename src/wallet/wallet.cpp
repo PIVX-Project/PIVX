@@ -1690,7 +1690,7 @@ CAmount CWalletTx::GetLockedCredit() const
 
     CAmount nCredit = 0;
     uint256 hashTx = GetHash();
-    const CAmount collAmt = Params().GetConsensus().nMNCollateralAmt;
+    const CAmount collAmt = Params().GetConsensus().nGMCollateralAmt;
     for (unsigned int i = 0; i < tx->vout.size(); i++) {
         const CTxOut& txout = tx->vout[i];
 
@@ -1702,7 +1702,7 @@ CAmount CWalletTx::GetLockedCredit() const
             nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE_ALL);
         }
 
-        // Add masternode collaterals which are handled like locked coins
+        // Add gamemaster collaterals which are handled like locked coins
         else if (fMasterNode && tx->vout[i].nValue == collAmt) {
             nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
         }
@@ -2406,7 +2406,7 @@ static bool CheckTXAvailability(const CWalletTx* pcoin,
     return CheckTXAvailabilityInternal(pcoin, fOnlySafe, nDepth, safeTx);
 }
 
-bool CWallet::GetMasternodeVinAndKeys(CPubKey& pubKeyRet,
+bool CWallet::GetGamemasterVinAndKeys(CPubKey& pubKeyRet,
                                       CKey& keyRet,
                                       const COutPoint& collateralOut,
                                       bool fValidateCollateral,
@@ -2424,17 +2424,17 @@ bool CWallet::GetMasternodeVinAndKeys(CPubKey& pubKeyRet,
 
     // Verify index limits
     if (collateralOut.n < 0 || collateralOut.n >= (uint32_t) wtx->tx->vout.size()) {
-        strError = "Invalid masternode output index";
+        strError = "Invalid gamemaster output index";
         return error("%s: output index %d not found in %s", __func__, collateralOut.n, collateralOut.hash.GetHex());
     }
 
     CTxOut txOut = wtx->tx->vout[collateralOut.n];
 
-    // Masternode collateral value
+    // Gamemaster collateral value
     const auto& consensus = Params().GetConsensus();
-    if (txOut.nValue != consensus.nMNCollateralAmt) {
-        strError = strprintf("Invalid collateral tx value, must be %s HMS", FormatMoney(Params().GetConsensus().nMNCollateralAmt));
-        return error("%s: tx %s, index %d not a masternode collateral", __func__, collateralOut.hash.GetHex(), collateralOut.n);
+    if (txOut.nValue != consensus.nGMCollateralAmt) {
+        strError = strprintf("Invalid collateral tx value, must be %s HMS", FormatMoney(Params().GetConsensus().nGMCollateralAmt));
+        return error("%s: tx %s, index %d not a gamemaster collateral", __func__, collateralOut.hash.GetHex(), collateralOut.n);
     }
 
     if (fValidateCollateral) {
@@ -2455,10 +2455,10 @@ bool CWallet::GetMasternodeVinAndKeys(CPubKey& pubKeyRet,
             }
         }
 
-        // Depth must be at least MASTERNODE_MIN_CONFIRMATIONS
-        if (nDepth < consensus.MasternodeCollateralMinConf()) {
+        // Depth must be at least GAMEMASTER_MIN_CONFIRMATIONS
+        if (nDepth < consensus.GamemasterCollateralMinConf()) {
             strError = strprintf("Collateral tx must have at least %d confirmations, has %d",
-                                 consensus.MasternodeCollateralMinConf(), nDepth);
+                                 consensus.GamemasterCollateralMinConf(), nDepth);
             return error("%s: %s", __func__, strError);
         }
     }
@@ -3360,7 +3360,7 @@ bool CWallet::CreateCoinStake(
 
     // Kernel Search
     CAmount nCredit;
-    CAmount nMasternodePayment;
+    CAmount nGamemasterPayment;
     CScript scriptPubKeyKernel;
     bool fKernelFound = false;
     int nAttempts = 0;
@@ -3403,11 +3403,11 @@ bool CWallet::CreateCoinStake(
 
         // Add block reward to the credit
         nCredit += GetBlockValue(pindexPrev->nHeight + 1);
-        nMasternodePayment = GetMasternodePayment(pindexPrev->nHeight + 1);
+        nGamemasterPayment = GetGamemasterPayment(pindexPrev->nHeight + 1);
 
         // Create the output transaction(s)
         std::vector<CTxOut> vout;
-        if (!CreateCoinstakeOuts(stakeInput, vout, nCredit - nMasternodePayment)) {
+        if (!CreateCoinstakeOuts(stakeInput, vout, nCredit - nGamemasterPayment)) {
             LogPrintf("%s : failed to create output\n", __func__);
             it++;
             continue;
@@ -4100,7 +4100,7 @@ void CWallet::AutoCombineDust(CConnman* connman)
         // we use 50 bytes as a base tx size (2 output: 2*34 + overhead: 10 -> 90 to be certain)
         unsigned int txSizeEstimate = 90;
 
-        //find masternode rewards that need to be combined
+        //find gamemaster rewards that need to be combined
         CCoinControl* coinControl = new CCoinControl();
         CAmount nTotalRewardsValue = 0;
         for (const COutput& out : vCoins) {

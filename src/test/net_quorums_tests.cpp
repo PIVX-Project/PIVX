@@ -12,30 +12,30 @@
 #include "test/test_hemis.h"
 >>>>>>> 1f345019d (first step)
 
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "llmq/quorums_connections.h"
 
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(net_quorums_tests)
 
-std::vector<CDeterministicMNCPtr> createMNList(unsigned int size)
+std::vector<CDeterministicGMCPtr> createGMList(unsigned int size)
 {
-    std::vector<CDeterministicMNCPtr> mns;
+    std::vector<CDeterministicGMCPtr> gms;
     for (size_t i = 0; i < size; i++) {
-        CDeterministicMN dmn(i);
+        CDeterministicGM dgm(i);
         uint256 newProTxHash;
         do {
             newProTxHash = g_insecure_rand_ctx.rand256();
-        } while (std::find_if(mns.begin(), mns.end(),
-                [&newProTxHash](CDeterministicMNCPtr mn){ return mn->proTxHash == newProTxHash; }) != mns.end());
-        dmn.proTxHash = newProTxHash;
-        mns.emplace_back(std::make_shared<const CDeterministicMN>(dmn));
+        } while (std::find_if(gms.begin(), gms.end(),
+                [&newProTxHash](CDeterministicGMCPtr gm){ return gm->proTxHash == newProTxHash; }) != gms.end());
+        dgm.proTxHash = newProTxHash;
+        gms.emplace_back(std::make_shared<const CDeterministicGM>(dgm));
     }
-    return mns;
+    return gms;
 }
 
-void checkQuorumRelayMembers(const std::vector<CDeterministicMNCPtr>& list, unsigned int expectedResSize)
+void checkQuorumRelayMembers(const std::vector<CDeterministicGMCPtr>& list, unsigned int expectedResSize)
 {
     for (size_t i = 0; i < list.size(); i++) {
         const auto& set = llmq::GetQuorumRelayMembers(list, i);
@@ -50,13 +50,13 @@ BOOST_FIXTURE_TEST_CASE(get_quorum_relay_members, BasicTestingSetup)
     size_t list_size = 2000;    // n
     size_t relay_memb = 10;     // floor(log2(n-1))
 
-    std::vector<CDeterministicMNCPtr> masternodes = createMNList(list_size);
+    std::vector<CDeterministicGMCPtr> gamemasters = createGMList(list_size);
 
     // Test quorum sizes 2000 to 2
     while (true) {
-        checkQuorumRelayMembers(masternodes, relay_memb);
+        checkQuorumRelayMembers(gamemasters, relay_memb);
 
-        masternodes.resize(--list_size);
+        gamemasters.resize(--list_size);
         if (list_size == 1) break;
         // n=2 is a special case (1 relay member)
         // Otherwise relay members are 1 + max(1, floor(log2(n-1))-1)

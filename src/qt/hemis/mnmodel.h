@@ -6,10 +6,10 @@
 #define MNMODEL_H
 
 #include <QAbstractTableModel>
-#include "masternodeconfig.h"
+#include "gamemasterconfig.h"
 #include "qt/walletmodel.h"
 
-class CMasternode;
+class CGamemaster;
 
 class MNModel : public QAbstractTableModel
 {
@@ -25,7 +25,7 @@ public:
     void setWalletModel(WalletModel* _model) { walletModel = _model; };
 
     enum ColumnIndex {
-        ALIAS = 0,  /**< User specified MN alias */
+        ALIAS = 0,  /**< User specified GM alias */
         ADDRESS = 1, /**< Node address */
         PROTO_VERSION = 2, /**< Node protocol version */
         STATUS = 3, /**< Node status */
@@ -42,34 +42,34 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent) const override;
     bool removeMn(const QModelIndex& index);
-    bool addMn(CMasternodeConfig::CMasternodeEntry* entry);
+    bool addMn(CGamemasterConfig::CGamemasterEntry* entry);
     void updateMNList();
 
 
     bool isMNsNetworkSynced();
-    // Returns the MN activeState field.
+    // Returns the GM activeState field.
     int getMNState(const QString& mnAlias);
-    // Checks if the masternode is inactive
+    // Checks if the gamemaster is inactive
     bool isMNInactive(const QString& mnAlias);
-    // Masternode is active if it's in PRE_ENABLED OR ENABLED state
+    // Gamemaster is active if it's in PRE_ENABLED OR ENABLED state
     bool isMNActive(const QString& mnAlias);
-    // Masternode collateral has enough confirmations
+    // Gamemaster collateral has enough confirmations
     bool isMNCollateralMature(const QString& mnAlias);
-    // Validate string representing a masternode IP address
+    // Validate string representing a gamemaster IP address
     static bool validateMNIP(const QString& addrStr);
 
-    // Return the specific chain amount value for the MN collateral output.
+    // Return the specific chain amount value for the GM collateral output.
     CAmount getMNCollateralRequiredAmount();
     // Return the specific chain min conf for the collateral tx
-    int getMasternodeCollateralMinConf();
+    int getGamemasterCollateralMinConf();
     // Generates the collateral transaction
     bool createMNCollateral(const QString& alias, const QString& addr, COutPoint& ret_outpoint, QString& ret_error);
     // Creates the mnb and broadcast it to the network
-    bool startLegacyMN(const CMasternodeConfig::CMasternodeEntry& mne, int chainHeight, std::string& strError);
+    bool startLegacyMN(const CGamemasterConfig::CGamemasterEntry& mne, int chainHeight, std::string& strError);
     void startAllLegacyMNs(bool onlyMissing, int& amountOfMnFailed, int& amountOfMnStarted,
                            std::string* aliasFilter = nullptr, std::string* error_ret = nullptr);
 
-    CMasternodeConfig::CMasternodeEntry* createLegacyMN(COutPoint& collateralOut,
+    CGamemasterConfig::CGamemasterEntry* createLegacyMN(COutPoint& collateralOut,
                                                         const std::string& alias,
                                                         std::string& serviceAddr,
                                                         const std::string& port,
@@ -84,7 +84,7 @@ private:
     WalletModel* walletModel;
     CCoinControl* coinControl;
     // alias mn node ---> pair <ip, master node>
-    QMap<QString, std::pair<QString, CMasternode*>> nodes;
+    QMap<QString, std::pair<QString, CGamemaster*>> nodes;
     QMap<std::string, bool> collateralTxAccepted;
 };
 

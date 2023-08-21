@@ -11,7 +11,7 @@
 #include "consensus/merkle.h"
 #include "bls/bls_wrapper.h"
 #include "guiinterface.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "evo/evodb.h"
 #include "evo/evonotificationinterface.h"
 #include "llmq/quorums_init.h"
@@ -75,14 +75,14 @@ BasicTestingSetup::BasicTestingSetup(const std::string& chainName)
     SelectParams(chainName);
     SeedInsecureRand();
     evoDb.reset(new CEvoDB(1 << 20, true, true));
-    deterministicMNManager.reset(new CDeterministicMNManager(*evoDb));
+    deterministicGMManager.reset(new CDeterministicGMManager(*evoDb));
 }
 
 BasicTestingSetup::~BasicTestingSetup()
 {
     fs::remove_all(m_path_root);
     ECC_Stop();
-    deterministicMNManager.reset();
+    deterministicGMManager.reset();
     evoDb.reset();
 }
 
@@ -108,7 +108,7 @@ TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(cha
         // our unit tests aren't testing multiple parts of the code at once.
         GetMainSignals().RegisterBackgroundSignalScheduler(scheduler);
 
-        g_connman = std::make_unique<CConnman>(0x1337, 0x1337); // Deterministic randomness for tests.
+        g_connman = std::make_unique<CConnman>(0x1337, 0x1337); // Deterministic randogmess for tests.
         connman = g_connman.get();
 
         // Register EvoNotificationInterface

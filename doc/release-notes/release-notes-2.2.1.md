@@ -91,7 +91,7 @@ git merge commit are mentioned.
 
 ### GUI
 - #131 `238977b` [Qt] Adds base CSS styles for various elements
-- #134 `f7cabbe` [Qt] Edit masternode.conf in Qt-wallet
+- #134 `f7cabbe` [Qt] Edit gamemaster.conf in Qt-wallet
 - #135 `f8f1904` [Qt] Show path to wallet.dat in wallet-repair tab
 - #136 `53705f1` [Qt] Fix false flags for MultiSend notification when sending transactions
 - #137 `ad08051` [Qt] Fix Overview Page Balances when receiving

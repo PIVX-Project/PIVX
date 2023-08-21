@@ -4,7 +4,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-from test_framework.test_framework import HemisDMNTestFramework
+from test_framework.test_framework import HemisDGMTestFramework
 from test_framework.util import (
     assert_equal,
     connect_nodes,
@@ -16,7 +16,7 @@ Check quorum based Chainlocks
 '''
 
 
-class ChainLocksTest(HemisDMNTestFramework):
+class ChainLocksTest(HemisDGMTestFramework):
 
     def set_test_params(self):
         self.set_base_test_params()
@@ -26,9 +26,9 @@ class ChainLocksTest(HemisDMNTestFramework):
     def run_test(self):
         miner = self.nodes[self.minerPos]
 
-        # initialize and start masternodes
+        # initialize and start gamemasters
         self.setup_test()
-        assert_equal(len(self.mns), 6)
+        assert_equal(len(self.gms), 6)
 
         # Mine a LLMQ final commitment regularly with 3 signers
         self.log.info("DKG Session Started")

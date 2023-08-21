@@ -12,7 +12,7 @@ hemis is an open source community-driven cryptocurrency, focused on five main as
 
 (2) Low environmental footprint and network participation equality: Through the use of a highly developed Proof of Stake protocol.
 
-(3) Decentralized Governance System: A DAO built on top of the tier two Masternodes network, enabling a monthly community treasury, proposals submission and decentralized voting.
+(3) Decentralized Governance System: A DAO built on top of the tier two Gamemasters network, enabling a monthly community treasury, proposals submission and decentralized voting.
 
 (4) Fast Transactions: Through the use of fast block times and the tier two network, hemis is committed to continue researching new and better instant transactions mechanisms.
 

@@ -7,14 +7,14 @@
 import time
 
 from test_framework.authproxy import JSONRPCException
-from test_framework.test_framework import HemisDMNTestFramework, ExpectedDKGMessages
+from test_framework.test_framework import HemisDGMTestFramework, ExpectedDKGMessages
 from test_framework.util import (
     assert_equal,
     wait_until,
 )
 
 
-class DkgPoseTest(HemisDMNTestFramework):
+class DkgPoseTest(HemisDGMTestFramework):
 
     def set_test_params(self):
         self.set_base_test_params()
@@ -40,9 +40,9 @@ class DkgPoseTest(HemisDMNTestFramework):
     def run_test(self):
         miner = self.nodes[self.minerPos]
 
-        # initialize and start masternodes
+        # initialize and start gamemasters
         self.setup_test()
-        assert_equal(len(self.mns), 6)
+        assert_equal(len(self.gms), 6)
 
         # Set DKG maintenance (SPORK 22) and verify that the mined commitment is null
         self.log.info("Activating SPORK 22...")
@@ -59,38 +59,38 @@ class DkgPoseTest(HemisDMNTestFramework):
         self.set_spork_22(False)
 
         # Mine a LLMQ final commitment regularly with 3 signers
-        qfc, bad_mnode = self.mine_quorum()
+        qfc, bad_gmode = self.mine_quorum()
         assert_equal(191, miner.getblockcount())
-        assert bad_mnode is None
+        assert bad_gmode is None
         self.check_final_commitment(qfc, valid=[1, 1, 1], signers=[1, 1, 1])
 
         # Mine the next final commitment after disconnecting a member
         dkg_msgs = [ExpectedDKGMessages(s_contrib=True, s_complaint=True, s_justif=False, s_commit=True,
                                         r_contrib=2, r_complaint=2, r_justif=0, r_commit=2) for _ in range(2)]
-        qfc, bad_mnode = self.mine_quorum(invalidate_func=self.disable_network_for_node,
+        qfc, bad_gmode = self.mine_quorum(invalidate_func=self.disable_network_for_node,
                                           skip_bad_member_sync=True, expected_messages=dkg_msgs)
         assert_equal(211, miner.getblockcount())
-        assert bad_mnode is not None
+        assert bad_gmode is not None
         self.check_final_commitment(qfc, valid=[1, 1, 0], signers=[1, 1, 0])
 
         # Check PoSe
-        self.log.info("Check that node %d has been PoSe punished..." % bad_mnode.idx)
+        self.log.info("Check that node %d has been PoSe punished..." % bad_gmode.idx)
         expected_penalty = 66
-        assert_equal(expected_penalty, miner.listmasternodes(bad_mnode.proTx)[0]["dmnstate"]["PoSePenalty"])
+        assert_equal(expected_penalty, miner.listgamemasters(bad_gmode.proTx)[0]["dgmstate"]["PoSePenalty"])
         self.log.info("Node punished.")
         # penalty decreases at every block
         miner.generate(1)
-        self.sync_all([n for i, n in enumerate(self.nodes) if i != bad_mnode.idx])
+        self.sync_all([n for i, n in enumerate(self.nodes) if i != bad_gmode.idx])
         expected_penalty -= 1
-        assert_equal(expected_penalty, miner.listmasternodes(bad_mnode.proTx)[0]["dmnstate"]["PoSePenalty"])
+        assert_equal(expected_penalty, miner.listgamemasters(bad_gmode.proTx)[0]["dgmstate"]["PoSePenalty"])
 
         # Keep mining commitments until the bad node is banned
         timeout = time.time() + 600
         while time.time() < timeout:
-            self.mine_quorum(invalidated_idx=bad_mnode.idx, skip_bad_member_sync=True, expected_messages=dkg_msgs)
-            pose_height = miner.listmasternodes(bad_mnode.proTx)[0]["dmnstate"]["PoSeBanHeight"]
+            self.mine_quorum(invalidated_idx=bad_gmode.idx, skip_bad_member_sync=True, expected_messages=dkg_msgs)
+            pose_height = miner.listgamemasters(bad_gmode.proTx)[0]["dgmstate"]["PoSeBanHeight"]
             if pose_height != -1:
-                self.log.info("Node %d has been PoSeBanned at height %d" % (bad_mnode.idx, pose_height))
+                self.log.info("Node %d has been PoSeBanned at height %d" % (bad_gmode.idx, pose_height))
                 self.log.info("All good.")
                 return
             time.sleep(1)

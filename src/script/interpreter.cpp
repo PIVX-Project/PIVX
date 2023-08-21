@@ -657,7 +657,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 //
                 case OP_EQUAL:
                 case OP_EQUALVERIFY:
-                //case OP_NOTEQUAL: // use OP_NUMNOTEQUAL
+                //case OP_NOTEQUAL: // use OP_NUGMOTEQUAL
                 {
                     // (x1 x2 - bool)
                     if (stack.size() < 2)
@@ -719,7 +719,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 case OP_BOOLOR:
                 case OP_NUMEQUAL:
                 case OP_NUMEQUALVERIFY:
-                case OP_NUMNOTEQUAL:
+                case OP_NUGMOTEQUAL:
                 case OP_LESSTHAN:
                 case OP_GREATERTHAN:
                 case OP_LESSTHANOREQUAL:
@@ -747,7 +747,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     case OP_BOOLOR:              bn = (bn1 != bnZero || bn2 != bnZero); break;
                     case OP_NUMEQUAL:            bn = (bn1 == bn2); break;
                     case OP_NUMEQUALVERIFY:      bn = (bn1 == bn2); break;
-                    case OP_NUMNOTEQUAL:         bn = (bn1 != bn2); break;
+                    case OP_NUGMOTEQUAL:         bn = (bn1 != bn2); break;
                     case OP_LESSTHAN:            bn = (bn1 < bn2); break;
                     case OP_GREATERTHAN:         bn = (bn1 > bn2); break;
                     case OP_LESSTHANOREQUAL:     bn = (bn1 <= bn2); break;
@@ -1378,7 +1378,7 @@ bool TransactionSignatureChecker::CheckColdStake(bool fAllowLastOutputFree, cons
     assert(outs >= 2);
     // All outputs must have the same pubKeyScript, and it must match the script we are spending.
     // If the coinstake has at least 3 outputs, the last one can be left free, to be used for
-    // budget/masternode payments (before v6.0 enforcement), and is checked in CheckColdstakeFreeOutput().
+    // budget/gamemaster payments (before v6.0 enforcement), and is checked in CheckColdstakeFreeOutput().
     // Here we verify only that input amount goes to the non-free outputs.
     CAmount outValue{0};
     for (unsigned int i = 1; i < outs; i++) {

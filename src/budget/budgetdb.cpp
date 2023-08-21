@@ -17,7 +17,7 @@ static const int BUDGET_DB_VERSION = 1;
 CBudgetDB::CBudgetDB()
 {
     pathDB = GetDataDir() / "budget.dat";
-    strMagicMessage = "MasternodeBudget";
+    strMagicMessage = "GamemasterBudget";
 }
 
 bool CBudgetDB::Write(const CBudgetManager& objToSave)
@@ -27,7 +27,7 @@ bool CBudgetDB::Write(const CBudgetManager& objToSave)
     // serialize, checksum data up to that point, then append checksum
     CDataStream ssObj(SER_DISK, CLIENT_VERSION);
     ssObj << BUDGET_DB_VERSION;
-    ssObj << strMagicMessage;                   // masternode cache file specific magic message
+    ssObj << strMagicMessage;                   // gamemaster cache file specific magic message
     ssObj << Params().MessageStart(); // network specific magic number
     ssObj << objToSave;
     uint256 hash = Hash(ssObj.begin(), ssObj.end());
@@ -47,7 +47,7 @@ bool CBudgetDB::Write(const CBudgetManager& objToSave)
     }
     fileout.fclose();
 
-    LogPrint(BCLog::MNBUDGET,"Written info to budget.dat  %dms\n", GetTimeMillis() - nStart);
+    LogPrint(BCLog::GMBUDGET,"Written info to budget.dat  %dms\n", GetTimeMillis() - nStart);
 
     return true;
 }
@@ -101,7 +101,7 @@ CBudgetDB::ReadResult CBudgetDB::Read(CBudgetManager& objToLoad, bool fDryRun)
 
         // ... verify the message matches predefined one
         if (strMagicMessage != strMagicMessageTmp) {
-            error("%s : Invalid masternode cache magic message", __func__);
+            error("%s : Invalid gamemaster cache magic message", __func__);
             return IncorrectMagicMessage;
         }
 
@@ -123,12 +123,12 @@ CBudgetDB::ReadResult CBudgetDB::Read(CBudgetManager& objToLoad, bool fDryRun)
         return IncorrectFormat;
     }
 
-    LogPrint(BCLog::MNBUDGET,"Loaded info from budget.dat (dbversion=%d) %dms\n", version, GetTimeMillis() - nStart);
-    LogPrint(BCLog::MNBUDGET,"%s\n", objToLoad.ToString());
+    LogPrint(BCLog::GMBUDGET,"Loaded info from budget.dat (dbversion=%d) %dms\n", version, GetTimeMillis() - nStart);
+    LogPrint(BCLog::GMBUDGET,"%s\n", objToLoad.ToString());
     if (!fDryRun) {
-        LogPrint(BCLog::MNBUDGET,"Budget manager - cleaning....\n");
+        LogPrint(BCLog::GMBUDGET,"Budget manager - cleaning....\n");
         objToLoad.CheckAndRemove();
-        LogPrint(BCLog::MNBUDGET,"Budget manager - result: %s\n", objToLoad.ToString());
+        LogPrint(BCLog::GMBUDGET,"Budget manager - result: %s\n", objToLoad.ToString());
     }
 
     return Ok;
@@ -139,8 +139,8 @@ void DumpBudgets(CBudgetManager& budgetman)
     int64_t nStart = GetTimeMillis();
 
     CBudgetDB budgetdb;
-    LogPrint(BCLog::MNBUDGET,"Writing info to budget.dat...\n");
+    LogPrint(BCLog::GMBUDGET,"Writing info to budget.dat...\n");
     budgetdb.Write(budgetman);
 
-    LogPrint(BCLog::MNBUDGET,"Budget dump finished  %dms\n", GetTimeMillis() - nStart);
+    LogPrint(BCLog::GMBUDGET,"Budget dump finished  %dms\n", GetTimeMillis() - nStart);
 }

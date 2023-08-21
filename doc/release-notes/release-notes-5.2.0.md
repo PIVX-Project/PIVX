@@ -13,7 +13,7 @@ Update enforcement is currently scheduled to go into effect at the following blo
 ```
 Mainnet: 2,927,000
 ```
-Masternodes will need to be restarted once both the masternode daemon and the controller wallet have been upgraded.
+Gamemasters will need to be restarted once both the gamemaster daemon and the controller wallet have been upgraded.
 
 Note: In preparation for the enforcement, upgraded peers will start rejecting non-upgraded peers few hours before the enforcement block height, we recommend everyone to be updated at max a day before the final time.
 
@@ -64,7 +64,7 @@ v5.2.0 Change log
 - #2435 [Backport] Bump default block version to 10 (no enforcement) (random-zebra)
 - #2441 [Consensus] v5.2 upgrade enforcement height (furszy).
 
-### Tier Two Network (Masternodes / Budget)
+### Tier Two Network (Gamemasters / Budget)
 - #2395 [budget] partially fixing a race condition that could cause a good peer to be banned (furszy)
 - #2437 [Backport] Add tiertwo_governance_reorg functional test (random-zebra)
 - ##2440 Align budget payee validity to highest voted budget check. (furszy)

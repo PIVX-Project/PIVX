@@ -3,7 +3,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://www.opensource.org/licenses/mit-license.php.
 """
-Test checking compatibility code between MN and DMN
+Test checking compatibility code between GM and DGM
 """
 
 from decimal import Decimal
@@ -15,7 +15,7 @@ from test_framework.util import (
 )
 
 
-class MasternodeCompatibilityTest(HemisTier2TestFramework):
+class GamemasterCompatibilityTest(HemisTier2TestFramework):
 
     def set_test_params(self):
         self.setup_clean_chain = True
@@ -26,51 +26,51 @@ class MasternodeCompatibilityTest(HemisTier2TestFramework):
         self.ownerOnePos = self.ownerTwoPos = 1
         self.remoteOnePos = 2
         self.remoteTwoPos = 3
-        self.remoteDMN1Pos = 4
-        self.remoteDMN2Pos = 5
-        self.remoteDMN3Pos = 6
+        self.remoteDGM1Pos = 4
+        self.remoteDGM2Pos = 5
+        self.remoteDGM3Pos = 6
 
-        self.masternodeOneAlias = "mnOne"
-        self.masternodeTwoAlias = "mntwo"
+        self.gamemasterOneAlias = "gmOne"
+        self.gamemasterTwoAlias = "gmtwo"
 
         self.extra_args = [["-nuparams=v5_shield:249", "-nuparams=v6_evo:250", "-whitelist=127.0.0.1"]] * self.num_nodes
-        for i in [self.remoteOnePos, self.remoteTwoPos, self.remoteDMN1Pos, self.remoteDMN2Pos, self.remoteDMN3Pos]:
+        for i in [self.remoteOnePos, self.remoteTwoPos, self.remoteDGM1Pos, self.remoteDGM2Pos, self.remoteDGM3Pos]:
             self.extra_args[i] += ["-listen", "-externalip=127.0.0.1"]
         self.extra_args[self.minerPos].append("-sporkkey=932HEevBSujW2ud7RfB1YF91AFygbBRQj3de3LyaCRqNzKKgWXi")
 
-        self.mnOnePrivkey = "9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK"
-        self.mnTwoPrivkey = "92Hkebp3RHdDidGZ7ARgS4orxJAGyFUPDXNqtsYsiwho1HGVRbF"
+        self.gmOnePrivkey = "9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK"
+        self.gmTwoPrivkey = "92Hkebp3RHdDidGZ7ARgS4orxJAGyFUPDXNqtsYsiwho1HGVRbF"
 
         self.miner = None
         self.ownerOne = self.ownerTwo = None
         self.remoteOne = None
         self.remoteTwo = None
-        self.remoteDMN1 = None
-        self.remoteDMN2 = None
-        self.remoteDMN3 = None
+        self.remoteDGM1 = None
+        self.remoteDGM2 = None
+        self.remoteDGM3 = None
 
-    def check_mns_status_legacy(self, node, txhash):
-        status = node.getmasternodestatus()
+    def check_gms_status_legacy(self, node, txhash):
+        status = node.getgamemasterstatus()
         assert_equal(status["txhash"], txhash)
-        assert_equal(status["message"], "Masternode successfully started")
+        assert_equal(status["message"], "Gamemaster successfully started")
 
-    def check_mns_status(self, node, txhash):
-        status = node.getmasternodestatus()
+    def check_gms_status(self, node, txhash):
+        status = node.getgamemasterstatus()
         assert_equal(status["proTxHash"], txhash)
-        assert_equal(status["dmnstate"]["PoSePenalty"], 0)
+        assert_equal(status["dgmstate"]["PoSePenalty"], 0)
         assert_equal(status["status"], "Ready")
 
-    def check_mn_enabled_count(self, enabled, total):
+    def check_gm_enabled_count(self, enabled, total):
         for node in self.nodes:
-            node_count = node.getmasternodecount()
+            node_count = node.getgamemastercount()
             assert_equal(node_count['enabled'], enabled)
             assert_equal(node_count['total'], total)
 
     """
     Checks the block at specified height
-    Returns the address of the mn paid (in the coinbase), and the json coinstake tx
+    Returns the address of the gm paid (in the coinbase), and the json coinstake tx
     """
-    def get_block_mnwinner(self, height):
+    def get_block_gmwinner(self, height):
         blk = self.miner.getblock(self.miner.getblockhash(height), True)
         assert_equal(blk['height'], height)
         cbase_tx = self.miner.getrawtransaction(blk['tx'][0], True)
@@ -82,140 +82,140 @@ class MasternodeCompatibilityTest(HemisTier2TestFramework):
         assert_equal(cbase_tx['vout'][0]['value'], Decimal("3.0"))
         return cbase_tx['vout'][0]['scriptPubKey']['addresses'][0], self.miner.getrawtransaction(blk['tx'][1], True)
 
-    def check_mn_list(self, node, txHashSet):
-        # check masternode list from node
-        mnlist = node.listmasternodes()
-        if len(mnlist) != len(txHashSet):
-            raise Exception(str(mnlist))
-        foundHashes = set([mn["txhash"] for mn in mnlist if mn["txhash"] in txHashSet])
+    def check_gm_list(self, node, txHashSet):
+        # check gamemaster list from node
+        gmlist = node.listgamemasters()
+        if len(gmlist) != len(txHashSet):
+            raise Exception(str(gmlist))
+        foundHashes = set([gm["txhash"] for gm in gmlist if gm["txhash"] in txHashSet])
         if len(foundHashes) != len(txHashSet):
-            raise Exception(str(mnlist))
-        for x in mnlist:
-            self.mn_addresses[x["txhash"]] = x["addr"]
+            raise Exception(str(gmlist))
+        for x in gmlist:
+            self.gm_addresses[x["txhash"]] = x["addr"]
 
     def run_test(self):
-        self.mn_addresses = {}
+        self.gm_addresses = {}
         self.enable_mocktime()
-        self.setup_3_masternodes_network()
+        self.setup_3_gamemasters_network()
 
-        # start with 3 masternodes (2 legacy + 1 DMN)
-        self.check_mn_enabled_count(3, 3)
+        # start with 3 gamemasters (2 legacy + 1 DGM)
+        self.check_gm_enabled_count(3, 3)
 
         # add two more nodes to the network
-        self.remoteDMN2 = self.nodes[self.remoteDMN2Pos]
-        self.remoteDMN3 = self.nodes[self.remoteDMN3Pos]
+        self.remoteDGM2 = self.nodes[self.remoteDGM2Pos]
+        self.remoteDGM3 = self.nodes[self.remoteDGM3Pos]
         # add more direct connections to the miner
         connect_nodes(self.miner, 2)
         connect_nodes(self.remoteTwo, 0)
-        connect_nodes(self.remoteDMN2, 0)
+        connect_nodes(self.remoteDGM2, 0)
         self.sync_all()
 
-        # check mn list from miner
-        txHashSet = set([self.mnOneCollateral.hash, self.mnTwoCollateral.hash, self.proRegTx1])
-        self.check_mn_list(self.miner, txHashSet)
+        # check gm list from miner
+        txHashSet = set([self.gmOneCollateral.hash, self.gmTwoCollateral.hash, self.proRegTx1])
+        self.check_gm_list(self.miner, txHashSet)
 
-        # check status of masternodes
-        self.check_mns_status_legacy(self.remoteOne, self.mnOneCollateral.hash)
-        self.log.info("MN1 active. Pays %s" % self.mn_addresses[self.mnOneCollateral.hash])
-        self.check_mns_status_legacy(self.remoteTwo, self.mnTwoCollateral.hash)
-        self.log.info("MN2 active Pays %s" % self.mn_addresses[self.mnTwoCollateral.hash])
-        self.check_mns_status(self.remoteDMN1, self.proRegTx1)
-        self.log.info("DMN1 active Pays %s" % self.mn_addresses[self.proRegTx1])
+        # check status of gamemasters
+        self.check_gms_status_legacy(self.remoteOne, self.gmOneCollateral.hash)
+        self.log.info("GM1 active. Pays %s" % self.gm_addresses[self.gmOneCollateral.hash])
+        self.check_gms_status_legacy(self.remoteTwo, self.gmTwoCollateral.hash)
+        self.log.info("GM2 active Pays %s" % self.gm_addresses[self.gmTwoCollateral.hash])
+        self.check_gms_status(self.remoteDGM1, self.proRegTx1)
+        self.log.info("DGM1 active Pays %s" % self.gm_addresses[self.proRegTx1])
 
-        # Create another DMN, this time without funding the collateral.
+        # Create another DGM, this time without funding the collateral.
         # ProTx references another transaction in the owner's wallet
-        self.proRegTx2, self.dmn2Privkey = self.setupDMN(
+        self.proRegTx2, self.dgm2Privkey = self.setupDGM(
             self.ownerOne,
             self.miner,
-            self.remoteDMN2Pos,
+            self.remoteDGM2Pos,
             "internal"
         )
-        self.remoteDMN2.initmasternode(self.dmn2Privkey)
+        self.remoteDGM2.initgamemaster(self.dgm2Privkey)
 
         # check list and status
-        self.check_mn_enabled_count(4, 4) # 2 legacy + 2 DMN
+        self.check_gm_enabled_count(4, 4) # 2 legacy + 2 DGM
         txHashSet.add(self.proRegTx2)
-        self.check_mn_list(self.miner, txHashSet)
-        self.check_mns_status(self.remoteDMN2, self.proRegTx2)
-        self.log.info("DMN2 active Pays %s" % self.mn_addresses[self.proRegTx2])
+        self.check_gm_list(self.miner, txHashSet)
+        self.check_gms_status(self.remoteDGM2, self.proRegTx2)
+        self.log.info("DGM2 active Pays %s" % self.gm_addresses[self.proRegTx2])
 
         # Check block version and coinbase payment
         blk_count = self.miner.getblockcount()
         self.log.info("Checking block version and coinbase payment...")
-        payee, cstake_tx = self.get_block_mnwinner(blk_count)
-        if payee not in [self.mn_addresses[k] for k in self.mn_addresses]:
-            raise Exception("payee %s not found in expected list %s" % (payee, str(self.mn_addresses)))
+        payee, cstake_tx = self.get_block_gmwinner(blk_count)
+        if payee not in [self.gm_addresses[k] for k in self.gm_addresses]:
+            raise Exception("payee %s not found in expected list %s" % (payee, str(self.gm_addresses)))
         assert_equal(len(cstake_tx['vin']), 1)
         assert_equal(len(cstake_tx['vout']), 2)
         assert_equal(cstake_tx['vout'][1]['value'], Decimal("497.0")) # 250 + 250 - 3
         self.log.info("Block at height %d checks out" % blk_count)
 
-        # Now create a DMN, reusing the collateral output of a legacy MN
-        self.log.info("Creating a DMN reusing the collateral of a legacy MN...")
-        self.proRegTx3, self.dmn3Privkey = self.setupDMN(
+        # Now create a DGM, reusing the collateral output of a legacy GM
+        self.log.info("Creating a DGM reusing the collateral of a legacy GM...")
+        self.proRegTx3, self.dgm3Privkey = self.setupDGM(
             self.ownerOne,
             self.miner,
-            self.remoteDMN3Pos,
+            self.remoteDGM3Pos,
             "external",
-            self.mnOneCollateral,
+            self.gmOneCollateral,
         )
         # The remote node is shutting down the pinging service
         self.send_3_pings()
 
-        self.remoteDMN3.initmasternode(self.dmn3Privkey)
+        self.remoteDGM3.initgamemaster(self.dgm3Privkey)
 
-        # The legacy masternode must no longer be in the list
-        # and the DMN must have taken its place
-        self.check_mn_enabled_count(4, 4)  # 1 legacy + 3 DMN
-        txHashSet.remove(self.mnOneCollateral.hash)
+        # The legacy gamemaster must no longer be in the list
+        # and the DGM must have taken its place
+        self.check_gm_enabled_count(4, 4)  # 1 legacy + 3 DGM
+        txHashSet.remove(self.gmOneCollateral.hash)
         txHashSet.add(self.proRegTx3)
         for node in self.nodes:
-            self.check_mn_list(node, txHashSet)
-        self.log.info("Masternode list correctly updated by all nodes.")
-        self.check_mns_status(self.remoteDMN3, self.proRegTx3)
-        self.log.info("DMN3 active Pays %s" % self.mn_addresses[self.proRegTx3])
+            self.check_gm_list(node, txHashSet)
+        self.log.info("Gamemaster list correctly updated by all nodes.")
+        self.check_gms_status(self.remoteDGM3, self.proRegTx3)
+        self.log.info("DGM3 active Pays %s" % self.gm_addresses[self.proRegTx3])
 
-        # Now try to start a legacy MN with a collateral used by a DMN
-        self.log.info("Now trying to start a legacy MN with a collateral of a DMN...")
-        self.controller_start_masternode(self.ownerOne, self.masternodeOneAlias)
+        # Now try to start a legacy GM with a collateral used by a DGM
+        self.log.info("Now trying to start a legacy GM with a collateral of a DGM...")
+        self.controller_start_gamemaster(self.ownerOne, self.gamemasterOneAlias)
         self.send_3_pings()
 
-        # the masternode list hasn't changed
-        self.check_mn_enabled_count(4, 4)
+        # the gamemaster list hasn't changed
+        self.check_gm_enabled_count(4, 4)
         for node in self.nodes:
-            self.check_mn_list(node, txHashSet)
-        self.log.info("Masternode list correctly unchanged in all nodes.")
+            self.check_gm_list(node, txHashSet)
+        self.log.info("Gamemaster list correctly unchanged in all nodes.")
 
         # stake 30 blocks, sync tiertwo data, and check winners
         self.log.info("Staking 30 blocks...")
         self.stake(30, [self.remoteTwo])
         self.sync_blocks()
-        self.wait_until_mnsync_finished()
+        self.wait_until_gmsync_finished()
 
         # check projection
         self.log.info("Checking winners...")
-        winners = set([x['winner']['address'] for x in self.miner.getmasternodewinners()
+        winners = set([x['winner']['address'] for x in self.miner.getgamemasterwinners()
                        if x['winner']['address'] != "Unknown"])
-        # all except mn1 must be scheduled
-        mn_addresses = set([self.mn_addresses[k] for k in self.mn_addresses
-                            if k != self.mnOneCollateral.hash])
-        assert_equal(winners, mn_addresses)
+        # all except gm1 must be scheduled
+        gm_addresses = set([self.gm_addresses[k] for k in self.gm_addresses
+                            if k != self.gmOneCollateral.hash])
+        assert_equal(winners, gm_addresses)
 
-        # check mns paid in the last 20 blocks
-        self.log.info("Checking masternodes paid...")
+        # check gms paid in the last 20 blocks
+        self.log.info("Checking gamemasters paid...")
         blk_count = self.miner.getblockcount()
-        mn_payments = {}    # dict address --> payments count
+        gm_payments = {}    # dict address --> payments count
         for i in range(blk_count - 20 + 1, blk_count + 1):
-            winner, _ = self.get_block_mnwinner(i)
-            if winner not in mn_payments:
-                mn_payments[winner] = 0
-            mn_payments[winner] += 1
-        # two full 10-blocks schedule: all mns must be paid at least twice
-        assert_equal(len(mn_payments), len(mn_addresses))
-        assert all([x >= 2 for x in mn_payments.values()])
+            winner, _ = self.get_block_gmwinner(i)
+            if winner not in gm_payments:
+                gm_payments[winner] = 0
+            gm_payments[winner] += 1
+        # two full 10-blocks schedule: all gms must be paid at least twice
+        assert_equal(len(gm_payments), len(gm_addresses))
+        assert all([x >= 2 for x in gm_payments.values()])
         self.log.info("All good.")
 
 
 
 if __name__ == '__main__':
-    MasternodeCompatibilityTest().main()
+    GamemasterCompatibilityTest().main()

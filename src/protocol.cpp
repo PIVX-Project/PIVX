@@ -41,21 +41,21 @@ const char* FILTERCLEAR = "filterclear";
 const char* SENDHEADERS = "sendheaders";
 const char* SPORK = "spork";
 const char* GETSPORKS = "getsporks";
-const char* MNBROADCAST = "mnb";
-const char* MNBROADCAST2 = "mnb2"; // BIP155 support
-const char* MNPING = "mnp";
-const char* MNWINNER = "mnw";
-const char* GETMNWINNERS = "mnget";
+const char* GMBROADCAST = "gmb";
+const char* GMBROADCAST2 = "gmb2"; // BIP155 support
+const char* GMPING = "gmp";
+const char* GMWINNER = "gmw";
+const char* GETGMWINNERS = "gmget";
 const char* BUDGETPROPOSAL = "mprop";
 const char* BUDGETVOTE = "mvote";
-const char* BUDGETVOTESYNC = "mnvs";
+const char* BUDGETVOTESYNC = "gmvs";
 const char* FINALBUDGET = "fbs";
 const char* FINALBUDGETVOTE = "fbvote";
 const char* SYNCSTATUSCOUNT = "ssc";
-const char* GETMNLIST = "dseg";
+const char* GETGMLIST = "dseg";
 const char* QFCOMMITMENT = "qfcommit";
 const char* QSENDRECSIGS = "qsendrecsigs";
-const char* MNAUTH = "mnauth";
+const char* GMAUTH = "gmauth";
 const char* QCONTRIB = "qcontrib";
 const char* QCOMPLAINT = "qcomplaint";
 const char* QJUSTIFICATION = "qjustify";
@@ -99,25 +99,25 @@ const static std::string allNetMessageTypes[] = {
     "ix",              // deprecated
     "txlvote",         // deprecated
     NetMsgType::SPORK, // --- tiertwoNetMessageTypes start here ---
-    NetMsgType::MNWINNER,
-    "mnodescanerr",
+    NetMsgType::GMWINNER,
+    "gmodescanerr",
     NetMsgType::BUDGETVOTE,
     NetMsgType::BUDGETPROPOSAL,
     NetMsgType::FINALBUDGET,
     NetMsgType::FINALBUDGETVOTE,
-    "mnq",
-    NetMsgType::MNBROADCAST,
-    NetMsgType::MNPING,
+    "gmq",
+    NetMsgType::GMBROADCAST,
+    NetMsgType::GMPING,
     "dstx", // deprecated
-    NetMsgType::GETMNWINNERS,
-    NetMsgType::GETMNLIST,
+    NetMsgType::GETGMWINNERS,
+    NetMsgType::GETGMLIST,
     NetMsgType::BUDGETVOTESYNC,
     NetMsgType::GETSPORKS,
     NetMsgType::SYNCSTATUSCOUNT,
-    NetMsgType::MNBROADCAST2,
+    NetMsgType::GMBROADCAST2,
     NetMsgType::QFCOMMITMENT,
     NetMsgType::QSENDRECSIGS,
-    NetMsgType::MNAUTH,
+    NetMsgType::GMAUTH,
     NetMsgType::QCONTRIB,
     NetMsgType::QCOMPLAINT,
     NetMsgType::QJUSTIFICATION,
@@ -215,15 +215,15 @@ std::string CInv::GetCommand() const
         case MSG_TXLOCK_REQUEST:    return cmd.append("ix");       // Deprecated
         case MSG_TXLOCK_VOTE:       return cmd.append("txlvote");  // Deprecated
         case MSG_SPORK:             return cmd.append(NetMsgType::SPORK);
-        case MSG_MASTERNODE_WINNER: return cmd.append(NetMsgType::MNWINNER);
-        case MSG_MASTERNODE_SCANNING_ERROR: return cmd.append("mnodescanerr"); // Deprecated
+        case MSG_GAMEMASTER_WINNER: return cmd.append(NetMsgType::GMWINNER);
+        case MSG_GAMEMASTER_SCANNING_ERROR: return cmd.append("gmodescanerr"); // Deprecated
         case MSG_BUDGET_VOTE: return cmd.append(NetMsgType::BUDGETVOTE);
         case MSG_BUDGET_PROPOSAL: return cmd.append(NetMsgType::BUDGETPROPOSAL);
         case MSG_BUDGET_FINALIZED: return cmd.append(NetMsgType::FINALBUDGET);
         case MSG_BUDGET_FINALIZED_VOTE: return cmd.append(NetMsgType::FINALBUDGETVOTE);
-        case MSG_MASTERNODE_QUORUM: return cmd.append("mnq"); // Unused
-        case MSG_MASTERNODE_ANNOUNCE: return cmd.append(NetMsgType::MNBROADCAST); // or MNBROADCAST2
-        case MSG_MASTERNODE_PING: return cmd.append(NetMsgType::MNPING);
+        case MSG_GAMEMASTER_QUORUM: return cmd.append("gmq"); // Unused
+        case MSG_GAMEMASTER_ANNOUNCE: return cmd.append(NetMsgType::GMBROADCAST); // or GMBROADCAST2
+        case MSG_GAMEMASTER_PING: return cmd.append(NetMsgType::GMPING);
         case MSG_DSTX: return cmd.append("dstx"); // Deprecated
         case MSG_QUORUM_FINAL_COMMITMENT: return cmd.append(NetMsgType::QFCOMMITMENT);
         case MSG_QUORUM_CONTRIB: return cmd.append(NetMsgType::QCONTRIB);

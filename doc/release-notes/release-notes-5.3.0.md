@@ -10,8 +10,8 @@ Update enforcement is currently scheduled to go into effect at the following tim
 ```
 Mainnet: block 3,014,000. ~10th September.
 ```
-Masternodes will need to be restarted once both the masternode daemon and the controller wallet have been upgraded.
-If you are running a Masternode over Tor, please read the "How To Upgrade" section.
+Gamemasters will need to be restarted once both the gamemaster daemon and the controller wallet have been upgraded.
+If you are running a Gamemaster over Tor, please read the "How To Upgrade" section.
 
 Note: In preparation for the enforcement, upgraded peers will start rejecting non-upgraded peers few hours before the enforcement block height, we recommend everyone to be updated at max a day before the final time.
 
@@ -22,14 +22,14 @@ How to Upgrade
 
 If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/hemis-Qt (on Mac) or hemisd/hemis-qt (on Linux).
 
-**Important note for Masternodes running over Tor (v2 onion address):**
+**Important note for Gamemasters running over Tor (v2 onion address):**
 Before starting the node, copy the content of the `onion_private_key` file, located inside the data directory into a new `onion_v3_private_key` file inside the same directory.
 On linux: `cp -f onion_private_key onion_v3_private_key`.
 If the `onion_v3_private_key` file already exist, replace the content with the content of the `onion_private_key` file.
 
-This will allow you to bypass the v2 onion address deprecation and continue running the MN over Tor for now.
+This will allow you to bypass the v2 onion address deprecation and continue running the GM over Tor for now.
 Be aware that the Tor network is **completely** removing v2 onion addresses support starting from Oct 15th (see "P2P and network changes" section).
-After the v5.3 network upgrade enforcement, the MN will need to be migrated to run on a Tor v3 onion address (Update window Sept 15th - Oct 15th).
+After the v5.3 network upgrade enforcement, the GM will need to be migrated to run on a Tor v3 onion address (Update window Sept 15th - Oct 15th).
 If it's not done on time, the node will drop off the network.
 
 Sapling Parameters
@@ -580,7 +580,7 @@ v5.3.0 Change log
 - #2328 Always flush block and undo when switching to new file (furszy)
 - #2339 [Bugfix] the end of a reorged chain is invalid when connect fails (furszy)
 - #2336 Refactor block file logic + util.h/cpp moved to util/system.h (furszy)
-- #2345 [TierTwo] Masternode collateral auto-locking + more tests (random-zebra)
+- #2345 [TierTwo] Gamemaster collateral auto-locking + more tests (random-zebra)
 - #2349 [RPC] Provider-Update-Service special tx type (random-zebra)
 - #2363 [RPC] ProUpReg and ProUpRev special tx types (random-zebra)
 - #2378 Child-pays-for-parent Implementation + CoinAge priority removal (random-zebra)
@@ -598,9 +598,9 @@ v5.3.0 Change log
 - #2422 Mockable PoissonNextSend helper and tests mempool sync fixes (furszy)
 - #2480 asmap to improve IP bucketing in addrman - backports (furszy)
 - #2411 Road to Tor v3 support (BIP155) (furszy)
-- #2510 [TierTwo] Enforce MessageVersion::MESS_VER_HASH (mnb/mnp) with 5.3 (random-zebra)
+- #2510 [TierTwo] Enforce MessageVersion::MESS_VER_HASH (gmb/gmp) with 5.3 (random-zebra)
 - #2502 Add Tor v3 hardcoded seeds (Fuzzbawls)
-- #2508 [BugFix] Correct mnb ser/unser of BIP155 node addresses (furszy)
+- #2508 [BugFix] Correct gmb ser/unser of BIP155 node addresses (furszy)
 
 ### Wallet
 - #2240 Add `rescanblockchain` RPC command functionality (furszy)
@@ -630,7 +630,7 @@ v5.3.0 Change log
 - #2392 [RPC] Remove compiler warning in autocombinerewards and update help text (random-zebra)
 - #2476 correct non hemisified help commands texts and add missing "ischange" result (furszy)
 - #2503 [Net] Add getnodeaddresses RPC command (Fuzzbawls)
-- #2519 [RPC] Do not register DMN-related RPC commands (random-zebra)
+- #2519 [RPC] Do not register DGM-related RPC commands (random-zebra)
 
 ### GUI
 - #2249 Make box of hemis Send address return to purple when it's empty (PicklesRcool)
@@ -647,14 +647,14 @@ v5.3.0 Change log
 - #2372 RPC-Console nested commands documentation (random-zebra)
 - #2388 Ensure that all UI error/warning texts pass through translation (Fuzzbawls)
 - #2403 transaction model, cleanup unused hasZcTxes flag (furszy)
-- #2397 Fix invalid MN collateral amount and align every static 10k HMS strings (furszy)
+- #2397 Fix invalid GM collateral amount and align every static 10k HMS strings (furszy)
 - #2380 [Cleanup] guiutils cleanup + fix memory mismanagement (furszy)
 - #2347 Add GUI controls for subtract-fee-from-amount (random-zebra)
 - #2490 [BugFix] fix app always triggering the tutorial dialog if no manual '-wallet' arg is provided (furszy)
 - #2448 Periodic make translate (Fuzzbawls)
 - #2481 [BUG][GUI] Fix P2CS grouping in coin control (random-zebra)
 - #2506 bugfix, the command line interface is called "hemis-cli" not "hemis-core" (furszy)
-- #2513 [GUI] Remove extra jump line in mnb creation error message (furszy)
+- #2513 [GUI] Remove extra jump line in gmb creation error message (furszy)
 - #2516 [GUI][BUG] Console: allow empty arguments (random-zebra)
 
 ### Platform support
@@ -662,13 +662,13 @@ v5.3.0 Change log
 
 ### Tier two network
 - #2271 [DB] Introduce EVO database (random-zebra)
-- #2273 [TierTwo] Deterministic masternode lists (random-zebra)
-- #2309 New masternode payment logic (random-zebra)
-- #2308 Compatibility code for MN payments + budget voting (random-zebra)
+- #2273 [TierTwo] Deterministic gamemaster lists (random-zebra)
+- #2309 New gamemaster payment logic (random-zebra)
+- #2308 Compatibility code for GM payments + budget voting (random-zebra)
 - #2322 Move evodb_cache Memory Usage logging (PeterL73)
-- #2402 Fix MN activation when the node received the mnb before initialize the MN (furszy)
-- #2501 [BUG][RPC] Fix listmasternodes and getmasternodewinners (random-zebra)
-- #2514 [TierTwo][BugFix] Fix peer banning for not synced tiertwo + GetMNList and inv performance improvements (furszy)
+- #2402 Fix GM activation when the node received the gmb before initialize the GM (furszy)
+- #2501 [BUG][RPC] Fix listgamemasters and getgamemasterwinners (random-zebra)
+- #2514 [TierTwo][BugFix] Fix peer banning for not synced tiertwo + GetGMList and inv performance improvements (furszy)
 
 ### Build system
 - #2263 Prune un-necessary X packages (Fuzzbawls)
@@ -760,12 +760,12 @@ v5.3.0 Change log
 - #2262 add reduce-memory.md (furszy)
 - #2344 Save historical release notes for v5.1.0 (random-zebra)
 - #2466 Remove OpenSSL instructions in build-osx.md (Fuzzbawls)
-- #2267 Introducing Deterministic Masternodes (random-zebra)
+- #2267 Introducing Deterministic Gamemasters (random-zebra)
 - #2500 Updated documentation related to macOS SDK extraction (random-zebra)
 
 ### Refactoring
 - #2253 Wallet db keys enum + old CWalletKey removal (furszy)
-- #2270 Mix refactoring in preparation for DMN lists (random-zebra)
+- #2270 Mix refactoring in preparation for DGM lists (random-zebra)
 - #2325 fix indenting and code styling in netaddress.h/.cpp (random-zebra)
 - #2399 One CBaseChainParams should be enough (Fuzzbawls)
 - #2373 Combine scriptPubKey and amount as CTxOut in CScriptCheck (random-zebra)
@@ -780,7 +780,7 @@ v5.3.0 Change log
 - #2507 [Cleanup] Drop unneeded protocol version checks and constants (random-zebra)
 - #2482 Make HexStr take a span (furszy)
 - #2505 [Cleanup][Trivial] Remove unused SPORK_5 (random-zebra)
-- #2511 [GUI] Clean up mninfodialog (Fuzzbawls)
+- #2511 [GUI] Clean up gminfodialog (Fuzzbawls)
 
 ## Credits
 

@@ -4,13 +4,13 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 // clang-format off
-#include "activemasternode.h"
+#include "activegamemaster.h"
 #include "addrman.h"
 #include "budget/budgetmanager.h"
-#include "evo/deterministicmns.h"
-#include "masternode-sync.h"
-#include "masternode.h"
-#include "masternodeman.h"
+#include "evo/deterministicgms.h"
+#include "gamemaster-sync.h"
+#include "gamemaster.h"
+#include "gamemasterman.h"
 #include "netmessagemaker.h"
 #include "tiertwo/netfulfilledman.h"
 #include "spork.h"
@@ -19,24 +19,24 @@
 #include "validation.h"
 // clang-format on
 
-class CMasternodeSync;
-CMasternodeSync masternodeSync;
+class CGamemasterSync;
+CGamemasterSync gamemasterSync;
 
-CMasternodeSync::CMasternodeSync()
+CGamemasterSync::CGamemasterSync()
 {
     Reset();
 }
 
-bool CMasternodeSync::NotCompleted()
+bool CGamemasterSync::NotCompleted()
 {
     return (!g_tiertwo_sync_state.IsSynced() && (
             !g_tiertwo_sync_state.IsSporkListSynced() ||
-            sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT) ||
-            sporkManager.IsSporkActive(SPORK_9_MASTERNODE_BUDGET_ENFORCEMENT) ||
+            sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT) ||
+            sporkManager.IsSporkActive(SPORK_9_GAMEMASTER_BUDGET_ENFORCEMENT) ||
             sporkManager.IsSporkActive(SPORK_13_ENABLE_SUPERBLOCKS)));
 }
 
-void CMasternodeSync::UpdateBlockchainSynced(bool isRegTestNet)
+void CGamemasterSync::UpdateBlockchainSynced(bool isRegTestNet)
 {
     if (!isRegTestNet && !g_tiertwo_sync_state.CanUpdateChainSync(lastProcess)) return;
     if (fImporting || fReindex) return;
@@ -53,119 +53,119 @@ void CMasternodeSync::UpdateBlockchainSynced(bool isRegTestNet)
     g_tiertwo_sync_state.SetBlockchainSync(is_chain_synced, lastProcess);
 }
 
-void CMasternodeSync::Reset()
+void CGamemasterSync::Reset()
 {
     g_tiertwo_sync_state.SetBlockchainSync(false, 0);
     g_tiertwo_sync_state.ResetData();
     lastProcess = 0;
     lastFailure = 0;
     nCountFailures = 0;
-    sumMasternodeList = 0;
-    sumMasternodeWinner = 0;
+    sumGamemasterList = 0;
+    sumGamemasterWinner = 0;
     sumBudgetItemProp = 0;
     sumBudgetItemFin = 0;
-    countMasternodeList = 0;
-    countMasternodeWinner = 0;
+    countGamemasterList = 0;
+    countGamemasterWinner = 0;
     countBudgetItemProp = 0;
     countBudgetItemFin = 0;
-    g_tiertwo_sync_state.SetCurrentSyncPhase(MASTERNODE_SYNC_INITIAL);
-    RequestedMasternodeAttempt = 0;
+    g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_INITIAL);
+    RequestedGamemasterAttempt = 0;
     nAssetSyncStarted = GetTime();
 }
 
-bool CMasternodeSync::IsBudgetPropEmpty()
+bool CGamemasterSync::IsBudgetPropEmpty()
 {
     return sumBudgetItemProp == 0 && countBudgetItemProp > 0;
 }
 
-bool CMasternodeSync::IsBudgetFinEmpty()
+bool CGamemasterSync::IsBudgetFinEmpty()
 {
     return sumBudgetItemFin == 0 && countBudgetItemFin > 0;
 }
 
-int CMasternodeSync::GetNextAsset(int currentAsset)
+int CGamemasterSync::GetNextAsset(int currentAsset)
 {
-    if (currentAsset > MASTERNODE_SYNC_FINISHED) {
+    if (currentAsset > GAMEMASTER_SYNC_FINISHED) {
         LogPrintf("%s - invalid asset %d\n", __func__, currentAsset);
-        return MASTERNODE_SYNC_FAILED;
+        return GAMEMASTER_SYNC_FAILED;
     }
     switch (currentAsset) {
-    case (MASTERNODE_SYNC_INITIAL):
-    case (MASTERNODE_SYNC_FAILED):
-        return MASTERNODE_SYNC_SPORKS;
-    case (MASTERNODE_SYNC_SPORKS):
-        return deterministicMNManager->LegacyMNObsolete() ? MASTERNODE_SYNC_BUDGET : MASTERNODE_SYNC_LIST;
-    case (MASTERNODE_SYNC_LIST):
-        return deterministicMNManager->LegacyMNObsolete() ? MASTERNODE_SYNC_BUDGET : MASTERNODE_SYNC_MNW;
-    case (MASTERNODE_SYNC_MNW):
-        return MASTERNODE_SYNC_BUDGET;
-    case (MASTERNODE_SYNC_BUDGET):
+    case (GAMEMASTER_SYNC_INITIAL):
+    case (GAMEMASTER_SYNC_FAILED):
+        return GAMEMASTER_SYNC_SPORKS;
+    case (GAMEMASTER_SYNC_SPORKS):
+        return deterministicGMManager->LegacyGMObsolete() ? GAMEMASTER_SYNC_BUDGET : GAMEMASTER_SYNC_LIST;
+    case (GAMEMASTER_SYNC_LIST):
+        return deterministicGMManager->LegacyGMObsolete() ? GAMEMASTER_SYNC_BUDGET : GAMEMASTER_SYNC_GMW;
+    case (GAMEMASTER_SYNC_GMW):
+        return GAMEMASTER_SYNC_BUDGET;
+    case (GAMEMASTER_SYNC_BUDGET):
     default:
-        return MASTERNODE_SYNC_FINISHED;
+        return GAMEMASTER_SYNC_FINISHED;
     }
 }
 
-void CMasternodeSync::SwitchToNextAsset()
+void CGamemasterSync::SwitchToNextAsset()
 {
-    int RequestedMasternodeAssets = g_tiertwo_sync_state.GetSyncPhase();
-    if (RequestedMasternodeAssets == MASTERNODE_SYNC_INITIAL ||
-            RequestedMasternodeAssets == MASTERNODE_SYNC_FAILED) {
+    int RequestedGamemasterAssets = g_tiertwo_sync_state.GetSyncPhase();
+    if (RequestedGamemasterAssets == GAMEMASTER_SYNC_INITIAL ||
+            RequestedGamemasterAssets == GAMEMASTER_SYNC_FAILED) {
         ClearFulfilledRequest();
     }
-    const int nextAsset = GetNextAsset(RequestedMasternodeAssets);
-    if (nextAsset == MASTERNODE_SYNC_FINISHED) {
+    const int nextAsset = GetNextAsset(RequestedGamemasterAssets);
+    if (nextAsset == GAMEMASTER_SYNC_FINISHED) {
         LogPrintf("%s - Sync has finished\n", __func__);
     }
     g_tiertwo_sync_state.SetCurrentSyncPhase(nextAsset);
-    RequestedMasternodeAttempt = 0;
+    RequestedGamemasterAttempt = 0;
     nAssetSyncStarted = GetTime();
 }
 
-std::string CMasternodeSync::GetSyncStatus()
+std::string CGamemasterSync::GetSyncStatus()
 {
     switch (g_tiertwo_sync_state.GetSyncPhase()) {
-    case MASTERNODE_SYNC_INITIAL:
-        return _("MNs synchronization pending...");
-    case MASTERNODE_SYNC_SPORKS:
+    case GAMEMASTER_SYNC_INITIAL:
+        return _("GMs synchronization pending...");
+    case GAMEMASTER_SYNC_SPORKS:
         return _("Synchronizing sporks...");
-    case MASTERNODE_SYNC_LIST:
-        return _("Synchronizing masternodes...");
-    case MASTERNODE_SYNC_MNW:
-        return _("Synchronizing masternode winners...");
-    case MASTERNODE_SYNC_BUDGET:
+    case GAMEMASTER_SYNC_LIST:
+        return _("Synchronizing gamemasters...");
+    case GAMEMASTER_SYNC_GMW:
+        return _("Synchronizing gamemaster winners...");
+    case GAMEMASTER_SYNC_BUDGET:
         return _("Synchronizing budgets...");
-    case MASTERNODE_SYNC_FAILED:
+    case GAMEMASTER_SYNC_FAILED:
         return _("Synchronization failed");
-    case MASTERNODE_SYNC_FINISHED:
+    case GAMEMASTER_SYNC_FINISHED:
         return _("Synchronization finished");
     }
     return "";
 }
 
-void CMasternodeSync::ProcessSyncStatusMsg(int nItemID, int nCount)
+void CGamemasterSync::ProcessSyncStatusMsg(int nItemID, int nCount)
 {
-    int RequestedMasternodeAssets = g_tiertwo_sync_state.GetSyncPhase();
-    if (RequestedMasternodeAssets >= MASTERNODE_SYNC_FINISHED) return;
+    int RequestedGamemasterAssets = g_tiertwo_sync_state.GetSyncPhase();
+    if (RequestedGamemasterAssets >= GAMEMASTER_SYNC_FINISHED) return;
 
     //this means we will receive no further communication
     switch (nItemID) {
-        case (MASTERNODE_SYNC_LIST):
-            if (nItemID != RequestedMasternodeAssets) return;
-            sumMasternodeList += nCount;
-            countMasternodeList++;
+        case (GAMEMASTER_SYNC_LIST):
+            if (nItemID != RequestedGamemasterAssets) return;
+            sumGamemasterList += nCount;
+            countGamemasterList++;
             break;
-        case (MASTERNODE_SYNC_MNW):
-            if (nItemID != RequestedMasternodeAssets) return;
-            sumMasternodeWinner += nCount;
-            countMasternodeWinner++;
+        case (GAMEMASTER_SYNC_GMW):
+            if (nItemID != RequestedGamemasterAssets) return;
+            sumGamemasterWinner += nCount;
+            countGamemasterWinner++;
             break;
-        case (MASTERNODE_SYNC_BUDGET_PROP):
-            if (RequestedMasternodeAssets != MASTERNODE_SYNC_BUDGET) return;
+        case (GAMEMASTER_SYNC_BUDGET_PROP):
+            if (RequestedGamemasterAssets != GAMEMASTER_SYNC_BUDGET) return;
             sumBudgetItemProp += nCount;
             countBudgetItemProp++;
             break;
-        case (MASTERNODE_SYNC_BUDGET_FIN):
-            if (RequestedMasternodeAssets != MASTERNODE_SYNC_BUDGET) return;
+        case (GAMEMASTER_SYNC_BUDGET_FIN):
+            if (RequestedGamemasterAssets != GAMEMASTER_SYNC_BUDGET) return;
             sumBudgetItemFin += nCount;
             countBudgetItemFin++;
             break;
@@ -173,20 +173,20 @@ void CMasternodeSync::ProcessSyncStatusMsg(int nItemID, int nCount)
             break;
     }
 
-    LogPrint(BCLog::MASTERNODE, "CMasternodeSync:ProcessMessage - ssc - got inventory count %d %d\n", nItemID, nCount);
+    LogPrint(BCLog::GAMEMASTER, "CGamemasterSync:ProcessMessage - ssc - got inventory count %d %d\n", nItemID, nCount);
 }
 
-void CMasternodeSync::ClearFulfilledRequest()
+void CGamemasterSync::ClearFulfilledRequest()
 {
     g_netfulfilledman.Clear();
 }
 
-void CMasternodeSync::Process()
+void CGamemasterSync::Process()
 {
     static int tick = 0;
     const bool isRegTestNet = Params().IsRegTestNet();
 
-    if (tick++ % MASTERNODE_SYNC_TIMEOUT != 0) return;
+    if (tick++ % GAMEMASTER_SYNC_TIMEOUT != 0) return;
 
     // if the last call to this function was more than 60 minutes ago (client was in sleep mode)
     // reset the sync process
@@ -203,12 +203,13 @@ void CMasternodeSync::Process()
         if (isRegTestNet) {
             return;
         }
-        bool legacy_obsolete = deterministicMNManager->LegacyMNObsolete();
-        // Check if we lost all masternodes (except the local one in case the node is a MN)
+        bool legacy_obsolete = deterministicGMManager->LegacyGMObsolete();
+        bool spork_8_active = sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT);
+        // Check if we lost all gamemasters (except the local one in case the node is a GM)
         // from sleep/wake or failure to sync originally (after spork 21, check if we lost
         // all proposals instead). If we did, resync from scratch.
-        if ((!legacy_obsolete && mnodeman.CountEnabled(true /* only_legacy */) <= 1) ||
-            (legacy_obsolete && g_budgetman.CountProposals() == 0)) {
+        if ((spork_8_active && !legacy_obsolete && gamemasterman.CountEnabled(true /* only_legacy */) <= 1) ||
+            (spork_8_active && legacy_obsolete && g_budgetman.CountProposals() == 0)) {
             Reset();
         } else {
             return;
@@ -216,23 +217,23 @@ void CMasternodeSync::Process()
     }
 
     // Try syncing again
-    int RequestedMasternodeAssets = g_tiertwo_sync_state.GetSyncPhase();
-    if (RequestedMasternodeAssets == MASTERNODE_SYNC_FAILED && lastFailure + (1 * 60) < GetTime()) {
+    int RequestedGamemasterAssets = g_tiertwo_sync_state.GetSyncPhase();
+    if (RequestedGamemasterAssets == GAMEMASTER_SYNC_FAILED && lastFailure + (1 * 60) < GetTime()) {
         Reset();
-    } else if (RequestedMasternodeAssets == MASTERNODE_SYNC_FAILED) {
+    } else if (RequestedGamemasterAssets == GAMEMASTER_SYNC_FAILED) {
         return;
     }
 
-    if (RequestedMasternodeAssets == MASTERNODE_SYNC_INITIAL) SwitchToNextAsset();
+    if (RequestedGamemasterAssets == GAMEMASTER_SYNC_INITIAL) SwitchToNextAsset();
 
     // sporks synced but blockchain is not, wait until we're almost at a recent block to continue
     if (!g_tiertwo_sync_state.IsBlockchainSynced() &&
-        RequestedMasternodeAssets > MASTERNODE_SYNC_SPORKS) return;
+        RequestedGamemasterAssets > GAMEMASTER_SYNC_SPORKS) return;
 
-    // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
-    bool fLegacyMnObsolete = deterministicMNManager->LegacyMNObsolete();
+    // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
+    bool fLegacyMnObsolete = deterministicGMManager->LegacyGMObsolete();
 
-    CMasternodeSync* sync = this;
+    CGamemasterSync* sync = this;
 
     // New sync architecture, regtest only for now.
     if (isRegTestNet) {
@@ -248,25 +249,25 @@ void CMasternodeSync::Process()
     });
 }
 
-void CMasternodeSync::syncTimeout(const std::string& reason)
+void CGamemasterSync::syncTimeout(const std::string& reason)
 {
     LogPrintf("%s - ERROR - Sync has failed on %s, will retry later\n", __func__, reason);
-    g_tiertwo_sync_state.SetCurrentSyncPhase(MASTERNODE_SYNC_FAILED);
-    RequestedMasternodeAttempt = 0;
+    g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_FAILED);
+    RequestedGamemasterAttempt = 0;
     lastFailure = GetTime();
     nCountFailures++;
 }
 
-bool CMasternodeSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
+bool CGamemasterSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
 {
-    int RequestedMasternodeAssets = g_tiertwo_sync_state.GetSyncPhase();
+    int RequestedGamemasterAssets = g_tiertwo_sync_state.GetSyncPhase();
     CNetMsgMaker msgMaker(pnode->GetSendVersion());
 
     //set to synced
-    if (RequestedMasternodeAssets == MASTERNODE_SYNC_SPORKS) {
+    if (RequestedGamemasterAssets == GAMEMASTER_SYNC_SPORKS) {
 
         // Sync sporks from at least 2 peers
-        if (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD) {
+        if (RequestedGamemasterAttempt >= GAMEMASTER_SYNC_THRESHOLD) {
             SwitchToNextAsset();
             return false;
         }
@@ -276,7 +277,7 @@ bool CMasternodeSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
         g_netfulfilledman.AddFulfilledRequest(pnode->addr, "getspork");
 
         g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::GETSPORKS));
-        RequestedMasternodeAttempt++;
+        RequestedGamemasterAttempt++;
         return false;
     }
 
@@ -284,61 +285,61 @@ bool CMasternodeSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
         return true; // move to next peer
     }
 
-    if (RequestedMasternodeAssets == MASTERNODE_SYNC_LIST) {
+    if (RequestedGamemasterAssets == GAMEMASTER_SYNC_LIST) {
         if (fLegacyMnObsolete) {
             SwitchToNextAsset();
             return false;
         }
 
-        int lastMasternodeList = g_tiertwo_sync_state.GetlastMasternodeList();
-        LogPrint(BCLog::MASTERNODE, "CMasternodeSync::Process() - lastMasternodeList %lld (GetTime() - MASTERNODE_SYNC_TIMEOUT) %lld\n", lastMasternodeList, GetTime() - MASTERNODE_SYNC_TIMEOUT);
-        if (lastMasternodeList > 0 && lastMasternodeList < GetTime() - MASTERNODE_SYNC_TIMEOUT * 8 && RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD) {
-            // hasn't received a new item in the last 40 seconds AND has sent at least a minimum of MASTERNODE_SYNC_THRESHOLD GETMNLIST requests,
+        int lastGamemasterList = g_tiertwo_sync_state.GetlastGamemasterList();
+        LogPrint(BCLog::GAMEMASTER, "CGamemasterSync::Process() - lastGamemasterList %lld (GetTime() - GAMEMASTER_SYNC_TIMEOUT) %lld\n", lastGamemasterList, GetTime() - GAMEMASTER_SYNC_TIMEOUT);
+        if (lastGamemasterList > 0 && lastGamemasterList < GetTime() - GAMEMASTER_SYNC_TIMEOUT * 8 && RequestedGamemasterAttempt >= GAMEMASTER_SYNC_THRESHOLD) {
+            // hasn't received a new item in the last 40 seconds AND has sent at least a minimum of GAMEMASTER_SYNC_THRESHOLD GETGMLIST requests,
             // so we'll move to the next asset.
             SwitchToNextAsset();
             return false;
         }
 
         // timeout
-        if (lastMasternodeList == 0 &&
-            (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD * 3 || GetTime() - nAssetSyncStarted > MASTERNODE_SYNC_TIMEOUT * 5)) {
-            if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
-                syncTimeout("MASTERNODE_SYNC_LIST");
+        if (lastGamemasterList == 0 &&
+            (RequestedGamemasterAttempt >= GAMEMASTER_SYNC_THRESHOLD * 3 || GetTime() - nAssetSyncStarted > GAMEMASTER_SYNC_TIMEOUT * 5)) {
+            if (sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT)) {
+                syncTimeout("GAMEMASTER_SYNC_LIST");
             } else {
                 SwitchToNextAsset();
             }
             return false;
         }
 
-        // Don't request mnlist initial sync to more than 8 randomly ordered peers in this round
-        if (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD * 4) return false;
+        // Don't request gmlist initial sync to more than 8 randomly ordered peers in this round
+        if (RequestedGamemasterAttempt >= GAMEMASTER_SYNC_THRESHOLD * 4) return false;
 
-        // Request mnb sync if we haven't requested it yet.
-        if (g_netfulfilledman.HasFulfilledRequest(pnode->addr, "mnsync")) return true;
+        // Request gmb sync if we haven't requested it yet.
+        if (g_netfulfilledman.HasFulfilledRequest(pnode->addr, "gmsync")) return true;
 
-        // Try to request MN list sync.
-        if (!mnodeman.RequestMnList(pnode)) {
+        // Try to request GM list sync.
+        if (!gamemasterman.RequestMnList(pnode)) {
             return true; // Failed, try next peer.
         }
 
         // Mark sync requested.
-        g_netfulfilledman.AddFulfilledRequest(pnode->addr, "mnsync");
+        g_netfulfilledman.AddFulfilledRequest(pnode->addr, "gmsync");
         // Increase the sync attempt count
-        RequestedMasternodeAttempt++;
+        RequestedGamemasterAttempt++;
 
         return false; // sleep 1 second before do another request round.
     }
 
-    if (RequestedMasternodeAssets == MASTERNODE_SYNC_MNW) {
+    if (RequestedGamemasterAssets == GAMEMASTER_SYNC_GMW) {
         if (fLegacyMnObsolete) {
             SwitchToNextAsset();
             return false;
         }
 
-        int lastMasternodeWinner = g_tiertwo_sync_state.GetlastMasternodeWinner();
-        if (lastMasternodeWinner > 0 && lastMasternodeWinner < GetTime() - MASTERNODE_SYNC_TIMEOUT * 2 && RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD) { //hasn't received a new item in the last five seconds, so we'll move to the
+        int lastGamemasterWinner = g_tiertwo_sync_state.GetlastGamemasterWinner();
+        if (lastGamemasterWinner > 0 && lastGamemasterWinner < GetTime() - GAMEMASTER_SYNC_TIMEOUT * 2 && RequestedGamemasterAttempt >= GAMEMASTER_SYNC_THRESHOLD) { //hasn't received a new item in the last five seconds, so we'll move to the
             SwitchToNextAsset();
-            // in case we received a budget item while we were syncing the mnw, let's reset the last budget item received time.
+            // in case we received a budget item while we were syncing the gmw, let's reset the last budget item received time.
             // reason: if we received for example a single proposal +50 seconds ago, then once the budget sync starts (right after this call),
             // it will look like the sync is finished, and will not wait to receive any budget data and declare the sync over.
             g_tiertwo_sync_state.ResetLastBudgetItem();
@@ -346,14 +347,14 @@ bool CMasternodeSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
         }
 
         // timeout
-        if (lastMasternodeWinner == 0 &&
-            (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD * 2 || GetTime() - nAssetSyncStarted > MASTERNODE_SYNC_TIMEOUT * 5)) {
-            if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
-                syncTimeout("MASTERNODE_SYNC_MNW");
+        if (lastGamemasterWinner == 0 &&
+            (RequestedGamemasterAttempt >= GAMEMASTER_SYNC_THRESHOLD * 2 || GetTime() - nAssetSyncStarted > GAMEMASTER_SYNC_TIMEOUT * 5)) {
+            if (sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT)) {
+                syncTimeout("GAMEMASTER_SYNC_GMW");
             } else {
                 SwitchToNextAsset();
                 // Same as above (future: remove all of this duplicated code in v6.0.)
-                // in case we received a budget item while we were syncing the mnw, let's reset the last budget item received time.
+                // in case we received a budget item while we were syncing the gmw, let's reset the last budget item received time.
                 // reason: if we received for example a single proposal +50 seconds ago, then once the budget sync starts (right after this call),
                 // it will look like the sync is finished, and will not wait to receive any budget data and declare the sync over.
                 g_tiertwo_sync_state.ResetLastBudgetItem();
@@ -361,47 +362,47 @@ bool CMasternodeSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
             return false;
         }
 
-        // Don't request mnw initial sync to more than 4 randomly ordered peers in this round.
-        if (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD * 2) return false;
+        // Don't request gmw initial sync to more than 4 randomly ordered peers in this round.
+        if (RequestedGamemasterAttempt >= GAMEMASTER_SYNC_THRESHOLD * 2) return false;
 
-        // Request mnw sync if we haven't requested it yet.
-        if (g_netfulfilledman.HasFulfilledRequest(pnode->addr, "mnwsync")) return true;
+        // Request gmw sync if we haven't requested it yet.
+        if (g_netfulfilledman.HasFulfilledRequest(pnode->addr, "gmwsync")) return true;
 
         // Mark sync requested.
-        g_netfulfilledman.AddFulfilledRequest(pnode->addr, "mnwsync");
+        g_netfulfilledman.AddFulfilledRequest(pnode->addr, "gmwsync");
 
-        // Sync mn winners
-        int nMnCount = mnodeman.CountEnabled(true /* only_legacy */);
-        g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::GETMNWINNERS, nMnCount));
-        RequestedMasternodeAttempt++;
+        // Sync gm winners
+        int nMnCount = gamemasterman.CountEnabled(true /* only_legacy */);
+        g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::GETGMWINNERS, nMnCount));
+        RequestedGamemasterAttempt++;
 
         return false; // sleep 1 second before do another request round.
     }
 
-    if (RequestedMasternodeAssets == MASTERNODE_SYNC_BUDGET) {
+    if (RequestedGamemasterAssets == GAMEMASTER_SYNC_BUDGET) {
         int lastBudgetItem = g_tiertwo_sync_state.GetlastBudgetItem();
         // We'll start rejecting votes if we accidentally get set as synced too soon
-        if (lastBudgetItem > 0 && lastBudgetItem < GetTime() - MASTERNODE_SYNC_TIMEOUT * 10 && RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD) {
-            // Hasn't received a new item in the last fifty seconds and more than MASTERNODE_SYNC_THRESHOLD requests were sent,
+        if (lastBudgetItem > 0 && lastBudgetItem < GetTime() - GAMEMASTER_SYNC_TIMEOUT * 10 && RequestedGamemasterAttempt >= GAMEMASTER_SYNC_THRESHOLD) {
+            // Hasn't received a new item in the last fifty seconds and more than GAMEMASTER_SYNC_THRESHOLD requests were sent,
             // so we'll move to the next asset
             SwitchToNextAsset();
 
-            // Try to activate our masternode if possible
-            activeMasternode.ManageStatus();
+            // Try to activate our gamemaster if possible
+            activeGamemaster.ManageStatus();
             return false;
         }
 
         // timeout
         if (lastBudgetItem == 0 &&
-            (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD * 3 || GetTime() - nAssetSyncStarted > MASTERNODE_SYNC_TIMEOUT * 5)) {
+            (RequestedGamemasterAttempt >= GAMEMASTER_SYNC_THRESHOLD * 3 || GetTime() - nAssetSyncStarted > GAMEMASTER_SYNC_TIMEOUT * 5)) {
             // maybe there is no budgets at all, so just finish syncing
             SwitchToNextAsset();
-            activeMasternode.ManageStatus();
+            activeGamemaster.ManageStatus();
             return false;
         }
 
         // Don't request budget initial sync to more than 6 randomly ordered peers in this round.
-        if (RequestedMasternodeAttempt >= MASTERNODE_SYNC_THRESHOLD * 3) return false;
+        if (RequestedGamemasterAttempt >= GAMEMASTER_SYNC_THRESHOLD * 3) return false;
 
         // Request bud sync if we haven't requested it yet.
         if (g_netfulfilledman.HasFulfilledRequest(pnode->addr, "busync")) return true;
@@ -412,7 +413,7 @@ bool CMasternodeSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
         // Sync proposals, finalizations and votes
         uint256 n;
         g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::BUDGETVOTESYNC, n));
-        RequestedMasternodeAttempt++;
+        RequestedGamemasterAttempt++;
 
         return false; // sleep 1 second before do another request round.
     }

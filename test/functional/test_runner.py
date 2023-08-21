@@ -163,13 +163,13 @@ TIERTWO_SCRIPTS = [
     'tiertwo_governance_sync_basic.py',         # ~ 1160 sec
     'tiertwo_dkg_errors.py',                    # ~ 486 sec
     'tiertwo_dkg_pose.py',                      # ~ 444 sec
-    'tiertwo_mn_compatibility.py',              # ~ 413 sec
+    'tiertwo_gm_compatibility.py',              # ~ 413 sec
     'tiertwo_signing_session.py',               # ~ 390 sec
     'tiertwo_chainlocks.py',                    # ~ ??? sec
-    'tiertwo_deterministicmns.py',              # ~ 366 sec
+    'tiertwo_deterministicgms.py',              # ~ 366 sec
     'tiertwo_governance_reorg.py',              # ~ 361 sec
-    'tiertwo_masternode_activation.py',         # ~ 352 sec
-    'tiertwo_masternode_ping.py',               # ~ 293 sec
+    'tiertwo_gamemaster_activation.py',         # ~ 352 sec
+    'tiertwo_gamemaster_ping.py',               # ~ 293 sec
     'tiertwo_governance_invalid_budget.py',     # ~ 266 sec
     'tiertwo_reorg_mempool.py',                 # ~ 97 sec
 ]

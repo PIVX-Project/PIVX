@@ -403,7 +403,7 @@ optional). If <category> is not supplied, output all debugging
 information. <category> can be: net, tor, mempool, http, bench, zmq, db,
 rpc, estimatefee, addrman, selectcoins, reindex, cmpctblock, rand,
 prune, proxy, mempoolrej, libevent, coindb, qt, leveldb, staking,
-masternode, mnbudget, zero, mnping, sapling, sporks.
+gamemaster, gmbudget, zero, gmping, sapling, sporks.
 .HP
 \fB\-debugexclude=\fR<category>
 .IP
@@ -453,30 +453,30 @@ Use the test chain
 .HP
 \fB\-litemode=\fR<n>
 .IP
-Disable all hemis specific functionality (Masternodes, Budgeting) (0\-1,
+Disable all hemis specific functionality (Gamemasters, Budgeting) (0\-1,
 default: 0)
 .PP
-Masternode options:
+Gamemaster options:
 .HP
-\fB\-masternode=\fR<n>
+\fB\-gamemaster=\fR<n>
 .IP
-Enable the client to act as a masternode (0\-1, default: 0)
+Enable the client to act as a gamemaster (0\-1, default: 0)
 .HP
-\fB\-mnconf=\fR<file>
+\fB\-gmconf=\fR<file>
 .IP
-Specify masternode configuration file (default: masternode.conf)
+Specify gamemaster configuration file (default: gamemaster.conf)
 .HP
-\fB\-mnconflock=\fR<n>
+\fB\-gmconflock=\fR<n>
 .IP
-Lock masternodes from masternode configuration file (default: 1)
+Lock gamemasters from gamemaster configuration file (default: 1)
 .HP
-\fB\-masternodeprivkey=\fR<n>
+\fB\-gamemasterprivkey=\fR<n>
 .IP
-Set the masternode private key
+Set the gamemaster private key
 .HP
-\fB\-masternodeaddr=\fR<n>
+\fB\-gamemasteraddr=\fR<n>
 .IP
-Set external address:port to get to this masternode (example:
+Set external address:port to get to this gamemaster (example:
 128.127.106.235:49165)
 .HP
 \fB\-budgetvotemode=\fR<mode>
@@ -485,10 +485,10 @@ Change automatic finalized budget voting behavior. mode=auto: Vote for
 only exact finalized budget match to my generated budget. (string,
 default: auto)
 .HP
-\fB\-mnoperatorprivatekey=\fR<WIF>
+\fB\-gmoperatorprivatekey=\fR<WIF>
 .IP
-Set the masternode operator private key. Only valid with \fB\-masternode\fR=\fI\,1\/\fR.
-When set, the masternode acts as a deterministic masternode.
+Set the gamemaster operator private key. Only valid with \fB\-gamemaster\fR=\fI\,1\/\fR.
+When set, the gamemaster acts as a deterministic gamemaster.
 .PP
 Node relay options:
 .HP

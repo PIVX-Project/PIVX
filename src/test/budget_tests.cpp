@@ -6,7 +6,7 @@
 
 #include "bls/bls_wrapper.h"
 #include "budget/budgetmanager.h"
-#include "masternode-payments.h"
+#include "gamemaster-payments.h"
 #include "spork.h"
 #include "test/util/blocksutil.h"
 #include "tiertwo/tiertwo_sync_state.h"
@@ -28,8 +28,8 @@ void CheckBudgetValue(int nHeight, std::string strNetwork, CAmount nExpectedValu
 
 void enableMnSyncAndSuperblocksPayment()
 {
-    // force mnsync complete
-    g_tiertwo_sync_state.SetCurrentSyncPhase(MASTERNODE_SYNC_FINISHED);
+    // force gmsync complete
+    g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_FINISHED);
 
     // enable SPORK_13
     int64_t nTime = GetTime() - 10;
@@ -37,17 +37,17 @@ void enableMnSyncAndSuperblocksPayment()
     sporkManager.AddOrUpdateSporkMessage(spork);
     BOOST_CHECK(sporkManager.IsSporkActive(SPORK_13_ENABLE_SUPERBLOCKS));
 
-    spork = CSporkMessage(SPORK_9_MASTERNODE_BUDGET_ENFORCEMENT, nTime + 1, nTime);
+    spork = CSporkMessage(SPORK_9_GAMEMASTER_BUDGET_ENFORCEMENT, nTime + 1, nTime);
     sporkManager.AddOrUpdateSporkMessage(spork);
-    BOOST_CHECK(sporkManager.IsSporkActive(SPORK_9_MASTERNODE_BUDGET_ENFORCEMENT));
+    BOOST_CHECK(sporkManager.IsSporkActive(SPORK_9_GAMEMASTER_BUDGET_ENFORCEMENT));
 }
 
-BOOST_AUTO_TEST_CASE(masternode_value)
+BOOST_AUTO_TEST_CASE(gamemaster_value)
 {
     SelectParams(CBaseChainParams::REGTEST);
     int nHeightTest = Params().GetConsensus().vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight + 1;
-    BOOST_CHECK_EQUAL(GetMasternodePayment(nHeightTest - 1), 3 * COIN);
-    BOOST_CHECK_EQUAL(GetMasternodePayment(nHeightTest), 6 * COIN);
+    BOOST_CHECK_EQUAL(GetGamemasterPayment(nHeightTest - 1), 3 * COIN);
+    BOOST_CHECK_EQUAL(GetGamemasterPayment(nHeightTest), 6 * COIN);
 }
 
 BOOST_AUTO_TEST_CASE(budget_value)
@@ -95,13 +95,13 @@ BOOST_FIXTURE_TEST_CASE(block_value, TestnetSetup)
 
     // superblock - create the finalized budget with a proposal, and vote on it
     nHeight = 144;
-    const CTxIn mnVin(GetRandHash(), 0);
+    const CTxIn gmVin(GetRandHash(), 0);
     const CScript payee = GetScriptForDestination(CKeyID(uint160(ParseHex("816115944e077fe7c803cfa57f29b36bf87c1d35"))));
     const CAmount propAmt = 100 * COIN;
     const uint256& propHash = GetRandHash(), finTxId = GetRandHash();
     const CTxBudgetPayment txBudgetPayment(propHash, payee, propAmt);
     CFinalizedBudget fin("main (test)", 144, {txBudgetPayment}, finTxId);
-    const CFinalizedBudgetVote fvote(mnVin, fin.GetHash());
+    const CFinalizedBudgetVote fvote(gmVin, fin.GetHash());
     BOOST_CHECK(fin.AddOrUpdateVote(fvote, strError));
     g_budgetman.ForceAddFinalizedBudget(fin.GetHash(), fin.GetFeeTXHash(), fin);
 
@@ -167,17 +167,17 @@ BOOST_FIXTURE_TEST_CASE(block_value_undermint, RegTestingSetup)
  */
 void forceAddFakeProposals(const CTxOut& payee1, const CTxOut& payee2)
 {
-    const CTxIn mnVin(GetRandHash(), 0);
+    const CTxIn gmVin(GetRandHash(), 0);
     const uint256& propHash = GetRandHash(), finTxId = GetRandHash();
     const CTxBudgetPayment txBudgetPayment(propHash, payee1.scriptPubKey, payee1.nValue);
 
-    const CTxIn mnVin2(GetRandHash(), 0);
+    const CTxIn gmVin2(GetRandHash(), 0);
     const uint256& propHash2 = GetRandHash(), finTxId2 = GetRandHash();
     const CTxBudgetPayment txBudgetPayment2(propHash2, payee2.scriptPubKey, payee2.nValue);
 
     // Create first finalization
     CFinalizedBudget fin("main (test)", 144, {txBudgetPayment, txBudgetPayment2}, finTxId);
-    const CFinalizedBudgetVote fvote(mnVin, fin.GetHash());
+    const CFinalizedBudgetVote fvote(gmVin, fin.GetHash());
     const CFinalizedBudgetVote fvote1_a({GetRandHash(), 0}, fin.GetHash());
     const CFinalizedBudgetVote fvote1_b({GetRandHash(), 0}, fin.GetHash());
     std::string strError;
@@ -188,7 +188,7 @@ void forceAddFakeProposals(const CTxOut& payee1, const CTxOut& payee2)
 
     // Create second finalization
     CFinalizedBudget fin2("main2 (test)", 144, {txBudgetPayment2, txBudgetPayment}, finTxId2);
-    const CFinalizedBudgetVote fvote2(mnVin2, fin2.GetHash());
+    const CFinalizedBudgetVote fvote2(gmVin2, fin2.GetHash());
     const CFinalizedBudgetVote fvote2_a({GetRandHash(), 0}, fin2.GetHash());
     BOOST_CHECK(fin2.AddOrUpdateVote(fvote2, strError));
     BOOST_CHECK(fin2.AddOrUpdateVote(fvote2_a, strError));
@@ -361,17 +361,17 @@ static CMutableTransaction NewCoinBase(int nHeight, CAmount cbaseAmt, const CScr
 BOOST_FIXTURE_TEST_CASE(IsCoinbaseValueValid_test, TestingSetup)
 {
     int nHeight = 100;
-    const CAmount mnAmt = GetMasternodePayment(nHeight);
+    const CAmount gmAmt = GetGamemasterPayment(nHeight);
     const CScript& cbaseScript = GetRandomP2PKH();
     CValidationState state;
 
-    // force mnsync complete
-    g_tiertwo_sync_state.SetCurrentSyncPhase(MASTERNODE_SYNC_FINISHED);
+    // force gmsync complete
+    g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_FINISHED);
 
     // -- Regular blocks
 
     // Exact
-    CMutableTransaction cbase = NewCoinBase(1, mnAmt, cbaseScript);
+    CMutableTransaction cbase = NewCoinBase(1, gmAmt, cbaseScript);
     BOOST_CHECK(IsCoinbaseValueValid(MakeTransactionRef(cbase), 0, state));
     cbase.vout[0].nValue /= 2;
     cbase.vout.emplace_back(cbase.vout[0]);
@@ -379,54 +379,54 @@ BOOST_FIXTURE_TEST_CASE(IsCoinbaseValueValid_test, TestingSetup)
 
     // Underpaying with SPORK_8 disabled (good)
     cbase.vout.clear();
-    cbase.vout.emplace_back(mnAmt - 1, cbaseScript);
+    cbase.vout.emplace_back(gmAmt - 1, cbaseScript);
     BOOST_CHECK(IsCoinbaseValueValid(MakeTransactionRef(cbase), 0, state));
-    cbase.vout[0].nValue = mnAmt/2;
+    cbase.vout[0].nValue = gmAmt/2;
     cbase.vout.emplace_back(cbase.vout[0]);
-    cbase.vout[1].nValue = mnAmt/2 - 1;
+    cbase.vout[1].nValue = gmAmt/2 - 1;
     BOOST_CHECK(IsCoinbaseValueValid(MakeTransactionRef(cbase), 0, state));
 
     // Overpaying with SPORK_8 disabled
     cbase.vout.clear();
-    cbase.vout.emplace_back(mnAmt + 1, cbaseScript);
+    cbase.vout.emplace_back(gmAmt + 1, cbaseScript);
     BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), 0, state));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-cb-amt-spork8-disabled");
     state = CValidationState();
-    cbase.vout[0].nValue = mnAmt/2;
+    cbase.vout[0].nValue = gmAmt/2;
     cbase.vout.emplace_back(cbase.vout[0]);
-    cbase.vout[1].nValue = mnAmt/2 + 1;
+    cbase.vout[1].nValue = gmAmt/2 + 1;
     BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), 0, state));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-cb-amt-spork8-disabled");
     state = CValidationState();
 
     // enable SPORK_8
     int64_t nTime = GetTime() - 10;
-    const CSporkMessage& spork = CSporkMessage(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT, nTime + 1, nTime);
+    const CSporkMessage& spork = CSporkMessage(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT, nTime + 1, nTime);
     sporkManager.AddOrUpdateSporkMessage(spork);
-    BOOST_CHECK(sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT));
+    BOOST_CHECK(sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT));
 
     // Underpaying with SPORK_8 enabled
     cbase.vout.clear();
-    cbase.vout.emplace_back(mnAmt - 1, cbaseScript);
+    cbase.vout.emplace_back(gmAmt - 1, cbaseScript);
     BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), 0, state));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-cb-amt");
     state = CValidationState();
-    cbase.vout[0].nValue = mnAmt/2;
+    cbase.vout[0].nValue = gmAmt/2;
     cbase.vout.emplace_back(cbase.vout[0]);
-    cbase.vout[1].nValue = mnAmt/2 - 1;
+    cbase.vout[1].nValue = gmAmt/2 - 1;
     BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), 0, state));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-cb-amt");
     state = CValidationState();
 
     // Overpaying with SPORK_8 enabled
     cbase.vout.clear();
-    cbase.vout.emplace_back(mnAmt + 1, cbaseScript);
+    cbase.vout.emplace_back(gmAmt + 1, cbaseScript);
     BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), 0, state));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-cb-amt");
     state = CValidationState();
-    cbase.vout[0].nValue = mnAmt/2;
+    cbase.vout[0].nValue = gmAmt/2;
     cbase.vout.emplace_back(cbase.vout[0]);
-    cbase.vout[1].nValue = mnAmt/2 + 1;
+    cbase.vout[1].nValue = gmAmt/2 + 1;
     BOOST_CHECK(!IsCoinbaseValueValid(MakeTransactionRef(cbase), 0, state));
     BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-cb-amt");
     state = CValidationState();

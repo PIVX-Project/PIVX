@@ -3,14 +3,14 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#include "tiertwo/net_masternodes.h"
+#include "tiertwo/net_gamemasters.h"
 
 #include "chainparams.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "llmq/quorums.h"
 #include "netmessagemaker.h"
 #include "scheduler.h"
-#include "tiertwo/masternode_meta_manager.h" // for g_mmetaman
+#include "tiertwo/gamemaster_meta_manager.h" // for g_mmetaman
 #include "tiertwo/tiertwo_sync_state.h"
 
 TierTwoConnMan::TierTwoConnMan(CConnman* _connman) : connman(_connman) {}
@@ -20,8 +20,8 @@ void TierTwoConnMan::setQuorumNodes(Consensus::LLMQType llmqType,
                                     const uint256& quorumHash,
                                     const std::set<uint256>& proTxHashes)
 {
-    LOCK(cs_vPendingMasternodes);
-    auto it = masternodeQuorumNodes.emplace(QuorumTypeAndHash(llmqType, quorumHash), proTxHashes);
+    LOCK(cs_vPendingGamemasters);
+    auto it = gamemasterQuorumNodes.emplace(QuorumTypeAndHash(llmqType, quorumHash), proTxHashes);
     if (!it.second) {
         it.first->second = proTxHashes;
     }
@@ -29,9 +29,9 @@ void TierTwoConnMan::setQuorumNodes(Consensus::LLMQType llmqType,
 
 std::set<uint256> TierTwoConnMan::getQuorumNodes(Consensus::LLMQType llmqType)
 {
-    LOCK(cs_vPendingMasternodes);
+    LOCK(cs_vPendingGamemasters);
     std::set<uint256> result;
-    for (const auto& p : masternodeQuorumNodes) {
+    for (const auto& p : gamemasterQuorumNodes) {
         if (p.first.first != llmqType) {
             continue;
         }
@@ -43,8 +43,8 @@ std::set<uint256> TierTwoConnMan::getQuorumNodes(Consensus::LLMQType llmqType)
 std::set<NodeId> TierTwoConnMan::getQuorumNodes(Consensus::LLMQType llmqType, uint256 quorumHash)
 {
     std::set<NodeId> result;
-    auto it = WITH_LOCK(cs_vPendingMasternodes, return masternodeQuorumRelayMembers.find(std::make_pair(llmqType, quorumHash)));
-    if (WITH_LOCK(cs_vPendingMasternodes, return it == masternodeQuorumRelayMembers.end())) {
+    auto it = WITH_LOCK(cs_vPendingGamemasters, return gamemasterQuorumRelayMembers.find(std::make_pair(llmqType, quorumHash)));
+    if (WITH_LOCK(cs_vPendingGamemasters, return it == gamemasterQuorumRelayMembers.end())) {
         return {};
     }
     for (const auto pnode : connman->GetvNodes()) {
@@ -68,21 +68,21 @@ std::set<NodeId> TierTwoConnMan::getQuorumNodes(Consensus::LLMQType llmqType, ui
 
 bool TierTwoConnMan::hasQuorumNodes(Consensus::LLMQType llmqType, const uint256& quorumHash)
 {
-    LOCK(cs_vPendingMasternodes);
-    return masternodeQuorumNodes.count(QuorumTypeAndHash(llmqType, quorumHash));
+    LOCK(cs_vPendingGamemasters);
+    return gamemasterQuorumNodes.count(QuorumTypeAndHash(llmqType, quorumHash));
 }
 
 void TierTwoConnMan::removeQuorumNodes(Consensus::LLMQType llmqType, const uint256& quorumHash)
 {
-    LOCK(cs_vPendingMasternodes);
-    masternodeQuorumNodes.erase(std::make_pair(llmqType, quorumHash));
+    LOCK(cs_vPendingGamemasters);
+    gamemasterQuorumNodes.erase(std::make_pair(llmqType, quorumHash));
 }
 
-void TierTwoConnMan::setMasternodeQuorumRelayMembers(Consensus::LLMQType llmqType, const uint256& quorumHash, const std::set<uint256>& proTxHashes)
+void TierTwoConnMan::setGamemasterQuorumRelayMembers(Consensus::LLMQType llmqType, const uint256& quorumHash, const std::set<uint256>& proTxHashes)
 {
     {
-        LOCK(cs_vPendingMasternodes);
-        auto it = masternodeQuorumRelayMembers.emplace(std::make_pair(llmqType, quorumHash), proTxHashes);
+        LOCK(cs_vPendingGamemasters);
+        auto it = gamemasterQuorumRelayMembers.emplace(std::make_pair(llmqType, quorumHash), proTxHashes);
         if (!it.second) {
             it.first->second = proTxHashes;
         }
@@ -90,35 +90,35 @@ void TierTwoConnMan::setMasternodeQuorumRelayMembers(Consensus::LLMQType llmqTyp
 
     // Update existing connections
     connman->ForEachNode([&](CNode* pnode) {
-        if (!pnode->m_masternode_iqr_connection && isMasternodeQuorumRelayMember(pnode->verifiedProRegTxHash)) {
+        if (!pnode->m_gamemaster_iqr_connection && isGamemasterQuorumRelayMember(pnode->verifiedProRegTxHash)) {
             // Tell our peer that we're interested in plain LLMQ recovered signatures.
             // Otherwise, the peer would only announce/send messages resulting from QRECSIG,
             // future e.g. tx locks or chainlocks. SPV and regular full nodes should not send
             // this message as they are usually only interested in the higher level messages.
             CNetMsgMaker msgMaker(pnode->GetSendVersion());
             connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QSENDRECSIGS, true));
-            pnode->m_masternode_iqr_connection = true;
+            pnode->m_gamemaster_iqr_connection = true;
         }
     });
 }
 
-bool TierTwoConnMan::isMasternodeQuorumNode(const CNode* pnode)
+bool TierTwoConnMan::isGamemasterQuorumNode(const CNode* pnode)
 {
-    // Let's see if this is an outgoing connection to an address that is known to be a masternode
-    // We however only need to know this if the node did not authenticate itself as a MN yet
+    // Let's see if this is an outgoing connection to an address that is known to be a gamemaster
+    // We however only need to know this if the node did not authenticate itself as a GM yet
     uint256 assumedProTxHash;
     if (pnode->verifiedProRegTxHash.IsNull() && !pnode->fInbound) {
-        auto mnList = deterministicMNManager->GetListAtChainTip();
-        auto dmn = mnList.GetMNByService(pnode->addr);
-        if (dmn == nullptr) {
-            // This is definitely not a masternode
+        auto gmList = deterministicGMManager->GetListAtChainTip();
+        auto dgm = gmList.GetGMByService(pnode->addr);
+        if (dgm == nullptr) {
+            // This is definitely not a gamemaster
             return false;
         }
-        assumedProTxHash = dmn->proTxHash;
+        assumedProTxHash = dgm->proTxHash;
     }
 
-    LOCK(cs_vPendingMasternodes);
-    for (const auto& quorumConn : masternodeQuorumNodes) {
+    LOCK(cs_vPendingGamemasters);
+    for (const auto& quorumConn : gamemasterQuorumNodes) {
         if (!pnode->verifiedProRegTxHash.IsNull()) {
             if (quorumConn.second.count(pnode->verifiedProRegTxHash)) {
                 return true;
@@ -132,13 +132,13 @@ bool TierTwoConnMan::isMasternodeQuorumNode(const CNode* pnode)
     return false;
 }
 
-bool TierTwoConnMan::isMasternodeQuorumRelayMember(const uint256& protxHash)
+bool TierTwoConnMan::isGamemasterQuorumRelayMember(const uint256& protxHash)
 {
     if (protxHash.IsNull()) {
         return false;
     }
-    LOCK(cs_vPendingMasternodes);
-    for (const auto& p : masternodeQuorumRelayMembers) {
+    LOCK(cs_vPendingGamemasters);
+    for (const auto& p : gamemasterQuorumRelayMembers) {
         if (p.second.count(protxHash) > 0) {
             return true;
         }
@@ -146,29 +146,29 @@ bool TierTwoConnMan::isMasternodeQuorumRelayMember(const uint256& protxHash)
     return false;
 }
 
-bool TierTwoConnMan::addPendingMasternode(const uint256& proTxHash)
+bool TierTwoConnMan::addPendingGamemaster(const uint256& proTxHash)
 {
-    LOCK(cs_vPendingMasternodes);
-    if (std::find(vPendingMasternodes.begin(), vPendingMasternodes.end(), proTxHash) != vPendingMasternodes.end()) {
+    LOCK(cs_vPendingGamemasters);
+    if (std::find(vPendingGamemasters.begin(), vPendingGamemasters.end(), proTxHash) != vPendingGamemasters.end()) {
         return false;
     }
-    vPendingMasternodes.emplace_back(proTxHash);
+    vPendingGamemasters.emplace_back(proTxHash);
     return true;
 }
 
 void TierTwoConnMan::addPendingProbeConnections(const std::set<uint256>& proTxHashes)
 {
-    LOCK(cs_vPendingMasternodes);
-    masternodePendingProbes.insert(proTxHashes.begin(), proTxHashes.end());
+    LOCK(cs_vPendingGamemasters);
+    gamemasterPendingProbes.insert(proTxHashes.begin(), proTxHashes.end());
 }
 
 void TierTwoConnMan::clear()
 {
-    LOCK(cs_vPendingMasternodes);
-    masternodeQuorumNodes.clear();
-    masternodeQuorumRelayMembers.clear();
-    vPendingMasternodes.clear();
-    masternodePendingProbes.clear();
+    LOCK(cs_vPendingGamemasters);
+    gamemasterQuorumNodes.clear();
+    gamemasterQuorumRelayMembers.clear();
+    vPendingGamemasters.clear();
+    gamemasterPendingProbes.clear();
 }
 
 void TierTwoConnMan::start(CScheduler& scheduler, const TierTwoConnMan::Options& options)
@@ -177,17 +177,17 @@ void TierTwoConnMan::start(CScheduler& scheduler, const TierTwoConnMan::Options&
     assert(connman);
     interruptNet.reset();
 
-    // Connecting to specific addresses, no masternode connections available
+    // Connecting to specific addresses, no gamemaster connections available
     if (options.m_has_specified_outgoing) return;
-    // Initiate masternode connections
-    threadOpenMasternodeConnections = std::thread(&TraceThread<std::function<void()> >, "mncon", std::function<void()>(std::bind(&TierTwoConnMan::ThreadOpenMasternodeConnections, this)));
+    // Initiate gamemaster connections
+    threadOpenGamemasterConnections = std::thread(&TraceThread<std::function<void()> >, "gmcon", std::function<void()>(std::bind(&TierTwoConnMan::ThreadOpenGamemasterConnections, this)));
     // Cleanup process every 60 seconds
     scheduler.scheduleEvery(std::bind(&TierTwoConnMan::doMaintenance, this), 60 * 1000);
 }
 
 void TierTwoConnMan::stop() {
-    if (threadOpenMasternodeConnections.joinable()) {
-        threadOpenMasternodeConnections.join();
+    if (threadOpenGamemasterConnections.joinable()) {
+        threadOpenGamemasterConnections.join();
     }
 }
 
@@ -207,10 +207,10 @@ void TierTwoConnMan::openConnection(const CAddress& addrConnect, bool isProbe)
 
 class PeerData {
 public:
-    PeerData(const CService& s, bool disconnect, bool is_mn_conn) : service(s), f_disconnect(disconnect), f_is_mn_conn(is_mn_conn) {}
+    PeerData(const CService& s, bool disconnect, bool is_gm_conn) : service(s), f_disconnect(disconnect), f_is_gm_conn(is_gm_conn) {}
     const CService service;
     bool f_disconnect{false};
-    bool f_is_mn_conn{false};
+    bool f_is_gm_conn{false};
     bool operator==(const CService& s) const { return service == s; }
 };
 
@@ -221,7 +221,7 @@ public:
     bool operator==(const uint256& hash) const { return verif_proreg_tx_hash == hash; }
 };
 
-void TierTwoConnMan::ThreadOpenMasternodeConnections()
+void TierTwoConnMan::ThreadOpenGamemasterConnections()
 {
     const auto& chainParams = Params();
     bool triedConnect = false;
@@ -244,39 +244,39 @@ void TierTwoConnMan::ThreadOpenMasternodeConnections()
         std::vector<PeerData> connectedNodes;
         std::vector<MnService> connectedMnServices;
         connman->ForEachNode([&](const CNode* pnode) {
-            connectedNodes.emplace_back(PeerData{pnode->addr, pnode->fDisconnect, pnode->m_masternode_connection});
+            connectedNodes.emplace_back(PeerData{pnode->addr, pnode->fDisconnect, pnode->m_gamemaster_connection});
             if (!pnode->verifiedProRegTxHash.IsNull()) {
                 connectedMnServices.emplace_back(MnService{pnode->verifiedProRegTxHash, pnode->fInbound});
             }
         });
 
-        // Try to connect to a single MN per cycle
-        CDeterministicMNCPtr dmnToConnect{nullptr};
+        // Try to connect to a single GM per cycle
+        CDeterministicGMCPtr dgmToConnect{nullptr};
         // Current list
-        auto mnList = deterministicMNManager->GetListAtChainTip();
+        auto gmList = deterministicGMManager->GetListAtChainTip();
         int64_t currentTime = GetAdjustedTime();
         bool isProbe = false;
         {
-            LOCK(cs_vPendingMasternodes);
+            LOCK(cs_vPendingGamemasters);
 
-            // First try to connect to pending MNs
-            if (!vPendingMasternodes.empty()) {
-                auto dmn = mnList.GetValidMN(vPendingMasternodes.front());
-                vPendingMasternodes.erase(vPendingMasternodes.begin());
-                if (dmn) {
-                    auto peerData = std::find(connectedNodes.begin(), connectedNodes.end(), dmn->pdmnState->addr);
+            // First try to connect to pending GMs
+            if (!vPendingGamemasters.empty()) {
+                auto dgm = gmList.GetValidGM(vPendingGamemasters.front());
+                vPendingGamemasters.erase(vPendingGamemasters.begin());
+                if (dgm) {
+                    auto peerData = std::find(connectedNodes.begin(), connectedNodes.end(), dgm->pdgmState->addr);
                     if (peerData == std::end(connectedNodes)) {
-                        dmnToConnect = dmn;
-                        LogPrint(BCLog::NET_MN, "%s -- opening pending masternode connection to %s, service=%s\n",
-                                 __func__, dmn->proTxHash.ToString(), dmn->pdmnState->addr.ToString());
+                        dgmToConnect = dgm;
+                        LogPrint(BCLog::NET_GM, "%s -- opening pending gamemaster connection to %s, service=%s\n",
+                                 __func__, dgm->proTxHash.ToString(), dgm->pdgmState->addr.ToString());
                     }
                 }
             }
 
             // Secondly, try to connect quorum members
-            if (!dmnToConnect) {
-                std::vector<CDeterministicMNCPtr> pending;
-                for (const auto& group: masternodeQuorumNodes) {
+            if (!dgmToConnect) {
+                std::vector<CDeterministicGMCPtr> pending;
+                for (const auto& group: gamemasterQuorumNodes) {
                     for (const auto& proRegTxHash: group.second) {
                         // Skip if already have this member connected
                         if (std::count(connectedMnServices.begin(), connectedMnServices.end(), proRegTxHash) > 0) {
@@ -284,134 +284,134 @@ void TierTwoConnMan::ThreadOpenMasternodeConnections()
                         }
 
                         // Don't try to connect to ourselves
-                        if (WITH_LOCK(cs_vPendingMasternodes, return local_dmn_pro_tx_hash && *local_dmn_pro_tx_hash == proRegTxHash)) {
+                        if (WITH_LOCK(cs_vPendingGamemasters, return local_dgm_pro_tx_hash && *local_dgm_pro_tx_hash == proRegTxHash)) {
                             continue;
                         }
 
-                        // Check if DMN exists in tip list
-                        const auto& dmn = mnList.GetValidMN(proRegTxHash);
-                        if (!dmn) continue;
-                        auto peerData = std::find(connectedNodes.begin(), connectedNodes.end(), dmn->pdmnState->addr);
+                        // Check if DGM exists in tip list
+                        const auto& dgm = gmList.GetValidGM(proRegTxHash);
+                        if (!dgm) continue;
+                        auto peerData = std::find(connectedNodes.begin(), connectedNodes.end(), dgm->pdgmState->addr);
 
                         // Skip already connected nodes.
                         if (peerData != std::end(connectedNodes) &&
-                            (peerData->f_disconnect || peerData->f_is_mn_conn)) {
+                            (peerData->f_disconnect || peerData->f_is_gm_conn)) {
                             continue;
                         }
 
                         // Check if we already tried this connection recently to not retry too often
-                        int64_t lastAttempt = g_mmetaman.GetMetaInfo(dmn->proTxHash)->GetLastOutboundAttempt();
+                        int64_t lastAttempt = g_mmetaman.GetMetaInfo(dgm->proTxHash)->GetLastOutboundAttempt();
                         // back off trying connecting to an address if we already tried recently
                         if (currentTime - lastAttempt < chainParams.LLMQConnectionRetryTimeout()) {
                             continue;
                         }
-                        pending.emplace_back(dmn);
+                        pending.emplace_back(dgm);
                     }
                 }
                 // Select a random node to connect
                 if (!pending.empty()) {
-                    dmnToConnect = pending[GetRandInt((int) pending.size())];
-                    LogPrint(BCLog::NET_MN, "TierTwoConnMan::%s -- opening quorum connection to %s, service=%s\n",
-                             __func__, dmnToConnect->proTxHash.ToString(), dmnToConnect->pdmnState->addr.ToString());
+                    dgmToConnect = pending[GetRandInt((int) pending.size())];
+                    LogPrint(BCLog::NET_GM, "TierTwoConnMan::%s -- opening quorum connection to %s, service=%s\n",
+                             __func__, dgmToConnect->proTxHash.ToString(), dgmToConnect->pdgmState->addr.ToString());
                 }
             }
 
             // If no node was selected, let's try to probe nodes connection
-            if (!dmnToConnect) {
-                std::vector<CDeterministicMNCPtr> pending;
-                for (auto it = masternodePendingProbes.begin(); it != masternodePendingProbes.end(); ) {
-                    auto dmn = mnList.GetMN(*it);
-                    if (!dmn) {
-                        it = masternodePendingProbes.erase(it);
+            if (!dgmToConnect) {
+                std::vector<CDeterministicGMCPtr> pending;
+                for (auto it = gamemasterPendingProbes.begin(); it != gamemasterPendingProbes.end(); ) {
+                    auto dgm = gmList.GetGM(*it);
+                    if (!dgm) {
+                        it = gamemasterPendingProbes.erase(it);
                         continue;
                     }
 
-                    // Discard already connected outbound MNs
-                    auto mnService = std::find(connectedMnServices.begin(), connectedMnServices.end(), dmn->proTxHash);
-                    bool connectedAndOutbound = mnService != std::end(connectedMnServices) && !mnService->is_inbound;
+                    // Discard already connected outbound GMs
+                    auto gmService = std::find(connectedMnServices.begin(), connectedMnServices.end(), dgm->proTxHash);
+                    bool connectedAndOutbound = gmService != std::end(connectedMnServices) && !gmService->is_inbound;
                     if (connectedAndOutbound) {
-                        // we already have an outbound connection to this MN so there is no eed to probe it again
-                        g_mmetaman.GetMetaInfo(dmn->proTxHash)->SetLastOutboundSuccess(currentTime);
-                        it = masternodePendingProbes.erase(it);
+                        // we already have an outbound connection to this GM so there is no eed to probe it again
+                        g_mmetaman.GetMetaInfo(dgm->proTxHash)->SetLastOutboundSuccess(currentTime);
+                        it = gamemasterPendingProbes.erase(it);
                         continue;
                     }
 
                     ++it;
 
-                    int64_t lastAttempt = g_mmetaman.GetMetaInfo(dmn->proTxHash)->GetLastOutboundAttempt();
+                    int64_t lastAttempt = g_mmetaman.GetMetaInfo(dgm->proTxHash)->GetLastOutboundAttempt();
                     // back off trying connecting to an address if we already tried recently
                     if (currentTime - lastAttempt < chainParams.LLMQConnectionRetryTimeout()) {
                         continue;
                     }
-                    pending.emplace_back(dmn);
+                    pending.emplace_back(dgm);
                 }
 
                 // Select a random node to connect
                 if (!pending.empty()) {
-                    dmnToConnect = pending[GetRandInt((int)pending.size())];
-                    masternodePendingProbes.erase(dmnToConnect->proTxHash);
+                    dgmToConnect = pending[GetRandInt((int)pending.size())];
+                    gamemasterPendingProbes.erase(dgmToConnect->proTxHash);
                     isProbe = true;
 
-                    LogPrint(BCLog::NET_MN, "CConnman::%s -- probing masternode %s, service=%s\n",
-                             __func__, dmnToConnect->proTxHash.ToString(), dmnToConnect->pdmnState->addr.ToString());
+                    LogPrint(BCLog::NET_GM, "CConnman::%s -- probing gamemaster %s, service=%s\n",
+                             __func__, dgmToConnect->proTxHash.ToString(), dgmToConnect->pdgmState->addr.ToString());
                 }
             }
         }
 
-        // No DMN to connect
-        if (!dmnToConnect || interruptNet) {
+        // No DGM to connect
+        if (!dgmToConnect || interruptNet) {
             continue;
         }
 
         // Update last attempt and try connection
-        g_mmetaman.GetMetaInfo(dmnToConnect->proTxHash)->SetLastOutboundAttempt(currentTime);
+        g_mmetaman.GetMetaInfo(dgmToConnect->proTxHash)->SetLastOutboundAttempt(currentTime);
         triedConnect = true;
 
         // Now connect
-        openConnection(CAddress(dmnToConnect->pdmnState->addr, NODE_NETWORK), isProbe);
+        openConnection(CAddress(dgmToConnect->pdgmState->addr, NODE_NETWORK), isProbe);
         // should be in the list now if connection was opened
-        bool connected = connman->ForNode(dmnToConnect->pdmnState->addr, CConnman::AllNodes, [&](CNode* pnode) {
+        bool connected = connman->ForNode(dgmToConnect->pdgmState->addr, CConnman::AllNodes, [&](CNode* pnode) {
             if (pnode->fDisconnect) { LogPrintf("about to be disconnected\n");
                 return false;
             }
             return true;
         });
         if (!connected) {
-            LogPrint(BCLog::NET_MN, "TierTwoConnMan::%s -- connection failed for masternode  %s, service=%s\n",
-                     __func__, dmnToConnect->proTxHash.ToString(), dmnToConnect->pdmnState->addr.ToString());
+            LogPrint(BCLog::NET_GM, "TierTwoConnMan::%s -- connection failed for gamemaster  %s, service=%s\n",
+                     __func__, dgmToConnect->proTxHash.ToString(), dgmToConnect->pdgmState->addr.ToString());
             // reset last outbound success
-            g_mmetaman.GetMetaInfo(dmnToConnect->proTxHash)->SetLastOutboundSuccess(0);
+            g_mmetaman.GetMetaInfo(dgmToConnect->proTxHash)->SetLastOutboundSuccess(0);
         }
     }
 }
 
-static void ProcessMasternodeConnections(CConnman& connman, TierTwoConnMan& tierTwoConnMan)
+static void ProcessGamemasterConnections(CConnman& connman, TierTwoConnMan& tierTwoConnMan)
 {
-    // Don't disconnect masternode connections when we have less than the desired amount of outbound nodes
-    int nonMasternodeCount = 0;
+    // Don't disconnect gamemaster connections when we have less than the desired amount of outbound nodes
+    int nonGamemasterCount = 0;
     connman.ForEachNode([&](CNode* pnode) {
-        if (!pnode->fInbound && !pnode->fFeeler && !pnode->fAddnode && !pnode->m_masternode_connection && !pnode->m_masternode_probe_connection) {
-            nonMasternodeCount++;
+        if (!pnode->fInbound && !pnode->fFeeler && !pnode->fAddnode && !pnode->m_gamemaster_connection && !pnode->m_gamemaster_probe_connection) {
+            nonGamemasterCount++;
         }
     });
-    if (nonMasternodeCount < (int) connman.GetMaxOutboundNodeCount()) {
+    if (nonGamemasterCount < (int) connman.GetMaxOutboundNodeCount()) {
         return;
     }
 
     connman.ForEachNode([&](CNode* pnode) {
-        // we're only disconnecting m_masternode_connection connections
-        if (!pnode->m_masternode_connection) return;
+        // we're only disconnecting m_gamemaster_connection connections
+        if (!pnode->m_gamemaster_connection) return;
         // we're only disconnecting outbound connections (inbound connections are disconnected in AcceptConnection())
         if (pnode->fInbound) return;
         // we're not disconnecting LLMQ connections
-        if (tierTwoConnMan.isMasternodeQuorumNode(pnode)) return;
-        // we're not disconnecting masternode probes for at least a few seconds
-        if (pnode->m_masternode_probe_connection && GetSystemTimeInSeconds() - pnode->nTimeConnected < 5) return;
+        if (tierTwoConnMan.isGamemasterQuorumNode(pnode)) return;
+        // we're not disconnecting gamemaster probes for at least a few seconds
+        if (pnode->m_gamemaster_probe_connection && GetSystemTimeInSeconds() - pnode->nTimeConnected < 5) return;
 
         if (fLogIPs) {
-            LogPrintf("Closing Masternode connection: peer=%d, addr=%s\n", pnode->GetId(), pnode->addr.ToString());
+            LogPrintf("Closing Gamemaster connection: peer=%d, addr=%s\n", pnode->GetId(), pnode->addr.ToString());
         } else {
-            LogPrintf("Closing Masternode connection: peer=%d\n", pnode->GetId());
+            LogPrintf("Closing Gamemaster connection: peer=%d\n", pnode->GetId());
         }
         pnode->fDisconnect = true;
     });
@@ -422,6 +422,6 @@ void TierTwoConnMan::doMaintenance()
     if(!g_tiertwo_sync_state.IsBlockchainSynced() || interruptNet) {
         return;
     }
-    ProcessMasternodeConnections(*connman, *this);
+    ProcessGamemasterConnections(*connman, *this);
 }
 

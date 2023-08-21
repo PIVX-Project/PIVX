@@ -20,7 +20,7 @@ enum class TrxValidationStatus {
     InValid,         /** Transaction verification failed */
     Valid,           /** Transaction successfully verified */
     DoublePayment,   /** Transaction successfully verified, but includes a double-budget-payment */
-    VoteThreshold    /** If not enough masternodes have voted on a finalized budget */
+    VoteThreshold    /** If not enough gamemasters have voted on a finalized budget */
 };
 
 //
@@ -32,7 +32,7 @@ class CFinalizedBudget
 private:
     friend class CBudgetManager;
 
-    bool fAutoChecked; //If it matches what we see, we'll auto vote for it (masternode only)
+    bool fAutoChecked; //If it matches what we see, we'll auto vote for it (gamemaster only)
     bool fValid;
     std::string strInvalid;
 
@@ -93,7 +93,7 @@ public:
     bool GetBudgetPaymentByBlock(int64_t nBlockHeight, CTxBudgetPayment& payment) const;
     bool GetPayeeAndAmount(int64_t nBlockHeight, CScript& payee, CAmount& nAmount) const;
 
-    // Check finalized budget proposals. Masternodes only (when voting on finalized budgets)
+    // Check finalized budget proposals. Gamemasters only (when voting on finalized budgets)
     bool CheckProposals(const std::map<uint256, CBudgetProposal>& mapWinningProposals) const;
     // Total amount paid out by this budget
     CAmount GetTotalPayout() const;

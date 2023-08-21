@@ -151,12 +151,12 @@ BOOST_AUTO_TEST_CASE(coldstake_lof_script)
     const CKeyID& dummyKeyID = dummyKey.GetPubKey().GetID();
     const CScript& dummyP2PKH = GetDummyP2PKH(dummyKeyID);
 
-    // Add a masternode out
+    // Add a gamemaster out
     tx.vout.emplace_back(3 * COIN, dummyP2PKH);
     SignColdStake(tx, 0, scriptP2CS, stakerKey, true);
     BOOST_CHECK(CheckP2CSScript(tx.vin[0].scriptSig, scriptP2CS, tx, err));
 
-    // Transfer more coins to the masternode
+    // Transfer more coins to the gamemaster
     tx.vout[2].nValue -= 3 * COIN;
     tx.vout[3].nValue += 3 * COIN;
     SignColdStake(tx, 0, scriptP2CS, stakerKey, true);

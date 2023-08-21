@@ -175,7 +175,7 @@ void setSortTxTypeFilter(QComboBox* filter, SortEdit* lineEditType)
                     TransactionFilterProxy::TYPE(TransactionRecord::SendToSelfShieldedAddress));
     filter->addItem(QObject::tr("Mined"), TransactionFilterProxy::TYPE(TransactionRecord::Generated));
     filter->addItem(QObject::tr("Minted"), TransactionFilterProxy::TYPE(TransactionRecord::StakeMint));
-    filter->addItem(QObject::tr("MN reward"), TransactionFilterProxy::TYPE(TransactionRecord::MNReward));
+    filter->addItem(QObject::tr("GM reward"), TransactionFilterProxy::TYPE(TransactionRecord::MNReward));
     filter->addItem(QObject::tr("To yourself"), TransactionFilterProxy::TYPE(TransactionRecord::SendToSelf) |
                                             TransactionFilterProxy::TYPE(TransactionRecord::SendToSelfShieldedAddress) |
                                             TransactionFilterProxy::TYPE(TransactionRecord::SendToSelfShieldToShieldChangeAddress) |

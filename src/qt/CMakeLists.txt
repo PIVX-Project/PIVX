@@ -115,9 +115,9 @@ SET(QT_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/mninfodialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/coldstakingmodel.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/mnmodel.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/masternodewizarddialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/gamemasterwizarddialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/mnrow.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/masternodeswidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/gamemasterswidget.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/sendchangeaddressdialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/sendconfirmdialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/sendcustomfeedialog.cpp

@@ -12,7 +12,7 @@ from test_framework.mininode import (
     P2PDataStore,
     P2PInterface,
 )
-from test_framework.messages import CTxIn, COutPoint, msg_mnping
+from test_framework.messages import CTxIn, COutPoint, msg_gmping
 from test_framework.test_framework import HemisTestFramework
 from test_framework.util import (
     assert_equal,
@@ -46,13 +46,13 @@ class InvReceiver(P2PInterface):
 
     def __init__(self):
         super().__init__()
-        self.vec_mnp = {}
+        self.vec_gmp = {}
         self.getdata_count = 0
 
     def on_getdata(self, message):
         for inv in message.inv:
-            if inv.type == 15: # MNPING
-                self.send_message(self.vec_mnp[inv.hash])
+            if inv.type == 15: # GMPING
+                self.send_message(self.vec_gmp[inv.hash])
                 self.getdata_count+=1
 
 class InvalidMessagesTest(HemisTestFramework):
@@ -210,10 +210,10 @@ class InvalidMessagesTest(HemisTestFramework):
         invs = []
         blockhash = int(self.nodes[0].getbestblockhash(), 16)
         for _ in range(50000):
-            mnp = msg_mnping(CTxIn(COutPoint(getrandbits(256))), blockhash, int(time.time()))
-            conn.vec_mnp[mnp.get_hash()] = mnp
-            invs.append(messages.CInv(15, mnp.get_hash()))
-        assert_equal(len(conn.vec_mnp), 50000)
+            gmp = msg_gmping(CTxIn(COutPoint(getrandbits(256))), blockhash, int(time.time()))
+            conn.vec_gmp[gmp.get_hash()] = gmp
+            invs.append(messages.CInv(15, gmp.get_hash()))
+        assert_equal(len(conn.vec_gmp), 50000)
         assert_equal(len(invs), 50000)
         msg = messages.msg_inv(invs)
         conn.send_message(msg)
@@ -222,9 +222,9 @@ class InvalidMessagesTest(HemisTestFramework):
         assert_equal(conn.getdata_count, 50000)
 
         # Prior #2611 the node was blocking any follow-up request.
-        mnp = msg_mnping(CTxIn(COutPoint(getrandbits(256))), getrandbits(256), int(time.time()))
-        conn.vec_mnp[mnp.get_hash()] = mnp
-        msg = messages.msg_inv([messages.CInv(15, mnp.get_hash())])
+        gmp = msg_gmping(CTxIn(COutPoint(getrandbits(256))), getrandbits(256), int(time.time()))
+        conn.vec_gmp[gmp.get_hash()] = gmp
+        msg = messages.msg_inv([messages.CInv(15, gmp.get_hash())])
         conn.send_and_ping(msg)
         time.sleep(3)
 

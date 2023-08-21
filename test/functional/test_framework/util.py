@@ -588,7 +588,7 @@ def get_coinstake_address(node, expected_utxos=None):
     assert(len(addrs) > 0)
     return addrs[0]
 
-# Deterministic masternodes
+# Deterministic gamemasters
 def is_coin_locked_by(node, outpoint):
     return outpoint.to_json() in node.listlockunspent()["transparent"]
 
@@ -603,11 +603,11 @@ def get_collateral_vout(json_tx):
 
 # owner and voting keys are created from controller node.
 # operator keys are created, if operator_keys is None.
-def create_new_dmn(idx, controller, payout_addr, operator_keys):
+def create_new_dgm(idx, controller, payout_addr, operator_keys):
     port = p2p_port(idx) if idx <= MAX_NODES else p2p_port(MAX_NODES) + (idx - MAX_NODES)
     ipport = "127.0.0.1:" + str(port)
-    owner_addr = controller.getnewaddress("mnowner-%d" % idx)
-    voting_addr = controller.getnewaddress("mnvoting-%d" % idx)
+    owner_addr = controller.getnewaddress("gmowner-%d" % idx)
+    voting_addr = controller.getnewaddress("gmvoting-%d" % idx)
     if operator_keys is None:
         bls_keypair = controller.generateblskeypair()
         operator_pk = bls_keypair["public"]
@@ -615,10 +615,10 @@ def create_new_dmn(idx, controller, payout_addr, operator_keys):
     else:
         operator_pk = operator_keys[0]
         operator_sk = operator_keys[1]
-    return messages.Masternode(idx, owner_addr, operator_pk, voting_addr, ipport, payout_addr, operator_sk)
+    return messages.Gamemaster(idx, owner_addr, operator_pk, voting_addr, ipport, payout_addr, operator_sk)
 
-def spend_mn_collateral(spender, dmn):
-    inputs = [dmn.collateral.to_json()]
+def spend_gm_collateral(spender, dgm):
+    inputs = [dgm.collateral.to_json()]
     outputs = {spender.getnewaddress(): Decimal('99.99')}
     sig_res = spender.signrawtransaction(spender.createrawtransaction(inputs, outputs))
     assert_equal(sig_res['complete'], True)

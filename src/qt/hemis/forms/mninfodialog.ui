@@ -101,7 +101,7 @@
            <string notr="true">padding-left:24px;</string>
           </property>
           <property name="text">
-           <string>Masternode Information</string>
+           <string>Gamemaster Information</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -554,7 +554,7 @@ background:transparent;
                       <number>0</number>
                      </property>
                      <property name="text">
-                      <string>Export data to run the Masternode on a remote server</string>
+                      <string>Export data to run the Gamemaster on a remote server</string>
                      </property>
                      <property name="wordWrap">
                       <bool>true</bool>

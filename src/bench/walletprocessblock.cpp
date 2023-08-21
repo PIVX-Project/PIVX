@@ -6,7 +6,7 @@
 #include "blockassembler.h"
 #include "chainparams.h"
 #include "consensus/merkle.h"
-#include "evo/deterministicmns.h"
+#include "evo/deterministicgms.h"
 #include "evo/evodb.h"
 #include "evo/evonotificationinterface.h"
 
@@ -110,7 +110,7 @@ static void initBasics()
     pcoinsdbview.reset(new CCoinsViewDB(1 << 23, true));
     pcoinsTip.reset(new CCoinsViewCache(pcoinsdbview.get()));
     evoDb.reset(new CEvoDB(1 << 20, true, true));
-    deterministicMNManager.reset(new CDeterministicMNManager(*evoDb));
+    deterministicGMManager.reset(new CDeterministicGMManager(*evoDb));
     pEvoNotificationInterface = new EvoNotificationInterface();
     RegisterValidationInterface(pEvoNotificationInterface);
 }
@@ -192,7 +192,7 @@ static void WalletProcessBlockBench(benchmark::State& state)
 
     // Cleanup
     ECC_Stop();
-    deterministicMNManager.reset();
+    deterministicGMManager.reset();
     evoDb.reset();
     scheduler.stop();
     threadGroup.interrupt_all();

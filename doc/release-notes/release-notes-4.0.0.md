@@ -16,7 +16,7 @@ Update enforcement is currently scheduled to go into effect at the following tim
 Mainnet: Sunday, January 5, 2020 12:00:00 AM GMT
 ```
 
-Masternodes will need to be restarted once both the masternode daemon and the controller wallet have been upgraded.
+Gamemasters will need to be restarted once both the gamemaster daemon and the controller wallet have been upgraded.
 
 How to Upgrade
 ==============
@@ -44,7 +44,7 @@ New Wallet UI
 
 v4.0.0 introduces a completely new GUI for the wallet, designed and coded from the ground up by the [Krubit](https://krubit.com/) team.
 
-This new UI, aside from the overall design large implementation, includes user-focused improvements and features such as a brief introduction on first load, a FAQ section, one-click QRCode compatible receiving addresses, masternode creation wizard, dark and light themes, filterable staking charts, and much more.
+This new UI, aside from the overall design large implementation, includes user-focused improvements and features such as a brief introduction on first load, a FAQ section, one-click QRCode compatible receiving addresses, gamemaster creation wizard, dark and light themes, filterable staking charts, and much more.
 
 You can read more details about this extensive work in ([PR #954](https://github.com/hemis-Project/hemis/pull/954))
 
@@ -109,7 +109,7 @@ This means that, when looking for a valid kernel, each stakeable input can be ha
 
 ### New Network Message Signatures
 
-Layer 2 network messages (MN, Budget, Spork, etc) are now signed based on the hash of their **binary** content instead of their **string** representation ([#PR1024](https://github.com/hemis-Project/hemis/pull/1024)).
+Layer 2 network messages (GM, Budget, Spork, etc) are now signed based on the hash of their **binary** content instead of their **string** representation ([#PR1024](https://github.com/hemis-Project/hemis/pull/1024)).
 
 ### New SPORKS
 
@@ -359,7 +359,7 @@ Release versions are available via the `Stable` branch, and (for testing-only pu
 Internal Miner/Staker Change
 --------------
 
-The wallet's internal miner/staker is no longer prevented from running prior to having synced all the additional layer 2 (MN/Budget) data. Instead, mining/staking uses better logic to allow block creation without fully synced layer 2 data when the full data set wouldn't be required.
+The wallet's internal miner/staker is no longer prevented from running prior to having synced all the additional layer 2 (GM/Budget) data. Instead, mining/staking uses better logic to allow block creation without fully synced layer 2 data when the full data set wouldn't be required.
 
 In other words, try to stake a new block only if:
 
@@ -390,7 +390,7 @@ Detailed release notes follow. For convenience in locating the code changes and 
 - #1025 `988ee3fe37` [Startup] Stop loading the wallet if shutdown was requested. (furszy)
 - #1029 `0df20ddbab` [Startup][Refactor][Backport] Memory allocation fail handler + init step 1 refactored. (furszy)
 - #1040 `01fe200d4a` [Bug] Fix GetDepthInMainChain returning 0 when tx is not in mempool (random-zebra)
-- #1050 `adc74f737c` [Core] Prevent coinstakes from overpaying masternodes (random-zebra)
+- #1050 `adc74f737c` [Core] Prevent coinstakes from overpaying gamemasters (random-zebra)
 - #1063 `04834fff67` [Node] Remove a call to IsSuperMajority (warrows)
 - #1066 `6a4bf7c42c` [Cleanup][Refactor]Main.cpp code cleanup. (furszy)
 - #1067 `c947e534ee` [Node] Replace IsSuperMajority with height checks (warrows)
@@ -402,11 +402,11 @@ Detailed release notes follow. For convenience in locating the code changes and 
 
 ### GUI
 - #954 `e815815fdc` [GUI] [Model] New Wallet UI (furszy)
-- #997 `4d50ff33da` [Trivial][UI] MN screen (furszy)
-- #998 `6380da7eb4` [Qt] Guard MN tab from possible missing TXs in masternode.conf (Fuzzbawls)
+- #997 `4d50ff33da` [Trivial][UI] GM screen (furszy)
+- #998 `6380da7eb4` [Qt] Guard GM tab from possible missing TXs in gamemaster.conf (Fuzzbawls)
 - #999 `c6567aec89` [UI] Send screen total amounts refresh after custom options cleaned (furszy)
 - #1003 `a89f4e6603` [QT][Performance] Memory leak re creating the row object instead of re initialize it. (furszy)
-- #1006 `ac523b24c2` [Trivial] Fix mnrow ifdef typo (Fuzzbawls)
+- #1006 `ac523b24c2` [Trivial] Fix gmrow ifdef typo (Fuzzbawls)
 - #1007 `39e8a03505` [Qt] Reintroduce networkstyle to title texts (Fuzzbawls)
 - #1008 `91514a0326` [Qt] Don't set placeholder on QPlainTextEdit (Fuzzbawls)
 - #1009 `e0178087c8` [QT] Dashboard chart left and right day range movement control buttons (furszy)
@@ -422,7 +422,7 @@ Detailed release notes follow. For convenience in locating the code changes and 
 - #1048 `1cb55b4822` [Qt] Make CoinControlTreeWidget focusable (Fuzzbawls)
 - #1053 `6aaa531ec1` [GUI] Segfault for a bad cast of the parent in the escape key press event (furszy)
 - #1054 `7c2cd32d6e` [UI] Guard a call to GetDepthInMainChain (warrows)
-- #1055 `232cea5584` [Wallet] Create label for addresses generated via masternode wizard (CryptoDev-Project)
+- #1055 `232cea5584` [Wallet] Create label for addresses generated via gamemaster wizard (CryptoDev-Project)
 - #1057 `d4e6525410` [UI] Fix AA_EnableHighDpiScaling warning (Akshay)
 - #1071 `297acac8d6` [UI] Settings options buttons hover css (furszy)
 - #1072 `1e0cea53e8` [Qt] Update welcomecontentwidget.ui (Jeffrey)
@@ -448,7 +448,7 @@ Detailed release notes follow. For convenience in locating the code changes and 
 - #1124 `bbb0125077` [GUI] Use QRegexValidator instead of the QDoubleValidator. (furszy)
 - #1125 `c6e238ca4d` [GUI] Inform if open hemis.conf and/or backups folder fail. (furszy)
 - #1126 `c910490c53` [BUG] Fix send transaction detail destinations (furszy)
-- #1130 `c582cabbd3` [UI] Copy correct data from mninfo dialog (Akshay)
+- #1130 `c582cabbd3` [UI] Copy correct data from gminfo dialog (Akshay)
 - #1131 `8ca5db691b` [Bug] URI read from file coded properly.. (furszy)
 - #1132 `a34a7dfe1f` [Bug][GUI] Tx list row amount color changing invalidly. (furszy)
 - #1133 `d159cb1878` [Bug][GUI] Topbar sync progressbar not expanding fixed. (furszy)
@@ -456,14 +456,14 @@ Detailed release notes follow. For convenience in locating the code changes and 
 - #1141 `01c517085b` [GUI][Model] isTestNetwork regtest correction. (furszy)
 - #1142 `17ad5a2a61` [Bug] Fix segfault on GUI initialization for cold staker wallet (random-zebra)
 - #1151 `da3bea5971` Rewording text under Change Wallet Passphrase (NoobieDev12)
-- #1158 `7deae859f1` [BUG] Masternodes wizard (furszy)
+- #1158 `7deae859f1` [BUG] Gamemasters wizard (furszy)
 - #1159 `1ae53d0a2a` [GUI][Trivial] Rewording of Error message when wallet is unlocked for staking only (NoobieDev12)
 - #1160 `88ddd1a947` [GUI][Model] Do not re request passphrase when the wallet is unlocked. (furszy)
 - #1161 `e4bfe3e9af` [GUI][Trivial] Custom change address (furszy)
 - #1162 `1c23ea6a59` [Qt] Periodic make translate (Fuzzbawls)
 - #1163 `474e2bc6b2` [GUI] Validate wallet password on enter key press (warrows)
 - #1165 `c54dad3b9f` [GUI][Bug] Cold staking screen (furszy)
-- #1166 `4cc04b0ba6` [Qt] properly copy IPv6 externalip MN info (Fuzzbawls)
+- #1166 `4cc04b0ba6` [Qt] properly copy IPv6 externalip GM info (Fuzzbawls)
 - #1173 `8e42e03192` [GUI][Trivial] Remove every pushButton focus decoration property. (furszy)
 - #1174 `b352e2d096` [GUI] Min cold staking amount in ColdStaking widget (random-zebra)
 - #1178 `d7a929c6a8` [GUI][Bug] Cold staking screen (furszy)
@@ -482,9 +482,9 @@ Detailed release notes follow. For convenience in locating the code changes and 
 ### P2P and Network Code
 - #975 `9765a772b8` [Consensus] Define SPORK_17 (random-zebra)
 - #995 `8f2217d2bd` [Consensus] Define SPORK_18 (random-zebra)
-- #1001 `59f55d6a54` [Consensus] Remove Old message format in CMasternodeBroadcast (random-zebra)
+- #1001 `59f55d6a54` [Consensus] Remove Old message format in CGamemasterBroadcast (random-zebra)
 - #1024 `98aa3fa438` [Consensus] New signatures for network messages (random-zebra)
-- #1110 `f89f672847` [Masterndoes] Masternodes sync try locking cs_main when it looks for the tip (furszy)
+- #1110 `f89f672847` [Masterndoes] Gamemasters sync try locking cs_main when it looks for the tip (furszy)
 - #1118 `3219d9b48c` [Sporks] Guard chainActive.Tip() and chainActive.Height() methods call. (furszy)
 - #1128 `d6573e70c7` [Consensus] nTimeOffset warning for time protocol V2 (random-zebra)
 - #1137 `4241574857` [Net] Protocol update enforcement for 70918 (random-zebra)
@@ -504,7 +504,7 @@ Detailed release notes follow. For convenience in locating the code changes and 
 - #1064 `bfbbb6b30c` [Wallet][RPC] Diagnose unsuitable outputs in lockunspent() (random-zebra)
 - #1065 `d605e528db` [Wallet] Unlock spent outputs (random-zebra)
 - #1068 `59b45e6d33` [Wallet] Do not cache the credit amount if fUnspent is enabled. (random-zebra)
-- #1069 `d6f9eff763` [Wallet] Enable miner with mnsync incomplete (random-zebra)
+- #1069 `d6f9eff763` [Wallet] Enable miner with gmsync incomplete (random-zebra)
 - #1116 `e4d7addbb7` [Wallet] Do not use p2cs outputs in the autocombine flow. (furszy)
 - #1117 `8d425bdf0d` [Wallet][GUI][Model] Cold staking addresses contacts flow. (furszy)
 

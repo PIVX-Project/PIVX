@@ -100,7 +100,7 @@ git merge commit are mentioned.
 - #290 `004d7b6` Include both pending and mature zerocoins for automint calculations (presstab)
 
 ### GUI
-- #268 `bc63f24` [GUI/RPC] Changed bubblehelp text + RPC startmasternode help text fixed (Mrs-X)
+- #268 `bc63f24` [GUI/RPC] Changed bubblehelp text + RPC startgamemaster help text fixed (Mrs-X)
 - #269 `5466a9b` Check if model is valid before using in transactionView (Jon Spock)
 - #270 `bd2328e` [Qt] Make lock icon clickable to toggle wallet lock state (Fuzzbawls)
 - #273 `f31136e` [Qt] Fix UI tab order and shortcuts (Mrs-X)

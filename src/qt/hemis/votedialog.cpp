@@ -34,7 +34,7 @@ VoteDialog::VoteDialog(QWidget *parent, GovernanceModel* _govModel, MNModel* _mn
     setCssProperty(ui->btnCancel, "btn-dialog-cancel");
     setCssProperty(ui->btnSave, "btn-primary");
     setCssProperty(ui->btnLink, "btn-link");
-    setCssProperty(ui->btnSelectMasternodes, "btn-vote-select");
+    setCssProperty(ui->btnSelectGamemasters, "btn-vote-select");
     setCssProperty(ui->containerNo, "card-progress-box");
     setCssProperty(ui->containerYes, "card-progress-box");
 
@@ -46,7 +46,7 @@ VoteDialog::VoteDialog(QWidget *parent, GovernanceModel* _govModel, MNModel* _mn
     checkBoxYes = new QCheckBox(ui->containerYes);
     initVoteCheck(ui->containerYes, checkBoxYes, progressBarYes, "Yes", Qt::LayoutDirection::LeftToRight, true);
 
-    connect(ui->btnSelectMasternodes, &QPushButton::clicked, this, &VoteDialog::onMnSelectionClicked);
+    connect(ui->btnSelectGamemasters, &QPushButton::clicked, this, &VoteDialog::onMnSelectionClicked);
     connect(ui->btnEsc, &QPushButton::clicked, this, &VoteDialog::close);
     connect(ui->btnCancel, &QPushButton::clicked, this, &VoteDialog::close);
     connect(ui->btnSave, &QPushButton::clicked, this, &VoteDialog::onAcceptClicked);
@@ -80,7 +80,7 @@ void VoteDialog::onAcceptClicked()
     }
 
     if (vecSelectedMn.empty()) {
-        inform(tr("Missing voting masternodes selection"));
+        inform(tr("Missing voting gamemasters selection"));
         return;
     }
 
@@ -166,12 +166,12 @@ void VoteDialog::updateMnSelectionNum()
 {
     QString text;
     if (vecSelectedMn.empty()) {
-        text = !votes.empty() ? tr("You have voted with %1 Masternodes for this proposal\nChange votes").arg(votes.size()) :
-                tr("Select Voting Masternodes");
+        text = !votes.empty() ? tr("You have voted with %1 Gamemasters for this proposal\nChange votes").arg(votes.size()) :
+                tr("Select Voting Gamemasters");
     } else {
-        text = tr("%1 Masternodes selected to vote").arg(vecSelectedMn.size());
+        text = tr("%1 Gamemasters selected to vote").arg(vecSelectedMn.size());
     }
-    ui->btnSelectMasternodes->setText(text);
+    ui->btnSelectGamemasters->setText(text);
 }
 
 void VoteDialog::inform(const QString& text)

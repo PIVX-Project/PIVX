@@ -18,9 +18,9 @@ Notable Changes
   - Watch and follow active proposals live.
   - Create new proposal using a simple three steps wizard (The wallet will automatically create the transaction and relay the proposal to the network without any further interaction).
   - Follow how many blocks left for the next superblock, the allocated and the available amounts.
-  - Vote for proposals functionality with a multi-masternode voting wizard and change vote on-demand.
+  - Vote for proposals functionality with a multi-gamemaster voting wizard and change vote on-demand.
   - Filter proposals by status, votes count and more.
-* Masternode rewards have been included into the dashboard chart.
+* Gamemaster rewards have been included into the dashboard chart.
 * Address search functionality for cold-staking screen.
 * More precise after-fee calculation.
 * Wallet startup screen presenting needed disk space per-network.
@@ -77,8 +77,8 @@ v5.4.0 Change log
 - #2601 Prefer coins that have fewer ancestors, sanity check txn before ATMP and rebroadcast functional test (furszy)
 
 ### Tier two network
-- #2565 [BUG] Consider also DMNs in CountEnabled and CountNetworks (random-zebra)
-- #2567 [BUG][TierTwo] MNB process refactor (furszy)
+- #2565 [BUG] Consider also DGMs in CountEnabled and CountNetworks (random-zebra)
+- #2567 [BUG][TierTwo] GMB process refactor (furszy)
 - #2659 [TierTwo] Fix and improve several synchronization problems (furszy)
 
 ### GUI
@@ -90,12 +90,12 @@ v5.4.0 Change log
 - #2627 Correct proposal large title for being cut when the app window width isn't big enough (furszy)
 - #2621 Show disk space requirement per-network (Fuzzbawls)
 - #2635 [Cleanup] Stop translating placeholder strings (Fuzzbawls)
-- #2577 Include MN Rewards in the dashboard chart (furszy)
+- #2577 Include GM Rewards in the dashboard chart (furszy)
 - #2564 Clean restart process (furszy)
 - #2661 [BUG] GUI: invalid locking of shield notes in coin control (random-zebra)
 - #2662 [GUI] Don't show UTXO locking options for shield notes (Fuzzbawls)
 - #2663 [Build] Sanitize governance UIs item naming (Fuzzbawls)
-- #2671 [GUI] Differentiate Budget payment output records from MNs block reward records (furszy)
+- #2671 [GUI] Differentiate Budget payment output records from GMs block reward records (furszy)
 - #2664 [GUI] Fix proposal tooltip menu location skewing (Fuzzbawls)
 - #2670 [GUI] Governance, do not open the proposal creation wizard if node is in IBD (furszy)
 - #2665 [GUI] Fix governance nav button hover css (Fuzzbawls)
@@ -121,7 +121,7 @@ v5.4.0 Change log
 ### Tests and QA
 - #2494 [Test] Script tests updates (furszy)
 - #2420 [BLS] Add wrapper around chiabls lib, worker, benchmarks and unit tests (random-zebra)
-- #2550 Add MN payments test coverage (furszy)
+- #2550 Add GM payments test coverage (furszy)
 - #2538 Improve benchmark precision (furszy)
 - #2616 Replace usage of tostring() with tobytes() (Fuzzbawls)
 - #2585 Secondary chains acceptance test coverage (furszy)
