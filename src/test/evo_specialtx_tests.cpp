@@ -45,7 +45,7 @@ static ProRegPL GetRandomProRegPayload()
     ProRegPL pl;
     pl.collateralOutpoint.hash = GetRandHash();
     pl.collateralOutpoint.n = InsecureRandBits(2);
-    BOOST_CHECK(Lookup("57.12.210.11:51472", pl.addr, Params().GetDefaultPort(), false));
+    BOOST_CHECK(Lookup("57.12.210.11:49165", pl.addr, Params().GetDefaultPort(), false));
     pl.keyIDOwner = GetRandomKeyID();
     pl.pubKeyOperator = GetRandomBLSKey();
     pl.keyIDVoting = GetRandomKeyID();
@@ -61,7 +61,7 @@ static ProUpServPL GetRandomProUpServPayload()
 {
     ProUpServPL pl;
     pl.proTxHash = GetRandHash();
-    BOOST_CHECK(Lookup("127.0.0.1:51472", pl.addr, Params().GetDefaultPort(), false));
+    BOOST_CHECK(Lookup("127.0.0.1:49165", pl.addr, Params().GetDefaultPort(), false));
     pl.scriptOperatorPayout = GetRandomScript();
     pl.inputsHash = GetRandHash();
     pl.sig.SetByteVector(InsecureRandBytes(BLS_CURVE_SIG_SIZE));

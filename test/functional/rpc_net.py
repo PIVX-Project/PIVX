@@ -103,7 +103,7 @@ class NetTest(HemisTestFramework):
 
         # Add an IPv6 address to the address manager.
         ipv6_addr = "1233:3432:2434:2343:3234:2345:6546:4534"
-        self.nodes[0].addpeeraddress(ipv6_addr, 51472)
+        self.nodes[0].addpeeraddress(ipv6_addr, 49165)
 
         # Add 10,000 IPv4 addresses to the address manager. Due to the way bucket
         # and bucket positions are calculated, some of these addresses will collide.
@@ -113,7 +113,7 @@ class NetTest(HemisTestFramework):
             second_octet = i % 256
             a = f"{first_octet}.{second_octet}.1.1"
             imported_addrs.append(a)
-            self.nodes[0].addpeeraddress(a, 51472)
+            self.nodes[0].addpeeraddress(a, 49165)
 
         # Fetch the addresses via the RPC and test the results.
         assert_equal(len(self.nodes[0].getnodeaddresses()), 1)  # default count is 1
@@ -129,7 +129,7 @@ class NetTest(HemisTestFramework):
             assert_greater_than(a["time"], 1527811200)  # 1st June 2018
             assert_equal(a["services"], services)
             assert a["address"] in imported_addrs
-            assert_equal(a["port"], 51472)
+            assert_equal(a["port"], 49165)
             assert_equal(a["network"], "ipv4")
 
         # Test the IPv6 address.
@@ -137,7 +137,7 @@ class NetTest(HemisTestFramework):
         assert_equal(len(res), 1)
         assert_equal(res[0]["address"], ipv6_addr)
         assert_equal(res[0]["network"], "ipv6")
-        assert_equal(res[0]["port"], 51472)
+        assert_equal(res[0]["port"], 49165)
         assert_equal(res[0]["services"], services)
 
         # Test for the absence of onion addresses.

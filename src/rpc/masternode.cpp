@@ -84,7 +84,7 @@ UniValue initmasternode(const JSONRPCRequest& request)
                 " success            (string) if the masternode initialization succeeded.\n"
 
                 "\nExamples:\n" +
-                HelpExampleCli("initmasternode", "\"9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK\" \"187.24.32.124:51472\"") +
+                HelpExampleCli("initmasternode", "\"9247iC59poZmqBYt9iDh9wDam6v9S1rW5XekjLGyPnDhrDkP4AK\" \"187.24.32.124:49165\"") +
                 HelpExampleRpc("initmasternode", "\"bls-sk1xye8es37kk7y2mz7mad6yz7fdygttexqwhypa0u86hzw2crqgxfqy29ajm\""));
     }
 

@@ -476,7 +476,7 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
                 (fSignAndSend ? (
                         "\"txid\"                 (string) The transaction id.\n"
                         "\nExamples:\n"
-                        + HelpExampleCli("protx_register", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" 0 \"168.192.1.100:51472\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\"")
+                        + HelpExampleCli("protx_register", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" 0 \"168.192.1.100:49165\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\"")
                         ) : (
                         "{                        (json object)\n"
                         "  \"tx\" :                 (string) The serialized ProTx in hex format.\n"
@@ -484,7 +484,7 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
                         "  \"signMessage\" :        (string) The string message that needs to be signed with the collateral key\n"
                         "}\n"
                         "\nExamples:\n"
-                        + HelpExampleCli("protx_register_prepare", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" 0 \"168.192.1.100:51472\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\"")
+                        + HelpExampleCli("protx_register_prepare", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" 0 \"168.192.1.100:49165\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\"")
                         )
                 )
         );
@@ -634,7 +634,7 @@ UniValue protx_register_fund(const JSONRPCRequest& request)
                 "\nResult:\n"
                 "\"txid\"                        (string) The transaction id.\n"
                 "\nExamples:\n"
-                + HelpExampleCli("protx_register_fund", "\"DKHHBsuU9zfxxxVaqqqQqK4MxZg6vzpf8\" \"168.192.1.100:51472\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\"")
+                + HelpExampleCli("protx_register_fund", "\"DKHHBsuU9zfxxxVaqqqQqK4MxZg6vzpf8\" \"168.192.1.100:49165\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\"")
         );
     }
     CheckEvoUpgradeEnforcement();
@@ -841,7 +841,7 @@ UniValue protx_update_service(const JSONRPCRequest& request)
                 "\nResult:\n"
                 "\"txid\"                        (string) The transaction id.\n"
                 "\nExamples:\n"
-                + HelpExampleCli("protx_update_service", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" \"168.192.1.100:51472\"")
+                + HelpExampleCli("protx_update_service", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" \"168.192.1.100:49165\"")
         );
     }
     CheckEvoUpgradeEnforcement();

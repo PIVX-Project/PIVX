@@ -100,7 +100,7 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel* model, MNModel* _mnM
     } else if (walletModel->isTestNetwork()) {
         ui->lineEditPort->setText("51474");
     } else {
-        ui->lineEditPort->setText("51472");
+        ui->lineEditPort->setText("49165");
     }
 
     // Confirm icons
