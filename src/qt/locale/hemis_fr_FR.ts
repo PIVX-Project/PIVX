@@ -1264,7 +1264,7 @@ Il commencera automatiquement dès que le portefeuille aura assez de confirmatio
     </message>
 </context>
 <context>
-    <name>MNRow</name>
+    <name>GMRow</name>
     <message>
         <source>Form</source>
         <translation>Formulaire</translation>
@@ -1279,7 +1279,7 @@ Il commencera automatiquement dès que le portefeuille aura assez de confirmatio
     </message>
 </context>
 <context>
-    <name>MasterNodeWizardDialog</name>
+    <name>GamemaSterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>Dialogue</translation>
@@ -1412,7 +1412,7 @@ Il commencera automatiquement dès que le portefeuille aura assez de confirmatio
     </message>
 </context>
 <context>
-    <name>MasterNodesWidget</name>
+    <name>GamemaStersWidget</name>
     <message>
         <source>Form</source>
         <translation>Formulaire</translation>
@@ -1586,7 +1586,7 @@ Confirmez-vous?</translation>
     </message>
 </context>
 <context>
-    <name>MnInfoDialog</name>
+    <name>GmInfoDialog</name>
     <message>
         <source>Form</source>
         <translation>Formulaire</translation>
@@ -5879,7 +5879,7 @@ Portefeuille hemis Core</translation>
         <translation>Lookup(): adresse-proxy ou nom d'hôte non valide: '%s'</translation>
     </message>
     <message>
-        <source>MNs synchronization pending...</source>
+        <source>GMs synchronization pending...</source>
         <translation>Synchronisation gamemaster en attente...</translation>
     </message>
     <message>

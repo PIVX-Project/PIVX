@@ -1264,7 +1264,7 @@ Het zal automatisch starten zodra de portemonnee voldoende bevestigingen heeft o
     </message>
 </context>
 <context>
-    <name>MNRow</name>
+    <name>GMRow</name>
     <message>
         <source>Form</source>
         <translation>Formulier</translation>
@@ -1279,7 +1279,7 @@ Het zal automatisch starten zodra de portemonnee voldoende bevestigingen heeft o
     </message>
 </context>
 <context>
-    <name>MasterNodeWizardDialog</name>
+    <name>GamemaSterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>Dialoog</translation>
@@ -1412,7 +1412,7 @@ Het zal automatisch starten zodra de portemonnee voldoende bevestigingen heeft o
     </message>
 </context>
 <context>
-    <name>MasterNodesWidget</name>
+    <name>GamemaStersWidget</name>
     <message>
         <source>Form</source>
         <translation>Formulier</translation>
@@ -1589,7 +1589,7 @@ Weet je het zeker?</translation>
     </message>
 </context>
 <context>
-    <name>MnInfoDialog</name>
+    <name>GmInfoDialog</name>
     <message>
         <source>Form</source>
         <translation>Formulier</translation>
@@ -5943,7 +5943,7 @@ Voer alstublieft 'sapling-fetch-params' of './util/fetch-params.sh' uit en herst
         <translation>Lookup (): ongeldig -proxy-adres of hostnaam: '%s'</translation>
     </message>
     <message>
-        <source>MNs synchronization pending...</source>
+        <source>GMs synchronization pending...</source>
         <translation>Synchronisatie van GM's in afwachting...</translation>
     </message>
     <message>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MnSelectionDialog</class>
- <widget class="QWidget" name="MnSelectionDialog">
+ <class>GmSelectionDialog</class>
+ <widget class="QWidget" name="GmSelectionDialog">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -341,7 +341,7 @@ void TransactionTableModel::updateTransaction(const QString& hash, int status, b
     priv->updateWallet(updated, status, showTransaction, rec);
 
     if (!rec.isNull())
-        Q_EMIT txArrived(hash, rec.isCoinStake(), rec.isMNReward(), rec.isAnyColdStakingType());
+        Q_EMIT txArrived(hash, rec.isCoinStake(), rec.isGMReward(), rec.isAnyColdStakingType());
 }
 
 void TransactionTableModel::updateConfirmations()
@@ -433,7 +433,7 @@ QString TransactionTableModel::formatTxType(const TransactionRecord* wtx) const
     switch (wtx->type) {
     case TransactionRecord::RecvWithAddress:
         return tr("Received with");
-    case TransactionRecord::MNReward:
+    case TransactionRecord::GMReward:
         return tr("Gamemaster Reward");
     case TransactionRecord::BudgetPayment:
         return tr("Budget Payment");
@@ -496,7 +496,7 @@ QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord* wtx
     case TransactionRecord::Generated:
     case TransactionRecord::StakeMint:
     case TransactionRecord::StakeZHMS:
-    case TransactionRecord::MNReward:
+    case TransactionRecord::GMReward:
     case TransactionRecord::BudgetPayment:
         return QIcon(":/icons/tx_mined");
     case TransactionRecord::RecvWithAddress:
@@ -524,7 +524,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord* wtx, b
     case TransactionRecord::RecvFromOther:
         return QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::RecvWithAddress:
-    case TransactionRecord::MNReward:
+    case TransactionRecord::GMReward:
     case TransactionRecord::BudgetPayment:
     case TransactionRecord::SendToAddress:
     case TransactionRecord::Generated:
@@ -579,7 +579,7 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord* wtx) const
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::SendToAddress:
     case TransactionRecord::Generated:
-    case TransactionRecord::MNReward: {
+    case TransactionRecord::GMReward: {
         QString label = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(wtx->address));
         if (label.isEmpty())
             return COLOR_BAREADDRESS;
@@ -706,7 +706,7 @@ QVariant TransactionTableModel::data(const QModelIndex& index, int role) const
     case Qt::ForegroundRole:
         // Minted
         if (rec->type == TransactionRecord::Generated || rec->type == TransactionRecord::StakeMint ||
-                rec->type == TransactionRecord::StakeZHMS || rec->type == TransactionRecord::MNReward) {
+                rec->type == TransactionRecord::StakeZHMS || rec->type == TransactionRecord::GMReward) {
             if (rec->status.status == TransactionStatus::Conflicted || rec->status.status == TransactionStatus::NotAccepted)
                 return COLOR_ORPHAN;
             else

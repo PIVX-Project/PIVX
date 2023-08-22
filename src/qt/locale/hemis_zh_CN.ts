@@ -1195,14 +1195,14 @@ It will start automatically as soon as the wallet has enough confirmations on an
     </message>
 </context>
 <context>
-    <name>MNRow</name>
+    <name>GMRow</name>
     <message>
         <source>Form</source>
         <translation>来自</translation>
     </message>
     </context>
 <context>
-    <name>MasterNodeWizardDialog</name>
+    <name>GamemaSterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>对话框</translation>
@@ -1327,7 +1327,7 @@ It will start automatically as soon as the wallet has enough confirmations on an
     </message>
 </context>
 <context>
-    <name>MasterNodesWidget</name>
+    <name>GamemaStersWidget</name>
     <message>
         <source>Form</source>
         <translation>来自</translation>
@@ -1488,7 +1488,7 @@ Are you sure?</source>
     </message>
 </context>
 <context>
-    <name>MnInfoDialog</name>
+    <name>GmInfoDialog</name>
     <message>
         <source>Form</source>
         <translation>来自</translation>
@@ -2212,7 +2212,7 @@ Address: %4
     </message>
     <message>
         <source>GM reward</source>
-        <translation>MN奖励</translation>
+        <translation>GM奖励</translation>
     </message>
     <message>
         <source>To yourself</source>
@@ -5371,8 +5371,8 @@ hemis核心钱包</translation>
         <translation>查找():无效-代理地址或主机名:'%s'</translation>
     </message>
     <message>
-        <source>MNs synchronization pending...</source>
-        <translation>MNs同步正在进行...</translation>
+        <source>GMs synchronization pending...</source>
+        <translation>GMs同步正在进行...</translation>
     </message>
     <message>
         <source>Maintain at most &lt;n&gt; connections to peers (default: %u)</source>

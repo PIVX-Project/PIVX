@@ -52,9 +52,9 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
     // Staking Information
     setCssSubtitleScreen(ui->labelMessage);
     setCssProperty(ui->labelSquarePiv, "square-chart-piv");
-    setCssProperty(ui->labelSquareMN, "square-chart-mn");
+    setCssProperty(ui->labelSquareGM, "square-chart-gm");
     setCssProperty(ui->labelPiv, "text-chart-piv");
-    setCssProperty(ui->labelMN, "text-chart-mn");
+    setCssProperty(ui->labelGM, "text-chart-gm");
 
     // Staking Amount
     QFont fontBold;
@@ -62,7 +62,7 @@ DashboardWidget::DashboardWidget(PIVXGUI* parent) :
 
     setCssProperty(ui->labelChart, "legend-chart");
     setCssProperty(ui->labelAmountPiv, "text-stake-piv-disable");
-    setCssProperty(ui->labelAmountMN, "text-stake-mn-disable");
+    setCssProperty(ui->labelAmountGM, "text-stake-gm-disable");
 
     setCssProperty({ui->pushButtonAll,  ui->pushButtonMonth, ui->pushButtonYear}, "btn-check-time");
     setCssProperty({ui->comboBoxMonths,  ui->comboBoxYears}, "btn-combo-chart-selected");
@@ -219,12 +219,12 @@ void DashboardWidget::loadWalletModel()
     updateDisplayUnit();
 }
 
-void DashboardWidget::onTxArrived(const QString& hash, const bool isCoinStake, const bool isMNReward, const bool isCSAnyType)
+void DashboardWidget::onTxArrived(const QString& hash, const bool isCoinStake, const bool isGMReward, const bool isCSAnyType)
 {
     showList();
     if (!isVisible()) return;
 #ifdef USE_QTCHARTS
-    if (isCoinStake || isMNReward) {
+    if (isCoinStake || isGMReward) {
         // Update value if this is our first stake/reward
         if (!hasStakes && stakesFilter)
             hasStakes = stakesFilter->rowCount() > 0;
@@ -532,7 +532,7 @@ QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy()
         QModelIndex modelIndex = stakesFilter->index(i, TransactionTableModel::ToAddress);
         qint64 amount = llabs(modelIndex.data(TransactionTableModel::AmountRole).toLongLong());
         QDate date = modelIndex.data(TransactionTableModel::DateRole).toDateTime().date();
-        bool isPiv = modelIndex.data(TransactionTableModel::TypeRole).toInt() != TransactionRecord::MNReward;
+        bool isPiv = modelIndex.data(TransactionTableModel::TypeRole).toInt() != TransactionRecord::GMReward;
 
         int time = 0;
         switch (chartShow) {
@@ -562,7 +562,7 @@ QMap<int, std::pair<qint64, qint64>> DashboardWidget::getAmountBy()
                 amountBy[time] = std::make_pair(amount, 0);
             } else {
                 amountBy[time] = std::make_pair(0, amount);
-                hasMNRewards = true;
+                hasGMRewards = true;
             }
         }
     }
@@ -591,21 +591,21 @@ bool DashboardWidget::loadChartData(bool withMonthNames)
     for (int j = range.first; j < range.second; j++) {
         int num = (isOrderedByMonth && j > daysInMonth) ? (j % daysInMonth) : j;
         qreal piv = 0;
-        qreal mn = 0;
+        qreal gm = 0;
         if (chartData->amountsByCache.contains(num)) {
             std::pair <qint64, qint64> pair = chartData->amountsByCache[num];
             piv = (pair.first != 0) ? pair.first / 100000000 : 0;
-            mn = (pair.second != 0) ? pair.second / 100000000 : 0;
+            gm = (pair.second != 0) ? pair.second / 100000000 : 0;
             chartData->totalPiv += pair.first;
-            chartData->totalMN += pair.second;
+            chartData->totalGM += pair.second;
         }
 
         chartData->xLabels << ((withMonthNames) ? monthsNames[num - 1] : QString::number(num));
 
         chartData->valuesPiv.append(piv);
-        chartData->valuesMN.append(mn);
+        chartData->valuesGM.append(gm);
 
-        int max = std::max(piv, mn);
+        int max = std::max(piv, gm);
         if (max > chartData->maxValue) {
             chartData->maxValue = max;
         }
@@ -677,23 +677,23 @@ void DashboardWidget::onChartRefreshed()
     series->attachAxis(axisY);
 
     set0->append(chartData->valuesPiv);
-    set1->append(chartData->valuesMN);
+    set1->append(chartData->valuesGM);
 
     // Total
     nDisplayUnit = walletModel->getOptionsModel()->getDisplayUnit();
-    if (chartData->totalPiv > 0 || chartData->totalMN > 0) {
+    if (chartData->totalPiv > 0 || chartData->totalGM > 0) {
         setCssProperty(ui->labelAmountPiv, "text-stake-piv");
-        setCssProperty(ui->labelAmountMN, "text-stake-mn");
+        setCssProperty(ui->labelAmountGM, "text-stake-gm");
     } else {
         setCssProperty(ui->labelAmountPiv, "text-stake-piv-disable");
-        setCssProperty(ui->labelAmountMN, "text-stake-mn-disable");
+        setCssProperty(ui->labelAmountGM, "text-stake-gm-disable");
     }
-    forceUpdateStyle({ui->labelAmountPiv, ui->labelAmountMN});
+    forceUpdateStyle({ui->labelAmountPiv, ui->labelAmountGM});
     ui->labelAmountPiv->setText(GUIUtil::formatBalance(chartData->totalPiv, nDisplayUnit));
-    ui->labelAmountMN->setText(GUIUtil::formatBalance(chartData->totalMN, nDisplayUnit));
+    ui->labelAmountGM->setText(GUIUtil::formatBalance(chartData->totalGM, nDisplayUnit));
 
     series->append(set0);
-    if (hasMNRewards)
+    if (hasGMRewards)
         series->append(set1);
 
     // bar width
@@ -887,7 +887,7 @@ void DashboardWidget::onHideChartsChanged(bool fHide)
                                         TransactionFilterProxy::TYPE(TransactionRecord::Generated) |
                                         TransactionFilterProxy::TYPE(TransactionRecord::StakeZHMS) |
                                         TransactionFilterProxy::TYPE(TransactionRecord::StakeDelegated) |
-                                        TransactionFilterProxy::TYPE(TransactionRecord::MNReward));
+                                        TransactionFilterProxy::TYPE(TransactionRecord::GMReward));
         }
         stakesFilter->setSourceModel(txModel);
         hasStakes = stakesFilter->rowCount() > 0;

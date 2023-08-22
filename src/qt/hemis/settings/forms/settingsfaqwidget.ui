@@ -271,7 +271,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="pushButton_MNController">
+                    <widget class="QPushButton" name="pushButton_GMController">
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
@@ -913,10 +913,10 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QWidget" name="widget_MNController" native="true">
-                   <layout class="QHBoxLayout" name="horizontalpage_MNController" stretch="0,1">
+                  <widget class="QWidget" name="widget_GMController" native="true">
+                   <layout class="QHBoxLayout" name="horizontalpage_GMController" stretch="0,1">
                     <item alignment="Qt::AlignTop">
-                     <widget class="QLabel" name="labelNumber_MNController">
+                     <widget class="QLabel" name="labelNumber_GMController">
                       <property name="minimumSize">
                        <size>
                         <width>24</width>
@@ -938,7 +938,7 @@
                      </widget>
                     </item>
                     <item>
-                     <layout class="QVBoxLayout" name="verticalLayoutpage_MNController">
+                     <layout class="QVBoxLayout" name="verticalLayoutpage_GMController">
                       <property name="leftMargin">
                        <number>20</number>
                       </property>
@@ -946,7 +946,7 @@
                        <number>20</number>
                       </property>
                       <item>
-                       <widget class="QLabel" name="labelSubtitle_MNController">
+                       <widget class="QLabel" name="labelSubtitle_GMController">
                         <property name="text">
                          <string>What is a Gamemaster Controller?</string>
                         </property>
@@ -956,7 +956,7 @@
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer1_MNController">
+                       <spacer name="verticalSpacer1_GMController">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>
@@ -972,7 +972,7 @@
                        </spacer>
                       </item>
                       <item>
-                       <widget class="QLabel" name="labelContent_MNController">
+                       <widget class="QLabel" name="labelContent_GMController">
                         <property name="text">
                          <string notr="true">N/A</string>
                         </property>
@@ -985,7 +985,7 @@
                        </widget>
                       </item>
                       <item>
-                       <spacer name="verticalSpacer2_MNController">
+                       <spacer name="verticalSpacer2_GMController">
                         <property name="orientation">
                          <enum>Qt::Vertical</enum>
                         </property>

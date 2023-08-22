@@ -51,16 +51,16 @@ bool TransactionRecord::decomposeCoinStake(const CWallet* wallet, const CWalletT
         }
     } else {
         //Gamemaster reward
-        CTxDestination destMN;
-        int nIndexMN = (int) wtx.tx->vout.size() - 1;
-        if (ExtractDestination(wtx.tx->vout[nIndexMN].scriptPubKey, destMN) && (mine = IsMine(*wallet, destMN)) ) {
+        CTxDestination destGM;
+        int nIndexGM = (int) wtx.tx->vout.size() - 1;
+        if (ExtractDestination(wtx.tx->vout[nIndexGM].scriptPubKey, destGM) && (mine = IsMine(*wallet, destGM)) ) {
             sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
-            sub.address = EncodeDestination(destMN);
-            sub.credit = wtx.tx->vout[nIndexMN].nValue;
+            sub.address = EncodeDestination(destGM);
+            sub.credit = wtx.tx->vout[nIndexGM].nValue;
             // Simple way to differentiate budget payments from GM rewards.
             int nHeight = wtx.m_confirm.block_height;
-            CAmount mn_reward = Params().GetConsensus().NetworkUpgradeActive(nHeight, Consensus::UPGRADE_V5_5) ? Params().GetConsensus().nNewMNBlockReward : Params().GetConsensus().nMNBlockReward;
-            sub.type = sub.credit > mn_reward ? TransactionRecord::BudgetPayment : TransactionRecord::MNReward;
+            CAmount gm_reward = Params().GetConsensus().NetworkUpgradeActive(nHeight, Consensus::UPGRADE_V5_5) ? Params().GetConsensus().nNewGMBlockReward : Params().GetConsensus().nGMBlockReward;
+            sub.type = sub.credit > gm_reward ? TransactionRecord::BudgetPayment : TransactionRecord::GMReward;
         }
     }
 
@@ -619,7 +619,7 @@ void TransactionRecord::updateStatus(const CWalletTx& wtx, int chainHeight)
     else if (type == TransactionRecord::Generated ||
             type == TransactionRecord::StakeMint ||
             type == TransactionRecord::StakeZHMS ||
-            type == TransactionRecord::MNReward ||
+            type == TransactionRecord::GMReward ||
             type == TransactionRecord::BudgetPayment ||
             type == TransactionRecord::StakeDelegated ||
             type == TransactionRecord::StakeHot) {
@@ -664,9 +664,9 @@ bool TransactionRecord::isCoinStake() const
     return type == TransactionRecord::StakeMint || type == TransactionRecord::Generated || type == TransactionRecord::StakeZHMS;
 }
 
-bool TransactionRecord::isMNReward() const
+bool TransactionRecord::isGMReward() const
 {
-    return type == TransactionRecord::MNReward;
+    return type == TransactionRecord::GMReward;
 }
 
 bool TransactionRecord::isAnyColdStakingType() const

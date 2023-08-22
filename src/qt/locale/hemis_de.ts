@@ -1277,7 +1277,7 @@ Das Staking wird automatisch gestartet, sobald die Wallet genügend Bestätigung
     </message>
 </context>
 <context>
-    <name>MNRow</name>
+    <name>GMRow</name>
     <message>
         <source>Form</source>
         <translation>Formular</translation>
@@ -1292,7 +1292,7 @@ Das Staking wird automatisch gestartet, sobald die Wallet genügend Bestätigung
     </message>
 </context>
 <context>
-    <name>MasterNodeWizardDialog</name>
+    <name>GamemaSterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>Dialog</translation>
@@ -1426,7 +1426,7 @@ Sie können den Node jederzeit deaktivieren und die Coins entriegeln.&lt;/p&gt;&
     </message>
 </context>
 <context>
-    <name>MasterNodesWidget</name>
+    <name>GamemaStersWidget</name>
     <message>
         <source>Form</source>
         <translation>Formular</translation>
@@ -1601,7 +1601,7 @@ Sind sie sicher?</translation>
     </message>
 </context>
 <context>
-    <name>MnInfoDialog</name>
+    <name>GmInfoDialog</name>
     <message>
         <source>Form</source>
         <translation>Formular</translation>
@@ -6189,8 +6189,8 @@ Bitte führen Sie 'sapling-fetch-params' oder './util/fetch-params.sh' aus und d
         <translation>Lookup(): Invalid -proxy address or hostname: '%s'</translation>
     </message>
     <message>
-        <source>MNs synchronization pending...</source>
-        <translation>MNs Synchronisation ausstehend...</translation>
+        <source>GMs synchronization pending...</source>
+        <translation>GMs Synchronisation ausstehend...</translation>
     </message>
     <message>
         <source>Maintain at most &lt;n&gt; connections to peers (default: %u)</source>

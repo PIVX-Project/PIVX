@@ -630,9 +630,9 @@ void RPCConsole::showConfEditor()
     GUIUtil::openConfigfile();
 }
 
-void RPCConsole::showMNConfEditor()
+void RPCConsole::showGMConfEditor()
 {
-    GUIUtil::openMNConfigfile();
+    GUIUtil::openGMConfigfile();
 }
 
 void RPCConsole::peerSelected(const QItemSelection& selected, const QItemSelection& deselected)

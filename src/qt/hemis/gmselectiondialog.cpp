@@ -2,14 +2,14 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#include "qt/pivx/mnselectiondialog.h"
-#include "qt/pivx/forms/ui_mnselectiondialog.h"
-#include "qt/pivx/mnmodel.h"
-#include "qt/pivx/qtutils.h"
+#include "qt/hemis/gmselectiondialog.h"
+#include "qt/hemis/forms/ui_gmselectiondialog.h"
+#include "qt/hemis/gmmodel.h"
+#include "qt/hemis/qtutils.h"
 
-MnSelectionDialog::MnSelectionDialog(QWidget *parent) :
+GmSelectionDialog::GmSelectionDialog(QWidget *parent) :
         QDialog(parent),
-        ui(new Ui::MnSelectionDialog)
+        ui(new Ui::GmSelectionDialog)
 {
     ui->setupUi(this);
     this->setStyleSheet(parent->styleSheet());
@@ -36,59 +36,59 @@ MnSelectionDialog::MnSelectionDialog(QWidget *parent) :
     ui->treeWidget->model()->setHeaderData(COLUMN_VOTE, Qt::Horizontal, Qt::AlignHCenter , Qt::TextAlignmentRole);
     ui->treeWidget->model()->setHeaderData(COLUMN_STATUS, Qt::Horizontal, Qt::AlignHCenter , Qt::TextAlignmentRole);
 
-    connect(ui->btnEsc, &QPushButton::clicked, this, &MnSelectionDialog::close);
-    connect(ui->btnCancel, &QPushButton::clicked, this, &MnSelectionDialog::close);
-    connect(ui->btnSave, &QPushButton::clicked, this, &MnSelectionDialog::accept);
-    connect(ui->btnSelectAll, &QPushButton::clicked, this, &MnSelectionDialog::selectAll);
-    connect(ui->treeWidget, &QTreeWidget::itemChanged, this, &MnSelectionDialog::viewItemChanged);
+    connect(ui->btnEsc, &QPushButton::clicked, this, &GmSelectionDialog::close);
+    connect(ui->btnCancel, &QPushButton::clicked, this, &GmSelectionDialog::close);
+    connect(ui->btnSave, &QPushButton::clicked, this, &GmSelectionDialog::accept);
+    connect(ui->btnSelectAll, &QPushButton::clicked, this, &GmSelectionDialog::selectAll);
+    connect(ui->treeWidget, &QTreeWidget::itemChanged, this, &GmSelectionDialog::viewItemChanged);
 }
 
-void MnSelectionDialog::setModel(MNModel* _mnModel, int _minVoteUpdateTimeInSecs)
+void GmSelectionDialog::setModel(GMModel* _gmModel, int _minVoteUpdateTimeInSecs)
 {
-    mnModel = _mnModel;
+    gmModel = _gmModel;
     minVoteUpdateTimeInSecs = _minVoteUpdateTimeInSecs;
 }
 
-void MnSelectionDialog::setMnVoters(const std::vector<VoteInfo>& _votes)
+void GmSelectionDialog::setGmVoters(const std::vector<VoteInfo>& _votes)
 {
     for (const auto& vote : _votes) {
-        votes.emplace(vote.mnAlias, vote);
+        votes.emplace(vote.gmAlias, vote);
     }
 }
 
-class MnInfo {
+class GmInfo {
 public:
-    explicit MnInfo(const QString& _alias,
+    explicit GmInfo(const QString& _alias,
                     const QString& _status) : alias(_alias), status(_status) {}
-    ~MnInfo() {}
+    ~GmInfo() {}
 
     QString alias;
     QString status;
 };
 
-void MnSelectionDialog::viewItemChanged(QTreeWidgetItem* item, int column)
+void GmSelectionDialog::viewItemChanged(QTreeWidgetItem* item, int column)
 {
     if (column == COLUMN_CHECKBOX) {
-        MnInfo mnInfo(item->text(COLUMN_NAME), item->text(COLUMN_STATUS));
-        if (mnInfo.alias.isEmpty()) return;
-        auto it = std::find(selectedMnList.begin(), selectedMnList.end(), mnInfo.alias.toStdString());
+        GmInfo gmInfo(item->text(COLUMN_NAME), item->text(COLUMN_STATUS));
+        if (gmInfo.alias.isEmpty()) return;
+        auto it = std::find(selectedGmList.begin(), selectedGmList.end(), gmInfo.alias.toStdString());
         if (item->checkState(COLUMN_CHECKBOX) == Qt::Unchecked) {
-            if (it != selectedMnList.end()) {
-                selectedMnList.erase(it);
-                ui->labelAmountOfVotes->setText(QString::number((int)selectedMnList.size()));
+            if (it != selectedGmList.end()) {
+                selectedGmList.erase(it);
+                ui->labelAmountOfVotes->setText(QString::number((int)selectedGmList.size()));
             }
         } else if (item->isDisabled()) {
             item->setCheckState(COLUMN_CHECKBOX, Qt::Unchecked);
         } else {
-            if (it == selectedMnList.end()) {
-                selectedMnList.emplace_back(mnInfo.alias.toStdString());
-                ui->labelAmountOfVotes->setText(QString::number((int)selectedMnList.size()));
+            if (it == selectedGmList.end()) {
+                selectedGmList.emplace_back(gmInfo.alias.toStdString());
+                ui->labelAmountOfVotes->setText(QString::number((int)selectedGmList.size()));
             }
         }
     }
 }
 
-void MnSelectionDialog::selectAll()
+void GmSelectionDialog::selectAll()
 {
     const bool fSelectAll = ui->btnSelectAll->isChecked();
     Qt::CheckState wantedState = fSelectAll ? Qt::Checked : Qt::Unchecked;
@@ -98,22 +98,22 @@ void MnSelectionDialog::selectAll()
             ui->treeWidget->topLevelItem(i)->setCheckState(COLUMN_CHECKBOX, wantedState);
     ui->treeWidget->setEnabled(true);
     if (!fSelectAll) {
-        selectedMnList.clear();
+        selectedGmList.clear();
     }
     updateView();
     ui->btnSelectAll->setText(fSelectAll ? tr("Unselect All") : tr("Select All"));
 }
 
-void MnSelectionDialog::updateView()
+void GmSelectionDialog::updateView()
 {
     ui->treeWidget->clear();
     ui->treeWidget->setEnabled(false); // performance, otherwise the labels update would be called for every checked checkbox
     QFlags<Qt::ItemFlag> flgCheckbox = Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable;
     QFlags<Qt::ItemFlag> flgTristate = Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsTristate;
 
-    for (int i = 0; i < mnModel->rowCount(); ++i) {
-        QString alias = mnModel->index(i, MNModel::ALIAS, QModelIndex()).data().toString();
-        QString status = mnModel->index(i, MNModel::STATUS, QModelIndex()).data().toString();
+    for (int i = 0; i < gmModel->rowCount(); ++i) {
+        QString alias = gmModel->index(i, GMModel::ALIAS, QModelIndex()).data().toString();
+        QString status = gmModel->index(i, GMModel::STATUS, QModelIndex()).data().toString();
         VoteInfo* ptrVoteInfo{nullptr};
         auto it = votes.find(alias.toStdString());
         if (it != votes.end()) { ptrVoteInfo = &it->second; }
@@ -128,17 +128,17 @@ void MnSelectionDialog::updateView()
     ui->treeWidget->setEnabled(true);
 }
 
-void MnSelectionDialog::appendItem(QFlags<Qt::ItemFlag> flgCheckbox,
+void GmSelectionDialog::appendItem(QFlags<Qt::ItemFlag> flgCheckbox,
                                    QFlags<Qt::ItemFlag> flgTristate,
-                                   const QString& mnName,
-                                   const QString& mnStatus,
+                                   const QString& gmName,
+                                   const QString& gmStatus,
                                    VoteInfo* ptrVoteInfo)
 {
     QTreeWidgetItem* itemOutput = new QTreeWidgetItem(ui->treeWidget);
     itemOutput->setFlags(flgCheckbox);
     itemOutput->setCheckState(COLUMN_CHECKBOX, Qt::Unchecked);
-    itemOutput->setText(COLUMN_NAME, mnName);
-    itemOutput->setText(COLUMN_STATUS, mnStatus);
+    itemOutput->setText(COLUMN_NAME, gmName);
+    itemOutput->setText(COLUMN_STATUS, gmStatus);
     itemOutput->setToolTip(COLUMN_STATUS, "Gamemaster status"); // future: add status description
     itemOutput->setTextAlignment(COLUMN_STATUS, Qt::AlignHCenter);
     itemOutput->setTextAlignment(COLUMN_VOTE, Qt::AlignHCenter);
@@ -150,17 +150,17 @@ void MnSelectionDialog::appendItem(QFlags<Qt::ItemFlag> flgCheckbox,
         itemOutput->setToolTip(COLUMN_VOTE, tr("No vote has been emitted from this Gamemaster"));
     }
 
-    if (std::find(selectedMnList.begin(), selectedMnList.end(), mnName.toStdString()) != selectedMnList.end()) {
+    if (std::find(selectedGmList.begin(), selectedGmList.end(), gmName.toStdString()) != selectedGmList.end()) {
         itemOutput->setCheckState(COLUMN_CHECKBOX, Qt::Checked);
     } else {
         itemOutput->setCheckState(COLUMN_CHECKBOX, Qt::Unchecked);
     }
 
-    if (mnStatus != "ENABLED") {
+    if (gmStatus != "ENABLED") {
         itemOutput->setDisabled(true);
     }
 
-    // Disable MNs that will not be able to vote for the proposal until the minimum vote time passes.
+    // Disable GMs that will not be able to vote for the proposal until the minimum vote time passes.
     if (ptrVoteInfo && ptrVoteInfo->time + minVoteUpdateTimeInSecs > GetAdjustedTime()) {
         itemOutput->setDisabled(true);
         QString disabledTooltip{tr("Time between votes is too soon, have to wait %1 minutes to change your vote").arg(minVoteUpdateTimeInSecs/60)};
@@ -169,12 +169,12 @@ void MnSelectionDialog::appendItem(QFlags<Qt::ItemFlag> flgCheckbox,
     }
 }
 
-std::vector<std::string> MnSelectionDialog::getSelectedMnAlias()
+std::vector<std::string> GmSelectionDialog::getSelectedGmAlias()
 {
-    return selectedMnList;
+    return selectedGmList;
 }
 
-MnSelectionDialog::~MnSelectionDialog()
+GmSelectionDialog::~GmSelectionDialog()
 {
     delete ui;
 }

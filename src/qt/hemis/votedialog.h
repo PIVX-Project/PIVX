@@ -18,8 +18,8 @@ class VoteDialog;
 
 struct ProposalInfo;
 struct VoteInfo;
-class MNModel;
-class MnSelectionDialog;
+class GMModel;
+class GmSelectionDialog;
 class GovernanceModel;
 class SnackBar;
 
@@ -28,7 +28,7 @@ class VoteDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit VoteDialog(QWidget *parent, GovernanceModel* _govModel, MNModel* _mnModel);
+    explicit VoteDialog(QWidget *parent, GovernanceModel* _govModel, GMModel* _gmModel);
     ~VoteDialog();
 
     void showEvent(QShowEvent *event) override;
@@ -37,12 +37,12 @@ public:
 public Q_SLOTS:
     void onAcceptClicked();
     void onCheckBoxClicked(QCheckBox* checkBox, QProgressBar* progressBar, bool isVoteYes);
-    void onMnSelectionClicked();
+    void onGmSelectionClicked();
 
 private:
     Ui::VoteDialog *ui;
     GovernanceModel* govModel{nullptr};
-    MNModel* mnModel{nullptr};
+    GMModel* gmModel{nullptr};
     SnackBar* snackBar{nullptr};
 
     QCheckBox* checkBoxNo{nullptr};
@@ -52,14 +52,14 @@ private:
 
     std::unique_ptr<ProposalInfo> proposal;
     std::vector<VoteInfo> votes;
-    MnSelectionDialog* mnSelectionDialog{nullptr};
-    std::vector<std::string> vecSelectedMn;
+    GmSelectionDialog* gmSelectionDialog{nullptr};
+    std::vector<std::string> vecSelectedGm;
 
     void initVoteCheck(QWidget* container, QCheckBox* checkBox, QProgressBar* progressBar,
                        const QString& text, Qt::LayoutDirection direction, bool isVoteYes);
 
     void inform(const QString& text);
-    void updateMnSelectionNum();
+    void updateGmSelectionNum();
 };
 
 #endif // VOTEDIALOG_H

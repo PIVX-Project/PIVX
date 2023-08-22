@@ -69,7 +69,7 @@ private Q_SLOTS:
     void onCopyOwnerClicked();
     void onAddressCopyClicked();
     void onAddressEditClicked();
-    void onTxArrived(const QString& hash, const bool isCoinStake, const bool isMNReward, const bool isCSAnyType);
+    void onTxArrived(const QString& hash, const bool isCoinStake, const bool isGMReward, const bool isCSAnyType);
     void onContactsClicked(bool ownerAdd);
     void clearAll();
     void onLabelClicked();

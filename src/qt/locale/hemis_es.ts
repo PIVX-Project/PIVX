@@ -1263,7 +1263,7 @@ It will start automatically as soon as the wallet has enough confirmations on an
     </message>
 </context>
 <context>
-    <name>MNRow</name>
+    <name>GMRow</name>
     <message>
         <source>Form</source>
         <translation>Formulario</translation>
@@ -1278,7 +1278,7 @@ It will start automatically as soon as the wallet has enough confirmations on an
     </message>
 </context>
 <context>
-    <name>MasterNodeWizardDialog</name>
+    <name>GamemaSterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>Diálogo</translation>
@@ -1411,7 +1411,7 @@ It will start automatically as soon as the wallet has enough confirmations on an
     </message>
 </context>
 <context>
-    <name>MasterNodesWidget</name>
+    <name>GamemaStersWidget</name>
     <message>
         <source>Form</source>
         <translation>Formulario</translation>
@@ -1584,7 +1584,7 @@ Are you sure?</source>
     </message>
 </context>
 <context>
-    <name>MnInfoDialog</name>
+    <name>GmInfoDialog</name>
     <message>
         <source>Form</source>
         <translation>Formulario</translation>
@@ -5911,8 +5911,8 @@ Ejecute 'sapling-fetch-params' o './util/fetch-params.sh' y luego reinicie.</tra
         <translation>Lookup(): Inválido -dirección proxy o nombre de host '%s'</translation>
     </message>
     <message>
-        <source>MNs synchronization pending...</source>
-        <translation>Sincronización de MNs pendiente...</translation>
+        <source>GMs synchronization pending...</source>
+        <translation>Sincronización de GMs pendiente...</translation>
     </message>
     <message>
         <source>Maintain at most &lt;n&gt; connections to peers (default: %u)</source>

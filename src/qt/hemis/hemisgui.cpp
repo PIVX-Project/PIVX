@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 The hemis Core developers
+// Copyright (c) 2019-2022 The HEMIS Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -430,7 +430,7 @@ void hemisGUI::message(const QString& title, const QString& message, unsigned in
     } else if (style & CClientUIInterface::MSG_INFORMATION_SNACK) {
         messageInfo(message);
     } else {
-        // Append title to "hemis - "
+        // Append title to "HEMIS - "
         if (!msgType.isEmpty())
             strTitle += " - " + msgType;
         notificator->notify(static_cast<Notificator::Class>(nNotifyIcon), strTitle, message);

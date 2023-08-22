@@ -87,7 +87,7 @@ Q_SIGNALS:
     // Emitted only during startup when records gets parsed
     void txLoaded(const QString& hash, const int txType, const int txStatus);
     // Emitted when a transaction that belongs to this wallet gets connected to the chain and/or committed locally.
-    void txArrived(const QString& hash, const bool isCoinStake, const bool isMNReward, const bool isCSAnyType);
+    void txArrived(const QString& hash, const bool isCoinStake, const bool isGMReward, const bool isCSAnyType);
 
 private:
     // Listeners

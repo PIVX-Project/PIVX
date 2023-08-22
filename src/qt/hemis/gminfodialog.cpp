@@ -2,15 +2,15 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "qt/pivx/mninfodialog.h"
-#include "qt/pivx/forms/ui_mninfodialog.h"
+#include "qt/hemis/gminfodialog.h"
+#include "qt/hemis/forms/ui_gminfodialog.h"
 
 #include "guiutil.h"
 #include "qt/pivx/qtutils.h"
 
-MnInfoDialog::MnInfoDialog(QWidget *parent) :
+GmInfoDialog::GmInfoDialog(QWidget *parent) :
     FocusedDialog(parent),
-    ui(new Ui::MnInfoDialog)
+    ui(new Ui::GmInfoDialog)
 {
     ui->setupUi(this);
     this->setStyleSheet(parent->styleSheet());
@@ -21,13 +21,13 @@ MnInfoDialog::MnInfoDialog(QWidget *parent) :
     setCssTextBodyDialog({ui->textAmount, ui->textAddress, ui->textInputs, ui->textStatus, ui->textId, ui->textExport});
     setCssProperty({ui->pushCopy, ui->pushCopyId, ui->pushExport}, "ic-copy-big");
     setCssProperty(ui->btnEsc, "ic-close");
-    connect(ui->btnEsc, &QPushButton::clicked, this, &MnInfoDialog::close);
+    connect(ui->btnEsc, &QPushButton::clicked, this, &GmInfoDialog::close);
     connect(ui->pushCopy, &QPushButton::clicked, [this](){ copyInform(pubKey, tr("Gamemaster public key copied")); });
     connect(ui->pushCopyId, &QPushButton::clicked, [this](){ copyInform(txId, tr("Collateral tx id copied")); });
-    connect(ui->pushExport, &QPushButton::clicked, [this](){ exportMN = true; accept(); });
+    connect(ui->pushExport, &QPushButton::clicked, [this](){ exportGM = true; accept(); });
 }
 
-void MnInfoDialog::setData(const QString& _pubKey, const QString& name, const QString& address, const QString& _txId, const QString& outputIndex, const QString& status)
+void GmInfoDialog::setData(const QString& _pubKey, const QString& name, const QString& address, const QString& _txId, const QString& outputIndex, const QString& status)
 {
     this->pubKey = _pubKey;
     this->txId = _txId;
@@ -50,7 +50,7 @@ void MnInfoDialog::setData(const QString& _pubKey, const QString& name, const QS
     ui->textStatus->setText(status);
 }
 
-void MnInfoDialog::copyInform(const QString& copyStr, const QString& message)
+void GmInfoDialog::copyInform(const QString& copyStr, const QString& message)
 {
     GUIUtil::setClipboard(copyStr);
     if (!snackBar) snackBar = new SnackBar(nullptr, this);
@@ -59,13 +59,13 @@ void MnInfoDialog::copyInform(const QString& copyStr, const QString& message)
     openDialog(snackBar, this);
 }
 
-void MnInfoDialog::reject()
+void GmInfoDialog::reject()
 {
     if (snackBar && snackBar->isVisible()) snackBar->hide();
     QDialog::reject();
 }
 
-MnInfoDialog::~MnInfoDialog()
+GmInfoDialog::~GmInfoDialog()
 {
     if (snackBar) delete snackBar;
     delete ui;

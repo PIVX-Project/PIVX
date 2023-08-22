@@ -7,8 +7,8 @@
 
 #include <QDialog>
 
-class MNModel;
-class PIVXGUI;
+class GMModel;
+class hemisGUI;
 
 namespace Ui {
 class SettingsFaqWidget;
@@ -24,10 +24,10 @@ public:
         STAKE,
         SUPPORT,
         GAMEMASTER,
-        MNCONTROLLER
+        GMCONTROLLER
     };
 
-    explicit SettingsFaqWidget(PIVXGUI* parent, MNModel* _model);
+    explicit SettingsFaqWidget(hemisGUI* parent, GMModel* _model);
     ~SettingsFaqWidget();
 
     void showEvent(QShowEvent *event) override;

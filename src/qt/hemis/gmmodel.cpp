@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "qt/pivx/mnmodel.h"
+#include "qt/hemis/gmmodel.h"
 
 #include "coincontrol.h"
 #include "gamemaster.h"
@@ -20,46 +20,46 @@
 #include <QFile>
 #include <QHostAddress>
 
-MNModel::MNModel(QObject *parent) : QAbstractTableModel(parent) {}
+GMModel::GMModel(QObject *parent) : QAbstractTableModel(parent) {}
 
-void MNModel::init()
+void GMModel::init()
 {
-    updateMNList();
+    updateGMList();
 }
 
-void MNModel::updateMNList()
+void GMModel::updateGMList()
 {
-    int mnMinConf = getGamemasterCollateralMinConf();
+    int gmMinConf = getGamemasterCollateralMinConf();
     int end = nodes.size();
     nodes.clear();
     collateralTxAccepted.clear();
-    for (const CGamemasterConfig::CGamemasterEntry& mne : gamemasterConfig.getEntries()) {
+    for (const CGamemasterConfig::CGamemasterEntry& gme : gamemasterConfig.getEntries()) {
         int nIndex;
-        if (!mne.castOutputIndex(nIndex))
+        if (!gme.castOutputIndex(nIndex))
             continue;
-        const uint256& txHash = uint256S(mne.getTxHash());
+        const uint256& txHash = uint256S(gme.getTxHash());
         CTxIn txIn(txHash, uint32_t(nIndex));
-        CGamemaster* pmn = mnodeman.Find(txIn.prevout);
-        if (!pmn) {
-            pmn = new CGamemaster();
-            pmn->vin = txIn;
+        CGamemaster* pgm = gamemasterman.Find(txIn.prevout);
+        if (!pgm) {
+            pgm = new CGamemaster();
+            pgm->vin = txIn;
         }
-        nodes.insert(QString::fromStdString(mne.getAlias()), std::make_pair(QString::fromStdString(mne.getIp()), pmn));
+        nodes.insert(QString::fromStdString(gme.getAlias()), std::make_pair(QString::fromStdString(gme.getIp()), pgm));
         if (walletModel) {
-            collateralTxAccepted.insert(mne.getTxHash(), walletModel->getWalletTxDepth(txHash) >= mnMinConf);
+            collateralTxAccepted.insert(gme.getTxHash(), walletModel->getWalletTxDepth(txHash) >= gmMinConf);
         }
     }
     Q_EMIT dataChanged(index(0, 0, QModelIndex()), index(end, 5, QModelIndex()) );
 }
 
-int MNModel::rowCount(const QModelIndex &parent) const
+int GMModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
     return nodes.size();
 }
 
-int MNModel::columnCount(const QModelIndex &parent) const
+int GMModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
@@ -67,7 +67,7 @@ int MNModel::columnCount(const QModelIndex &parent) const
 }
 
 
-QVariant MNModel::data(const QModelIndex &index, int role) const
+QVariant GMModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
             return QVariant();
@@ -96,7 +96,7 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
                     // Quick workaround to the current Gamemaster status types.
                     // If the status is REMOVE and there is no pubkey associated to the Gamemaster
                     // means that the GM is not in the network list and was created in
-                    // updateMNList(). Which.. denotes a not started gamemaster.
+                    // updateGMList(). Which.. denotes a not started gamemaster.
                     // This will change in the future with the GamemasterWrapper introduction.
                     if (status == "REMOVE" && !pair.second->pubKeyCollateralAddress.IsValid()) {
                         return "MISSING";
@@ -106,9 +106,9 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
             }
             case PRIV_KEY: {
                 if (isAvailable) {
-                    for (CGamemasterConfig::CGamemasterEntry mne : gamemasterConfig.getEntries()) {
-                        if (mne.getTxHash().compare(rec->vin.prevout.hash.GetHex()) == 0) {
-                            return QString::fromStdString(mne.getPrivKey());
+                    for (CGamemasterConfig::CGamemasterEntry gme : gamemasterConfig.getEntries()) {
+                        if (gme.getTxHash().compare(rec->vin.prevout.hash.GetHex()) == 0) {
+                            return QString::fromStdString(gme.getPrivKey());
                         }
                     }
                 }
@@ -122,7 +122,7 @@ QVariant MNModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QModelIndex MNModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex GMModel::index(int row, int column, const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     std::pair<QString, CGamemaster*> pair = nodes.values().value(row);
@@ -137,7 +137,7 @@ QModelIndex MNModel::index(int row, int column, const QModelIndex& parent) const
 }
 
 
-bool MNModel::removeMn(const QModelIndex& modelIndex)
+bool GMModel::removeGm(const QModelIndex& modelIndex)
 {
     QString alias = modelIndex.data(Qt::DisplayRole).toString();
     int idx = modelIndex.row();
@@ -148,72 +148,72 @@ bool MNModel::removeMn(const QModelIndex& modelIndex)
     return true;
 }
 
-bool MNModel::addMn(CGamemasterConfig::CGamemasterEntry* mne)
+bool GMModel::addGm(CGamemasterConfig::CGamemasterEntry* gme)
 {
     beginInsertRows(QModelIndex(), nodes.size(), nodes.size());
     int nIndex;
-    if (!mne->castOutputIndex(nIndex))
+    if (!gme->castOutputIndex(nIndex))
         return false;
 
-    CGamemaster* pmn = mnodeman.Find(COutPoint(uint256S(mne->getTxHash()), uint32_t(nIndex)));
-    nodes.insert(QString::fromStdString(mne->getAlias()), std::make_pair(QString::fromStdString(mne->getIp()), pmn));
+    CGamemaster* pgm = gamemasterman.Find(COutPoint(uint256S(gme->getTxHash()), uint32_t(nIndex)));
+    nodes.insert(QString::fromStdString(gme->getAlias()), std::make_pair(QString::fromStdString(gme->getIp()), pgm));
     endInsertRows();
     return true;
 }
 
-int MNModel::getMNState(const QString& mnAlias)
+int GMModel::getGMState(const QString& gmAlias)
 {
-    QMap<QString, std::pair<QString, CGamemaster*>>::const_iterator it = nodes.find(mnAlias);
+    QMap<QString, std::pair<QString, CGamemaster*>>::const_iterator it = nodes.find(gmAlias);
     if (it != nodes.end()) return it.value().second->GetActiveState();
     throw std::runtime_error(std::string("Gamemaster alias not found"));
 }
 
-bool MNModel::isMNInactive(const QString& mnAlias)
+bool GMModel::isGMInactive(const QString& gmAlias)
 {
-    int activeState = getMNState(mnAlias);
+    int activeState = getGMState(gmAlias);
     return activeState == CGamemaster::GAMEMASTER_EXPIRED || activeState == CGamemaster::GAMEMASTER_REMOVE;
 }
 
-bool MNModel::isMNActive(const QString& mnAlias)
+bool GMModel::isGMActive(const QString& gmAlias)
 {
-    int activeState = getMNState(mnAlias);
+    int activeState = getGMState(gmAlias);
     return activeState == CGamemaster::GAMEMASTER_PRE_ENABLED || activeState == CGamemaster::GAMEMASTER_ENABLED;
 }
 
-bool MNModel::isMNCollateralMature(const QString& mnAlias)
+bool GMModel::isGMCollateralMature(const QString& gmAlias)
 {
-    QMap<QString, std::pair<QString, CGamemaster*>>::const_iterator it = nodes.find(mnAlias);
+    QMap<QString, std::pair<QString, CGamemaster*>>::const_iterator it = nodes.find(gmAlias);
     if (it != nodes.end()) return collateralTxAccepted.value(it.value().second->vin.prevout.hash.GetHex());
     throw std::runtime_error(std::string("Gamemaster alias not found"));
 }
 
-bool MNModel::isMNsNetworkSynced()
+bool GMModel::isGMsNetworkSynced()
 {
     return g_tiertwo_sync_state.IsSynced();
 }
 
-bool MNModel::validateMNIP(const QString& addrStr)
+bool GMModel::validateGMIP(const QString& addrStr)
 {
     return validateGamemasterIP(addrStr.toStdString());
 }
 
-CAmount MNModel::getMNCollateralRequiredAmount()
+CAmount GMModel::getGMCollateralRequiredAmount()
 {
-    return Params().GetConsensus().nMNCollateralAmt;
+    return Params().GetConsensus().nGMCollateralAmt;
 }
 
-int MNModel::getGamemasterCollateralMinConf()
+int GMModel::getGamemasterCollateralMinConf()
 {
     return Params().GetConsensus().GamemasterCollateralMinConf();
 }
 
-bool MNModel::createMNCollateral(
+bool GMModel::createGMCollateral(
         const QString& alias,
         const QString& addr,
         COutPoint& ret_outpoint,
         QString& ret_error)
 {
-    SendCoinsRecipient sendCoinsRecipient(addr, alias, getMNCollateralRequiredAmount(), "");
+    SendCoinsRecipient sendCoinsRecipient(addr, alias, getGMCollateralRequiredAmount(), "");
 
     // Send the 10 tx to one of your address
     QList<SendCoinsRecipient> recipients;
@@ -255,7 +255,7 @@ bool MNModel::createMNCollateral(
     int indexOut = -1;
     for (int i=0; i < (int)walletTx->vout.size(); i++) {
         const CTxOut& out = walletTx->vout[i];
-        if (out.nValue == getMNCollateralRequiredAmount()) {
+        if (out.nValue == getGMCollateralRequiredAmount()) {
             indexOut = i;
             break;
         }
@@ -269,57 +269,57 @@ bool MNModel::createMNCollateral(
     return true;
 }
 
-bool MNModel::startLegacyMN(const CGamemasterConfig::CGamemasterEntry& mne, int chainHeight, std::string& strError)
+bool GMModel::startLegacyGM(const CGamemasterConfig::CGamemasterEntry& gme, int chainHeight, std::string& strError)
 {
-    CGamemasterBroadcast mnb;
-    if (!CGamemasterBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strError, mnb, false, chainHeight))
+    CGamemasterBroadcast gmb;
+    if (!CGamemasterBroadcast::Create(gme.getIp(), gme.getPrivKey(), gme.getTxHash(), gme.getOutputIndex(), strError, gmb, false, chainHeight))
         return false;
 
-    mnodeman.UpdateGamemasterList(mnb);
-    if (activeGamemaster.pubKeyGamemaster == mnb.GetPubKey()) {
-        activeGamemaster.EnableHotColdMasterNode(mnb.vin, mnb.addr);
+    gamemasterman.UpdateGamemasterList(gmb);
+    if (activeGamemaster.pubKeyGamemaster == gmb.GetPubKey()) {
+        activeGamemaster.EnableHotColdGamemaSter(gmb.vin, gmb.addr);
     }
-    mnb.Relay();
+    gmb.Relay();
     return true;
 }
 
-void MNModel::startAllLegacyMNs(bool onlyMissing, int& amountOfMnFailed, int& amountOfMnStarted,
+void GMModel::startAllLegacyGMs(bool onlyMissing, int& amountOfGmFailed, int& amountOfGmStarted,
                                 std::string* aliasFilter, std::string* error_ret)
 {
-    for (const auto& mne : gamemasterConfig.getEntries()) {
+    for (const auto& gme : gamemasterConfig.getEntries()) {
         if (!aliasFilter) {
             // Check for missing only
-            QString mnAlias = QString::fromStdString(mne.getAlias());
-            if (onlyMissing && !isMNInactive(mnAlias)) {
-                if (!isMNActive(mnAlias))
-                    amountOfMnFailed++;
+            QString gmAlias = QString::fromStdString(gme.getAlias());
+            if (onlyMissing && !isGMInactive(gmAlias)) {
+                if (!isGMActive(gmAlias))
+                    amountOfGmFailed++;
                 continue;
             }
 
-            if (!isMNCollateralMature(mnAlias)) {
-                amountOfMnFailed++;
+            if (!isGMCollateralMature(gmAlias)) {
+                amountOfGmFailed++;
                 continue;
             }
-        } else if (*aliasFilter != mne.getAlias()){
+        } else if (*aliasFilter != gme.getAlias()){
             continue;
         }
 
         std::string ret_str;
-        if (!startLegacyMN(mne, walletModel->getLastBlockProcessedNum(), ret_str)) {
-            amountOfMnFailed++;
+        if (!startLegacyGM(gme, walletModel->getLastBlockProcessedNum(), ret_str)) {
+            amountOfGmFailed++;
             if (error_ret) *error_ret = ret_str;
         } else {
-            amountOfMnStarted++;
+            amountOfGmStarted++;
         }
     }
 }
 
 // Future: remove after v6.0
-CGamemasterConfig::CGamemasterEntry* MNModel::createLegacyMN(COutPoint& collateralOut,
+CGamemasterConfig::CGamemasterEntry* GMModel::createLegacyGM(COutPoint& collateralOut,
                              const std::string& alias,
                              std::string& serviceAddr,
                              const std::string& port,
-                             const std::string& mnKeyString,
+                             const std::string& gmKeyString,
                              QString& ret_error)
 {
     // Update the conf file
@@ -374,7 +374,7 @@ CGamemasterConfig::CGamemasterEntry* MNModel::createLegacyMN(COutPoint& collater
     if (lineCopy.empty()) {
         lineCopy = "# Gamemaster config file\n"
                    "# Format: alias IP:port gamemasterprivkey collateral_output_txid collateral_output_index\n"
-                   "# Example: mn1 127.0.0.2:49165 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0"
+                   "# Example: gm1 127.0.0.2:49165 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0"
                    "#";
     }
     lineCopy += "\n";
@@ -393,7 +393,7 @@ CGamemasterConfig::CGamemasterEntry* MNModel::createLegacyMN(COutPoint& collater
 
     fs::path pathConfigFile = AbsPathForConfigVal(fs::path("gamemaster_temp.conf"));
     FILE* configFile = fopen(pathConfigFile.string().c_str(), "w");
-    lineCopy += alias+" "+serviceAddr+":"+port+" "+mnKeyString+" "+txID+" "+indexOutStr+"\n";
+    lineCopy += alias+" "+serviceAddr+":"+port+" "+gmKeyString+" "+txID+" "+indexOutStr+"\n";
     fwrite(lineCopy.c_str(), std::strlen(lineCopy.c_str()), 1, configFile);
     fclose(configFile);
 
@@ -406,15 +406,15 @@ CGamemasterConfig::CGamemasterEntry* MNModel::createLegacyMN(COutPoint& collater
     fs::path pathNewConfFile = AbsPathForConfigVal(fs::path(strConfFile));
     rename(pathConfigFile, pathNewConfFile);
 
-    auto ret_mn_entry = gamemasterConfig.add(alias, serviceAddr+":"+port, mnKeyString, txID, indexOutStr);
+    auto ret_gm_entry = gamemasterConfig.add(alias, serviceAddr+":"+port, gmKeyString, txID, indexOutStr);
 
     // Lock collateral output
     walletModel->lockCoin(collateralOut.hash, collateralOut.n);
-    return ret_mn_entry;
+    return ret_gm_entry;
 }
 
 // Future: remove after v6.0
-bool MNModel::removeLegacyMN(const std::string& alias_to_remove, const std::string& tx_id, unsigned int out_index, QString& ret_error)
+bool GMModel::removeLegacyGM(const std::string& alias_to_remove, const std::string& tx_id, unsigned int out_index, QString& ret_error)
 {
     QString strConfFileQt(hemis_GAMEMASTER_CONF_FILENAME);
     std::string strConfFile = strConfFileQt.toStdString();
@@ -473,7 +473,7 @@ bool MNModel::removeLegacyMN(const std::string& alias_to_remove, const std::stri
     if (lineCopy.empty()) {
         lineCopy = "# Gamemaster config file\n"
                    "# Format: alias IP:port gamemasterprivkey collateral_output_txid collateral_output_index\n"
-                   "# Example: mn1 127.0.0.2:49165 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0\n";
+                   "# Example: gm1 127.0.0.2:49165 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0\n";
     }
 
     streamConfig.close();
@@ -505,12 +505,12 @@ bool MNModel::removeLegacyMN(const std::string& alias_to_remove, const std::stri
     return true;
 }
 
-void MNModel::setCoinControl(CCoinControl* coinControl)
+void GMModel::setCoinControl(CCoinControl* coinControl)
 {
     this->coinControl = coinControl;
 }
 
-void MNModel::resetCoinControl()
+void GMModel::resetCoinControl()
 {
     coinControl = nullptr;
 }

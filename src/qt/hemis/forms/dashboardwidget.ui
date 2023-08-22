@@ -575,7 +575,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="labelAmountMN">
+           <widget class="QLabel" name="labelAmountGM">
             <property name="text">
              <string notr="true">0 GM</string>
             </property>
@@ -715,7 +715,7 @@
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QLabel" name="labelSquareMN">
+                 <widget class="QLabel" name="labelSquareGM">
                   <property name="minimumSize">
                    <size>
                     <width>14</width>
@@ -734,7 +734,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="labelMN">
+                 <widget class="QLabel" name="labelGM">
                   <property name="text">
                    <string>Gamemaster</string>
                   </property>

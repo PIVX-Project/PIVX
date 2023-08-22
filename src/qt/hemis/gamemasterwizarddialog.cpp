@@ -6,8 +6,8 @@
 #include "qt/hemis/forms/ui_gamemasterwizarddialog.h"
 
 #include "key_io.h"
-#include "qt/pivx/mnmodel.h"
-#include "qt/pivx/qtutils.h"
+#include "qt/hemis/gmmodel.h"
+#include "qt/hemis/qtutils.h"
 #include "qt/walletmodel.h"
 
 #include <QIntValidator>
@@ -34,14 +34,14 @@ static void initBtn(std::initializer_list<QPushButton*> args)
     }
 }
 
-MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel* model, MNModel* _mnModel, QWidget *parent) :
+GamemaSterWizardDialog::GamemaSterWizardDialog(WalletModel* model, GMModel* _gmModel, QWidget *parent) :
     FocusedDialog(parent),
-    ui(new Ui::MasterNodeWizardDialog),
+    ui(new Ui::GamemaSterWizardDialog),
     icConfirm1(new QPushButton(this)),
     icConfirm3(new QPushButton(this)),
     icConfirm4(new QPushButton(this)),
     walletModel(model),
-    mnModel(_mnModel)
+    gmModel(_gmModel)
 {
     ui->setupUi(this);
 
@@ -66,7 +66,7 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel* model, MNModel* _mnM
     setCssProperty(ui->labelMessage1a, "text-main-grey");
     setCssProperty(ui->labelMessage1b, "text-main-purple");
 
-    QString collateralAmountStr = GUIUtil::formatBalance(mnModel->getMNCollateralRequiredAmount());
+    QString collateralAmountStr = GUIUtil::formatBalance(gmModel->getGMCollateralRequiredAmount());
     ui->labelMessage1a->setText(formatHtmlContent(
                 formatParagraph(tr("To create a hemis Gamemaster you must dedicate %1 (the unit of hemis) "
                         "to the network (however, these coins are still yours and will never leave your possession).").arg(collateralAmountStr)) +
@@ -116,17 +116,17 @@ MasterNodeWizardDialog::MasterNodeWizardDialog(WalletModel* model, MNModel* _mnM
     ui->btnBack->setVisible(false);
     setCssProperty(ui->pushButtonSkip, "ic-close");
 
-    connect(ui->pushButtonSkip, &QPushButton::clicked, this, &MasterNodeWizardDialog::close);
-    connect(ui->btnNext, &QPushButton::clicked, this, &MasterNodeWizardDialog::accept);
-    connect(ui->btnBack, &QPushButton::clicked, this, &MasterNodeWizardDialog::onBackClicked);
+    connect(ui->pushButtonSkip, &QPushButton::clicked, this, &GamemaSterWizardDialog::close);
+    connect(ui->btnNext, &QPushButton::clicked, this, &GamemaSterWizardDialog::accept);
+    connect(ui->btnBack, &QPushButton::clicked, this, &GamemaSterWizardDialog::onBackClicked);
 }
 
-void MasterNodeWizardDialog::showEvent(QShowEvent *event)
+void GamemaSterWizardDialog::showEvent(QShowEvent *event)
 {
     if (ui->btnNext) ui->btnNext->setFocus();
 }
 
-void MasterNodeWizardDialog::accept()
+void GamemaSterWizardDialog::accept()
 {
     switch(pos) {
         case 0:{
@@ -163,14 +163,14 @@ void MasterNodeWizardDialog::accept()
                 return;
             }
             icConfirm4->setVisible(true);
-            isOk = createMN();
+            isOk = createGM();
             QDialog::accept();
         }
     }
     pos++;
 }
 
-bool MasterNodeWizardDialog::createMN()
+bool GamemaSterWizardDialog::createGM()
 {
     if (!walletModel) {
         returnStr = tr("walletModel not set");
@@ -190,7 +190,7 @@ bool MasterNodeWizardDialog::createMN()
         returnStr = tr("IP or port cannot be empty");
         return false;
     }
-    if (!MNModel::validateMNIP(addressStr)) {
+    if (!GMModel::validateGMIP(addressStr)) {
         returnStr = tr("Invalid IP address");
         return false;
     }
@@ -199,16 +199,16 @@ bool MasterNodeWizardDialog::createMN()
     std::string ipAddress = addressStr.toStdString();
     std::string port = portStr.toStdString();
 
-    // create the mn key
+    // create the gm key
     CKey secret;
     secret.MakeNewKey(false);
-    std::string mnKeyString = KeyIO::EncodeSecret(secret);
+    std::string gmKeyString = KeyIO::EncodeSecret(secret);
 
     // Look for a valid collateral utxo
     COutPoint collateralOut;
 
     // If not found create a new collateral tx
-    if (!walletModel->getMNCollateralCandidate(collateralOut)) {
+    if (!walletModel->getGMCollateralCandidate(collateralOut)) {
         // New receive address
         auto r = walletModel->getNewAddress(alias);
         if (!r) {
@@ -217,7 +217,7 @@ bool MasterNodeWizardDialog::createMN()
             return false;
         }
 
-        if (!mnModel->createMNCollateral(addressLabel,
+        if (!gmModel->createGMCollateral(addressLabel,
                                          QString::fromStdString(r.getObjResult()->ToString()),
                                          collateralOut,
                                          returnStr)) {
@@ -226,17 +226,17 @@ bool MasterNodeWizardDialog::createMN()
         }
     }
 
-    mnEntry = mnModel->createLegacyMN(collateralOut, alias, ipAddress, port, mnKeyString, returnStr);
-    if (!mnEntry) {
-        // error str set inside createLegacyMN
+    gmEntry = gmModel->createLegacyGM(collateralOut, alias, ipAddress, port, gmKeyString, returnStr);
+    if (!gmEntry) {
+        // error str set inside createLegacyGM
         return false;
     }
 
-    returnStr = tr("Gamemaster created! Wait %1 confirmations before starting it.").arg(mnModel->getGamemasterCollateralMinConf());
+    returnStr = tr("Gamemaster created! Wait %1 confirmations before starting it.").arg(gmModel->getGamemasterCollateralMinConf());
     return true;
 }
 
-void MasterNodeWizardDialog::onBackClicked()
+void GamemaSterWizardDialog::onBackClicked()
 {
     if (pos == 0) return;
     pos--;
@@ -268,7 +268,7 @@ void MasterNodeWizardDialog::onBackClicked()
     }
 }
 
-void MasterNodeWizardDialog::inform(const QString& text)
+void GamemaSterWizardDialog::inform(const QString& text)
 {
     if (!snackBar)
         snackBar = new SnackBar(nullptr, this);
@@ -277,7 +277,7 @@ void MasterNodeWizardDialog::inform(const QString& text)
     openDialog(snackBar, this);
 }
 
-MasterNodeWizardDialog::~MasterNodeWizardDialog()
+GamemaSterWizardDialog::~GamemaSterWizardDialog()
 {
     delete snackBar;
     delete ui;

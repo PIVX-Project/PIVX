@@ -15,27 +15,27 @@
 #include <QTimer>
 #include <QWidget>
 
-class PIVXGUI;
-class MNModel;
+class hemisGUI;
+class GMModel;
 
 namespace Ui {
-class MasterNodesWidget;
+class GamemaStersWidget;
 }
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
 QT_END_NAMESPACE
 
-class MasterNodesWidget : public PWidget
+class GamemaStersWidget : public PWidget
 {
     Q_OBJECT
 
 public:
 
-    explicit MasterNodesWidget(PIVXGUI *parent = nullptr);
-    ~MasterNodesWidget();
+    explicit GamemaStersWidget(hemisGUI *parent = nullptr);
+    ~GamemaStersWidget();
     void resetCoinControl();
-    void setMNModel(MNModel* _mnModel);
+    void setGMModel(GMModel* _gmModel);
 
     void run(int type) override;
     void onError(QString error, int type) override;
@@ -45,20 +45,20 @@ public:
 
 private Q_SLOTS:
     void onCoinControlClicked();
-    void onCreateMNClicked();
+    void onCreateGMClicked();
     void onStartAllClicked(int type);
     void changeTheme(bool isLightTheme, QString &theme) override;
-    void onMNClicked(const QModelIndex &index);
-    void onEditMNClicked();
-    void onDeleteMNClicked();
-    void onInfoMNClicked();
+    void onGMClicked(const QModelIndex &index);
+    void onEditGMClicked();
+    void onDeleteGMClicked();
+    void onInfoGMClicked();
     void updateListState();
     void updateModelAndInform(const QString& informText);
 
 private:
-    Ui::MasterNodesWidget *ui;
+    Ui::GamemaStersWidget *ui;
     FurAbstractListItemDelegate *delegate;
-    MNModel *mnModel = nullptr;
+    GMModel *gmModel = nullptr;
     TooltipMenu* menu = nullptr;
     QModelIndex index;
     QTimer *timer = nullptr;
@@ -66,9 +66,9 @@ private:
 
     std::atomic<bool> isLoading;
 
-    bool checkMNsNetwork();
+    bool checkGMsNetwork();
     void startAlias(const QString& strAlias);
-    bool startAll(QString& failedMN, bool onlyMissing);
+    bool startAll(QString& failedGM, bool onlyMissing);
 };
 
 #endif // GAMEMASTERSWIDGET_H

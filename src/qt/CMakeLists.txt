@@ -112,11 +112,11 @@ SET(QT_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/contactdropdownrow.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/contactsdropdown.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/optionbutton.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/mninfodialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/gminfodialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/coldstakingmodel.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/mnmodel.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/gmmodel.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/gamemasterwizarddialog.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/mnrow.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/gmrow.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/gamemasterswidget.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/sendchangeaddressdialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/sendconfirmdialog.cpp
@@ -134,7 +134,7 @@ SET(QT_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/addresseswidget.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/defaultdialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/coldstakingwidget.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/mnselectiondialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/hemis/gmselectiondialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/proposalcard.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/votedialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/hemis/createproposaldialog.cpp

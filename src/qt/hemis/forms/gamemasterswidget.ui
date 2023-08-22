@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MasterNodesWidget</class>
- <widget class="QWidget" name="MasterNodesWidget">
+ <class>GamemaStersWidget</class>
+ <widget class="QWidget" name="GamemaStersWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -114,7 +114,7 @@ and vote on the treasury system receiving a periodic reward.</string>
          <layout class="QVBoxLayout" name="verticalLayout_6"/>
         </item>
         <item>
-         <widget class="QListView" name="listMn">
+         <widget class="QListView" name="listGm">
           <property name="mouseTracking">
            <bool>true</bool>
           </property>

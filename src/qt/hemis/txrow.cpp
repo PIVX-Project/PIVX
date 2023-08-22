@@ -76,7 +76,7 @@ void TxRow::setType(bool isLightTheme, int type, bool isConfirmed)
             break;
         case TransactionRecord::Generated:
         case TransactionRecord::StakeZHMS:
-        case TransactionRecord::MNReward:
+        case TransactionRecord::GMReward:
         case TransactionRecord::StakeMint:
         case TransactionRecord::BudgetPayment:
             path = "://ic-transaction-staked";

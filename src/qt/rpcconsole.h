@@ -104,7 +104,7 @@ public Q_SLOTS:
     /** Open external (default) editor with hemis.conf */
     void showConfEditor();
     /** Open external (default) editor with gamemaster.conf */
-    void showMNConfEditor();
+    void showGMConfEditor();
     /** Handle selection of peer in peers list */
     void peerSelected(const QItemSelection& selected, const QItemSelection& deselected);
     /** Handle updated peer information */

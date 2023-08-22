@@ -6,15 +6,15 @@
 #include "config/pivx-config.h"
 #endif
 
-#include "qt/pivx/settings/settingsfaqwidget.h"
-#include "qt/pivx/settings/forms/ui_settingsfaqwidget.h"
-#include "qt/pivx/mnmodel.h"
-#include "qt/pivx/qtutils.h"
+#include "qt/hemis/settings/settingsfaqwidget.h"
+#include "qt/hemis/settings/forms/ui_settingsfaqwidget.h"
+#include "qt/hemis/gmmodel.h"
+#include "qt/hemis/qtutils.h"
 
 #include <QScrollBar>
 #include <QMetaObject>
 
-SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
+SettingsFaqWidget::SettingsFaqWidget(hemisGUI* parent, GMModel* gmModel) :
     QDialog(parent),
     ui(new Ui::SettingsFaqWidget)
 {
@@ -37,7 +37,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
            ui->labelNumber_Stake,
            ui->labelNumber_Support,
            ui->labelNumber_Gamemaster,
-           ui->labelNumber_MNController
+           ui->labelNumber_GMController
         }, "container-number-faq");
 
     setCssProperty({
@@ -46,7 +46,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
               ui->labelSubtitle_Stake,
               ui->labelSubtitle_Support,
               ui->labelSubtitle_Gamemaster,
-              ui->labelSubtitle_MNController
+              ui->labelSubtitle_GMController
             }, "text-subtitle-faq");
 
 
@@ -56,7 +56,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
               ui->labelContent_Stake,
               ui->labelContent_Support,
               ui->labelContent_Gamemaster,
-              ui->labelContent_MNController
+              ui->labelContent_GMController
             }, "text-content-faq");
 
 
@@ -66,7 +66,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
               ui->pushButton_Stake,
               ui->pushButton_Support,
               ui->pushButton_Gamemaster,
-              ui->pushButton_MNController
+              ui->pushButton_GMController
             }, "btn-faq-options");
 
     ui->labelContent_Support->setOpenExternalLinks(true);
@@ -123,7 +123,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
                "to the network and in return, receive a portion of the block reward "
                "regularly. These services include:")
                 .arg(PACKAGE_NAME)
-                .arg(GUIUtil::formatBalance(mnModel->getMNCollateralRequiredAmount(), BitcoinUnits::HMS)) +
+                .arg(GUIUtil::formatBalance(gmModel->getGMCollateralRequiredAmount(), BitcoinUnits::HMS)) +
             formatFAQUnorderedList(
                 formatFAQListItem(tr("A decentralized governance (Proposal Voting)")) +
                 formatFAQListItem(tr("A decentralized budgeting system (Treasury)")) +
@@ -144,20 +144,20 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
             tr("Requirements:") +
             formatFAQUnorderedList(
                 formatFAQListItem(tr("%1 per single Gamemaster instance")
-                        .arg(GUIUtil::formatBalance(mnModel->getMNCollateralRequiredAmount(), BitcoinUnits::HMS))) +
+                        .arg(GUIUtil::formatBalance(gmModel->getGMCollateralRequiredAmount(), BitcoinUnits::HMS))) +
                 formatFAQListItem(tr("Must be stored in a core wallet")) +
                 formatFAQListItem(tr("Need dedicated IP address")) +
                 formatFAQListItem(tr("Gamemaster wallet to remain online")))));
     ui->labelContent_Gamemaster->setText(gamemasterContent);
 
-    QString mNControllerContent = formatFAQContent(
+    QString gMControllerContent = formatFAQContent(
         formatFAQParagraph(
             tr("A Gamemaster Controller wallet is where the %1 collateral "
                "can reside during a Controller-Remote gamemaster setup. It is a wallet "
                "that can activate the remote gamemaster wallet(s) and allows you to keep "
                "your collateral coins offline while the remote gamemaster remains online.")
-                    .arg(GUIUtil::formatBalance(mnModel->getMNCollateralRequiredAmount(), BitcoinUnits::HMS))));
-    ui->labelContent_MNController->setText(mNControllerContent);
+                    .arg(GUIUtil::formatBalance(gmModel->getGMCollateralRequiredAmount(), BitcoinUnits::HMS))));
+    ui->labelContent_GMController->setText(gMControllerContent);
 
 
     // Exit button
@@ -174,7 +174,7 @@ SettingsFaqWidget::SettingsFaqWidget(PIVXGUI* parent, MNModel* mnModel) :
     connect(ui->pushButton_Stake, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_Stake);});
     connect(ui->pushButton_Support, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_Support);});
     connect(ui->pushButton_Gamemaster, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_Gamemaster);});
-    connect(ui->pushButton_MNController, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_MNController);});
+    connect(ui->pushButton_GMController, &QPushButton::clicked, [this](){onFaqClicked(ui->widget_GMController);});
 
     if (parent)
         connect(parent, &PIVXGUI::windowResizeEvent, this, &SettingsFaqWidget::windowResizeEvent);
@@ -212,7 +212,7 @@ std::vector<QPushButton*> SettingsFaqWidget::getButtons()
             ui->pushButton_Stake,
             ui->pushButton_Support,
             ui->pushButton_Gamemaster,
-            ui->pushButton_MNController
+            ui->pushButton_GMController
     };
 }
 

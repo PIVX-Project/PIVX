@@ -105,7 +105,7 @@ public:
     // Start/Stop the gamemaster polling timer
     void startGamemastersTimer();
     void stopGamemastersTimer();
-    // Force a GM count update calling mnmanager directly locking its internal mutex.
+    // Force a GM count update calling gmmanager directly locking its internal mutex.
     // Future todo: implement an event based update and remove the lock requirement.
     QString getGamemastersCountString();
     int getGamemastersCount() const { return m_cached_gamemasters_count; }
@@ -133,7 +133,7 @@ private:
     int numBlocksAtStartup;
 
     QTimer* pollTimer;
-    QTimer* pollMnTimer;
+    QTimer* pollGmTimer;
 
     std::atomic_int m_cached_gamemasters_count{0};
 
@@ -156,7 +156,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void updateTimer();
-    void updateMnTimer();
+    void updateGmTimer();
     void updateNumConnections(int numConnections);
     void updateNetworkActive(bool networkActive);
     void updateAlert();

@@ -143,7 +143,7 @@ bool openDebugLogfile();
 bool openConfigfile();
 
 // Open gamemaster.conf
-bool openMNConfigfile();
+bool openGMConfigfile();
 
 // Browse backup folder
 bool showBackups();

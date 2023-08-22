@@ -70,7 +70,7 @@ public Q_SLOTS:
     void goToSend();
     void goToReceive();
     void goToAddresses();
-    void goToMasterNodes();
+    void goToGamemaSters();
     void goToGovernance();
     void goToColdStaking();
     void goToSettings();
@@ -99,7 +99,7 @@ public Q_SLOTS:
     void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address);
 #ifdef ENABLE_WALLET
     void setGovModel(GovernanceModel* govModel);
-    void setMNModel(MNModel* mnModel);
+    void setGMModel(GMModel* gmModel);
     /** Set the wallet model.
         The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending
         functionality.
@@ -126,7 +126,7 @@ private:
 
     bool enableWallet;
     ClientModel* clientModel = nullptr;
-    MNModel* mnModel = nullptr;
+    GMModel* gmModel = nullptr;
 
     // Actions
     QAction* quitAction = nullptr;
@@ -141,7 +141,7 @@ private:
     SendWidget *sendWidget = nullptr;
     ReceiveWidget *receiveWidget = nullptr;
     AddressesWidget *addressesWidget = nullptr;
-    MasterNodesWidget *masterNodesWidget = nullptr;
+    GamemaStersWidget *gamemaStersWidget = nullptr;
     ColdStakingWidget *coldStakingWidget = nullptr;
     GovernanceWidget* governancewidget{nullptr};
     SettingsWidget* settingsWidget = nullptr;

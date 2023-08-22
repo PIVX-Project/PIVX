@@ -7,14 +7,14 @@
 #include "qt/hemis/forms/ui_gamemasterswidget.h"
 
 #include "qt/hemis/qtutils.h"
-#include "qt/hemis/mnrow.h"
-#include "qt/hemis/mninfodialog.h"
+#include "qt/hemis/gmrow.h"
+#include "qt/hemis/gminfodialog.h"
 #include "qt/hemis/gamemasterwizarddialog.h"
 
 #include "clientmodel.h"
 #include "guiutil.h"
-#include "qt/pivx/mnmodel.h"
-#include "qt/pivx/optionbutton.h"
+#include "qt/hemis/gmmodel.h"
+#include "qt/hemis/optionbutton.h"
 #include "qt/walletmodel.h"
 
 #define DECORATION_SIZE 65
@@ -22,24 +22,24 @@
 #define REQUEST_START_ALL 1
 #define REQUEST_START_MISSING 2
 
-class MNHolder : public FurListRow<QWidget*>
+class GMHolder : public FurListRow<QWidget*>
 {
 public:
-    explicit MNHolder(bool _isLightTheme) : FurListRow(), isLightTheme(_isLightTheme) {}
+    explicit GMHolder(bool _isLightTheme) : FurListRow(), isLightTheme(_isLightTheme) {}
 
-    MNRow* createHolder(int pos) override
+    GMRow* createHolder(int pos) override
     {
-        if (!cachedRow) cachedRow = new MNRow();
+        if (!cachedRow) cachedRow = new GMRow();
         return cachedRow;
     }
 
     void init(QWidget* holder,const QModelIndex &index, bool isHovered, bool isSelected) const override
     {
-        MNRow* row = static_cast<MNRow*>(holder);
+        GMRow* row = static_cast<GMRow*>(holder);
         QString label = index.data(Qt::DisplayRole).toString();
-        QString address = index.sibling(index.row(), MNModel::ADDRESS).data(Qt::DisplayRole).toString();
-        QString status = index.sibling(index.row(), MNModel::STATUS).data(Qt::DisplayRole).toString();
-        bool wasCollateralAccepted = index.sibling(index.row(), MNModel::WAS_COLLATERAL_ACCEPTED).data(Qt::DisplayRole).toBool();
+        QString address = index.sibling(index.row(), GMModel::ADDRESS).data(Qt::DisplayRole).toString();
+        QString status = index.sibling(index.row(), GMModel::STATUS).data(Qt::DisplayRole).toString();
+        bool wasCollateralAccepted = index.sibling(index.row(), GMModel::WAS_COLLATERAL_ACCEPTED).data(Qt::DisplayRole).toBool();
         row->updateView("Address: " + address, label, status, wasCollateralAccepted);
     }
 
@@ -48,22 +48,22 @@ public:
         return getRowColor(isLightTheme, isHovered, isSelected);
     }
 
-    ~MNHolder() override{}
+    ~GMHolder() override{}
 
     bool isLightTheme;
-    MNRow* cachedRow = nullptr;
+    GMRow* cachedRow = nullptr;
 };
 
-MasterNodesWidget::MasterNodesWidget(PIVXGUI *parent) :
+GamemaStersWidget::GamemaStersWidget(hemisGUI *parent) :
     PWidget(parent),
-    ui(new Ui::MasterNodesWidget),
+    ui(new Ui::GamemaStersWidget),
     isLoading(false)
 {
     ui->setupUi(this);
 
     delegate = new FurAbstractListItemDelegate(
             DECORATION_SIZE,
-            new MNHolder(isLightTheme()),
+            new GMHolder(isLightTheme()),
             this
     );
 
@@ -100,65 +100,65 @@ MasterNodesWidget::MasterNodesWidget(PIVXGUI *parent) :
     ui->btnCoinControl->setTitleClassAndText("btn-title-grey", "Coin Control");
     ui->btnCoinControl->setSubTitleClassAndText("text-subtitle", "Select the source of coins to create a Gamemaster");
 
-    setCssProperty(ui->listMn, "container");
-    ui->listMn->setItemDelegate(delegate);
-    ui->listMn->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
-    ui->listMn->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
-    ui->listMn->setAttribute(Qt::WA_MacShowFocusRect, false);
-    ui->listMn->setSelectionBehavior(QAbstractItemView::SelectRows);
+    setCssProperty(ui->listGm, "container");
+    ui->listGm->setItemDelegate(delegate);
+    ui->listGm->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
+    ui->listGm->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
+    ui->listGm->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->listGm->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     ui->emptyContainer->setVisible(false);
     setCssProperty(ui->pushImgEmpty, "img-empty-master");
     setCssProperty(ui->labelEmpty, "text-empty");
 
-    connect(ui->pushButtonSave, &QPushButton::clicked, this, &MasterNodesWidget::onCreateMNClicked);
+    connect(ui->pushButtonSave, &QPushButton::clicked, this, &GamemaStersWidget::onCreateGMClicked);
     connect(ui->pushButtonStartAll, &QPushButton::clicked, [this]() {
         onStartAllClicked(REQUEST_START_ALL);
     });
     connect(ui->pushButtonStartMissing, &QPushButton::clicked, [this]() {
         onStartAllClicked(REQUEST_START_MISSING);
     });
-    connect(ui->listMn, &QListView::clicked, this, &MasterNodesWidget::onMNClicked);
+    connect(ui->listGm, &QListView::clicked, this, &GamemaStersWidget::onGMClicked);
     connect(ui->btnAbout, &OptionButton::clicked, [this](){window->openFAQ(SettingsFaqWidget::Section::GAMEMASTER);});
-    connect(ui->btnAboutController, &OptionButton::clicked, [this](){window->openFAQ(SettingsFaqWidget::Section::MNCONTROLLER);});
-    connect(ui->btnCoinControl, &OptionButton::clicked, this, &MasterNodesWidget::onCoinControlClicked);
+    connect(ui->btnAboutController, &OptionButton::clicked, [this](){window->openFAQ(SettingsFaqWidget::Section::GMCONTROLLER);});
+    connect(ui->btnCoinControl, &OptionButton::clicked, this, &GamemaStersWidget::onCoinControlClicked);
 }
 
-void MasterNodesWidget::showEvent(QShowEvent *event)
+void GamemaStersWidget::showEvent(QShowEvent *event)
 {
-    if (mnModel) mnModel->updateMNList();
+    if (gmModel) gmModel->updateGMList();
     if (!timer) {
         timer = new QTimer(this);
-        connect(timer, &QTimer::timeout, [this]() {mnModel->updateMNList();});
+        connect(timer, &QTimer::timeout, [this]() {gmModel->updateGMList();});
     }
     timer->start(30000);
 }
 
-void MasterNodesWidget::hideEvent(QHideEvent *event)
+void GamemaStersWidget::hideEvent(QHideEvent *event)
 {
     if (timer) timer->stop();
 }
 
-void MasterNodesWidget::setMNModel(MNModel* _mnModel)
+void GamemaStersWidget::setGMModel(GMModel* _gmModel)
 {
-    mnModel = _mnModel;
-    ui->listMn->setModel(mnModel);
-    ui->listMn->setModelColumn(AddressTableModel::Label);
+    gmModel = _gmModel;
+    ui->listGm->setModel(gmModel);
+    ui->listGm->setModelColumn(AddressTableModel::Label);
     updateListState();
 }
 
-void MasterNodesWidget::updateListState()
+void GamemaStersWidget::updateListState()
 {
-    bool show = mnModel->rowCount() > 0;
-    ui->listMn->setVisible(show);
+    bool show = gmModel->rowCount() > 0;
+    ui->listGm->setVisible(show);
     ui->emptyContainer->setVisible(!show);
     ui->pushButtonStartAll->setVisible(show);
 }
 
-void MasterNodesWidget::onMNClicked(const QModelIndex& _index)
+void GamemaStersWidget::onGMClicked(const QModelIndex& _index)
 {
-    ui->listMn->setCurrentIndex(_index);
-    QRect rect = ui->listMn->visualRect(_index);
+    ui->listGm->setCurrentIndex(_index);
+    QRect rect = ui->listGm->visualRect(_index);
     QPoint pos = rect.topRight();
     pos.setX(pos.x() - (DECORATION_SIZE * 2));
     pos.setY(pos.y() + (DECORATION_SIZE * 1.5));
@@ -168,9 +168,9 @@ void MasterNodesWidget::onMNClicked(const QModelIndex& _index)
         this->menu->setDeleteBtnText(tr("Delete"));
         this->menu->setCopyBtnText(tr("Info"));
         connect(this->menu, &TooltipMenu::message, this, &AddressesWidget::message);
-        connect(this->menu, &TooltipMenu::onEditClicked, this, &MasterNodesWidget::onEditMNClicked);
-        connect(this->menu, &TooltipMenu::onDeleteClicked, this, &MasterNodesWidget::onDeleteMNClicked);
-        connect(this->menu, &TooltipMenu::onCopyClicked, this, &MasterNodesWidget::onInfoMNClicked);
+        connect(this->menu, &TooltipMenu::onEditClicked, this, &GamemaStersWidget::onEditGMClicked);
+        connect(this->menu, &TooltipMenu::onDeleteClicked, this, &GamemaStersWidget::onDeleteGMClicked);
+        connect(this->menu, &TooltipMenu::onCopyClicked, this, &GamemaStersWidget::onInfoGMClicked);
         this->menu->adjustSize();
     } else {
         this->menu->hide();
@@ -180,23 +180,23 @@ void MasterNodesWidget::onMNClicked(const QModelIndex& _index)
     menu->show();
 
     // Back to regular status
-    ui->listMn->scrollTo(index);
-    ui->listMn->clearSelection();
-    ui->listMn->setFocus();
+    ui->listGm->scrollTo(index);
+    ui->listGm->clearSelection();
+    ui->listGm->setFocus();
 }
 
-bool MasterNodesWidget::checkMNsNetwork()
+bool GamemaStersWidget::checkGMsNetwork()
 {
-    bool isTierTwoSync = mnModel->isMNsNetworkSynced();
+    bool isTierTwoSync = gmModel->isGMsNetworkSynced();
     if (!isTierTwoSync) inform(tr("Please wait until the node is fully synced"));
     return isTierTwoSync;
 }
 
-void MasterNodesWidget::onEditMNClicked()
+void GamemaStersWidget::onEditGMClicked()
 {
     if (walletModel) {
-        if (!walletModel->isRegTestNetwork() && !checkMNsNetwork()) return;
-        if (index.sibling(index.row(), MNModel::WAS_COLLATERAL_ACCEPTED).data(Qt::DisplayRole).toBool()) {
+        if (!walletModel->isRegTestNetwork() && !checkGMsNetwork()) return;
+        if (index.sibling(index.row(), GMModel::WAS_COLLATERAL_ACCEPTED).data(Qt::DisplayRole).toBool()) {
             // Start GM
             QString strAlias = this->index.data(Qt::DisplayRole).toString();
             if (ask(tr("Start Gamemaster"), tr("Are you sure you want to start gamemaster %1?\n").arg(strAlias))) {
@@ -210,12 +210,12 @@ void MasterNodesWidget::onEditMNClicked()
             }
         } else {
             inform(tr("Cannot start gamemaster, the collateral transaction has not been confirmed by the network yet.\n"
-                    "Please wait few more minutes (gamemaster collaterals require %1 confirmations).").arg(mnModel->getGamemasterCollateralMinConf()));
+                    "Please wait few more minutes (gamemaster collaterals require %1 confirmations).").arg(gmModel->getGamemasterCollateralMinConf()));
         }
     }
 }
 
-void MasterNodesWidget::startAlias(const QString& strAlias)
+void GamemaStersWidget::startAlias(const QString& strAlias)
 {
     QString strStatusHtml;
     strStatusHtml += "Alias: " + strAlias + " ";
@@ -224,7 +224,7 @@ void MasterNodesWidget::startAlias(const QString& strAlias)
     int success_amount = 0;
     std::string alias = strAlias.toStdString();
     std::string strError;
-    mnModel->startAllLegacyMNs(false, failed_amount, success_amount, &alias, &strError);
+    gmModel->startAllLegacyGMs(false, failed_amount, success_amount, &alias, &strError);
     if (failed_amount > 0) {
         strStatusHtml = tr("failed to start.\nError: %1").arg(QString::fromStdString(strError));
     } else if (success_amount > 0) {
@@ -234,15 +234,15 @@ void MasterNodesWidget::startAlias(const QString& strAlias)
     updateModelAndInform(strStatusHtml);
 }
 
-void MasterNodesWidget::updateModelAndInform(const QString& informText)
+void GamemaStersWidget::updateModelAndInform(const QString& informText)
 {
-    mnModel->updateMNList();
+    gmModel->updateGMList();
     inform(informText);
 }
 
-void MasterNodesWidget::onStartAllClicked(int type)
+void GamemaStersWidget::onStartAllClicked(int type)
 {
-    if (!Params().IsRegTestNet() && !checkMNsNetwork()) return;     // skip on RegNet: so we can test even if tier two not synced
+    if (!Params().IsRegTestNet() && !checkGMsNetwork()) return;     // skip on RegNet: so we can test even if tier two not synced
 
     if (isLoading) {
         inform(tr("Background task is being executed, please wait"));
@@ -260,19 +260,19 @@ void MasterNodesWidget::onStartAllClicked(int type)
     }
 }
 
-bool MasterNodesWidget::startAll(QString& failText, bool onlyMissing)
+bool GamemaStersWidget::startAll(QString& failText, bool onlyMissing)
 {
-    int amountOfMnFailed = 0;
-    int amountOfMnStarted = 0;
-    mnModel->startAllLegacyMNs(onlyMissing, amountOfMnFailed, amountOfMnStarted);
-    if (amountOfMnFailed > 0) {
-        failText = tr("%1 Gamemasters failed to start, %2 started").arg(amountOfMnFailed).arg(amountOfMnStarted);
+    int amountOfGmFailed = 0;
+    int amountOfGmStarted = 0;
+    gmModel->startAllLegacyGMs(onlyMissing, amountOfGmFailed, amountOfGmStarted);
+    if (amountOfGmFailed > 0) {
+        failText = tr("%1 Gamemasters failed to start, %2 started").arg(amountOfGmFailed).arg(amountOfGmStarted);
         return false;
     }
     return true;
 }
 
-void MasterNodesWidget::run(int type)
+void GamemaStersWidget::run(int type)
 {
     bool isStartMissing = type == REQUEST_START_MISSING;
     if (type == REQUEST_START_ALL || isStartMissing) {
@@ -285,7 +285,7 @@ void MasterNodesWidget::run(int type)
     isLoading = false;
 }
 
-void MasterNodesWidget::onError(QString error, int type)
+void GamemaStersWidget::onError(QString error, int type)
 {
     if (type == REQUEST_START_ALL) {
         QMetaObject::invokeMethod(this, "inform", Qt::QueuedConnection,
@@ -293,7 +293,7 @@ void MasterNodesWidget::onError(QString error, int type)
     }
 }
 
-void MasterNodesWidget::onInfoMNClicked()
+void GamemaStersWidget::onInfoGMClicked()
 {
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (!ctx.isValid()) {
@@ -302,28 +302,28 @@ void MasterNodesWidget::onInfoMNClicked()
         return;
     }
     showHideOp(true);
-    MnInfoDialog* dialog = new MnInfoDialog(window);
+    GmInfoDialog* dialog = new GmInfoDialog(window);
     QString label = index.data(Qt::DisplayRole).toString();
-    QString address = index.sibling(index.row(), MNModel::ADDRESS).data(Qt::DisplayRole).toString();
-    QString status = index.sibling(index.row(), MNModel::STATUS).data(Qt::DisplayRole).toString();
-    QString txId = index.sibling(index.row(), MNModel::COLLATERAL_ID).data(Qt::DisplayRole).toString();
-    QString outIndex = index.sibling(index.row(), MNModel::COLLATERAL_OUT_INDEX).data(Qt::DisplayRole).toString();
-    QString pubKey = index.sibling(index.row(), MNModel::PUB_KEY).data(Qt::DisplayRole).toString();
+    QString address = index.sibling(index.row(), GMModel::ADDRESS).data(Qt::DisplayRole).toString();
+    QString status = index.sibling(index.row(), GMModel::STATUS).data(Qt::DisplayRole).toString();
+    QString txId = index.sibling(index.row(), GMModel::COLLATERAL_ID).data(Qt::DisplayRole).toString();
+    QString outIndex = index.sibling(index.row(), GMModel::COLLATERAL_OUT_INDEX).data(Qt::DisplayRole).toString();
+    QString pubKey = index.sibling(index.row(), GMModel::PUB_KEY).data(Qt::DisplayRole).toString();
     dialog->setData(pubKey, label, address, txId, outIndex, status);
     dialog->adjustSize();
     showDialog(dialog, 3, 17);
-    if (dialog->exportMN) {
+    if (dialog->exportGM) {
         if (ask(tr("Remote Gamemaster Data"),
                 tr("You are just about to export the required data to run a Gamemaster\non a remote server to your clipboard.\n\n\n"
                    "You will only have to paste the data in the hemis.conf file\nof your remote server and start it, "
                    "then start the Gamemaster using\nthis controller wallet (select the Gamemaster in the list and press \"start\").\n"
                 ))) {
             // export data
-            QString exportedMN = "gamemaster=1\n"
+            QString exportedGM = "gamemaster=1\n"
                                  "externalip=" + address.left(address.lastIndexOf(":")) + "\n" +
                                  "gamemasteraddr=" + address + + "\n" +
-                                 "gamemasterprivkey=" + index.sibling(index.row(), MNModel::PRIV_KEY).data(Qt::DisplayRole).toString() + "\n";
-            GUIUtil::setClipboard(exportedMN);
+                                 "gamemasterprivkey=" + index.sibling(index.row(), GMModel::PRIV_KEY).data(Qt::DisplayRole).toString() + "\n";
+            GUIUtil::setClipboard(exportedGM);
             inform(tr("Gamemaster data copied to the clipboard."));
         }
     }
@@ -331,10 +331,10 @@ void MasterNodesWidget::onInfoMNClicked()
     dialog->deleteLater();
 }
 
-void MasterNodesWidget::onDeleteMNClicked()
+void GamemaStersWidget::onDeleteGMClicked()
 {
-    QString txId = index.sibling(index.row(), MNModel::COLLATERAL_ID).data(Qt::DisplayRole).toString();
-    QString outIndex = index.sibling(index.row(), MNModel::COLLATERAL_OUT_INDEX).data(Qt::DisplayRole).toString();
+    QString txId = index.sibling(index.row(), GMModel::COLLATERAL_ID).data(Qt::DisplayRole).toString();
+    QString outIndex = index.sibling(index.row(), GMModel::COLLATERAL_OUT_INDEX).data(Qt::DisplayRole).toString();
     QString qAliasString = index.data(Qt::DisplayRole).toString();
 
     bool convertOK = false;
@@ -349,16 +349,16 @@ void MasterNodesWidget::onDeleteMNClicked()
     }
 
     QString errorStr;
-    if (!mnModel->removeLegacyMN(qAliasString.toStdString(), txId.toStdString(), indexOut, errorStr)) {
+    if (!gmModel->removeLegacyGM(qAliasString.toStdString(), txId.toStdString(), indexOut, errorStr)) {
         inform(errorStr);
         return;
     }
     // Update list
-    mnModel->removeMn(index);
+    gmModel->removeGm(index);
     updateListState();
 }
 
-void MasterNodesWidget::onCreateMNClicked()
+void GamemaStersWidget::onCreateGMClicked()
 {
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (!ctx.isValid()) {
@@ -367,10 +367,10 @@ void MasterNodesWidget::onCreateMNClicked()
         return;
     }
 
-    CAmount mnCollateralAmount = mnModel->getMNCollateralRequiredAmount();
-    if (walletModel->getBalance() <= mnCollateralAmount) {
+    CAmount gmCollateralAmount = gmModel->getGMCollateralRequiredAmount();
+    if (walletModel->getBalance() <= gmCollateralAmount) {
         inform(tr("Not enough balance to create a gamemaster, %1 required.")
-            .arg(GUIUtil::formatBalance(mnCollateralAmount, BitcoinUnits::HMS)));
+            .arg(GUIUtil::formatBalance(gmCollateralAmount, BitcoinUnits::HMS)));
         return;
     }
 
@@ -381,22 +381,22 @@ void MasterNodesWidget::onCreateMNClicked()
         for (const auto& coin : coins) {
             selectedBalance += coin.value;
         }
-        if (selectedBalance <= mnCollateralAmount) {
+        if (selectedBalance <= gmCollateralAmount) {
             inform(tr("Not enough coins selected to create a gamemaster, %1 required.")
-                       .arg(GUIUtil::formatBalance(mnCollateralAmount, BitcoinUnits::HMS)));
+                       .arg(GUIUtil::formatBalance(gmCollateralAmount, BitcoinUnits::HMS)));
             return;
         }
-        mnModel->setCoinControl(coinControlDialog->coinControl);
+        gmModel->setCoinControl(coinControlDialog->coinControl);
     }
 
     showHideOp(true);
-    MasterNodeWizardDialog *dialog = new MasterNodeWizardDialog(walletModel, mnModel, window);
+    GamemaSterWizardDialog *dialog = new GamemaSterWizardDialog(walletModel, gmModel, window);
     if (openDialogWithOpaqueBackgroundY(dialog, window, 5, 7)) {
         if (dialog->isOk) {
             // Update list
-            mnModel->addMn(dialog->mnEntry);
+            gmModel->addGm(dialog->gmEntry);
             updateListState();
-            // add mn
+            // add gm
             inform(dialog->returnStr);
         } else {
             warn(tr("Error creating gamemaster"), dialog->returnStr);
@@ -406,12 +406,12 @@ void MasterNodesWidget::onCreateMNClicked()
     resetCoinControl();
 }
 
-void MasterNodesWidget::changeTheme(bool isLightTheme, QString& theme)
+void GamemaStersWidget::changeTheme(bool isLightTheme, QString& theme)
 {
-    static_cast<MNHolder*>(this->delegate->getRowFactory())->isLightTheme = isLightTheme;
+    static_cast<GMHolder*>(this->delegate->getRowFactory())->isLightTheme = isLightTheme;
 }
 
-void MasterNodesWidget::onCoinControlClicked()
+void GamemaStersWidget::onCoinControlClicked()
 {
     if (!coinControlDialog->hasModel()) coinControlDialog->setModel(walletModel);
     coinControlDialog->setSelectionType(true);
@@ -420,14 +420,14 @@ void MasterNodesWidget::onCoinControlClicked()
     ui->btnCoinControl->setActive(coinControlDialog->coinControl->HasSelected());
 }
 
-void MasterNodesWidget::resetCoinControl()
+void GamemaStersWidget::resetCoinControl()
 {
     if (coinControlDialog) coinControlDialog->coinControl->SetNull();
-    mnModel->resetCoinControl();
+    gmModel->resetCoinControl();
     ui->btnCoinControl->setActive(false);
 }
 
-MasterNodesWidget::~MasterNodesWidget()
+GamemaStersWidget::~GamemaStersWidget()
 {
     delete ui;
 }

@@ -1874,14 +1874,14 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     border-bottom: 5px solid #69656F;
 }
 
-*[cssClass="text-stake-mn"] {
+*[cssClass="text-stake-gm"] {
     color:#b088ff;
     font-size:16px;
     padding:10px;
     border-bottom: 5px solid #b088ff;
 }
 
-*[cssClass="text-stake-mn-disable"] {
+*[cssClass="text-stake-gm-disable"] {
     color:#423E4A;
     font-size:16px;
     padding:10px;
@@ -1893,7 +1893,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     font-size:16px;
 }
 
-*[cssClass="text-chart-mn"] {
+*[cssClass="text-chart-gm"] {
     color:#b088ff;
     font-size:16px;
     padding-left:4px;
@@ -1905,7 +1905,7 @@ HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     padding-left:4px;
 }
 
-*[cssClass="square-chart-mn"] {
+*[cssClass="square-chart-gm"] {
     background-color:#b088ff;
     border:none;
 }

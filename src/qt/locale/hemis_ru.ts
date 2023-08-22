@@ -1262,7 +1262,7 @@ It will start automatically as soon as the wallet has enough confirmations on an
     </message>
 </context>
 <context>
-    <name>MNRow</name>
+    <name>GMRow</name>
     <message>
         <source>Form</source>
         <translation>Вид</translation>
@@ -1277,7 +1277,7 @@ It will start automatically as soon as the wallet has enough confirmations on an
     </message>
 </context>
 <context>
-    <name>MasterNodeWizardDialog</name>
+    <name>GamemaSterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>Диалоговое окно</translation>
@@ -1406,7 +1406,7 @@ It will start automatically as soon as the wallet has enough confirmations on an
     </message>
 </context>
 <context>
-    <name>MasterNodesWidget</name>
+    <name>GamemaStersWidget</name>
     <message>
         <source>Form</source>
         <translation>Вид</translation>
@@ -1582,7 +1582,7 @@ Are you sure?</source>
     </message>
 </context>
 <context>
-    <name>MnInfoDialog</name>
+    <name>GmInfoDialog</name>
     <message>
         <source>Form</source>
         <translation>Вид</translation>
@@ -5834,7 +5834,7 @@ hemis Core Wallet</source>
         <translation>Lookup (): Invalid -proxy адрес или имя хоста: '%s'</translation>
     </message>
     <message>
-        <source>MNs synchronization pending...</source>
+        <source>GMs synchronization pending...</source>
         <translation>Ожидается синхронизация Мастернод...</translation>
     </message>
     <message>

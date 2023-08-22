@@ -5,15 +5,15 @@
 #include "qt/pivx/votedialog.h"
 #include "qt/pivx/forms/ui_votedialog.h"
 
-#include "qt/pivx/mnmodel.h"
-#include "qt/pivx/mnselectiondialog.h"
-#include "qt/pivx/qtutils.h"
+#include "qt/hemis/gmmodel.h"
+#include "qt/hemis/gmselectiondialog.h"
+#include "qt/hemis/qtutils.h"
 
-VoteDialog::VoteDialog(QWidget *parent, GovernanceModel* _govModel, MNModel* _mnModel) :
+VoteDialog::VoteDialog(QWidget *parent, GovernanceModel* _govModel, GMModel* _gmModel) :
     QDialog(parent),
     ui(new Ui::VoteDialog),
     govModel(_govModel),
-    mnModel(_mnModel)
+    gmModel(_gmModel)
 {
     ui->setupUi(this);
     this->setStyleSheet(parent->styleSheet());
@@ -46,7 +46,7 @@ VoteDialog::VoteDialog(QWidget *parent, GovernanceModel* _govModel, MNModel* _mn
     checkBoxYes = new QCheckBox(ui->containerYes);
     initVoteCheck(ui->containerYes, checkBoxYes, progressBarYes, "Yes", Qt::LayoutDirection::LeftToRight, true);
 
-    connect(ui->btnSelectGamemasters, &QPushButton::clicked, this, &VoteDialog::onMnSelectionClicked);
+    connect(ui->btnSelectGamemasters, &QPushButton::clicked, this, &VoteDialog::onGmSelectionClicked);
     connect(ui->btnEsc, &QPushButton::clicked, this, &VoteDialog::close);
     connect(ui->btnCancel, &QPushButton::clicked, this, &VoteDialog::close);
     connect(ui->btnSave, &QPushButton::clicked, this, &VoteDialog::onAcceptClicked);
@@ -65,8 +65,8 @@ void VoteDialog::setProposal(const ProposalInfo& prop)
     progressBarYes->setValue((int)percentageYes);
     checkBoxNo->setText(QString::number(prop.votesNo) + " /  " + QString::number(percentageNo) + "% " + tr("No"));
     checkBoxYes->setText(tr("Yes") + " " + QString::number(prop.votesYes) + " / " + QString::number(percentageYes) + "%");
-    votes = govModel->getLocalMNsVotesForProposal(prop);
-    updateMnSelectionNum();
+    votes = govModel->getLocalGMsVotesForProposal(prop);
+    updateGmSelectionNum();
 }
 
 void VoteDialog::onAcceptClicked()
@@ -79,15 +79,15 @@ void VoteDialog::onAcceptClicked()
         return;
     }
 
-    if (vecSelectedMn.empty()) {
+    if (vecSelectedGm.empty()) {
         inform(tr("Missing voting gamemasters selection"));
         return;
     }
 
     // Check time between votes.
     for (const auto& vote : votes) {
-        auto it = std::find(vecSelectedMn.begin(), vecSelectedMn.end(), vote.mnAlias);
-        if (it != vecSelectedMn.end()) {
+        auto it = std::find(vecSelectedGm.begin(), vecSelectedGm.end(), vote.gmAlias);
+        if (it != vecSelectedGm.end()) {
             if (vote.time + govModel->getProposalVoteUpdateMinTime() > GetAdjustedTime()) {
                 inform(tr("Time between votes is too soon, have to wait %1 minutes").arg(govModel->getProposalVoteUpdateMinTime()/60));
                 return;
@@ -96,7 +96,7 @@ void VoteDialog::onAcceptClicked()
     }
 
     // Craft and broadcast vote
-    auto res = govModel->voteForProposal(*proposal, isPositive, vecSelectedMn);
+    auto res = govModel->voteForProposal(*proposal, isPositive, vecSelectedGm);
     if (!res) {
         inform(QString::fromStdString(res.getError()));
         return;
@@ -111,18 +111,18 @@ void VoteDialog::showEvent(QShowEvent *event)
     progressBarNo->setFixedWidth(progressBarNo->width() + 5);
 }
 
-void VoteDialog::onMnSelectionClicked()
+void VoteDialog::onGmSelectionClicked()
 {
-    PIVXGUI* window = dynamic_cast<PIVXGUI*>(parent());
-    if (!mnSelectionDialog) {
-        mnSelectionDialog = new MnSelectionDialog(window);
-        mnSelectionDialog->setModel(mnModel, govModel->getProposalVoteUpdateMinTime());
+    hemisGUI* window = dynamic_cast<hemisGUI*>(parent());
+    if (!gmSelectionDialog) {
+        gmSelectionDialog = new GmSelectionDialog(window);
+        gmSelectionDialog->setModel(gmModel, govModel->getProposalVoteUpdateMinTime());
     }
-    mnSelectionDialog->setMnVoters(votes);
-    mnSelectionDialog->updateView();
-    mnSelectionDialog->resize(size());
-    if (openDialogWithOpaqueBackgroundY(mnSelectionDialog, window, 4.5, 5, false)) {
-        vecSelectedMn = mnSelectionDialog->getSelectedMnAlias();
+    gmSelectionDialog->setGmVoters(votes);
+    gmSelectionDialog->updateView();
+    gmSelectionDialog->resize(size());
+    if (openDialogWithOpaqueBackgroundY(gmSelectionDialog, window, 4.5, 5, false)) {
+        vecSelectedGm = gmSelectionDialog->getSelectedGmAlias();
     }
 }
 
@@ -162,14 +162,14 @@ void VoteDialog::initVoteCheck(QWidget* container, QCheckBox* checkBox, QProgres
     checkBox->show();
 }
 
-void VoteDialog::updateMnSelectionNum()
+void VoteDialog::updateGmSelectionNum()
 {
     QString text;
-    if (vecSelectedMn.empty()) {
+    if (vecSelectedGm.empty()) {
         text = !votes.empty() ? tr("You have voted with %1 Gamemasters for this proposal\nChange votes").arg(votes.size()) :
                 tr("Select Voting Gamemasters");
     } else {
-        text = tr("%1 Gamemasters selected to vote").arg(vecSelectedMn.size());
+        text = tr("%1 Gamemasters selected to vote").arg(vecSelectedGm.size());
     }
     ui->btnSelectGamemasters->setText(text);
 }

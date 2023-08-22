@@ -10,35 +10,35 @@
 #include "gamemasterconfig.h"
 #include "qt/hemis/pwidget.h"
 
-class MNModel;
+class GMModel;
 class WalletModel;
 
 namespace Ui {
-class MasterNodeWizardDialog;
+class GamemaSterWizardDialog;
 class QPushButton;
 }
 
-class MasterNodeWizardDialog : public FocusedDialog, public PWidget::Translator
+class GamemaSterWizardDialog : public FocusedDialog, public PWidget::Translator
 {
     Q_OBJECT
 
 public:
-    explicit MasterNodeWizardDialog(WalletModel* walletMode,
-                                    MNModel* mnModel,
+    explicit GamemaSterWizardDialog(WalletModel* walletMode,
+                                    GMModel* gmModel,
                                     QWidget *parent = nullptr);
-    ~MasterNodeWizardDialog() override;
+    ~GamemaSterWizardDialog() override;
     void showEvent(QShowEvent *event) override;
     QString translate(const char *msg) override { return tr(msg); }
 
     QString returnStr = "";
     bool isOk = false;
-    CGamemasterConfig::CGamemasterEntry* mnEntry = nullptr;
+    CGamemasterConfig::CGamemasterEntry* gmEntry = nullptr;
 
 private Q_SLOTS:
     void accept() override;
     void onBackClicked();
 private:
-    Ui::MasterNodeWizardDialog *ui;
+    Ui::GamemaSterWizardDialog *ui;
     QPushButton* icConfirm1;
     QPushButton* icConfirm3;
     QPushButton* icConfirm4;
@@ -46,8 +46,8 @@ private:
     int pos = 0;
 
     WalletModel* walletModel{nullptr};
-    MNModel* mnModel{nullptr};
-    bool createMN();
+    GMModel* gmModel{nullptr};
+    bool createGM();
     void inform(const QString& text);
 };
 

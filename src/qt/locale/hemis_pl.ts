@@ -1263,7 +1263,7 @@ Rozpocznie się automatycznie, gdy portfel będzie miał wystarczającą liczbę
     </message>
 </context>
 <context>
-    <name>MNRow</name>
+    <name>GMRow</name>
     <message>
         <source>Form</source>
         <translation>Formularz</translation>
@@ -1278,7 +1278,7 @@ Rozpocznie się automatycznie, gdy portfel będzie miał wystarczającą liczbę
     </message>
 </context>
 <context>
-    <name>MasterNodeWizardDialog</name>
+    <name>GamemaSterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>Dialog</translation>
@@ -1411,7 +1411,7 @@ Rozpocznie się automatycznie, gdy portfel będzie miał wystarczającą liczbę
     </message>
 </context>
 <context>
-    <name>MasterNodesWidget</name>
+    <name>GamemaStersWidget</name>
     <message>
         <source>Form</source>
         <translation>Formularz</translation>
@@ -1574,7 +1574,7 @@ Jesteś pewny?</translation>
     </message>
 </context>
 <context>
-    <name>MnInfoDialog</name>
+    <name>GmInfoDialog</name>
     <message>
         <source>Form</source>
         <translation>Formularz</translation>
@@ -5558,7 +5558,7 @@ Portfel hemis Core</translation>
         <translation>Lookup (): Niepoprawny -proxy adres lub nazwa hosta: '%s'</translation>
     </message>
     <message>
-        <source>MNs synchronization pending...</source>
+        <source>GMs synchronization pending...</source>
         <translation>Trwa synchronizacja GM ...</translation>
     </message>
     <message>

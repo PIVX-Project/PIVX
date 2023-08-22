@@ -1681,9 +1681,9 @@ Be part of the DAO.</source>
     </message>
 </context>
 <context>
-    <name>MNRow</name>
+    <name>GMRow</name>
     <message>
-        <location filename="../hemis/mnrow.cpp" line="+25"/>
+        <location filename="../hemis/gmrow.cpp" line="+25"/>
         <source>Collateral tx not found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1694,7 +1694,7 @@ Be part of the DAO.</source>
     </message>
 </context>
 <context>
-    <name>MasterNodeWizardDialog</name>
+    <name>GamemaSterWizardDialog</name>
     <message>
         <location filename="../hemis/forms/gamemasterwizarddialog.ui" line="+196"/>
         <source>1</source>
@@ -1862,7 +1862,7 @@ Be part of the DAO.</source>
     </message>
 </context>
 <context>
-    <name>MasterNodesWidget</name>
+    <name>GamemaStersWidget</name>
     <message>
         <location filename="../hemis/forms/gamemasterswidget.ui" line="+295"/>
         <source>Start All</source>
@@ -2058,9 +2058,9 @@ Are you sure?</source>
     </message>
 </context>
 <context>
-    <name>MnInfoDialog</name>
+    <name>GmInfoDialog</name>
     <message>
-        <location filename="../hemis/forms/mninfodialog.ui" line="+104"/>
+        <location filename="../hemis/forms/gminfodialog.ui" line="+104"/>
         <source>Gamemaster Information</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2100,7 +2100,7 @@ Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../hemis/mninfodialog.cpp" line="+25"/>
+        <location filename="../hemis/gminfodialog.cpp" line="+25"/>
         <source>Gamemaster public key copied</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2111,9 +2111,9 @@ Are you sure?</source>
     </message>
 </context>
 <context>
-    <name>MnSelectionDialog</name>
+    <name>GmSelectionDialog</name>
     <message>
-        <location filename="../hemis/forms/mnselectiondialog.ui" line="+117"/>
+        <location filename="../hemis/forms/gmselectiondialog.ui" line="+117"/>
         <source>Select Gamemasters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2129,7 +2129,7 @@ Are you sure?</source>
     </message>
     <message>
         <location line="+45"/>
-        <location filename="../hemis/mnselectiondialog.cpp" line="+104"/>
+        <location filename="../hemis/gmselectiondialog.cpp" line="+104"/>
         <source>Select All</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2159,7 +2159,7 @@ Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../hemis/mnselectiondialog.cpp" line="+0"/>
+        <location filename="../hemis/gmselectiondialog.cpp" line="+0"/>
         <source>Unselect All</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6465,7 +6465,7 @@ Select fewer inputs with coin control.</source>
     </message>
     <message>
         <location line="+6"/>
-        <source>&quot;local&quot; vote is no longer available with DMNs. Use &quot;alias&quot; from the wallet with the voting key.</source>
+        <source>&quot;local&quot; vote is no longer available with DGMs. Use &quot;alias&quot; from the wallet with the voting key.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6788,7 +6788,7 @@ Please run &apos;sapling-fetch-params&apos; or &apos;./util/fetch-params.sh&apos
     </message>
     <message>
         <location line="+2"/>
-        <source>MNs synchronization pending...</source>
+        <source>GMs synchronization pending...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6954,7 +6954,7 @@ Please run &apos;sapling-fetch-params&apos; or &apos;./util/fetch-params.sh&apos
     </message>
     <message>
         <location line="+3"/>
-        <source>Invalid mnoperatorprivatekey. Please see the documentation.</source>
+        <source>Invalid gmoperatorprivatekey. Please see the documentation.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

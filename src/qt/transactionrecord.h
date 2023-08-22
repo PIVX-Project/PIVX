@@ -80,7 +80,7 @@ public:
         SendToAddress,
         SendToOther,
         RecvWithAddress,
-        MNReward,
+        GMReward,
         BudgetPayment,
         RecvFromOther,
         SendToSelf,
@@ -200,7 +200,7 @@ public:
     bool isCoinStake() const;
 
     /** Return true if the tx is a GM reward */
-    bool isMNReward() const;
+    bool isGMReward() const;
 
     /** Return true if the tx is a any cold staking type tx.
      */

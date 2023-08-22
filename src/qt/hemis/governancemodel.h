@@ -69,17 +69,17 @@ struct VoteInfo {
         NO      = 2
     };
 
-    explicit VoteInfo(const COutPoint _mnId, VoteDirection _vote, std::string _mnAlias, int64_t _time) :
-        mnVoter(_mnId), vote(_vote), mnAlias(std::move(_mnAlias)), time(_time) {}
-    COutPoint mnVoter;
+    explicit VoteInfo(const COutPoint _gmId, VoteDirection _vote, std::string _gmAlias, int64_t _time) :
+        gmVoter(_gmId), vote(_vote), gmAlias(std::move(_gmAlias)), time(_time) {}
+    COutPoint gmVoter;
     VoteDirection vote;
-    std::string mnAlias;
+    std::string gmAlias;
     int64_t time;
 };
 
 class CBudgetProposal;
 class TransactionRecord;
-class MNModel;
+class GMModel;
 class WalletModel;
 
 QT_BEGIN_NAMESPACE
@@ -90,7 +90,7 @@ class GovernanceModel : public QObject
 {
 
 public:
-    explicit GovernanceModel(ClientModel* _clientModel, MNModel* _mnModel);
+    explicit GovernanceModel(ClientModel* _clientModel, GMModel* _gmModel);
     ~GovernanceModel() override;
     void setWalletModel(WalletModel* _walletModel);
 
@@ -116,7 +116,7 @@ public:
     CAmount getBudgetAllocatedAmount() const { return allocatedAmount; };
     CAmount getBudgetAvailableAmount() const { return getMaxAvailableBudgetAmount() - allocatedAmount; };
     // Return the votes that the local gamemasters did for the inputted proposal
-    std::vector<VoteInfo> getLocalMNsVotesForProposal(const ProposalInfo& propInfo);
+    std::vector<VoteInfo> getLocalGMsVotesForProposal(const ProposalInfo& propInfo);
     // Check if the URL is valid.
     OperationResult validatePropURL(const QString& url) const;
     OperationResult validatePropName(const QString& name) const;
@@ -136,7 +136,7 @@ public:
 
     OperationResult voteForProposal(const ProposalInfo& prop,
                                     bool isVotePositive,
-                                    const std::vector<std::string>& mnVotingAlias);
+                                    const std::vector<std::string>& gmVotingAlias);
 
     // Stop internal timers
     void stop();
@@ -148,7 +148,7 @@ public Q_SLOTS:
 private:
     ClientModel* clientModel{nullptr};
     WalletModel* walletModel{nullptr};
-    MNModel* mnModel{nullptr};
+    GMModel* gmModel{nullptr};
     std::atomic<bool> refreshNeeded{false};
 
     // Cached amount

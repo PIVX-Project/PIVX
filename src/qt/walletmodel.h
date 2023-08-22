@@ -300,7 +300,7 @@ public:
     bool isMine(const QString& addressStr);
     bool IsShieldedDestination(const CWDestination& address);
     bool isUsed(CTxDestination address);
-    bool getMNCollateralCandidate(COutPoint& outPoint);
+    bool getGMCollateralCandidate(COutPoint& outPoint);
     // Depth of a wallet transaction or -1 if not found
     int getWalletTxDepth(const uint256& txHash) const;
     bool isSpent(const COutPoint& outpoint) const;

@@ -96,7 +96,7 @@ QT_TRANSLATE_NOOP("hemis-core", ""
 "Warning: error reading %s! All keys read correctly, but transaction data or "
 "address book entries might be missing or incorrect."),
 QT_TRANSLATE_NOOP("hemis-core", ""
-"\"local\" vote is no longer available with DMNs. Use \"alias\" from the "
+"\"local\" vote is no longer available with DGMs. Use \"alias\" from the "
 "wallet with the voting key."),
 QT_TRANSLATE_NOOP("hemis-core", "%s Invalid %s address or hostname: '%s'"),
 QT_TRANSLATE_NOOP("hemis-core", "%s corrupt, salvage failed"),
@@ -162,7 +162,7 @@ QT_TRANSLATE_NOOP("hemis-core", "Invalid activation height (%s)"),
 QT_TRANSLATE_NOOP("hemis-core", "Invalid amount for %s: '%s' (must be at least %s)"),
 QT_TRANSLATE_NOOP("hemis-core", "Invalid amount for -%s=<amount>: '%s'"),
 QT_TRANSLATE_NOOP("hemis-core", "Invalid gamemasterprivkey. Please see the documentation."),
-QT_TRANSLATE_NOOP("hemis-core", "Invalid mnoperatorprivatekey. Please see the documentation."),
+QT_TRANSLATE_NOOP("hemis-core", "Invalid gmoperatorprivatekey. Please see the documentation."),
 QT_TRANSLATE_NOOP("hemis-core", "Invalid netmask specified in %s: '%s'"),
 QT_TRANSLATE_NOOP("hemis-core", "Invalid network upgrade (%s)"),
 QT_TRANSLATE_NOOP("hemis-core", "Invalid port %d detected in gamemaster.conf"),
@@ -179,7 +179,7 @@ QT_TRANSLATE_NOOP("hemis-core", "Loading gamemaster payment cache..."),
 QT_TRANSLATE_NOOP("hemis-core", "Loading sporks..."),
 QT_TRANSLATE_NOOP("hemis-core", "Loading wallet..."),
 QT_TRANSLATE_NOOP("hemis-core", "Loading/Pruning invalid outputs..."),
-QT_TRANSLATE_NOOP("hemis-core", "MNs synchronization pending..."),
+QT_TRANSLATE_NOOP("hemis-core", "GMs synchronization pending..."),
 QT_TRANSLATE_NOOP("hemis-core", "Need to specify a port with %s: '%s'"),
 QT_TRANSLATE_NOOP("hemis-core", "Network upgrade parameters malformed, expecting %s"),
 QT_TRANSLATE_NOOP("hemis-core", "Network upgrade parameters may only be overridden on regtest."),

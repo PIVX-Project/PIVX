@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MNMODEL_H
-#define MNMODEL_H
+#ifndef GMMODEL_H
+#define GMMODEL_H
 
 #include <QAbstractTableModel>
 #include "gamemasterconfig.h"
@@ -11,13 +11,13 @@
 
 class CGamemaster;
 
-class MNModel : public QAbstractTableModel
+class GMModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    explicit MNModel(QObject *parent);
-    ~MNModel() override {
+    explicit GMModel(QObject *parent);
+    ~GMModel() override {
         nodes.clear();
         collateralTxAccepted.clear();
     }
@@ -41,51 +41,51 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent) const override;
-    bool removeMn(const QModelIndex& index);
-    bool addMn(CGamemasterConfig::CGamemasterEntry* entry);
-    void updateMNList();
+    bool removeGm(const QModelIndex& index);
+    bool addGm(CGamemasterConfig::CGamemasterEntry* entry);
+    void updateGMList();
 
 
-    bool isMNsNetworkSynced();
+    bool isGMsNetworkSynced();
     // Returns the GM activeState field.
-    int getMNState(const QString& mnAlias);
+    int getGMState(const QString& gmAlias);
     // Checks if the gamemaster is inactive
-    bool isMNInactive(const QString& mnAlias);
+    bool isGMInactive(const QString& gmAlias);
     // Gamemaster is active if it's in PRE_ENABLED OR ENABLED state
-    bool isMNActive(const QString& mnAlias);
+    bool isGMActive(const QString& gmAlias);
     // Gamemaster collateral has enough confirmations
-    bool isMNCollateralMature(const QString& mnAlias);
+    bool isGMCollateralMature(const QString& gmAlias);
     // Validate string representing a gamemaster IP address
-    static bool validateMNIP(const QString& addrStr);
+    static bool validateGMIP(const QString& addrStr);
 
     // Return the specific chain amount value for the GM collateral output.
-    CAmount getMNCollateralRequiredAmount();
+    CAmount getGMCollateralRequiredAmount();
     // Return the specific chain min conf for the collateral tx
     int getGamemasterCollateralMinConf();
     // Generates the collateral transaction
-    bool createMNCollateral(const QString& alias, const QString& addr, COutPoint& ret_outpoint, QString& ret_error);
-    // Creates the mnb and broadcast it to the network
-    bool startLegacyMN(const CGamemasterConfig::CGamemasterEntry& mne, int chainHeight, std::string& strError);
-    void startAllLegacyMNs(bool onlyMissing, int& amountOfMnFailed, int& amountOfMnStarted,
+    bool createGMCollateral(const QString& alias, const QString& addr, COutPoint& ret_outpoint, QString& ret_error);
+    // Creates the gmb and broadcast it to the network
+    bool startLegacyGM(const CGamemasterConfig::CGamemasterEntry& gme, int chainHeight, std::string& strError);
+    void startAllLegacyGMs(bool onlyMissing, int& amountOfGmFailed, int& amountOfGmStarted,
                            std::string* aliasFilter = nullptr, std::string* error_ret = nullptr);
 
-    CGamemasterConfig::CGamemasterEntry* createLegacyMN(COutPoint& collateralOut,
+    CGamemasterConfig::CGamemasterEntry* createLegacyGM(COutPoint& collateralOut,
                                                         const std::string& alias,
                                                         std::string& serviceAddr,
                                                         const std::string& port,
-                                                        const std::string& mnKeyString,
+                                                        const std::string& gmKeyString,
                                                         QString& ret_error);
 
-    bool removeLegacyMN(const std::string& alias_to_remove, const std::string& tx_id, unsigned int out_index, QString& ret_error);
+    bool removeLegacyGM(const std::string& alias_to_remove, const std::string& tx_id, unsigned int out_index, QString& ret_error);
     void setCoinControl(CCoinControl* coinControl);
     void resetCoinControl();
 
 private:
     WalletModel* walletModel;
     CCoinControl* coinControl;
-    // alias mn node ---> pair <ip, master node>
+    // alias gm node ---> pair <ip, master node>
     QMap<QString, std::pair<QString, CGamemaster*>> nodes;
     QMap<std::string, bool> collateralTxAccepted;
 };
 
-#endif // MNMODEL_H
+#endif // GMMODEL_H

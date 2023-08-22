@@ -1279,7 +1279,7 @@ Staking će se automatski pokrenuti čim novčanik dobije dovoljno potvrda o nep
     </message>
 </context>
 <context>
-    <name>MNRow</name>
+    <name>GMRow</name>
     <message>
         <source>Form</source>
         <translation>Obrazac</translation>
@@ -1294,7 +1294,7 @@ Staking će se automatski pokrenuti čim novčanik dobije dovoljno potvrda o nep
     </message>
 </context>
 <context>
-    <name>MasterNodeWizardDialog</name>
+    <name>GamemaSterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>Dijaloški okvir</translation>
@@ -1427,7 +1427,7 @@ Staking će se automatski pokrenuti čim novčanik dobije dovoljno potvrda o nep
     </message>
 </context>
 <context>
-    <name>MasterNodesWidget</name>
+    <name>GamemaStersWidget</name>
     <message>
         <source>Form</source>
         <translation>Obrazac</translation>
@@ -1604,7 +1604,7 @@ Jeste li sigurni?</translation>
     </message>
 </context>
 <context>
-    <name>MnInfoDialog</name>
+    <name>GmInfoDialog</name>
     <message>
         <source>Form</source>
         <translation>Obrazac</translation>
@@ -6258,7 +6258,7 @@ Pokrenite 'sapling-fetch-params' ili '.util/fetch-params.sh' te ponovno pokrenit
         <translation>Potražnja(): nevažeća adresa -proxy ili naziv hosta: '%s'</translation>
     </message>
     <message>
-        <source>MNs synchronization pending...</source>
+        <source>GMs synchronization pending...</source>
         <translation>Sinkronizacija GM-ova je na čekanju ...</translation>
     </message>
     <message>

@@ -1027,11 +1027,11 @@ QString WalletModel::getSaplingAddressString(const CWalletTx* wtx, const Sapling
 }
 
 // returns a COutPoint of 10000 HMS if found
-bool WalletModel::getMNCollateralCandidate(COutPoint& outPoint)
+bool WalletModel::getGMCollateralCandidate(COutPoint& outPoint)
 {
     CWallet::AvailableCoinsFilter coinsFilter;
     coinsFilter.fIncludeDelegated = false;
-    coinsFilter.nMaxOutValue = Params().GetConsensus().nMNCollateralAmt;
+    coinsFilter.nMaxOutValue = Params().GetConsensus().nGMCollateralAmt;
     coinsFilter.nMinOutValue = coinsFilter.nMaxOutValue;
     coinsFilter.fIncludeLocked = true;
     std::vector<COutput> vCoins;

@@ -2,29 +2,29 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MNROW_H
-#define MNROW_H
+#ifndef GMROW_H
+#define GMROW_H
 
 #include <QWidget>
 
 namespace Ui {
-class MNRow;
+class GMRow;
 }
 
-class MNRow : public QWidget
+class GMRow : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MNRow(QWidget *parent = nullptr);
-    ~MNRow();
+    explicit GMRow(QWidget *parent = nullptr);
+    ~GMRow();
 
     void updateView(QString address, const QString& label, QString status, bool wasCollateralAccepted);
 
 Q_SIGNALS:
     void onMenuClicked();
 private:
-    Ui::MNRow *ui;
+    Ui::GMRow *ui;
 };
 
-#endif // MNROW_H
+#endif // GMROW_H

@@ -188,7 +188,7 @@ void SettingsInformationWidget::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     if (clientModel) {
         clientModel->startGamemastersTimer();
-        // Initial gamemasters count value, running in a worker thread to not lock mnmanager mutex in the main thread.
+        // Initial gamemasters count value, running in a worker thread to not lock gmmanager mutex in the main thread.
         execute(REQUEST_UPDATE_COUNTS);
     }
 }

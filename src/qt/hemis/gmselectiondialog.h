@@ -2,49 +2,49 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MN_SELECTION_DEFAULTDIALOG_H
-#define MN_SELECTION_DEFAULTDIALOG_H
+#ifndef GM_SELECTION_DEFAULTDIALOG_H
+#define GM_SELECTION_DEFAULTDIALOG_H
 
 #include <QDialog>
 #include <map>
 
 namespace Ui {
-    class MnSelectionDialog;
+    class GmSelectionDialog;
 }
 
-class MNModel;
+class GMModel;
 class QTreeWidgetItem;
-class MnInfo;
+class GmInfo;
 struct VoteInfo;
 
-class MnSelectionDialog : public QDialog
+class GmSelectionDialog : public QDialog
 {
 Q_OBJECT
 
 public:
-    explicit MnSelectionDialog(QWidget *parent);
-    ~MnSelectionDialog();
+    explicit GmSelectionDialog(QWidget *parent);
+    ~GmSelectionDialog();
 
-    void setModel(MNModel* _mnModel, int minVoteUpdateTimeInSecs);
+    void setModel(GMModel* _gmModel, int minVoteUpdateTimeInSecs);
     void updateView();
-    // Sets the MNs who already voted for this proposal
-    void setMnVoters(const std::vector<VoteInfo>& _votes);
-    // Return the MNs who are going to vote for this proposal
-    std::vector<std::string> getSelectedMnAlias();
+    // Sets the GMs who already voted for this proposal
+    void setGmVoters(const std::vector<VoteInfo>& _votes);
+    // Return the GMs who are going to vote for this proposal
+    std::vector<std::string> getSelectedGmAlias();
 
 public Q_SLOTS:
     void viewItemChanged(QTreeWidgetItem*, int);
     void selectAll();
 
 private:
-    Ui::MnSelectionDialog *ui;
-    MNModel* mnModel{nullptr};
+    Ui::GmSelectionDialog *ui;
+    GMModel* gmModel{nullptr};
     // Consensus param, the minimum time that need to pass
     // to be able to broadcast another vote with the same GM.
     int minVoteUpdateTimeInSecs{0};
     int colCheckBoxWidth_treeMode{50};
-    // selected MNs alias
-    std::vector<std::string> selectedMnList;
+    // selected GMs alias
+    std::vector<std::string> selectedGmList;
     // GM alias -> VoteInfo for a certain proposal
     std::map<std::string, VoteInfo> votes;
 
@@ -57,9 +57,9 @@ private:
 
     void appendItem(QFlags<Qt::ItemFlag> flgCheckbox,
                     QFlags<Qt::ItemFlag> flgTristate,
-                    const QString& mnName,
-                    const QString& mnStats,
+                    const QString& gmName,
+                    const QString& gmStats,
                     VoteInfo* ptrVoteInfo);
 };
 
-#endif // MN_SELECTION_DEFAULTDIALOG_H
+#endif // GM_SELECTION_DEFAULTDIALOG_H

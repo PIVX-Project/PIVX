@@ -81,9 +81,9 @@ public:
     QMap<int, std::pair<qint64, qint64>> amountsByCache;
     qreal maxValue = 0;
     qint64 totalPiv = 0;
-    qint64 totalMN = 0;
+    qint64 totalGM = 0;
     QList<qreal> valuesPiv;
-    QList<qreal> valuesMN;
+    QList<qreal> valuesGM;
     QStringList xLabels;
 };
 
@@ -122,7 +122,7 @@ private Q_SLOTS:
     void onSortTypeChanged(const QString& value);
     void updateDisplayUnit();
     void showList();
-    void onTxArrived(const QString& hash, const bool isCoinStake, const bool isMNReward, const bool isCSAnyType);
+    void onTxArrived(const QString& hash, const bool isCoinStake, const bool isGMReward, const bool isCSAnyType);
 
 #ifdef USE_QTCHARTS
     void windowResizeEvent(QResizeEvent* event);
@@ -165,7 +165,7 @@ private:
     int yearFilter{0};
     int monthFilter{0};
     int dayStart{1};
-    bool hasMNRewards{false};
+    bool hasGMRewards{false};
 
     ChartData* chartData{nullptr};
     bool hasStakes{false};

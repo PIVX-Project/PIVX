@@ -1265,7 +1265,7 @@ Si avvierà automaticamente non appena il portafoglio avrà sufficienti conferme
     </message>
 </context>
 <context>
-    <name>MNRow</name>
+    <name>GMRow</name>
     <message>
         <source>Form</source>
         <translation>Modulo</translation>
@@ -1280,7 +1280,7 @@ Si avvierà automaticamente non appena il portafoglio avrà sufficienti conferme
     </message>
 </context>
 <context>
-    <name>MasterNodeWizardDialog</name>
+    <name>GamemaSterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>Finestra di dialogo</translation>
@@ -1413,7 +1413,7 @@ Si avvierà automaticamente non appena il portafoglio avrà sufficienti conferme
     </message>
 </context>
 <context>
-    <name>MasterNodesWidget</name>
+    <name>GamemaStersWidget</name>
     <message>
         <source>Form</source>
         <translation>Modulo</translation>
@@ -1590,7 +1590,7 @@ Sei sicuro?</translation>
     </message>
 </context>
 <context>
-    <name>MnInfoDialog</name>
+    <name>GmInfoDialog</name>
     <message>
         <source>Form</source>
         <translation>Modulo</translation>
@@ -5890,7 +5890,7 @@ Portafoglio hemis Core.</translation>
         <translation>Lookup(): Invalid -proxy address or hostname: '%s'</translation>
     </message>
     <message>
-        <source>MNs synchronization pending...</source>
+        <source>GMs synchronization pending...</source>
         <translation>Sincronizzazione GM in attesa...</translation>
     </message>
     <message>
