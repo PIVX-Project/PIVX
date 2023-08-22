@@ -1294,7 +1294,7 @@ Staking će se automatski pokrenuti čim novčanik dobije dovoljno potvrda o nep
     </message>
 </context>
 <context>
-    <name>GamemaSterWizardDialog</name>
+    <name>GameMasterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>Dijaloški okvir</translation>
@@ -1427,7 +1427,7 @@ Staking će se automatski pokrenuti čim novčanik dobije dovoljno potvrda o nep
     </message>
 </context>
 <context>
-    <name>GamemaStersWidget</name>
+    <name>GameMastersWidget</name>
     <message>
         <source>Form</source>
         <translation>Obrazac</translation>

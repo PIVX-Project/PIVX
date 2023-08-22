@@ -470,7 +470,7 @@ public:
 
     friend bool operator<(const CInv& a, const CInv& b);
 
-    bool IsMasterNodeType() const;
+    bool IsGameMasterType() const;
     std::string ToString() const;
 
     // TODO: make private (improve encapsulation)

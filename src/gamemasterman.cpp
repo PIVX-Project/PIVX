@@ -609,7 +609,7 @@ GamemasterRef CGamemasterMan::GetNextGamemasterInQueueForPayment(int nBlockHeigh
     return pBestGamemaster;
 }
 
-GamemasterRef CGamemasterMan::GetCurrentMasterNode(const uint256& hash) const
+GamemasterRef CGamemasterMan::GetCurrentGameMaster(const uint256& hash) const
 {
     int minProtocol = ActiveProtocol();
     int64_t score = 0;
@@ -654,7 +654,7 @@ std::vector<std::pair<GamemasterRef, int>> CGamemasterMan::GetGmScores(int nLast
 
     for (int nHeight = nChainHeight - nLast; nHeight < nChainHeight + 20; nHeight++) {
         const uint256& hash = GetHashAtHeight(nHeight - 101);
-        GamemasterRef winner = GetCurrentMasterNode(hash);
+        GamemasterRef winner = GetCurrentGameMaster(hash);
         if (winner) {
             ret.emplace_back(winner, nHeight);
         }
@@ -839,7 +839,7 @@ int CGamemasterMan::ProcessGMBroadcast(CNode* pfrom, CGamemasterBroadcast& gmb)
 
     // if it matches our GM pubkey, then we've been remotely activated
     if (gmb.pubKeyGamemaster == activeGamemaster.pubKeyGamemaster && gmb.protocolVersion == PROTOCOL_VERSION) {
-        activeGamemaster.EnableHotColdMasterNode(gmb.vin, gmb.addr);
+        activeGamemaster.EnableHotColdGameMaster(gmb.vin, gmb.addr);
     }
 
     // Relay only if we are synchronized and if the gmb address is not local.

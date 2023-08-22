@@ -68,7 +68,7 @@ void NavMenuWidget::connectActions() {
     connect(ui->btnDashboard, &QPushButton::clicked, this, &NavMenuWidget::onDashboardClicked);
     connect(ui->btnSend, &QPushButton::clicked, this, &NavMenuWidget::onSendClicked);
     connect(ui->btnAddress, &QPushButton::clicked, this, &NavMenuWidget::onAddressClicked);
-    connect(ui->btnMaster, &QPushButton::clicked, this, &NavMenuWidget::onGamemaStersClicked);
+    connect(ui->btnMaster, &QPushButton::clicked, this, &NavMenuWidget::onGameMastersClicked);
     connect(ui->btnSettings, &QPushButton::clicked, this, &NavMenuWidget::onSettingsClicked);
     connect(ui->btnReceive, &QPushButton::clicked, this, &NavMenuWidget::onReceiveClicked);
     connect(ui->btnColdStaking, &QPushButton::clicked, this, &NavMenuWidget::onColdStakingClicked);
@@ -98,8 +98,8 @@ void NavMenuWidget::onAddressClicked(){
     onNavSelected(ui->btnAddress);
 }
 
-void NavMenuWidget::onGamemaStersClicked(){
-    window->goToGamemaSters();
+void NavMenuWidget::onGameMastersClicked(){
+    window->goToGameMasters();
     onNavSelected(ui->btnMaster);
 }
 

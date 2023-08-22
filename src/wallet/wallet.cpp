@@ -1703,7 +1703,7 @@ CAmount CWalletTx::GetLockedCredit() const
         }
 
         // Add gamemaster collaterals which are handled like locked coins
-        else if (fMasterNode && tx->vout[i].nValue == collAmt) {
+        else if (fGameMaster && tx->vout[i].nValue == collAmt) {
             nCredit += pwallet->GetCredit(txout, ISMINE_SPENDABLE);
         }
 

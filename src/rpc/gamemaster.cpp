@@ -59,7 +59,7 @@ UniValue gmping(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_MISC_ERROR, "command available only for RegTest network");
     }
 
-    if (!fMasterNode) {
+    if (!fGameMaster) {
         throw JSONRPCError(RPC_MISC_ERROR, "this is not a gamemaster");
     }
 
@@ -88,17 +88,17 @@ UniValue initgamemaster(const JSONRPCRequest& request)
                 HelpExampleRpc("initgamemaster", "\"bls-sk1xye8es37kk7y2mz7mad6yz7fdygttexqwhypa0u86hzw2crqgxfqy29ajm\""));
     }
 
-    std::string _strMasterNodePrivKey = request.params[0].get_str();
-    if (_strMasterNodePrivKey.empty()) throw JSONRPCError(RPC_INVALID_PARAMETER, "Gamemaster key cannot be empty.");
+    std::string _strGameMasterPrivKey = request.params[0].get_str();
+    if (_strGameMasterPrivKey.empty()) throw JSONRPCError(RPC_INVALID_PARAMETER, "Gamemaster key cannot be empty.");
 
     const auto& params = Params();
-    bool isDeterministic = _strMasterNodePrivKey.find(params.Bech32HRP(CChainParams::BLS_SECRET_KEY)) != std::string::npos;
+    bool isDeterministic = _strGameMasterPrivKey.find(params.Bech32HRP(CChainParams::BLS_SECRET_KEY)) != std::string::npos;
     if (isDeterministic) {
         if (!activeGamemasterManager) {
             activeGamemasterManager = new CActiveDeterministicGamemasterManager();
             RegisterValidationInterface(activeGamemasterManager);
         }
-        auto res = activeGamemasterManager->SetOperatorKey(_strMasterNodePrivKey);
+        auto res = activeGamemasterManager->SetOperatorKey(_strGameMasterPrivKey);
         if (!res) throw std::runtime_error(res.getError());
         const CBlockIndex* pindexTip = WITH_LOCK(cs_main, return chainActive.Tip(); );
         activeGamemasterManager->Init(pindexTip);
@@ -109,8 +109,8 @@ UniValue initgamemaster(const JSONRPCRequest& request)
     }
     // legacy
     if (request.params.size() < 2) throw JSONRPCError(RPC_INVALID_PARAMETER, "Must specify the IP address for legacy gm");
-    std::string _strMasterNodeAddr = request.params[1].get_str();
-    auto res = initGamemaster(_strMasterNodePrivKey, _strMasterNodeAddr, false);
+    std::string _strGameMasterAddr = request.params[1].get_str();
+    auto res = initGamemaster(_strGameMasterPrivKey, _strGameMasterAddr, false);
     if (!res) throw std::runtime_error(res.getError());
     return "success";
 }
@@ -690,7 +690,7 @@ UniValue getgamemasterstatus(const JSONRPCRequest& request)
             "\nExamples:\n" +
             HelpExampleCli("getgamemasterstatus", "") + HelpExampleRpc("getgamemasterstatus", ""));
 
-    if (!fMasterNode)
+    if (!fGameMaster)
         throw JSONRPCError(RPC_MISC_ERROR, _("This is not a gamemaster."));
 
     bool fLegacyGM = (activeGamemaster.vin != nullopt);

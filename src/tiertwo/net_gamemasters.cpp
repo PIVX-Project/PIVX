@@ -235,7 +235,7 @@ void TierTwoConnMan::ThreadOpenGamemasterConnections()
 
         triedConnect = false;
 
-        if (!fMasterNode || !g_tiertwo_sync_state.IsBlockchainSynced() || !g_connman->GetNetworkActive()) {
+        if (!fGameMaster || !g_tiertwo_sync_state.IsBlockchainSynced() || !g_connman->GetNetworkActive()) {
             continue;
         }
 

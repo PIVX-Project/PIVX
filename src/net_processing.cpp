@@ -1295,7 +1295,7 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
                 pfrom->m_gamemaster_connection = fOtherGamemaster;
                 if (fOtherGamemaster) {
                     LogPrint(BCLog::NET, "peer=%d is an inbound gamemaster connection, not relaying anything to it\n", pfrom->GetId());
-                    if (!fMasterNode) { // global GM flag
+                    if (!fGameMaster) { // global GM flag
                         LogPrint(BCLog::NET, "but we're not a gamemaster, disconnecting\n");
                         pfrom->fDisconnect = true;
                         return true;

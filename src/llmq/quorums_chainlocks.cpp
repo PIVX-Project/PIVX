@@ -172,7 +172,7 @@ void CChainLocksHandler::AcceptedBlockHeader(const CBlockIndex* pindexNew)
 
 void CChainLocksHandler::UpdatedBlockTip(const CBlockIndex* pindexNew, const CBlockIndex* pindexFork)
 {
-    if (!fMasterNode) {
+    if (!fGameMaster) {
         return;
     }
     if (!pindexNew->pprev) {

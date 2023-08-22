@@ -76,7 +76,7 @@ public:
 };
 
 // Responsible for initializing the gamemaster
-OperationResult initGamemaster(const std::string& strMasterNodePrivKey, const std::string& strMasterNodeAddr, bool isFromInit);
+OperationResult initGamemaster(const std::string& strGameMasterPrivKey, const std::string& strGameMasterAddr, bool isFromInit);
 
 
 // Responsible for activating the Gamemaster and pinging the network (legacy GM list)
@@ -107,7 +107,7 @@ public:
     /// Ping Gamemaster
     bool SendGamemasterPing(std::string& errorMessage);
     /// Enable cold wallet mode (run a Gamemaster with no funds)
-    bool EnableHotColdMasterNode(CTxIn& vin, CService& addr);
+    bool EnableHotColdGameMaster(CTxIn& vin, CService& addr);
 
     void GetKeys(CKey& privKeyGamemaster, CPubKey& pubKeyGamemaster) const;
 };

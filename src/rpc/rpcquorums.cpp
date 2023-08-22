@@ -317,7 +317,7 @@ UniValue quorumdkgstatus(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("invalid detail_level %d", detailLevel));
     }
 
-    if (!fMasterNode || !activeGamemasterManager) {
+    if (!fGameMaster || !activeGamemasterManager) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, "This is not a (deterministic) gamemaster");
     }
 

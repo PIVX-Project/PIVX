@@ -1694,7 +1694,7 @@ Be part of the DAO.</source>
     </message>
 </context>
 <context>
-    <name>GamemaSterWizardDialog</name>
+    <name>GameMasterWizardDialog</name>
     <message>
         <location filename="../hemis/forms/gamemasterwizarddialog.ui" line="+196"/>
         <source>1</source>
@@ -1862,7 +1862,7 @@ Be part of the DAO.</source>
     </message>
 </context>
 <context>
-    <name>GamemaStersWidget</name>
+    <name>GameMastersWidget</name>
     <message>
         <location filename="../hemis/forms/gamemasterswidget.ui" line="+295"/>
         <source>Start All</source>

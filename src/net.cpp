@@ -985,7 +985,7 @@ bool CConnman::AttemptToEvictConnection(bool fPreferNewConnection)
                 continue;
 
             // Protect verified GM-only connections
-            if (fMasterNode) {
+            if (fGameMaster) {
                 // This handles eviction protected nodes. Nodes are always protected for a short time after the connection
                 // was accepted. This short time is meant for the VERSION/VERACK exchange and the possible GMAUTH that might
                 // follow when the incoming connection is from another gamemaster. When a message other than GMAUTH
@@ -2522,7 +2522,7 @@ void CConnman::RelayInv(CInv& inv)
     LOCK(cs_vNodes);
     for (CNode* pnode : vNodes){
         if (!pnode->fSuccessfullyConnected) continue;
-        if ((pnode->nServices == NODE_BLOOM_WITHOUT_GM) && inv.IsMasterNodeType()) continue;
+        if ((pnode->nServices == NODE_BLOOM_WITHOUT_GM) && inv.IsGameMasterType()) continue;
         if (!pnode->CanRelay()) continue;
         if (pnode->nVersion >= ActiveProtocol())
             pnode->PushInventory(inv);

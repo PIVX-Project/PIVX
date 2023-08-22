@@ -1280,7 +1280,7 @@ Si avvierà automaticamente non appena il portafoglio avrà sufficienti conferme
     </message>
 </context>
 <context>
-    <name>GamemaSterWizardDialog</name>
+    <name>GameMasterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>Finestra di dialogo</translation>
@@ -1413,7 +1413,7 @@ Si avvierà automaticamente non appena il portafoglio avrà sufficienti conferme
     </message>
 </context>
 <context>
-    <name>GamemaStersWidget</name>
+    <name>GameMastersWidget</name>
     <message>
         <source>Form</source>
         <translation>Modulo</translation>

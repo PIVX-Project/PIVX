@@ -1202,7 +1202,7 @@ It will start automatically as soon as the wallet has enough confirmations on an
     </message>
     </context>
 <context>
-    <name>GamemaSterWizardDialog</name>
+    <name>GameMasterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>对话框</translation>
@@ -1327,7 +1327,7 @@ It will start automatically as soon as the wallet has enough confirmations on an
     </message>
 </context>
 <context>
-    <name>GamemaStersWidget</name>
+    <name>GameMastersWidget</name>
     <message>
         <source>Form</source>
         <translation>来自</translation>

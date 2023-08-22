@@ -214,13 +214,13 @@ void SetBudgetFinMode(const std::string& mode)
 
 bool InitActiveGM()
 {
-    fMasterNode = gArgs.GetBoolArg("-gamemaster", DEFAULT_GAMEMASTER);
-    if ((fMasterNode || gamemasterConfig.getCount() > -1) && fTxIndex == false) {
+    fGameMaster = gArgs.GetBoolArg("-gamemaster", DEFAULT_GAMEMASTER);
+    if ((fGameMaster || gamemasterConfig.getCount() > -1) && fTxIndex == false) {
         return UIError(strprintf(_("Enabling Gamemaster support requires turning on transaction indexing."
                                    "Please add %s to your configuration and start with %s"), "txindex=1", "-reindex"));
     }
 
-    if (fMasterNode) {
+    if (fGameMaster) {
 
         if (gArgs.IsArgSet("-connect") && gArgs.GetArgs("-connect").size() > 0) {
             return UIError(_("Cannot be a gamemaster and only connect to specific nodes"));

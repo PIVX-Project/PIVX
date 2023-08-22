@@ -326,7 +326,7 @@ bool CGamemasterPayments::GetLegacyGamemasterTxOut(int nHeight, std::vector<CTxO
     if (!GetBlockPayee(nHeight, payee)) {
         //no gamemaster detected
         const uint256& hash = gamemasterman.GetHashAtHeight(nHeight - 1);
-        GamemasterRef winningNode = gamemasterman.GetCurrentMasterNode(hash);
+        GamemasterRef winningNode = gamemasterman.GetCurrentGameMaster(hash);
         if (winningNode) {
             payee = winningNode->GetPayeeScript();
         } else {
@@ -711,7 +711,7 @@ void CGamemasterPayments::ProcessBlock(int nBlockHeight)
     if (deterministicGMManager->LegacyGMObsolete(nBlockHeight)) {
         return;
     }
-    if (!fMasterNode) return;
+    if (!fGameMaster) return;
 
     // Get the active gamemaster (operator) key
     CTxIn gmVin;

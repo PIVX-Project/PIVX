@@ -556,7 +556,7 @@ bool CBudgetManager::FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTra
 void CBudgetManager::VoteOnFinalizedBudgets()
 {
     // function called only from initialized gamemasters
-    if (!fMasterNode) {
+    if (!fGameMaster) {
         LogPrint(BCLog::GMBUDGET,"%s: Not a gamemaster\n", __func__);
         return;
     }

@@ -84,7 +84,7 @@ const char * const hemis_GAMEMASTER_CONF_FILENAME = "gamemaster.conf";
 
 // hemis only features
 // Gamemaster
-std::atomic<bool> fMasterNode{false};
+std::atomic<bool> fGameMaster{false};
 
 ArgsManager gArgs;
 

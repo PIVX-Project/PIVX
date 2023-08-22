@@ -146,7 +146,7 @@ static gmKeyList getGMKeys(const Optional<std::string>& gmAliasFilter,
 static gmKeyList getGMKeysForActiveGamemaster(UniValue& resultsObj)
 {
     // local node must be a gamemaster
-    if (!fMasterNode) {
+    if (!fGameMaster) {
         throw std::runtime_error(_("This is not a gamemaster. 'local' option disabled."));
     }
 

@@ -99,9 +99,9 @@ OperationResult CActiveDeterministicGamemasterManager::GetOperatorKey(CBLSSecret
 void CActiveDeterministicGamemasterManager::Init(const CBlockIndex* pindexTip)
 {
     // set gamemaster arg if called from RPC
-    if (!fMasterNode) {
+    if (!fGameMaster) {
         gArgs.ForceSetArg("-gamemaster", "1");
-        fMasterNode = true;
+        fGameMaster = true;
     }
 
     if (!deterministicGMManager->IsDIP3Enforced(pindexTip->nHeight)) {
@@ -191,7 +191,7 @@ void CActiveDeterministicGamemasterManager::UpdatedBlockTip(const CBlockIndex* p
     if (fInitialDownload)
         return;
 
-    if (!fMasterNode || !deterministicGMManager->IsDIP3Enforced(pindexNew->nHeight))
+    if (!fGameMaster || !deterministicGMManager->IsDIP3Enforced(pindexNew->nHeight))
         return;
 
     if (state == GAMEMASTER_READY) {
@@ -237,20 +237,20 @@ bool CActiveDeterministicGamemasterManager::IsValidNetAddr(const CService& addrI
 
 /********* LEGACY *********/
 
-OperationResult initGamemaster(const std::string& _strMasterNodePrivKey, const std::string& _strMasterNodeAddr, bool isFromInit)
+OperationResult initGamemaster(const std::string& _strGameMasterPrivKey, const std::string& _strGameMasterAddr, bool isFromInit)
 {
-    if (!isFromInit && fMasterNode) {
+    if (!isFromInit && fGameMaster) {
         return errorOut( "ERROR: Gamemaster already initialized.");
     }
 
     LOCK(cs_main); // Lock cs_main so the node doesn't perform any action while we setup the Gamemaster
-    LogPrintf("Initializing gamemaster, addr %s..\n", _strMasterNodeAddr.c_str());
+    LogPrintf("Initializing gamemaster, addr %s..\n", _strGameMasterAddr.c_str());
 
-    if (_strMasterNodePrivKey.empty()) {
+    if (_strGameMasterPrivKey.empty()) {
         return errorOut("ERROR: Gamemaster priv key cannot be empty.");
     }
 
-    if (_strMasterNodeAddr.empty()) {
+    if (_strGameMasterAddr.empty()) {
         return errorOut("ERROR: Empty gamemasteraddr");
     }
 
@@ -259,7 +259,7 @@ OperationResult initGamemaster(const std::string& _strMasterNodePrivKey, const s
     int nPort = 0;
     int nDefaultPort = params.GetDefaultPort();
     std::string strHost;
-    SplitHostPort(_strMasterNodeAddr, nPort, strHost);
+    SplitHostPort(_strGameMasterAddr, nPort, strHost);
 
     // Allow for the port number to be omitted here and just double check
     // that if a port is supplied, it matches the required default port.
@@ -270,7 +270,7 @@ OperationResult initGamemaster(const std::string& _strMasterNodePrivKey, const s
     }
     CService addrTest(LookupNumeric(strHost, nPort));
     if (!addrTest.IsValid()) {
-        return errorOut(strprintf(_("Invalid -gamemasteraddr address: %s"), _strMasterNodeAddr));
+        return errorOut(strprintf(_("Invalid -gamemasteraddr address: %s"), _strGameMasterAddr));
     }
 
     // Peer port needs to match the gamemaster public one for IPv4 and IPv6.
@@ -282,19 +282,19 @@ OperationResult initGamemaster(const std::string& _strMasterNodePrivKey, const s
 
     CKey key;
     CPubKey pubkey;
-    if (!CMessageSigner::GetKeysFromSecret(_strMasterNodePrivKey, key, pubkey)) {
+    if (!CMessageSigner::GetKeysFromSecret(_strGameMasterPrivKey, key, pubkey)) {
         return errorOut(_("Invalid gamemasterprivkey. Please see the documentation."));
     }
 
     activeGamemaster.pubKeyGamemaster = pubkey;
     activeGamemaster.privKeyGamemaster = key;
     activeGamemaster.service = addrTest;
-    fMasterNode = true;
+    fGameMaster = true;
 
     if (g_tiertwo_sync_state.IsBlockchainSynced()) {
         // Check if the gamemaster already exists in the list
         CGamemaster* pgm = gamemasterman.Find(pubkey);
-        if (pgm) activeGamemaster.EnableHotColdMasterNode(pgm->vin, pgm->addr);
+        if (pgm) activeGamemaster.EnableHotColdGameMaster(pgm->vin, pgm->addr);
     }
 
     return {true};
@@ -305,7 +305,7 @@ OperationResult initGamemaster(const std::string& _strMasterNodePrivKey, const s
 //
 void CActiveGamemaster::ManageStatus()
 {
-    if (!fMasterNode) return;
+    if (!fGameMaster) return;
     if (activeGamemasterManager != nullptr) {
         // Deterministic gamemaster
         return;
@@ -341,7 +341,7 @@ void CActiveGamemaster::ManageStatus()
                 return;
             }
             // Update vin and service
-            EnableHotColdMasterNode(pgm->vin, pgm->addr);
+            EnableHotColdGameMaster(pgm->vin, pgm->addr);
         }
     }
 
@@ -460,9 +460,9 @@ bool CActiveGamemaster::SendGamemasterPing(std::string& errorMessage)
 }
 
 // when starting a Gamemaster, this can enable to run as a hot wallet with no funds
-bool CActiveGamemaster::EnableHotColdMasterNode(CTxIn& newVin, CService& newService)
+bool CActiveGamemaster::EnableHotColdGameMaster(CTxIn& newVin, CService& newService)
 {
-    if (!fMasterNode) return false;
+    if (!fGameMaster) return false;
 
     status = ACTIVE_GAMEMASTER_STARTED;
 
@@ -470,7 +470,7 @@ bool CActiveGamemaster::EnableHotColdMasterNode(CTxIn& newVin, CService& newServ
     vin = newVin;
     service = newService;
 
-    LogPrintf("CActiveGamemaster::EnableHotColdMasterNode() - Enabled! You may shut down the cold daemon.\n");
+    LogPrintf("CActiveGamemaster::EnableHotColdGameMaster() - Enabled! You may shut down the cold daemon.\n");
 
     return true;
 }

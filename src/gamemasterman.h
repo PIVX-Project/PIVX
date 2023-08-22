@@ -144,7 +144,7 @@ public:
     GamemasterRef GetNextGamemasterInQueueForPayment(int nBlockHeight, bool fFilterSigTime, int& nCount, const CBlockIndex* pChainTip = nullptr) const;
 
     /// Get the winner for this block hash
-    GamemasterRef GetCurrentMasterNode(const uint256& hash) const;
+    GamemasterRef GetCurrentGameMaster(const uint256& hash) const;
 
     /// vector of pairs <gamemaster winner, height>
     std::vector<std::pair<GamemasterRef, int>> GetGmScores(int nLast) const;

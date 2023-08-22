@@ -1279,7 +1279,7 @@ Il commencera automatiquement dès que le portefeuille aura assez de confirmatio
     </message>
 </context>
 <context>
-    <name>GamemaSterWizardDialog</name>
+    <name>GameMasterWizardDialog</name>
     <message>
         <source>Dialog</source>
         <translation>Dialogue</translation>
@@ -1412,7 +1412,7 @@ Il commencera automatiquement dès que le portefeuille aura assez de confirmatio
     </message>
 </context>
 <context>
-    <name>GamemaStersWidget</name>
+    <name>GameMastersWidget</name>
     <message>
         <source>Form</source>
         <translation>Formulaire</translation>

@@ -54,7 +54,7 @@ extern const char * const DEFAULT_DEBUGLOGFILE;
 
 //hemis only features
 
-extern std::atomic<bool> fMasterNode;
+extern std::atomic<bool> fGameMaster;
 
 extern CTranslationInterface translationInterface;
 

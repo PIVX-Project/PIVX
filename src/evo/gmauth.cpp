@@ -21,7 +21,7 @@
 void CGMAuth::PushGMAUTH(CNode* pnode, CConnman& connman)
 {
     const CActiveGamemasterInfo* activeGmInfo{nullptr};
-    if (!fMasterNode || !activeGamemasterManager ||
+    if (!fGameMaster || !activeGamemasterManager ||
         (activeGmInfo = activeGamemasterManager->GetInfo())->proTxHash.IsNull()) {
         return;
     }
@@ -129,7 +129,7 @@ bool CGMAuth::ProcessMessage(CNode* pnode, const std::string& strCommand, CDataS
 
         // future: Move this to the first line of this function..
         const CActiveGamemasterInfo* activeGmInfo{nullptr};
-        if (!fMasterNode || !activeGamemasterManager ||
+        if (!fGameMaster || !activeGamemasterManager ||
             (activeGmInfo = activeGamemasterManager->GetInfo())->proTxHash.IsNull()) {
             return true;
         }
@@ -141,7 +141,7 @@ bool CGMAuth::ProcessMessage(CNode* pnode, const std::string& strCommand, CDataS
             }
 
             if (pnode2->verifiedProRegTxHash == gmauth.proRegTxHash) {
-                if (fMasterNode) {
+                if (fGameMaster) {
                     auto deterministicOutbound = llmq::DeterministicOutboundConnection(activeGmInfo->proTxHash, gmauth.proRegTxHash);
                     LogPrint(BCLog::NET_GM, "CGMAuth::ProcessMessage -- Gamemaster %s has already verified as peer %d, deterministicOutbound=%s. peer=%d\n",
                              gmauth.proRegTxHash.ToString(), pnode2->GetId(), deterministicOutbound.ToString(), pnode->GetId());
