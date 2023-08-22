@@ -70,7 +70,7 @@ public Q_SLOTS:
     void goToSend();
     void goToReceive();
     void goToAddresses();
-    void goToGamemasters();
+    void goToGamemaSters();
     void goToGovernance();
     void goToColdStaking();
     void goToSettings();
@@ -141,7 +141,7 @@ private:
     SendWidget *sendWidget = nullptr;
     ReceiveWidget *receiveWidget = nullptr;
     AddressesWidget *addressesWidget = nullptr;
-    GamemastersWidget *gamemastersWidget = nullptr;
+    GamemaStersWidget *gamemaStersWidget = nullptr;
     ColdStakingWidget *coldStakingWidget = nullptr;
     GovernanceWidget* governancewidget{nullptr};
     SettingsWidget* settingsWidget = nullptr;

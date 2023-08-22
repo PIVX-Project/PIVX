@@ -277,7 +277,7 @@ bool GMModel::startLegacyGM(const CGamemasterConfig::CGamemasterEntry& gme, int 
 
     gamemasterman.UpdateGamemasterList(gmb);
     if (activeGamemaster.pubKeyGamemaster == gmb.GetPubKey()) {
-        activeGamemaster.EnableHotColdGamemaster(gmb.vin, gmb.addr);
+        activeGamemaster.EnableHotColdGamemaSter(gmb.vin, gmb.addr);
     }
     gmb.Relay();
     return true;

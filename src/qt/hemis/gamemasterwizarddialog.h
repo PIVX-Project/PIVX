@@ -14,19 +14,19 @@ class GMModel;
 class WalletModel;
 
 namespace Ui {
-class GamemasterWizardDialog;
+class GamemaSterWizardDialog;
 class QPushButton;
 }
 
-class GamemasterWizardDialog : public FocusedDialog, public PWidget::Translator
+class GamemaSterWizardDialog : public FocusedDialog, public PWidget::Translator
 {
     Q_OBJECT
 
 public:
-    explicit GamemasterWizardDialog(WalletModel* walletMode,
+    explicit GamemaSterWizardDialog(WalletModel* walletMode,
                                     GMModel* gmModel,
                                     QWidget *parent = nullptr);
-    ~GamemasterWizardDialog() override;
+    ~GamemaSterWizardDialog() override;
     void showEvent(QShowEvent *event) override;
     QString translate(const char *msg) override { return tr(msg); }
 
@@ -38,7 +38,7 @@ private Q_SLOTS:
     void accept() override;
     void onBackClicked();
 private:
-    Ui::GamemasterWizardDialog *ui;
+    Ui::GamemaSterWizardDialog *ui;
     QPushButton* icConfirm1;
     QPushButton* icConfirm3;
     QPushButton* icConfirm4;

@@ -123,7 +123,7 @@ hemisGUI::hemisGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         sendWidget = new SendWidget(this);
         receiveWidget = new ReceiveWidget(this);
         addressesWidget = new AddressesWidget(this);
-        gamemastersWidget = new GamemastersWidget(this);
+        gamemaStersWidget = new GamemaStersWidget(this);
         coldStakingWidget = new ColdStakingWidget(this);
         governancewidget = new GovernanceWidget(this);
         settingsWidget = new SettingsWidget(this);
@@ -199,8 +199,8 @@ void hemisGUI::connectActions()
     connect(sendWidget, &SendWidget::showHide, this, &hemisGUI::showHide);
     connect(receiveWidget, &ReceiveWidget::showHide, this, &hemisGUI::showHide);
     connect(addressesWidget, &AddressesWidget::showHide, this, &hemisGUI::showHide);
-    connect(gamemastersWidget, &GamemastersWidget::showHide, this, &hemisGUI::showHide);
-    connect(gamemastersWidget, &GamemastersWidget::execDialog, this, &hemisGUI::execDialog);
+    connect(gamemaStersWidget, &GamemaStersWidget::showHide, this, &hemisGUI::showHide);
+    connect(gamemaStersWidget, &GamemaStersWidget::execDialog, this, &hemisGUI::execDialog);
     connect(coldStakingWidget, &ColdStakingWidget::showHide, this, &hemisGUI::showHide);
     connect(coldStakingWidget, &ColdStakingWidget::execDialog, this, &hemisGUI::execDialog);
     connect(governancewidget, &GovernanceWidget::showHide, this, &hemisGUI::showHide);
@@ -503,9 +503,9 @@ void hemisGUI::goToAddresses()
     showTop(addressesWidget);
 }
 
-void hemisGUI::goToGamemasters()
+void hemisGUI::goToGamemaSters()
 {
-    gamemastersWidget->resetCoinControl();
+    gamemaStersWidget->resetCoinControl();
     showTop(gamemaStersWidget);
 }
 
@@ -654,7 +654,7 @@ bool hemisGUI::addWallet(const QString& name, WalletModel* walletModel)
 
     // Connect actions..
     connect(walletModel, &WalletModel::message, this, &hemisGUI::message);
-    connect(gamemastersWidget, &GamemastersWidget::message, this, &hemisGUI::message);
+    connect(gamemaStersWidget, &GamemaStersWidget::message, this, &hemisGUI::message);
     connect(coldStakingWidget, &ColdStakingWidget::message, this, &hemisGUI::message);
     connect(topBar, &TopBar::message, this, &hemisGUI::message);
     connect(sendWidget, &SendWidget::message,this, &hemisGUI::message);
