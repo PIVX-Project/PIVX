@@ -13,7 +13,7 @@
 #include "clientversion.h"
 #include "fs.h"
 #include "init.h"
-#include "masternodeconfig.h"
+#include "gamemasterconfig.h"
 #include "noui.h"
 #include "shutdown.h"
 #include "util/system.h"
