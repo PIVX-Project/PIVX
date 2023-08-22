@@ -19,21 +19,21 @@ class hemisGUI;
 class GMModel;
 
 namespace Ui {
-class GamemaStersWidget;
+class GamemastersWidget;
 }
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
 QT_END_NAMESPACE
 
-class GamemaStersWidget : public PWidget
+class GamemastersWidget : public PWidget
 {
     Q_OBJECT
 
 public:
 
-    explicit GamemaStersWidget(hemisGUI *parent = nullptr);
-    ~GamemaStersWidget();
+    explicit GamemastersWidget(hemisGUI *parent = nullptr);
+    ~GamemastersWidget();
     void resetCoinControl();
     void setGMModel(GMModel* _gmModel);
 
@@ -56,7 +56,7 @@ private Q_SLOTS:
     void updateModelAndInform(const QString& informText);
 
 private:
-    Ui::GamemaStersWidget *ui;
+    Ui::GamemastersWidget *ui;
     FurAbstractListItemDelegate *delegate;
     GMModel *gmModel = nullptr;
     TooltipMenu* menu = nullptr;

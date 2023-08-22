@@ -54,9 +54,9 @@ public:
     GMRow* cachedRow = nullptr;
 };
 
-GamemaStersWidget::GamemaStersWidget(hemisGUI *parent) :
+GamemastersWidget::GamemastersWidget(hemisGUI *parent) :
     PWidget(parent),
-    ui(new Ui::GamemaStersWidget),
+    ui(new Ui::GamemastersWidget),
     isLoading(false)
 {
     ui->setupUi(this);
@@ -111,20 +111,20 @@ GamemaStersWidget::GamemaStersWidget(hemisGUI *parent) :
     setCssProperty(ui->pushImgEmpty, "img-empty-master");
     setCssProperty(ui->labelEmpty, "text-empty");
 
-    connect(ui->pushButtonSave, &QPushButton::clicked, this, &GamemaStersWidget::onCreateGMClicked);
+    connect(ui->pushButtonSave, &QPushButton::clicked, this, &GamemastersWidget::onCreateGMClicked);
     connect(ui->pushButtonStartAll, &QPushButton::clicked, [this]() {
         onStartAllClicked(REQUEST_START_ALL);
     });
     connect(ui->pushButtonStartMissing, &QPushButton::clicked, [this]() {
         onStartAllClicked(REQUEST_START_MISSING);
     });
-    connect(ui->listGm, &QListView::clicked, this, &GamemaStersWidget::onGMClicked);
+    connect(ui->listGm, &QListView::clicked, this, &GamemastersWidget::onGMClicked);
     connect(ui->btnAbout, &OptionButton::clicked, [this](){window->openFAQ(SettingsFaqWidget::Section::GAMEMASTER);});
     connect(ui->btnAboutController, &OptionButton::clicked, [this](){window->openFAQ(SettingsFaqWidget::Section::GMCONTROLLER);});
-    connect(ui->btnCoinControl, &OptionButton::clicked, this, &GamemaStersWidget::onCoinControlClicked);
+    connect(ui->btnCoinControl, &OptionButton::clicked, this, &GamemastersWidget::onCoinControlClicked);
 }
 
-void GamemaStersWidget::showEvent(QShowEvent *event)
+void GamemastersWidget::showEvent(QShowEvent *event)
 {
     if (gmModel) gmModel->updateGMList();
     if (!timer) {
@@ -134,12 +134,12 @@ void GamemaStersWidget::showEvent(QShowEvent *event)
     timer->start(30000);
 }
 
-void GamemaStersWidget::hideEvent(QHideEvent *event)
+void GamemastersWidget::hideEvent(QHideEvent *event)
 {
     if (timer) timer->stop();
 }
 
-void GamemaStersWidget::setGMModel(GMModel* _gmModel)
+void GamemastersWidget::setGMModel(GMModel* _gmModel)
 {
     gmModel = _gmModel;
     ui->listGm->setModel(gmModel);
@@ -147,7 +147,7 @@ void GamemaStersWidget::setGMModel(GMModel* _gmModel)
     updateListState();
 }
 
-void GamemaStersWidget::updateListState()
+void GamemastersWidget::updateListState()
 {
     bool show = gmModel->rowCount() > 0;
     ui->listGm->setVisible(show);
@@ -155,7 +155,7 @@ void GamemaStersWidget::updateListState()
     ui->pushButtonStartAll->setVisible(show);
 }
 
-void GamemaStersWidget::onGMClicked(const QModelIndex& _index)
+void GamemastersWidget::onGMClicked(const QModelIndex& _index)
 {
     ui->listGm->setCurrentIndex(_index);
     QRect rect = ui->listGm->visualRect(_index);
@@ -168,9 +168,9 @@ void GamemaStersWidget::onGMClicked(const QModelIndex& _index)
         this->menu->setDeleteBtnText(tr("Delete"));
         this->menu->setCopyBtnText(tr("Info"));
         connect(this->menu, &TooltipMenu::message, this, &AddressesWidget::message);
-        connect(this->menu, &TooltipMenu::onEditClicked, this, &GamemaStersWidget::onEditGMClicked);
-        connect(this->menu, &TooltipMenu::onDeleteClicked, this, &GamemaStersWidget::onDeleteGMClicked);
-        connect(this->menu, &TooltipMenu::onCopyClicked, this, &GamemaStersWidget::onInfoGMClicked);
+        connect(this->menu, &TooltipMenu::onEditClicked, this, &GamemastersWidget::onEditGMClicked);
+        connect(this->menu, &TooltipMenu::onDeleteClicked, this, &GamemastersWidget::onDeleteGMClicked);
+        connect(this->menu, &TooltipMenu::onCopyClicked, this, &GamemastersWidget::onInfoGMClicked);
         this->menu->adjustSize();
     } else {
         this->menu->hide();
@@ -185,14 +185,14 @@ void GamemaStersWidget::onGMClicked(const QModelIndex& _index)
     ui->listGm->setFocus();
 }
 
-bool GamemaStersWidget::checkGMsNetwork()
+bool GamemastersWidget::checkGMsNetwork()
 {
     bool isTierTwoSync = gmModel->isGMsNetworkSynced();
     if (!isTierTwoSync) inform(tr("Please wait until the node is fully synced"));
     return isTierTwoSync;
 }
 
-void GamemaStersWidget::onEditGMClicked()
+void GamemastersWidget::onEditGMClicked()
 {
     if (walletModel) {
         if (!walletModel->isRegTestNetwork() && !checkGMsNetwork()) return;
@@ -215,7 +215,7 @@ void GamemaStersWidget::onEditGMClicked()
     }
 }
 
-void GamemaStersWidget::startAlias(const QString& strAlias)
+void GamemastersWidget::startAlias(const QString& strAlias)
 {
     QString strStatusHtml;
     strStatusHtml += "Alias: " + strAlias + " ";
@@ -260,7 +260,7 @@ void GamemaStersWidget::onStartAllClicked(int type)
     }
 }
 
-bool GamemaStersWidget::startAll(QString& failText, bool onlyMissing)
+bool GamemastersWidget::startAll(QString& failText, bool onlyMissing)
 {
     int amountOfGmFailed = 0;
     int amountOfGmStarted = 0;
@@ -272,7 +272,7 @@ bool GamemaStersWidget::startAll(QString& failText, bool onlyMissing)
     return true;
 }
 
-void GamemaStersWidget::run(int type)
+void GamemastersWidget::run(int type)
 {
     bool isStartMissing = type == REQUEST_START_MISSING;
     if (type == REQUEST_START_ALL || isStartMissing) {
@@ -285,7 +285,7 @@ void GamemaStersWidget::run(int type)
     isLoading = false;
 }
 
-void GamemaStersWidget::onError(QString error, int type)
+void GamemastersWidget::onError(QString error, int type)
 {
     if (type == REQUEST_START_ALL) {
         QMetaObject::invokeMethod(this, "inform", Qt::QueuedConnection,
@@ -293,7 +293,7 @@ void GamemaStersWidget::onError(QString error, int type)
     }
 }
 
-void GamemaStersWidget::onInfoGMClicked()
+void GamemastersWidget::onInfoGMClicked()
 {
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (!ctx.isValid()) {
@@ -331,7 +331,7 @@ void GamemaStersWidget::onInfoGMClicked()
     dialog->deleteLater();
 }
 
-void GamemaStersWidget::onDeleteGMClicked()
+void GamemastersWidget::onDeleteGMClicked()
 {
     QString txId = index.sibling(index.row(), GMModel::COLLATERAL_ID).data(Qt::DisplayRole).toString();
     QString outIndex = index.sibling(index.row(), GMModel::COLLATERAL_OUT_INDEX).data(Qt::DisplayRole).toString();
@@ -358,7 +358,7 @@ void GamemaStersWidget::onDeleteGMClicked()
     updateListState();
 }
 
-void GamemaStersWidget::onCreateGMClicked()
+void GamemastersWidget::onCreateGMClicked()
 {
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if (!ctx.isValid()) {
@@ -390,7 +390,7 @@ void GamemaStersWidget::onCreateGMClicked()
     }
 
     showHideOp(true);
-    GamemaSterWizardDialog *dialog = new GamemaSterWizardDialog(walletModel, gmModel, window);
+    GamemasterWizardDialog *dialog = new GamemasterWizardDialog(walletModel, gmModel, window);
     if (openDialogWithOpaqueBackgroundY(dialog, window, 5, 7)) {
         if (dialog->isOk) {
             // Update list
@@ -406,12 +406,12 @@ void GamemaStersWidget::onCreateGMClicked()
     resetCoinControl();
 }
 
-void GamemaStersWidget::changeTheme(bool isLightTheme, QString& theme)
+void GamemastersWidget::changeTheme(bool isLightTheme, QString& theme)
 {
     static_cast<GMHolder*>(this->delegate->getRowFactory())->isLightTheme = isLightTheme;
 }
 
-void GamemaStersWidget::onCoinControlClicked()
+void GamemastersWidget::onCoinControlClicked()
 {
     if (!coinControlDialog->hasModel()) coinControlDialog->setModel(walletModel);
     coinControlDialog->setSelectionType(true);
@@ -420,14 +420,14 @@ void GamemaStersWidget::onCoinControlClicked()
     ui->btnCoinControl->setActive(coinControlDialog->coinControl->HasSelected());
 }
 
-void GamemaStersWidget::resetCoinControl()
+void GamemastersWidget::resetCoinControl()
 {
     if (coinControlDialog) coinControlDialog->coinControl->SetNull();
     gmModel->resetCoinControl();
     ui->btnCoinControl->setActive(false);
 }
 
-GamemaStersWidget::~GamemaStersWidget()
+GamemastersWidget::~GamemastersWidget()
 {
     delete ui;
 }

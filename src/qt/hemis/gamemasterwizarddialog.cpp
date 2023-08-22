@@ -34,9 +34,9 @@ static void initBtn(std::initializer_list<QPushButton*> args)
     }
 }
 
-GamemaSterWizardDialog::GamemaSterWizardDialog(WalletModel* model, GMModel* _gmModel, QWidget *parent) :
+GamemasterWizardDialog::GamemasterWizardDialog(WalletModel* model, GMModel* _gmModel, QWidget *parent) :
     FocusedDialog(parent),
-    ui(new Ui::GamemaSterWizardDialog),
+    ui(new Ui::GamemasterWizardDialog),
     icConfirm1(new QPushButton(this)),
     icConfirm3(new QPushButton(this)),
     icConfirm4(new QPushButton(this)),
@@ -116,17 +116,17 @@ GamemaSterWizardDialog::GamemaSterWizardDialog(WalletModel* model, GMModel* _gmM
     ui->btnBack->setVisible(false);
     setCssProperty(ui->pushButtonSkip, "ic-close");
 
-    connect(ui->pushButtonSkip, &QPushButton::clicked, this, &GamemaSterWizardDialog::close);
-    connect(ui->btnNext, &QPushButton::clicked, this, &GamemaSterWizardDialog::accept);
-    connect(ui->btnBack, &QPushButton::clicked, this, &GamemaSterWizardDialog::onBackClicked);
+    connect(ui->pushButtonSkip, &QPushButton::clicked, this, &GamemasterWizardDialog::close);
+    connect(ui->btnNext, &QPushButton::clicked, this, &GamemasterWizardDialog::accept);
+    connect(ui->btnBack, &QPushButton::clicked, this, &GamemasterWizardDialog::onBackClicked);
 }
 
-void GamemaSterWizardDialog::showEvent(QShowEvent *event)
+void GamemasterWizardDialog::showEvent(QShowEvent *event)
 {
     if (ui->btnNext) ui->btnNext->setFocus();
 }
 
-void GamemaSterWizardDialog::accept()
+void GamemasterWizardDialog::accept()
 {
     switch(pos) {
         case 0:{
@@ -170,7 +170,7 @@ void GamemaSterWizardDialog::accept()
     pos++;
 }
 
-bool GamemaSterWizardDialog::createGM()
+bool GamemasterWizardDialog::createGM()
 {
     if (!walletModel) {
         returnStr = tr("walletModel not set");
@@ -236,7 +236,7 @@ bool GamemaSterWizardDialog::createGM()
     return true;
 }
 
-void GamemaSterWizardDialog::onBackClicked()
+void GamemasterWizardDialog::onBackClicked()
 {
     if (pos == 0) return;
     pos--;
@@ -268,7 +268,7 @@ void GamemaSterWizardDialog::onBackClicked()
     }
 }
 
-void GamemaSterWizardDialog::inform(const QString& text)
+void GamemasterWizardDialog::inform(const QString& text)
 {
     if (!snackBar)
         snackBar = new SnackBar(nullptr, this);
@@ -277,7 +277,7 @@ void GamemaSterWizardDialog::inform(const QString& text)
     openDialog(snackBar, this);
 }
 
-GamemaSterWizardDialog::~GamemaSterWizardDialog()
+GamemasterWizardDialog::~GamemasterWizardDialog()
 {
     delete snackBar;
     delete ui;
