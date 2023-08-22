@@ -234,13 +234,13 @@ void GamemastersWidget::startAlias(const QString& strAlias)
     updateModelAndInform(strStatusHtml);
 }
 
-void GamemaStersWidget::updateModelAndInform(const QString& informText)
+void GamemastersWidget::updateModelAndInform(const QString& informText)
 {
     gmModel->updateGMList();
     inform(informText);
 }
 
-void GamemaStersWidget::onStartAllClicked(int type)
+void GamemastersWidget::onStartAllClicked(int type)
 {
     if (!Params().IsRegTestNet() && !checkGMsNetwork()) return;     // skip on RegNet: so we can test even if tier two not synced
 

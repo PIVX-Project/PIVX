@@ -133,7 +133,7 @@ hemisGUI::hemisGUI(const NetworkStyle* networkStyle, QWidget* parent) :
         stackedContainer->addWidget(sendWidget);
         stackedContainer->addWidget(receiveWidget);
         stackedContainer->addWidget(addressesWidget);
-        stackedContainer->addWidget(gamemaStersWidget);
+        stackedContainer->addWidget(gamemastersWidget);
         stackedContainer->addWidget(coldStakingWidget);
         stackedContainer->addWidget(governancewidget);
         stackedContainer->addWidget(settingsWidget);
@@ -254,7 +254,7 @@ void hemisGUI::setClientModel(ClientModel* _clientModel)
         topBar->setClientModel(clientModel);
         dashboard->setClientModel(clientModel);
         sendWidget->setClientModel(clientModel);
-        gamemaStersWidget->setClientModel(clientModel);
+        gamemastersWidget->setClientModel(clientModel);
         settingsWidget->setClientModel(clientModel);
         governancewidget->setClientModel(clientModel);
 
@@ -506,7 +506,7 @@ void hemisGUI::goToAddresses()
 void hemisGUI::goToGamemasters()
 {
     gamemastersWidget->resetCoinControl();
-    showTop(gamemaStersWidget);
+    showTop(gamemastersWidget);
 }
 
 void hemisGUI::goToColdStaking()
@@ -631,7 +631,7 @@ void hemisGUI::setGMModel(GMModel* _gmModel)
     if (!stackedContainer || !clientModel) return;
     gmModel = _gmModel;
     governancewidget->setGMModel(gmModel);
-    gamemaStersWidget->setGMModel(gmModel);
+    gamemastersWidget->setGMModel(gmModel);
 }
 
 bool hemisGUI::addWallet(const QString& name, WalletModel* walletModel)
@@ -647,7 +647,7 @@ bool hemisGUI::addWallet(const QString& name, WalletModel* walletModel)
     receiveWidget->setWalletModel(walletModel);
     sendWidget->setWalletModel(walletModel);
     addressesWidget->setWalletModel(walletModel);
-    gamemaStersWidget->setWalletModel(walletModel);
+    gamemastersWidget->setWalletModel(walletModel);
     coldStakingWidget->setWalletModel(walletModel);
     governancewidget->setWalletModel(walletModel);
     settingsWidget->setWalletModel(walletModel);
