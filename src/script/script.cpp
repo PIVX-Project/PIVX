@@ -109,7 +109,7 @@ const char* GetOpName(opcodetype opcode)
     case OP_BOOLOR                 : return "OP_BOOLOR";
     case OP_NUMEQUAL               : return "OP_NUMEQUAL";
     case OP_NUMEQUALVERIFY         : return "OP_NUMEQUALVERIFY";
-    case OP_NUGMOTEQUAL            : return "OP_NUGMOTEQUAL";
+    case OP_NUMNOTEQUAL            : return "OP_NUMNOTEQUAL";
     case OP_LESSTHAN               : return "OP_LESSTHAN";
     case OP_GREATERTHAN            : return "OP_GREATERTHAN";
     case OP_LESSTHANOREQUAL        : return "OP_LESSTHANOREQUAL";
