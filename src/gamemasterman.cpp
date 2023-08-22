@@ -447,7 +447,7 @@ int CGamemasterMan::CountEnabled(bool only_legacy) const
     return count_enabled;
 }
 
-bool CGamemasterMan::RequestMnList(CNode* pnode)
+bool CGamemasterMan::RequestGmList(CNode* pnode)
 {
     // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
     if (deterministicGMManager->LegacyGMObsolete()) {
@@ -518,7 +518,7 @@ void CGamemasterMan::CheckSpentCollaterals(const std::vector<CTransactionRef>& v
 }
 
 static bool canScheduleGM(bool fFilterSigTime, const GamemasterRef& gm, int minProtocol,
-                          int nMnCount, int nBlockHeight)
+                          int nGmCount, int nBlockHeight)
 {
     // check protocol version
     if (gm->protocolVersion < minProtocol) return false;
@@ -527,10 +527,10 @@ static bool canScheduleGM(bool fFilterSigTime, const GamemasterRef& gm, int minP
     if (gamemasterPayments.IsScheduled(*gm, nBlockHeight)) return false;
 
     // it's too new, wait for a cycle
-    if (fFilterSigTime && gm->sigTime + (nMnCount * 2.6 * 60) > GetAdjustedTime()) return false;
+    if (fFilterSigTime && gm->sigTime + (nGmCount * 2.6 * 60) > GetAdjustedTime()) return false;
 
     // make sure it has as many confirmations as there are gamemasters
-    if (pcoinsTip->GetCoinDepthAtHeight(gm->vin.prevout, nBlockHeight) < nMnCount) return false;
+    if (pcoinsTip->GetCoinDepthAtHeight(gm->vin.prevout, nBlockHeight) < nGmCount) return false;
 
     return true;
 }
@@ -646,7 +646,7 @@ GamemasterRef CGamemasterMan::GetCurrentMasterNode(const uint256& hash) const
     return winner;
 }
 
-std::vector<std::pair<GamemasterRef, int>> CGamemasterMan::GetMnScores(int nLast) const
+std::vector<std::pair<GamemasterRef, int>> CGamemasterMan::GetGmScores(int nLast) const
 {
     std::vector<std::pair<GamemasterRef, int>> ret;
     int nChainHeight = GetBestHeight();

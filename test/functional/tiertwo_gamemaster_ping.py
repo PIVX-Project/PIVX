@@ -86,7 +86,7 @@ class GamemasterPingTest(HemisTestFramework):
         self.log.info("waiting to complete gmsync...")
         start_time = time.time()
         self.wait_until_gmsync_finished()
-        self.log.info("MnSync completed in %d seconds" % (time.time() - start_time))
+        self.log.info("GmSync completed in %d seconds" % (time.time() - start_time))
         miner.generate(1)
         self.sync_blocks()
         time.sleep(1)

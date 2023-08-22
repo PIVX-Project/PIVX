@@ -337,7 +337,7 @@ CDeterministicGMListDiff CDeterministicGMList::BuildDiff(const CDeterministicGML
     ForEachGM(false, [&](const CDeterministicGMCPtr& fromPtr) {
         auto toPtr = to.GetGM(fromPtr->proTxHash);
         if (toPtr == nullptr) {
-            diffRet.removedMns.emplace(fromPtr->GetInternalId());
+            diffRet.removedGms.emplace(fromPtr->GetInternalId());
         }
     });
 
@@ -356,7 +356,7 @@ CDeterministicGMList CDeterministicGMList::ApplyDiff(const CBlockIndex* pindex, 
     result.blockHash = pindex->GetBlockHash();
     result.nHeight = pindex->nHeight;
 
-    for (const auto& id : diff.removedMns) {
+    for (const auto& id : diff.removedGms) {
         auto dgm = result.GetGMByInternalId(id);
         if (!dgm) {
             throw(std::runtime_error(strprintf("%s: can't find a removed gamemaster, id=%d", __func__, id)));
@@ -975,9 +975,9 @@ void CDeterministicGMManager::CleanupCache(int nHeight)
 std::vector<CDeterministicGMCPtr> CDeterministicGMManager::GetAllQuorumMembers(Consensus::LLMQType llmqType, const CBlockIndex* pindexQuorum)
 {
     auto& params = Params().GetConsensus().llmqs.at(llmqType);
-    auto allMns = GetListForBlock(pindexQuorum);
+    auto allGms = GetListForBlock(pindexQuorum);
     auto modifier = ::SerializeHash(std::make_pair(static_cast<uint8_t>(llmqType), pindexQuorum->GetBlockHash()));
-    return allMns.CalculateQuorum(params.size, modifier);
+    return allGms.CalculateQuorum(params.size, modifier);
 }
 
 

@@ -26,7 +26,7 @@ void CheckBudgetValue(int nHeight, std::string strNetwork, CAmount nExpectedValu
     BOOST_CHECK_MESSAGE(nBudget == nExpectedValue, strError);
 }
 
-void enableMnSyncAndSuperblocksPayment()
+void enableGmSyncAndSuperblocksPayment()
 {
     // force gmsync complete
     g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_FINISHED);
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(budget_value)
 
 BOOST_FIXTURE_TEST_CASE(block_value, TestnetSetup)
 {
-    enableMnSyncAndSuperblocksPayment();
+    enableGmSyncAndSuperblocksPayment();
     int nHeight = 100; std::string strError;
     const CAmount nBlockReward = GetBlockValue(nHeight);
     CAmount nExpectedRet = nBlockReward;
@@ -199,7 +199,7 @@ BOOST_FIXTURE_TEST_CASE(budget_blocks_payee_test, TestChain100Setup)
 {
     // Regtest superblock is every 144 blocks.
     for (int i=0; i<43; i++) CreateAndProcessBlock({}, coinbaseKey);
-    enableMnSyncAndSuperblocksPayment();
+    enableGmSyncAndSuperblocksPayment();
     g_budgetman.Clear();
     BOOST_CHECK_EQUAL(WITH_LOCK(cs_main, return chainActive.Height();), 143);
     BOOST_ASSERT(g_budgetman.GetFinalizedBudgets().size() == 0);
@@ -281,7 +281,7 @@ BOOST_FIXTURE_TEST_CASE(budget_blocks_reorg_test, TestChain100Setup)
 {
     // Regtest superblock is every 144 blocks.
     for (int i=0; i<43; i++) CreateAndProcessBlock({}, coinbaseKey);
-    enableMnSyncAndSuperblocksPayment();
+    enableGmSyncAndSuperblocksPayment();
     BOOST_CHECK_EQUAL(WITH_LOCK(cs_main, return chainActive.Height();), 143);
 
     // Now we are at the superblock height, let's add a proposal to pay.

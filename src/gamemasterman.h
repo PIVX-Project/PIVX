@@ -130,7 +130,7 @@ public:
 
     int CountEnabled(bool only_legacy = false) const;
 
-    bool RequestMnList(CNode* pnode);
+    bool RequestGmList(CNode* pnode);
 
     /// Find an entry
     CGamemaster* Find(const COutPoint& collateralOut);
@@ -147,7 +147,7 @@ public:
     GamemasterRef GetCurrentMasterNode(const uint256& hash) const;
 
     /// vector of pairs <gamemaster winner, height>
-    std::vector<std::pair<GamemasterRef, int>> GetMnScores(int nLast) const;
+    std::vector<std::pair<GamemasterRef, int>> GetGmScores(int nLast) const;
 
     // Retrieve the known gamemasters ordered by scoring without checking them. (Only used for listgamemasters RPC call)
     std::vector<std::pair<int64_t, GamemasterRef>> GetGamemasterRanks(int nBlockHeight) const;

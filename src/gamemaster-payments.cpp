@@ -338,7 +338,7 @@ bool CGamemasterPayments::GetLegacyGamemasterTxOut(int nHeight, std::vector<CTxO
     return true;
 }
 
-static void SubtractMnPaymentFromCoinstake(CMutableTransaction& txCoinstake, CAmount gamemasterPayment, int stakerOuts)
+static void SubtractGmPaymentFromCoinstake(CMutableTransaction& txCoinstake, CAmount gamemasterPayment, int stakerOuts)
 {
     assert (stakerOuts >= 2);
     //subtract gm payment from the stake reward
@@ -360,8 +360,8 @@ static void SubtractMnPaymentFromCoinstake(CMutableTransaction& txCoinstake, CAm
 
 void CGamemasterPayments::FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const CBlockIndex* pindexPrev, bool fProofOfStake) const
 {
-    std::vector<CTxOut> vecMnOuts;
-    if (!GetGamemasterTxOuts(pindexPrev, vecMnOuts)) {
+    std::vector<CTxOut> vecGmOuts;
+    if (!GetGamemasterTxOuts(pindexPrev, vecGmOuts)) {
         return;
     }
 
@@ -375,7 +375,7 @@ void CGamemasterPayments::FillBlockPayee(CMutableTransaction& txCoinbase, CMutab
     const int initial_cstake_outs = txCoinstake.vout.size();
 
     CAmount gamemasterPayment{0};
-    for (const CTxOut& gmOut: vecMnOuts) {
+    for (const CTxOut& gmOut: vecGmOuts) {
         // Add the gm payment to the coinstake/coinbase tx
         if (fPayCoinstake) {
             txCoinstake.vout.emplace_back(gmOut);
@@ -390,7 +390,7 @@ void CGamemasterPayments::FillBlockPayee(CMutableTransaction& txCoinbase, CMutab
 
     // Subtract gm payment value from the block reward
     if (fProofOfStake) {
-        SubtractMnPaymentFromCoinstake(txCoinstake, gamemasterPayment, initial_cstake_outs);
+        SubtractGmPaymentFromCoinstake(txCoinstake, gamemasterPayment, initial_cstake_outs);
     } else {
         txCoinbase.vout[0].nValue = GetBlockValue(nHeight) - gamemasterPayment;
     }
@@ -646,13 +646,13 @@ bool CGamemasterPayments::IsTransactionValid(const CTransaction& txNew, const CB
 {
     const int nBlockHeight = pindexPrev->nHeight + 1;
     if (deterministicGMManager->LegacyGMObsolete(nBlockHeight)) {
-        std::vector<CTxOut> vecMnOuts;
-        if (!GetGamemasterTxOuts(pindexPrev, vecMnOuts)) {
+        std::vector<CTxOut> vecGmOuts;
+        if (!GetGamemasterTxOuts(pindexPrev, vecGmOuts)) {
             // No gamemaster scheduled to be paid.
             return true;
         }
 
-        for (const CTxOut& o : vecMnOuts) {
+        for (const CTxOut& o : vecGmOuts) {
             if (std::find(txNew.vout.begin(), txNew.vout.end(), o) == txNew.vout.end()) {
                 CTxDestination gmDest;
                 const std::string& payee = ExtractDestination(o.scriptPubKey, gmDest) ? EncodeDestination(gmDest)
@@ -837,15 +837,15 @@ bool IsCoinbaseValueValid(const CTransactionRef& tx, CAmount nBudgetAmt, CValida
         } else {
             // regular block
             int nHeight = gamemasterman.GetBestHeight();
-            CAmount nMnAmt = GetGamemasterPayment(nHeight);
+            CAmount nGmAmt = GetGamemasterPayment(nHeight);
             // if enforcement is disabled, there could be no gamemaster payment
             bool sporkEnforced = sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT);
             const std::string strError = strprintf("%s: invalid coinbase payment for gamemaster (%s vs expected=%s)",
-                                                   __func__, FormatMoney(nCBaseOutAmt), FormatMoney(nMnAmt));
-            if (sporkEnforced && nCBaseOutAmt != nMnAmt) {
+                                                   __func__, FormatMoney(nCBaseOutAmt), FormatMoney(nGmAmt));
+            if (sporkEnforced && nCBaseOutAmt != nGmAmt) {
                 return _state.DoS(100, error(strError.c_str()), REJECT_INVALID, "bad-cb-amt");
             }
-            if (!sporkEnforced && nCBaseOutAmt > nMnAmt) {
+            if (!sporkEnforced && nCBaseOutAmt > nGmAmt) {
                 return _state.DoS(100, error(strError.c_str()), REJECT_INVALID, "bad-cb-amt-spork8-disabled");
             }
             return true;

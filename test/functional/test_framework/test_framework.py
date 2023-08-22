@@ -1309,9 +1309,9 @@ class HemisTestFramework():
             gms_l = [[x.proTx, x.ipport] for x in gms]
             strErr = ""
             for x in [x for x in gmlist_l if x not in gms_l]:
-                strErr += "Mn %s is not expected\n" % str(x)
+                strErr += "Gm %s is not expected\n" % str(x)
             for x in [x for x in gms_l if x not in gmlist_l]:
-                strErr += "Expect Mn %s not found\n" % str(x)
+                strErr += "Expect Gm %s not found\n" % str(x)
             raise Exception("Invalid gm list on node %d:\n%s" % (idx, strErr))
         protxs = {x["proTxHash"]: x for x in gmlist}
         for gm in gms:

@@ -235,5 +235,5 @@ void CMainSignals::NotifyGamemasterListChanged(bool undo, const CDeterministicGM
               oldGMList.GetBlockHash().ToString(),
               diff.addedGMs.size(),
               diff.updatedGMs.size(),
-              diff.removedMns.size());
+              diff.removedGms.size());
 }

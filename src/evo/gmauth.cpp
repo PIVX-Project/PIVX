@@ -20,9 +20,9 @@
 
 void CGMAuth::PushGMAUTH(CNode* pnode, CConnman& connman)
 {
-    const CActiveGamemasterInfo* activeMnInfo{nullptr};
+    const CActiveGamemasterInfo* activeGmInfo{nullptr};
     if (!fMasterNode || !activeGamemasterManager ||
-        (activeMnInfo = activeGamemasterManager->GetInfo())->proTxHash.IsNull()) {
+        (activeGmInfo = activeGamemasterManager->GetInfo())->proTxHash.IsNull()) {
         return;
     }
 
@@ -43,15 +43,15 @@ void CGMAuth::PushGMAUTH(CNode* pnode, CConnman& connman)
             nOurNodeVersion = (int)gArgs.GetArg("-pushversion", PROTOCOL_VERSION);
         }
         if (pnode->nVersion < GMAUTH_NODE_VER_VERSION || nOurNodeVersion < GMAUTH_NODE_VER_VERSION) {
-            signHash = ::SerializeHash(std::make_tuple(activeMnInfo->pubKeyOperator, pnode->receivedGMAuthChallenge, pnode->fInbound));
+            signHash = ::SerializeHash(std::make_tuple(activeGmInfo->pubKeyOperator, pnode->receivedGMAuthChallenge, pnode->fInbound));
         } else {
-            signHash = ::SerializeHash(std::make_tuple(activeMnInfo->pubKeyOperator, pnode->receivedGMAuthChallenge, pnode->fInbound, nOurNodeVersion));
+            signHash = ::SerializeHash(std::make_tuple(activeGmInfo->pubKeyOperator, pnode->receivedGMAuthChallenge, pnode->fInbound, nOurNodeVersion));
         }
     }
 
     CGMAuth gmauth;
-    gmauth.proRegTxHash = activeMnInfo->proTxHash;
-    gmauth.sig = activeMnInfo->keyOperator.Sign(signHash);
+    gmauth.proRegTxHash = activeGmInfo->proTxHash;
+    gmauth.sig = activeGmInfo->keyOperator.Sign(signHash);
 
     LogPrint(BCLog::NET_GM, "CGMAuth::%s -- Sending GMAUTH, peer=%d\n", __func__, pnode->GetId());
     connman.PushMessage(pnode, CNetMsgMaker(pnode->GetSendVersion()).Make(NetMsgType::GMAUTH, gmauth));
@@ -128,9 +128,9 @@ bool CGMAuth::ProcessMessage(CNode* pnode, const std::string& strCommand, CDataS
         }
 
         // future: Move this to the first line of this function..
-        const CActiveGamemasterInfo* activeMnInfo{nullptr};
+        const CActiveGamemasterInfo* activeGmInfo{nullptr};
         if (!fMasterNode || !activeGamemasterManager ||
-            (activeMnInfo = activeGamemasterManager->GetInfo())->proTxHash.IsNull()) {
+            (activeGmInfo = activeGamemasterManager->GetInfo())->proTxHash.IsNull()) {
             return true;
         }
 
@@ -142,10 +142,10 @@ bool CGMAuth::ProcessMessage(CNode* pnode, const std::string& strCommand, CDataS
 
             if (pnode2->verifiedProRegTxHash == gmauth.proRegTxHash) {
                 if (fMasterNode) {
-                    auto deterministicOutbound = llmq::DeterministicOutboundConnection(activeMnInfo->proTxHash, gmauth.proRegTxHash);
+                    auto deterministicOutbound = llmq::DeterministicOutboundConnection(activeGmInfo->proTxHash, gmauth.proRegTxHash);
                     LogPrint(BCLog::NET_GM, "CGMAuth::ProcessMessage -- Gamemaster %s has already verified as peer %d, deterministicOutbound=%s. peer=%d\n",
                              gmauth.proRegTxHash.ToString(), pnode2->GetId(), deterministicOutbound.ToString(), pnode->GetId());
-                    if (deterministicOutbound == activeMnInfo->proTxHash) {
+                    if (deterministicOutbound == activeGmInfo->proTxHash) {
                         if (pnode2->fInbound) {
                             LogPrint(BCLog::NET_GM, "CGMAuth::ProcessMessage -- dropping old inbound, peer=%d\n", pnode2->GetId());
                             pnode2->fDisconnect = true;
@@ -198,7 +198,7 @@ bool CGMAuth::ProcessMessage(CNode* pnode, const std::string& strCommand, CDataS
 void CGMAuth::NotifyGamemasterListChanged(bool undo, const CDeterministicGMList& oldGMList, const CDeterministicGMListDiff& diff)
 {
     // we're only interested in updated/removed GMs. Added GMs are of no interest for us
-    if (diff.updatedGMs.empty() && diff.removedMns.empty()) {
+    if (diff.updatedGMs.empty() && diff.removedGms.empty()) {
         return;
     }
 
@@ -212,7 +212,7 @@ void CGMAuth::NotifyGamemasterListChanged(bool undo, const CDeterministicGMList&
             return;
         }
         bool doRemove = false;
-        if (diff.removedMns.count(verifiedDgm->GetInternalId())) {
+        if (diff.removedGms.count(verifiedDgm->GetInternalId())) {
             doRemove = true;
         } else {
             auto it = diff.updatedGMs.find(verifiedDgm->GetInternalId());

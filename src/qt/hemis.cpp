@@ -487,7 +487,7 @@ void BitcoinApplication::initializeResult(int retval)
         window->setClientModel(clientModel);
 
 #ifdef ENABLE_WALLET
-        gmModel = new MNModel(this);
+        gmModel = new GMModel(this);
         govModel = new GovernanceModel(clientModel, gmModel);
         // TODO: Expose secondary wallets
         if (!vpwallets.empty()) {
@@ -501,7 +501,7 @@ void BitcoinApplication::initializeResult(int retval)
             window->setGovModel(govModel);
             window->addWallet(hemisGUI::DEFAULT_WALLET, walletModel);
             window->setCurrentWallet(hemisGUI::DEFAULT_WALLET);
-            window->setMNModel(gmModel);
+            window->setGMModel(gmModel);
         }
 #endif
 

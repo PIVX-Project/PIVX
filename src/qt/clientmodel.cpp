@@ -48,8 +48,8 @@ ClientModel::ClientModel(OptionsModel* optionsModel, QObject* parent) : QObject(
     connect(pollTimer, &QTimer::timeout, this, &ClientModel::updateTimer);
     pollTimer->start(MODEL_UPDATE_DELAY);
 
-    pollMnTimer = new QTimer(this);
-    connect(pollMnTimer, &QTimer::timeout, this, &ClientModel::updateMnTimer);
+    pollGmTimer = new QTimer(this);
+    connect(pollGmTimer, &QTimer::timeout, this, &ClientModel::updateGmTimer);
     startGamemastersTimer();
 
     subscribeToCoreSignals();
@@ -78,7 +78,7 @@ int ClientModel::getNumConnections(unsigned int flags) const
 
 QString ClientModel::getGamemasterCountString()
 {
-    const auto& info = mnodeman.getMNsInfo();
+    const auto& info = gamemasterman.getGMsInfo();
     int unknown = std::max(0, info.total - info.ipv4 - info.ipv6 - info.onion);
     m_cached_gamemasters_count = info.total;
     return tr("Total: %1 (IPv4: %2 / IPv6: %3 / Tor: %4 / Unknown: %5)").arg(QString::number(info.total))
@@ -173,9 +173,9 @@ void ClientModel::updateTimer()
     Q_EMIT bytesChanged(getTotalBytesRecv(), getTotalBytesSent());
 }
 
-void ClientModel::updateMnTimer()
+void ClientModel::updateGmTimer()
 {
-    // Following method is locking the mnmanager mutex for now,
+    // Following method is locking the gmmanager mutex for now,
     // future: move to an event based update.
     QString newGamemasterCountString = getGamemasterCountString();
 
@@ -188,16 +188,16 @@ void ClientModel::updateMnTimer()
 
 void ClientModel::startGamemastersTimer()
 {
-    if (!pollMnTimer->isActive()) {
+    if (!pollGmTimer->isActive()) {
         // no need to update as frequent as data for balances/txes/blocks
-        pollMnTimer->start(MODEL_UPDATE_DELAY * 40);
+        pollGmTimer->start(MODEL_UPDATE_DELAY * 40);
     }
 }
 
 void ClientModel::stopGamemastersTimer()
 {
-    if (pollMnTimer->isActive()) {
-        pollMnTimer->stop();
+    if (pollGmTimer->isActive()) {
+        pollGmTimer->stop();
     }
 }
 

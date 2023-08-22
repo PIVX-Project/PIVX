@@ -392,9 +392,9 @@ void SerializeGMB(UniValue& statusObjRet, const CGamemasterBroadcast& gmb, const
 {
     if(fSuccess) {
         successful++;
-        CDataStream ssMnb(SER_NETWORK, PROTOCOL_VERSION);
-        ssMnb << gmb;
-        statusObjRet.pushKV("hex", HexStr(ssMnb));
+        CDataStream ssGmb(SER_NETWORK, PROTOCOL_VERSION);
+        ssGmb << gmb;
+        statusObjRet.pushKV("hex", HexStr(ssGmb));
     } else {
         failed++;
     }
@@ -863,11 +863,11 @@ UniValue getgamemasterscores(const JSONRPCRequest& request)
         }
     }
 
-    std::vector<std::pair<GamemasterRef, int>> vMnScores = gamemasterman.GetMnScores(nLast);
-    if (vMnScores.empty()) return "unknown";
+    std::vector<std::pair<GamemasterRef, int>> vGmScores = gamemasterman.GetGmScores(nLast);
+    if (vGmScores.empty()) return "unknown";
 
     UniValue obj(UniValue::VOBJ);
-    for (const auto& p : vMnScores) {
+    for (const auto& p : vGmScores) {
         const GamemasterRef& gm = p.first;
         const int nHeight = p.second;
         obj.pushKV(strprintf("%d", nHeight), gm->vin.prevout.hash.ToString().c_str());
@@ -875,12 +875,12 @@ UniValue getgamemasterscores(const JSONRPCRequest& request)
     return obj;
 }
 
-bool DecodeHexMnb(CGamemasterBroadcast& gmb, std::string strHexMnb) {
+bool DecodeHexGmb(CGamemasterBroadcast& gmb, std::string strHexGmb) {
 
-    if (!IsHex(strHexMnb))
+    if (!IsHex(strHexGmb))
         return false;
 
-    std::vector<unsigned char> gmbData(ParseHex(strHexMnb));
+    std::vector<unsigned char> gmbData(ParseHex(strHexGmb));
     CDataStream ssData(gmbData, SER_NETWORK, PROTOCOL_VERSION);
     try {
         ssData >> gmb;
@@ -1038,7 +1038,7 @@ UniValue decodegamemasterbroadcast(const JSONRPCRequest& request)
 
     CGamemasterBroadcast gmb;
 
-    if (!DecodeHexMnb(gmb, request.params[0].get_str()))
+    if (!DecodeHexGmb(gmb, request.params[0].get_str()))
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Gamemaster broadcast message decode failed");
 
     UniValue resultObj(UniValue::VOBJ);
@@ -1082,7 +1082,7 @@ UniValue relaygamemasterbroadcast(const JSONRPCRequest& request)
 
     CGamemasterBroadcast gmb;
 
-    if (!DecodeHexMnb(gmb, request.params[0].get_str()))
+    if (!DecodeHexGmb(gmb, request.params[0].get_str()))
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Gamemaster broadcast message decode failed");
 
     if(!gmb.CheckSignature())

@@ -37,19 +37,19 @@ static UniValue packVoteReturnValue(const UniValue& details, int success, int fa
 }
 
 // key, alias and collateral outpoint of a gamemaster. Struct used to sign proposal/budget votes
-struct MnKeyData
+struct GmKeyData
 {
     std::string gmAlias;
     const COutPoint* collateralOut;
 
-    MnKeyData() = delete;
-    MnKeyData(const std::string& _gmAlias, const COutPoint* _collateralOut, const CKey& _key):
+    GmKeyData() = delete;
+    GmKeyData(const std::string& _gmAlias, const COutPoint* _collateralOut, const CKey& _key):
         gmAlias(_gmAlias),
         collateralOut(_collateralOut),
         key(_key),
         use_bls(false)
     {}
-    MnKeyData(const std::string& _gmAlias, const COutPoint* _collateralOut, const CBLSSecretKey& _key):
+    GmKeyData(const std::string& _gmAlias, const COutPoint* _collateralOut, const CBLSSecretKey& _key):
         gmAlias(_gmAlias),
         collateralOut(_collateralOut),
         blsKey(_key),
@@ -68,7 +68,7 @@ private:
     bool use_bls;   // whether to use a CKey (mbv) or blsKey (fbv, gmw) to sign
 };
 
-typedef std::list<MnKeyData> gmKeyList;
+typedef std::list<GmKeyData> gmKeyList;
 
 static UniValue voteProposal(const uint256& propHash, const CBudgetVote::VoteDirection& nVote,
                              const gmKeyList& gmKeys, UniValue resultsObj, int failed)
@@ -162,7 +162,7 @@ static gmKeyList getGMKeysForActiveGamemaster(UniValue& resultsObj)
         return gmKeyList();
     }
 
-    return {MnKeyData("local", &pgm->vin.prevout, gmKey)};
+    return {GmKeyData("local", &pgm->vin.prevout, gmKey)};
 }
 
 // Deterministic gamemasters
@@ -226,7 +226,7 @@ static gmKeyList getDGMKeysForActiveGamemaster(UniValue& resultsObj)
         return {};
     }
 
-    return {MnKeyData("local", &dgm->collateralOutpoint, sk)};
+    return {GmKeyData("local", &dgm->collateralOutpoint, sk)};
 }
 
 // vote on proposal (finalized budget, if fFinal=true) with all possible keys or a single gm (gmAliasFilter)

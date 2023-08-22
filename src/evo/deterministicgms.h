@@ -262,20 +262,20 @@ inline void SerReadWrite(Stream& s, immer::map<K, T, Hash, Equal>& obj, CSerActi
 class CDeterministicGMList
 {
 public:
-    typedef immer::map<uint256, CDeterministicGMCPtr> MnMap;
-    typedef immer::map<uint64_t, uint256> MnInternalIdMap;
-    typedef immer::map<uint256, std::pair<uint256, uint32_t> > MnUniquePropertyMap;
+    typedef immer::map<uint256, CDeterministicGMCPtr> GmMap;
+    typedef immer::map<uint64_t, uint256> GmInternalIdMap;
+    typedef immer::map<uint256, std::pair<uint256, uint32_t> > GmUniquePropertyMap;
 
 private:
     uint256 blockHash;
     int nHeight{-1};
     uint32_t nTotalRegisteredCount{0};
-    MnMap gmMap;
-    MnInternalIdMap gmInternalIdMap;
+    GmMap gmMap;
+    GmInternalIdMap gmInternalIdMap;
 
     // map of unique properties like address and keys
     // we keep track of this as checking for duplicates would otherwise be painfully slow
-    MnUniquePropertyMap gmUniquePropertyMap;
+    GmUniquePropertyMap gmUniquePropertyMap;
 
 public:
     CDeterministicGMList() {}
@@ -301,9 +301,9 @@ public:
 
     template<typename Stream>
     void Unserialize(Stream& s) {
-        gmMap = MnMap();
-        gmUniquePropertyMap = MnUniquePropertyMap();
-        gmInternalIdMap = MnInternalIdMap();
+        gmMap = GmMap();
+        gmUniquePropertyMap = GmUniquePropertyMap();
+        gmInternalIdMap = GmInternalIdMap();
 
         s >> blockHash;
         s >> nHeight;
@@ -500,7 +500,7 @@ public:
     std::vector<CDeterministicGMCPtr> addedGMs;
     // keys are all relating to the internalId of GMs
     std::map<uint64_t, CDeterministicGMStateDiff> updatedGMs;
-    std::set<uint64_t> removedMns;
+    std::set<uint64_t> removedGms;
 
 public:
     template<typename Stream>
@@ -512,8 +512,8 @@ public:
             s << VARINT(p.first);
             s << p.second;
         }
-        WriteCompactSize(s, removedMns.size());
-        for (const auto& p : removedMns) {
+        WriteCompactSize(s, removedGms.size());
+        for (const auto& p : removedGms) {
             s << VARINT(p);
         }
     }
@@ -522,7 +522,7 @@ public:
     void Unserialize(Stream& s)
     {
         updatedGMs.clear();
-        removedMns.clear();
+        removedGms.clear();
 
         size_t tmp;
         uint64_t tmp2;
@@ -537,14 +537,14 @@ public:
         tmp = ReadCompactSize(s);
         for (size_t i = 0; i < tmp; i++) {
             s >> VARINT(tmp2);
-            removedMns.emplace(tmp2);
+            removedGms.emplace(tmp2);
         }
     }
 
 public:
     bool HasChanges() const
     {
-        return !addedGMs.empty() || !updatedGMs.empty() || !removedMns.empty();
+        return !addedGMs.empty() || !updatedGMs.empty() || !removedGms.empty();
     }
 };
 

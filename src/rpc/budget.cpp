@@ -495,9 +495,9 @@ UniValue gmbudgetrawvote(const JSONRPCRequest& request)
             "\nExamples:\n" +
             HelpExampleCli("gmbudgetrawvote", "") + HelpExampleRpc("gmbudgetrawvote", ""));
 
-    const uint256& hashMnTx = ParseHashV(request.params[0], "gm tx hash");
-    int nMnTxIndex = request.params[1].get_int();
-    const CTxIn& vin = CTxIn(hashMnTx, nMnTxIndex);
+    const uint256& hashGmTx = ParseHashV(request.params[0], "gm tx hash");
+    int nGmTxIndex = request.params[1].get_int();
+    const CTxIn& vin = CTxIn(hashGmTx, nGmTxIndex);
 
     const uint256& hashProposal = ParseHashV(request.params[2], "Proposal hash");
     CBudgetVote::VoteDirection nVote = parseVote(request.params[3].get_str());

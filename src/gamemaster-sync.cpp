@@ -231,7 +231,7 @@ void CGamemasterSync::Process()
         RequestedGamemasterAssets > GAMEMASTER_SYNC_SPORKS) return;
 
     // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
-    bool fLegacyMnObsolete = deterministicGMManager->LegacyGMObsolete();
+    bool fLegacyGmObsolete = deterministicGMManager->LegacyGMObsolete();
 
     CGamemasterSync* sync = this;
 
@@ -244,8 +244,8 @@ void CGamemasterSync::Process()
     }
 
     // Mainnet sync
-    g_connman->ForEachNodeInRandomOrderContinueIf([sync, fLegacyMnObsolete](CNode* pnode){
-        return sync->SyncWithNode(pnode, fLegacyMnObsolete);
+    g_connman->ForEachNodeInRandomOrderContinueIf([sync, fLegacyGmObsolete](CNode* pnode){
+        return sync->SyncWithNode(pnode, fLegacyGmObsolete);
     });
 }
 
@@ -258,7 +258,7 @@ void CGamemasterSync::syncTimeout(const std::string& reason)
     nCountFailures++;
 }
 
-bool CGamemasterSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
+bool CGamemasterSync::SyncWithNode(CNode* pnode, bool fLegacyGmObsolete)
 {
     int RequestedGamemasterAssets = g_tiertwo_sync_state.GetSyncPhase();
     CNetMsgMaker msgMaker(pnode->GetSendVersion());
@@ -286,7 +286,7 @@ bool CGamemasterSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
     }
 
     if (RequestedGamemasterAssets == GAMEMASTER_SYNC_LIST) {
-        if (fLegacyMnObsolete) {
+        if (fLegacyGmObsolete) {
             SwitchToNextAsset();
             return false;
         }
@@ -318,7 +318,7 @@ bool CGamemasterSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
         if (g_netfulfilledman.HasFulfilledRequest(pnode->addr, "gmsync")) return true;
 
         // Try to request GM list sync.
-        if (!gamemasterman.RequestMnList(pnode)) {
+        if (!gamemasterman.RequestGmList(pnode)) {
             return true; // Failed, try next peer.
         }
 
@@ -331,7 +331,7 @@ bool CGamemasterSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
     }
 
     if (RequestedGamemasterAssets == GAMEMASTER_SYNC_GMW) {
-        if (fLegacyMnObsolete) {
+        if (fLegacyGmObsolete) {
             SwitchToNextAsset();
             return false;
         }
@@ -372,8 +372,8 @@ bool CGamemasterSync::SyncWithNode(CNode* pnode, bool fLegacyMnObsolete)
         g_netfulfilledman.AddFulfilledRequest(pnode->addr, "gmwsync");
 
         // Sync gm winners
-        int nMnCount = gamemasterman.CountEnabled(true /* only_legacy */);
-        g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::GETGMWINNERS, nMnCount));
+        int nGmCount = gamemasterman.CountEnabled(true /* only_legacy */);
+        g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::GETGMWINNERS, nGmCount));
         RequestedGamemasterAttempt++;
 
         return false; // sleep 1 second before do another request round.

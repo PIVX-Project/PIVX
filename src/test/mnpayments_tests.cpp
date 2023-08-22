@@ -27,7 +27,7 @@
 
 BOOST_AUTO_TEST_SUITE(gmpayments_tests)
 
-void enableMnSyncAndGMPayments()
+void enableGmSyncAndGMPayments()
 {
     // force gmsync complete
     g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_FINISHED);
@@ -127,7 +127,7 @@ BOOST_FIXTURE_TEST_CASE(gmwinner_test, TestChain100Setup)
 {
     CreateAndProcessBlock({}, coinbaseKey);
     CBlock tipBlock = CreateAndProcessBlock({}, coinbaseKey);
-    enableMnSyncAndGMPayments();
+    enableGmSyncAndGMPayments();
     int nextBlockHeight = 103;
     UpdateNetworkUpgradeParameters(Consensus::UPGRADE_V5_3, nextBlockHeight - 1);
 
@@ -160,10 +160,10 @@ BOOST_FIXTURE_TEST_CASE(gmwinner_test, TestChain100Setup)
     BOOST_CHECK_MESSAGE(findStrError(state1, "Gamemaster not in the top"), state1.GetRejectReason());
 
     // Voter GM2, fail because GM2 doesn't match with the signing keys.
-    auto secondMn = findGMData(gmList, gmRank[1].second);
-    CGamemaster* pSecondGM = gamemasterman.Find(secondMn.gm.vin.prevout);
+    auto secondGm = findGMData(gmList, gmRank[1].second);
+    CGamemaster* pSecondGM = gamemasterman.Find(secondGm.gm.vin.prevout);
     gmVinVoter = CTxIn(pSecondGM->vin);
-    payeeScript = secondMn.data.gmPayeeScript;
+    payeeScript = secondGm.data.gmPayeeScript;
     CValidationState state2;
     BOOST_CHECK(!CreateGMWinnerPayment(gmVinVoter, paymentBlockHeight, payeeScript,
                                        firstGM.data.gmPrivKey, firstGM.data.gmPubKey, state2));
@@ -173,7 +173,7 @@ BOOST_FIXTURE_TEST_CASE(gmwinner_test, TestChain100Setup)
     gmVinVoter = CTxIn(pSecondGM->vin);
     CValidationState state2_5;
     BOOST_CHECK(!CreateGMWinnerPayment(gmVinVoter, paymentBlockHeight + 20, payeeScript,
-                                       secondMn.data.gmPrivKey, secondMn.data.gmPubKey, state2_5));
+                                       secondGm.data.gmPrivKey, secondGm.data.gmPubKey, state2_5));
     BOOST_CHECK_MESSAGE(findStrError(state2_5, "block height out of range"), state2_5.GetRejectReason());
 
 
@@ -182,25 +182,25 @@ BOOST_FIXTURE_TEST_CASE(gmwinner_test, TestChain100Setup)
     BOOST_CHECK(!pSecondGM->IsEnabled());
     CValidationState state3;
     BOOST_CHECK(!CreateGMWinnerPayment(gmVinVoter, paymentBlockHeight, payeeScript,
-                                       secondMn.data.gmPrivKey, secondMn.data.gmPubKey, state3));
+                                       secondGm.data.gmPrivKey, secondGm.data.gmPubKey, state3));
     // future: could add specific error cause.
     BOOST_CHECK_MESSAGE(findStrError(state3, "Gamemaster not in the top"), state3.GetRejectReason());
 
     // Voter GM3, fail because the payeeScript is not a P2PKH
-    auto thirdMn = findGMData(gmList, gmRank[2].second);
-    CGamemaster* pThirdGM = gamemasterman.Find(thirdMn.gm.vin.prevout);
+    auto thirdGm = findGMData(gmList, gmRank[2].second);
+    CGamemaster* pThirdGM = gamemasterman.Find(thirdGm.gm.vin.prevout);
     gmVinVoter = CTxIn(pThirdGM->vin);
     CScript scriptDummy = CScript() << OP_TRUE;
     CValidationState state4;
     BOOST_CHECK(!CreateGMWinnerPayment(gmVinVoter, paymentBlockHeight, scriptDummy,
-                                       thirdMn.data.gmPrivKey, thirdMn.data.gmPubKey, state4));
+                                       thirdGm.data.gmPrivKey, thirdGm.data.gmPubKey, state4));
     BOOST_CHECK_MESSAGE(findStrError(state4, "payee must be a P2PKH"), state4.GetRejectReason());
 
     // Voter GM15 pays to GM3, fail because the voter is not in the top ten.
     auto voterPos15 = findGMData(gmList, gmRank[14].second);
     CGamemaster* p15dGM = gamemasterman.Find(voterPos15.gm.vin.prevout);
     gmVinVoter = CTxIn(p15dGM->vin);
-    payeeScript = thirdMn.data.gmPayeeScript;
+    payeeScript = thirdGm.data.gmPayeeScript;
     CValidationState state6;
     BOOST_CHECK(!CreateGMWinnerPayment(gmVinVoter, paymentBlockHeight, payeeScript,
                                        voterPos15.data.gmPrivKey, voterPos15.data.gmPubKey, state6));
@@ -210,7 +210,7 @@ BOOST_FIXTURE_TEST_CASE(gmwinner_test, TestChain100Setup)
     gmVinVoter = CTxIn(pThirdGM->vin);
     CValidationState state7;
     BOOST_CHECK(CreateGMWinnerPayment(gmVinVoter, paymentBlockHeight, payeeScript,
-                                      thirdMn.data.gmPrivKey, thirdMn.data.gmPubKey, state7));
+                                      thirdGm.data.gmPrivKey, thirdGm.data.gmPubKey, state7));
     BOOST_CHECK_MESSAGE(state7.IsValid(), state7.GetRejectReason());
 
     // Create block and check that is being paid properly.
@@ -230,12 +230,12 @@ BOOST_FIXTURE_TEST_CASE(gmwinner_test, TestChain100Setup)
         if (i > 5) {
             payeeScript = secondRankedPayee;
         }
-        auto voterMn = findGMData(gmList, gmRank[i].second);
-        CGamemaster* pVoterGM = gamemasterman.Find(voterMn.gm.vin.prevout);
+        auto voterGm = findGMData(gmList, gmRank[i].second);
+        CGamemaster* pVoterGM = gamemasterman.Find(voterGm.gm.vin.prevout);
         gmVinVoter = CTxIn(pVoterGM->vin);
         CValidationState stateInternal;
         BOOST_CHECK(CreateGMWinnerPayment(gmVinVoter, nextBlockHeight, payeeScript,
-                                                             voterMn.data.gmPrivKey, voterMn.data.gmPubKey, stateInternal));
+                                                             voterGm.data.gmPrivKey, voterGm.data.gmPubKey, stateInternal));
         BOOST_CHECK_MESSAGE(stateInternal.IsValid(), stateInternal.GetRejectReason());
     }
 
@@ -273,12 +273,12 @@ BOOST_FIXTURE_TEST_CASE(gmwinner_test, TestChain100Setup)
         gmRank = gamemasterman.GetGamemasterRanks(nextBlockHeight - 100);
         payeeScript = GetScriptForDestination(gmRank[0].second->pubKeyCollateralAddress.GetID());
         for (int j=0; j<7; j++) { // votes
-            auto voterMn = findGMData(gmList, gmRank[j].second);
-            CGamemaster* pVoterGM = gamemasterman.Find(voterMn.gm.vin.prevout);
+            auto voterGm = findGMData(gmList, gmRank[j].second);
+            CGamemaster* pVoterGM = gamemasterman.Find(voterGm.gm.vin.prevout);
             gmVinVoter = CTxIn(pVoterGM->vin);
             CValidationState stateInternal;
             BOOST_CHECK(CreateGMWinnerPayment(gmVinVoter, nextBlockHeight, payeeScript,
-                                              voterMn.data.gmPrivKey, voterMn.data.gmPubKey, stateInternal));
+                                              voterGm.data.gmPrivKey, voterGm.data.gmPubKey, stateInternal));
             BOOST_CHECK_MESSAGE(stateInternal.IsValid(), stateInternal.GetRejectReason());
         }
         // Create block and check that is being paid properly.
@@ -298,12 +298,12 @@ BOOST_FIXTURE_TEST_CASE(gmwinner_test, TestChain100Setup)
     GamemasterRef gmToPay = gmRank[0].second;
     payeeScript = GetScriptForDestination(gmToPay->pubKeyCollateralAddress.GetID());
     for (int i=0; i<6; i++) {
-        auto voterMn = findGMData(gmList, gmRank[i].second);
-        CGamemaster* pVoterGM = gamemasterman.Find(voterMn.gm.vin.prevout);
+        auto voterGm = findGMData(gmList, gmRank[i].second);
+        CGamemaster* pVoterGM = gamemasterman.Find(voterGm.gm.vin.prevout);
         gmVinVoter = CTxIn(pVoterGM->vin);
         CValidationState stateInternal;
         BOOST_CHECK(CreateGMWinnerPayment(gmVinVoter, nextBlockHeight, payeeScript,
-                                          voterMn.data.gmPrivKey, voterMn.data.gmPubKey, stateInternal));
+                                          voterGm.data.gmPrivKey, voterGm.data.gmPubKey, stateInternal));
         BOOST_CHECK_MESSAGE(stateInternal.IsValid(), stateInternal.GetRejectReason());
     }
 
@@ -313,12 +313,12 @@ BOOST_FIXTURE_TEST_CASE(gmwinner_test, TestChain100Setup)
     BOOST_CHECK_MESSAGE(!gamemasterman.Find(gmToPay->vin.prevout), "error: removed GM is still available");
 
     // Now emit the vote from GM7
-    auto voterMn = findGMData(gmList, gmRank[7].second);
-    CGamemaster* pVoterGM = gamemasterman.Find(voterMn.gm.vin.prevout);
+    auto voterGm = findGMData(gmList, gmRank[7].second);
+    CGamemaster* pVoterGM = gamemasterman.Find(voterGm.gm.vin.prevout);
     gmVinVoter = CTxIn(pVoterGM->vin);
     CValidationState stateInternal;
     BOOST_CHECK(CreateGMWinnerPayment(gmVinVoter, nextBlockHeight, payeeScript,
-                                      voterMn.data.gmPrivKey, voterMn.data.gmPubKey, stateInternal));
+                                      voterGm.data.gmPrivKey, voterGm.data.gmPubKey, stateInternal));
     BOOST_CHECK_MESSAGE(stateInternal.IsValid(), stateInternal.GetRejectReason());
 }
 

@@ -214,7 +214,7 @@ public:
     bool operator==(const CService& s) const { return service == s; }
 };
 
-struct MnService {
+struct GmService {
 public:
     uint256 verif_proreg_tx_hash{UINT256_ZERO};
     bool is_inbound{false};
@@ -242,11 +242,11 @@ void TierTwoConnMan::ThreadOpenGamemasterConnections()
         // Gather all connected peers first, so we don't
         // try to connect to an already connected peer
         std::vector<PeerData> connectedNodes;
-        std::vector<MnService> connectedMnServices;
+        std::vector<GmService> connectedGmServices;
         connman->ForEachNode([&](const CNode* pnode) {
             connectedNodes.emplace_back(PeerData{pnode->addr, pnode->fDisconnect, pnode->m_gamemaster_connection});
             if (!pnode->verifiedProRegTxHash.IsNull()) {
-                connectedMnServices.emplace_back(MnService{pnode->verifiedProRegTxHash, pnode->fInbound});
+                connectedGmServices.emplace_back(GmService{pnode->verifiedProRegTxHash, pnode->fInbound});
             }
         });
 
@@ -279,7 +279,7 @@ void TierTwoConnMan::ThreadOpenGamemasterConnections()
                 for (const auto& group: gamemasterQuorumNodes) {
                     for (const auto& proRegTxHash: group.second) {
                         // Skip if already have this member connected
-                        if (std::count(connectedMnServices.begin(), connectedMnServices.end(), proRegTxHash) > 0) {
+                        if (std::count(connectedGmServices.begin(), connectedGmServices.end(), proRegTxHash) > 0) {
                             continue;
                         }
 
@@ -327,8 +327,8 @@ void TierTwoConnMan::ThreadOpenGamemasterConnections()
                     }
 
                     // Discard already connected outbound GMs
-                    auto gmService = std::find(connectedMnServices.begin(), connectedMnServices.end(), dgm->proTxHash);
-                    bool connectedAndOutbound = gmService != std::end(connectedMnServices) && !gmService->is_inbound;
+                    auto gmService = std::find(connectedGmServices.begin(), connectedGmServices.end(), dgm->proTxHash);
+                    bool connectedAndOutbound = gmService != std::end(connectedGmServices) && !gmService->is_inbound;
                     if (connectedAndOutbound) {
                         // we already have an outbound connection to this GM so there is no eed to probe it again
                         g_mmetaman.GetMetaInfo(dgm->proTxHash)->SetLastOutboundSuccess(currentTime);

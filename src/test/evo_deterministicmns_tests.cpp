@@ -337,8 +337,8 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     // force gmsync complete and enable spork 8
     g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_FINISHED);
     int64_t nTime = GetTime() - 10;
-    const CSporkMessage& sporkMnPayment = CSporkMessage(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT, nTime + 1, nTime);
-    sporkManager.AddOrUpdateSporkMessage(sporkMnPayment);
+    const CSporkMessage& sporkGmPayment = CSporkMessage(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT, nTime + 1, nTime);
+    sporkManager.AddOrUpdateSporkMessage(sporkGmPayment);
     BOOST_CHECK(sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT));
 
     int port = 1;
@@ -611,18 +611,18 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     CheckPayments(mapPayments, 15, 2);
 
     // Check that the prev DGM winner is different that the tip one
-    std::vector<CTxOut> vecMnOutsPrev;
-    BOOST_CHECK(gamemasterPayments.GetGamemasterTxOuts(chainTip->pprev, vecMnOutsPrev));
-    std::vector<CTxOut> vecMnOutsNow;
-    BOOST_CHECK(gamemasterPayments.GetGamemasterTxOuts(chainTip, vecMnOutsNow));
-    BOOST_CHECK(vecMnOutsPrev != vecMnOutsNow);
+    std::vector<CTxOut> vecGmOutsPrev;
+    BOOST_CHECK(gamemasterPayments.GetGamemasterTxOuts(chainTip->pprev, vecGmOutsPrev));
+    std::vector<CTxOut> vecGmOutsNow;
+    BOOST_CHECK(gamemasterPayments.GetGamemasterTxOuts(chainTip, vecGmOutsNow));
+    BOOST_CHECK(vecGmOutsPrev != vecGmOutsNow);
 
     // Craft an invalid block paying to the previous block DGM again
     CBlock invalidBlock = CreateBlock({}, coinbaseKey);
     std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>(invalidBlock);
     CMutableTransaction invalidCoinbaseTx = CreateCoinbaseTx(CScript(), chainTip);
     invalidCoinbaseTx.vout.clear();
-    for (const CTxOut& gmOut: vecMnOutsPrev) {
+    for (const CTxOut& gmOut: vecGmOutsPrev) {
         invalidCoinbaseTx.vout.emplace_back(gmOut);
     }
     invalidCoinbaseTx.vout.emplace_back(
@@ -1007,8 +1007,8 @@ BOOST_FIXTURE_TEST_CASE(dkg_pose_and_qfc_invalid_paths, TestChain400Setup)
     // force gmsync complete and enable spork 8
     g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_FINISHED);
     int64_t nTime = GetTime() - 10;
-    const CSporkMessage& sporkMnPayment = CSporkMessage(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT, nTime + 1, nTime);
-    sporkManager.AddOrUpdateSporkMessage(sporkMnPayment);
+    const CSporkMessage& sporkGmPayment = CSporkMessage(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT, nTime + 1, nTime);
+    sporkManager.AddOrUpdateSporkMessage(sporkGmPayment);
     BOOST_CHECK(sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT));
 
     int port = 1;
