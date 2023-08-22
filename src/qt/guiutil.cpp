@@ -420,7 +420,7 @@ bool openConfigfile()
     return openFile(GetConfigFile(gArgs.GetArg("-conf", hemis_CONF_FILENAME)), true);
 }
 
-bool openMNConfigfile()
+bool openGMConfigfile()
 {
     return openFile(GetGamemasterConfigFile(), true);
 }
@@ -716,7 +716,7 @@ QString formatServicesStr(quint64 mask)
                 strList.append(QObject::tr("NETWORK"));
                 break;
             case NODE_BLOOM:
-            case NODE_BLOOM_WITHOUT_MN:
+            case NODE_BLOOM_WITHOUT_GM:
                 strList.append(QObject::tr("BLOOM"));
                 break;
             default:

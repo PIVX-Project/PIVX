@@ -32,7 +32,7 @@
 
 #ifdef ENABLE_WALLET
 #include "qt/hemis/governancemodel.h"
-#include "qt/hemis/mnmodel.h"
+#include "qt/hemis/gmmodel.h"
 #include "paymentserver.h"
 #include "walletmodel.h"
 #include "interfaces/wallet.h"
@@ -233,7 +233,7 @@ private:
     PaymentServer* paymentServer{nullptr};
     WalletModel* walletModel{nullptr};
     GovernanceModel* govModel{nullptr};
-    MNModel* mnModel{nullptr};
+    GMModel* gmModel{nullptr};
 #endif
     int returnValue{0};
     QTranslator qtTranslatorBase, qtTranslator, translatorBase, translator;
@@ -487,21 +487,21 @@ void BitcoinApplication::initializeResult(int retval)
         window->setClientModel(clientModel);
 
 #ifdef ENABLE_WALLET
-        mnModel = new MNModel(this);
-        govModel = new GovernanceModel(clientModel, mnModel);
+        gmModel = new MNModel(this);
+        govModel = new GovernanceModel(clientModel, gmModel);
         // TODO: Expose secondary wallets
         if (!vpwallets.empty()) {
             walletModel = new WalletModel(vpwallets[0], optionsModel);
             walletModel->setClientModel(clientModel);
-            mnModel->setWalletModel(walletModel);
+            gmModel->setWalletModel(walletModel);
             govModel->setWalletModel(walletModel);
             walletModel->init();
-            mnModel->init();
+            gmModel->init();
 
             window->setGovModel(govModel);
             window->addWallet(hemisGUI::DEFAULT_WALLET, walletModel);
             window->setCurrentWallet(hemisGUI::DEFAULT_WALLET);
-            window->setMNModel(mnModel);
+            window->setMNModel(gmModel);
         }
 #endif
 
