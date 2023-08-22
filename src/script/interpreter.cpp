@@ -657,7 +657,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 //
                 case OP_EQUAL:
                 case OP_EQUALVERIFY:
-                //case OP_NOTEQUAL: // use OP_NUGMOTEQUAL
+                //case OP_NOTEQUAL: // use OP_NUMNOTEQUAL
                 {
                     // (x1 x2 - bool)
                     if (stack.size() < 2)
@@ -719,7 +719,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                 case OP_BOOLOR:
                 case OP_NUMEQUAL:
                 case OP_NUMEQUALVERIFY:
-                case OP_NUGMOTEQUAL:
+                case OP_NUMNOTEQUAL:
                 case OP_LESSTHAN:
                 case OP_GREATERTHAN:
                 case OP_LESSTHANOREQUAL:
@@ -747,7 +747,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
                     case OP_BOOLOR:              bn = (bn1 != bnZero || bn2 != bnZero); break;
                     case OP_NUMEQUAL:            bn = (bn1 == bn2); break;
                     case OP_NUMEQUALVERIFY:      bn = (bn1 == bn2); break;
-                    case OP_NUGMOTEQUAL:         bn = (bn1 != bn2); break;
+                    case OP_NUMNOTEQUAL:         bn = (bn1 != bn2); break;
                     case OP_LESSTHAN:            bn = (bn1 < bn2); break;
                     case OP_GREATERTHAN:         bn = (bn1 > bn2); break;
                     case OP_LESSTHANOREQUAL:     bn = (bn1 <= bn2); break;

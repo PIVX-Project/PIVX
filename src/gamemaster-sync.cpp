@@ -204,7 +204,7 @@ void CGamemasterSync::Process()
             return;
         }
         bool legacy_obsolete = deterministicGMManager->LegacyGMObsolete();
-        bool spork_8_active = sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT);
+        bool spork_8_active = sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT);
         // Check if we lost all gamemasters (except the local one in case the node is a GM)
         // from sleep/wake or failure to sync originally (after spork 21, check if we lost
         // all proposals instead). If we did, resync from scratch.
