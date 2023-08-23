@@ -332,7 +332,11 @@ UniValue getbudgetvotes(const JSONRPCRequest& request)
     std::string strProposalName = SanitizeString(request.params[0].get_str());
     const CBudgetProposal* pbudgetProposal = g_budgetman.FindProposalByName(strProposalName);
     if (pbudgetProposal == nullptr) throw std::runtime_error("Unknown proposal name");
-    return pbudgetProposal->GetVotesArray();
+    UniValue ret(UniValue::VARR);
+    for (const auto& it : pbudgetProposal->GetVotes()) {
+        ret.push_back(it.second.ToJSON());
+    }
+    return ret;
 }
 
 UniValue getnextsuperblock(const JSONRPCRequest& request)
@@ -523,11 +527,11 @@ UniValue gmbudgetrawvote(const JSONRPCRequest& request)
         return "Failure to verify signature.";
     }
 
-    std::string strError;
-    if (g_budgetman.AddAndRelayProposalVote(vote, strError)) {
+    CValidationState state;
+    if (g_budgetman.ProcessProposalVote(vote, nullptr, state)) {
         return "Voted successfully";
     } else {
-        return "Error voting : " + strError;
+        return "Error voting : " + state.GetRejectReason() + ". " + state.GetDebugMessage();
     }
 }
 
@@ -634,6 +638,39 @@ UniValue createrawgmfinalbudget(const JSONRPCRequest& request)
     return ret;
 }
 
+static std::string GetFinalizedBudgetStatus(CFinalizedBudget* fb)
+{
+    std::string retBadHashes;
+    std::string retBadPayeeOrAmount;
+    int nBlockStart = fb->GetBlockStart();
+    int nBlockEnd = fb->GetBlockEnd();
+
+    for (int nBlockHeight = nBlockStart; nBlockHeight <= nBlockEnd; nBlockHeight++) {
+        CTxBudgetPayment budgetPayment;
+        if (!fb->GetBudgetPaymentByBlock(nBlockHeight, budgetPayment)) {
+            LogPrint(BCLog::GMBUDGET,"%s: Couldn't find budget payment for block %lld\n", __func__, nBlockHeight);
+            continue;
+        }
+
+        CBudgetProposal bp;
+        if (!g_budgetman.GetProposal(budgetPayment.nProposalHash, bp)) {
+            retBadHashes += (retBadHashes.empty() ? "" : ", ") + budgetPayment.nProposalHash.ToString();
+            continue;
+        }
+
+        if (bp.GetPayee() != budgetPayment.payee || bp.GetAmount() != budgetPayment.nAmount) {
+            retBadPayeeOrAmount += (retBadPayeeOrAmount.empty() ? "" : ", ") + budgetPayment.nProposalHash.ToString();
+        }
+    }
+
+    if (retBadHashes.empty() && retBadPayeeOrAmount == "") return "OK";
+
+    if (!retBadHashes.empty()) retBadHashes = "Unknown proposal(s) hash! Check this proposal(s) before voting: " + retBadHashes;
+    if (!retBadPayeeOrAmount.empty()) retBadPayeeOrAmount = "Budget payee/nAmount doesn't match our proposal(s)! "+ retBadPayeeOrAmount;
+
+    return retBadHashes + " -- " + retBadPayeeOrAmount;
+}
+
 UniValue gmfinalbudget(const JSONRPCRequest& request)
 {
     std::string strCommand;
@@ -682,7 +719,7 @@ UniValue gmfinalbudget(const JSONRPCRequest& request)
             bObj.pushKV("BlockEnd", (int64_t)finalizedBudget->GetBlockEnd());
             bObj.pushKV("Proposals", finalizedBudget->GetProposalsStr());
             bObj.pushKV("VoteCount", (int64_t)finalizedBudget->GetVoteCount());
-            bObj.pushKV("Status", g_budgetman.GetFinalizedBudgetStatus(nHash));
+            bObj.pushKV("Status", GetFinalizedBudgetStatus(finalizedBudget));
 
             bool fValid = finalizedBudget->IsValid();
             bObj.pushKV("IsValid", fValid);
@@ -705,7 +742,12 @@ UniValue gmfinalbudget(const JSONRPCRequest& request)
         LOCK(g_budgetman.cs_budgets);
         CFinalizedBudget* pfinalBudget = g_budgetman.FindFinalizedBudget(hash);
         if (pfinalBudget == nullptr) return "Unknown budget hash";
-        return pfinalBudget->GetVotesObject();
+        UniValue ret(UniValue::VOBJ);
+        for (const auto& it: pfinalBudget->GetVotes()) {
+            const CFinalizedBudgetVote& vote = it.second;
+            ret.pushKV(vote.GetVin().prevout.ToStringShort(), vote.ToJSON());
+        }
+        return ret;
     }
 
     return NullUniValue;
