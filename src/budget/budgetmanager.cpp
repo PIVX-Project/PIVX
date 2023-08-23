@@ -1549,7 +1549,6 @@ bool CheckCollateral(const uint256& nTxCollateralHash, const uint256& nExpectedH
         return false;
     }
 
-    CScript findScript;
     CScript findScript = CScript() << OP_RETURN << ToByteVector(nExpectedHash);
     CAmount expectedAmount = fBudgetFinalization ?  BUDGET_FEE_TX : PROPOSAL_FEE_TX;
 
