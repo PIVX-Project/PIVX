@@ -157,8 +157,8 @@ bool TransactionRecord::decomposeCreditTransaction(const CWallet* wallet, const 
                 sub.address = getValueOrReturnEmpty(wtx.mapValue, "from");
             }
             if (wtx.IsCoinBase()) {
-                // Generated
-                sub.type = TransactionRecord::Generated;
+                // Generated or GM Reward in v6.0
+                sub.type = !Params().GetConsensus().NetworkUpgradeActive(wtx.m_confirm.block_height, Consensus::UPGRADE_V6_0) ? TransactionRecord::Generated : TransactionRecord::GMReward;
             }
 
             parts.append(sub);

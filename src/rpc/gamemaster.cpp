@@ -410,7 +410,11 @@ UniValue startgamemaster(const JSONRPCRequest& request)
 {
     // Skip after legacy obsolete. !TODO: remove when transition to DGM is complete
     if (deterministicGMManager->LegacyGMObsolete()) {
-        throw JSONRPCError(RPC_MISC_ERROR, "startgamemaster is not supported when deterministic gamemaster list is active (DIP3)");
+        if (request.fHelp) {
+            throw std::runtime_error("startmasternode (deprecated and no longer functional)");
+        } else {
+            throw JSONRPCError(RPC_MISC_ERROR, "startmasternode is not supported when deterministic masternode list is active (DIP3)");
+        }
     }
 
     CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
