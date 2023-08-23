@@ -182,12 +182,10 @@ void CSporkManager::ProcessGetSporks(CNode* pfrom, std::string& strCommand, CDat
         it++;
     }
 
-    // end message
-    if (Params().IsRegTestNet()) {
-        // For now, only use it on regtest.
-        CSporkMessage msg(SPORK_INVALID, 0, 0);
-        g_connman->PushMessage(pfrom, CNetMsgMaker(pfrom->GetSendVersion()).Make(NetMsgType::SPORK, msg));
-    }
+
+    // For now, only use it on regtest.
+    CSporkMessage msg(SPORK_INVALID, 0, 0);
+    g_connman->PushMessage(pfrom, CNetMsgMaker(pfrom->GetSendVersion()).Make(NetMsgType::SPORK, msg));
 }
 
 bool CSporkManager::UpdateSpork(SporkId nSporkID, int64_t nValue)

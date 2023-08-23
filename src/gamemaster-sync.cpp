@@ -200,20 +200,17 @@ void CGamemasterSync::Process()
     UpdateBlockchainSynced(isRegTestNet);
 
     if (g_tiertwo_sync_state.IsSynced()) {
-        if (isRegTestNet) {
-            return;
-        }
         bool legacy_obsolete = deterministicGMManager->LegacyGMObsolete();
-        bool spork_8_active = sporkManager.IsSporkActive(SPORK_8_GAMEMASTER_PAYMENT_ENFORCEMENT);
         // Check if we lost all gamemasters (except the local one in case the node is a GM)
         // from sleep/wake or failure to sync originally (after spork 21, check if we lost
         // all proposals instead). If we did, resync from scratch.
-        if ((spork_8_active && !legacy_obsolete && gamemasterman.CountEnabled(true /* only_legacy */) <= 1) ||
-            (spork_8_active && legacy_obsolete && g_budgetman.CountProposals() == 0)) {
+        if ((!legacy_obsolete && gamemasterman.CountEnabled(true /* only_legacy */) <= 1) ||
+            (legacy_obsolete && g_budgetman.CountProposals() == 0)) {
             Reset();
         } else {
             return;
         }
+        return;
     }
 
     // Try syncing again
@@ -238,7 +235,6 @@ void CGamemasterSync::Process()
     g_connman->ForEachNode([sync](CNode* pnode){
         return sync->SyncRegtest(pnode);
     });
-    return;
 }
 
 void CGamemasterSync::syncTimeout(const std::string& reason)

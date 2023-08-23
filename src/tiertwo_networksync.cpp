@@ -214,6 +214,7 @@ void CGamemasterSync::SyncRegtest(CNode* pnode)
 {
     // skip gm list and winners sync if legacy gm are obsolete
     int syncPhase = g_tiertwo_sync_state.GetSyncPhase();
+    LogPrintf("REGTEST SYNC STARTED!\n");
     if (deterministicGMManager->LegacyGMObsolete() &&
             (syncPhase == GAMEMASTER_SYNC_LIST || syncPhase == GAMEMASTER_SYNC_GMW)) {
         g_tiertwo_sync_state.SetCurrentSyncPhase(GAMEMASTER_SYNC_BUDGET);
