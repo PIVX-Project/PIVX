@@ -368,7 +368,7 @@ bool CGamemasterSync::SyncWithNode(CNode* pnode, bool fLegacyGmObsolete)
         g_netfulfilledman.AddFulfilledRequest(pnode->addr, "gmwsync");
 
         // Sync gm winners
-        int nGmCount = gamemasterman.CountEnabled(fLegacyGmObsolete /* only_legacy */);
+        int nGmCount = gamemasterman.CountEnabled(false /* only_legacy */);
         g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::GETGMWINNERS, nGmCount));
         RequestedGamemasterAttempt++;
 
