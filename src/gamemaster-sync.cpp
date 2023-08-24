@@ -200,6 +200,9 @@ void CGamemasterSync::Process()
     UpdateBlockchainSynced(isRegTestNet);
 
     if (g_tiertwo_sync_state.IsSynced()) {
+        if (isRegTestNet) {
+            return;
+        }
         bool legacy_obsolete = deterministicGMManager->LegacyGMObsolete();
         // Check if we lost all gamemasters (except the local one in case the node is a GM)
         // from sleep/wake or failure to sync originally (after spork 21, check if we lost
@@ -210,7 +213,6 @@ void CGamemasterSync::Process()
         } else {
             return;
         }
-        return;
     }
 
     // Try syncing again
@@ -232,8 +234,14 @@ void CGamemasterSync::Process()
 
     CGamemasterSync* sync = this;
 
+
     g_connman->ForEachNode([sync](CNode* pnode){
         return sync->SyncRegtest(pnode);
+    });
+
+    // Mainnet sync
+    g_connman->ForEachNodeInRandomOrderContinueIf([sync, fLegacyGmObsolete](CNode* pnode){
+        return sync->SyncWithNode(pnode, fLegacyGmObsolete);
     });
 }
 
@@ -360,7 +368,7 @@ bool CGamemasterSync::SyncWithNode(CNode* pnode, bool fLegacyGmObsolete)
         g_netfulfilledman.AddFulfilledRequest(pnode->addr, "gmwsync");
 
         // Sync gm winners
-        int nGmCount = gamemasterman.CountEnabled(false /* only_legacy */);
+        int nGmCount = gamemasterman.CountEnabled(fLegacyGmObsolete /* only_legacy */);
         g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::GETGMWINNERS, nGmCount));
         RequestedGamemasterAttempt++;
 
