@@ -233,7 +233,7 @@ void updateStyle(QWidget* widget)
 QColor getRowColor(bool isLightTheme, bool isHovered, bool isSelected)
 {
     if (isSelected) {
-        return QColor("#25c2bfc8");
+        return QColor("#25FF9000");
     } else if (isHovered) {
         return QColor("#25bababa");
     } else {

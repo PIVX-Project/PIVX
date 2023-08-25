@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="26" viewBox="0 0 40 26">
     <defs>
         <style type="text/css">
-            .cls-1,.cls-2{fill:#b088ff}.cls-1{fill-rule:evenodd;opacity:.5}.cls-3{filter:url(#switch_button)}
+            .cls-1,.cls-2{fill:#FF9000}.cls-1{fill-rule:evenodd;opacity:.5}.cls-3{filter:url(#switch_button)}
         </style>
         <filter id="switch_button" width="26" height="26" x="14" y="0" filterUnits="userSpaceOnUse">
             <feOffset dy="2"/>
