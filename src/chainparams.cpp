@@ -319,7 +319,7 @@ public:
         consensus.nGMCollateralMinConf = 15;
         consensus.nProposalEstablishmentTime = 60 * 60 * 24;    // must be at least a day old to make it into a budget
         consensus.nStakeMinAge = 60 * 60;
-        consensus.nStakeMinDepth = 600;
+        consensus.nStakeMinDepth = 400;
         consensus.nTargetTimespan = 20 * 60;
         consensus.nTargetTimespanV2 = 20 * 60;
         consensus.nTargetSpacing = 0.5 * 60;
