@@ -366,12 +366,11 @@ public:
                 Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
         consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 71000000;
         consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 600;
-        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          =
-                Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 601;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 602;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 603;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 604;
+        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 601;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 602;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 603;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 604;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 605;
         consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight 		    = 
                 Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
