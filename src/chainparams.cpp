@@ -362,8 +362,7 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 600;
         consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 71000000;
         consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 71000000;
-        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         =
-                Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
+        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         = 600;
         consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 71000000;
         consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 600;
         consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 601;
