@@ -58,6 +58,8 @@ NavMenuWidget::NavMenuWidget(PIVXGUI *mainWindow, QWidget *parent) :
 void NavMenuWidget::loadWalletModel() {
     if (walletModel && walletModel->getOptionsModel()) {
         ui->btnColdStaking->setVisible(walletModel->getOptionsModel()->isColdStakingScreenEnabled());
+       ui->btnGovernance->setVisible(false);
+       ui->btnMaster->setVisible(false);
     }
 }
 

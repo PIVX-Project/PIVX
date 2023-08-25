@@ -234,10 +234,13 @@ void CGamemasterSync::Process()
 
     CGamemasterSync* sync = this;
 
-
-    g_connman->ForEachNode([sync](CNode* pnode){
-        return sync->SyncRegtest(pnode);
-    });
+    // New sync architecture, regtest only for now.
+    if (isRegTestNet) {
+        g_connman->ForEachNode([sync](CNode* pnode){
+            return sync->SyncRegtest(pnode);
+        });
+        return;
+    }
 
     // Mainnet sync
     g_connman->ForEachNodeInRandomOrderContinueIf([sync, fLegacyGmObsolete](CNode* pnode){

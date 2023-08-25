@@ -327,7 +327,7 @@ public:
         consensus.nMaxProposalPayments = 6;
 
         // spork keys
-        consensus.strSporkPubKey = "04a47ab30df33aad81929a2704ae1ba2d5d5d26c26549940c3126fd0941856088e2c0d57b65a32c46f19dd855cd999eb3a675c7a01e20ca0ba3ca0f32a225fcb1e";
+        consensus.strSporkPubKey = "0489BF9B08FE8F2A971390A0C1A05F5B1C8A4F4F2ECF5413622CA8B21E296520A82431AFB5A6A7D788335EBB021301806D9653EFADB3AE132CBF507F58942F1BF4";
 
         // height-based activations
         consensus.height_last_invalid_UTXO = 1;
@@ -362,16 +362,18 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 750;
         consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 750;
         consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 750;
-        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         = 750;
+        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         =
+                Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
         consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 750;
         consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 750;
-        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 751;
+        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          =
+                Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
         consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 752;
         consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 753;
         consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 754;
         consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 755;
-        consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight 		= 756;
-//                Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
+        consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight 		    = 
+                Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
         consensus.vUpgrades[Consensus::UPGRADE_ZC].hashActivationBlock =
                 uint256S("0x5b2482eca24caf2a46bb22e0545db7b7037282733faa3a42ec20542509999a64");
@@ -402,7 +404,7 @@ public:
 //        vSeeds.emplace_back("hemis.seed2.fuzzbawls.pw", true);    // Secondary DNS Seeder from Fuzzbawls
 //        vSeeds.emplace_back("dnsseed.liquid369.wtf", true);     // Primary DNS Seeder from Liquid369
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 30);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 40);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 13);
         base58Prefixes[STAKING_ADDRESS] = std::vector<unsigned char>(1, 63);     // starting with 'S'
         base58Prefixes[SECRET_KEY] = std::vector<unsigned char>(1, 212);
@@ -458,10 +460,10 @@ public:
     {
         strNetworkID = "test";
 
-        genesis = CreateGenesisBlock(1454124731, 2402015, 0x1e0ffff0, 1, 250 * COIN);
+        genesis = CreateGenesisBlock(1692423000, 4820300, 0x1e00ffff, 1, 0 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000041e482b9b9691d98eefb48473405c0b8ec31b76df3797c74a78680ef818"));
-        assert(genesis.hashMerkleRoot == uint256S("0x1b2ef6e2f28be914103a277377ae7729dcd125dfeb8bf97bd5964ba72b6dc39b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0000009efeaed4a864a417a90065b12da5bd89ac7742c4f88a93d8687a94abb0"));
+        assert(genesis.hashMerkleRoot == uint256S("0x93ad7b455294f429da00d11b656d62f7fb197a72b7315f58de8c9380dbdaa113"));
 
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
@@ -515,19 +517,21 @@ public:
                 Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
         consensus.vUpgrades[Consensus::UPGRADE_TESTDUMMY].nActivationHeight =
                 Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
-        consensus.vUpgrades[Consensus::UPGRADE_POS].nActivationHeight           = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 262525;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 332300;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 925056;
-        consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight =
+        consensus.vUpgrades[Consensus::UPGRADE_POS].nActivationHeight           = 1000;
+        consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 1000;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 10000000;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 10000000;
+        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         =
+                Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 10000000;
+        consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          =
+                Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
+        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 1000;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 1000;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 1000;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 1000;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 1000;
+        consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight          =
                 Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
         /**
@@ -542,8 +546,8 @@ public:
         nDefaultPort = 51474;
 
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("hemis-testnet.seed.fuzzbawls.pw", true);
-        vSeeds.emplace_back("hemis-testnet.seed2.fuzzbawls.pw", true);
+        //vSeeds.emplace_back("hemis-testnet.seed.fuzzbawls.pw", true);
+        //vSeeds.emplace_back("hemis-testnet.seed2.fuzzbawls.pw", true);
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 139); // Testnet hemis addresses start with 'x' or 'y'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 19);  // Testnet hemis script addresses start with '8' or '9'
@@ -599,10 +603,10 @@ public:
     {
         strNetworkID = "regtest";
 
-        genesis = CreateGenesisBlock(1454124731, 1, 0x207fffff, 1, 250 * COIN);
+        genesis = CreateGenesisBlock(1692423000, 4820300, 0x1e00ffff, 1, 0 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x7445589c4c8e52b105247b13373e5ee325856aa05d53f429e59ea46b7149ae3f"));
-        assert(genesis.hashMerkleRoot == uint256S("0x1b2ef6e2f28be914103a277377ae7729dcd125dfeb8bf97bd5964ba72b6dc39b"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0000009efeaed4a864a417a90065b12da5bd89ac7742c4f88a93d8687a94abb0"));
+        assert(genesis.hashMerkleRoot == uint256S("0x93ad7b455294f429da00d11b656d62f7fb197a72b7315f58de8c9380dbdaa113"));
 
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
@@ -660,20 +664,20 @@ public:
                 Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
         consensus.vUpgrades[Consensus::UPGRADE_TESTDUMMY].nActivationHeight =
                 Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
-        consensus.vUpgrades[Consensus::UPGRADE_POS].nActivationHeight           = 251;
-        consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 251;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 300;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 300;
+        consensus.vUpgrades[Consensus::UPGRADE_POS].nActivationHeight           = 250;
+        consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 250;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 1000000;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 1000000;
         consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         =
                 Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 400;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 1000000;
         consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 251;
         consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          =
                 Consensus::NetworkUpgrade::ALWAYS_ACTIVE;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 300;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 300;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 251;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 576;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 250;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 250;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 250;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 250;
         consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight =
                 Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
