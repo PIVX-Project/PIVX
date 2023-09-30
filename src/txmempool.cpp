@@ -374,8 +374,14 @@ void CTxMemPool::addUncheckedSpecialTx(const CTransaction& tx)
             bool ok = GetTxPayload(tx, pl);
             assert(ok);
             if (!pl.collateralOutpoint.hash.IsNull()) {
-                mapProTxRefs.emplace(txid, pl.collateralOutpoint.hash);
-                mapProTxCollaterals.emplace(pl.collateralOutpoint, txid);
+            // TODO: recheck this change (but I'm pretty sure that's the right way )
+            mapProTxRefs.emplace(txid, txid);
+            mapProTxCollaterals.emplace(pl.collateralOutpoint, txid);
+            }
+            if (!pl.shieldCollateral.IsNull()) {
+            // TODO: recheck this (but I'm pretty sure that's the right way )
+            mapProTxRefs.emplace(txid, txid);
+            mapProTxNullifiers.emplace(pl.shieldCollateral.input.nullifier, txid);
             }
             mapProTxAddresses.emplace(pl.addr, txid);
             mapProTxPubKeyIDs.emplace(pl.keyIDOwner, txid);
@@ -500,8 +506,11 @@ void CTxMemPool::removeUncheckedSpecialTx(const CTransaction& tx)
             assert(ok);
             if (!pl.collateralOutpoint.IsNull()) {
                 eraseProTxRef(txid, pl.collateralOutpoint.hash);
+                mapProTxCollaterals.erase(pl.collateralOutpoint);
             }
-            mapProTxCollaterals.erase(pl.collateralOutpoint);
+            if (!pl.shieldCollateral.IsNull()) {
+                mapProTxNullifiers.erase(pl.shieldCollateral.input.nullifier);
+            }
             mapProTxAddresses.erase(pl.addr);
             mapProTxPubKeyIDs.erase(pl.keyIDOwner);
             mapProTxBlsPubKeyHashes.erase(pl.pubKeyOperator.GetHash());
@@ -745,6 +754,16 @@ void CTxMemPool::removeProTxCollateralConflicts(const CTransaction &tx, const CO
     }
 }
 
+void CTxMemPool::removeProTxNullifiterConflicts(const CTransaction& tx, const uint256& nullifier)
+{
+    if (mapProTxNullifiers.count(nullifier)) {
+        const uint256& conflictHash = mapProTxNullifiers.at(nullifier);
+        if (conflictHash != tx.GetHash() && mapTx.count(conflictHash)) {
+            removeRecursive(mapTx.find(conflictHash)->GetTx(), MemPoolRemovalReason::CONFLICT);
+        }
+    }
+}
+
 void CTxMemPool::removeProTxReferences(const uint256& proTxHash, MemPoolRemovalReason reason)
 {
     // Remove TXs that refer to a certain MN
@@ -769,6 +788,7 @@ void CTxMemPool::removeProTxSpentCollateralConflicts(const CTransaction &tx)
 {
     auto mnList = deterministicMNManager->GetListAtChainTip();
     for (const auto& in : tx.vin) {
+        if (in.prevout.IsNull()) continue;
         auto collateralIt = mapProTxCollaterals.find(in.prevout);
         if (collateralIt != mapProTxCollaterals.end()) {
             // These are not yet mined ProRegTxs
@@ -782,9 +802,28 @@ void CTxMemPool::removeProTxSpentCollateralConflicts(const CTransaction &tx)
     }
 }
 
+void CTxMemPool::removeProTxSpentNullifierConflicts(const CTransaction& tx)
+{
+    if (!tx.hasSaplingData()) return;
+    auto mnList = deterministicMNManager->GetListAtChainTip();
+    for (const auto& in : (*tx.sapData).vShieldedSpend) {
+        auto nullifierIt = mapProTxNullifiers.find(in.nullifier);
+        if (nullifierIt != mapProTxNullifiers.end()) {
+            // These are not yet mined ProRegTxs
+            removeProTxReferences(nullifierIt->second, MemPoolRemovalReason::CONFLICT);
+        }
+        auto dmn = mnList.GetMNByNullifier(in.nullifier);
+        if (dmn) {
+            // These are updates refering to a mined ProRegTx
+            removeProTxReferences(dmn->proTxHash, MemPoolRemovalReason::CONFLICT);
+        }
+    }
+}
+
 void CTxMemPool::removeProTxConflicts(const CTransaction &tx)
 {
     removeProTxSpentCollateralConflicts(tx);
+    removeProTxSpentNullifierConflicts(tx);
 
     if (!tx.IsSpecialTx()) return;
 
@@ -806,6 +845,9 @@ void CTxMemPool::removeProTxConflicts(const CTransaction &tx)
             removeProTxPubKeyConflicts(tx, pl.pubKeyOperator);
             if (!pl.collateralOutpoint.hash.IsNull()) {
                 removeProTxCollateralConflicts(tx, pl.collateralOutpoint);
+            }
+            if (!pl.shieldCollateral.IsNull()) {
+                removeProTxNullifiterConflicts(tx, pl.shieldCollateral.input.nullifier);
             }
             break;
         }
@@ -1167,6 +1209,16 @@ bool CTxMemPool::existsProviderTxConflict(const CTransaction &tx) const
                 }
                 if (mapNextTx.count(pl.collateralOutpoint)) {
                     // there is another tx that spends the collateral
+                    return true;
+                }
+            }
+            if (!pl.shieldCollateral.IsNull()) {
+                if (mapProTxNullifiers.count(pl.shieldCollateral.input.nullifier)) {
+                    // there is another ProRegTx that refers to the same shield collateral
+                    return true;
+                }
+                if (mapSaplingNullifiers.count(pl.shieldCollateral.input.nullifier)) {
+                    // there is another shield tx that spends the collateral
                     return true;
                 }
             }

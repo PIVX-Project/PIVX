@@ -7,6 +7,8 @@
 
 #include "bls/key_io.h"
 #include "key_io.h"
+#include "primitives/transaction.h"
+#include "uint256.h"
 
 std::string ProRegPL::MakeSignString() const
 {
@@ -39,6 +41,7 @@ void ProRegPL::ToJson(UniValue& obj) const
     obj.pushKV("version", nVersion);
     obj.pushKV("collateralHash", collateralOutpoint.hash.ToString());
     obj.pushKV("collateralIndex", (int)collateralOutpoint.n);
+    obj.pushKV("nullifier", shieldCollateral.input.nullifier.ToString());
     obj.pushKV("service", addr.ToString());
     obj.pushKV("ownerAddress", EncodeDestination(keyIDOwner));
     obj.pushKV("operatorPubKey", bls::EncodePublic(Params(), pubKeyOperator));
@@ -117,6 +120,37 @@ void ProUpRevPL::ToJson(UniValue& obj) const
     obj.pushKV("proTxHash", proTxHash.ToString());
     obj.pushKV("reason", (int)nReason);
     obj.pushKV("inputsHash", inputsHash.ToString());
+}
+
+bool IsShieldProReg(const CTransactionRef& tx)
+{
+    if (tx == nullptr) {
+        return false;
+    }
+    if (!tx->IsSpecialTx() || tx->nType != CTransaction::TxType::PROREG) {
+        return false;
+    }
+    ProRegPL pl;
+    if (!GetTxPayload(*tx, pl)) {
+        return false;
+    }
+    return !pl.shieldCollateral.IsNull();
+}
+
+bool GetProRegNullifier(const CTransactionRef& tx, uint256& outNullifier)
+{
+    if (tx == nullptr) {
+        return false;
+    }
+    if (!tx->IsSpecialTx() || tx->nType != CTransaction::TxType::PROREG) {
+        return false;
+    }
+    ProRegPL pl;
+    if (!GetTxPayload(*tx, pl)) {
+        return false;
+    }
+    outNullifier = pl.shieldCollateral.input.nullifier;
+    return true;
 }
 
 bool GetProRegCollateral(const CTransactionRef& tx, COutPoint& outRet)

@@ -7,6 +7,9 @@
 
 #include "test/test_pivx.h"
 
+
+#include "sapling/sapling_operation.h"
+
 class CWallet;
 
 /*
@@ -20,5 +23,11 @@ struct TestPoSChainSetup: public TestChainSetup
     TestPoSChainSetup();
     ~TestPoSChainSetup();
 };
+
+SaplingOperation CreateOperationAndBuildTx(std::unique_ptr<CWallet>& pwallet,
+    CAmount amount,
+    bool selectTransparentCoins);
+bool IsSpentOnFork(const COutput& coin, std::initializer_list<std::shared_ptr<CBlock>> forkchain = {});
+std::shared_ptr<CBlock> CreateBlockInternal(CWallet* pwalletMain, const std::vector<CMutableTransaction>& txns = {}, CBlockIndex* customPrevBlock = nullptr, std::initializer_list<std::shared_ptr<CBlock>> forkchain = {}, bool fNoMempoolTx = true, bool testValidity = false);
 
 #endif // PIVX_POS_TEST_FIXTURE_H

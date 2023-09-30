@@ -137,6 +137,9 @@ public:
 
     void SendChangeTo(const CTxDestination& changeAddr);
 
+    // WARNING: This function must be used only for testing
+    TransactionBuilderResult BuildWithoutConstraints();
+
     TransactionBuilderResult Build(bool fDummySig = false);
     // Add Sapling Spend/Output descriptions, binding sig, and transparent signatures
     TransactionBuilderResult ProveAndSign();

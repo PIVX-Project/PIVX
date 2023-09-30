@@ -171,7 +171,9 @@ TIERTWO_SCRIPTS = [
     'tiertwo_masternode_activation.py',         # ~ 352 sec
     'tiertwo_masternode_ping.py',               # ~ 293 sec
     'tiertwo_governance_invalid_budget.py',     # ~ 266 sec
+    'tiertwo_shield_deterministicmns.py',        # ~ 160 sec
     'tiertwo_reorg_mempool.py',                 # ~ 97 sec
+    'tiertwo_shield_governance.py'              # ~ 80 sec
 ]
 
 SAPLING_SCRIPTS = [
@@ -246,7 +248,15 @@ LEGACY_SKIP_TESTS = [
     'wallet_importmulti.py',
     'wallet_import_rescan.py',
     'wallet_multiwallet.py',
-    'sapling_wallet_encryption.py'
+    'sapling_wallet_encryption.py',
+    'tiertwo_shield_deterministicmns.py',
+    'tiertwo_shield_governance.py',
+    'tiertwo_dkg_errors.py',
+    'tiertwo_chainlocks.py',
+    'tiertwo_dkg_errors.py',
+    'tiertwo_dkg_pose.py',
+    'tiertwo_signing_session.py',
+    'p2p_quorum_connect.py'
 ]
 
 # Place the lists with the longest tests (on average) first

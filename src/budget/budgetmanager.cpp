@@ -572,7 +572,7 @@ void CBudgetManager::VoteOnFinalizedBudgets()
     CTxIn mnVin;
     Optional<CKey> mnKey{nullopt};
     CBLSSecretKey blsKey;
-    if (!GetActiveMasternodeKeys(mnVin, mnKey, blsKey)) {
+    if (!GetActiveMasternodeVotingKeys(mnVin, mnKey, blsKey)) {
         return;
     }
 
@@ -885,8 +885,8 @@ void CBudgetManager::RemoveStaleVotesOnProposal(CBudgetProposal* prop)
     auto it = prop->mapVotes.begin();
     while (it != prop->mapVotes.end()) {
         auto mnList = deterministicMNManager->GetListAtChainTip();
-        auto dmn = mnList.GetMNByCollateral(it->first);
-        if (dmn) {
+        auto dmn = mnList.GetMN(it->first.hash);
+        if (dmn && it->first.n == 0) {
             (*it).second.SetValid(!dmn->IsPoSeBanned());
         } else {
             // -- Legacy System (!TODO: remove after enforcement) --
@@ -909,8 +909,8 @@ void CBudgetManager::RemoveStaleVotesOnFinalBudget(CFinalizedBudget* fbud)
     auto it = fbud->mapVotes.begin();
     while (it != fbud->mapVotes.end()) {
         auto mnList = deterministicMNManager->GetListAtChainTip();
-        auto dmn = mnList.GetMNByCollateral(it->first);
-        if (dmn) {
+        auto dmn = mnList.GetMN(it->first.hash);
+        if (dmn && it->first.n == 0) {
             (*it).second.SetValid(!dmn->IsPoSeBanned());
         } else {
             // -- Legacy System (!TODO: remove after enforcement) --
@@ -1101,9 +1101,15 @@ bool CBudgetManager::ProcessProposalVote(CBudgetVote& vote, CNode* pfrom, CValid
 
     // See if this vote was signed with a deterministic masternode
     auto mnList = deterministicMNManager->GetListAtChainTip();
-    auto dmn = mnList.GetMNByCollateral(voteVin.prevout);
+    auto dmn = mnList.GetMN(voteVin.prevout.hash);
     if (dmn) {
         const std::string& mn_protx_id = dmn->proTxHash.ToString();
+
+        if (voteVin.prevout.n != 0) {
+            err = strprintf("masternode (%s) not valid prevout.n (0 != %d)", mn_protx_id, voteVin.prevout.n);
+            // TODO: ban the node in this case?
+            return state.DoS(0, false, REJECT_INVALID, "bad-prevout", false, err);
+        }
 
         if (dmn->IsPoSeBanned()) {
             err = strprintf("masternode (%s) not valid or PoSe banned", mn_protx_id);
@@ -1210,9 +1216,15 @@ bool CBudgetManager::ProcessFinalizedBudgetVote(CFinalizedBudgetVote& vote, CNod
 
     // See if this vote was signed with a deterministic masternode
     auto mnList = deterministicMNManager->GetListAtChainTip();
-    auto dmn = mnList.GetMNByCollateral(voteVin.prevout);
+    auto dmn = mnList.GetMN(voteVin.prevout.hash);
     if (dmn) {
         const std::string& mn_protx_id = dmn->proTxHash.ToString();
+
+        if (voteVin.prevout.n != 0) {
+            err = strprintf("masternode (%s) not valid prevout.n (0 != %d)", mn_protx_id, voteVin.prevout.n);
+            // TODO: ban the node in this case?
+            return state.DoS(0, false, REJECT_INVALID, "bad-prevout", false, err);
+        }
 
         if (dmn->IsPoSeBanned()) {
             err = strprintf("masternode (%s) not valid or PoSe banned", mn_protx_id);

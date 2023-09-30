@@ -34,11 +34,12 @@ class DIP3Test(PivxTestFramework):
         self.extra_args = [["-nuparams=v5_shield:1", "-nuparams=v6_evo:130"]] * self.num_nodes
         self.extra_args[0].append("-sporkkey=932HEevBSujW2ud7RfB1YF91AFygbBRQj3de3LyaCRqNzKKgWXi")
 
-    def add_new_dmn(self, mns, strType, op_keys=None, from_out=None):
+    def add_new_dmn(self, mns, strType, transparent=True, op_keys=None, from_out=None):
         mns.append(self.register_new_dmn(2 + len(mns),
                                          self.minerPos,
                                          self.controllerPos,
                                          strType,
+                                         transparent,
                                          outpoint=from_out,
                                          op_blskeys=op_keys))
 
@@ -119,7 +120,7 @@ class DIP3Test(PivxTestFramework):
         assert_raises_rpc_error(-1, "Evo upgrade is not active yet", self.add_new_dmn, mns, "internal")
         assert_raises_rpc_error(-1, "Evo upgrade is not active yet", self.add_new_dmn, mns, "fund")
         # Can create the raw proReg
-        dmn = create_new_dmn(2, controller, dummy_add, None)
+        dmn = create_new_dmn(2, controller, dummy_add, None, True)
         tx, sig = self.protx_register_ext(miner, controller, dmn, None, False)
         # but cannot send it
         assert_raises_rpc_error(-1, "Evo upgrade is not active yet", miner.protx_register_submit, tx, sig)
@@ -164,9 +165,9 @@ class DIP3Test(PivxTestFramework):
             time.sleep(1)
 
         # Now send the ProReg txes and check list
-        self.add_new_dmn(mns, "internal", op_keys[0])
-        self.add_new_dmn(mns, "external", op_keys[1])
-        self.add_new_dmn(mns, "fund", op_keys[2])
+        self.add_new_dmn(mns, "internal", True, op_keys[0])
+        self.add_new_dmn(mns, "external", True, op_keys[1])
+        self.add_new_dmn(mns, "fund", True, op_keys[2])
         miner.generate(2)
         self.sync_blocks()
         time.sleep(1)
@@ -211,7 +212,7 @@ class DIP3Test(PivxTestFramework):
         dmn_keys = [dmn.operator_pk, dmn.operator_sk]
         dmn2_keys = [dmn2.operator_pk, dmn2.operator_sk]
         self.log.info("Reactivating node %d reusing the collateral of node %d..." % (dmn.idx, dmn2.idx))
-        mns.append(self.register_new_dmn(dmn.idx, self.minerPos, self.controllerPos, "external",
+        mns.append(self.register_new_dmn(dmn.idx, self.minerPos, self.controllerPos, "external", True,
                                          outpoint=dmn2.collateral, op_blskeys=dmn_keys))
         miner.generate(1)
         self.sync_blocks()
@@ -224,18 +225,18 @@ class DIP3Test(PivxTestFramework):
         self.log.info("Trying duplicate IP...")
         rand_idx = mns[randrange(len(mns))].idx
         assert_raises_rpc_error(-1, "bad-protx-dup-IP-address",
-                                self.register_new_dmn, rand_idx, self.minerPos, self.controllerPos, "fund",
+                                self.register_new_dmn, rand_idx, self.minerPos, self.controllerPos, "fund", True,
                                 op_blskeys=dmn2_keys)
 
         # Now try with duplicate operator key
         self.log.info("Trying duplicate operator key...")
-        dmn2b = create_new_dmn(dmn2.idx, controller, dummy_add, dmn_keys)
+        dmn2b = create_new_dmn(dmn2.idx, controller, dummy_add, dmn_keys, True)
         assert_raises_rpc_error(-1, "bad-protx-dup-operator-key",
                                 self.protx_register_fund, miner, controller, dmn2b, dummy_add)
 
         # Now try with duplicate owner key
         self.log.info("Trying duplicate owner key...")
-        dmn2c = create_new_dmn(dmn2.idx, controller, dummy_add, dmn2_keys)
+        dmn2c = create_new_dmn(dmn2.idx, controller, dummy_add, dmn2_keys, True)
         dmn2c.owner = mns[randrange(len(mns))].owner
         assert_raises_rpc_error(-1, "bad-protx-dup-owner-key",
                                 self.protx_register_fund, miner, controller, dmn2c, dummy_add)
@@ -243,7 +244,7 @@ class DIP3Test(PivxTestFramework):
         # Finally, register it properly. This time setting 10% of the reward for the operator
         op_rew = {"reward": 10.00, "address": self.nodes[dmn2.idx].getnewaddress()}
         self.log.info("Reactivating the node with a new registration (with operator reward)...")
-        dmn2c = create_new_dmn(dmn2.idx, controller, dummy_add, dmn2_keys)
+        dmn2c = create_new_dmn(dmn2.idx, controller, dummy_add, dmn2_keys, True)
         self.protx_register_fund(miner, controller, dmn2c, dummy_add, op_rew)
         mns.append(dmn2c)
         time.sleep(1)
@@ -362,7 +363,7 @@ class DIP3Test(PivxTestFramework):
         miner.protx_update_registrar(mns[0].proTx, mns[0].operator_pk, "", "", ownerKey)
         miner.generate(1)
         self.sync_blocks()
-        self.check_mn_enabled_count(5, 6) # still not valid until new operator sends proUpServ
+        self.check_mn_enabled_count(5, 6)  # still not valid until new operator sends proUpServ
         self.check_mn_list(mns)
         self.log.info("Update voting address...")
         mns[1].voting = controller.getnewaddress()

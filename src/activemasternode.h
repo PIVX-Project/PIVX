@@ -112,9 +112,16 @@ public:
     void GetKeys(CKey& privKeyMasternode, CPubKey& pubKeyMasternode) const;
 };
 
-// Compatibility code: get vin and keys for either legacy or deterministic masternode
+// Compatibility code: get vin OF THE COLLATERAL and keys for either legacy or deterministic masternode
+// TODO: Remove after full transition to DMNs
 bool GetActiveMasternodeKeys(CTxIn& vin, Optional<CKey>& key, CBLSSecretKey& blsKey);
-// Get active masternode BLS operator keys for DMN
+// Get active masternode BLS operator keys for DMN and vin OF THE COLLATERAL
+// TODO: Remove after full transition to DMNs
 bool GetActiveDMNKeys(CBLSSecretKey& key, CTxIn& vin);
+
+// Compatibility code: get vin FOR VOTING and keys for either legacy or deterministic masternode
+bool GetActiveMasternodeVotingKeys(CTxIn& vin, Optional<CKey>& key, CBLSSecretKey& blsKey);
+// Get active masternode BLS operator keys for DMN and vin FOR VOTING
+bool GetActiveVotingDMNKeys(CBLSSecretKey& key, CTxIn& vin);
 
 #endif

@@ -126,60 +126,6 @@ COutPoint GetOutpointWithAmount(const CTransaction& tx, CAmount outpointValue)
     return {};
 }
 
-static bool IsSpentOnFork(const COutput& coin, std::initializer_list<std::shared_ptr<CBlock>> forkchain = {})
-{
-    for (const auto& block : forkchain) {
-        const auto& usedOutput = block->vtx[1]->vin.at(0).prevout;
-        if (coin.tx->GetHash() == usedOutput.hash && coin.i == (int)usedOutput.n) {
-            // spent on fork
-            return true;
-        }
-    }
-    return false;
-}
-
-std::shared_ptr<CBlock> CreateBlockInternal(CWallet* pwalletMain, const std::vector<CMutableTransaction>& txns = {},
-                                            CBlockIndex* customPrevBlock = nullptr,
-                                            std::initializer_list<std::shared_ptr<CBlock>> forkchain = {})
-{
-    std::vector<CStakeableOutput> availableCoins;
-    BOOST_CHECK(pwalletMain->StakeableCoins(&availableCoins));
-
-    // Remove any utxo which is not deeper than 120 blocks (for the same reasoning
-    // used when selecting tx inputs in CreateAndCommitTx)
-    // Also, as the wallet is not prepared to follow several chains at the same time,
-    // need to manually remove from the stakeable utxo set every already used
-    // coinstake inputs on the previous blocks of the parallel chain so they
-    // are not used again.
-    for (auto it = availableCoins.begin(); it != availableCoins.end() ;) {
-        if (it->nDepth <= 120 || IsSpentOnFork(*it, forkchain)) {
-            it = availableCoins.erase(it);
-        } else {
-            it++;
-        }
-    }
-
-    std::unique_ptr<CBlockTemplate> pblocktemplate = BlockAssembler(
-            Params(), false).CreateNewBlock(CScript(),
-                                            pwalletMain,
-                                            true,
-                                            &availableCoins,
-                                            true,
-                                            false,
-                                            customPrevBlock,
-                                            false);
-    BOOST_ASSERT(pblocktemplate);
-    auto pblock = std::make_shared<CBlock>(pblocktemplate->block);
-    if (!txns.empty()) {
-        for (const auto& tx : txns) {
-            pblock->vtx.emplace_back(MakeTransactionRef(tx));
-        }
-        pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
-        assert(SignBlock(*pblock, *pwalletMain));
-    }
-    return pblock;
-}
-
 static COutput GetUnspentCoin(CWallet* pwallet, std::initializer_list<std::shared_ptr<CBlock>> forkchain = {})
 {
     std::vector<COutput> availableCoins;

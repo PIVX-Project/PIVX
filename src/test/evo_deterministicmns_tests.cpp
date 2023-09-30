@@ -3,13 +3,18 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "test/test_pivx.h"
+
+#include "chainparams.h"
+#include "consensus/validation.h"
+#include "sapling/transaction_builder.h"
+#include "sync.h"
+#include "wallet/test/pos_test_fixture.h"
 
 #include "blockassembler.h"
 #include "consensus/merkle.h"
 #include "consensus/params.h"
-#include "evo/specialtx_validation.h"
 #include "evo/deterministicmns.h"
+#include "evo/specialtx_validation.h"
 #include "llmq/quorums_blockprocessor.h"
 #include "llmq/quorums_commitment.h"
 #include "llmq/quorums_utils.h"
@@ -28,6 +33,14 @@
 #include <boost/test/unit_test.hpp>
 
 typedef std::map<COutPoint, std::pair<int, CAmount>> SimpleUTXOMap;
+class CWallet;
+
+enum class MasternodeType {
+    MN_EMPTY,
+    MN_TRANSPARENT,
+    MN_SHIELD,
+    MN_BOTH
+};
 
 // static 0.1 PIV fee used for the special txes in these tests
 static const CAmount fee = 10000000;
@@ -135,18 +148,65 @@ static CBLSSecretKey GetRandomBLSKey()
     return sk;
 }
 
+// Create a good/fake ProRegShieldProof
+static bool CreateProRegShieldProof(ProRegPL& pl, const SaplingNoteEntry& note, CWallet* pwallet, CAmount amount, bool useRogueBuilder, bool emptySig)
+{
+    TransactionBuilder txBuilder(Params().GetConsensus(), pwallet);
+    txBuilder.SetFee(0);
+    libzcash::SaplingExtendedSpendingKey sk;
+    if (!pwallet->GetSaplingExtendedSpendingKey(note.address, sk)) {
+        return false;
+    }
+    uint256 anchor;
+    std::vector<Optional<SaplingWitness>> witnesses;
+    std::vector<SaplingOutPoint> noteop;
+    noteop.emplace_back(note.op);
+    pwallet->GetSaplingScriptPubKeyMan()->GetSaplingNoteWitnesses(noteop, witnesses, anchor);
+    txBuilder.AddSaplingSpend(sk.expsk, note.note, anchor, witnesses[0].get());
+    auto newAddress = pwallet->getNewAddress("");
+    if (!newAddress.getRes()) {
+        return false;
+    }
+    txBuilder.AddTransparentOutput(*newAddress.getObjResult(), amount);
+    auto txTrial = useRogueBuilder ? txBuilder.BuildWithoutConstraints() : txBuilder.Build();
+    if (txTrial.IsError()) {
+        return false;
+    }
+    auto txFinal = *txTrial.GetTx();
+    pl.shieldCollateral.input = (*txFinal.sapData).vShieldedSpend[0];
+    pl.shieldCollateral.output = txFinal.vout[0];
+    if (!emptySig) copy(begin((*txFinal.sapData).bindingSig), end((*txFinal.sapData).bindingSig), back_inserter(pl.shieldCollateral.bindingSig));
+    return true;
+}
+
 // Creates a ProRegTx.
 // - if optCollateralOut is nullopt, generate a new collateral in the first output of the tx
 // - otherwise reference *optCollateralOut as external collateral
 static CMutableTransaction CreateProRegTx(Optional<COutPoint> optCollateralOut,
-                                          SimpleUTXOMap& utxos, int port, const CScript& scriptPayout, const CKey& coinbaseKey,
-                                          const CKey& ownerKey,
-                                          const CBLSPublicKey& operatorPubKey,
-                                          uint16_t operatorReward = 0,
-                                          bool fInvalidCollateral = false)
+    SimpleUTXOMap& utxos,
+    int port,
+    const CScript& scriptPayout,
+    const CKey& coinbaseKey,
+    const CKey& ownerKey,
+    const CBLSPublicKey& operatorPubKey,
+    uint16_t operatorReward = 0,
+    bool fInvalidCollateral = false,
+    MasternodeType masternodeType = MasternodeType::MN_TRANSPARENT,
+    const SaplingNoteEntry* note = nullptr,
+    CWallet* pwallet = nullptr,
+    CAmount amount = Params().GetConsensus().nMNCollateralAmt,
+    bool useRogueBuilder = true,
+    bool emptySig = false)
 {
     ProRegPL pl;
-    pl.collateralOutpoint = (optCollateralOut ? *optCollateralOut : COutPoint(UINT256_ZERO, 0));
+    if (masternodeType == MasternodeType::MN_TRANSPARENT) {
+        pl.collateralOutpoint = (optCollateralOut ? *optCollateralOut : COutPoint(UINT256_ZERO, 0));
+    } else if (masternodeType == MasternodeType::MN_SHIELD) {
+        BOOST_CHECK(CreateProRegShieldProof(pl, *note, pwallet, amount, useRogueBuilder, emptySig));
+    } else if (masternodeType == MasternodeType::MN_BOTH) {
+        pl.collateralOutpoint = (optCollateralOut ? *optCollateralOut : COutPoint(UINT256_ZERO, 0));
+        BOOST_CHECK(CreateProRegShieldProof(pl, *note, pwallet, amount, useRogueBuilder, emptySig));
+    }
     pl.addr = LookupNumeric("1.1.1.1", port);
     pl.keyIDOwner = ownerKey.GetPubKey().GetID();
     pl.pubKeyOperator = operatorPubKey;
@@ -157,10 +217,15 @@ static CMutableTransaction CreateProRegTx(Optional<COutPoint> optCollateralOut,
     CMutableTransaction tx;
     tx.nVersion = CTransaction::TxVersion::SAPLING;
     tx.nType = CTransaction::TxType::PROREG;
-    FundTransaction(tx, utxos, scriptPayout,
-                    GetScriptForDestination(coinbaseKey.GetPubKey().GetID()),
-                    (optCollateralOut ? 0 : Params().GetConsensus().nMNCollateralAmt - (fInvalidCollateral ? 1 : 0)));
-
+    if (masternodeType == MasternodeType::MN_TRANSPARENT) {
+        FundTransaction(tx, utxos, scriptPayout,
+            GetScriptForDestination(coinbaseKey.GetPubKey().GetID()),
+            (optCollateralOut ? 0 : Params().GetConsensus().nMNCollateralAmt - (fInvalidCollateral ? 1 : 0)));
+    } else {
+        FundTransaction(tx, utxos, scriptPayout,
+            GetScriptForDestination(coinbaseKey.GetPubKey().GetID()),
+            0);
+    }
     pl.inputsHash = CalcTxInputsHash(tx);
     SetTxPayload(tx, pl);
     SignTransaction(tx, coinbaseKey);
@@ -911,6 +976,294 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
     }
 
     UpdateNetworkUpgradeParameters(Consensus::UPGRADE_V6_0, Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT);
+}
+
+void ProcessBlockAndUpdateUtxos(std::shared_ptr<CBlock> pblock, SimpleUTXOMap& utxos)
+{
+    BOOST_CHECK(ProcessNewBlock(pblock, nullptr));
+    for (auto& vtx : pblock.get()->vtx) {
+        for (auto& vin : vtx->vin) {
+            int count = utxos.count(vin.prevout);
+            if (count > 0) {
+                BOOST_ASSERT(count == 1);
+                utxos.erase(vin.prevout);
+            }
+        }
+    }
+}
+
+BOOST_FIXTURE_TEST_CASE(dip3_shield, TestPoSChainSetup)
+{
+    // Verify that we are at block 251
+    int nHeight = WITH_LOCK(cs_main, return chainActive.Tip()->nHeight);
+    BOOST_CHECK_EQUAL(nHeight, 250);
+    SyncWithValidationInterfaceQueue();
+
+    UpdateNetworkUpgradeParameters(Consensus::UPGRADE_V5_0, nHeight + 1);
+    UpdateNetworkUpgradeParameters(Consensus::UPGRADE_V6_0, nHeight + 2);
+
+    auto utxos = BuildSimpleUtxoMap(coinbaseTxns);
+    // Disable masterode sync so we won't have problems with missing mn payments for now
+    g_tiertwo_sync_state.SetCurrentSyncPhase(MASTERNODE_SYNC_INITIAL);
+    // Mint the block before v6
+    {
+        std::shared_ptr<CBlock> pblock = CreateBlockInternal(pwalletMain.get());
+        ProcessBlockAndUpdateUtxos(pblock, utxos);
+        nHeight += 1;
+    }
+
+    // Create a pro reg tx and check its validity
+    int port = 1;
+    const CKey& ownerKeyTransp = GetRandomKey();
+    const CBLSSecretKey& operatorKeyTransp = GetRandomBLSKey();
+    auto tx = CreateProRegTx(nullopt, utxos, port++, GenerateRandomAddress(), coinbaseKey, ownerKeyTransp, operatorKeyTransp.GetPublicKey());
+
+    CValidationState dummyState;
+    CBlockIndex* chainTip = chainActive.Tip();
+    CCoinsViewCache* view = pcoinsTip.get();
+
+    BOOST_CHECK(WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, dummyState);));
+    BOOST_CHECK(CheckTransactionSignature(tx));
+
+    // Commit the transaction, mint another block and the DMN should be on chain!
+    CReserveKey reservekey(&*pwalletMain);
+    pwalletMain->CommitTransaction(MakeTransactionRef(tx), reservekey, nullptr);
+    std::shared_ptr<CBlock> pblock = CreateBlockInternal(pwalletMain.get(), {tx}, nullptr, {}, true, true);
+    ProcessBlockAndUpdateUtxos(pblock, utxos);
+    BOOST_CHECK(deterministicMNManager->GetListAtChainTip().HasMN(tx.GetHash()));
+    nHeight += 1;
+
+    // force mnsync complete and enable spork 8
+    {
+        g_tiertwo_sync_state.SetCurrentSyncPhase(MASTERNODE_SYNC_FINISHED);
+        int64_t nTime = GetTime() - 10;
+        const CSporkMessage& sporkMnPayment = CSporkMessage(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT, nTime + 1, nTime);
+        sporkManager.AddOrUpdateSporkMessage(sporkMnPayment);
+        BOOST_CHECK(sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT));
+    }
+
+    // Let's create a few more PoS blocks
+    for (int i = 0; i < 10; i++) {
+        std::shared_ptr<CBlock> pblock = CreateBlockInternal(pwalletMain.get());
+        ProcessBlockAndUpdateUtxos(pblock, utxos);
+        nHeight += 1;
+    }
+
+    // Create a bunch of sapling notes, with which we will create our SDMNs
+    for (int i = 0; i < 2; i++) {
+        SaplingOperation operation = CreateOperationAndBuildTx(pwalletMain, Params().GetConsensus().nMNCollateralAmt, true);
+        pwalletMain->CommitTransaction(operation.getFinalTxRef(), reservekey, nullptr);
+    }
+    std::shared_ptr<CBlock> shieldBlockNormal = CreateBlockInternal(pwalletMain.get(), {}, nullptr, {}, false, true);
+    ProcessBlockAndUpdateUtxos(shieldBlockNormal, utxos);
+    nHeight += 1;
+    {
+        SaplingOperation operation = CreateOperationAndBuildTx(pwalletMain, Params().GetConsensus().nMNCollateralAmt * 2, true);
+        pwalletMain->CommitTransaction(operation.getFinalTxRef(), reservekey, nullptr);
+    }
+    std::shared_ptr<CBlock> shieldBlockBig = CreateBlockInternal(pwalletMain.get(), {}, nullptr, {}, false, true);
+    ProcessBlockAndUpdateUtxos(shieldBlockBig, utxos);
+    nHeight += 1;
+    {
+        SaplingOperation operation = CreateOperationAndBuildTx(pwalletMain, Params().GetConsensus().nMNCollateralAmt * 0.5, true);
+        pwalletMain->CommitTransaction(operation.getFinalTxRef(), reservekey, nullptr);
+    }
+    std::shared_ptr<CBlock> shieldBlockSmall = CreateBlockInternal(pwalletMain.get(), {}, nullptr, {}, false, true);
+    ProcessBlockAndUpdateUtxos(shieldBlockSmall, utxos);
+    nHeight += 1;
+
+    // Sanity check on the blocks created
+    BOOST_CHECK(shieldBlockNormal->vtx.size() == 4);
+    BOOST_CHECK(shieldBlockNormal->vtx[2]->sapData->vShieldedOutput.size() == 1 && shieldBlockNormal->vtx[3]->sapData->vShieldedOutput.size() == 1);
+    BOOST_CHECK(shieldBlockBig->vtx.size() == 3);
+    BOOST_CHECK(shieldBlockBig->vtx[2]->sapData->vShieldedOutput.size() == 1);
+    BOOST_CHECK(shieldBlockSmall->vtx.size() == 3);
+    BOOST_CHECK(shieldBlockSmall->vtx[2]->sapData->vShieldedOutput.size() == 1);
+
+    // Finally create a SDMN, or at least try! spork21 is not active yet
+    const CKey& ownerKeyShield = GetRandomKey();
+    const CBLSSecretKey& operatorKeyShield = GetRandomBLSKey();
+    std::vector<SaplingNoteEntry> collateralNote1;
+    pwalletMain.get()->GetSaplingScriptPubKeyMan()->GetNotes({SaplingOutPoint(shieldBlockNormal->vtx[2]->GetHash(), 0)}, collateralNote1);
+    BOOST_CHECK(collateralNote1.size() == 1);
+
+    std::vector<SaplingNoteEntry> collateralNote2;
+    pwalletMain.get()->GetSaplingScriptPubKeyMan()->GetNotes({SaplingOutPoint(shieldBlockNormal->vtx[3]->GetHash(), 0)}, collateralNote2);
+    BOOST_CHECK(collateralNote2.size() == 1);
+    CMutableTransaction txShield;
+    {
+        txShield = CreateProRegTx(nullopt, utxos, port++, GenerateRandomAddress(), coinbaseKey, ownerKeyShield, operatorKeyShield.GetPublicKey(), 0, false, MasternodeType::MN_SHIELD, &collateralNote1[0], pwalletMain.get());
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(txShield, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "spork-21-inactive");
+
+        // Finally activate spork 21 and recheck the tx
+        int64_t nTime = GetTime() - 10;
+        const CSporkMessage& sporkLegacyObs = CSporkMessage(SPORK_21_LEGACY_MNS_MAX_HEIGHT, nHeight, nTime);
+        sporkManager.AddOrUpdateSporkMessage(sporkLegacyObs);
+        BOOST_CHECK(sporkManager.IsSporkActive(SPORK_21_LEGACY_MNS_MAX_HEIGHT));
+
+        state = CValidationState();
+        BOOST_CHECK(WITH_LOCK(cs_main, return CheckSpecialTx(txShield, chainTip, view, dummyState);));
+        BOOST_CHECK(CheckTransactionSignature(txShield));
+
+        pwalletMain->CommitTransaction(MakeTransactionRef(txShield), reservekey, nullptr);
+        std::shared_ptr<CBlock> pblock = CreateBlockInternal(pwalletMain.get(), {txShield}, nullptr, {}, true, true);
+        ProcessBlockAndUpdateUtxos(pblock, utxos);
+        nHeight += 1;
+        BOOST_CHECK(deterministicMNManager->GetListAtChainTip().HasMN(txShield.GetHash()));
+    }
+
+    // Next, verify payments in this mixture of transparent and shield masternodes:
+    std::map<uint256, int> mapPayments;
+    for (size_t i = 0; i < 20; i++) {
+        auto mnList = deterministicMNManager->GetListAtChainTip();
+        BOOST_CHECK_EQUAL(mnList.GetValidMNsCount(), 2);
+        BOOST_CHECK_EQUAL(mnList.GetHeight(), nHeight);
+
+        // get next payee
+        auto dmnExpectedPayee = mnList.GetMNPayee();
+        std::shared_ptr<CBlock> block = CreateBlockInternal(pwalletMain.get());
+        ProcessBlockAndUpdateUtxos(block, utxos);
+        chainTip = chainActive.Tip();
+        BOOST_ASSERT(!block.get()->vtx.empty());
+        BOOST_CHECK(IsMNPayeeInBlock(*block.get(), dmnExpectedPayee->pdmnState->scriptPayout));
+        mapPayments[dmnExpectedPayee->proTxHash]++;
+        BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
+    }
+    // 20 blocks, 2 masternodes. Must have been paid 10 times each.
+    CheckPayments(mapPayments, 2, 10);
+
+    // Try to register another SDMN with the same address of the first one:
+    {
+        auto tx = CreateProRegTx(nullopt, utxos, port - 1, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey(), 0, false, MasternodeType::MN_SHIELD, &collateralNote2[0], pwalletMain.get());
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-dup-IP-address");
+    }
+
+    // Try to register another SDMN with the same operator key of the first one:
+    {
+        auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), operatorKeyShield.GetPublicKey(), 0, false, MasternodeType::MN_SHIELD, &collateralNote2[0], pwalletMain.get());
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-dup-operator-key");
+    }
+
+    // Try to register another SDMN with the same owner key of the first one:
+    {
+        auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, ownerKeyShield, GetRandomBLSKey().GetPublicKey(), 0, false, MasternodeType::MN_SHIELD, &collateralNote2[0], pwalletMain.get());
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-dup-owner-key");
+    }
+
+    // Try to create a SDMN with incorrect input note (note value too big)
+    std::vector<SaplingNoteEntry> collateralNoteBig1;
+    pwalletMain.get()->GetSaplingScriptPubKeyMan()->GetNotes({SaplingOutPoint(shieldBlockBig->vtx[2]->GetHash(), 0)}, collateralNoteBig1);
+    BOOST_CHECK(collateralNoteBig1.size() == 1);
+    {
+        auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey(), 0, false, MasternodeType::MN_SHIELD, &collateralNoteBig1[0], pwalletMain.get(), Params().GetConsensus().nMNCollateralAmt);
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-txns-sapling-spend-description-invalid");
+    }
+
+    // Try to create a SDMN with correct input note, but broken proof (wrong output amount)
+    {
+        auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey(), 0, false, MasternodeType::MN_SHIELD, &collateralNote2[0], pwalletMain.get(), Params().GetConsensus().nMNCollateralAmt - 1);
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-proofCollateralOutput-amt");
+    }
+
+    // Try to create a SDMN with incorrect input note (note value too small)
+    std::vector<SaplingNoteEntry> collateralNoteSmall1;
+    pwalletMain.get()->GetSaplingScriptPubKeyMan()->GetNotes({SaplingOutPoint(shieldBlockSmall->vtx[2]->GetHash(), 0)}, collateralNoteSmall1);
+    BOOST_CHECK(collateralNoteSmall1.size() == 1);
+    {
+        auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey(), 0, false, MasternodeType::MN_SHIELD, &collateralNoteSmall1[0], pwalletMain.get(), Params().GetConsensus().nMNCollateralAmt);
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-txns-sapling-spend-description-invalid");
+    }
+
+    // Try to create a SDMN by using a big note as input but this time get a shield change as additional output (200 -> 100 + 100)
+    {
+        auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey(), 0, false, MasternodeType::MN_SHIELD, &collateralNoteBig1[0], pwalletMain.get(), Params().GetConsensus().nMNCollateralAmt, false);
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-txns-sapling-spend-description-invalid");
+    }
+
+    // Try to create a SDMN with a wrong bindig sig length:
+    {
+        auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey(), 0, false, MasternodeType::MN_SHIELD, &collateralNote2[0], pwalletMain.get(), Params().GetConsensus().nMNCollateralAmt, false, true);
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-bindingSig-len");
+    }
+
+    // Try to create a Masternode with both normal collateral and shield collateral non-empty:
+    {
+        auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey(), 0, false, MasternodeType::MN_BOTH, &collateralNote2[0], pwalletMain.get(), Params().GetConsensus().nMNCollateralAmt, false, true);
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-collaterals-non-empty");
+    }
+
+    // Try to create a Masternode with both normal collateral and shield collateral empty:
+    {
+        auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey(), 0, false, MasternodeType::MN_EMPTY, &collateralNote2[0], pwalletMain.get(), Params().GetConsensus().nMNCollateralAmt, false, true);
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-collaterals-empty");
+    }
+
+    // Spend ALL shield notes (4.3 masternode cost instead of 4.5 to pay fees):
+    {
+        WITH_LOCK(pwalletMain->cs_wallet, pwalletMain->UnlockAllNotes());
+        SaplingOperation operation = CreateOperationAndBuildTx(pwalletMain, Params().GetConsensus().nMNCollateralAmt * 4.3, false);
+        pwalletMain->CommitTransaction(operation.getFinalTxRef(), reservekey, nullptr);
+        std::shared_ptr<CBlock> pblock = CreateBlockInternal(pwalletMain.get(), {}, nullptr, {}, false, true);
+        ProcessBlockAndUpdateUtxos(pblock, utxos);
+        nHeight += 1;
+    }
+
+    // Verify that the SDMN is gone
+    BOOST_CHECK(!deterministicMNManager->GetListAtChainTip().HasMN(txShield.GetHash()));
+
+    // Try to create a SDMN with a spent collateral:
+    {
+        auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey(), 0, false, MasternodeType::MN_SHIELD, &collateralNote2[0], pwalletMain.get(), Params().GetConsensus().nMNCollateralAmt, false, false);
+        CValidationState state;
+        CBlockIndex* chainTip = chainActive.Tip();
+        CCoinsViewCache* view = pcoinsTip.get();
+        WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state););
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-txns-shielded-requirements-not-met");
+    }
 }
 
 // Dummy commitment where the DKG shares are replaced with the operator keys of each member.

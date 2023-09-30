@@ -6,6 +6,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "optional.h"
+#include "uint256.h"
 #if defined(HAVE_CONFIG_H)
 #include "config/pivx-config.h"
 #endif
@@ -4204,14 +4205,29 @@ void CWallet::LockOutpointIfMine(const CTransactionRef& ptx, const COutPoint& c)
     }
 }
 
+void CWallet::LockNullifierIfMine(uint256 nullifier)
+{
+    AssertLockHeld(cs_wallet);
+    if (m_sspk_man->mapSaplingNullifiersToNotes.count(nullifier)) {
+        LockNote(m_sspk_man->mapSaplingNullifiersToNotes.at(nullifier));
+    }
+}
+
 // Called from AddToWalletIfInvolvingMe
 void CWallet::LockIfMyCollateral(const CTransactionRef& ptx)
 {
     AssertLockHeld(cs_wallet);
 
-    COutPoint o;
-    if (GetProRegCollateral(ptx, o)) {
-        LockOutpointIfMine(ptx, o);
+    if (!IsShieldProReg(ptx)) {
+        COutPoint o;
+        if (GetProRegCollateral(ptx, o)) {
+            LockOutpointIfMine(ptx, o);
+        }
+    } else {
+        uint256 nullifier;
+        if (GetProRegNullifier(ptx, nullifier)) {
+            LockNullifierIfMine(nullifier);
+        }
     }
 }
 

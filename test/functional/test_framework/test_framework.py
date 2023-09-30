@@ -1117,13 +1117,13 @@ class PivxTestFramework():
                     break
             assert_greater_than(collateralTxId_n, -1)
             assert_greater_than(json_tx["confirmations"], 0)
-            proTxId = mnOwner.protx_register(collateralTxId, collateralTxId_n, ipport, ownerAdd,
+            proTxId = mnOwner.protx_register(collateralTxId, collateralTxId_n, True, ipport, ownerAdd,
                                              bls_keypair["public"], votingAdd, collateralAdd)
         elif strType == "external":
             self.log.info("Setting up ProRegTx with collateral externally-signed...")
             # send the tx from the miner
             payoutAdd = mnOwner.getnewaddress("payout")
-            register_res = miner.protx_register_prepare(outpoint.hash, outpoint.n, ipport, ownerAdd,
+            register_res = miner.protx_register_prepare(outpoint.hash, outpoint.n, True, ipport, ownerAdd,
                                                         bls_keypair["public"], votingAdd, payoutAdd)
             self.log.info("ProTx prepared")
             message_to_sign = register_res["signMessage"]
@@ -1218,19 +1218,24 @@ class PivxTestFramework():
     Create a ProReg tx, which references an 100 PIV UTXO as collateral.
     The controller node owns the collateral and creates the ProReg tx.
     """
-    def protx_register(self, miner, controller, dmn, collateral_addr):
-        # send to the owner the exact collateral tx amount
-        funding_txid = miner.sendtoaddress(collateral_addr, Decimal('100'))
+    def protx_register(self, miner, controller, dmn, collateral_addr, transparent, outpoint):
+        # send to the owner the exact collateral tx amount, unless we already have an outpoint that we want to use
+        if outpoint is None:
+            funding_txid = miner.sendtoaddress(collateral_addr, Decimal('100'))
         # send another output to be used for the fee of the proReg tx
-        miner.sendtoaddress(collateral_addr, Decimal('1'))
+        feeAddr = collateral_addr if transparent else controller.getnewaddress("feeAddr")
+        miner.sendtoaddress(feeAddr, Decimal('1'))
         # confirm and verify reception
         miner.generate(1)
         self.sync_blocks([miner, controller])
-        json_tx = controller.getrawtransaction(funding_txid, True)
-        assert_greater_than(json_tx["confirmations"], 0)
-        # create and send the ProRegTx
-        dmn.collateral = COutPoint(int(funding_txid, 16), get_collateral_vout(json_tx))
-        dmn.proTx = controller.protx_register(funding_txid, dmn.collateral.n, dmn.ipport, dmn.owner,
+        if outpoint is None:
+            json_tx = controller.getrawtransaction(funding_txid, True)
+            assert_greater_than(json_tx["confirmations"], 0)
+            # create and send the ProRegTx, FOR SHIELD DMNS THIS IS NOT THE COLLATERAL CONTAINED IN THE PROREGTX (which is instead the null COutPoint (0,-1))
+            dmn.collateral = COutPoint(int(funding_txid, 16), get_collateral_vout(json_tx)) if transparent else COutPoint(int(funding_txid, 16), 0, transparent)
+        else:
+            dmn.collateral = outpoint
+        dmn.proTx = controller.protx_register("%064x" % dmn.collateral.hash, dmn.collateral.n, transparent, dmn.ipport, dmn.owner,
                                               dmn.operator_pk, dmn.voting, dmn.payee)
 
     """
@@ -1249,7 +1254,7 @@ class PivxTestFramework():
             outpoint = COutPoint(int(funding_txid, 16), get_collateral_vout(json_tx))
         dmn.collateral = outpoint
         # Prepare the message to be signed externally by the owner of the collateral (the controller)
-        reg_tx = miner.protx_register_prepare("%064x" % outpoint.hash, outpoint.n, dmn.ipport, dmn.owner,
+        reg_tx = miner.protx_register_prepare("%064x" % outpoint.hash, outpoint.n, True, dmn.ipport, dmn.owner,
                                               dmn.operator_pk, dmn.voting, dmn.payee)
         sig = controller.signmessage(reg_tx["collateralAddress"], reg_tx["signMessage"])
         if fSubmit:
@@ -1270,7 +1275,7 @@ class PivxTestFramework():
                                  If not provided, a new address-key pair is generated.
     :return: dmn:              (Masternode) the deterministic masternode object
     """
-    def register_new_dmn(self, idx, miner_idx, controller_idx, strType,
+    def register_new_dmn(self, idx, miner_idx, controller_idx, strType, transparent,
                          payout_addr=None, outpoint=None, op_blskeys=None):
         # Prepare remote node
         assert idx != miner_idx
@@ -1280,19 +1285,21 @@ class PivxTestFramework():
         mn_node = self.nodes[idx]
 
         # Generate ip and addresses/keys
-        collateral_addr = controller_node.getnewaddress("mncollateral-%d" % idx)
+        collateral_addr = controller_node.getnewaddress("mncollateral-%d" % idx) if transparent else controller_node.getnewshieldaddress("shieldmncollateral-%d" % idx)
         if payout_addr is None:
-            payout_addr = collateral_addr
-        dmn = create_new_dmn(idx, controller_node, payout_addr, op_blskeys)
+            payout_addr = collateral_addr if transparent else controller_node.getnewaddress("mncollateral-%d" % idx)
+        dmn = create_new_dmn(idx, controller_node, payout_addr, op_blskeys, transparent)
 
         # Create ProRegTx
         self.log.info("Creating%s proRegTx for deterministic masternode idx=%d..." % (
             " and funding" if strType == "fund" else "", idx))
         if strType == "fund":
+            assert (transparent)
             self.protx_register_fund(miner_node, controller_node, dmn, collateral_addr)
         elif strType == "internal":
-            self.protx_register(miner_node, controller_node, dmn, collateral_addr)
+            self.protx_register(miner_node, controller_node, dmn, collateral_addr, transparent, outpoint)
         elif strType == "external":
+            assert (transparent)
             self.protx_register_ext(miner_node, controller_node, dmn, outpoint, True)
         else:
             raise Exception("Type %s not available" % strType)
@@ -1307,7 +1314,7 @@ class PivxTestFramework():
         assert dmn.proTx in mn_node.protx_list(False)
 
         # check coin locking
-        assert is_coin_locked_by(controller_node, dmn.collateral)
+        assert is_coin_locked_by(controller_node, dmn.collateral, dmn.transparent)
 
         # check json payload against local dmn object
         self.check_proreg_payload(dmn, json_tx)
@@ -1337,23 +1344,38 @@ class PivxTestFramework():
             assert_equal(mn.voting, mn2["dmnstate"]["votingAddress"])
             assert_equal(mn.ipport, mn2["dmnstate"]["service"])
             assert_equal(mn.payee, mn2["dmnstate"]["payoutAddress"])
-            assert_equal(collateral["txid"], mn2["collateralHash"])
-            assert_equal(collateral["vout"], mn2["collateralIndex"])
+            assert_equal(mn.nullifier, mn2["nullifier"])
+            # Usual story, For shield Dmns the value we store in collateral (i.e. the sapling outpoint referring to the note)
+            # Is different from the default null collateral in the ProRegTx
+            if mn.transparent:
+                assert_equal(collateral["txid"], mn2["collateralHash"])
+                assert_equal(collateral["vout"], mn2["collateralIndex"])
+            else:
+                assert_equal("%064x" % 0, mn2["collateralHash"])
+                assert_equal(-1, mn2["collateralIndex"])
 
     def check_proreg_payload(self, dmn, json_tx):
         assert "payload" in json_tx
         # null hash if funding collateral
         collateral_hash = 0 if int(json_tx["txid"], 16) == dmn.collateral.hash \
                             else dmn.collateral.hash
+        collateral_n = dmn.collateral.n
+        # null Outpoint if dmn is shielded
+        if not dmn.transparent:
+            collateral_hash = 0
+            collateral_n = -1
         pl = json_tx["payload"]
-        assert_equal(pl["version"], 1)
+        assert_equal(pl["version"], 2)
         assert_equal(pl["collateralHash"], "%064x" % collateral_hash)
-        assert_equal(pl["collateralIndex"], dmn.collateral.n)
+        assert_equal(pl["collateralIndex"], collateral_n)
         assert_equal(pl["service"], dmn.ipport)
         assert_equal(pl["ownerAddress"], dmn.owner)
         assert_equal(pl["votingAddress"], dmn.voting)
         assert_equal(pl["operatorPubKey"], dmn.operator_pk)
         assert_equal(pl["payoutAddress"], dmn.payee)
+        # fix the nullifier
+        dmn.nullifier = pl["nullifier"]
+
 
 # ------------------------------------------------------
 
@@ -1383,17 +1405,18 @@ class ExpectedDKGMessages:
 class PivxDMNTestFramework(PivxTestFramework):
 
     def set_base_test_params(self):
-        # 1 miner, 1 controller, 6 remote mns
+        # 1 miner, 1 controller, 6 remote mns 2 of which shielded
         self.num_nodes = 8
         self.minerPos = 0
         self.controllerPos = 1
         self.setup_clean_chain = True
 
-    def add_new_dmn(self, strType, op_keys=None, from_out=None):
+    def add_new_dmn(self, strType, transparent=True, op_keys=None, from_out=None):
         self.mns.append(self.register_new_dmn(2 + len(self.mns),
                                              self.minerPos,
                                              self.controllerPos,
                                              strType,
+                                             transparent,
                                              outpoint=from_out,
                                              op_blskeys=op_keys))
 
@@ -1453,10 +1476,14 @@ class PivxDMNTestFramework(PivxTestFramework):
         # Create 6 DMNs and init the remote nodes
         self.log.info("Initializing masternodes...")
         for _ in range(2):
-            self.add_new_dmn("internal")
+            self.add_new_dmn("internal", False)
             self.add_new_dmn("external")
             self.add_new_dmn("fund")
         assert_equal(len(self.mns), 6)
+        # Sanity check that we have 2 shielded masternodes
+        assert_equal(len(self.nodes[self.controllerPos].listlockunspent()["shielded"]), 2)
+        assert_equal(self.mns[0].transparent, False)
+        assert_equal(self.mns[3].transparent, False)
         for mn in self.mns:
             self.nodes[mn.idx].initmasternode(mn.operator_sk)
             time.sleep(1)

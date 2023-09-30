@@ -4,25 +4,30 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "activemasternode.h"
-#include "bls/key_io.h"
 #include "bls/bls_wrapper.h"
+#include "bls/key_io.h"
+#include "chainparams.h"
 #include "core_io.h"
 #include "destination_io.h"
 #include "evo/deterministicmns.h"
-#include "evo/specialtx_validation.h"
 #include "evo/providertx.h"
+#include "evo/specialtx_validation.h"
 #include "key_io.h"
 #include "masternode.h"
 #include "messagesigner.h"
 #include "netbase.h"
 #include "operationresult.h"
 #include "policy/policy.h"
+#include "primitives/transaction.h"
 #include "pubkey.h" // COMPACT_SIGNATURE_SIZE
+#include "rpc/protocol.h"
 #include "rpc/server.h"
+#include "sapling/transaction_builder.h"
 #include "script/sign.h"
 #include "tiertwo/masternode_meta_manager.h"
 #include "util/validation.h"
 #include "utilmoneystr.h"
+#include "validation.h"
 
 #ifdef ENABLE_WALLET
 #include "coincontrol.h"
@@ -37,6 +42,7 @@ enum ProRegParam {
     collateralAddress,
     collateralHash,
     collateralIndex,
+    transparent,
     ipAndPort_register,
     ipAndPort_update,
     operatorPubKey_register,
@@ -56,85 +62,68 @@ enum ProRegParam {
 };
 
 static const std::map<ProRegParam, std::string> mapParamHelp = {
-        {collateralAddress,
-            "%d. \"collateralAddress\"     (string, required) The PIVX address to send the collateral to.\n"
-        },
-        {collateralHash,
-            "%d. \"collateralHash\"        (string, required) The collateral transaction hash.\n"
-        },
-        {collateralIndex,
-            "%d. collateralIndex           (numeric, required) The collateral transaction output index.\n"
-        },
-        {ipAndPort_register,
-            "%d. \"ipAndPort\"             (string, required) IP and port in the form \"IP:PORT\".\n"
-            "                                Must be unique on the network. Can be set to 0, which will require a ProUpServTx afterwards.\n"
-        },
-        {ipAndPort_update,
-            "%d. \"ipAndPort\"             (string, required) IP and port in the form \"IP:PORT\".\n"
-            "                                If set to an empty string, the currently active ip is reused.\n"
-        },
-        {operatorPubKey_register,
-            "%d. \"operatorPubKey\"       (string, required) The operator BLS public key. The BLS private key does not have to be known.\n"
-            "                              It has to match the BLS private key which is later used when operating the masternode.\n"
-        },
-        {operatorPubKey_update,
-            "%d. \"operatorPubKey\"       (string, required) The operator BLS public key. The BLS private key does not have to be known.\n"
-            "                                It has to match the BLS private key which is later used when operating the masternode.\n"
-            "                                If set to an empty string, the currently active operator BLS public key is reused.\n"
-        },
-        {operatorKey,
-            "%d. \"operatorKey\"           (string, optional) The operator BLS private key associated with the\n"
-            "                                 registered operator public key. If not specified, or set to an empty string, then this command must\n"
-            "                                 be performed on the active masternode with the corresponding operator key.\n"
-        },
-        {operatorPayoutAddress_register,
-            "%d. \"operatorPayoutAddress\" (string, optional) The address used for operator reward payments.\n"
-            "                                Only allowed when the ProRegTx had a non-zero operatorReward value.\n"
-            "                                If set to an empty string, the operatorPubKey is used.\n"
-        },
-        {operatorPayoutAddress_update,
-            "%d. \"operatorPayoutAddress\" (string, optional) The address used for operator reward payments.\n"
-            "                                Only allowed when the ProRegTx had a non-zero operatorReward value.\n"
-            "                                If set to an empty string, the currently active one is reused.\n"
-        },
-        {operatorReward,
-            "%d. \"operatorReward\"        (numeric, optional) The fraction in %% to share with the operator. The value must be\n"
-            "                                between 0.00 and 100.00. If not set, it takes the default value of 0.0\n"
-        },
-        {ownerAddress,
-            "%d. \"ownerAddress\"          (string, required) The PIVX address to use for payee updates and proposal voting.\n"
-            "                                The private key belonging to this address must be known in your wallet, in order to send updates.\n"
-            "                                The address must not be already registered, and must differ from the collateralAddress\n"
-        },
-        {ownerKey,
-            "%d. \"ownerKey\"              (string, optional) The owner key associated with the operator address of the masternode.\n"
-            "                                If not specified, or set to an empty string, then the mn key must be known by your wallet, in order to sign the tx.\n"
-        },
-        {payoutAddress_register,
-            "%d. \"payoutAddress\"          (string, required) The PIVX address to use for masternode reward payments.\n"
-        },
-        {payoutAddress_update,
-            "%d. \"payoutAddress\"          (string, required) The PIVX address to use for masternode reward payments.\n"
-            "                                 If set to an empty string, the currently active payout address is reused.\n"
-        },
-        {proTxHash,
-            "%d. \"proTxHash\"              (string, required) The hash of the initial ProRegTx.\n"
-        },
-        {revocationReason,
-            "%d. reason                     (numeric, optional) The reason for masternode service revocation. Default: 0.\n"
-            "                                 0=not_specified, 1=service_termination, 2=compromised_keys, 3=keys_change.\n"
-        },
-        {votingAddress_register,
-            "%d. \"votingAddress\"          (string, required) The voting key address. The private key does not have to be known by your wallet.\n"
-            "                                 It has to match the private key which is later used when voting on proposals.\n"
-            "                                 If set to an empty string, ownerAddress will be used.\n"
-        },
-        {votingAddress_update,
-            "%d. \"votingAddress\"          (string, required) The voting key address. The private key does not have to be known by your wallet.\n"
-            "                                 It has to match the private key which is later used when voting on proposals.\n"
-            "                                 If set to an empty string, the currently active voting key address is reused.\n"
-        },
-    };
+    {collateralAddress,
+        "%d. \"collateralAddress\"     (string, required) The PIVX address to send the collateral to.\n"},
+    {collateralHash,
+        "%d. \"collateralHash\"        (string, required) The collateral transaction hash.\n"},
+    {collateralIndex,
+        "%d. collateralIndex           (numeric, required) The collateral transaction output index.\n"},
+    {transparent,
+        "%d. transparent           (bool, required) Whether you want to create a shield masternode or a transparent one.\n"},
+    {ipAndPort_register,
+        "%d. \"ipAndPort\"             (string, required) IP and port in the form \"IP:PORT\".\n"
+        "                                Must be unique on the network. Can be set to 0, which will require a ProUpServTx afterwards.\n"},
+    {ipAndPort_update,
+        "%d. \"ipAndPort\"             (string, required) IP and port in the form \"IP:PORT\".\n"
+        "                                If set to an empty string, the currently active ip is reused.\n"},
+    {operatorPubKey_register,
+        "%d. \"operatorPubKey\"       (string, required) The operator BLS public key. The BLS private key does not have to be known.\n"
+        "                              It has to match the BLS private key which is later used when operating the masternode.\n"},
+    {operatorPubKey_update,
+        "%d. \"operatorPubKey\"       (string, required) The operator BLS public key. The BLS private key does not have to be known.\n"
+        "                                It has to match the BLS private key which is later used when operating the masternode.\n"
+        "                                If set to an empty string, the currently active operator BLS public key is reused.\n"},
+    {operatorKey,
+        "%d. \"operatorKey\"           (string, optional) The operator BLS private key associated with the\n"
+        "                                 registered operator public key. If not specified, or set to an empty string, then this command must\n"
+        "                                 be performed on the active masternode with the corresponding operator key.\n"},
+    {operatorPayoutAddress_register,
+        "%d. \"operatorPayoutAddress\" (string, optional) The address used for operator reward payments.\n"
+        "                                Only allowed when the ProRegTx had a non-zero operatorReward value.\n"
+        "                                If set to an empty string, the operatorPubKey is used.\n"},
+    {operatorPayoutAddress_update,
+        "%d. \"operatorPayoutAddress\" (string, optional) The address used for operator reward payments.\n"
+        "                                Only allowed when the ProRegTx had a non-zero operatorReward value.\n"
+        "                                If set to an empty string, the currently active one is reused.\n"},
+    {operatorReward,
+        "%d. \"operatorReward\"        (numeric, optional) The fraction in %% to share with the operator. The value must be\n"
+        "                                between 0.00 and 100.00. If not set, it takes the default value of 0.0\n"},
+    {ownerAddress,
+        "%d. \"ownerAddress\"          (string, required) The PIVX address to use for payee updates and proposal voting.\n"
+        "                                The private key belonging to this address must be known in your wallet, in order to send updates.\n"
+        "                                The address must not be already registered, and must differ from the collateralAddress\n"},
+    {ownerKey,
+        "%d. \"ownerKey\"              (string, optional) The owner key associated with the operator address of the masternode.\n"
+        "                                If not specified, or set to an empty string, then the mn key must be known by your wallet, in order to sign the tx.\n"},
+    {payoutAddress_register,
+        "%d. \"payoutAddress\"          (string, required) The PIVX address to use for masternode reward payments.\n"},
+    {payoutAddress_update,
+        "%d. \"payoutAddress\"          (string, required) The PIVX address to use for masternode reward payments.\n"
+        "                                 If set to an empty string, the currently active payout address is reused.\n"},
+    {proTxHash,
+        "%d. \"proTxHash\"              (string, required) The hash of the initial ProRegTx.\n"},
+    {revocationReason,
+        "%d. reason                     (numeric, optional) The reason for masternode service revocation. Default: 0.\n"
+        "                                 0=not_specified, 1=service_termination, 2=compromised_keys, 3=keys_change.\n"},
+    {votingAddress_register,
+        "%d. \"votingAddress\"          (string, required) The voting key address. The private key does not have to be known by your wallet.\n"
+        "                                 It has to match the private key which is later used when voting on proposals.\n"
+        "                                 If set to an empty string, ownerAddress will be used.\n"},
+    {votingAddress_update,
+        "%d. \"votingAddress\"          (string, required) The voting key address. The private key does not have to be known by your wallet.\n"
+        "                                 It has to match the private key which is later used when voting on proposals.\n"
+        "                                 If set to an empty string, the currently active voting key address is reused.\n"},
+};
 
 std::string GetHelpString(int nParamNum, ProRegParam p)
 {
@@ -441,6 +430,39 @@ static ProRegPL ParseProRegPLParams(const UniValue& params, unsigned int paramId
     return pl;
 }
 
+static bool CreateProRegShieldProof(std::string& error, ProRegPL& pl, SaplingNoteEntry& note, CWallet* pwallet)
+{
+    TransactionBuilder txBuilder(Params().GetConsensus(), pwallet);
+    txBuilder.SetFee(0);
+    libzcash::SaplingExtendedSpendingKey sk;
+    if (!pwallet->GetSaplingExtendedSpendingKey(note.address, sk)) {
+        error = strprintf("Cannot fetch the SaplingExtendedSpendingKey");
+        return false;
+    }
+    uint256 anchor;
+    std::vector<Optional<SaplingWitness>> witnesses;
+    std::vector<SaplingOutPoint> noteop;
+    noteop.emplace_back(note.op);
+    pwallet->GetSaplingScriptPubKeyMan()->GetSaplingNoteWitnesses(noteop, witnesses, anchor);
+    txBuilder.AddSaplingSpend(sk.expsk, note.note, anchor, witnesses[0].get());
+    auto newAddress = pwallet->getNewAddress("");
+    if (!newAddress.getRes()) {
+        error = newAddress.getError();
+        return false;
+    }
+    txBuilder.AddTransparentOutput(*newAddress.getObjResult(), Params().GetConsensus().nMNCollateralAmt);
+    auto txTrial = txBuilder.Build();
+    if (txTrial.IsError()) {
+        error = strprintf("Could not build shield proof");
+        return false;
+    }
+    auto txFinal = *txTrial.GetTx();
+    pl.shieldCollateral.input = (*txFinal.sapData).vShieldedSpend[0];
+    pl.shieldCollateral.output = txFinal.vout[0];
+    copy(begin((*txFinal.sapData).bindingSig), end((*txFinal.sapData).bindingSig), back_inserter(pl.shieldCollateral.bindingSig));
+    return true;
+}
+
 // handles protx_register, and protx_register_prepare
 static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
 {
@@ -449,45 +471,32 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() < 7 || request.params.size() > 9) {
+    if (request.fHelp || request.params.size() < 8 || request.params.size() > 10) {
         throw std::runtime_error(
-                (fSignAndSend ?
-                    "protx_register \"collateralHash\" collateralIndex \"ipAndPort\" \"ownerAddress\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (operatorReward \"operatorPayoutAddress\")\n"
+            (fSignAndSend ?
+                    "protx_register \"collateralHash\" collateralIndex transparent \"ipAndPort\" \"ownerAddress\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (operatorReward \"operatorPayoutAddress\")\n"
                     "The collateral is specified through \"collateralHash\" and \"collateralIndex\" and must be an unspent\n"
-                    "transaction output spendable by this wallet. It must also not be used by any other masternode.\n"
-                        :
-                    "protx_register_prepare \"collateralHash\" collateralIndex \"ipAndPort\" \"ownerAddress\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (operatorReward \"operatorPayoutAddress\")\n"
+                    "transaction output spendable by this wallet. It must also not be used by any other masternode.\n" :
+                    "protx_register_prepare \"collateralHash\" collateralIndex transparent \"ipAndPort\" \"ownerAddress\" \"operatorPubKey\" \"votingAddress\" \"payoutAddress\" (operatorReward \"operatorPayoutAddress\")\n"
                     "\nCreates an unsigned ProTx and returns it. The ProTx must be signed externally with the collateral\n"
-                    "key and then passed to \"protx_register_submit\".\n"
-                    "The collateral is specified through \"collateralHash\" and \"collateralIndex\" and must be an unspent transaction output.\n"
-                )
-                + HelpRequiringPassphrase(pwallet) + "\n"
-                "\nArguments:\n"
-                + GetHelpString(1, collateralHash)
-                + GetHelpString(2, collateralIndex)
-                + GetHelpString(3, ipAndPort_register)
-                + GetHelpString(4, ownerAddress)
-                + GetHelpString(5, operatorPubKey_register)
-                + GetHelpString(6, votingAddress_register)
-                + GetHelpString(7, payoutAddress_register)
-                + GetHelpString(8, operatorReward)
-                + GetHelpString(9, operatorPayoutAddress_register) +
-                "\nResult:\n" +
-                (fSignAndSend ? (
-                        "\"txid\"                 (string) The transaction id.\n"
-                        "\nExamples:\n"
-                        + HelpExampleCli("protx_register", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" 0 \"168.192.1.100:51472\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\"")
-                        ) : (
-                        "{                        (json object)\n"
-                        "  \"tx\" :                 (string) The serialized ProTx in hex format.\n"
-                        "  \"collateralAddress\" :  (string) The collateral address.\n"
-                        "  \"signMessage\" :        (string) The string message that needs to be signed with the collateral key\n"
-                        "}\n"
-                        "\nExamples:\n"
-                        + HelpExampleCli("protx_register_prepare", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" 0 \"168.192.1.100:51472\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\"")
-                        )
-                )
-        );
+                    "key (if the masternode is transparent) and then passed to \"protx_register_submit\".\n"
+                    "The collateral is specified through \"collateralHash\" and \"collateralIndex\" and must be an unspent transaction output/ unspent shield outpoint.\n") +
+            HelpRequiringPassphrase(pwallet) + "\n"
+                                               "\nArguments:\n" +
+            GetHelpString(1, collateralHash) + GetHelpString(2, collateralIndex) + GetHelpString(3, transparent) + GetHelpString(4, ipAndPort_register) + GetHelpString(5, ownerAddress) + GetHelpString(6, operatorPubKey_register) + GetHelpString(7, votingAddress_register) + GetHelpString(8, payoutAddress_register) + GetHelpString(9, operatorReward) + GetHelpString(10, operatorPayoutAddress_register) +
+            "\nResult:\n" +
+            (fSignAndSend ? (
+                                "\"txid\"                 (string) The transaction id.\n"
+                                "\nExamples:\n" +
+                                HelpExampleCli("protx_register", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" 0 false \"168.192.1.100:51472\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\"")) :
+                            (
+                                "{                        (json object)\n"
+                                "  \"tx\" :                 (string) The serialized ProTx in hex format.\n"
+                                "  \"collateralAddress\" :  (string) The collateral address.\n"
+                                "  \"signMessage\" :        (string) The string message that needs to be signed with the collateral key\n"
+                                "}\n"
+                                "\nExamples:\n" +
+                                HelpExampleCli("protx_register_prepare", "\"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\" 0 false \"168.192.1.100:51472\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\" \"DMJRSsuU9zfyrvxVaAEFQqK4MxZg6vgeS6\""))));
     }
     if (fSignAndSend) CheckEvoUpgradeEnforcement();
 
@@ -501,10 +510,9 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
     if (collateralIndex < 0) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("invalid collateral index (negative): %d", collateralIndex));
     }
-
-    ProRegPL pl = ParseProRegPLParams(request.params, 2);
+    const bool transparent = request.params[2].get_bool();
+    ProRegPL pl = ParseProRegPLParams(request.params, 3);
     pl.nVersion = ProRegPL::CURRENT_VERSION;
-    pl.collateralOutpoint = COutPoint(collateralHash, (uint32_t)collateralIndex);
 
     CMutableTransaction tx;
     tx.nVersion = CTransaction::TxVersion::SAPLING;
@@ -512,12 +520,36 @@ static UniValue ProTxRegister(const JSONRPCRequest& request, bool fSignAndSend)
 
     // referencing unspent collateral outpoint
     Coin coin;
-    if (!WITH_LOCK(cs_main, return pcoinsTip->GetUTXOCoin(pl.collateralOutpoint, coin); )) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("collateral not found: %s-%d", collateralHash.ToString(), collateralIndex));
+    if (transparent) {
+        pl.collateralOutpoint = COutPoint(collateralHash, (uint32_t)collateralIndex);
+        if (!WITH_LOCK(cs_main, return pcoinsTip->GetUTXOCoin(pl.collateralOutpoint, coin);)) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("collateral not found: %s-%d", collateralHash.ToString(), collateralIndex));
+        }
+        if (coin.out.nValue != Params().GetConsensus().nMNCollateralAmt) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("collateral %s-%d with invalid value %d", collateralHash.ToString(), collateralIndex, coin.out.nValue));
+        }
+    } else {
+        const SaplingOutPoint op(collateralHash, collateralIndex);
+        std::vector<SaplingNoteEntry> note;
+        pwallet->GetSaplingScriptPubKeyMan()->GetNotes({op}, note);
+        if (note.size() == 0) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Cannot find sapling note indexed by %s-%d", collateralHash.ToString(), collateralIndex));
+        }
+        std::string errStr;
+        if (!CreateProRegShieldProof(errStr, pl, note[0], pwallet)) {
+            throw JSONRPCError(RPC_INTERNAL_ERROR, errStr);
+        }
+        FundSpecialTx(pwallet, tx, pl);
+        SetTxPayload(tx, pl);
+        if (fSignAndSend) {
+            return SignAndSendSpecialTx(pwallet, tx, pl);
+        } else {
+            UniValue ret(UniValue::VOBJ);
+            ret.pushKV("tx", EncodeHexTx(tx));
+            return ret;
+        }
     }
-    if (coin.out.nValue != Params().GetConsensus().nMNCollateralAmt) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("collateral %s-%d with invalid value %d", collateralHash.ToString(), collateralIndex, coin.out.nValue));
-    }
+
     CTxDestination txDest;
     ExtractDestination(coin.out.scriptPubKey, txDest);
     const CKeyID* keyID = boost::get<CKeyID>(&txDest);
@@ -566,20 +598,19 @@ UniValue protx_register_submit(const JSONRPCRequest& request)
     if (!EnsureWalletIsAvailable(pwallet, request.fHelp))
         return NullUniValue;
 
-    if (request.fHelp || request.params.size() != 2) {
+    if (request.fHelp || (request.params.size() != 1 && request.params.size() != 2)) {
         throw std::runtime_error(
-                "protx_register_submit \"tx\" \"sig\"\n"
-                "\nSubmits the specified ProTx to the network. This command will also sign the inputs of the transaction\n"
-                "which were previously added by \"protx_register_prepare\" to cover transaction fees\n"
-                + HelpRequiringPassphrase(pwallet) + "\n"
-                "\nArguments:\n"
-                "1. \"tx\"                 (string, required) The serialized transaction previously returned by \"protx_register_prepare\"\n"
-                "2. \"sig\"                (string, required) The signature signed with the collateral key. Must be in base64 format.\n"
-                "\nResult:\n"
-                "\"txid\"                  (string) The transaction id.\n"
-                "\nExamples:\n"
-                + HelpExampleCli("protx_register_submit", "\"tx\" \"sig\"")
-        );
+            "protx_register_submit \"tx\" \"sig\"\n"
+            "\nSubmits the specified ProTx to the network. This command will also sign the inputs of the transaction\n"
+            "which were previously added by \"protx_register_prepare\" to cover transaction fees (note: the signature is not needed for shield masternodes)\n" +
+            HelpRequiringPassphrase(pwallet) + "\n"
+                                               "\nArguments:\n"
+                                               "1. \"tx\"                 (string, required) The serialized transaction previously returned by \"protx_register_prepare\"\n"
+                                               "2. \"sig\"                (string, required only for transparent masternodes) The signature signed with the collateral key. Must be in base64 format.\n"
+                                               "\nResult:\n"
+                                               "\"txid\"                  (string) The transaction id.\n"
+                                               "\nExamples:\n" +
+            HelpExampleCli("protx_register_submit", "\"tx\" \"sig\""));
     }
     CheckEvoUpgradeEnforcement();
 
@@ -603,7 +634,13 @@ UniValue protx_register_submit(const JSONRPCRequest& request)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "payload signature not empty");
     }
 
-    pl.vchSig = DecodeBase64(request.params[1].get_str().c_str());
+    bool isShield = !pl.shieldCollateral.IsNull();
+    if (!isShield) {
+        if (request.params.size() != 2) {
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "missing signature");
+        }
+        pl.vchSig = DecodeBase64(request.params[1].get_str().c_str());
+    }
 
     // check the payload, add the tx inputs sigs, and send the tx.
     return SignAndSendSpecialTx(pwallet, tx, pl);
@@ -1067,9 +1104,9 @@ static const CRPCCommand commands[] =
     { "evo",         "generateblskeypair",             &generateblskeypair,     true,  {} },
     { "evo",         "protx_list",                     &protx_list,             true,  {"detailed","wallet_only","valid_only","height"} },
 #ifdef ENABLE_WALLET
-    { "evo",         "protx_register",                 &protx_register,         true,  {"collateralHash","collateralIndex","ipAndPort","ownerAddress","operatorPubKey","votingAddress","payoutAddress","operatorReward","operatorPayoutAddress"} },
+    { "evo",         "protx_register",                 &protx_register,         true,  {"collateralHash","collateralIndex", "transparent", "ipAndPort","ownerAddress","operatorPubKey","votingAddress","payoutAddress","operatorReward","operatorPayoutAddress"} },
     { "evo",         "protx_register_fund",            &protx_register_fund,    true,  {"collateralAddress","ipAndPort","ownerAddress","operatorPubKey","votingAddress","payoutAddress","operatorReward","operatorPayoutAddress"} },
-    { "evo",         "protx_register_prepare",         &protx_register_prepare, true,  {"collateralHash","collateralIndex","ipAndPort","ownerAddress","operatorPubKey","votingAddress","payoutAddress","operatorReward","operatorPayoutAddress"} },
+    { "evo",         "protx_register_prepare",         &protx_register_prepare, true,  {"collateralHash","collateralIndex", "transparent", "ipAndPort","ownerAddress","operatorPubKey","votingAddress","payoutAddress","operatorReward","operatorPayoutAddress"} },
     { "evo",         "protx_register_submit",          &protx_register_submit,  true,  {"tx","sig"} },
     { "evo",         "protx_revoke",                   &protx_revoke,           true,  {"proTxHash","operatorKey","reason"} },
     { "evo",         "protx_update_registrar",         &protx_update_registrar, true,  {"proTxHash","operatorPubKey","votingAddress","payoutAddress","ownerKey"} },

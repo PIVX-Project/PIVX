@@ -440,6 +440,7 @@ bool CMasternodePayments::ProcessMessageMasternodePayments(CNode* pfrom, std::st
     return true;
 }
 
+// This function is not compatible with shield DMNs, but it's not a problem since they will activated after the transition
 bool CMasternodePayments::ProcessMNWinner(CMasternodePaymentWinner& winner, CNode* pfrom, CValidationState& state)
 {
     int nHeight = mnodeman.GetBestHeight();
@@ -464,7 +465,7 @@ bool CMasternodePayments::ProcessMNWinner(CMasternodePaymentWinner& winner, CNod
 
     // See if the mnw signer exists, and whether it's a legacy or DMN masternode
     const CMasternode* pmn{nullptr};
-    auto dmn = deterministicMNManager->GetListAtChainTip().GetMNByCollateral(winner.vinMasternode.prevout);
+    auto dmn = winner.vinMasternode.prevout.IsNull() ? nullptr : deterministicMNManager->GetListAtChainTip().GetMNByCollateral(winner.vinMasternode.prevout);
     if (dmn == nullptr) {
         // legacy masternode
         pmn = mnodeman.Find(winner.vinMasternode.prevout);

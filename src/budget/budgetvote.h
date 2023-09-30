@@ -30,6 +30,9 @@ private:
     uint256 nProposalHash;
     VoteDirection nVote;
     int64_t nTime;
+    // NOTE: SDMNs don't have a public collateral outpoint since they point to a shield note.
+    // Therefore from v6.0+ the prevout of the vin instead of being the masternode collateral outpoint will become the quantity Coutpoint(proRegTxHash, 0).
+    // Sadly to keep backward compatibility we cannot change this CTxIn to a more simple uint256.
     CTxIn vin;
 
 public:

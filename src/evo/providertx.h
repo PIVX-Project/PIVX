@@ -6,23 +6,61 @@
 #define PIVX_PROVIDERTX_H
 
 #include "bls/bls_wrapper.h"
-#include "primitives/transaction.h"
 #include "netaddress.h"
+#include "primitives/transaction.h"
+#include "sapling/sapling_transaction.h"
+#include "serialize.h"
 
 #include <univalue.h>
+
+// Proof of ownership/validity/unspentness for the collateral of a shield DMn
+
+class ShieldDMNProof
+{
+public:
+    SpendDescription input;
+    CTxOut output;
+    std::vector<unsigned char> bindingSig;
+
+    ShieldDMNProof()
+    {
+        SetNull();
+    }
+
+    void SetNull()
+    {
+        input = SpendDescription();
+        output = CTxOut();
+        bindingSig.clear();
+    }
+
+    bool IsNull()
+    {
+        return output.IsNull() && bindingSig.empty() && input == SpendDescription();
+    }
+
+    SERIALIZE_METHODS(ShieldDMNProof, obj)
+    {
+        READWRITE(obj.input);
+        READWRITE(obj.output);
+        READWRITE(obj.bindingSig);
+    }
+};
+
 
 // Provider-Register tx payload
 
 class ProRegPL
 {
 public:
-    static const uint16_t CURRENT_VERSION = 1;
+    static const uint16_t CURRENT_VERSION = 2;
 
 public:
     uint16_t nVersion{CURRENT_VERSION};                         // message version
     uint16_t nType{0};                                          // only 0 supported for now
     uint16_t nMode{0};                                          // only 0 supported for now
     COutPoint collateralOutpoint{UINT256_ZERO, (uint32_t)-1};   // if hash is null, we refer to a ProRegTx output
+    ShieldDMNProof shieldCollateral{ShieldDMNProof()}; // if null the ProRegTx refers to a transparent DMNs
     CService addr;
     CKeyID keyIDOwner;
     CBLSPublicKey pubKeyOperator;
@@ -41,6 +79,7 @@ public:
         READWRITE(obj.nType);
         READWRITE(obj.nMode);
         READWRITE(obj.collateralOutpoint);
+        READWRITE(obj.shieldCollateral);
         READWRITE(obj.addr);
         READWRITE(obj.keyIDOwner);
         READWRITE(obj.pubKeyOperator);
@@ -160,5 +199,9 @@ public:
 
 // If tx is a ProRegTx, return the collateral outpoint in outRet.
 bool GetProRegCollateral(const CTransactionRef& tx, COutPoint& outRet);
+// return true is the tx is a ProReg and corresponds to a shield masternode
+bool IsShieldProReg(const CTransactionRef& tx);
+// If tx is a ProRegTx, return the corresponding shield nullifier.
+bool GetProRegNullifier(const CTransactionRef& tx, uint256& outNullifier);
 
 #endif  //PIVX_PROVIDERTX_H

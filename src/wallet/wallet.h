@@ -904,6 +904,7 @@ public:
      */
     void LockOutpointIfMineWithMutex(const CTransactionRef& ptx, const COutPoint& c);
 
+    void LockNullifierIfMine(uint256 nullifier);
     /*
      *  Requires cs_wallet lock.
      *  Called from AddToWalletIfInvolvingMe. If ptx is a ProRegTx, and the

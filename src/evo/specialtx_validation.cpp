@@ -6,18 +6,20 @@
 #include "evo/specialtx_validation.h"
 
 #include "chain.h"
-#include "coins.h"
 #include "chainparams.h"
 #include "clientversion.h"
+#include "coins.h"
 #include "consensus/validation.h"
 #include "evo/deterministicmns.h"
 #include "evo/providertx.h"
 #include "llmq/quorums_blockprocessor.h"
 #include "messagesigner.h"
-#include "primitives/transaction.h"
 #include "primitives/block.h"
+#include "primitives/transaction.h"
+#include "sapling/sapling_validation.h"
 #include "script/standard.h"
 #include "spork.h"
+#include <algorithm>
 
 /* -- Helper static functions -- */
 
@@ -105,6 +107,17 @@ static bool CheckCollateralOut(const CTxOut& out, const ProRegPL& pl, CValidatio
     return true;
 }
 
+// This checks if the provided note value is valid
+static bool CheckShieldDMnCollateralValidity(const CBlockIndex* pindexPrev, const CCoinsViewCache* view, CValidationState& state, CTransaction& tx)
+{
+    assert(pindexPrev);
+
+    if (!SaplingValidation::ContextualCheckTransaction(tx, state, Params(), pindexPrev->nHeight + 1, false, false)) {
+        return false;
+    }
+    return true;
+}
+
 // Provider Register Payload
 static bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev, const CCoinsViewCache* view, CValidationState& state)
 {
@@ -114,6 +127,7 @@ static bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev,
     if (!GetTxPayload(tx, pl)) {
         return state.DoS(100, false, REJECT_INVALID, "bad-protx-payload");
     }
+    bool isShieldDMn = !pl.shieldCollateral.IsNull();
 
     if (pl.nVersion == 0 || pl.nVersion > ProRegPL::CURRENT_VERSION) {
         return state.DoS(100, false, REJECT_INVALID, "bad-protx-version");
@@ -161,46 +175,96 @@ static bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev,
         return state.DoS(10, false, REJECT_INVALID, "bad-protx-operator-reward");
     }
 
-    if (pl.collateralOutpoint.hash.IsNull()) {
-        // collateral included in the proReg tx
-        if (pl.collateralOutpoint.n >= tx.vout.size()) {
-            return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral-index");
-        }
-        CTxDestination collateralTxDest;
-        if (!CheckCollateralOut(tx.vout[pl.collateralOutpoint.n], pl, state, collateralTxDest)) {
-            // pass the state returned by the function above
-            return false;
-        }
-        // collateral is part of this ProRegTx, so we know the collateral is owned by the issuer
-        if (!pl.vchSig.empty()) {
-            return state.DoS(100, false, REJECT_INVALID, "bad-protx-sig");
-        }
-    } else if (pindexPrev != nullptr) {
-        assert(view != nullptr);
+    if (pl.collateralOutpoint.IsNull() && pl.shieldCollateral.IsNull()) {
+        return state.DoS(10, false, REJECT_INVALID, "bad-protx-collaterals-empty");
+    }
 
-        // Referenced external collateral.
-        // This is checked only when pindexPrev is not null (thus during ConnectBlock-->CheckSpecialTx),
-        // because this is a contextual check: we need the updated utxo set, to verify that
-        // the coin exists and it is unspent.
-        Coin coin;
-        if (!view->GetUTXOCoin(pl.collateralOutpoint, coin)) {
-            return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral");
+    if (!pl.collateralOutpoint.IsNull() && !pl.shieldCollateral.IsNull()) {
+        return state.DoS(10, false, REJECT_INVALID, "bad-protx-collaterals-non-empty");
+    }
+
+    if (!isShieldDMn) {
+        if (pl.collateralOutpoint.hash.IsNull()) {
+            // collateral included in the proReg tx
+            if (pl.collateralOutpoint.n >= tx.vout.size()) {
+                return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral-index");
+            }
+            CTxDestination collateralTxDest;
+            if (!CheckCollateralOut(tx.vout[pl.collateralOutpoint.n], pl, state, collateralTxDest)) {
+                // pass the state returned by the function above
+                return false;
+            }
+            // collateral is part of this ProRegTx, so we know the collateral is owned by the issuer
+            if (!pl.vchSig.empty()) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-protx-sig");
+            }
+        } else if (pindexPrev != nullptr) {
+            assert(view != nullptr);
+
+            // Referenced external collateral.
+            // This is checked only when pindexPrev is not null (thus during ConnectBlock-->CheckSpecialTx),
+            // because this is a contextual check: we need the updated utxo set, to verify that
+            // the coin exists and it is unspent.
+            Coin coin;
+            if (!view->GetUTXOCoin(pl.collateralOutpoint, coin)) {
+                return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral");
+            }
+            CTxDestination collateralTxDest;
+            if (!CheckCollateralOut(coin.out, pl, state, collateralTxDest)) {
+                // pass the state returned by the function above
+                return false;
+            }
+            // Extract key from collateral. This only works for P2PK and P2PKH collaterals and will fail for P2SH.
+            // Issuer of this ProRegTx must prove ownership with this key by signing the ProRegTx
+            const CKeyID* keyForPayloadSig = boost::get<CKeyID>(&collateralTxDest);
+            if (!keyForPayloadSig) {
+                return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral-pkh");
+            }
+            // collateral is not part of this ProRegTx, so we must verify ownership of the collateral
+            if (!CheckStringSig(pl, *keyForPayloadSig, state)) {
+                // pass the state returned by the function above
+                return false;
+            }
         }
-        CTxDestination collateralTxDest;
-        if (!CheckCollateralOut(coin.out, pl, state, collateralTxDest)) {
-            // pass the state returned by the function above
-            return false;
-        }
-        // Extract key from collateral. This only works for P2PK and P2PKH collaterals and will fail for P2SH.
-        // Issuer of this ProRegTx must prove ownership with this key by signing the ProRegTx
-        const CKeyID* keyForPayloadSig = boost::get<CKeyID>(&collateralTxDest);
-        if (!keyForPayloadSig) {
-            return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral-pkh");
-        }
-        // collateral is not part of this ProRegTx, so we must verify ownership of the collateral
-        if (!CheckStringSig(pl, *keyForPayloadSig, state)) {
-            // pass the state returned by the function above
-            return false;
+    } else {
+        if (pindexPrev != nullptr) {
+            assert(view != nullptr);
+            // ShieldDmns are disabled when the legacy system is still active
+            // TODO: remove after complete transition to DMN
+            if (!deterministicMNManager->LegacyMNObsolete(pindexPrev->nHeight + 1) && isShieldDMn) {
+                return state.DoS(10, false, REJECT_INVALID, "spork-21-inactive");
+            }
+
+            // Create the tx proof
+            CMutableTransaction txMut = CMutableTransaction();
+            txMut.nVersion = 3;
+            txMut.vout.push_back(pl.shieldCollateral.output);
+            (*txMut.sapData).vShieldedSpend.push_back(pl.shieldCollateral.input);
+            (*txMut.sapData).valueBalance = Params().GetConsensus().nMNCollateralAmt;
+            if (pl.shieldCollateral.bindingSig.size() != (*txMut.sapData).bindingSig.size()) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-protx-bindingSig-len");
+            }
+            if (pl.shieldCollateral.output.nValue != Params().GetConsensus().nMNCollateralAmt) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-protx-proofCollateralOutput-amt");
+            }
+            std::copy(pl.shieldCollateral.bindingSig.begin(), pl.shieldCollateral.bindingSig.end(), (*txMut.sapData).bindingSig.begin());
+
+            // Check that the proof is valid
+            CTransaction tx = txMut;
+            if (!CheckShieldDMnCollateralValidity(pindexPrev, view, state, tx)) {
+                // pass the state returned by the function above
+                return false;
+            }
+
+            // Check that the nullifier is still unspent
+            if (!view->HaveShieldedRequirements(tx)) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-shielded-requirements-not-met");
+            }
+
+            // Check that the signature is empty
+            if (!pl.vchSig.empty()) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-protx-sig");
+            }
         }
     }
 
@@ -210,9 +274,15 @@ static bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev,
 
     if (pindexPrev) {
         auto mnList = deterministicMNManager->GetListForBlock(pindexPrev);
-        // only allow reusing of addresses when it's for the same collateral (which replaces the old MN)
-        if (mnList.HasUniqueProperty(pl.addr) && mnList.GetUniquePropertyMN(pl.addr)->collateralOutpoint != pl.collateralOutpoint) {
-            return state.DoS(10, false, REJECT_DUPLICATE, "bad-protx-dup-IP-address");
+        // only allow reusing of addresses when it's for the same collateral/nullifier (which replaces the old MN)
+        if (!isShieldDMn) {
+            if (mnList.HasUniqueProperty(pl.addr) && mnList.GetUniquePropertyMN(pl.addr)->collateralOutpoint != pl.collateralOutpoint) {
+                return state.DoS(10, false, REJECT_DUPLICATE, "bad-protx-dup-IP-address");
+            }
+        } else {
+            if (mnList.HasUniqueProperty(pl.addr) && mnList.GetUniquePropertyMN(pl.addr)->nullifier != pl.shieldCollateral.input.nullifier) {
+                return state.DoS(10, false, REJECT_DUPLICATE, "bad-protx-dup-IP-address");
+            }
         }
         // never allow duplicate keys, even if this ProTx would replace an existing MN
         if (mnList.HasUniqueProperty(pl.keyIDOwner)) {
@@ -222,7 +292,6 @@ static bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev,
             return state.DoS(10, false, REJECT_DUPLICATE, "bad-protx-dup-operator-key");
         }
     }
-
     return true;
 }
 

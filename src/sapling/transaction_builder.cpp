@@ -5,10 +5,11 @@
 
 #include "sapling/transaction_builder.h"
 
-#include "script/sign.h"
-#include "utilmoneystr.h"
 #include "consensus/upgrades.h"
 #include "policy/policy.h"
+#include "primitives/transaction.h"
+#include "script/sign.h"
+#include "utilmoneystr.h"
 #include "validation.h"
 
 #include <librustzcash.h>
@@ -446,4 +447,10 @@ TransactionBuilderResult TransactionBuilder::Build(bool fDummySig)
     }
 
     return fDummySig ? AddDummySignatures() : ProveAndSign();
+}
+
+// WARNING: This function must be used only for testing
+TransactionBuilderResult TransactionBuilder::BuildWithoutConstraints()
+{
+    return ProveAndSign();
 }

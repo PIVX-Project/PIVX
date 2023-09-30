@@ -350,11 +350,12 @@ class CBlockLocator:
 
 
 class COutPoint:
-    __slots__ = ("hash", "n")
+    __slots__ = ("hash", "n", "transparent")
 
-    def __init__(self, hash=0, n=0):
+    def __init__(self, hash=0, n=0, transparent=True):
         self.hash = hash
         self.n = n
+        self.transparent = transparent
 
     def deserialize(self, f):
         self.hash = deser_uint256(f)
@@ -380,7 +381,8 @@ class COutPoint:
         return "COutPoint(hash=%064x n=%i)" % (self.hash, self.n)
 
     def to_json(self):
-        return {"txid": "%064x" % self.hash, "vout": self.n}
+        voutStr = "vout" if self.transparent else "vShieldedOutput"
+        return {"txid": "%064x" % self.hash, voutStr: self.n}
 
 
 NullOutPoint = COutPoint(0, 0xffffffff)
@@ -1575,10 +1577,12 @@ class msg_witness_blocktxn(msg_blocktxn):
 
 
 # PIVX Classes
+# NB: for shielded masternode the field collateral is the ShieldOutPoint of the shield collateral
+# notice the difference from the ProRegTx in which the collateral is the Null default value
 class Masternode(object):
-    __slots__ = ("idx", "owner", "operator_pk", "voting", "ipport", "payee", "operator_sk", "proTx", "collateral")
+    __slots__ = ("idx", "owner", "operator_pk", "voting", "ipport", "payee", "operator_sk", "proTx", "collateral", "nullifier", "transparent")
 
-    def __init__(self, idx, owner_addr, operator_pk, voting_addr, ipport, payout_addr, operator_sk):
+    def __init__(self, idx, owner_addr, operator_pk, voting_addr, ipport, payout_addr, operator_sk, transparent):
         self.idx = idx
         self.owner = owner_addr
         self.operator_pk = operator_pk
@@ -1588,6 +1592,8 @@ class Masternode(object):
         self.operator_sk = operator_sk
         self.proTx = None
         self.collateral = None
+        self.nullifier = "%064x" % 0 if transparent else None
+        self.transparent = transparent
 
     def revoked(self):
         self.ipport = "[::]:0"
@@ -1595,9 +1601,9 @@ class Masternode(object):
         self.operator_sk = None
 
     def __repr__(self):
-        return "Masternode(idx=%d, owner=%s, operator=%s, voting=%s, ip=%s, payee=%s, opkey=%s, protx=%s, collateral=%s)" % (
+        return "Masternode(idx=%d, owner=%s, operator=%s, voting=%s, ip=%s, payee=%s, opkey=%s, protx=%s, collateral=%s, transparent=%s)" % (
             self.idx, str(self.owner), str(self.operator_pk), str(self.voting), str(self.ipport),
-            str(self.payee), str(self.operator_sk), str(self.proTx), str(self.collateral)
+            str(self.payee), str(self.operator_sk), str(self.proTx), str(self.collateral), str(self.transparent)
         )
 
     def __str__(self):

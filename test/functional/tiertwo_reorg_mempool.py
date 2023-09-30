@@ -82,8 +82,8 @@ class TiertwoReorgMempoolTest(PivxTestFramework):
 
         # Register two masternodes before the split
         collateral_addr = nodeA.getnewaddress() # for both collateral and payouts
-        pre_split_mn1 = create_new_dmn(100, nodeA, nodeA.getnewaddress(), None)
-        pre_split_mn2 = create_new_dmn(200, nodeA, nodeA.getnewaddress(), None)
+        pre_split_mn1 = create_new_dmn(100, nodeA, nodeA.getnewaddress(), None, True)
+        pre_split_mn2 = create_new_dmn(200, nodeA, nodeA.getnewaddress(), None, True)
         self.register_masternode(nodeA, pre_split_mn1, collateral_addr)
         self.register_masternode(nodeA, pre_split_mn2, collateral_addr)
         nodeA.generate(1)
@@ -104,7 +104,7 @@ class TiertwoReorgMempoolTest(PivxTestFramework):
         # Register 5 masternodes, then mine 5 blocks
         self.log.info("Registering masternodes on chain A...")
         for _ in range(5):
-            dmn = create_new_dmn(free_idx, nodeA, collateral_addr, None)
+            dmn = create_new_dmn(free_idx, nodeA, collateral_addr, None, True)
             free_idx += 1
             self.register_masternode(nodeA, dmn, collateral_addr)
             mnsA.append(dmn)
@@ -124,14 +124,14 @@ class TiertwoReorgMempoolTest(PivxTestFramework):
             nodeA.lockunspent(False, True, [{"txid": x["txid"], "vout": x["vout"]}])
 
         # Now send a valid proReg tx to the mempool, without mining it
-        mempool_dmn1 = create_new_dmn(free_idx, nodeA, collateral_addr, None)
+        mempool_dmn1 = create_new_dmn(free_idx, nodeA, collateral_addr, None, True)
         free_idx += 1
         self.register_masternode(nodeA, mempool_dmn1, collateral_addr)
         assert mempool_dmn1.proTx in nodeA.getrawmempool()
 
         # Try sending a proReg tx with same owner
         self.log.info("Testing in-mempool duplicate-owner rejection...")
-        dmn_A1 = create_new_dmn(free_idx, nodeA, collateral_addr, None)
+        dmn_A1 = create_new_dmn(free_idx, nodeA, collateral_addr, None, True)
         free_idx += 1
         dmn_A1.owner = mempool_dmn1.owner
         assert_raises_rpc_error(-26, "protx-dup",
@@ -140,7 +140,7 @@ class TiertwoReorgMempoolTest(PivxTestFramework):
 
         # Try sending a proReg tx with same operator
         self.log.info("Testing in-mempool duplicate-operator rejection...")
-        dmn_A2 = create_new_dmn(free_idx, nodeA, collateral_addr, None)
+        dmn_A2 = create_new_dmn(free_idx, nodeA, collateral_addr, None, True)
         free_idx += 1
         dmn_A2.operator_pk = mempool_dmn1.operator_pk
         assert_raises_rpc_error(-26, "protx-dup",
@@ -149,7 +149,7 @@ class TiertwoReorgMempoolTest(PivxTestFramework):
 
         # Try sending a proReg tx with same IP
         self.log.info("Testing proReg in-mempool duplicate-IP rejection...")
-        dmn_A3 = create_new_dmn(free_idx, nodeA, collateral_addr, None)
+        dmn_A3 = create_new_dmn(free_idx, nodeA, collateral_addr, None, True)
         free_idx += 1
         dmn_A3.ipport = mempool_dmn1.ipport
         assert_raises_rpc_error(-26, "protx-dup",
@@ -158,15 +158,15 @@ class TiertwoReorgMempoolTest(PivxTestFramework):
 
         # Now send other 2 valid proReg tx to the mempool, without mining them
         self.log.info("Sending more ProReg txes to the mempool...")
-        mempool_dmn2 = create_new_dmn(free_idx, nodeA, collateral_addr, None)
+        mempool_dmn2 = create_new_dmn(free_idx, nodeA, collateral_addr, None, True)
         free_idx += 1
-        mempool_dmn3 = create_new_dmn(free_idx, nodeA, collateral_addr, None)
+        mempool_dmn3 = create_new_dmn(free_idx, nodeA, collateral_addr, None, True)
         free_idx += 1
         self.register_masternode(nodeA, mempool_dmn2, collateral_addr)
         self.register_masternode(nodeA, mempool_dmn3, collateral_addr)
 
         # Send to the mempool a ProRegTx using the collateral mined after the split
-        mempool_dmn4 = create_new_dmn(free_idx, nodeA, collateral_addr, None)
+        mempool_dmn4 = create_new_dmn(free_idx, nodeA, collateral_addr, None, True)
         mempool_dmn4.collateral = initial_collateral
         self.protx_register_ext(nodeA, nodeA, mempool_dmn4, mempool_dmn4.collateral, True)
 
@@ -256,7 +256,7 @@ class TiertwoReorgMempoolTest(PivxTestFramework):
 
         # Register 5 more masternodes. One per block.
         for _ in range(5):
-            dmn = create_new_dmn(free_idx, nodeB, collateral_addr, None)
+            dmn = create_new_dmn(free_idx, nodeB, collateral_addr, None, True)
             free_idx += 1
             self.register_masternode(nodeB, dmn, collateral_addr)
             mnsB.append(dmn)
@@ -264,14 +264,14 @@ class TiertwoReorgMempoolTest(PivxTestFramework):
         self.check_mn_list_on_node(1, mnsB)
 
         # Register one masternode reusing the IP of the proUpServ mempool tx on chainA
-        dmn1000 = create_new_dmn(free_idx, nodeB, collateral_addr, None)
+        dmn1000 = create_new_dmn(free_idx, nodeB, collateral_addr, None, True)
         free_idx += 1
         dmn1000.ipport = "127.0.0.1:1000"
         mnsB.append(dmn1000)
         self.register_masternode(nodeB, dmn1000, collateral_addr)
 
         # Register one masternode reusing the operator-key of the proUpReg mempool tx on chainA
-        dmnop = create_new_dmn(free_idx, nodeB, collateral_addr, None)
+        dmnop = create_new_dmn(free_idx, nodeB, collateral_addr, None, True)
         free_idx += 1
         dmnop.operator_pk = operator_to_reuse
         mnsB.append(dmnop)

@@ -484,6 +484,7 @@ void CActiveMasternode::GetKeys(CKey& _privKeyMasternode, CPubKey& _pubKeyMaster
     _pubKeyMasternode = pubKeyMasternode;
 }
 
+// TODO: Remove after full transition to DMNs
 bool GetActiveDMNKeys(CBLSSecretKey& key, CTxIn& vin)
 {
     if (activeMasternodeManager == nullptr) {
@@ -498,12 +499,54 @@ bool GetActiveDMNKeys(CBLSSecretKey& key, CTxIn& vin)
     return true;
 }
 
+// TODO: Remove after full transition to DMNs
 bool GetActiveMasternodeKeys(CTxIn& vin, Optional<CKey>& key, CBLSSecretKey& blsKey)
 {
     if (activeMasternodeManager != nullptr) {
         // deterministic mn
         key = nullopt;
         return GetActiveDMNKeys(blsKey, vin);
+    }
+    // legacy mn
+    if (activeMasternode.vin == nullopt) {
+        return error("%s: Active Masternode not initialized", __func__);
+    }
+    if (activeMasternode.GetStatus() != ACTIVE_MASTERNODE_STARTED) {
+        return error("%s: MN not started (%s)", __func__, activeMasternode.GetStatusMessage());
+    }
+    vin = *activeMasternode.vin;
+    CKey sk;
+    CPubKey pk;
+    activeMasternode.GetKeys(sk, pk);
+    key = Optional<CKey>(sk);
+    blsKey.Reset();
+    return true;
+}
+
+// Difference with the other function: here the vin returned is the one used for voting, i.e the outpoint is: (proRegTxHash; 0)
+// WHICH IS OF COURSE (IN GENERAL) DIFFERENT FROM THE OUTPOINT OF THE COLLATERAL
+bool GetActiveVotingDMNKeys(CBLSSecretKey& key, CTxIn& vin)
+{
+    if (activeMasternodeManager == nullptr) {
+        return error("%s: Active Masternode not initialized", __func__);
+    }
+    CDeterministicMNCPtr dmn;
+    auto res = activeMasternodeManager->GetOperatorKey(key, dmn);
+    if (!res) {
+        return error("%s: %s", __func__, res.getError());
+    }
+    vin = CTxIn(COutPoint(dmn->proTxHash, 0));
+    return true;
+}
+
+// Difference with the other function: here the vin returned is the one used for voting, i.e the outpoint is: (proRegTxHash; 0)
+// WHICH IS OF COURSE (IN GENERAL) DIFFERENT FROM THE OUTPOINT OF THE COLLATERAL
+bool GetActiveMasternodeVotingKeys(CTxIn& vin, Optional<CKey>& key, CBLSSecretKey& blsKey)
+{
+    if (activeMasternodeManager != nullptr) {
+        // deterministic mn
+        key = nullopt;
+        return GetActiveVotingDMNKeys(blsKey, vin);
     }
     // legacy mn
     if (activeMasternode.vin == nullopt) {

@@ -7,17 +7,19 @@
 
 #include "bls/key_io.h"
 #include "chain.h"
-#include "coins.h"
 #include "chainparams.h"
+#include "coins.h"
 #include "consensus/upgrades.h"
 #include "consensus/validation.h"
 #include "core_io.h"
-#include "key_io.h"
 #include "guiinterface.h"
+#include "key_io.h"
 #include "masternodeman.h" // for mnodeman (!TODO: remove)
+#include "primitives/transaction.h"
 #include "script/standard.h"
 #include "spork.h"
 #include "sync.h"
+#include "uint256.h"
 
 #include <univalue.h>
 
@@ -77,7 +79,7 @@ uint64_t CDeterministicMN::GetInternalId() const
 
 std::string CDeterministicMN::ToString() const
 {
-    return strprintf("CDeterministicMN(proTxHash=%s, collateralOutpoint=%s, nOperatorReward=%f, state=%s", proTxHash.ToString(), collateralOutpoint.ToStringShort(), (double)nOperatorReward / 100, pdmnState->ToString());
+    return strprintf("CDeterministicMN(proTxHash=%s, collateralOutpoint=%s, nullifier=%s, nOperatorReward=%f, state=%s", proTxHash.ToString(), collateralOutpoint.ToStringShort(), nullifier.ToString(), (double)nOperatorReward / 100, pdmnState->ToString());
 }
 
 void CDeterministicMN::ToJson(UniValue& obj) const
@@ -91,6 +93,7 @@ void CDeterministicMN::ToJson(UniValue& obj) const
     obj.pushKV("proTxHash", proTxHash.ToString());
     obj.pushKV("collateralHash", collateralOutpoint.hash.ToString());
     obj.pushKV("collateralIndex", (int)collateralOutpoint.n);
+    obj.pushKV("nullifier", nullifier.ToString());
     obj.pushKV("operatorReward", (double)nOperatorReward / 100);
     obj.pushKV("dmnstate", stateObj);
 }
@@ -125,6 +128,7 @@ CDeterministicMNCPtr CDeterministicMNList::GetMNByOperatorKey(const CBLSPublicKe
 
 CDeterministicMNCPtr CDeterministicMNList::GetMNByCollateral(const COutPoint& collateralOutpoint) const
 {
+    assert(!collateralOutpoint.IsNull());
     return GetUniquePropertyMN(collateralOutpoint);
 }
 
@@ -135,6 +139,12 @@ CDeterministicMNCPtr CDeterministicMNList::GetValidMNByCollateral(const COutPoin
         return nullptr;
     }
     return dmn;
+}
+
+CDeterministicMNCPtr CDeterministicMNList::GetMNByNullifier(const uint256& nullifier) const
+{
+    assert(nullifier != UINT256_ZERO);
+    return GetUniquePropertyMN(nullifier);
 }
 
 CDeterministicMNCPtr CDeterministicMNList::GetMNByService(const CService& service) const
@@ -393,7 +403,12 @@ void CDeterministicMNList::AddMN(const CDeterministicMNCPtr& dmn, bool fBumpTota
 
     mnMap = mnMap.set(dmn->proTxHash, dmn);
     mnInternalIdMap = mnInternalIdMap.set(dmn->GetInternalId(), dmn->proTxHash);
-    AddUniqueProperty(dmn, dmn->collateralOutpoint);
+    if (!dmn->collateralOutpoint.IsNull()) {
+        AddUniqueProperty(dmn, dmn->collateralOutpoint);
+    }
+    if (dmn->nullifier != UINT256_ZERO) {
+        AddUniqueProperty(dmn, dmn->nullifier);
+    }
     if (dmn->pdmnState->addr != CService()) {
         AddUniqueProperty(dmn, dmn->pdmnState->addr);
     }
@@ -448,7 +463,12 @@ void CDeterministicMNList::RemoveMN(const uint256& proTxHash)
     if (!dmn) {
         throw(std::runtime_error(strprintf("%s: Can't find a masternode with proTxHash=%s", __func__, proTxHash.ToString())));
     }
-    DeleteUniqueProperty(dmn, dmn->collateralOutpoint);
+    if (!dmn->collateralOutpoint.IsNull()) {
+        DeleteUniqueProperty(dmn, dmn->collateralOutpoint);
+    }
+    if (dmn->nullifier != UINT256_ZERO) {
+        DeleteUniqueProperty(dmn, dmn->nullifier);
+    }
     if (dmn->pdmnState->addr != CService()) {
         DeleteUniqueProperty(dmn, dmn->pdmnState->addr);
     }
@@ -610,30 +630,34 @@ bool CDeterministicMNManager::BuildNewListFromBlock(const CBlock& block, const C
             auto dmn = std::make_shared<CDeterministicMN>(newList.GetTotalRegisteredCount());
             dmn->proTxHash = tx.GetHash();
 
-            // collateralOutpoint is either pointing to an external collateral or to the ProRegTx itself
-            dmn->collateralOutpoint = pl.collateralOutpoint.hash.IsNull() ? COutPoint(tx.GetHash(), pl.collateralOutpoint.n)
-                                                                          : pl.collateralOutpoint;
+            bool isShieldDmn = !pl.shieldCollateral.IsNull();
+            dmn->nullifier = pl.shieldCollateral.input.nullifier;
+            if (!isShieldDmn) {
+                // collateralOutpoint is either pointing to an external collateral or to the ProRegTx itself
+                dmn->collateralOutpoint = pl.collateralOutpoint.hash.IsNull() ? COutPoint(tx.GetHash(), pl.collateralOutpoint.n) : pl.collateralOutpoint;
 
-            // if the collateral outpoint appears in the legacy masternode list, remove the old node
-            // !TODO: remove this when the transition to DMN is complete
-            CMasternode* old_mn = mnodeman.Find(dmn->collateralOutpoint);
-            if (old_mn) {
-                old_mn->SetSpent();
-                mnodeman.CheckAndRemove();
+                // if the collateral outpoint appears in the legacy masternode list, remove the old node
+                // !TODO: remove this when the transition to DMN is complete
+                CMasternode* old_mn = mnodeman.Find(dmn->collateralOutpoint);
+                if (old_mn) {
+                    old_mn->SetSpent();
+                    mnodeman.CheckAndRemove();
+                }
+            } else {
+                // In case of shield DMn we set the outpoint to the default valute
+                dmn->collateralOutpoint = COutPoint(UINT256_ZERO, (uint32_t)-1);
             }
-
-            auto replacedDmn = newList.GetMNByCollateral(dmn->collateralOutpoint);
+            auto replacedDmn = isShieldDmn ? newList.GetMNByNullifier(dmn->nullifier) : newList.GetMNByCollateral(dmn->collateralOutpoint);
             if (replacedDmn != nullptr) {
                 // This might only happen with a ProRegTx that refers an external collateral
                 // In that case the new ProRegTx will replace the old one. This means the old one is removed
                 // and the new one is added like a completely fresh one, which is also at the bottom of the payment list
                 newList.RemoveMN(replacedDmn->proTxHash);
                 if (debugLogs) {
-                    LogPrintf("CDeterministicMNManager::%s -- MN %s removed from list because collateral was used for a new ProRegTx. collateralOutpoint=%s, nHeight=%d, mapCurMNs.allMNsCount=%d\n",
-                              __func__, replacedDmn->proTxHash.ToString(), dmn->collateralOutpoint.ToStringShort(), nHeight, newList.GetAllMNsCount());
+                    LogPrintf("CDeterministicMNManager::%s -- MN %s removed from list because collateral was used for a new ProRegTx. collateralOutpoint=%s, nullifier=%s, nHeight=%d, mapCurMNs.allMNsCount=%d\n",
+                        __func__, replacedDmn->proTxHash.ToString(), dmn->collateralOutpoint.ToStringShort(), dmn->nullifier.ToString(), nHeight, newList.GetAllMNsCount());
                 }
             }
-
             if (newList.HasUniqueProperty(pl.addr)) {
                 return _state.DoS(100, false, REJECT_DUPLICATE, "bad-protx-dup-IP-address");
             }
@@ -785,6 +809,17 @@ bool CDeterministicMNManager::BuildNewListFromBlock(const CBlock& block, const C
                 if (debugLogs) {
                     LogPrintf("CDeterministicMNManager::%s -- MN %s removed from list because collateral was spent. collateralOutpoint=%s, nHeight=%d, mapCurMNs.allMNsCount=%d\n",
                               __func__, dmn->proTxHash.ToString(), dmn->collateralOutpoint.ToStringShort(), nHeight, newList.GetAllMNsCount());
+                }
+            }
+        }
+        if (!tx.hasSaplingData()) continue;
+        for (const auto& in : (*tx.sapData).vShieldedSpend) {
+            auto dmn = newList.GetMNByNullifier(in.nullifier);
+            if (dmn && dmn->nullifier == in.nullifier) {
+                newList.RemoveMN(dmn->proTxHash);
+                if (debugLogs) {
+                    LogPrintf("CDeterministicMNManager::%s -- MN %s removed from list because collateral was spent. nullifier=%s, nHeight=%d, mapCurMNs.allMNsCount=%d\n",
+                        __func__, dmn->proTxHash.ToString(), dmn->nullifier.ToString(), nHeight, newList.GetAllMNsCount());
                 }
             }
         }
