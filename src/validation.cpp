@@ -18,6 +18,7 @@
 #include "checkqueue.h"
 #include "consensus/consensus.h"
 #include "consensus/merkle.h"
+#include "consensus/params.h"
 #include "consensus/tx_verify.h"
 #include "consensus/validation.h"
 #include "consensus/zerocoin_verify.h"
@@ -379,6 +380,10 @@ static bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState &state, 
     // Coinstake is also only valid in a block, not as a loose transaction
     if (tx.IsCoinStake())
         return state.DoS(100, false, REJECT_INVALID, "coinstake");
+
+    // CoinShieldStake is also only valid in a block, not as a loose transaction
+    if (tx.IsCoinShieldStake())
+        return state.DoS(100, false, REJECT_INVALID, "coinshieldstake");
 
     // LLMQ final commitment too, not valid as a loose transaction
     if (tx.IsQuorumCommitmentTx())
@@ -1077,7 +1082,7 @@ bool CheckTxInputs(const CTransaction& tx, CValidationState& state, const CCoins
     // Sapling
     nValueIn += tx.GetShieldedValueIn();
 
-    if (!tx.IsCoinStake()) {
+    if (!tx.IsCoinStake() && !tx.IsCoinShieldStake()) {
         if (nValueIn < tx.GetValueOut())
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-belowout", false,
                     strprintf("value in (%s) < value out (%s)", FormatMoney(nValueIn), FormatMoney(tx.GetValueOut())));
@@ -1446,7 +1451,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     const bool isPoSActive = consensus.NetworkUpgradeActive(pindex->nHeight, Consensus::UPGRADE_POS);
     const bool isV5UpgradeEnforced = consensus.NetworkUpgradeActive(pindex->nHeight, Consensus::UPGRADE_V5_0);
     const bool isV6UpgradeEnforced = consensus.NetworkUpgradeActive(pindex->nHeight, Consensus::UPGRADE_V6_0);
-
+    const bool isShieldStakeActive = consensus.NetworkUpgradeActive(pindex->nHeight, Consensus::UPGRADE_SHIELD_STAKING);
     // Coinbase output should be empty if proof-of-stake block (before v6 enforcement)
     if (!isV6UpgradeEnforced && isPoSBlock && (block.vtx[0]->vout.size() != 1 || !block.vtx[0]->vout[0].IsEmpty()))
         return state.DoS(100, false, REJECT_INVALID, "bad-cb-pos", false, "coinbase output not empty for proof-of-stake block");
@@ -1476,6 +1481,11 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
         return state.DoS(100, error("ConnectBlock() : PoW period ended"),
             REJECT_INVALID, "PoW-ended");
 
+    // You cannot shield stake if network upgrade is not active yet
+    if (!isShieldStakeActive && block.IsProofOfShieldStake()) {
+        return state.DoS(100, false, REJECT_INVALID, "bad-scs-not-active", false,
+            "shield staking is not active yet");
+    }
     // Sapling
     // Reject a block that results in a negative shielded value pool balance.
     // Description under ZIP209 turnstile violation.
@@ -1567,7 +1577,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
         CAmount txValueOut = tx.GetValueOut();
         if (!tx.IsCoinBase()) {
             CAmount txValueIn = view.GetValueIn(tx);
-            if (!tx.IsCoinStake())
+            if (!tx.IsCoinStake() && !tx.IsCoinShieldStake())
                 nFees += txValueIn - txValueOut;
             nValueIn += txValueIn;
 
@@ -2471,7 +2481,13 @@ static CBlockIndex* AddToBlockIndex(const CBlock& block) EXCLUSIVE_LOCKS_REQUIRE
 
         } else {
             // compute and set new V2 stake modifier (hash of prevout and prevModifier)
-            pindexNew->SetNewStakeModifier(block.vtx[1]->vin[0].prevout.hash);
+            if (block.IsProofOfStake()) {
+                if (block.IsProofOfShieldStake()) {
+                    pindexNew->SetNewStakeModifier(block.vtx[1]->sapData->vShieldedSpend[0].nullifier);
+                } else {
+                    pindexNew->SetNewStakeModifier(block.vtx[1]->vin[0].prevout.hash);
+                }
+            }
         }
     }
     pindexNew->nTimeMax = (pindexNew->pprev ? std::max(pindexNew->pprev->nTimeMax, pindexNew->nTime) : pindexNew->nTime);
@@ -2739,10 +2755,10 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
 
     if (IsPoS) {
         // Second transaction must be coinstake, the rest must not be
-        if (block.vtx.empty() || !block.vtx[1]->IsCoinStake())
+        if (block.vtx.empty() || !(block.vtx[1]->IsCoinStake() || block.vtx[1]->IsCoinShieldStake()))
             return state.DoS(100, false, REJECT_INVALID, "bad-cs-missing", false, "second tx is not coinstake");
         for (unsigned int i = 2; i < block.vtx.size(); i++)
-            if (block.vtx[i]->IsCoinStake())
+            if (block.vtx[i]->IsCoinStake() || block.vtx[i]->IsCoinShieldStake())
                 return state.DoS(100, false, REJECT_INVALID, "bad-cs-multiple", false, "more than one coinstake");
     }
 
@@ -2770,7 +2786,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         // that this block is invalid, so don't issue an outright ban.
         if (nHeight != 0 && !IsInitialBlockDownload()) {
             // Last output of Cold-Stake is not abused
-            if (IsPoS && !CheckColdStakeFreeOutput(*(block.vtx[1]), nHeight)) {
+            if ((block.IsProofOfStake() && !block.IsProofOfShieldStake()) && !CheckColdStakeFreeOutput(*(block.vtx[1]), nHeight)) {
                 mapRejectedBlocks.emplace(block.GetHash(), GetTime());
                 return state.DoS(0, false, REJECT_INVALID, "bad-p2cs-outs", false, "invalid cold-stake output");
             }
@@ -2935,8 +2951,8 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
         (block.nVersion < 5 && consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_BIP65)) ||
         (block.nVersion < 6 && consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_V3_4)) ||
         (block.nVersion < 7 && consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_V4_0)) ||
-        (block.nVersion < 8 && consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_V5_0)))
-    {
+        (block.nVersion < 8 && consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_V5_0)) ||
+        (block.nVersion < 12 && consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_SHIELD_STAKING))) {
         std::string stringErr = strprintf("rejected block version %d at height %d", block.nVersion, nHeight);
         return state.Invalid(false, REJECT_OBSOLETE, "bad-version", stringErr);
     }
@@ -2980,6 +2996,27 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 
         // Prevent multi-empty-outputs
         for (size_t i=1; i<csTx->vout.size(); i++ ) {
+            if (csTx->vout[i].IsEmpty()) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-vout-empty");
+            }
+        }
+    }
+    if (block.IsProofOfShieldStake()) {
+        CTransactionRef csTx = block.vtx[1];
+        // No transparent inputs
+        if (!csTx->vin.empty()) {
+            return state.DoS(100, false, REJECT_INVALID, "bad-scs-multi-inputs", false,
+                "invalid shield stake with transparent input");
+        }
+
+        // No more than one shield spend
+        if (csTx->sapData->vShieldedSpend.size() > 1) {
+            return state.DoS(100, false, REJECT_INVALID, "bad-scs-multi-inputs", false,
+                "invalid multi-inputs shield stake");
+        }
+
+        // Prevent multi-empty-outputs
+        for (size_t i = 1; i < csTx->vout.size(); i++) {
             if (csTx->vout[i].IsEmpty()) {
                 return state.DoS(100, false, REJECT_INVALID, "bad-txns-vout-empty");
             }
@@ -3134,7 +3171,8 @@ static bool CheckInBlockDoubleSpends(const CBlock& block, int nHeight, CValidati
         if (inblock_txes.find(it->hash) != inblock_txes.end()) {
             // the input spent was created as output of another in-block tx
             // this is not allowed for the coinstake input
-            if (*it == block.vtx[1]->vin[0].prevout) {
+            // this check is not needed in shield staking
+            if (!block.IsProofOfShieldStake() && *it == block.vtx[1]->vin[0].prevout) {
                 return state.DoS(100, error("%s: coinstake input created in the same block", __func__));
             }
             it = spent_outpoints.erase(it);
@@ -3269,6 +3307,7 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, CBlockInde
         return state.DoS(100, false, REJECT_INVALID);
 
     bool isPoS = block.IsProofOfStake();
+    bool isShieldPos = block.IsProofOfShieldStake();
     if (isPoS) {
         std::string strError;
         if (!CheckProofOfStake(block, strError, pindexPrev))
@@ -3365,17 +3404,17 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, CBlockInde
             }
         }
 
-        // ZPOS contextual checks
-        const CTransaction& coinstake = *block.vtx[1];
-        const CTxIn& coinstake_in = coinstake.vin[0];
-        if (coinstake_in.IsZerocoinSpend()) {
-            libzerocoin::CoinSpend spend = ZPIVModule::TxInToZerocoinSpend(coinstake_in);
-            if (!ContextualCheckZerocoinSpend(coinstake, &spend, pindex->nHeight)) {
-                return state.DoS(100,error("%s: main chain ContextualCheckZerocoinSpend failed for tx %s", __func__,
-                        coinstake.GetHash().GetHex()), REJECT_INVALID, "bad-txns-invalid-zpiv");
+        // ZPOS contextual checks, not needed for shield stake
+        if (!isShieldPos) {
+            const CTransaction& coinstake = *block.vtx[1];
+            const CTxIn& coinstake_in = coinstake.vin[0];
+            if (coinstake_in.IsZerocoinSpend()) {
+                libzerocoin::CoinSpend spend = ZPIVModule::TxInToZerocoinSpend(coinstake_in);
+                if (!ContextualCheckZerocoinSpend(coinstake, &spend, pindex->nHeight)) {
+                    return state.DoS(100, error("%s: main chain ContextualCheckZerocoinSpend failed for tx %s", __func__, coinstake.GetHash().GetHex()), REJECT_INVALID, "bad-txns-invalid-zpiv");
+                }
             }
         }
-
     }
 
     // Write block to history file

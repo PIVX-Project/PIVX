@@ -5,10 +5,11 @@
 
 #include "sapling/transaction_builder.h"
 
-#include "script/sign.h"
-#include "utilmoneystr.h"
 #include "consensus/upgrades.h"
 #include "policy/policy.h"
+#include "script/script.h"
+#include "script/sign.h"
+#include "utilmoneystr.h"
 #include "validation.h"
 
 #include <librustzcash.h>
@@ -150,6 +151,11 @@ void TransactionBuilder::Clear()
     fee = -1;   // Verified in Build(). Must be set before.
 }
 
+void TransactionBuilder::AddStakeInput()
+{
+    mtx.vout.emplace_back(0, CScript());
+}
+
 void TransactionBuilder::AddSaplingSpend(
     const libzcash::SaplingExpandedSpendingKey& expsk,
     const libzcash::SaplingNote& note,
@@ -213,6 +219,11 @@ void TransactionBuilder::AddTransparentOutput(const CTxDestination& dest, CAmoun
 void TransactionBuilder::SetFee(CAmount _fee)
 {
     this->fee = _fee;
+}
+
+uint256 TransactionBuilder::GetShieldStakeRandomness()
+{
+    return spends[0].alpha;
 }
 
 void TransactionBuilder::SendChangeTo(const libzcash::SaplingPaymentAddress& changeAddr, const uint256& ovk)
@@ -409,7 +420,8 @@ TransactionBuilderResult TransactionBuilder::Build(bool fDummySig)
     for (auto& tOut : mtx.vout) {
         change -= tOut.nValue;
     }
-    if (change < 0) {
+    // Change cannot be negative unless  the tx is shield staking
+    if (change < 0 && !(mtx.vout.size() > 0 && mtx.vout[0].IsEmpty())) {
         return TransactionBuilderResult("Change cannot be negative");
     }
 

@@ -55,6 +55,7 @@ EXPECTED_CIRCULAR_DEPENDENCIES=(
     "chain -> legacy/stakemodifier -> validation -> pow -> chain"
     "evo/deterministicmns -> masternodeman -> net -> tiertwo/net_masternodes -> evo/deterministicmns"
     "evo/deterministicmns -> masternodeman -> validation -> validationinterface -> evo/deterministicmns"
+    "blocksignature -> sapling/transaction_builder -> validation -> blocksignature"
 )
 
 EXIT_CODE=0

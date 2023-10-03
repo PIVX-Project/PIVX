@@ -9,6 +9,7 @@
 
 #include "chainparamsseeds.h"
 #include "consensus/merkle.h"
+#include "consensus/params.h"
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 
@@ -295,6 +296,7 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 3715200;
         consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight =
                 Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
+        consensus.vUpgrades[Consensus::UPGRADE_SHIELD_STAKING].nActivationHeight = Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
         consensus.vUpgrades[Consensus::UPGRADE_ZC].hashActivationBlock =
                 uint256S("0x5b2482eca24caf2a46bb22e0545db7b7037282733faa3a42ec20542509999a64");
@@ -453,6 +455,7 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 925056;
         consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight =
                 Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
+        consensus.vUpgrades[Consensus::UPGRADE_SHIELD_STAKING].nActivationHeight = Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -601,8 +604,8 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 300;
         consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 251;
         consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 576;
-        consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight =
-                Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
+        consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight = 600;
+        consensus.vUpgrades[Consensus::UPGRADE_SHIELD_STAKING].nActivationHeight = 601;
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.

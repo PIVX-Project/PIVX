@@ -5,7 +5,21 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include "consensus/params.h"
 #include "optional.h"
+#include "primitives/transaction.h"
+#include "sapling/address.h"
+#include "sapling/incrementalmerkletree.h"
+#include "sapling/note.h"
+#include "sapling/sapling_transaction.h"
+#include "sapling/sapling_util.h"
+#include "sapling/saplingscriptpubkeyman.h"
+#include "sapling/zip32.h"
+#include "serialize.h"
+#include "stakeinput.h"
+#include "version.h"
+#include <memory>
+#include <vector>
 #if defined(HAVE_CONFIG_H)
 #include "config/pivx-config.h"
 #endif
@@ -18,8 +32,9 @@
 #include "guiinterfaceutil.h"
 #include "policy/policy.h"
 #include "sapling/key_io_sapling.h"
-#include "script/sign.h"
+#include "sapling/transaction_builder.h"
 #include "scheduler.h"
+#include "script/sign.h"
 #include "shutdown.h"
 #include "spork.h"
 #include "util/validation.h"
@@ -705,6 +720,11 @@ bool CWallet::HasSaplingSPKM() const
 bool CWallet::IsSaplingSpent(const SaplingOutPoint& op) const
 {
     return m_sspk_man->IsSaplingSpent(op);
+}
+
+bool CWallet::IsSaplingSpent(const uint256& nullifier) const
+{
+    return m_sspk_man->IsSaplingSpent(nullifier);
 }
 
 /**
@@ -2179,6 +2199,17 @@ CAmount CWallet::GetStakingBalance(const bool fIncludeColdStaking) const
     }));
 }
 
+CAmount CWallet::GetShieldStakingBalance()
+{
+    std::vector<CStakeableShieldNote> vShieldCoins;
+    CAmount total = 0;
+    this->StakeableNotes(&vShieldCoins);
+    for (auto it = vShieldCoins.begin(); it < vShieldCoins.end(); it++) {
+        total += it->note.value();
+    }
+    return total;
+}
+
 CAmount CWallet::GetDelegatedBalance() const
 {
     return loopTxsBalance([](const uint256& id, const CWalletTx& pcoin, CAmount& nTotal) {
@@ -2678,13 +2709,13 @@ static void ApproximateBestSubset(const std::vector<std::pair<CAmount, std::pair
     }
 }
 
-bool CWallet::StakeableCoins(std::vector<CStakeableOutput>* pCoins)
+bool CWallet::StakeableUTXOs(std::vector<CStakeableOutput>* stakeableCoins) const
 {
     const bool fIncludeColdStaking = !sporkManager.IsSporkActive(SPORK_19_COLDSTAKING_MAINTENANCE) &&
                                      gArgs.GetBoolArg("-coldstaking", DEFAULT_COLDSTAKING);
-
-    if (pCoins) pCoins->clear();
-
+    bool fFoundUTXO = false;
+    // Add notes to stakablecoins
+    // Add UTXOs
     LOCK2(cs_main, cs_wallet);
     for (const auto& it : mapWallet) {
         const uint256& wtxid = it.first;
@@ -2714,13 +2745,44 @@ bool CWallet::StakeableCoins(std::vector<CStakeableOutput>* pCoins)
 
             if (!res.available || !res.spendable) continue;
 
-            // found valid coin
-            if (!pCoins) return true;
             if (!pindex) pindex = mapBlockIndex.at(pcoin->m_confirm.hashBlock);
-            pCoins->emplace_back(pcoin, (int) index, nDepth, pindex);
+            if (!stakeableCoins) {
+                return true;
+            }
+            stakeableCoins->emplace_back(pcoin, (int)index, nDepth, pindex);
+            fFoundUTXO = true;
         }
     }
-    return (pCoins && !pCoins->empty());
+    return fFoundUTXO;
+}
+
+bool CWallet::StakeableNotes(std::vector<CStakeableShieldNote>* shieldNotes) const
+{
+    LOCK(cs_wallet);
+    if (Params().GetConsensus().NetworkUpgradeActive(this->GetLastBlockHeight(), Consensus::UPGRADE_SHIELD_STAKING)) {
+        return m_sspk_man->GetStakeableNotes(shieldNotes, Params().GetConsensus().nStakeMinDepth);
+    }
+    return false;
+}
+
+bool CWallet::StakeableCoins(std::vector<std::unique_ptr<CStakeableInterface>>* stakeableCoins) const
+{
+    assert(stakeableCoins || stakeableCoins->empty());
+    // Add shield notes first
+    std::vector<CStakeableShieldNote> notes;
+    bool hasNotes = StakeableNotes(&notes);
+    // Add UTXOs
+    std::vector<CStakeableOutput> utxos;
+    bool hasUTXOs = StakeableUTXOs(&utxos);
+    if (stakeableCoins) {
+        for (const auto& note : notes) {
+            stakeableCoins->push_back(std::make_unique<CStakeableShieldNote>(note));
+        }
+        for (const auto& utxo : utxos) {
+            stakeableCoins->push_back(std::make_unique<CStakeableOutput>(utxo));
+        }
+    }
+    return hasNotes || hasUTXOs;
 }
 
 bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, uint64_t nMaxAncestors, std::vector<COutput> vCoins, std::set<std::pair<const CWalletTx*, unsigned int> >& setCoinsRet, CAmount& nValueRet) const
@@ -3294,7 +3356,7 @@ int CWallet::GetLastBlockHeightLockWallet() const
     return WITH_LOCK(cs_wallet, return m_last_block_processed_height;);
 }
 
-bool CWallet::CreateCoinstakeOuts(const CPivStake& stakeInput, std::vector<CTxOut>& vout, CAmount nTotal) const
+bool CWallet::CreateCoinstakeOuts(const CStakeInput& stakeInput, std::vector<CTxOut>& vout, CAmount nTotal) const
 {
     std::vector<valtype> vSolutions;
     txnouttype whichType;
@@ -3336,18 +3398,8 @@ bool CWallet::CreateCoinstakeOuts(const CPivStake& stakeInput, std::vector<CTxOu
     return true;
 }
 
-bool CWallet::CreateCoinStake(
-        const CBlockIndex* pindexPrev,
-        unsigned int nBits,
-        CMutableTransaction& txNew,
-        int64_t& nTxNewTime,
-        std::vector<CStakeableOutput>* availableCoins,
-        bool stopOnNewBlock) const
+CStakeableInterface* CWallet::CreateCoinStake(const CBlockIndex& indexPrev, unsigned int nBits, CMutableTransaction& txNew, int64_t& nTxNewTime, const std::vector<std::unique_ptr<CStakeableInterface>>& stakeOutputs, bool stopOnNewBlock)
 {
-    // shuffle coins
-    if (availableCoins && Params().IsRegTestNet()) {
-        Shuffle(availableCoins->begin(), availableCoins->end(), FastRandomContext());
-    }
 
     // Mark coin stake transaction
     txNew.vin.clear();
@@ -3355,93 +3407,120 @@ bool CWallet::CreateCoinStake(
     txNew.vout.emplace_back(0, CScript());
 
     // update staker status (hash)
-    pStakerStatus->SetLastTip(pindexPrev);
-    pStakerStatus->SetLastCoins((int) availableCoins->size());
+    pStakerStatus->SetLastTip(&indexPrev);
+    pStakerStatus->SetLastCoins((int)stakeOutputs.size());
 
-    // Kernel Search
-    CAmount nCredit;
-    CAmount nMasternodePayment;
-    CScript scriptPubKeyKernel;
-    bool fKernelFound = false;
     int nAttempts = 0;
-    for (auto it = availableCoins->begin(); it != availableCoins->end();) {
-        COutPoint outPoint = COutPoint(it->tx->GetHash(), it->i);
-        CPivStake stakeInput(it->tx->tx->vout[it->i],
-                             outPoint,
-                             it->pindex);
-
+    // Kernel Search
+    for (const auto& stakeOutput : stakeOutputs) {
+        const auto& stakeInput = stakeOutput->ToInput();
         // New block came in, move on
-        if (stopOnNewBlock && GetLastBlockHeightLockWallet() != pindexPrev->nHeight) return false;
+        if (stopOnNewBlock && GetLastBlockHeightLockWallet() != indexPrev.nHeight) return nullptr;
 
         // Make sure the wallet is unlocked and shutdown hasn't been requested
-        if (IsLocked() || ShutdownRequested()) return false;
+        if (IsLocked() || ShutdownRequested()) return nullptr;
 
         // Make sure the stake input hasn't been spent since last check
-        if (WITH_LOCK(cs_wallet, return IsSpent(outPoint))) {
-            // remove it from the available coins
-            it = availableCoins->erase(it);
-            continue;
+        if (stakeInput->IsShieldPIV()) {
+            if (WITH_LOCK(cs_wallet, return IsSaplingSpent(stakeInput->GetSpendInfo().first))) {
+                continue;
+            }
+        } else if (!stakeInput->IsZPIV()) {
+            if (WITH_LOCK(cs_wallet, return IsSpent(COutPoint(stakeInput->GetSpendInfo().first, stakeInput->GetSpendInfo().second)))) {
+                continue;
+            }
+        }
+        ++nAttempts;
+
+        CAmount suggestedValue;
+        bool fKernelFound = Stake(&indexPrev, &*stakeInput, nBits, nTxNewTime, &suggestedValue);
+        // Refactor maybe
+        if (stakeInput->IsShieldPIV()) {
+            static_cast<CStakeableShieldNote*>(stakeOutput.get())->suggestedValue = suggestedValue;
         }
 
-        nCredit = 0;
-
-        nAttempts++;
-        fKernelFound = Stake(pindexPrev, &stakeInput, nBits, nTxNewTime);
-
-        // update staker status (time, attempts)
+        // update staker status (time, attemps)
         pStakerStatus->SetLastTime(nTxNewTime);
         pStakerStatus->SetLastTries(nAttempts);
 
         if (!fKernelFound) {
-            it++;
             continue;
         }
 
         // Found a kernel
         LogPrintf("CreateCoinStake : kernel found\n");
-        nCredit += stakeInput.GetValue();
 
         // Add block reward to the credit
-        nCredit += GetBlockValue(pindexPrev->nHeight + 1);
-        nMasternodePayment = GetMasternodePayment(pindexPrev->nHeight + 1);
-
-        // Create the output transaction(s)
-        std::vector<CTxOut> vout;
-        if (!CreateCoinstakeOuts(stakeInput, vout, nCredit - nMasternodePayment)) {
-            LogPrintf("%s : failed to create output\n", __func__);
-            it++;
-            continue;
+        if (stakeOutput->CreateReward(*this, indexPrev, txNew)) {
+            return stakeOutput.get();
         }
-        txNew.vout.insert(txNew.vout.end(), vout.begin(), vout.end());
-
-        // Set output amount
-        int outputs = (int) txNew.vout.size() - 1;
-        CAmount nRemaining = nCredit;
-        if (outputs > 1) {
-            // Split the stake across the outputs
-            CAmount nShare = nRemaining / outputs;
-            for (int i = 1; i < outputs; i++) {
-                // loop through all but the last one.
-                txNew.vout[i].nValue = nShare;
-                nRemaining -= nShare;
-            }
-        }
-        // put the remaining on the last output (which all into the first if only one output)
-        txNew.vout[outputs].nValue += nRemaining;
-
-        // Set coinstake input
-        txNew.vin.emplace_back(stakeInput.GetTxIn());
-
-        // Limit size
-        unsigned int nBytes = ::GetSerializeSize(txNew, PROTOCOL_VERSION);
-        if (nBytes >= DEFAULT_BLOCK_MAX_SIZE / 5)
-            return error("%s : exceeded coinstake size limit", __func__);
-
-        break;
     }
-    LogPrint(BCLog::STAKING, "%s: attempted staking %d times\n", __func__, nAttempts);
 
-    return fKernelFound;
+    return nullptr;
+}
+
+bool CWallet::CreateShieldReward(const CBlockIndex& indexPrev, const CStakeableShieldNote& shieldNote, CMutableTransaction& txNew)
+{
+    CAmount nMasternodePayment = GetMasternodePayment(indexPrev.nHeight + 1);
+    TransactionBuilder txBuilder(Params().GetConsensus(), this);
+    txBuilder.SetFee(0);
+    txBuilder.AddStakeInput();
+    txBuilder.AddSaplingOutput(m_sspk_man->getCommonOVK(), GenerateNewSaplingZKey(), shieldNote.note.value() + GetBlockValue(indexPrev.nHeight + 1) - nMasternodePayment);
+    libzcash::SaplingExtendedSpendingKey sk;
+    if (!GetSaplingExtendedSpendingKey(shieldNote.address, sk)) {
+        return false;
+    }
+
+    uint256 anchor;
+    std::vector<Optional<SaplingWitness>> witnesses;
+    std::vector<SaplingOutPoint> noteop;
+    noteop.emplace_back(shieldNote.op);
+    m_sspk_man->GetSaplingNoteWitnesses(noteop, witnesses, anchor);
+    txBuilder.AddSaplingSpend(sk.expsk, shieldNote.note, anchor, witnesses[0].get());
+
+    const auto& txTrial = txBuilder.Build().GetTx();
+    if (txTrial) {
+        txNew = CMutableTransaction(*txTrial);
+        txNew.shieldStakePrivKey = sk.expsk.ask;
+        txNew.shieldStakeRandomness = txBuilder.GetShieldStakeRandomness();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool CWallet::CreateTransparentReward(const CBlockIndex& indexPrev, const CStakeableOutput& stakeOutput, CMutableTransaction& txNew)
+{
+    const auto& stakeInput = stakeOutput.ToInput();
+    // Create the output transaction(s)
+    std::vector<CTxOut> vout;
+    CAmount nMasternodePayment = GetMasternodePayment(indexPrev.nHeight + 1);
+    CAmount nCredit = stakeOutput.Value() + GetBlockValue(indexPrev.nHeight + 1);
+
+    if (!CreateCoinstakeOuts(*stakeInput, vout, nCredit - nMasternodePayment)) {
+        LogPrintf("%s : failed to create output\n", __func__);
+        return false;
+    }
+    txNew.vout.insert(txNew.vout.end(), vout.begin(), vout.end());
+
+    // Set output amount
+    int outputs = (int)txNew.vout.size() - 1;
+    CAmount nRemaining = nCredit;
+    if (outputs > 1) {
+        // Split the stake across the outputs
+        CAmount nShare = nRemaining / outputs;
+        for (int i = 1; i < outputs; i++) {
+            // loop through all but the last one.
+            txNew.vout[i].nValue = nShare;
+            nRemaining -= nShare;
+        }
+    }
+    // put the remaining on the last output (which all into the first if only one output)
+    txNew.vout[outputs].nValue += nRemaining;
+
+    // Set coinstake input
+    txNew.vin.emplace_back(stakeInput->GetTxIn());
+    return true;
 }
 
 bool CWallet::SignCoinStake(CMutableTransaction& txNew) const
@@ -4939,9 +5018,8 @@ const CWDestination* CAddressBookIterator::GetDestKey()
 }
 
 CStakeableOutput::CStakeableOutput(const CWalletTx* txIn,
-                                   int iIn,
-                                   int nDepthIn,
-                                   const CBlockIndex*& _pindex) :
-                       COutput(txIn, iIn, nDepthIn, true /*fSpendable*/, true/*fSolvable*/, true/*fSafe*/),
-                       pindex(_pindex)
+    int iIn,
+    int nDepthIn,
+    const CBlockIndex*& _pindex) : COutput(txIn, iIn, nDepthIn, true /*fSpendable*/, true /*fSolvable*/, true /*fSafe*/),
+                                   pindex(_pindex)
 {}

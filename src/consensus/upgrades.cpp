@@ -13,66 +13,70 @@
  * We are using it in the -nuparams startup arg and input it with spaces is just ugly.
  */
 const struct NUInfo NetworkUpgradeInfo[Consensus::MAX_NETWORK_UPGRADES] = {
-        {
-                /*.strName =*/ "Base",
-                /*.strInfo =*/ "PIVX network",
-        },
-        {
-                /*.strName =*/ "PoS",
-                /*.strInfo =*/ "Proof of Stake Consensus activation",
-        },
-        {
-                /*.strName =*/ "PoS_v2",
-                /*.strInfo =*/ "New selection for stake modifier",
-        },
-        {
-                /*.strName =*/ "Zerocoin",
-                /*.strInfo =*/ "ZeroCoin protocol activation - start block v4",
-        },
-        {
-                /*.strName =*/ "Zerocoin_v2",
-                /*.strInfo =*/ "New zerocoin serials and zPOS start",
-        },
-        {
-                /*.strName =*/ "BIP65",
-                /*.strInfo =*/ "CLTV (BIP65) activation - start block v5",
-        },
-        {
-                /*.strName =*/ "Zerocoin_Public",
-                /*.strInfo =*/ "Activation of zerocoin public spends (spend v3)",
-        },
-        {
-                /*.strName =*/ "PIVX_v3.4",
-                /*.strInfo =*/ "New 256-bit stake modifier - start block v6",
-        },
-        {
-                /*.strName =*/ "PIVX_v4.0",
-                /*.strInfo =*/ "New message sigs - start block v7 - time protocol - zc spend v4",
-        },
-        {
-                /*.strName =*/ "v5_shield",
-                /*.strInfo =*/ "Sapling Shield - start block v8 - start transaction v3",
-        },
-        {
-                /*.strName =*/ "PIVX_v5.2",
-                /*.strInfo =*/ "New cold-staking rules",
-        },
-        {
-                /*.strName =*/ "PIVX_v5.3",
-                /*.strInfo =*/ "New staking rules",
-        },
-        {
-                /*.strName =*/ "PIVX_v5.5",
-                /*.strInfo =*/ "New rewards structure",
-        },
-        {
-                /*.strName =*/ "v6_evo",
-                /*.strInfo =*/ "Deterministic Masternodes",
-        },
-        {
-                /*.strName =*/ "Test_dummy",
-                /*.strInfo =*/ "Test dummy info",
-        },
+    {
+        /*.strName =*/"Base",
+        /*.strInfo =*/"PIVX network",
+    },
+    {
+        /*.strName =*/"PoS",
+        /*.strInfo =*/"Proof of Stake Consensus activation",
+    },
+    {
+        /*.strName =*/"PoS_v2",
+        /*.strInfo =*/"New selection for stake modifier",
+    },
+    {
+        /*.strName =*/"Zerocoin",
+        /*.strInfo =*/"ZeroCoin protocol activation - start block v4",
+    },
+    {
+        /*.strName =*/"Zerocoin_v2",
+        /*.strInfo =*/"New zerocoin serials and zPOS start",
+    },
+    {
+        /*.strName =*/"BIP65",
+        /*.strInfo =*/"CLTV (BIP65) activation - start block v5",
+    },
+    {
+        /*.strName =*/"Zerocoin_Public",
+        /*.strInfo =*/"Activation of zerocoin public spends (spend v3)",
+    },
+    {
+        /*.strName =*/"PIVX_v3.4",
+        /*.strInfo =*/"New 256-bit stake modifier - start block v6",
+    },
+    {
+        /*.strName =*/"PIVX_v4.0",
+        /*.strInfo =*/"New message sigs - start block v7 - time protocol - zc spend v4",
+    },
+    {
+        /*.strName =*/"v5_shield",
+        /*.strInfo =*/"Sapling Shield - start block v8 - start transaction v3",
+    },
+    {
+        /*.strName =*/"PIVX_v5.2",
+        /*.strInfo =*/"New cold-staking rules",
+    },
+    {
+        /*.strName =*/"PIVX_v5.3",
+        /*.strInfo =*/"New staking rules",
+    },
+    {
+        /*.strName =*/"PIVX_v5.5",
+        /*.strInfo =*/"New rewards structure",
+    },
+    {
+        /*.strName =*/"v6_evo",
+        /*.strInfo =*/"Deterministic Masternodes",
+    },
+    {
+        /*.strName =*/"shield_staking",
+        /*.strInfo =*/"Shield Staking",
+    },
+    {
+        /*.strName =*/"Test_dummy",
+        /*.strInfo =*/"Test dummy info",
+    },
 };
 
 UpgradeState NetworkUpgradeState(

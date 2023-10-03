@@ -7,6 +7,7 @@
 
 #include "stakeinput.h"
 #include "txdb.h"
+#include <stdexcept>
 
 class CLegacyZPivStake : public CStakeInput
 {
@@ -26,11 +27,17 @@ public:
     static CLegacyZPivStake* NewZPivStake(const CTxIn& txin, int nHeight);
 
     bool IsZPIV() const override { return true; }
+    bool IsShieldPIV() const override { return false; };
     uint32_t GetChecksum() const { return nChecksum; }
     const CBlockIndex* GetIndexFrom() const override;
     CAmount GetValue() const override;
     CDataStream GetUniqueness() const override;
     bool GetTxOutFrom(CTxOut& out) const override { return false; /* not available */ }
+    CTxIn GetTxIn() const override
+    {
+        throw "can't be bothered";
+    }
+    std::pair<uint256, uint32_t> GetSpendInfo() const override { throw new std::runtime_error{"Function non defined for zPiv"}; };
 };
 
 #endif //PIVX_LEGACY_ZPOS_H

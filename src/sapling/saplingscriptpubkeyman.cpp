@@ -7,7 +7,10 @@
 
 #include "chain.h" // for CBlockIndex
 #include "primitives/transaction.h"
+#include "sapling/sapling_transaction.h"
 #include "validation.h" // for ReadBlockFromDisk()
+#include "wallet/wallet.h"
+#include <librustzcash.h>
 
 void SaplingScriptPubKeyMan::AddToSaplingSpends(const uint256& nullifier, const uint256& wtxid)
 {
@@ -552,6 +555,57 @@ void SaplingScriptPubKeyMan::GetFilteredNotes(
             saplingEntries.emplace_back(op, pa, note, notePt.memo(), depth);
         }
     }
+}
+bool SaplingScriptPubKeyMan::GetStakeableNotes(std::vector<CStakeableShieldNote>* notes, int minDepth)
+{
+    bool foundNote = false;
+    LOCK(wallet->cs_wallet);
+    for (auto& p : wallet->mapWallet) {
+        const CWalletTx& wtx = p.second;
+        // Filter coinbase/coinstakes transactions that don't have Sapling outputs
+        if ((wtx.IsCoinBase() || wtx.IsCoinStake()) && wtx.mapSaplingNoteData.empty()) {
+            continue;
+        }
+        // Filter the transactions before checking for notes
+        const int depth = wtx.GetDepthInMainChain();
+        if (!IsFinalTx(wtx.tx, wallet->GetLastBlockHeight() + 1, GetAdjustedTime()) ||
+            depth < minDepth) {
+            continue;
+        }
+        for (const auto& it : wtx.mapSaplingNoteData) {
+            const SaplingOutPoint& op = it.first;
+            const SaplingNoteData& nd = it.second;
+
+            // skip sent notes
+            if (!nd.IsMyNote()) continue;
+
+            // recover plaintext and address
+            auto optNotePtAndAddress = wtx.DecryptSaplingNote(op);
+            assert(static_cast<bool>(optNotePtAndAddress));
+
+            const libzcash::SaplingIncomingViewingKey& ivk = *(nd.ivk);
+            const libzcash::SaplingNotePlaintext& notePt = optNotePtAndAddress->first;
+            const libzcash::SaplingPaymentAddress& pa = optNotePtAndAddress->second;
+            auto& note = notePt.note(ivk).get();
+
+            // skip notes which cannot be spent
+            if (!HaveSpendingKeyForPaymentAddress(pa)) {
+                continue;
+            }
+
+            if (nd.nullifier && IsSaplingSpent(*nd.nullifier)) {
+                continue;
+            }
+            SaplingNoteEntry noteEntry = SaplingNoteEntry(op, pa, note, notePt.memo(), depth);
+            if (notes) {
+                notes->emplace_back(CStakeableShieldNote(noteEntry, *nd.nullifier));
+            } else {
+                return true;
+            }
+            foundNote = true;
+        }
+    }
+    return foundNote;
 }
 
 /* Return list of available notes and locked notes grouped by sapling address. */
@@ -1281,4 +1335,78 @@ uint256 SaplingScriptPubKeyMan::getCommonOVKFromSeed() const
     }
     HDSeed seed{key.GetPrivKey()};
     return ovkForShieldingFromTaddr(seed);
+}
+
+bool SaplingScriptPubKeyMan::ComputeShieldStakeProof(CBlock& block, CStakeableShieldNote& note, CAmount suggestedValue)
+{
+    assert(block.IsProofOfShieldStake());
+    assert(note.note.value() >= suggestedValue);
+
+    const auto& spendNote = block.vtx[1]->sapData->vShieldedSpend[0];
+    auto* ctx = librustzcash_sapling_proving_ctx_init();
+    libzcash::SaplingExtendedSpendingKey sk;
+    if (!wallet->GetSaplingExtendedSpendingKey(note.address, sk)) {
+        return false;
+    }
+
+    uint256 alpha;
+    uint256 anchor;
+    uint256 dataToBeSigned;
+    std::vector<Optional<SaplingWitness>> witnesses;
+    std::vector<SaplingOutPoint> noteop;
+    noteop.emplace_back(note.op);
+    GetSaplingNoteWitnesses(noteop, witnesses, anchor);
+
+    librustzcash_sapling_generate_r(alpha.begin());
+    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+    ss << witnesses[0]->path();
+    std::vector<unsigned char> witness(ss.begin(), ss.end());
+    assert(anchor == spendNote.anchor);
+    if (!librustzcash_sapling_spend_proof(ctx, sk.expsk.full_viewing_key().ak.begin(),
+            sk.expsk.nsk.begin(),
+            note.note.d.data(),
+            note.note.r.begin(),
+            alpha.begin(),
+            note.note.value(),
+            anchor.begin(),
+            witness.data(),
+            block.shieldStakeProof.inputCv.begin(),
+            block.shieldStakeProof.rk.begin(),
+            block.shieldStakeProof.inputProof.begin())) {
+        librustzcash_sapling_proving_ctx_free(ctx);
+        return false;
+    }
+    uint256 dummyEsk;
+
+    CAmount amount = note.note.value() - suggestedValue;
+    uint256 rcm;
+    librustzcash_sapling_generate_r(rcm.begin());
+    libzcash::SaplingPaymentAddress paymentAddress(note.address);
+    const std::array<unsigned char, ZC_MEMO_SIZE> emptyMemo = {{0xF6}};
+    libzcash::SaplingNote dummyNote(paymentAddress.d, paymentAddress.pk_d, amount, rcm);
+    libzcash::SaplingNotePlaintext notePlaintext(dummyNote, emptyMemo);
+    auto res = notePlaintext.encrypt(dummyNote.pk_d);
+    if (!res) return false;
+    auto& encryptor = res->second;
+
+    ss = CDataStream(SER_NETWORK, PROTOCOL_VERSION);
+    ss << paymentAddress;
+    std::vector<unsigned char> addressBytes(ss.begin(), ss.end());
+
+    if (!librustzcash_sapling_output_proof(ctx, encryptor.get_esk().begin(), addressBytes.data(), rcm.begin(), amount, block.shieldStakeProof.outputCv.begin(), block.shieldStakeProof.outputProof.begin())) {
+        librustzcash_sapling_proving_ctx_free(ctx);
+        return false;
+    }
+    block.shieldStakeProof.cmu = *dummyNote.cmu();
+    block.shieldStakeProof.epk = encryptor.get_epk();
+
+    if (!librustzcash_sapling_binding_sig(ctx, suggestedValue, dataToBeSigned.data(), block.shieldStakeProof.sig.begin())) {
+        librustzcash_sapling_proving_ctx_free(ctx);
+        return false;
+    }
+
+    librustzcash_sapling_proving_ctx_free(ctx);
+    block.shieldStakeProof.amount = suggestedValue;
+    LogPrintf("%s : Shield Stake proof generated with value %d\n", __func__, suggestedValue);
+    return true;
 }

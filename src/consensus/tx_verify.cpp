@@ -87,7 +87,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState& state, bool fCol
     // Check for negative or overflow output values
     const Consensus::Params& consensus = Params().GetConsensus();
     for (const CTxOut& txout : tx.vout) {
-        if (txout.IsEmpty() && !tx.IsCoinBase() && !tx.IsCoinStake())
+        if (txout.IsEmpty() && !tx.IsCoinBase() && !tx.IsCoinStake() && !tx.IsCoinShieldStake())
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-vout-empty");
         if (txout.nValue < 0)
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-vout-negative");

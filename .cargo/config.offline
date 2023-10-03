@@ -1,9 +1,9 @@
 [source.crates-io]
 replace-with = "vendored-sources"
 
-[source."git+https://github.com/PIVX-Project/librustzcash?rev=e7662b23d16c38595ef9ad1f3ae683b1f54dc732"]
+[source."git+https://github.com/PIVX-Project/librustzcash?rev=4822cf07b18d8726e9b3253a15f9e08d81752746"]
 git = "https://github.com/PIVX-Project/librustzcash"
-rev = "e7662b23d16c38595ef9ad1f3ae683b1f54dc732"
+rev = "4822cf07b18d8726e9b3253a15f9e08d81752746"
 replace-with = "vendored-sources"
 
 [source.vendored-sources]

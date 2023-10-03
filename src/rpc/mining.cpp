@@ -16,6 +16,7 @@
 #include "shutdown.h"
 #include "util/blockstatecatcher.h"
 #include "validationinterface.h"
+#include <memory>
 #ifdef ENABLE_WALLET
 #include "wallet/rpcwallet.h"
 #include "wallet/db.h"
@@ -41,14 +42,14 @@ UniValue generateBlocks(const Consensus::Params& consensus,
     while (nHeight < nHeightEnd && !ShutdownRequested()) {
 
         // Get available coins
-        std::vector<CStakeableOutput> availableCoins;
-        if (fPoS && !pwallet->StakeableCoins(&availableCoins)) {
+        std::vector<std::unique_ptr<CStakeableInterface>> availableCoins;
+        if (fPoS && !(pwallet->StakeableCoins(&availableCoins))) {
             throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "No available coins to stake");
         }
 
         std::unique_ptr<CBlockTemplate> pblocktemplate(fPoS ?
-                                                       BlockAssembler(Params(), DEFAULT_PRINTPRIORITY).CreateNewBlock(CScript(), pwallet, true, &availableCoins) :
-                                                       CreateNewBlockWithScript(*coinbaseScript, pwallet));
+                                                           BlockAssembler(Params(), DEFAULT_PRINTPRIORITY).CreateNewBlock(CScript(), pwallet, true, availableCoins) :
+                                                           CreateNewBlockWithScript(*coinbaseScript, pwallet));
         if (!pblocktemplate.get()) break;
         std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>(pblocktemplate->block);
 

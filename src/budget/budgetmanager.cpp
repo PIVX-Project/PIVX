@@ -526,6 +526,13 @@ bool CBudgetManager::FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTra
     const bool fPayCoinstake = fProofOfStake &&
                                !Params().GetConsensus().NetworkUpgradeActive(nHeight, Consensus::UPGRADE_V6_0);
 
+
+    // With current implementation shield staking must be activated NOT BEFORE THE V6.0
+    // In other words budgets must be payed in coinbase, the opposite case would just give an invalid block
+    bool isShieldStake = Params().GetConsensus().NetworkUpgradeActive(nHeight, Consensus::UPGRADE_SHIELD_STAKING);
+    if (isShieldStake)
+        assert(!fPayCoinstake);
+
     if (fProofOfStake) {
         if (fPayCoinstake) {
             unsigned int i = txCoinstake.vout.size();

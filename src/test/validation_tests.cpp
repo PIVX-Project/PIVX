@@ -77,7 +77,7 @@ BOOST_FIXTURE_TEST_CASE(test_simple_shielded_invalid, TestingSetup)
         CMutableTransaction newTx(tx);
         CValidationState state;
 
-        // Create a coinstake transaction
+        // Create a mixed transaction with an empty vout and sapling data (so it isn't neither coinstake nor coinshieldstake)
         CTxIn vin;
         vin.prevout = COutPoint(UINT256_ZERO, 0);
         newTx.vin.emplace_back(vin);
@@ -90,7 +90,7 @@ BOOST_FIXTURE_TEST_CASE(test_simple_shielded_invalid, TestingSetup)
         newTx.sapData->vShieldedSpend.emplace_back();
 
         BOOST_CHECK(!CheckTransaction(newTx, state, false));
-        BOOST_CHECK(state.GetRejectReason() == "bad-txns-invalid-sapling");
+        BOOST_CHECK(state.GetRejectReason() == "bad-txns-vout-empty");
     }
 }
 

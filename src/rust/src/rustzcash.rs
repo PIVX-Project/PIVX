@@ -588,9 +588,12 @@ pub extern "system" fn librustzcash_sapling_check_spend(
     };
 
     // Deserialize the signature
-    let spend_auth_sig = match Signature::read(&(unsafe { &*spend_auth_sig })[..]) {
-        Ok(sig) => sig,
-        Err(_) => return false,
+    // Spend auth sig is not needed in shield stake proofs.
+    // See #2836 for details
+    let spend_auth_sig = if spend_auth_sig.is_null() {
+        None
+    } else {
+        Signature::read(&(unsafe { &*spend_auth_sig })[..]).ok()
     };
 
     // Deserialize the proof
@@ -599,12 +602,18 @@ pub extern "system" fn librustzcash_sapling_check_spend(
         Err(_) => return false,
     };
 
+    let sighash_value = if sighash_value.is_null() {
+        [0u8; 32]
+    } else {
+        unsafe { *sighash_value }
+    };
+
     unsafe { &mut *ctx }.check_spend(
         &cv,
         anchor,
         unsafe { &*nullifier },
         rk.clone(),
-        unsafe { &*sighash_value },
+        &sighash_value,
         spend_auth_sig,
         zkproof.clone(),
         unsafe { SAPLING_SPEND_VK.as_ref() }.unwrap(),
@@ -684,7 +693,15 @@ pub extern "system" fn librustzcash_sapling_final_check(
         Err(_) => return false,
     };
 
-    unsafe { &*ctx }.final_check(value_balance, unsafe { &*sighash_value }, binding_sig)
+    // Sighash is not needed in Shield stake proof.
+    // See #2836 for details.
+    let sighash_value = if sighash_value.is_null() {
+        [0u8; 32]
+    } else {
+        unsafe { *sighash_value }
+    };
+
+    unsafe { &*ctx }.final_check(value_balance, &sighash_value, binding_sig)
 }
 
 #[no_mangle]
@@ -939,6 +956,63 @@ pub extern "system" fn librustzcash_sapling_output_proof(
         .expect("should be able to serialize a proof");
 
     true
+}
+
+#[no_mangle]
+pub extern "system" fn librustzcash_verify_block_signature(
+    rk: *const [c_uchar; 32],
+    sighash: *const [c_uchar; 32],
+    sign: *const [c_uchar; 64],
+) -> bool {
+    // Deserialize rk
+    let rk = match redjubjub::PublicKey::read(&(unsafe { &*rk })[..]) {
+        Ok(p) => p,
+        Err(_) => return false,
+    };
+
+    // Deserialize the signature
+    let signature = match Signature::read(&(unsafe { &*sign })[..]) {
+        Ok(sig) => sig,
+        Err(_) => return false,
+    };
+    rk.verify(unsafe { &*sighash }, &signature, SPENDING_KEY_GENERATOR)
+}
+
+#[no_mangle]
+pub extern "system" fn librustzcash_sign_block(
+    ask: *const [c_uchar; 32],
+    ar: *const [c_uchar; 32],
+    sighash: *const [c_uchar; 32],
+    result: *mut [c_uchar; 64],
+) -> bool {
+    // The caller provides the re-randomization of `ak`.
+    let ar = {
+        let ar = Fr::from_repr(unsafe { *ar });
+        if ar.is_some().into() {
+            ar.unwrap()
+        } else {
+            return false;
+        }
+    };
+
+    // The caller provides `ask`, the spend authorizing key.
+    let ask = match redjubjub::PrivateKey::read(&(unsafe { &*ask })[..]) {
+        Ok(p) => p,
+        Err(_) => return false,
+    };
+
+    // Initialize secure RNG
+    let mut rng = OsRng;
+
+    // Do the signing
+    let rsk = ask.randomize(ar);
+    let sig = rsk.sign(unsafe { &*sighash }, &mut rng, SPENDING_KEY_GENERATOR);
+
+    // Write out the signature
+    sig.write(&mut (unsafe { &mut *result })[..])
+        .expect("result should be 64 bytes");
+
+    return true;
 }
 
 #[no_mangle]

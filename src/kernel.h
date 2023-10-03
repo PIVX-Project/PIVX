@@ -8,6 +8,7 @@
 #ifndef PIVX_KERNEL_H
 #define PIVX_KERNEL_H
 
+#include "arith_uint256.h"
 #include "stakeinput.h"
 
 class CStakeKernel {
@@ -26,7 +27,11 @@ public:
     uint256 GetHash() const;
 
     // Check that the kernel hash meets the target required
-    bool CheckKernelHash(bool fSkipLog = false) const;
+    bool CheckKernelHash(bool fSkipLog = false);
+    CAmount GetSuggestedValue() const
+    {
+        return suggestedValue;
+    }
 
 private:
     // kernel message hashed
@@ -37,6 +42,8 @@ private:
     // hash target
     unsigned int nBits{0};     // difficulty for the target
     CAmount stakeValue{0};     // target multiplier
+    CAmount suggestedValue{0};
+    CAmount ComputeSuggestedValue(CAmount stakevalue, const arith_uint256& bnTarget, const arith_uint256& hashProofOfStake) const;
 };
 
 /* PoS Validation */
@@ -50,7 +57,7 @@ private:
  * @param[in]   nTimeTx         new blocktime
  * @return      bool            true if stake kernel hash meets target protocol
  */
-bool Stake(const CBlockIndex* pindexPrev, CStakeInput* stakeInput, unsigned int nBits, int64_t& nTimeTx);
+bool Stake(const CBlockIndex* pindexPrev, CStakeInput* stakeInput, unsigned int nBits, int64_t& nTimeTx, CAmount* suggestedValue = nullptr);
 
 /*
  * CheckProofOfStake    Check if block has valid proof of stake
@@ -62,6 +69,17 @@ bool Stake(const CBlockIndex* pindexPrev, CStakeInput* stakeInput, unsigned int 
  * @return      bool            true if the block has a valid proof of stake
  */
 bool CheckProofOfStake(const CBlock& block, std::string& strError, const CBlockIndex* pindexPrev = nullptr);
+
+/*
+ * CheckProofOfStake    Check if block has valid proof of shield stake
+ *
+ * @param[in]   block           block with the proof being verified
+ * @param[out]  strError        string returning error message (if any, else empty)
+ * @param[in]   pindexPrev      index of the parent block
+ *                              (if nullptr, it will be searched in mapBlockIndex)
+ * @return      bool            true if the block has a valid proof of stake
+ */
+bool CheckProofOfShieldStake(const CBlock& block, std::string& strError);
 
 /*
  * GetStakeKernelHash   Return stake kernel of a block

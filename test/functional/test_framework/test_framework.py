@@ -886,8 +886,8 @@ class PivxTestFramework():
         rpc_conn = self.nodes[node_id]
         ss = rpc_conn.getstakingstatus()
         assert ss["walletunlocked"]
-        assert ss["stakeablecoins"] > 0
-        assert ss["stakingbalance"] > 0.0
+        assert ss["transparent_stakeable_coins"] > 0
+        assert ss["transparent_staking_balance"] > 0.0
         if btime is not None:
             next_btime = btime + 60
         fStaked = False
@@ -902,7 +902,7 @@ class PivxTestFramework():
                     # couldn't generate block. check that this node can still stake (after 60 failures)
                     if failures > 60:
                         ss = rpc_conn.getstakingstatus()
-                        if not (ss["walletunlocked"] and ss["stakeablecoins"] > 0 and ss["stakingbalance"] > 0.0):
+                        if not (ss["walletunlocked"] and ss["transparent_stakeable_coins"] > 0 and ss["transparent_staking_balance"] > 0.0):
                             raise AssertionError("Node %d unable to stake!" % node_id)
                     # try to stake one sec in the future
                     if btime is not None:

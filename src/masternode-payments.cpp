@@ -5,19 +5,20 @@
 
 #include "masternode-payments.h"
 
+#include "budget/budgetmanager.h"
 #include "chainparams.h"
 #include "evo/deterministicmns.h"
 #include "fs.h"
-#include "budget/budgetmanager.h"
 #include "masternodeman.h"
 #include "netmessagemaker.h"
-#include "tiertwo/netfulfilledman.h"
 #include "spork.h"
 #include "sync.h"
+#include "tiertwo/netfulfilledman.h"
 #include "tiertwo/tiertwo_sync_state.h"
 #include "util/system.h"
 #include "utilmoneystr.h"
 #include "validation.h"
+#include <cassert>
 
 
 /** Object for who's going to get paid on which blocks */
@@ -368,6 +369,12 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txCoinbase, CMutab
     // Starting from PIVX v6.0 masternode and budgets are paid in the coinbase tx
     const int nHeight = pindexPrev->nHeight + 1;
     bool fPayCoinstake = fProofOfStake && !Params().GetConsensus().NetworkUpgradeActive(nHeight, Consensus::UPGRADE_V6_0);
+
+    // With current implementation shield staking must be activated NOT BEFORE THE V6.0
+    // In other words Masternodes must be payed in coinbase, the opposite case would just give an invalid block
+    bool isShieldStake = Params().GetConsensus().NetworkUpgradeActive(nHeight, Consensus::UPGRADE_SHIELD_STAKING);
+    if (isShieldStake)
+        assert(!fPayCoinstake);
 
     // if PoS block pays the coinbase, clear it first
     if (fProofOfStake && !fPayCoinstake) txCoinbase.vout.clear();

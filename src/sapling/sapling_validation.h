@@ -25,6 +25,9 @@ bool ContextualCheckTransaction(const CTransaction &tx, CValidationState &state,
                                 const CChainParams &chainparams, int nHeight, bool isMined,
                                 bool sInitBlockDownload);
 
+/** Check shield stake */
+bool CheckShieldStake(const CBlock& block, CValidationState& state, const CChainParams& chainParams);
+
 }; // End SaplingValidation namespace
 
 #endif //PIVX_SAPLING_VALIDATION_H

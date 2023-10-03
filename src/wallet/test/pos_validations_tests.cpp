@@ -2,19 +2,30 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
+#include "amount.h"
+#include "optional.h"
+#include "primitives/transaction.h"
+#include "sapling/address.h"
+#include "sapling/zip32.h"
+#include "sync.h"
+#include "validation.h"
 #include "wallet/test/pos_test_fixture.h"
 
 #include "blockassembler.h"
-#include "coincontrol.h"
-#include "util/blockstatecatcher.h"
 #include "blocksignature.h"
+#include "coincontrol.h"
 #include "consensus/merkle.h"
 #include "primitives/block.h"
+#include "sapling/sapling_operation.h"
 #include "script/sign.h"
 #include "test/util/blocksutil.h"
+#include "util/blockstatecatcher.h"
 #include "wallet/wallet.h"
 
 #include <boost/test/unit_test.hpp>
+#include <memory>
+#include <string>
+#include <vector>
 
 BOOST_AUTO_TEST_SUITE(pos_validations_tests)
 
@@ -43,21 +54,26 @@ BOOST_FIXTURE_TEST_CASE(coinstake_tests, TestPoSChainSetup)
     SyncWithValidationInterfaceQueue();
 
     // Let's create the block
-    std::vector<CStakeableOutput> availableCoins;
-    BOOST_CHECK(pwalletMain->StakeableCoins(&availableCoins));
+    std::vector<CStakeableOutput> availableUTXOs;
+    BOOST_CHECK(pwalletMain->StakeableUTXOs(&availableUTXOs));
+    std::vector<std::unique_ptr<CStakeableInterface>> availableCoins;
+    for (auto& utxo : availableUTXOs) {
+        availableCoins.push_back(std::make_unique<CStakeableOutput>(utxo));
+    }
     std::unique_ptr<CBlockTemplate> pblocktemplate = BlockAssembler(
-            Params(), false).CreateNewBlock(CScript(),
-                                            pwalletMain.get(),
-                                            true,
-                                            &availableCoins,
-                                            true);
+        Params(), false)
+                                                         .CreateNewBlock(CScript(),
+                                                             pwalletMain.get(),
+                                                             true,
+                                                             availableCoins,
+                                                             true);
     std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>(pblocktemplate->block);
     BOOST_CHECK(pblock->IsProofOfStake());
 
     // Add a second input to a coinstake
     CMutableTransaction mtx(*pblock->vtx[1]);
-    const CStakeableOutput& in2 = availableCoins.back();
-    availableCoins.pop_back();
+    const CStakeableOutput& in2 = availableUTXOs.back();
+    availableUTXOs.pop_back();
     CTxIn vin2(in2.tx->GetHash(), in2.i);
     mtx.vin.emplace_back(vin2);
 
@@ -138,43 +154,57 @@ static bool IsSpentOnFork(const COutput& coin, std::initializer_list<std::shared
     return false;
 }
 
-std::shared_ptr<CBlock> CreateBlockInternal(CWallet* pwalletMain, const std::vector<CMutableTransaction>& txns = {},
-                                            CBlockIndex* customPrevBlock = nullptr,
-                                            std::initializer_list<std::shared_ptr<CBlock>> forkchain = {})
+std::shared_ptr<CBlock> CreateBlockInternal(CWallet* pwalletMain, const std::vector<CMutableTransaction>& txns = {}, CBlockIndex* customPrevBlock = nullptr, std::initializer_list<std::shared_ptr<CBlock>> forkchain = {}, bool fNoMempoolTx = true, bool isShieldStake = false)
 {
-    std::vector<CStakeableOutput> availableCoins;
-    BOOST_CHECK(pwalletMain->StakeableCoins(&availableCoins));
+    std::vector<std::unique_ptr<CStakeableInterface>> availableCoins;
+    if (!isShieldStake) {
+        std::vector<CStakeableOutput> availableUTXOs;
+        BOOST_CHECK(pwalletMain->StakeableUTXOs(&availableUTXOs));
 
-    // Remove any utxo which is not deeper than 120 blocks (for the same reasoning
-    // used when selecting tx inputs in CreateAndCommitTx)
-    // Also, as the wallet is not prepared to follow several chains at the same time,
-    // need to manually remove from the stakeable utxo set every already used
-    // coinstake inputs on the previous blocks of the parallel chain so they
-    // are not used again.
-    for (auto it = availableCoins.begin(); it != availableCoins.end() ;) {
-        if (it->nDepth <= 120 || IsSpentOnFork(*it, forkchain)) {
-            it = availableCoins.erase(it);
-        } else {
-            it++;
+        // Remove any utxo which is not deeper than 120 blocks (for the same reasoning
+        // used when selecting tx inputs in CreateAndCommitTx)
+        // Also, as the wallet is not prepared to follow several chains at the same time,
+        // need to manually remove from the stakeable utxo set every already used
+        // coinstake inputs on the previous blocks of the parallel chain so they
+        // are not used again.
+        for (auto it = availableUTXOs.begin(); it != availableUTXOs.end();) {
+            if (it->nDepth <= 120 || IsSpentOnFork(*it, forkchain)) {
+                it = availableUTXOs.erase(it);
+            } else {
+                it++;
+            }
+        }
+
+        for (auto& utxo : availableUTXOs) {
+            availableCoins.push_back(std::make_unique<CStakeableOutput>(utxo));
+        }
+    } else {
+        std::vector<CStakeableShieldNote> availableNotes;
+        BOOST_CHECK(pwalletMain->StakeableNotes(&availableNotes));
+        for (auto& note : availableNotes) {
+            availableCoins.push_back(std::make_unique<CStakeableShieldNote>(note));
         }
     }
-
     std::unique_ptr<CBlockTemplate> pblocktemplate = BlockAssembler(
-            Params(), false).CreateNewBlock(CScript(),
-                                            pwalletMain,
-                                            true,
-                                            &availableCoins,
-                                            true,
-                                            false,
-                                            customPrevBlock,
-                                            false);
+        Params(), false)
+                                                         .CreateNewBlock(CScript(),
+                                                             pwalletMain,
+                                                             true,
+                                                             availableCoins,
+                                                             fNoMempoolTx,
+                                                             false,
+                                                             customPrevBlock,
+                                                             false);
     BOOST_ASSERT(pblocktemplate);
     auto pblock = std::make_shared<CBlock>(pblocktemplate->block);
     if (!txns.empty()) {
+        if (isShieldStake) BOOST_CHECK(false);
         for (const auto& tx : txns) {
             pblock->vtx.emplace_back(MakeTransactionRef(tx));
         }
         pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
+        const int nHeight = (customPrevBlock != nullptr ? customPrevBlock->nHeight + 1 : WITH_LOCK(cs_main, return chainActive.Height()) + 1);
+        pblock->hashFinalSaplingRoot = CalculateSaplingTreeRoot(&*pblock, nHeight, Params());
         assert(SignBlock(*pblock, *pwalletMain));
     }
     return pblock;
@@ -436,6 +466,294 @@ BOOST_FIXTURE_TEST_CASE(created_on_fork_tests, TestPoSChainSetup)
     assert(SignBlock(*pblockI, *pwalletMain));
     BOOST_CHECK(pblockI3->GetHash() != pblockI->GetHash());
     BOOST_CHECK(ProcessNewBlock(pblockI, nullptr));
+}
+
+// From now on SHIELD STAKE TESTS
+static void ActivateShieldStaking(CWallet* pwalletMain)
+{
+    while (WITH_LOCK(cs_main, return chainActive.Tip()->nHeight) < 600) {
+        std::shared_ptr<CBlock> pblock = CreateBlockInternal(pwalletMain);
+        ProcessNewBlock(pblock, nullptr);
+    }
+}
+
+static void UpdateAndProcessShieldStakeBlock(std::shared_ptr<CBlock> pblock, CWallet* pwalletMain, std::string processError, int expBlock)
+{
+    pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
+    pblock->hashFinalSaplingRoot = CalculateSaplingTreeRoot(&*pblock, WITH_LOCK(cs_main, return chainActive.Height()) + 1, Params());
+    if (pblock->IsProofOfShieldStake()) BOOST_CHECK(SignBlock(*pblock, *pwalletMain, pblock->vtx[1]->shieldStakeRandomness, pblock->vtx[1]->shieldStakePrivKey));
+    ProcessBlockAndCheckRejectionReason(pblock, processError, expBlock);
+}
+
+// Create a coinshieldstake with an eventual addition of unwanted pieces
+// Entries of shieldNotes are the notes you are going to spend inside the coinshieldstake
+static bool CreateFakeShieldReward(CWallet* pwalletMain, const std::vector<CStakeableShieldNote>& shieldNotes, CMutableTransaction& txNew, int deltaReward, bool splitOutput, bool addMultiEmptyOutput)
+{
+    int nHeight = WITH_LOCK(cs_main, return chainActive.Tip()->nHeight);
+    CAmount nMasternodePayment = GetMasternodePayment(nHeight);
+    TransactionBuilder txBuilder(Params().GetConsensus(), pwalletMain);
+    txBuilder.SetFee(0);
+    txBuilder.AddStakeInput();
+    if (addMultiEmptyOutput) {
+        txBuilder.AddStakeInput();
+    }
+    CAmount val = GetBlockValue(nHeight) - nMasternodePayment + deltaReward * COIN;
+    for (const CStakeableShieldNote& note : shieldNotes) {
+        val += note.note.value();
+    }
+    val /= (splitOutput + 1);
+    for (int i = 0; i < (splitOutput + 1); i++) {
+        txBuilder.AddSaplingOutput(pwalletMain->GetSaplingScriptPubKeyMan()->getCommonOVK(), pwalletMain->GenerateNewSaplingZKey(), val);
+    }
+
+    std::vector<libzcash::SaplingExtendedSpendingKey> sk;
+    for (const CStakeableShieldNote& note : shieldNotes) {
+        libzcash::SaplingExtendedSpendingKey t;
+        if (!pwalletMain->GetSaplingExtendedSpendingKey(note.address, t)) {
+            return false;
+        }
+        sk.push_back(t);
+    }
+
+    uint256 anchor;
+    std::vector<Optional<SaplingWitness>> witnesses;
+    std::vector<SaplingOutPoint> noteop;
+    for (const CStakeableShieldNote& note : shieldNotes) {
+        noteop.emplace_back(note.op);
+    }
+
+    pwalletMain->GetSaplingScriptPubKeyMan()->GetSaplingNoteWitnesses(noteop, witnesses, anchor);
+    int i = 0;
+    for (const CStakeableShieldNote& note : shieldNotes) {
+        txBuilder.AddSaplingSpend(sk[i].expsk, note.note, anchor, witnesses[i].get());
+        i++;
+    }
+
+    const auto& txTrial = txBuilder.Build().GetTx();
+    if (txTrial) {
+        txNew = CMutableTransaction(*txTrial);
+        txNew.shieldStakePrivKey = sk[0].expsk.ask;
+        txNew.shieldStakeRandomness = txBuilder.GetShieldStakeRandomness();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Create a sapling operation that can build a shield tx
+static SaplingOperation CreateOperationAndBuildTx(std::unique_ptr<CWallet>& pwallet,
+    CAmount amount,
+    bool selectTransparentCoins)
+{
+    // Create the operation
+    libzcash::SaplingPaymentAddress pa = pwallet->GenerateNewSaplingZKey("s1");
+    std::vector<SendManyRecipient> recipients;
+    recipients.emplace_back(pa, amount, "", false);
+    SaplingOperation operation(Params().GetConsensus(), pwallet.get());
+    operation.setMinDepth(1);
+    auto operationResult = operation.setRecipients(recipients)
+                               ->setSelectTransparentCoins(selectTransparentCoins)
+                               ->setSelectShieldedCoins(!selectTransparentCoins)
+                               ->build();
+    BOOST_ASSERT_MSG(operationResult, operationResult.getError().c_str());
+
+    CValidationState state;
+    BOOST_ASSERT_MSG(
+        CheckTransaction(operation.getFinalTx(), state, true),
+        "Invalid Sapling transaction");
+    return operation;
+}
+
+// The aim of this test is verifying some basic rules regarding the coinshieldstake,
+// double spend and non malleability of the shield staked block
+BOOST_FIXTURE_TEST_CASE(coinshieldstake_tests, TestPoSChainSetup)
+{
+    // Verify that we are at block 250 and then activate shield Staking
+    BOOST_CHECK_EQUAL(WITH_LOCK(cs_main, return chainActive.Tip()->nHeight), 250);
+    SyncWithValidationInterfaceQueue();
+    ActivateShieldStaking(pwalletMain.get());
+
+    // Create two sapling notes with 10k PIVs
+    {
+        CReserveKey reservekey(&*pwalletMain);
+        for (int i = 0; i < 2; i++) {
+            SaplingOperation operation = CreateOperationAndBuildTx(pwalletMain, 10000 * COIN, true);
+            pwalletMain->CommitTransaction(operation.getFinalTxRef(), reservekey, nullptr);
+        }
+        std::shared_ptr<CBlock> pblock = CreateBlockInternal(pwalletMain.get(), {}, nullptr, {}, false);
+        BOOST_CHECK(ProcessNewBlock(pblock, nullptr));
+
+        // Sanity check on the block created
+        BOOST_CHECK(pblock->vtx.size() == 4);
+        BOOST_CHECK(pblock->vtx[2]->sapData->vShieldedOutput.size() == 1 && pblock->vtx[3]->sapData->vShieldedOutput.size() == 1);
+    }
+
+    // Create 20 more blocks, in such a way that the sapling notes will be stakeable
+    for (int i = 0; i < 20; i++) {
+        std::shared_ptr<CBlock> pblock = CreateBlockInternal(pwalletMain.get(), {}, nullptr, {}, true);
+        ProcessNewBlock(pblock, nullptr);
+    }
+
+    // Create a shield stake block
+    std::shared_ptr<CBlock> pblock = CreateBlockInternal(pwalletMain.get(), {}, nullptr, {}, false, true);
+    BOOST_CHECK(pblock->IsProofOfShieldStake());
+
+    // And let's begin with tests:
+    // 1) ShieldStake blocks are not malleable, for example let's try to add a new tx
+    {
+        std::shared_ptr<CBlock> pblockA = std::make_shared<CBlock>(*pblock);
+        auto cTx = CreateAndCommitTx(pwalletMain.get(), *pwalletMain->getNewAddress("").getObjResult(), 249 * COIN);
+        pblockA->vtx.emplace_back(MakeTransactionRef(cTx));
+        pblockA->hashMerkleRoot = BlockMerkleRoot(*pblockA);
+        pblockA->hashFinalSaplingRoot = CalculateSaplingTreeRoot(&*pblockA, WITH_LOCK(cs_main, return chainActive.Height()) + 1, Params());
+        ProcessBlockAndCheckRejectionReason(pblockA, "bad-PoS-sig", 621);
+    }
+
+    // 2) The Note used to ShieldStake cannot be spent two times in the same block:
+    {
+        std::shared_ptr<CBlock> pblockB = std::make_shared<CBlock>(*pblock);
+        uint256 shieldStakeNullifier = pblock.get()->vtx[1]->sapData->vShieldedSpend[0].nullifier;
+
+        // Build a random shield tx that spends the shield stake note (we are spending both to be sure).
+        SaplingOperation operation = CreateOperationAndBuildTx(pwalletMain, 11000 * COIN, false);
+        // Sanity check on the notes that was spent
+        auto vecShieldSpend = operation.getFinalTx().sapData->vShieldedSpend;
+        BOOST_CHECK(vecShieldSpend[0].nullifier == shieldStakeNullifier || vecShieldSpend[1].nullifier == shieldStakeNullifier);
+        BOOST_CHECK(operation.getFinalTx().sapData->vShieldedSpend.size() == 2);
+
+        // Update the block, resign and try to process
+        pblockB->vtx.emplace_back(operation.getFinalTxRef());
+        UpdateAndProcessShieldStakeBlock(pblockB, &*pwalletMain, "bad-txns-sapling-requirements-not-met", 621);
+    }
+    // 3) Let's try to change the structure of the CoinShieldStake tx:
+    {
+        std::shared_ptr<CBlock> pblockC = std::make_shared<CBlock>(*pblock);
+        uint256 shieldStakeNullifier = pblock.get()->vtx[1]->sapData->vShieldedSpend[0].nullifier;
+        std::vector<CStakeableShieldNote> stakeableNotes = {};
+        BOOST_CHECK(pwalletMain->StakeableNotes(&stakeableNotes));
+        // Usual sanity check
+        BOOST_CHECK(stakeableNotes.size() == 2);
+        int shieldNoteIndex = stakeableNotes[0].nullifier == shieldStakeNullifier ? 0 : 1;
+        int otherNoteIndex = (1 + shieldNoteIndex) % 2;
+
+        // 3.1) Staker is trying to get paid a different amount from the expected
+        CMutableTransaction mtx;
+        BOOST_CHECK(CreateFakeShieldReward(&*pwalletMain, {stakeableNotes[shieldNoteIndex]}, mtx, 100000, false, false));
+        pblockC->vtx[1] = MakeTransactionRef(mtx);
+        UpdateAndProcessShieldStakeBlock(pblockC, &*pwalletMain, "bad-blk-amount", 621);
+
+        // 3.2) Staker is trying to add more than one empty vout
+        BOOST_CHECK(CreateFakeShieldReward(&*pwalletMain, {stakeableNotes[shieldNoteIndex]}, mtx, 0, false, true));
+        pblockC->vtx[1] = MakeTransactionRef(mtx);
+        // Why this processError? Well the mtx is not coinstake since it has saplingdata and the mtx is not coinshieldstake since the vout has length different than 1,
+        // therefore the block is not proof of stake => invalid PoW
+        UpdateAndProcessShieldStakeBlock(pblockC, &*pwalletMain, "PoW-ended", 621);
+
+        // 3.3) Staker is trying to add another shield input
+        BOOST_CHECK(CreateFakeShieldReward(&*pwalletMain, {stakeableNotes[shieldNoteIndex], stakeableNotes[otherNoteIndex]}, mtx, 0, false, false));
+        pblockC->vtx[1] = MakeTransactionRef(mtx);
+        UpdateAndProcessShieldStakeBlock(pblockC, &*pwalletMain, "bad-scs-multi-inputs", 621);
+
+        // 3.4) TODO: add an upper bound on the maximum number of shield outputs (or a malicious node could create huge blocks without paying fees)??
+    }
+    // 4) TODO: test what happens is the proof is faked
+
+    // 5) Last but not least, the original block is processed without any errors.
+    BOOST_CHECK(ProcessNewBlock(pblock, nullptr));
+}
+
+// The aim of this test is verifying that shield stake rewards can be spent only as intended.
+BOOST_FIXTURE_TEST_CASE(shieldstake_fork_tests, TestPoSChainSetup)
+{
+    /*
+    Consider the following chain diagram:
+    A -- B -- C -- D -- E -- F
+              \
+                -- D1 -- E1 --F1 -- G1
+
+    I will verify that a shield stake reward created in D can be spent in F but not in the fork block E1
+    */
+    // Verify that we are at block 250 and then activate shield Staking
+    BOOST_CHECK_EQUAL(WITH_LOCK(cs_main, return chainActive.Tip()->nHeight), 250);
+    SyncWithValidationInterfaceQueue();
+    ActivateShieldStaking(pwalletMain.get());
+    // Create a sapling notes of 10k PIVs
+    {
+        CReserveKey reservekey(&*pwalletMain);
+        SaplingOperation operation = CreateOperationAndBuildTx(pwalletMain, 10000 * COIN, true);
+        pwalletMain->CommitTransaction(operation.getFinalTxRef(), reservekey, nullptr);
+
+        std::shared_ptr<CBlock> pblock = CreateBlockInternal(pwalletMain.get(), {}, nullptr, {}, false);
+        BOOST_CHECK(ProcessNewBlock(pblock, nullptr));
+
+        // Sanity check on the block created
+        BOOST_CHECK(pblock->vtx.size() == 3);
+        BOOST_CHECK(pblock->vtx[2]->sapData->vShieldedOutput.size() == 1);
+    }
+
+    // Create 20 more blocks, in such a way that the sapling notes will be stakeable, the 20-th is block C
+    for (int i = 0; i < 19; i++) {
+        std::shared_ptr<CBlock> pblock = CreateBlockInternal(pwalletMain.get(), {}, nullptr, {}, true);
+        ProcessNewBlock(pblock, nullptr);
+    }
+    std::shared_ptr<CBlock> pblockC = CreateBlockInternal(pwalletMain.get());
+    BOOST_CHECK(ProcessNewBlock(pblockC, nullptr));
+
+    // Create a shielded pos block D
+    std::shared_ptr<CBlock> pblockD = CreateBlockInternal(pwalletMain.get(), {}, nullptr, {}, true, true);
+
+    // Create D1 forked block that connects a new tx
+    std::shared_ptr<CBlock> pblockD1 = CreateBlockInternal(pwalletMain.get());
+
+    // Process blocks D and D1
+    ProcessNewBlock(pblockD, nullptr);
+    ProcessNewBlock(pblockD1, nullptr);
+    BOOST_CHECK(WITH_LOCK(cs_main, return chainActive.Tip()->GetBlockHash() == pblockD->GetHash()));
+
+    // Create block E
+    std::shared_ptr<CBlock> pblockE = CreateBlockInternal(pwalletMain.get(), {}, {});
+    BOOST_CHECK(ProcessNewBlock(pblockE, nullptr));
+
+    // Verify that we indeed have the shield stake reward:
+    std::vector<CStakeableShieldNote> notes = {};
+    BOOST_CHECK(pwalletMain->GetSaplingScriptPubKeyMan()->GetStakeableNotes(&notes, 1));
+    BOOST_CHECK(notes.size() == 1);
+    BOOST_CHECK(notes[0].note.value() == 10004 * COIN);
+    uint256 rewardNullifier = notes[0].nullifier;
+
+    // Build and commit a tx that spends the reward and check that it indeed spends it
+    auto operation = CreateOperationAndBuildTx(pwalletMain, 100 * COIN, false);
+    auto txRef = operation.getFinalTx();
+    BOOST_CHECK(txRef.sapData->vShieldedSpend.size() == 1);
+    BOOST_CHECK(txRef.sapData->vShieldedSpend[0].nullifier == rewardNullifier);
+    std::string txHash;
+    operation.send(txHash);
+
+    // Create the forked block E1 that spends the shield stake reward
+    // There is a little catch here: the validation checks for this kind of invalid block (in this case invalid anchor since the note does not exist on the forked chain)
+    // is done only on ConnectBlock which is called only when we are connecting the new block to the current chaintip
+    // now, since the fork is not the current active chain ConnectBlock is not called and the block seems to be valid.
+    std::shared_ptr<CBlock> pblockE1 = CreateBlockInternal(pwalletMain.get(), {txRef}, mapBlockIndex.at(pblockD1->GetHash()), {pblockD1});
+    BOOST_CHECK(pblockE1->vtx[2]->sapData->vShieldedSpend.size() == 1);
+    BOOST_CHECK(pblockE1->vtx[2]->sapData->vShieldedSpend[0].nullifier == rewardNullifier);
+    BOOST_CHECK(ProcessNewBlock(pblockE1, nullptr));
+
+    // So how to see that the forked chain is indeed invalid?
+    // We can keep adding blocks to the forked chain until it becomes the active chain!
+    // In that moment connectblock will be called and the forked chain will become invalid.
+    std::shared_ptr<CBlock> pblockF1 = CreateBlockInternal(pwalletMain.get(), {}, mapBlockIndex.at(pblockE1->GetHash()), {pblockD1, pblockE1});
+    BOOST_CHECK(ProcessNewBlock(pblockF1, nullptr));
+
+    // finally the wallet will try to activate the forkedchain and will figure out that we have a bad previous block
+    std::shared_ptr<CBlock> pblockG1 = CreateBlockInternal(pwalletMain.get(), {}, mapBlockIndex.at(pblockF1->GetHash()), {pblockD1, pblockE1, pblockF1});
+    ProcessBlockAndCheckRejectionReason(pblockG1, "bad-prevblk", 623);
+    // Side note: Of course what I just showed doesn't depend on shield staking and will happen for any non-valid shield transaction sent to a forked chain,
+    // TODO: change the validation in such a way that the anchor and duplicated nullifiers are checked not only when the block is connected?
+
+    // Finally let's see that the shield reward can be spent on the main chain:
+    BOOST_CHECK(WITH_LOCK(cs_main, return chainActive.Tip()->GetBlockHash() == pblockE->GetHash()));
+    std::shared_ptr<CBlock> pblockF = CreateBlockInternal(pwalletMain.get(), {txRef});
+    BOOST_CHECK(ProcessNewBlock(pblockF, nullptr));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

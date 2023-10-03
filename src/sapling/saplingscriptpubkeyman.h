@@ -6,11 +6,11 @@
 #define PIVX_SAPLINGSCRIPTPUBKEYMAN_H
 
 #include "consensus/consensus.h"
-#include "sapling/note.h"
-#include "wallet/hdchain.h"
-#include "wallet/wallet.h"
-#include "wallet/walletdb.h"
 #include "sapling/incrementalmerkletree.h"
+#include "sapling/note.h"
+#include "script/ismine.h"
+#include "wallet/hdchain.h"
+#include "wallet/walletdb.h"
 
 //! Size of witness cache
 //  Should be large enough that we can expect not to reorg beyond our cache
@@ -19,6 +19,7 @@ static const unsigned int WITNESS_CACHE_SIZE = DEFAULT_MAX_REORG_DEPTH + 1;
 
 class CBlock;
 class CBlockIndex;
+class CStakeableShieldNote;
 
 /** Sapling note, its location in a transaction, and number of confirmations. */
 struct SaplingNoteEntry
@@ -36,6 +37,7 @@ struct SaplingNoteEntry
     std::array<unsigned char, ZC_MEMO_SIZE> memo;
     int confirmations;
 };
+
 
 class SaplingNoteData
 {
@@ -296,6 +298,9 @@ public:
                           bool requireSpendingKey=true,
                           bool ignoreLocked=true) const;
 
+    /* Return a list of notes that are stakable */
+    bool GetStakeableNotes(std::vector<CStakeableShieldNote>* notes, int minDepth);
+
     /* Return list of available notes grouped by sapling address. */
     std::map<libzcash::SaplingPaymentAddress, std::vector<SaplingNoteEntry>> ListNotes() const;
 
@@ -405,6 +410,8 @@ public:
      */
 
     std::map<uint256, SaplingOutPoint> mapSaplingNullifiersToNotes;
+
+    bool ComputeShieldStakeProof(CBlock& block, CStakeableShieldNote& note, CAmount suggestedValue);
 
 private:
     /* Parent wallet */

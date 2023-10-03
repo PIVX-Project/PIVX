@@ -201,15 +201,16 @@ CBlock TestChainSetup::CreateBlock(const std::vector<CMutableTransaction>& txns,
                                    CBlockIndex* customPrevBlock)
 {
     std::unique_ptr<CBlockTemplate> pblocktemplate = BlockAssembler(
-            Params(), DEFAULT_PRINTPRIORITY).CreateNewBlock(scriptPubKey,
-                                                            nullptr,       // wallet
-                                                            false,   // fProofOfStake
-                                                            nullptr, // availableCoins
-                                                            fNoMempoolTx,
-                                                            fTestBlockValidity,
-                                                            customPrevBlock,
-                                                            true,
-                                                            fIncludeQfc);
+        Params(), DEFAULT_PRINTPRIORITY)
+                                                         .CreateNewBlock(scriptPubKey,
+                                                             nullptr, // wallet
+                                                             false,   // fProofOfStake
+                                                             {},      // availableCoins
+                                                             fNoMempoolTx,
+                                                             fTestBlockValidity,
+                                                             customPrevBlock,
+                                                             true,
+                                                             fIncludeQfc);
     std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>(pblocktemplate->block);
 
     // Add passed-in txns:

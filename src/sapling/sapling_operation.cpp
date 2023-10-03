@@ -590,3 +590,11 @@ OperationResult CheckTransactionSize(std::vector<SendManyRecipient>& recipients,
     }
     return OperationResult(true);
 }
+
+bool ComputeShieldStakeProof(CWallet& wallet, CBlock& block, CStakeableShieldNote& note, CAmount suggestedValue)
+{
+    assert(block.IsProofOfShieldStake());
+    assert(note.note.value() >= suggestedValue);
+    block.shieldStakeProof.amount = suggestedValue;
+    return true;
+}

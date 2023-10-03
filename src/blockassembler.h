@@ -8,12 +8,15 @@
 #define PIVX_BLOCKASSEMBLER_H
 
 #include "primitives/block.h"
+#include "sapling/saplingscriptpubkeyman.h"
+#include "stakeinput.h"
 #include "txmempool.h"
 
-#include <stdint.h>
-#include <memory>
-#include "boost/multi_index_container.hpp"
 #include "boost/multi_index/ordered_index.hpp"
+#include "boost/multi_index_container.hpp"
+#include "wallet/wallet.h"
+#include <memory>
+#include <stdint.h>
 
 class CBlockIndex;
 class CChainParams;
@@ -163,14 +166,14 @@ public:
     BlockAssembler(const CChainParams& chainparams, const bool defaultPrintPriority);
     /** Construct a new block template with coinbase to scriptPubKeyIn */
     std::unique_ptr<CBlockTemplate> CreateNewBlock(const CScript& scriptPubKeyIn,
-                                   CWallet* pwallet = nullptr,
-                                   bool fProofOfStake = false,
-                                   std::vector<CStakeableOutput>* availableCoins = nullptr,
-                                   bool fNoMempoolTx = false,
-                                   bool fTestValidity = true,
-                                   CBlockIndex* prevBlock = nullptr,
-                                   bool stopPoSOnNewBlock = true,
-                                   bool fIncludeQfc = true);
+        CWallet* pwallet = nullptr,
+        bool fProofOfStake = false,
+        const std::vector<std::unique_ptr<CStakeableInterface>>& availableCoins = {},
+        bool fNoMempoolTx = false,
+        bool fTestValidity = true,
+        CBlockIndex* prevBlock = nullptr,
+        bool stopPoSOnNewBlock = true,
+        bool fIncludeQfc = true);
 
 private:
     // utility functions

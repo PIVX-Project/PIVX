@@ -29,7 +29,7 @@ byteorder = "1.4.3"
 group = "0.13"
 rand_core = "0.6.4"
 jubjub = "0.10.0"
-zcash_primitives = { git="https://github.com/PIVX-Project/librustzcash", rev="e7662b23d16c38595ef9ad1f3ae683b1f54dc732" }
-zcash_proofs = { git="https://github.com/PIVX-Project/librustzcash", rev="e7662b23d16c38595ef9ad1f3ae683b1f54dc732" }
+zcash_primitives = { git="https://github.com/PIVX-Project/librustzcash", rev="4822cf07b18d8726e9b3253a15f9e08d81752746" }
+zcash_proofs = { git="https://github.com/PIVX-Project/librustzcash", rev="4822cf07b18d8726e9b3253a15f9e08d81752746" }
 zcash_note_encryption = "0.3.0"
 

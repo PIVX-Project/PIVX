@@ -4,6 +4,7 @@
 
 #include "blocksignature.h"
 
+#include "rust/include/librustzcash.h"
 #include "script/standard.h"
 #include "zpiv/zpivmodule.h"
 
@@ -32,9 +33,19 @@ bool SignBlockWithKey(CBlock& block, const CKey& key)
     return true;
 }
 
-bool SignBlock(CBlock& block, const CKeyStore& keystore)
+bool SignBlock(CBlock& block, const CKeyStore& keystore, Optional<uint256> shieldStakeRandomness, Optional<uint256> shieldStakePrivKey)
 {
     CKeyID keyID;
+
+    if (block.IsProofOfShieldStake()) {
+        block.vchBlockSig.resize(64);
+        if (shieldStakeRandomness == boost::none || shieldStakePrivKey == boost::none) {
+            return error("%s: failed to find keys for shield stake", __func__);
+        }
+        if (!librustzcash_sign_block((*shieldStakePrivKey).begin(), (*shieldStakeRandomness).begin(), block.GetHash().begin(), block.vchBlockSig.data())) return error("%s: failed to sign the shield stake block", __func__);
+        return true;
+    }
+
     if (!GetKeyIDFromUTXO(block.vtx[1]->vout[1], keyID)) {
         return error("%s: failed to find key for PoS", __func__);
     }
@@ -50,7 +61,14 @@ bool CheckBlockSignature(const CBlock& block)
 {
     if (block.IsProofOfWork())
         return block.vchBlockSig.empty();
+    if (block.IsProofOfShieldStake()) {
+        uint256 rk = block.vtx[1]->sapData->vShieldedSpend[0].rk;
 
+        if (block.vchBlockSig.size() != 64) {
+            return error("%s: vchBlockSig has not the right length!", __func__);
+        }
+        return librustzcash_verify_block_signature(rk.begin(), block.GetHash().begin(), block.vchBlockSig.data());
+    }
     if (block.vchBlockSig.empty())
         return error("%s: vchBlockSig is empty!", __func__);
 

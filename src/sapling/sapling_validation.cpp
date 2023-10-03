@@ -5,11 +5,12 @@
 
 #include "sapling/sapling_validation.h"
 
-#include "consensus/consensus.h" // for MAX_BLOCK_SIZE_CURRENT
-#include "script/interpreter.h" // for SigHash
+#include "consensus/consensus.h"  // for MAX_BLOCK_SIZE_CURRENT
+#include "consensus/upgrades.h"   // for CurrentEpochBranchId()
 #include "consensus/validation.h" // for CValidationState
-#include "util/system.h" // for error()
-#include "consensus/upgrades.h" // for CurrentEpochBranchId()
+#include "logging.h"
+#include "script/interpreter.h" // for SigHash
+#include "util/system.h"        // for error()
 
 #include <librustzcash.h>
 
@@ -65,7 +66,7 @@ bool CheckTransactionWithoutProofVerification(const CTransaction& tx, CValidatio
         // NB: negative valueBalance "takes" money from the transparent value pool just as outputs do
         nValueOut += -tx.sapData->valueBalance;
 
-        if (!consensus.MoneyRange(nValueOut)) {
+        if (!tx.IsCoinShieldStake() && !consensus.MoneyRange(nValueOut)) {
             return state.DoS(100, error("%s: txout total out of range", __func__ ),
                              REJECT_INVALID, "bad-txns-txouttotal-toolarge");
         }
@@ -225,5 +226,43 @@ bool ContextualCheckTransaction(
     return true;
 }
 
+bool CheckShieldStake(const CBlock& block, CValidationState& state, const CChainParams& chainParams)
+{
+    // Check that the block is in Shield stake form, i.e. has 1 shield input, 1 shield output
+    if (!block.IsProofOfShieldStake()) {
+        return false;
+    }
+    LogPrintf("%d", block.shieldStakeProof.amount);
+
+    const auto& saplingData = block.vtx[1].get()->sapData.get();
+    auto ctx = librustzcash_sapling_verification_ctx_init();
+    const auto& inputNote = saplingData.vShieldedSpend[0];
+    const auto& p = block.shieldStakeProof;
+    const int DOS_LEVEL_BLOCK = 100;
+
+    if (!librustzcash_sapling_check_spend(ctx, p.inputCv.begin(), inputNote.anchor.begin(), inputNote.nullifier.begin(), p.rk.begin(), p.inputProof.begin(), nullptr, nullptr)) {
+        librustzcash_sapling_verification_ctx_free(ctx);
+        return state.DoS(
+            DOS_LEVEL_BLOCK,
+            error("%s: Sapling spend description invalid", __func__),
+            REJECT_INVALID, "bad-txns-sapling-spend-description-invalid");
+    }
+
+    if (!librustzcash_sapling_check_output(ctx, p.outputCv.begin(), p.cmu.begin(), p.epk.begin(), p.outputProof.begin())) {
+        librustzcash_sapling_verification_ctx_free(ctx);
+        return state.DoS(100, error("%s: Sapling output description invalid", __func__),
+            REJECT_INVALID, "bad-txns-sapling-output-description-invalid");
+    }
+
+    if (!librustzcash_sapling_final_check(ctx, block.shieldStakeProof.amount, block.shieldStakeProof.sig.data(), nullptr)) {
+        librustzcash_sapling_verification_ctx_free(ctx);
+        return state.DoS(
+            100,
+            error("%s: Sapling binding signature invalid", __func__),
+            REJECT_INVALID, "bad-txns-sapling-binding-signature-invalid");
+    }
+    librustzcash_sapling_verification_ctx_free(ctx);
+    return true;
+}
 
 } // End SaplingValidation namespace

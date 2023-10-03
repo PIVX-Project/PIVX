@@ -6,11 +6,13 @@
 #define PIVX_BLOCKSIGNATURE_H
 
 #include "key.h"
-#include "primitives/block.h"
 #include "keystore.h"
+#include "optional.h"
+#include "primitives/block.h"
+#include "sapling/transaction_builder.h"
 
 bool SignBlockWithKey(CBlock& block, const CKey& key);
-bool SignBlock(CBlock& block, const CKeyStore& keystore);
+bool SignBlock(CBlock& block, const CKeyStore& keystore, Optional<uint256> shieldStakeRandomness = boost::none, Optional<uint256> shieldStakePrivKey = boost::none);
 bool CheckBlockSignature(const CBlock& block);
 
 #endif //PIVX_BLOCKSIGNATURE_H

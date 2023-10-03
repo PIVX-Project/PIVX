@@ -4,7 +4,9 @@
 
 #include "stakeinput.h"
 
+#include "amount.h"
 #include "chain.h"
+#include "streams.h"
 #include "txdb.h"
 #include "validation.h"
 
@@ -87,6 +89,12 @@ CDataStream CPivStake::GetUniqueness() const
     return ss;
 }
 
+CShieldStake* CShieldStake::NewShieldStake(const SpendDescription& spendDescription, CAmount noteAmount, int nHeight, uint32_t nTime)
+{
+    // TODO: add previous block and all of that stuff
+    return new CShieldStake(spendDescription.nullifier, noteAmount);
+}
+
 //The block that the UTXO was added to the chain
 const CBlockIndex* CPivStake::GetIndexFrom() const
 {
@@ -95,3 +103,10 @@ const CBlockIndex* CPivStake::GetIndexFrom() const
     return pindexFrom;
 }
 
+// A Unique identifier of a shield note
+CDataStream CShieldStake::GetUniqueness() const
+{
+    CDataStream ss(SER_NETWORK, 0);
+    ss << this->nullifier;
+    return ss;
+}

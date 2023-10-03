@@ -94,6 +94,7 @@ BASE_SCRIPTS= [
     'rpc_bind.py --nonloopback',                # ~ 126 sec
     'feature_uacomment.py',                     # ~ 125 sec
     'interface_rest.py',                        # ~ 120 sec
+    'mining_shield_pos.py',                     # ~ 120 sec
 
     # vv Tests less than 2m vv
     'wallet_upgrade.py',                        # ~ 119 sec
@@ -220,6 +221,7 @@ LEGACY_SKIP_TESTS = [
     'mempool_reorg.py',
     'mempool_resurrect.py',
     'mempool_spend_coinbase.py',
+    'mining_shield_pos.py',
     'p2p_disconnect_ban.py',
     'p2p_time_offset.py',
     'rpc_bip38.py',

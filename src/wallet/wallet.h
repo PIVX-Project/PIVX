@@ -14,6 +14,7 @@
 #include "consensus/validation.h"
 #include "crypter.h"
 #include "destination_io.h"
+#include "guiinterface.h"
 #include "kernel.h"
 #include "key.h"
 #include "key_io.h"
@@ -23,14 +24,15 @@
 #include "primitives/block.h"
 #include "primitives/transaction.h"
 #include "sapling/address.h"
-#include "guiinterface.h"
+#include "sapling/saplingscriptpubkeyman.h"
+#include "sapling/transaction_builder.h"
+#include "script/ismine.h"
+#include "stakeinput.h"
 #include "util/system.h"
 #include "utilstrencodings.h"
-#include "validationinterface.h"
-#include "script/ismine.h"
-#include "wallet/scriptpubkeyman.h"
-#include "sapling/saplingscriptpubkeyman.h"
 #include "validation.h"
+#include "validationinterface.h"
+#include "wallet/scriptpubkeyman.h"
 #include "wallet/walletdb.h"
 
 #include <algorithm>
@@ -99,6 +101,8 @@ class ScriptPubKeyMan;
 class SaplingScriptPubKeyMan;
 class SaplingNoteData;
 struct SaplingNoteEntry;
+class CStakeableInterface;
+class CStakeableShieldNote;
 
 /** (client) version numbers for particular wallet features */
 enum WalletFeature {
@@ -835,7 +839,10 @@ public:
      */
     bool SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, uint64_t nMaxAncestors, std::vector<COutput> vCoins, std::set<std::pair<const CWalletTx*, unsigned int> >& setCoinsRet, CAmount& nValueRet) const;
     //! >> Available coins (staking)
-    bool StakeableCoins(std::vector<CStakeableOutput>* pCoins = nullptr);
+    bool StakeableCoins(std::vector<std::unique_ptr<CStakeableInterface>>* stakeableCoins) const;
+    bool StakeableNotes(std::vector<CStakeableShieldNote>* stakeableNotes) const;
+    bool StakeableUTXOs(std::vector<CStakeableOutput>* stakeableUTXOs) const;
+
     //! >> Available coins (P2CS)
     void GetAvailableP2CSCoins(std::vector<COutput>& vCoins) const;
 
@@ -860,6 +867,7 @@ public:
                                  std::string& strError);
 
     bool IsSaplingSpent(const SaplingOutPoint& op) const;
+    bool IsSaplingSpent(const uint256& nullifier) const;
     bool IsSpent(const COutPoint& outpoint) const;
     bool IsSpent(const uint256& hash, unsigned int n) const;
 
@@ -1059,6 +1067,7 @@ public:
     CAmount GetColdStakingBalance() const;  // delegated coins for which we have the staking key
     CAmount GetImmatureColdStakingBalance() const;
     CAmount GetStakingBalance(const bool fIncludeColdStaking = true) const;
+    CAmount GetShieldStakingBalance();
     CAmount GetDelegatedBalance() const;    // delegated coins for which we have the spending key
     CAmount GetImmatureDelegatedBalance() const;
     CAmount GetLockedCoins() const;
@@ -1110,20 +1119,18 @@ public:
     CWallet::CommitResult CommitTransaction(CTransactionRef tx, CReserveKey& opReservekey, CConnman* connman);
     CWallet::CommitResult CommitTransaction(CTransactionRef tx, CReserveKey* reservekey, CConnman* connman, mapValue_t* extraValues=nullptr);
 
-    bool CreateCoinstakeOuts(const CPivStake& stakeInput, std::vector<CTxOut>& vout, CAmount nTotal) const;
-    bool CreateCoinStake(const CBlockIndex* pindexPrev,
-                         unsigned int nBits,
-                         CMutableTransaction& txNew,
-                         int64_t& nTxNewTime,
-                         std::vector<CStakeableOutput>* availableCoins,
-                         bool stopOnNewBlock = true) const;
+    bool CreateShieldReward(const CBlockIndex& indexPrev, const CStakeableShieldNote& shieldInput, CMutableTransaction& txNew);
+    bool CreateTransparentReward(const CBlockIndex& indexPrev, const CStakeableOutput& stakeInput, CMutableTransaction& txNew);
+
+    bool CreateCoinstakeOuts(const CStakeInput& stakeInput, std::vector<CTxOut>& vout, CAmount nTotal) const;
+    CStakeableInterface* CreateCoinStake(const CBlockIndex& indexPrev, unsigned int nBits, CMutableTransaction& txNew, int64_t& nTxNewTime, const std::vector<std::unique_ptr<CStakeableInterface>>& stakeOutputs, bool stopOnNewBlock);
+
     bool SignCoinStake(CMutableTransaction& txNew) const;
     void AutoCombineDust(CConnman* connman);
 
     // Shielded balances
     CAmount GetAvailableShieldedBalance(bool fUseCache = true) const;
     CAmount GetUnconfirmedShieldedBalance() const;
-
     static CFeeRate minTxFee;
 
     size_t KeypoolCountExternalKeys();
@@ -1306,14 +1313,47 @@ public:
     std::string ToString() const;
 };
 
-class CStakeableOutput : public COutput
+/** Stakeable interface rapresenting an UTXO or unspent note */
+class CStakeableInterface
+{
+public:
+    virtual ~CStakeableInterface() {}
+    virtual std::unique_ptr<CStakeInput> ToInput() const = 0;
+    virtual bool CreateReward(CWallet& wallet, const CBlockIndex& indexPrev, CMutableTransaction& txNew) const = 0;
+};
+
+class CStakeableOutput : public COutput, public CStakeableInterface
 {
 public:
     const CBlockIndex* pindex{nullptr};
 
     CStakeableOutput(const CWalletTx* txIn, int iIn, int nDepthIn,
                      const CBlockIndex*& pindex);
+    std::unique_ptr<CStakeInput> ToInput() const override
+    {
+        COutPoint outPoint = COutPoint(tx->GetHash(), this->i);
+        return std::make_unique<CPivStake>(tx->tx->vout[this->i], outPoint, pindex);
+    }
+    bool CreateReward(CWallet& wallet, const CBlockIndex& indexPrev, CMutableTransaction& txNew) const override
+    {
+        return wallet.CreateTransparentReward(indexPrev, *this, txNew);
+    }
+};
 
+class CStakeableShieldNote : public SaplingNoteEntry, public CStakeableInterface
+{
+public:
+    uint256 nullifier;
+    CAmount suggestedValue = 0;
+    explicit CStakeableShieldNote(const SaplingNoteEntry& _note, uint256 _nullifier) : SaplingNoteEntry(_note), nullifier(_nullifier) {}
+    std::unique_ptr<CStakeInput> ToInput() const override
+    {
+        return std::make_unique<CShieldStake>(nullifier, note.value());
+    }
+    bool CreateReward(CWallet& wallet, const CBlockIndex& indexPrev, CMutableTransaction& txNew) const override
+    {
+        return wallet.CreateShieldReward(indexPrev, *this, txNew);
+    }
 };
 
 /** RAII object to check and reserve a wallet rescan */

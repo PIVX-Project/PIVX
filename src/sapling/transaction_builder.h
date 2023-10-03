@@ -104,6 +104,10 @@ public:
 
     void SetFee(CAmount _fee);
 
+    // returns the randomness required to compute the blocksignature in shield stake
+    uint256 GetShieldStakeRandomness();
+
+    void AddStakeInput();
     // Throws if the anchor does not match the anchor used by
     // previously-added Sapling spends.
     void AddSaplingSpend(

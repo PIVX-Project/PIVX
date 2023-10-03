@@ -4385,8 +4385,10 @@ UniValue getstakingstatus(const JSONRPCRequest& request)
             "  \"haveconnections\": true|false,     (boolean) whether network connections are present\n"
             "  \"mnsync\": true|false,              (boolean) whether the required masternode/spork data is synced\n"
             "  \"walletunlocked\": true|false,      (boolean) whether the wallet is unlocked\n"
-            "  \"stakeablecoins\": n                (numeric) number of stakeable UTXOs\n"
-            "  \"stakingbalance\": d                (numeric) PIV value of the stakeable coins (minus reserve balance, if any)\n"
+            "  \"transparent_stakeable_coins\": n   (numeric) number of transparent stakeable UTXOs\n"
+            "  \"shield_stakeables_notes\": n       (numeric) number of shield stakeable notes\n"
+            "  \"transparent_staking_balance\": d   (numeric) PIV value of the stakeable coins (minus reserve balance, if any)\n"
+            "  \"shield_staking_balance\": d        (numeric) shield PIV value of the stakeable coins (minus reserve balance, if any)\n"
             "  \"stakesplitthreshold\": d           (numeric) value of the current threshold for stake split\n"
             "  \"lastattempt_age\": n               (numeric) seconds since last stake attempt\n"
             "  \"lastattempt_depth\": n             (numeric) depth of the block on top of which the last stake attempt was made\n"
@@ -4412,9 +4414,13 @@ UniValue getstakingstatus(const JSONRPCRequest& request)
         obj.pushKV("mnsync", !masternodeSync.NotCompleted());
         obj.pushKV("walletunlocked", !pwallet->IsLocked());
         std::vector<CStakeableOutput> vCoins;
-        pwallet->StakeableCoins(&vCoins);
-        obj.pushKV("stakeablecoins", (int)vCoins.size());
-        obj.pushKV("stakingbalance", ValueFromAmount(pwallet->GetStakingBalance(fColdStaking)));
+        std::vector<CStakeableShieldNote> vShieldCoins;
+        pwallet->StakeableUTXOs(&vCoins);
+        pwallet->StakeableNotes(&vShieldCoins);
+        obj.pushKV("transparent_stakeable_coins", (int)vCoins.size());
+        obj.pushKV("shield_stakeables_notes", (int)vShieldCoins.size());
+        obj.pushKV("transparent_staking_balance", ValueFromAmount(pwallet->GetStakingBalance(fColdStaking)));
+        obj.pushKV("shield_staking_balance", ValueFromAmount(pwallet->GetShieldStakingBalance()));
         obj.pushKV("stakesplitthreshold", ValueFromAmount(pwallet->nStakeSplitThreshold));
         CStakerStatus* ss = pwallet->pStakerStatus;
         if (ss) {

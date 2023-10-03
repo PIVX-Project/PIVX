@@ -1,6 +1,7 @@
 #ifndef LIBRUSTZCASH_INCLUDE_H_
 #define LIBRUSTZCASH_INCLUDE_H_
 
+#include <cstddef>
 #include <stdint.h>
 
 extern "C" {
@@ -71,6 +72,19 @@ extern "C" {
         const unsigned char *b,
         unsigned char *result
     );
+
+    /// Verify the block signature for shield staking
+    bool librustzcash_verify_block_signature(
+        const unsigned char* rk,
+        const unsigned char* sighash,
+        const unsigned char* sign);
+
+    /// Computes the signature for a shield staking block
+    bool librustzcash_sign_block(
+        const unsigned char* ask,
+        const unsigned char* ar,
+        const unsigned char* sighash,
+        unsigned char* result);
 
     /// Computes the signature for each Spend description, given the key
     /// `ask`, the re-randomization `ar`, the 32-byte sighash `sighash`,
