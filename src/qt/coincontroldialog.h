@@ -106,11 +106,11 @@ private:
                            const Optional<QString>& stakerAddress,
                            const QString& sWalletLabel,
                            const uint256& txhash,
-                           const uint32_t outIndex,
-                           const CAmount nValue,
-                           const int64_t nTime,
-                           const int nDepth,
-                           const bool isChange);
+                           uint32_t outIndex,
+                           CAmount nValue,
+                           int64_t nTime,
+                           int nDepth,
+                           bool isChange);
 
     // calculate sums for selected amount, number of inputs, change, fee, after fee value, and transaction size
     TotalAmounts getTotals() const;

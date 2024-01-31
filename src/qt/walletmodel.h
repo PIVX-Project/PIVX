@@ -203,10 +203,10 @@ public:
     void setWalletDefaultFee(CAmount fee = DEFAULT_TRANSACTION_FEE);
     bool hasWalletCustomFee();
     bool getWalletCustomFee(CAmount& nFeeRet);
-    void setWalletCustomFee(bool fUseCustomFee, const CAmount nFee = DEFAULT_TRANSACTION_FEE);
+    void setWalletCustomFee(bool fUseCustomFee, CAmount nFee = DEFAULT_TRANSACTION_FEE);
     CAmount getNetMinFee();
 
-    void setWalletStakeSplitThreshold(const CAmount nStakeSplitThreshold);
+    void setWalletStakeSplitThreshold(CAmount nStakeSplitThreshold);
     CAmount getWalletStakeSplitThreshold() const;
     /* Minimum stake split threshold*/
     double getSSTMinimum() const;
@@ -347,7 +347,7 @@ public:
     std::set<SaplingOutPoint> listLockedNotes();
 
     void loadReceiveRequests(std::vector<std::string>& vReceiveRequests);
-    bool saveReceiveRequest(const std::string& sAddress, const int64_t nId, const std::string& sRequest);
+    bool saveReceiveRequest(const std::string& sAddress, int64_t nId, const std::string& sRequest);
 
     ClientModel& clientModel() const { return *m_client_model; }
     void setClientModel(ClientModel* client_model);
@@ -435,7 +435,7 @@ Q_SIGNALS:
     void notifyReceiveAddressChanged();
 
     /** notify stake-split threshold changed */
-    void notifySSTChanged(const double sstVal);
+    void notifySSTChanged(double sstVal);
 
 public Q_SLOTS:
     /* Wallet balances changes */

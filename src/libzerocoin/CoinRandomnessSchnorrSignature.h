@@ -27,7 +27,7 @@ public:
      * @param randomness the coin we are going to use for the signature (sk := randomness, pk := h^sk mod p).
      * @param msghash hash of meta data to create a signature on.
      */
-    CoinRandomnessSchnorrSignature(const ZerocoinParams* zcparams, const CBigNum randomness, const uint256 msghash);
+    CoinRandomnessSchnorrSignature(const ZerocoinParams* zcparams, CBigNum randomness, uint256 msghash);
 
     /** Verifies the Schnorr signature on message msghash with public key pk = Cg^-S mod p
      *
@@ -37,7 +37,7 @@ public:
      * @param msghash hash of meta data to verify the signature on.
      * @return
      */
-    bool Verify(const ZerocoinParams* zcparams, const CBigNum& S, const CBigNum& C, const uint256 msghash) const;
+    bool Verify(const ZerocoinParams* zcparams, const CBigNum& S, const CBigNum& C, uint256 msghash) const;
 
     SERIALIZE_METHODS(CoinRandomnessSchnorrSignature, obj) { READWRITE(obj.alpha, obj.beta); }
 

@@ -160,7 +160,7 @@ private:
     const bool defaultPrintPriority{false};
 
 public:
-    BlockAssembler(const CChainParams& chainparams, const bool defaultPrintPriority);
+    BlockAssembler(const CChainParams& chainparams, bool defaultPrintPriority);
     /** Construct a new block template with coinbase to scriptPubKeyIn */
     std::unique_ptr<CBlockTemplate> CreateNewBlock(const CScript& scriptPubKeyIn,
                                    CWallet* pwallet = nullptr,

@@ -138,7 +138,7 @@ T FindFirstNonZero(T itbegin, T itend)
 /**
  * Convert a span of bytes to a lower-case hexadecimal string.
  */
-std::string HexStr(const Span<const uint8_t> s);
+std::string HexStr(Span<const uint8_t> s);
 inline std::string HexStr(const Span<const char> s) { return HexStr(MakeUCharSpan(s)); }
 
 /** Reverse the endianness of a string */
@@ -157,7 +157,7 @@ inline std::string ReverseEndianString(std::string in)
  * Format a paragraph of text to a fixed width, adding spaces for
  * indentation to any added line.
  */
-std::string FormatParagraph(const std::string in, size_t width = 79, size_t indent = 0);
+std::string FormatParagraph(std::string in, size_t width = 79, size_t indent = 0);
 
 /**
  * Timing-attack-resistant comparison.

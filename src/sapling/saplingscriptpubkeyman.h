@@ -338,7 +338,7 @@ public:
     //! Return the memo value of a specific outpoint of wallet transaction
     Optional<std::string> GetOutPointMemo(const CWalletTx& tx, const SaplingOutPoint& op) const;
     //! Return the shielded credit of the tx
-    CAmount GetCredit(const CWalletTx& tx, const isminefilter& filter, const bool fUnspent = false) const;
+    CAmount GetCredit(const CWalletTx& tx, const isminefilter& filter, bool fUnspent = false) const;
     //! Return the shielded debit of the tx.
     CAmount GetDebit(const CTransaction& tx, const isminefilter& filter) const;
     //! Return the shielded change of the tx

@@ -93,7 +93,7 @@ public:
     void setFromAddress(const libzcash::SaplingPaymentAddress&);
     void clearTx() { txBuilder.Clear(); }
     // In case of no addressFrom filter selected, it will accept any utxo in the wallet as input.
-    SaplingOperation* setSelectTransparentCoins(const bool select, const bool _fIncludeDelegated = false);
+    SaplingOperation* setSelectTransparentCoins(bool select, bool _fIncludeDelegated = false);
     SaplingOperation* setSelectShieldedCoins(const bool select) { selectFromShield = select; return this; };
     SaplingOperation* setRecipients(std::vector<SendManyRecipient>& vec) { recipients = std::move(vec); return this; };
     SaplingOperation* setFee(CAmount _fee) { fee = _fee; return this; }
@@ -133,7 +133,7 @@ private:
     CTransactionRef finalTx;
 
     OperationResult loadUtxos(TxValues& values);
-    OperationResult loadUtxos(TxValues& txValues, const std::vector<COutput>& selectedUTXO, const CAmount selectedUTXOAmount);
+    OperationResult loadUtxos(TxValues& txValues, const std::vector<COutput>& selectedUTXO, CAmount selectedUTXOAmount);
     OperationResult loadUnspentNotes(TxValues& txValues, uint256& ovk);
     OperationResult checkTxValues(TxValues& txValues, bool isFromtAddress, bool isFromShielded);
 };

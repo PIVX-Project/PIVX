@@ -319,7 +319,7 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex);
 
 /** Context-independent validity checks */
 bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW = true, bool fCheckMerkleRoot = true, bool fCheckSig = true) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
-bool CheckWork(const CBlock& block, const CBlockIndex* const pindexPrev);
+bool CheckWork(const CBlock& block, const CBlockIndex* pindexPrev);
 
 /** Context-dependent validity checks */
 bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& state, CBlockIndex* pindexPrev) EXCLUSIVE_LOCKS_REQUIRED(cs_main);

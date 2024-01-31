@@ -52,7 +52,7 @@ public Q_SLOTS:
     void setNetworkActive(bool active);
     void setStakingStatusActive(bool fActive);
     void updateStakingStatus();
-    void updateHDState(const bool upgraded, const QString& upgradeError);
+    void updateHDState(bool upgraded, const QString& upgradeError);
     void showUpgradeDialog(const QString& message);
 
 Q_SIGNALS:

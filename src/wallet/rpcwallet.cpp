@@ -1054,7 +1054,7 @@ static void SendMoney(CWallet* const pwallet, const CTxDestination& address, CAm
         throw JSONRPCError(RPC_WALLET_ERROR, res.ToString());
 }
 
-static SaplingOperation CreateShieldedTransaction(CWallet* const pwallet, const JSONRPCRequest& request);
+static SaplingOperation CreateShieldedTransaction(CWallet* pwallet, const JSONRPCRequest& request);
 
 /*
  * redirect sendtoaddress/sendmany inputs to shieldsendmany implementation (CreateShieldedTransaction)
@@ -2475,7 +2475,7 @@ UniValue sendmany(const JSONRPCRequest& request)
 }
 
 // Defined in rpc/misc.cpp
-extern CScript _createmultisig_redeemScript(CWallet* const pwallet, const UniValue& params);
+extern CScript _createmultisig_redeemScript(CWallet* pwallet, const UniValue& params);
 
 UniValue addmultisigaddress(const JSONRPCRequest& request)
 {

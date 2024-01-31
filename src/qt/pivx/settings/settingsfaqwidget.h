@@ -36,7 +36,7 @@ public Q_SLOTS:
    void windowResizeEvent(QResizeEvent* event);
    void setSection(Section _section);
 private Q_SLOTS:
-    void onFaqClicked(const QWidget* const widget);
+    void onFaqClicked(const QWidget* widget);
 private:
     Ui::SettingsFaqWidget *ui;
     Section section = INTRO;

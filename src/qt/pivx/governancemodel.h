@@ -143,7 +143,7 @@ public:
 
 public Q_SLOTS:
     void pollGovernanceChanged();
-    void txLoaded(const QString& hash, const int txType, const int txStatus);
+    void txLoaded(const QString& hash, int txType, int txStatus);
 
 private:
     ClientModel* clientModel{nullptr};

@@ -493,8 +493,8 @@ public:
     CAmount GetAvailableCredit(bool fUseCache = true, const isminefilter& filter=ISMINE_SPENDABLE) const;
     // Return sum of locked coins
     CAmount GetLockedCredit() const;
-    CAmount GetImmatureWatchOnlyCredit(const bool fUseCache = true) const;
-    CAmount GetAvailableWatchOnlyCredit(const bool fUseCache = true) const;
+    CAmount GetImmatureWatchOnlyCredit(bool fUseCache = true) const;
+    CAmount GetAvailableWatchOnlyCredit(bool fUseCache = true) const;
     CAmount GetChange() const;
 
     // Shielded credit/debit/change
@@ -659,13 +659,13 @@ private:
     };
 
     OutputAvailabilityResult CheckOutputAvailability(const CTxOut& output,
-                                                     const unsigned int outIndex,
+                                                     unsigned int outIndex,
                                                      const uint256& wtxid,
                                                      const CCoinControl* coinControl,
-                                                     const bool fCoinsSelected,
-                                                     const bool fIncludeColdStaking,
-                                                     const bool fIncludeDelegated,
-                                                     const bool fIncludeLocked) const;
+                                                     bool fCoinsSelected,
+                                                     bool fIncludeColdStaking,
+                                                     bool fIncludeDelegated,
+                                                     bool fIncludeLocked) const;
 
     /** Return the selected known outputs */
     std::vector<COutput> GetOutputsFromCoinControl(const CCoinControl* coinControl);
@@ -888,7 +888,7 @@ public:
     /*
      * Stake Split threshold
      */
-    bool SetStakeSplitThreshold(const CAmount sst);
+    bool SetStakeSplitThreshold(CAmount sst);
     CAmount GetStakeSplitThreshold() const { LOCK(cs_wallet); return nStakeSplitThreshold; }
 
     /*
@@ -913,8 +913,8 @@ public:
     void LockIfMyCollateral(const CTransactionRef& ptx);
 
     //  keystore implementation
-    CallResult<CTxDestination> getNewAddress(const std::string& addressLabel, const std::string purpose,
-                                             const CChainParams::Base58Type addrType = CChainParams::PUBKEY_ADDRESS);
+    CallResult<CTxDestination> getNewAddress(const std::string& addressLabel, std::string purpose,
+                                             CChainParams::Base58Type addrType = CChainParams::PUBKEY_ADDRESS);
     CallResult<CTxDestination> getNewAddress(const std::string& label);
     CallResult<CTxDestination> getNewStakingAddress(const std::string& label);
     int64_t GetKeyCreationTime(const CWDestination& dest);
@@ -1034,7 +1034,7 @@ public:
     /**
      * Upgrade wallet to HD and Sapling if needed. Does nothing if not.
      */
-    bool Upgrade(std::string& error, const int prevVersion);
+    bool Upgrade(std::string& error, int prevVersion);
     bool ActivateSaplingWallet(bool memOnly = false);
 
     int64_t RescanFromTime(int64_t startTime, const WalletRescanReserver& reserver, bool update);
@@ -1058,7 +1058,7 @@ public:
     CAmount GetAvailableBalance(isminefilter& filter, bool useCache = false, int minDepth = 1) const;
     CAmount GetColdStakingBalance() const;  // delegated coins for which we have the staking key
     CAmount GetImmatureColdStakingBalance() const;
-    CAmount GetStakingBalance(const bool fIncludeColdStaking = true) const;
+    CAmount GetStakingBalance(bool fIncludeColdStaking = true) const;
     CAmount GetDelegatedBalance() const;    // delegated coins for which we have the spending key
     CAmount GetImmatureDelegatedBalance() const;
     CAmount GetLockedCoins() const;
@@ -1129,7 +1129,7 @@ public:
     size_t KeypoolCountExternalKeys();
     bool TopUpKeyPool(unsigned int kpSize = 0);
     void KeepKey(int64_t nIndex);
-    void ReturnKey(int64_t nIndex, const bool internal = false, const bool staking = false);
+    void ReturnKey(int64_t nIndex, bool internal = false, bool staking = false);
     bool GetKeyFromPool(CPubKey& key, const uint8_t& type = HDChain::ChangeType::EXTERNAL);
     int64_t GetOldestKeyPoolTime();
 
@@ -1140,7 +1140,7 @@ public:
 
     bool CreateBudgetFeeTX(CTransactionRef& tx, const uint256& hash, CReserveKey& keyChange, CAmount fee);
 
-    bool IsUsed(const CTxDestination address) const;
+    bool IsUsed(CTxDestination address) const;
 
     isminetype IsMine(const CTxIn& txin) const;
     CAmount GetDebit(const CTxIn& txin, const isminefilter& filter) const;
@@ -1167,7 +1167,7 @@ public:
     static std::string ParseIntoAddress(const CWDestination& dest, const std::string& purpose);
 
     bool SetAddressBook(const CWDestination& address, const std::string& strName, const std::string& purpose);
-    bool DelAddressBook(const CWDestination& address, const CChainParams::Base58Type addrType = CChainParams::PUBKEY_ADDRESS);
+    bool DelAddressBook(const CWDestination& address, CChainParams::Base58Type addrType = CChainParams::PUBKEY_ADDRESS);
     bool HasAddressBook(const CWDestination& address) const;
     bool HasDelegator(const CTxOut& out) const;
     int GetAddressBookSize() const { return mapAddressBook.size(); };

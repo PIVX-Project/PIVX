@@ -21,7 +21,7 @@ class CWallet;
 UniValue mnLocalBudgetVoteInner(bool fLegacyMN, const uint256& budgetHash, bool fFinal,
                                        const CBudgetVote::VoteDirection& nVote);
 
-UniValue mnBudgetVoteInner(CWallet* const pwallet, bool fLegacyMN, const uint256& budgetHash, bool fFinal,
+UniValue mnBudgetVoteInner(CWallet* pwallet, bool fLegacyMN, const uint256& budgetHash, bool fFinal,
                                   const CBudgetVote::VoteDirection& nVote, const Optional<std::string>& mnAliasFilter);
 
 #endif //PIVX_BUDGETUTIL_H

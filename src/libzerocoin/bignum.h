@@ -102,7 +102,7 @@ public:
         * @param e the exponent as an int
         * @return
         */
-    CBigNum pow(const int e) const;
+    CBigNum pow(int e) const;
 
     /**
      * exponentiation this^e
@@ -146,7 +146,7 @@ public:
     *                          default causes error rate of 2^-80.
     * @return true if prime
     */
-    bool isPrime(const int checks=15) const;
+    bool isPrime(int checks=15) const;
 
     bool isOne() const;
     bool operator!() const;

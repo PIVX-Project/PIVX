@@ -559,7 +559,7 @@ public:
     /** Affect CreateNewBlock prioritisation of transactions */
     void PrioritiseTransaction(const uint256& hash, const CAmount& nFeeDelta);
     void ApplyDelta(const uint256& hash, CAmount& nFeeDelta) const;
-    void ClearPrioritisation(const uint256 hash);
+    void ClearPrioritisation(uint256 hash);
 
     bool nullifierExists(const uint256& nullifier) const;
 
