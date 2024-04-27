@@ -618,7 +618,7 @@ QString AddressTableModel::getAddressToShow(bool isShielded) const
 
     for (auto it = wallet->NewAddressBookIterator(); it.IsValid(); it.Next()) {
         const auto addrData = it.GetValue();
-
+        CWDestination x = *it.GetDestKey();
         if (!isShielded) {
             if (addrData.purpose == AddressBook::AddressBookPurpose::RECEIVE) {
                 const auto &address = *it.GetCTxDestKey();
@@ -627,10 +627,9 @@ QString AddressTableModel::getAddressToShow(bool isShielded) const
                 }
             }
         } else {
-            // todo: add shielded address support to IsUsed
             if (addrData.purpose == AddressBook::AddressBookPurpose::SHIELDED_RECEIVE) {
                 const auto &address = *it.GetShieldedDestKey();
-                if (IsValidPaymentAddress(address) && IsMine(*wallet, address)) {
+                if (IsValidPaymentAddress(address) && IsMine(*wallet, address) && !wallet->IsUsed(address)) {
                     return QString::fromStdString(KeyIO::EncodePaymentAddress(address));
                 }
             }

@@ -1480,6 +1480,23 @@ bool CWallet::IsUsed(const CTxDestination address) const
     return false;
 }
 
+bool CWallet::IsUsed(const libzcash::SaplingPaymentAddress address) const
+{
+    LOCK(cs_wallet);
+    if (!::IsMine(*this, address)) {
+        return false;
+    }
+
+    for (const auto& it : mapWallet) {
+        const CWalletTx& wtx = it.second;
+        for (const auto& txout : wtx.mapSaplingNoteData) {
+            if (txout.second.address && *txout.second.address == address)
+                return true;
+        }
+    }
+    return false;
+}
+
 CAmount CWallet::GetDebit(const CTxIn& txin, const isminefilter& filter) const
 {
     {
