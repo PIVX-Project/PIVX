@@ -3,8 +3,8 @@ dnl Distributed under the MIT software license, see the accompanying
 dnl file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 AC_DEFUN([BITCOIN_FIND_BDB48],[
-  AC_ARG_VAR(BDB_CFLAGS, [C compiler flags for BerkeleyDB, bypasses autodetection])
-  AC_ARG_VAR(BDB_LIBS, [Linker flags for BerkeleyDB, bypasses autodetection])
+  AC_ARG_VAR([BDB_CFLAGS], [C compiler flags for BerkeleyDB, bypasses autodetection])
+  AC_ARG_VAR([BDB_LIBS], [Linker flags for BerkeleyDB, bypasses autodetection])
 
   if test "x$BDB_CFLAGS" = "x"; then
     AC_MSG_CHECKING([for Berkeley DB C++ headers])
@@ -61,7 +61,7 @@ AC_DEFUN([BITCOIN_FIND_BDB48],[
     BDB_CPPFLAGS=${BDB_CFLAGS}
   fi
   AC_SUBST(BDB_CPPFLAGS)
-  
+
   if test "x$BDB_LIBS" = "x"; then
     # TODO: Ideally this could find the library version and make sure it matches the headers being used
     for searchlib in db_cxx-4.8 db_cxx db4_cxx; do
