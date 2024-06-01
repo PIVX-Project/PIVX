@@ -12,6 +12,12 @@
 #include "sapling/address.h"
 #include "sapling/zip32.h"
 #include "sync.h"
+#include <key.h>
+#include <pubkey.h>
+#include <script/script.h>
+#include <script/sign.h>
+#include <script/standard.h>
+#include <sync.h>
 
 #include <boost/signals2/signal.hpp>
 
@@ -19,14 +25,13 @@ class CScript;
 class CScriptID;
 
 /** A virtual base class for key stores */
-class CKeyStore
+class CKeyStore : public SigningProvider
 {
 public:
     // todo: Make it protected again once we are more advanced in the wallet/spkm decoupling.
     mutable RecursiveMutex cs_KeyStore;
 
-    virtual ~CKeyStore() {}
-
+public:
     //! Add a key to the store.
     virtual bool AddKeyPubKey(const CKey& key, const CPubKey& pubkey) = 0;
     virtual bool AddKey(const CKey& key);
