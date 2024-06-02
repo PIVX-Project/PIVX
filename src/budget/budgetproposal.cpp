@@ -5,6 +5,7 @@
 
 #include "budget/budgetproposal.h"
 #include "chainparams.h"
+#include "logging.h"
 #include "script/standard.h"
 #include "utilstrencodings.h"
 
@@ -123,11 +124,11 @@ bool CBudgetProposal::CheckAmount(const CAmount& nTotalBudget)
     return true;
 }
 
-bool CBudgetProposal::CheckAddress()
+bool CBudgetProposal::CheckAddress(const int nCurrentHeight)
 {
-    // !TODO: There might be an issue with multisig in the coinbase on mainnet
-    // we will add support for it in a future release.
-    if (address.IsPayToScriptHash()) {
+    // Multisig is supported only after v6
+    bool isV6Enforced = Params().GetConsensus().NetworkUpgradeActive(nCurrentHeight, Consensus::UPGRADE_V6_0);
+    if (!isV6Enforced && address.IsPayToScriptHash()) {
         strInvalid = "Multisig is not currently supported.";
         return false;
     }
@@ -146,9 +147,6 @@ bool CBudgetProposal::CheckAddress()
     return true;
 }
 
-/* TODO: Add this to IsWellFormed() for the next hard-fork
- * This will networkly reject malformed proposal names and URLs
- */
 bool CBudgetProposal::CheckStrings()
 {
     if (strProposalName != SanitizeString(strProposalName)) {
@@ -157,12 +155,18 @@ bool CBudgetProposal::CheckStrings()
     }
     if (strURL != SanitizeString(strURL)) {
         strInvalid = "Proposal URL contains illegal characters.";
+        return false;
     }
+    return true;
 }
 
-bool CBudgetProposal::IsWellFormed(const CAmount& nTotalBudget)
+bool CBudgetProposal::IsWellFormed(const CAmount& nTotalBudget, const int nCurrentHeight)
 {
-    return CheckStartEnd() && CheckAmount(nTotalBudget) && CheckAddress();
+    bool isV6Enforced = Params().GetConsensus().NetworkUpgradeActive(nCurrentHeight, Consensus::UPGRADE_V6_0);
+    if (isV6Enforced && !CheckStrings()) {
+        return false;
+    }
+    return CheckStartEnd() && CheckAmount(nTotalBudget) && CheckAddress(nCurrentHeight);
 }
 
 bool CBudgetProposal::updateExpired(int nCurrentHeight)

@@ -147,7 +147,7 @@ UniValue preparebudget(const JSONRPCRequest& request)
     // create transaction 15 minutes into the future, to allow for confirmation time
     CBudgetProposal proposal(strProposalName, strURL, nPaymentCount, scriptPubKey, nAmount, nBlockStart, UINT256_ZERO);
     const uint256& nHash = proposal.GetHash();
-    if (!proposal.IsWellFormed(g_budgetman.GetTotalBudget(proposal.GetBlockStart())))
+    if (!proposal.IsWellFormed(g_budgetman.GetTotalBudget(proposal.GetBlockStart()), GetChainTip()->nHeight))
         throw std::runtime_error("Proposal is not valid " + proposal.IsInvalidReason());
 
     CTransactionRef wtx;
