@@ -339,6 +339,9 @@ public:
     bool VerifyDB(CCoinsView* coinsview, int nCheckLevel, int nCheckDepth);
 };
 
+/** Rewind chain up to the last checkpoint */
+bool RewindBlockIndexToLastCheckpoint(const CChainParams& chainparams, bool& clearWitnessCaches, bool fJustCheck);
+
 /** Replay blocks that aren't fully applied to the database. */
 bool ReplayBlocks(const CChainParams& params, CCoinsView* view);
 
