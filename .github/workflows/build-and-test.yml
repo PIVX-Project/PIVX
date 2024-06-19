@@ -26,7 +26,7 @@ jobs:
       - name: Initialize Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: '3.8'
 
       - name: Install Dependencies
         run: |
@@ -93,26 +93,30 @@ jobs:
         config:
           - name: Linux
             os: ubuntu-20.04
+            python-version: '3.8'
             packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             cc: gcc
             cxx: g++
 
           - name: Linux-latest
             os: ubuntu-latest
+            python-version: '3.8'
             packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             cc: gcc
             cxx: g++
 
           - name: macOS
             os: macos-12
-            packages: llvm@13 python@3.8 autoconf automake berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium rust
+            python-version: '3.8'
+            packages: llvm@13 autoconf automake berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
             cc: $(brew --prefix llvm@13)/bin/clang
             cxx: $(brew --prefix llvm@13)/bin/clang++
 
           - name: macOS-latest
             os: macos-14
-            packages: llvm@14 python@3.8 autoconf automake berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium rust
+            python-version: '3.10'
+            packages: llvm@14 autoconf automake berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
             cc: $(brew --prefix llvm@14)/bin/clang
             cxx: $(brew --prefix llvm@14)/bin/clang++
@@ -120,6 +124,11 @@ jobs:
     steps:
       - name: Get Source
         uses: actions/checkout@v4
+
+      - name: Initialize Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.config.python-version }}
 
       - name: Setup Environment
         run: |
@@ -141,6 +150,7 @@ jobs:
         run: |
           CC=${{ matrix.config.cc }}
           CXX=${{ matrix.config.cxx }}
+          PYTHON=$pythonLocation/bin/python${{ matrix.config.python-version }}
           if [[ ${{ matrix.config.os }} = macos* ]]; then
             if [ "${{ matrix.config.no_qt }}" = "true" ]; then
               export NO_QT=1
@@ -151,13 +161,14 @@ jobs:
                 export LDFLAGS="-L/opt/homebrew/opt/boost@1.76/lib"
                 export CPPFLAGS="-I/opt/homebrew/opt/boost@1.76/include"
               else
-                export CPPFLAGS="-I/usr/local/opt/boost@1.76/include"
-                export LDFLAGS="-L/usr/local/opt/boost@1.76/lib"
+                export CPPFLAGS="-I/usr/local/opt/boost@1.76/include -I/usr/local/opt/berkeley-db@4/include"
+                export LDFLAGS="-L/usr/local/opt/boost@1.76/lib -L/usr/local/opt/berkeley-db@4/lib"
               fi
             fi
           fi
           export CC
           export CXX
+          export PYTHON
           mkdir -p ${{ github.workspace }}/cmake-build-debug && cd ${{ github.workspace }}/cmake-build-debug
           cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" ${{ github.workspace }}
 
@@ -189,6 +200,7 @@ jobs:
           - name: x64-Linux
             id: Linux-x86_64-nodepends
             os: ubuntu-20.04
+            python-version: '3.8'
             packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             unit_tests: true
             functional_tests: true
@@ -198,6 +210,7 @@ jobs:
           - name: x64-Linux-latest
             id: Linux-x86_64-nodepends-latest
             os: ubuntu-latest
+            python-version: '3.8'
             packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             unit_tests: true
             functional_tests: true
@@ -207,7 +220,8 @@ jobs:
           - name: x64-macOS
             id: macOS-nodepends
             os: macos-12
-            packages: autoconf automake ccache berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config python@3.8 libevent qrencode gmp libsodium rust librsvg
+            python-version: '3.8'
+            packages: autoconf automake ccache berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
             functional_tests: true
             cc: clang
@@ -217,7 +231,8 @@ jobs:
           - name: arm64-macOS-latest
             id: macOS-nodepends-latest
             os: macos-14
-            packages: autoconf automake ccache berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config python@3.8 qt@5 zmq libevent qrencode gmp libsodium rust librsvg
+            python-version: '3.10'
+            packages: autoconf automake ccache berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
             functional_tests: true
             goal: deploy
@@ -229,6 +244,11 @@ jobs:
       - name: Get Source
         uses: actions/checkout@v4
 
+      - name: Initialize Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.config.python-version }}
+
       - name: Setup Environment
         run: |
           if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
@@ -236,7 +256,7 @@ jobs:
           fi
           if [[ ${{ matrix.config.os }} = macos* ]]; then
             brew install ${{ matrix.config.packages }}
-            pip3.8 install ds_store mac_alias
+            pip install ds_store mac_alias
           fi
 
       - name: ccache cache files
@@ -252,12 +272,19 @@ jobs:
           # Add llvm-symbolizer directory to PATH. Needed to get symbolized stack traces from the sanitizers.
           PATH=$PATH:/usr/lib/llvm-6.0/bin/
           export PATH
+          PYTHON=$pythonLocation/bin/python${{ matrix.config.python-version }}
+          export PYTHON
 
           if [[ ${{ matrix.config.os }} = macos* ]]; then
             CC=${{ matrix.config.cc }}
             CXX=${{ matrix.config.cxx }}
             export CC
             export CXX
+          fi
+
+          if [ "${{ matrix.config.os }}" = "macos-12" ]; then
+            export CPPFLAGS="-I/usr/local/opt/boost@1.76/include -I/usr/local/opt/berkeley-db@4/include"
+            export LDFLAGS="-L/usr/local/opt/boost@1.76/lib -L/usr/local/opt/berkeley-db@4/lib"
           fi
 
           if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
@@ -337,24 +364,33 @@ jobs:
           - name: x64-Linux
             id: Linux-x86_64-nodepends-tests
             os: ubuntu-20.04
+            python-version: '3.8'
             packages: python3-zmq libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev
 
           - name: x64-Linux-latest
             id: Linux-x86_64-nodepends-latest-tests
             os: ubuntu-latest
+            python-version: '3.8'
             packages: python3-zmq libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev
 
           - name: x64-macOS
             id: macOS-nodepends
             os: macos-12
-            packages: python@3.8 berkeley-db@4 boost@1.76 miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
+            python-version: '3.8'
+            packages: berkeley-db@4 boost@1.76 miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
           - name: arm64-macOS-latest
             id: macOS-nodepends-latest
             os: macos-14
-            packages: python@3.8 berkeley-db@4 boost@1.76 miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
+            python-version: '3.10'
+            packages: berkeley-db@4 boost@1.76 miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
     steps:
+      - name: Initialize Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.config.python-version }}
+
       - name: Setup Environment
         run: |
           if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
@@ -363,6 +399,7 @@ jobs:
           if [[ ${{ matrix.config.os }} = macos* ]]; then
             brew install ${{ matrix.config.packages }}
           fi
+          pip install pyzmq
 
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
@@ -401,17 +438,17 @@ jobs:
           - name: ARM 32-bit
             os: ubuntu-20.04
             host: arm-linux-gnueabihf
-            packages: python3 g++-arm-linux-gnueabihf
+            packages: g++-arm-linux-gnueabihf
 
           - name: AARCH64
             os: ubuntu-20.04
             host: aarch64-linux-gnu
-            packages: python3 g++-aarch64-linux-gnu
+            packages: g++-aarch64-linux-gnu
 
           - name: Win64
             os: ubuntu-20.04
             host: x86_64-w64-mingw32
-            packages: python3 nsis g++-mingw-w64-x86-64 wine-binfmt wine64
+            packages: nsis g++-mingw-w64-x86-64 wine-binfmt wine64
 
           - name: 32-bit + dash
             os: ubuntu-20.04
@@ -427,7 +464,7 @@ jobs:
           - name: macOS 10.12
             os: ubuntu-20.04
             host: x86_64-apple-darwin16
-            packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python3-dev python3-setuptools
+            packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools
             XCODE_VERSION: 11.3.1
             XCODE_BUILD_ID: 11C505
 
@@ -435,8 +472,15 @@ jobs:
       - name: Get Source
         uses: actions/checkout@v4
 
+      - name: Initialize Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+
       - name: Setup Environment
-        run: sudo apt-get install --no-install-recommends --no-upgrade -qq "$APT_BASE" ${{ matrix.config.packages }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends --no-upgrade -qq "$APT_BASE" ${{ matrix.config.packages }}
 
       - name: depends cache files
         uses: actions/cache@v4
@@ -513,7 +557,7 @@ jobs:
             id: ARM64-build
             os: ubuntu-20.04
             host: aarch64-linux-gnu
-            packages: python3 g++-aarch64-linux-gnu
+            packages: g++-aarch64-linux-gnu
             unit_tests: false
             functional_tests: false
             goal: install
@@ -523,7 +567,7 @@ jobs:
             id: Win64-build
             os: ubuntu-20.04
             host: x86_64-w64-mingw32
-            packages: python3 nsis g++-mingw-w64-x86-64 wine-binfmt wine64
+            packages: nsis g++-mingw-w64-x86-64 wine-binfmt wine64
             unit_tests: false
             functional_tests: false
             symbol_check: true
@@ -544,7 +588,7 @@ jobs:
             id: macOS10.12-build
             os: ubuntu-20.04
             host: x86_64-apple-darwin16
-            packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools python3-dev python3-setuptools
+            packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools
             XCODE_VERSION: 11.3.1
             XCODE_BUILD_ID: 11C505
             unit_tests: false
@@ -557,8 +601,15 @@ jobs:
       - name: Get Source
         uses: actions/checkout@v4
 
+      - name: Initialize Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+
       - name: Setup Environment
-        run: sudo apt-get install --no-install-recommends --no-upgrade -qq "$APT_BASE" ${{ matrix.config.packages }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends --no-upgrade -qq "$APT_BASE" ${{ matrix.config.packages }}
 
       - name: depends cache files
         if: matrix.config.no_depends != 1
@@ -711,18 +762,26 @@ jobs:
             id: macos-x86_64-tests
             os: macos-12
             host: x86_64-apple-darwin16
-            packages: python@3.8
+            packages: None
             test_runner_extra: "--all --exclude feature_dbcrash"
 
     steps:
+      - name: Initialize Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+
       - name: Setup Environment
         run: |
-          if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
-            sudo apt-get install --no-install-recommends --no-upgrade -qq ${{ matrix.config.packages }}
+          if [[ ${{ matrix.config.packages }} != None ]]; then
+            if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
+              sudo apt-get install --no-install-recommends --no-upgrade -qq ${{ matrix.config.packages }}
+            fi
+            if [[ ${{ matrix.config.os }} = macos* ]]; then
+              brew install ${{ matrix.config.packages }}
+            fi
           fi
-          if [[ ${{ matrix.config.os }} = macos* ]]; then
-            brew install ${{ matrix.config.packages }}
-          fi
+          pip install pyzmq
 
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
