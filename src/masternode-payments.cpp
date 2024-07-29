@@ -5,15 +5,16 @@
 
 #include "masternode-payments.h"
 
+#include "budget/budgetmanager.h"
 #include "chainparams.h"
 #include "evo/deterministicmns.h"
 #include "fs.h"
-#include "budget/budgetmanager.h"
 #include "masternodeman.h"
 #include "netmessagemaker.h"
-#include "tiertwo/netfulfilledman.h"
 #include "spork.h"
+#include "sporkid.h"
 #include "sync.h"
+#include "tiertwo/netfulfilledman.h"
 #include "tiertwo/tiertwo_sync_state.h"
 #include "util/system.h"
 #include "utilmoneystr.h"
@@ -228,15 +229,24 @@ bool IsBlockPayeeValid(const CBlock& block, const CBlockIndex* pindexPrev)
 {
     int nBlockHeight = pindexPrev->nHeight + 1;
     TrxValidationStatus transactionStatus = TrxValidationStatus::InValid;
+    const bool isV6UpgradeEnforced = Params().GetConsensus().NetworkUpgradeActive(nBlockHeight, Consensus::UPGRADE_V6_0);
+    const bool isLegacyObsolete = deterministicMNManager->LegacyMNObsolete(nBlockHeight);
+
+    const bool fPayCoinstake = Params().GetConsensus().NetworkUpgradeActive(nBlockHeight, Consensus::UPGRADE_POS) &&
+                               !isV6UpgradeEnforced;
+    const CTransaction& txNew = *(fPayCoinstake ? block.vtx[1] : block.vtx[0]);
+
+    // If v6 is enforced and legacy mns are obsolete even not-synced nodes can check dmns reward
+    if (!g_tiertwo_sync_state.IsSynced() && isV6UpgradeEnforced && isLegacyObsolete) {
+        // This is a possible superblock cannot check anything: (TODO: update for single superblock payment)
+        if (nBlockHeight % Params().GetConsensus().nBudgetCycleBlocks < 100) return true;
+        return CheckMasternodePayee(txNew, pindexPrev);
+    }
 
     if (!g_tiertwo_sync_state.IsSynced()) { //there is no budget data to use to check anything -- find the longest chain
         LogPrint(BCLog::MASTERNODE, "Client not synced, skipping block payee checks\n");
         return true;
     }
-
-    const bool fPayCoinstake = Params().GetConsensus().NetworkUpgradeActive(nBlockHeight, Consensus::UPGRADE_POS) &&
-                               !Params().GetConsensus().NetworkUpgradeActive(nBlockHeight, Consensus::UPGRADE_V6_0);
-    const CTransaction& txNew = *(fPayCoinstake ? block.vtx[1] : block.vtx[0]);
 
     //check if it's a budget block
     if (sporkManager.IsSporkActive(SPORK_13_ENABLE_SUPERBLOCKS)) {
@@ -262,16 +272,20 @@ bool IsBlockPayeeValid(const CBlock& block, const CBlockIndex* pindexPrev)
     // In all cases a masternode will get the payment for this block
 
     //check for masternode payee
+    return CheckMasternodePayee(txNew, pindexPrev);
+}
+
+bool CheckMasternodePayee(const CTransaction& txNew, const CBlockIndex* pindexPrev)
+{
     if (masternodePayments.IsTransactionValid(txNew, pindexPrev))
         return true;
-    LogPrint(BCLog::MASTERNODE,"Invalid mn payment detected %s\n", txNew.ToString().c_str());
+    LogPrint(BCLog::MASTERNODE, "Invalid mn payment detected %s\n", txNew.ToString().c_str());
 
     if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT))
         return false;
-    LogPrint(BCLog::MASTERNODE,"Masternode payment enforcement is disabled, accepting block\n");
+    LogPrint(BCLog::MASTERNODE, "Masternode payment enforcement is disabled, accepting block\n");
     return true;
 }
-
 
 void FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const CBlockIndex* pindexPrev, bool fProofOfStake)
 {
