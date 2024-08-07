@@ -1143,6 +1143,7 @@ public:
     bool CreateBudgetFeeTX(CTransactionRef& tx, const uint256& hash, CReserveKey& keyChange, CAmount fee);
 
     bool IsUsed(const CTxDestination address) const;
+    bool IsUsed(const libzcash::SaplingPaymentAddress address) const;
 
     isminetype IsMine(const CTxIn& txin) const;
     CAmount GetDebit(const CTxIn& txin, const isminefilter& filter) const;

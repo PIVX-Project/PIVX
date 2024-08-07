@@ -869,6 +869,11 @@ isminetype SaplingScriptPubKeyMan::IsMine(const CWalletTx& wtx, const SaplingOut
 
 CAmount SaplingScriptPubKeyMan::GetCredit(const CWalletTx& tx, const isminefilter& filter, const bool fUnspent) const
 {
+    // If we are not filtering shield data, return
+    if (!(filter & ISMINE_WATCH_ONLY_SHIELDED || filter & ISMINE_SPENDABLE_SHIELDED)) {
+        return 0;
+    }
+
     if (!tx.tx->IsShieldedTx() || tx.tx->sapData->vShieldedOutput.empty()) {
         return 0;
     }
@@ -889,15 +894,21 @@ CAmount SaplingScriptPubKeyMan::GetCredit(const CWalletTx& tx, const isminefilte
             (fUnspent && IsSaplingSpent(*noteData.nullifier))) {
             continue; // only unspent
         }
-        // todo: check if we can spend this note or not. (if not, then it's a watch only)
-
-        nCredit += noteData.amount ? *noteData.amount : 0;
+        // If we are filtering watch only or we have spend authority add the amount
+        if ((filter & ISMINE_WATCH_ONLY_SHIELDED) || (noteData.address && HaveSpendingKeyForPaymentAddress(*noteData.address))) {
+            nCredit += noteData.amount ? *noteData.amount : 0;
+        }
     }
     return nCredit;
 }
 
 CAmount SaplingScriptPubKeyMan::GetDebit(const CTransaction& tx, const isminefilter& filter) const
 {
+    // If we are not filtering shield data, return
+    if (!(filter & ISMINE_WATCH_ONLY_SHIELDED || filter & ISMINE_SPENDABLE_SHIELDED)) {
+        return 0;
+    }
+
     if (!tx.IsShieldedTx() || tx.sapData->vShieldedSpend.empty()) {
         return 0;
     }
@@ -914,9 +925,12 @@ CAmount SaplingScriptPubKeyMan::GetDebit(const CTransaction& tx, const isminefil
             auto nit = wtx.mapSaplingNoteData.find(op);
             assert(nit != wtx.mapSaplingNoteData.end());
             const auto& nd = nit->second;
-            assert(nd.IsMyNote());        // todo: Add watch only check.
+            assert(nd.IsMyNote());
             assert(static_cast<bool>(nd.amount));
-            nDebit += *(nd.amount);
+            // If we are filtering watch only or we have spend authority add the amount
+            if ((filter & ISMINE_WATCH_ONLY_SHIELDED) || (nd.address && HaveSpendingKeyForPaymentAddress(*nd.address))) {
+                nDebit += *(nd.amount);
+            }
             if (!Params().GetConsensus().MoneyRange(nDebit))
                 throw std::runtime_error("SaplingScriptPubKeyMan::GetDebit() : value out of range");
         }
