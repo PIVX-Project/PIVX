@@ -332,9 +332,9 @@ TransactionBuilderResult TransactionBuilder::ProveAndSign()
         auto tIn = tIns[nIn];
         SignatureData sigdata;
         bool signSuccess = ProduceSignature(
-            TransactionSignatureCreator(
-                keystore, &txNewConst, nIn, tIn.value, SIGHASH_ALL),
-            tIn.scriptPubKey, sigdata, SIGVERSION_SAPLING, false);
+                        *keystore,
+                        TransactionSignatureCreator(&txNewConst, nIn, tIn.value, SIGHASH_ALL),
+                        tIn.scriptPubKey, sigdata, SIGVERSION_SAPLING, false);
 
         if (!signSuccess) {
             return TransactionBuilderResult("Failed to sign transaction");
@@ -366,7 +366,12 @@ TransactionBuilderResult TransactionBuilder::AddDummySignatures()
     for (int nIn = 0; nIn < (int) mtx.vin.size(); nIn++) {
         auto tIn = tIns[nIn];
         SignatureData sigdata;
-        if (!ProduceSignature(DummySignatureCreator(keystore), tIn.scriptPubKey, sigdata, SIGVERSION_SAPLING, false)) {
+        if (!ProduceSignature(*keystore,
+                              DUMMY_SIGNATURE_CREATOR,
+                              tIn.scriptPubKey,
+                              sigdata,
+                              SIGVERSION_SAPLING,
+                              false)) {
             return TransactionBuilderResult("Failed to sign transaction");
         } else {
             UpdateTransaction(mtx, nIn, sigdata);

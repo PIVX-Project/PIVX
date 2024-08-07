@@ -34,9 +34,10 @@ CScript GetScriptForType(CPubKey pubKey, BlockSignatureType type)
 
 std::vector<unsigned char> CreateDummyScriptSigWithKey(CPubKey pubKey)
 {
+    SigningProvider provider;
     std::vector<unsigned char> vchSig;
     const CScript scriptCode;
-    DummySignatureCreator(nullptr).CreateSig(vchSig, pubKey.GetID(), scriptCode, SIGVERSION_BASE);
+    DUMMY_SIGNATURE_CREATOR.CreateSig(provider, vchSig, pubKey.GetID(), scriptCode, SIGVERSION_BASE);
     return vchSig;
 }
 
