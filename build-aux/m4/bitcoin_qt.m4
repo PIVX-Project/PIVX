@@ -133,7 +133,6 @@ AC_DEFUN([BITCOIN_QT_CONFIGURE],[
       _BITCOIN_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)],[-lqxcb -lxcb-static])
       AC_DEFINE([QT_QPA_PLATFORM_XCB], [1], [Define this symbol if the Qt platform is XCB])
     elif test "x$TARGET_OS" = xdarwin; then
-      AX_CHECK_LINK_FLAG([-framework IOKit], [QT_LIBS="$QT_LIBS -framework IOKit"], [AC_MSG_ERROR([could not link iokit framework])])
       _BITCOIN_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)],[-lqcocoa])
       AC_DEFINE([QT_QPA_PLATFORM_COCOA], [1], [Define this symbol if the Qt platform is Cocoa])
     fi
@@ -204,7 +203,7 @@ AC_DEFUN([BITCOIN_QT_CONFIGURE],[
     *darwin*)
      BITCOIN_QT_CHECK([
        MOC_DEFS="${MOC_DEFS} -DQ_OS_MAC"
-       base_frameworks="-framework Foundation -framework ApplicationServices -framework AppKit"
+       base_frameworks="-framework Foundation -framework AppKit"
        AX_CHECK_LINK_FLAG([$base_frameworks], [QT_LIBS="$QT_LIBS $base_frameworks"], [AC_MSG_ERROR([could not find base frameworks])])
      ])
     ;;

@@ -133,6 +133,7 @@ jobs:
       - name: Setup Environment
         run: |
           if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
+            sudo apt-get update
             sudo apt-get install --no-install-recommends --no-upgrade -qq "$APT_BASE" ${{ matrix.config.packages }}
           fi
           if [[ ${{ matrix.config.os }} = macos* ]]; then
@@ -145,6 +146,12 @@ jobs:
           path: .ccache
           key: ${{ runner.os }}-cmake-${{ matrix.config.name }}-ccache
           restore-keys: ${{ runner.os }}-cmake-${{ matrix.config.name }}-ccache
+
+      - name: Set Xcode Version
+        if: matrix.config.os == 'macos-14'
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.0.1'
 
       - name: Configure CMake Wallet
         run: |
@@ -252,6 +259,7 @@ jobs:
       - name: Setup Environment
         run: |
           if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
+            sudo apt-get update
             sudo apt-get install --no-install-recommends --no-upgrade -qq "$APT_BASE" ${{ matrix.config.packages }}
           fi
           if [[ ${{ matrix.config.os }} = macos* ]]; then
@@ -265,6 +273,12 @@ jobs:
           path: .ccache
           key: ${{ runner.os }}-${{ matrix.config.id }}-native-ccache
           restore-keys: ${{ runner.os }}-${{ matrix.config.id }}-native-ccache
+
+      - name: Set Xcode Version
+        if: matrix.config.os == 'macos-14'
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.0.1'
 
       - name: Configure Native Wallet
         run: |
@@ -394,6 +408,7 @@ jobs:
       - name: Setup Environment
         run: |
           if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
+            sudo apt-get update
             sudo apt-get install --no-install-recommends --no-upgrade -qq ${{ matrix.config.packages }}
           fi
           if [[ ${{ matrix.config.os }} = macos* ]]; then
@@ -775,6 +790,7 @@ jobs:
         run: |
           if [[ ${{ matrix.config.packages }} != None ]]; then
             if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
+              sudo apt-get update
               sudo apt-get install --no-install-recommends --no-upgrade -qq ${{ matrix.config.packages }}
             fi
             if [[ ${{ matrix.config.os }} = macos* ]]; then
