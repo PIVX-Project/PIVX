@@ -329,19 +329,18 @@ bool CBudgetManager::AddProposal(CBudgetProposal& budgetProposal)
 {
     AssertLockNotHeld(cs_proposals);    // need to lock cs_main here (CheckCollateral)
     const uint256& nHash = budgetProposal.GetHash();
-
+    int nCurrentHeight = GetBestHeight();
     if (WITH_LOCK(cs_proposals, return mapProposals.count(nHash))) {
         LogPrint(BCLog::MNBUDGET,"%s: proposal %s already added\n", __func__, nHash.ToString());
         return false;
     }
 
-    if (!budgetProposal.IsWellFormed(GetTotalBudget(budgetProposal.GetBlockStart()))) {
+    if (!budgetProposal.IsWellFormed(GetTotalBudget(budgetProposal.GetBlockStart()), nCurrentHeight)) {
         LogPrint(BCLog::MNBUDGET,"%s: Invalid budget proposal %s %s\n", __func__, nHash.ToString(), budgetProposal.IsInvalidLogStr());
         return false;
     }
 
     std::string strError;
-    int nCurrentHeight = GetBestHeight();
     const uint256& feeTxId = budgetProposal.GetFeeTXHash();
     if (!CheckCollateral(feeTxId, nHash, strError, budgetProposal.nTime, nCurrentHeight, false)) {
         LogPrint(BCLog::MNBUDGET,"%s: invalid budget proposal (%s) collateral id=%s - %s\n",
