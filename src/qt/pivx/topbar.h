@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TOPBAR_H
-#define TOPBAR_H
+#ifndef PIVX_QT_PIVX_TOPBAR_H
+#define PIVX_QT_PIVX_TOPBAR_H
 
 #include <QWidget>
 #include "qt/askpassphrasedialog.h"
@@ -91,4 +91,4 @@ private:
     void connectUpgradeBtnAndDialogTimer(const QString& message);
 };
 
-#endif // TOPBAR_H
+#endif // PIVX_QT_PIVX_TOPBAR_H

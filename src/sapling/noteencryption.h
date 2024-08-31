@@ -8,8 +8,8 @@ See the Zcash protocol specification for more information.
 https://github.com/zcash/zips/blob/master/protocol/protocol.pdf
 */
 
-#ifndef ZC_NOTE_ENCRYPTION_H_
-#define ZC_NOTE_ENCRYPTION_H_
+#ifndef PIVX_SAPLING_NOTEENCRYPTION_H
+#define PIVX_SAPLING_NOTEENCRYPTION_H
 
 #include "optional.h"
 #include "sapling/sapling.h"
@@ -97,4 +97,4 @@ Optional<SaplingOutPlaintext> AttemptSaplingOutDecryption(
 
 }
 
-#endif /* ZC_NOTE_ENCRYPTION_H_ */
+#endif // PIVX_SAPLING_NOTEENCRYPTION_H

@@ -3,8 +3,8 @@
 // Distributed under the X11 software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_MASTERNODE_META_MANAGER_H
-#define PIVX_MASTERNODE_META_MANAGER_H
+#ifndef PIVX_TIERTWO_MASTERNODE_META_MANAGER_H
+#define PIVX_TIERTWO_MASTERNODE_META_MANAGER_H
 
 #include "serialize.h"
 #include "sync.h"
@@ -92,4 +92,4 @@ public:
 
 extern CMasternodeMetaMan g_mmetaman;
 
-#endif //PIVX_MASTERNODE_META_MANAGER_H
+#endif // PIVX_TIERTWO_MASTERNODE_META_MANAGER_H

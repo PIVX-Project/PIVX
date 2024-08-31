@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BUDGET_MANAGER_H
-#define BUDGET_MANAGER_H
+#ifndef PIVX_BUDGET_BUDGETMANAGER_H
+#define PIVX_BUDGET_BUDGETMANAGER_H
 
 #include "budget/budgetproposal.h"
 #include "budget/finalizedbudget.h"
@@ -209,4 +209,4 @@ public:
 
 extern CBudgetManager g_budgetman;
 
-#endif // BUDGET_MANAGER_H
+#endif // PIVX_BUDGET_BUDGETMANAGER_H

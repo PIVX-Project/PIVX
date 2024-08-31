@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SCRIPT_STANDARD_H
-#define BITCOIN_SCRIPT_STANDARD_H
+#ifndef PIVX_SCRIPT_STANDARD_H
+#define PIVX_SCRIPT_STANDARD_H
 
 #include "script/interpreter.h"
 #include "uint256.h"
@@ -129,4 +129,4 @@ CScript GetScriptForStakeDelegationLOF(const CKeyID& stakingKey, const CKeyID& s
 /** Generate an OP_RETURN output script with the given data. */
 CScript GetScriptForOpReturn(const uint256& message);
 
-#endif // BITCOIN_SCRIPT_STANDARD_H
+#endif // PIVX_SCRIPT_STANDARD_H

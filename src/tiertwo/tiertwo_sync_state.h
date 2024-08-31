@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_TIERTWO_SYNC_STATE_H
-#define PIVX_TIERTWO_SYNC_STATE_H
+#ifndef PIVX_TIERTWO_TIERTWO_SYNC_STATE_H
+#define PIVX_TIERTWO_TIERTWO_SYNC_STATE_H
 
 #include <atomic>
 #include <map>
@@ -80,4 +80,4 @@ private:
 
 extern TierTwoSyncState g_tiertwo_sync_state;
 
-#endif //PIVX_TIERTWO_SYNC_STATE_H
+#endif // PIVX_TIERTWO_TIERTWO_SYNC_STATE_H

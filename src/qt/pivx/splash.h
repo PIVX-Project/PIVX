@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SPLASH_H
-#define SPLASH_H
+#ifndef PIVX_QT_PIVX_SPLASH_H
+#define PIVX_QT_PIVX_SPLASH_H
 
 #include <QWidget>
 
@@ -51,4 +51,4 @@ private:
     void unsubscribeFromCoreSignals();
 };
 
-#endif // SPLASH_H
+#endif // PIVX_QT_PIVX_SPLASH_H

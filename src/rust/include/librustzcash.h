@@ -1,5 +1,5 @@
-#ifndef LIBRUSTZCASH_INCLUDE_H_
-#define LIBRUSTZCASH_INCLUDE_H_
+#ifndef PIVX_RUST_INCLUDE_LIBRUSTZCASH_H
+#define PIVX_RUST_INCLUDE_LIBRUSTZCASH_H
 
 #include <stdint.h>
 
@@ -309,4 +309,4 @@ extern "C" {
     );
 }
 
-#endif // LIBRUSTZCASH_INCLUDE_H_
+#endif // PIVX_RUST_INCLUDE_LIBRUSTZCASH_H

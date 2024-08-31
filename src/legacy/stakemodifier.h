@@ -5,8 +5,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_LEGACY_MODIFIER_H
-#define PIVX_LEGACY_MODIFIER_H
+#ifndef PIVX_LEGACY_STAKEMODIFIER_H
+#define PIVX_LEGACY_STAKEMODIFIER_H
 
 #include "chain.h"
 #include "stakeinput.h"
@@ -15,4 +15,4 @@
 bool GetOldStakeModifier(CStakeInput* stake, uint64_t& nStakeModifier);
 bool ComputeNextStakeModifier(const CBlockIndex* pindexPrev, uint64_t& nStakeModifier, bool& fGeneratedStakeModifier);
 
-#endif // PIVX_LEGACY_MODIFIER_H
+#endif // PIVX_LEGACY_STAKEMODIFIER_H

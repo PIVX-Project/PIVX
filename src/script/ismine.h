@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SCRIPT_ISMINE_H
-#define BITCOIN_SCRIPT_ISMINE_H
+#ifndef PIVX_SCRIPT_ISMINE_H
+#define PIVX_SCRIPT_ISMINE_H
 
 #include "destination_io.h"
 #include "key.h"
@@ -61,4 +61,4 @@ struct CachableAmount
     }
 };
 
-#endif // BITCOIN_SCRIPT_ISMINE_H
+#endif // PIVX_SCRIPT_ISMINE_H

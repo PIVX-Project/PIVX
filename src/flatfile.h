@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_FLATFILE_H
-#define BITCOIN_FLATFILE_H
+#ifndef PIVX_FLATFILE_H
+#define PIVX_FLATFILE_H
 
 #include <string>
 
@@ -87,4 +87,4 @@ public:
     bool Flush(const FlatFilePos& pos, bool finalize = false);
 };
 
-#endif // BITCOIN_FLATFILE_H
+#endif // PIVX_FLATFILE_H

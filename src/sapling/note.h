@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ZC_NOTE_H_
-#define ZC_NOTE_H_
+#ifndef PIVX_SAPLING_NOTE_H
+#define PIVX_SAPLING_NOTE_H
 
 #include "optional.h"
 #include "sapling/address.h"
@@ -149,4 +149,4 @@ public:
 
 }
 
-#endif // ZC_NOTE_H_
+#endif // PIVX_SAPLING_NOTE_H

@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SCHEDULER_H
-#define BITCOIN_SCHEDULER_H
+#ifndef PIVX_SCHEDULER_H
+#define PIVX_SCHEDULER_H
 
 //
 // NOTE:
@@ -125,4 +125,4 @@ public:
     size_t CallbacksPending();
 };
 
-#endif
+#endif // PIVX_SCHEDULER_H

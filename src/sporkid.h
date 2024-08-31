@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SPORKID_H
-#define SPORKID_H
+#ifndef PIVX_SPORKID_H
+#define PIVX_SPORKID_H
 
 /*
     Don't ever reuse these IDs for other sporks
@@ -42,4 +42,4 @@ struct CSporkDef
     std::string name;
 };
 
-#endif
+#endif // PIVX_SPORKID_H

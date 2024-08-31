@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_MERKLEBLOCK_H
-#define BITCOIN_MERKLEBLOCK_H
+#ifndef PIVX_MERKLEBLOCK_H
+#define PIVX_MERKLEBLOCK_H
 
 #include "bloom.h"
 #include "primitives/block.h"
@@ -149,4 +149,4 @@ private:
 
 };
 
-#endif // BITCOIN_MERKLEBLOCK_H
+#endif // PIVX_MERKLEBLOCK_H

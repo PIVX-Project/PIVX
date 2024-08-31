@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_CRYPTO_BLS_H
-#define PIVX_CRYPTO_BLS_H
+#ifndef PIVX_BLS_BLS_WRAPPER_H
+#define PIVX_BLS_BLS_WRAPPER_H
 
 #include "hash.h"
 #include "serialize.h"
@@ -419,4 +419,4 @@ typedef std::shared_ptr<BLSSignatureVector> BLSSignatureVectorPtr;
 
 bool BLSInit();
 
-#endif // PIVX_CRYPTO_BLS_H
+#endif // PIVX_BLS_BLS_WRAPPER_H

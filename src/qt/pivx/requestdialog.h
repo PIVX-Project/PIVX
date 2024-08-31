@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef REQUESTDIALOG_H
-#define REQUESTDIALOG_H
+#ifndef PIVX_QT_PIVX_REQUESTDIALOG_H
+#define PIVX_QT_PIVX_REQUESTDIALOG_H
 
 #include "qt/pivx/focuseddialog.h"
 #include "qt/pivx/snackbar.h"
@@ -49,4 +49,4 @@ private:
     void inform(const QString& text);
 };
 
-#endif // REQUESTDIALOG_H
+#endif // PIVX_QT_PIVX_REQUESTDIALOG_H

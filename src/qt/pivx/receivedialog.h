@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RECEIVEDIALOG_H
-#define RECEIVEDIALOG_H
+#ifndef PIVX_QT_PIVX_RECEIVEDIALOG_H
+#define PIVX_QT_PIVX_RECEIVEDIALOG_H
 
 #include "qt/pivx/focuseddialog.h"
 
@@ -30,4 +30,4 @@ private:
     SendCoinsRecipient *info{nullptr};
 };
 
-#endif // RECEIVEDIALOG_H
+#endif // PIVX_QT_PIVX_RECEIVEDIALOG_H

@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_UTILTIME_H
-#define BITCOIN_UTILTIME_H
+#ifndef PIVX_UTILTIME_H
+#define PIVX_UTILTIME_H
 
 #include <stdint.h>
 #include <string>
@@ -46,4 +46,4 @@ std::string FormatISO8601DateTimeForBackup(int64_t nTime);
 std::string FormatISO8601Date(int64_t nTime);
 std::string FormatISO8601Time(int64_t nTime);
 
-#endif // BITCOIN_UTILTIME_H
+#endif // PIVX_UTILTIME_H

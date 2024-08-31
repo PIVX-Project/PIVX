@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef QTUTILS_H
-#define QTUTILS_H
+#ifndef PIVX_QT_PIVX_QTUTILS_H
+#define PIVX_QT_PIVX_QTUTILS_H
 
 #include "qt/pivx/pivxgui.h"
 
@@ -76,4 +76,4 @@ void setCssProperty(QWidget* wid, const QString& value, bool forceUpdate = false
 void forceUpdateStyle(QWidget* widget, bool forceUpdate);
 void forceUpdateStyle(std::initializer_list<QWidget*> args);
 
-#endif // QTUTILS_H
+#endif // PIVX_QT_PIVX_QTUTILS_H

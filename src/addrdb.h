@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_ADDRDB_H
-#define BITCOIN_ADDRDB_H
+#ifndef PIVX_ADDRDB_H
+#define PIVX_ADDRDB_H
 
 #include "fs.h"
 #include "serialize.h"
@@ -94,4 +94,4 @@ public:
     bool Read(banmap_t& banSet);
 };
 
-#endif //BITCOIN_ADDRDB_H
+#endif // PIVX_ADDRDB_H

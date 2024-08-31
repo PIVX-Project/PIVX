@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_LLMQ_BLOCKPROCESSOR_H
-#define PIVX_LLMQ_BLOCKPROCESSOR_H
+#ifndef PIVX_LLMQ_QUORUMS_BLOCKPROCESSOR_H
+#define PIVX_LLMQ_QUORUMS_BLOCKPROCESSOR_H
 
 #include "consensus/params.h"
 #include "llmq/quorums_commitment.h"
@@ -74,4 +74,4 @@ extern std::unique_ptr<CQuorumBlockProcessor> quorumBlockProcessor;
 
 } // namespace llmq
 
-#endif // PIVX_LLMQ_BLOCKPROCESSOR_H
+#endif // PIVX_LLMQ_QUORUMS_BLOCKPROCESSOR_H

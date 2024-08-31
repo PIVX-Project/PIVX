@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php .
 
-#ifndef TRANSACTION_BUILDER_H
-#define TRANSACTION_BUILDER_H
+#ifndef PIVX_SAPLING_TRANSACTION_BUILDER_H
+#define PIVX_SAPLING_TRANSACTION_BUILDER_H
 
 #include "coins.h"
 #include "consensus/params.h"
@@ -146,4 +146,4 @@ public:
     void ClearProofsAndSignatures();
 };
 
-#endif /* TRANSACTION_BUILDER_H */
+#endif // PIVX_SAPLING_TRANSACTION_BUILDER_H

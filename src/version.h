@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_VERSION_H
-#define BITCOIN_VERSION_H
+#ifndef PIVX_VERSION_H
+#define PIVX_VERSION_H
 
 /**
  * network protocol versioning
@@ -29,4 +29,4 @@ static const int MNAUTH_NODE_VER_VERSION = 70925;
 // Make sure that none of the values above collide with
 // `ADDRV2_FORMAT`.
 
-#endif // BITCOIN_VERSION_H
+#endif // PIVX_VERSION_H

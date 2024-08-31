@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_DB_H
-#define BITCOIN_DB_H
+#ifndef PIVX_WALLET_DB_H
+#define PIVX_WALLET_DB_H
 
 #include "clientversion.h"
 #include "fs.h"
@@ -402,4 +402,4 @@ public:
     bool static Rewrite(BerkeleyDatabase& database, const char* pszSkip = nullptr);
 };
 
-#endif // BITCOIN_DB_H
+#endif // PIVX_WALLET_DB_H

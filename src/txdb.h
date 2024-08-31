@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TXDB_H
-#define BITCOIN_TXDB_H
+#ifndef PIVX_TXDB_H
+#define PIVX_TXDB_H
 
 #include "coins.h"
 #include "chain.h"
@@ -196,4 +196,4 @@ public:
     void Wipe();
 };
 
-#endif // BITCOIN_TXDB_H
+#endif // PIVX_TXDB_H

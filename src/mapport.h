@@ -28,4 +28,4 @@ void StartMapPort(bool use_upnp, bool use_natpmp);
 void InterruptMapPort();
 void StopMapPort();
 
-#endif //PIVX_MAPPORT_H
+#endif // PIVX_MAPPORT_H

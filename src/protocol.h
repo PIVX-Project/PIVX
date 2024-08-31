@@ -9,8 +9,8 @@
 #error This header can only be compiled as C++.
 #endif
 
-#ifndef BITCOIN_PROTOCOL_H
-#define BITCOIN_PROTOCOL_H
+#ifndef PIVX_PROTOCOL_H
+#define PIVX_PROTOCOL_H
 
 #include "netaddress.h"
 #include "serialize.h"
@@ -481,4 +481,4 @@ private:
     std::string GetCommand() const;
 };
 
-#endif // BITCOIN_PROTOCOL_H
+#endif // PIVX_PROTOCOL_H

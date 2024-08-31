@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PROPOSALINFODIALOG_H
-#define PROPOSALINFODIALOG_H
+#ifndef PIVX_QT_PIVX_PROPOSALINFODIALOG_H
+#define PIVX_QT_PIVX_PROPOSALINFODIALOG_H
 
 #include "qt/pivx/focuseddialog.h"
 #include "qt/pivx/governancemodel.h"
@@ -37,4 +37,4 @@ private:
     void inform(const QString& msg);
 };
 
-#endif // PROPOSALINFODIALOG_H
+#endif // PIVX_QT_PIVX_PROPOSALINFODIALOG_H

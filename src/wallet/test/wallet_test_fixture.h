@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_WALLET_TEST_FIXTURE_H
-#define PIVX_WALLET_TEST_FIXTURE_H
+#ifndef PIVX_WALLET_TEST_WALLET_TEST_FIXTURE_H
+#define PIVX_WALLET_TEST_WALLET_TEST_FIXTURE_H
 
 #include "test/librust/sapling_test_fixture.h"
 #include "wallet/wallet.h"
@@ -31,5 +31,4 @@ struct WalletRegTestingSetup : public WalletTestingSetup
     WalletRegTestingSetup() : WalletTestingSetup(CBaseChainParams::REGTEST) {}
 };
 
-#endif // PIVX_WALLET_TEST_FIXTURE_H
-
+#endif // PIVX_WALLET_TEST_WALLET_TEST_FIXTURE_H

@@ -12,8 +12,8 @@
  * - E-mail usually won't line-break if there's no punctuation to break at.
  * - Double-clicking selects the whole number as one word if it's all alphanumeric.
  */
-#ifndef BITCOIN_BASE58_H
-#define BITCOIN_BASE58_H
+#ifndef PIVX_BASE58_H
+#define PIVX_BASE58_H
 
 #include "attributes.h"
 #include "chainparams.h"
@@ -65,4 +65,4 @@ NODISCARD bool DecodeBase58Check(const char* psz, std::vector<unsigned char>& vc
  */
 NODISCARD bool DecodeBase58Check(const std::string& str, std::vector<unsigned char>& vchRet, int max_ret_len);
 
-#endif // BITCOIN_BASE58_H
+#endif // PIVX_BASE58_H

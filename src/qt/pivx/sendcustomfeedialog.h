@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SENDCUSTOMFEEDIALOG_H
-#define SENDCUSTOMFEEDIALOG_H
+#ifndef PIVX_QT_PIVX_SENDCUSTOMFEEDIALOG_H
+#define PIVX_QT_PIVX_SENDCUSTOMFEEDIALOG_H
 
 #include "policy/feerate.h"
 #include "qt/pivx/focuseddialog.h"
@@ -46,4 +46,4 @@ private:
     void inform(const QString& text);
 };
 
-#endif // SENDCUSTOMFEEDIALOG_H
+#endif // PIVX_QT_PIVX_SENDCUSTOMFEEDIALOG_H

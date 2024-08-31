@@ -4,8 +4,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_GUIINTERFACE_H
-#define BITCOIN_GUIINTERFACE_H
+#ifndef PIVX_GUIINTERFACE_H
+#define PIVX_GUIINTERFACE_H
 
 #include <stdint.h>
 #include <string>
@@ -113,4 +113,4 @@ public:
 
 extern CClientUIInterface uiInterface;
 
-#endif // BITCOIN_GUIINTERFACE_H
+#endif // PIVX_GUIINTERFACE_H

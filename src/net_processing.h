@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_NET_PROCESSING_H
-#define BITCOIN_NET_PROCESSING_H
+#ifndef PIVX_NET_PROCESSING_H
+#define PIVX_NET_PROCESSING_H
 
 #include "net.h"
 #include "validationinterface.h"
@@ -81,4 +81,4 @@ using SecondsDouble = std::chrono::duration<double, std::chrono::seconds::period
  */
 inline double CountSecondsDouble(SecondsDouble t) { return t.count(); }
 
-#endif // BITCOIN_NET_PROCESSING_H
+#endif // PIVX_NET_PROCESSING_H

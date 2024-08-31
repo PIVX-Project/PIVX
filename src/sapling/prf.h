@@ -8,8 +8,8 @@
 // within the zkSNARK circuit.
 */
 
-#ifndef ZC_PRF_H_
-#define ZC_PRF_H_
+#ifndef PIVX_SAPLING_PRF_H
+#define PIVX_SAPLING_PRF_H
 
 #include "uint256.h"
 
@@ -22,4 +22,4 @@ uint256 PRF_ovk(const uint256& sk);
 
 std::array<unsigned char, 11> default_diversifier(const uint256& sk);
 
-#endif // ZC_PRF_H_
+#endif // PIVX_SAPLING_PRF_H

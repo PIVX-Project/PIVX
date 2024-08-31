@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_ADDRMAN_H
-#define BITCOIN_ADDRMAN_H
+#ifndef PIVX_ADDRMAN_H
+#define PIVX_ADDRMAN_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/pivx-config.h"
@@ -742,4 +742,4 @@ public:
 
 };
 
-#endif // BITCOIN_ADDRMAN_H
+#endif // PIVX_ADDRMAN_H

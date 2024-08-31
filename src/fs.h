@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_FS_H
-#define BITCOIN_FS_H
+#ifndef PIVX_FS_H
+#define PIVX_FS_H
 
 #include <stdio.h>
 #include <string>
@@ -94,4 +94,4 @@ namespace fsbridge {
 #endif // WIN32 && __GLIBCXX__
 };
 
-#endif // BITCOIN_FS_H
+#endif // PIVX_FS_H

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TOOLTIPMENU_H
-#define TOOLTIPMENU_H
+#ifndef PIVX_QT_PIVX_TOOLTIPMENU_H
+#define PIVX_QT_PIVX_TOOLTIPMENU_H
 
 #include "qt/pivx/pwidget.h"
 #include <QWidget>
@@ -57,4 +57,4 @@ private:
     QModelIndex index;
 };
 
-#endif // TOOLTIPMENU_H
+#endif // PIVX_QT_PIVX_TOOLTIPMENU_H

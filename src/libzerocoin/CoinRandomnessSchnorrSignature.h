@@ -2,8 +2,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef COINRANDOMNESSPROOF_H_
-#define COINRANDOMNESSPROOF_H_
+#ifndef PIVX_LIBZEROCOIN_COINRANDOMNESSSCHNORRSIGNATURE_H
+#define PIVX_LIBZEROCOIN_COINRANDOMNESSSCHNORRSIGNATURE_H
 
 #include "Params.h"
 #include "Coin.h"
@@ -47,4 +47,4 @@ private:
 };
 
 } /* namespace libzerocoin */
-#endif /* COINRANDOMNESSPROOF_H_ */
+#endif // PIVX_LIBZEROCOIN_COINRANDOMNESSSCHNORRSIGNATURE_H

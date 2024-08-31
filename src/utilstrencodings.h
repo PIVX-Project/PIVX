@@ -7,8 +7,8 @@
 /**
  * Utilities for converting data from/to strings.
  */
-#ifndef BITCOIN_UTILSTRENCODINGS_H
-#define BITCOIN_UTILSTRENCODINGS_H
+#ifndef PIVX_UTILSTRENCODINGS_H
+#define PIVX_UTILSTRENCODINGS_H
 
 #include "support/allocators/secure.h"
 #include "span.h"
@@ -288,4 +288,4 @@ std::string Capitalize(std::string str);
  */
 bool IsValidUTF8(const std::string& str);
 
-#endif // BITCOIN_UTILSTRENCODINGS_H
+#endif // PIVX_UTILSTRENCODINGS_H

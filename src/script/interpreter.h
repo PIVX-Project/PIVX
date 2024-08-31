@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SCRIPT_INTERPRETER_H
-#define BITCOIN_SCRIPT_INTERPRETER_H
+#ifndef PIVX_SCRIPT_INTERPRETER_H
+#define PIVX_SCRIPT_INTERPRETER_H
 
 #include "primitives/transaction.h"
 #include "script_error.h"
@@ -151,4 +151,4 @@ public:
 bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* error = nullptr);
 bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, unsigned int flags, const BaseSignatureChecker& checker, SigVersion sigversion, ScriptError* serror = nullptr);
 
-#endif // BITCOIN_SCRIPT_INTERPRETER_H
+#endif // PIVX_SCRIPT_INTERPRETER_H

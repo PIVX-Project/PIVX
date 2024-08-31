@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RECEIVEWIDGET_H
-#define RECEIVEWIDGET_H
+#ifndef PIVX_QT_PIVX_RECEIVEWIDGET_H
+#define PIVX_QT_PIVX_RECEIVEWIDGET_H
 
 #include "qt/pivx/pwidget.h"
 #include "addresstablemodel.h"
@@ -79,4 +79,4 @@ private:
 
 };
 
-#endif // RECEIVEWIDGET_H
+#endif // PIVX_QT_PIVX_RECEIVEWIDGET_H
