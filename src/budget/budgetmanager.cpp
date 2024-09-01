@@ -126,7 +126,7 @@ uint256 CBudgetManager::SubmitFinalBudget()
 
     if (nBlockStart - nCurrentHeight > finalizationWindow) {
         LogPrint(BCLog::MNBUDGET,"%s: Too early for finalization. Current block is %ld, next Superblock is %ld.\n", __func__, nCurrentHeight, nBlockStart);
-        LogPrint(BCLog::MNBUDGET,"%s: First possible block for finalization: %ld. Last possible block for finalization: %ld. "
+        LogPrint(BCLog::MNBUDGET,"%s: First possible block for finalization: %ld. Last possible block for finalization: %ld. " /* Continued */
                 "You have to wait for %ld block(s) until Budget finalization will be possible\n", __func__, nFinalizationStart, nBlockStart, nOffsetToStart);
         return UINT256_ZERO;
     }

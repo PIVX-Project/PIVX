@@ -336,7 +336,7 @@ void CActiveMasternode::ManageStatus()
     if (status == ACTIVE_MASTERNODE_INITIAL || (pmn && status == ACTIVE_MASTERNODE_NOT_CAPABLE)) {
         if (pmn) {
             if (pmn->protocolVersion != PROTOCOL_VERSION) {
-                LogPrintf("%s: ERROR Trying to start a masternode running an old protocol version, "
+                LogPrintf("%s: ERROR Trying to start a masternode running an old protocol version, " /* Continued */
                           "the controller and masternode wallets need to be running the latest release version.\n", __func__);
                 return;
             }

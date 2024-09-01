@@ -31,7 +31,7 @@ static const CBlockIndex* FindIndexFrom(uint32_t nChecksum, libzerocoin::CoinDen
 
     // Not found. This should never happen (during IBD we save the accumulator checksums
     // in the cache as they are updated, and persist the cache to DB) but better to have a fallback.
-    LogPrintf("WARNING: accumulatorCache corrupt - missing (%d-%d), height=%d",
+    LogPrintf("WARNING: accumulatorCache corrupt - missing (%d-%d), height=%d\n",
               nChecksum, libzerocoin::ZerocoinDenominationToInt(denom), cpHeight);
 
     // Start at the current checkpoint and go backwards
@@ -59,7 +59,7 @@ CLegacyZPivStake* CLegacyZPivStake::NewZPivStake(const CTxIn& txin, int nHeight)
 {
     // Construct the stakeinput object
     if (!txin.IsZerocoinSpend()) {
-        LogPrintf("%s: unable to initialize CLegacyZPivStake from non zc-spend", __func__);
+        LogPrintf("%s: unable to initialize CLegacyZPivStake from non zc-spend\n", __func__);
         return nullptr;
     }
 
@@ -67,14 +67,14 @@ CLegacyZPivStake* CLegacyZPivStake::NewZPivStake(const CTxIn& txin, int nHeight)
     const Consensus::Params& consensus = Params().GetConsensus();
     if (!consensus.NetworkUpgradeActive(nHeight, Consensus::UPGRADE_ZC_V2) ||
             nHeight >= consensus.height_last_ZC_AccumCheckpoint) {
-        LogPrint(BCLog::LEGACYZC, "%s : zPIV stake block: height %d outside range", __func__, nHeight);
+        LogPrint(BCLog::LEGACYZC, "%s : zPIV stake block: height %d outside range\n", __func__, nHeight);
         return nullptr;
     }
 
     // Check spend type
     libzerocoin::CoinSpend spend = ZPIVModule::TxInToZerocoinSpend(txin);
     if (spend.getSpendType() != libzerocoin::SpendType::STAKE) {
-        LogPrintf("%s : spend is using the wrong SpendType (%d)", __func__, (int)spend.getSpendType());
+        LogPrintf("%s : spend is using the wrong SpendType (%d)\n", __func__, (int)spend.getSpendType());
         return nullptr;
     }
 
@@ -86,13 +86,13 @@ CLegacyZPivStake* CLegacyZPivStake::NewZPivStake(const CTxIn& txin, int nHeight)
     // The checkpoint needs to be from 200 blocks ago
     const int cpHeight = nHeight - 1 - consensus.ZC_MinStakeDepth;
     if (ParseAccChecksum(chainActive[cpHeight]->nAccumulatorCheckpoint, _denom) != _nChecksum) {
-        LogPrint(BCLog::LEGACYZC, "%s : accum. checksum at height %d is wrong.", __func__, nHeight);
+        LogPrint(BCLog::LEGACYZC, "%s : accum. checksum at height %d is wrong.\n", __func__, nHeight);
     }
 
     // Find the pindex of the first block with the accumulator checksum
     const CBlockIndex* _pindexFrom = FindIndexFrom(_nChecksum, _denom, cpHeight);
     if (_pindexFrom == nullptr) {
-        LogPrintf("%s : Failed to find the block index for zpiv stake origin", __func__);
+        LogPrintf("%s : Failed to find the block index for zpiv stake origin\n", __func__);
         return nullptr;
     }
 

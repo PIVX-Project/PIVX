@@ -93,7 +93,7 @@ bool CCryptoKeyStore::UnlockSaplingKeys(const CKeyingMaterial& vMasterKeyIn, boo
     }
 
     if (keyPass && keyFail) {
-        LogPrintf("Sapling wallet is probably corrupted: Some keys decrypt but not all.");
+        LogPrintf("Sapling wallet is probably corrupted: Some keys decrypt but not all.\n");
         throw std::runtime_error("Error unlocking sapling wallet: some keys decrypt but not all. Your wallet file may be corrupt.");
     }
     if (keyFail || !keyPass)

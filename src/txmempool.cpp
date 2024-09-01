@@ -793,7 +793,7 @@ void CTxMemPool::removeProTxConflicts(const CTransaction &tx)
         case CTransaction::TxType::PROREG: {
             ProRegPL pl;
             if (!GetTxPayload(tx, pl)) {
-                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s", __func__, tx.ToString());
+                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s\n", __func__, tx.ToString());
                 return;
             }
             if (mapProTxAddresses.count(pl.addr)) {
@@ -813,7 +813,7 @@ void CTxMemPool::removeProTxConflicts(const CTransaction &tx)
         case CTransaction::TxType::PROUPSERV: {
             ProUpServPL pl;
             if (!GetTxPayload(tx, pl)) {
-                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s", __func__, tx.ToString());
+                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s\n", __func__, tx.ToString());
                 return;
             }
             if (mapProTxAddresses.count(pl.addr)) {
@@ -828,7 +828,7 @@ void CTxMemPool::removeProTxConflicts(const CTransaction &tx)
         case CTransaction::TxType::PROUPREG: {
             ProUpRegPL pl;
             if (!GetTxPayload(tx, pl)) {
-                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s", __func__, tx.ToString());
+                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s\n", __func__, tx.ToString());
                 return;
             }
             removeProTxPubKeyConflicts(tx, pl.pubKeyOperator);
@@ -1153,7 +1153,7 @@ bool CTxMemPool::existsProviderTxConflict(const CTransaction &tx) const
         case CTransaction::TxType::PROREG: {
             ProRegPL pl;
             if (!GetTxPayload(tx, pl)) {
-                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s", __func__, tx.ToString());
+                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s\n", __func__, tx.ToString());
                 return true; // i.e. can't decode payload == conflict
             }
             if (mapProTxAddresses.count(pl.addr) || mapProTxPubKeyIDs.count(pl.keyIDOwner) ||
@@ -1176,7 +1176,7 @@ bool CTxMemPool::existsProviderTxConflict(const CTransaction &tx) const
         case CTransaction::TxType::PROUPSERV: {
             ProUpServPL pl;
             if (!GetTxPayload(tx, pl)) {
-                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s", __func__, tx.ToString());
+                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s\n", __func__, tx.ToString());
                 return true; // i.e. can't decode payload == conflict
             }
             auto it = mapProTxAddresses.find(pl.addr);
@@ -1186,7 +1186,7 @@ bool CTxMemPool::existsProviderTxConflict(const CTransaction &tx) const
         case CTransaction::TxType::PROUPREG: {
             ProUpRegPL pl;
             if (!GetTxPayload(tx, pl)) {
-                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s", __func__, tx.ToString());
+                LogPrint(BCLog::MEMPOOL, "%s: ERROR: Invalid transaction payload, tx: %s\n", __func__, tx.ToString());
                 return true; // i.e. can't decode payload == conflict
             }
             auto it = mapProTxBlsPubKeyHashes.find(pl.pubKeyOperator.GetHash());
@@ -1217,7 +1217,7 @@ bool CTxMemPool::WriteFeeEstimates(CAutoFile& fileout) const
         fileout << CLIENT_VERSION;  // version that wrote the file
         minerPolicyEstimator->Write(fileout);
     } catch (const std::exception&) {
-        LogPrintf("CTxMemPool::WriteFeeEstimates() : unable to write policy estimator data (non-fatal)");
+        LogPrintf("CTxMemPool::WriteFeeEstimates() : unable to write policy estimator data (non-fatal)\n");
         return false;
     }
     return true;
@@ -1229,12 +1229,12 @@ bool CTxMemPool::ReadFeeEstimates(CAutoFile& filein)
         int nVersionRequired, nVersionThatWrote;
         filein >> nVersionRequired >> nVersionThatWrote;
         if (nVersionRequired > CLIENT_VERSION)
-            return error("CTxMemPool::ReadFeeEstimates() : up-version (%d) fee estimate file", nVersionRequired);
+            return error("CTxMemPool::ReadFeeEstimates() : up-version (%d) fee estimate file\n", nVersionRequired);
 
         LOCK(cs);
         minerPolicyEstimator->Read(filein, nVersionThatWrote);
     } catch (const std::exception&) {
-        LogPrintf("CTxMemPool::ReadFeeEstimates() : unable to read policy estimator data (non-fatal)");
+        LogPrintf("CTxMemPool::ReadFeeEstimates() : unable to read policy estimator data (non-fatal)\n");
         return false;
     }
     return true;

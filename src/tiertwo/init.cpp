@@ -178,12 +178,12 @@ bool LoadTierTwo(int chain_active_height, bool load_cache_files)
     CFlatDB<CNetFulfilledRequestManager> netRequestsDb(NET_REQUESTS_CACHE_FILENAME, NET_REQUESTS_CACHE_FILE_ID);
     if (load_cache_files) {
         if (!netRequestsDb.Load(g_netfulfilledman)) {
-            LogPrintf("Failed to load network requests cache from %s", netRequestsDb.GetDbPath().string());
+            LogPrintf("Failed to load network requests cache from %s\n", netRequestsDb.GetDbPath().string());
         }
     } else {
         CNetFulfilledRequestManager netfulfilledmanTmp(0);
         if (!netRequestsDb.Dump(netfulfilledmanTmp)) {
-            LogPrintf("Failed to clear network requests cache at %s", netRequestsDb.GetDbPath().string());
+            LogPrintf("Failed to clear network requests cache at %s\n", netRequestsDb.GetDbPath().string());
         }
     }
 

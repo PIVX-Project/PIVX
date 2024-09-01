@@ -694,7 +694,7 @@ void ThreadImport(const std::vector<fs::path>& vImportFiles)
     // scan for better chains in the block chain database, that are not yet connected in the active best chain
     CValidationState state;
     if (!ActivateBestChain(state)) {
-        LogPrintf("Failed to connect best block");
+        LogPrintf("Failed to connect best block\n");
         StartShutdown();
     }
 
@@ -1201,9 +1201,9 @@ bool AppInitMain()
 
     // Warn about relative -datadir path.
     if (gArgs.IsArgSet("-datadir") && !fs::path(gArgs.GetArg("-datadir", "")).is_absolute()) {
-        LogPrintf("Warning: relative datadir option '%s' specified, which will be interpreted relative to the "
-                  "current working directory '%s'. This is fragile because if PIVX is started in the future "
-                  "from a different location. It will be unable to locate the current data files. There could "
+        LogPrintf("Warning: relative datadir option '%s' specified, which will be interpreted relative to the " /* Continued */
+                  "current working directory '%s'. This is fragile because if PIVX is started in the future " /* Continued */
+                  "from a different location. It will be unable to locate the current data files. There could " /* Continued */
                   "also be data loss if PIVX is started while in a temporary directory.\n",
             gArgs.GetArg("-datadir", ""), fs::current_path().string());
     }

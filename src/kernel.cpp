@@ -67,14 +67,14 @@ bool CStakeKernel::CheckKernelHash(bool fSkipLog) const
     const bool res = hashProofOfStake < bnTarget;
 
     if (!fSkipLog || res) {
-        LogPrint(BCLog::STAKING, "%s : Proof Of Stake:"
-                            "\nstakeModifier=%s"
-                            "\nnTimeBlockFrom=%d"
-                            "\nssUniqueID=%s"
-                            "\nnTimeTx=%d"
-                            "\nhashProofOfStake=%s"
-                            "\nnBits=%d"
-                            "\nweight=%d"
+        LogPrint(BCLog::STAKING, "%s : Proof Of Stake:" /* Continued */
+                            "\nstakeModifier=%s" /* Continued */
+                            "\nnTimeBlockFrom=%d" /* Continued */
+                            "\nssUniqueID=%s" /* Continued */
+                            "\nnTimeTx=%d" /* Continued */
+                            "\nhashProofOfStake=%s" /* Continued */
+                            "\nnBits=%d" /* Continued */
+                            "\nweight=%d" /* Continued */
                             "\nbnTarget=%s (res: %d)\n\n",
             __func__, HexStr(stakeModifier), nTimeBlockFrom, HexStr(stakeUniqueness), nTime, hashProofOfStake.GetHex(),
             nBits, stakeValue, bnTarget.GetHex(), res);

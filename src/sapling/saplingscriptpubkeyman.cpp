@@ -831,7 +831,7 @@ Optional<std::pair<
         try {
             ovks.emplace(getCommonOVK());
         } catch (...) {
-            LogPrintf("WARNING: No CommonOVK found. Some notes might not be correctly recovered. "
+            LogPrintf("WARNING: No CommonOVK found. Some notes might not be correctly recovered. " /* Continued */
                       "Unlock the wallet and call 'viewshieldtransaction %s' to fix.\n", txId.ToString());
         }
     } else {

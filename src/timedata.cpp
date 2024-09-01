@@ -88,8 +88,8 @@ void AddTimeData(const CNetAddr& ip, int64_t nOffsetSample, int nOffsetLimit)
         }
         if (!gArgs.GetBoolArg("-shrinkdebugfile", g_logger->DefaultShrinkDebugFile())) {
             for (int64_t n : vSorted)
-                LogPrintf("%+d  ", n);
-            LogPrintf("|  ");
+                LogPrintf("%+d  ", n); /* Continued */
+            LogPrintf("|  "); /* Continued */
         }
         LogPrintf("nTimeOffset = %+d\n", nTimeOffset);
     }

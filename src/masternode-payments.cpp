@@ -657,7 +657,7 @@ bool CMasternodePayments::IsTransactionValid(const CTransaction& txNew, const CB
                 CTxDestination mnDest;
                 const std::string& payee = ExtractDestination(o.scriptPubKey, mnDest) ? EncodeDestination(mnDest)
                                                                                       : HexStr(o.scriptPubKey);
-                LogPrint(BCLog::MASTERNODE, "%s: Failed to find expected payee %s in block at height %d (tx %s)",
+                LogPrint(BCLog::MASTERNODE, "%s: Failed to find expected payee %s in block at height %d (tx %s)\n",
                                             __func__, payee, pindexPrev->nHeight + 1, txNew.GetHash().ToString());
                 return false;
             }
@@ -743,7 +743,7 @@ void CMasternodePayments::ProcessBlock(int nBlockHeight)
 
     // check winner height
     if (nBlockHeight - 100 > mnodeman.GetBestHeight() + 1) {
-        LogPrintf("%s: mnw - invalid height %d > %d", __func__, nBlockHeight - 100, mnodeman.GetBestHeight() + 1);
+        LogPrintf("%s: mnw - invalid height %d > %d\n", __func__, nBlockHeight - 100, mnodeman.GetBestHeight() + 1);
         return;
     }
 
