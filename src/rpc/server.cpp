@@ -411,7 +411,7 @@ bool IsDeprecatedRPCEnabled(const std::string& method)
     return find(enabled_methods.begin(), enabled_methods.end(), method) != enabled_methods.end();
 }
 
-static UniValue JSONRPCExecOne(const UniValue& req)
+UniValue JSONRPCExec(const JSONRPCRequest& jreq, bool catch_errors)
 {
     UniValue rpc_result(UniValue::VOBJ);
 
@@ -428,7 +428,7 @@ static UniValue JSONRPCExecOne(const UniValue& req)
             JSONRPCError(RPC_PARSE_ERROR, e.what()), jreq.id);
     }
 
-    return rpc_result;
+    return JSONRPCReplyObj(std::move(result), NullUniValue, jreq.id, jreq.m_json_version);
 }
 
 std::string JSONRPCExecBatch(const UniValue& vReq)

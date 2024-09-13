@@ -61,8 +61,11 @@ static std::string strRPCUserColonPass;
 /* Stored RPC timer interface (for unregistration) */
 static std::unique_ptr<HTTPRPCTimerInterface> httpRPCTimerInterface;
 
-static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const UniValue& id)
+static void JSONErrorReply(HTTPRequest* req, UniValue objError, const JSONRPCRequest& jreq)
 {
+    // Sending HTTP errors is a legacy JSON-RPC behavior.
+    Assume(jreq.m_json_version != JSONRPCVersion::V2);
+
     // Send error reply from json-rpc error object
     int nStatus = HTTP_INTERNAL_SERVER_ERROR;
     int code = find_value(objError, "code").get_int();
@@ -72,7 +75,7 @@ static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const Uni
     else if (code == RPC_METHOD_NOT_FOUND)
         nStatus = HTTP_NOT_FOUND;
 
-    std::string strReply = JSONRPCReply(NullUniValue, objError, id);
+    std::string strReply = JSONRPCReplyObj(NullUniValue, std::move(objError), jreq.id, jreq.m_json_version).write() + "\n";
 
     req->WriteHeader("Content-Type", "application/json");
     req->WriteReply(nStatus, strReply);
@@ -176,14 +179,36 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
         jreq.URI = req->GetURI();
 
         std::string strReply;
+        UniValue reply;
+        bool user_has_whitelist = g_rpc_whitelist.count(jreq.authUser);
+        if (!user_has_whitelist && g_rpc_whitelist_default) {
+            LogPrintf("RPC User %s not allowed to call any methods\n", jreq.authUser);
+            req->WriteReply(HTTP_FORBIDDEN);
+            return false;
+
         // singleton request
         if (valRequest.isObject()) {
             jreq.parse(valRequest);
+            if (user_has_whitelist && !g_rpc_whitelist[jreq.authUser].count(jreq.strMethod)) {
+                LogPrintf("RPC User %s not allowed to call method %s\n", jreq.authUser, jreq.strMethod);
+                req->WriteReply(HTTP_FORBIDDEN);
+                return false;
+            }
 
             UniValue result = tableRPC.execute(jreq);
 
-            // Send reply
-            strReply = JSONRPCReply(result, NullUniValue, jreq.id);
+            // Legacy 1.0/1.1 behavior is for failed requests to throw
+            // exceptions which return HTTP errors and RPC errors to the client.
+            // 2.0 behavior is to catch exceptions and return HTTP success with
+            // RPC errors, as long as there is not an actual HTTP server error.
+            const bool catch_errors{jreq.m_json_version == JSONRPCVersion::V2};
+            reply = JSONRPCExec(jreq, catch_errors);
+
+            if (jreq.IsNotification()) {
+                // Even though we do execute notifications, we do not respond to them
+                req->WriteReply(HTTP_NO_CONTENT);
+                return true;
+            }
 
         // array of requests
         } else if (valRequest.isArray())
@@ -192,12 +217,12 @@ static bool HTTPReq_JSONRPC(HTTPRequest* req, const std::string &)
             throw JSONRPCError(RPC_PARSE_ERROR, "Top-level object parse error");
 
         req->WriteHeader("Content-Type", "application/json");
-        req->WriteReply(HTTP_OK, strReply);
-    } catch (const UniValue& objError) {
-        JSONErrorReply(req, objError, jreq.id);
+        req->WriteReply(HTTP_OK, reply.write() + "\n");
+    } catch (UniValue& e) {
+        JSONErrorReply(req, std::move(e), jreq);
         return false;
     } catch (const std::exception& e) {
-        JSONErrorReply(req, JSONRPCError(RPC_PARSE_ERROR, e.what()), jreq.id);
+        JSONErrorReply(req, JSONRPCError(RPC_PARSE_ERROR, e.what()), jreq);
         return false;
     }
     return true;

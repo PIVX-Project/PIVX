@@ -26,7 +26,7 @@ ServiceProxy class:
 
 - HTTP connections persist for the life of the AuthServiceProxy object
   (if server supports HTTP/1.1)
-- sends protocol 'version', per JSON-RPC 1.1
+- sends "jsonrpc":"2.0", per JSON-RPC 2.0
 - sends proper, incrementing 'id'
 - sends Basic HTTP authentication headers
 - parses all JSON numbers that look like floats as Decimal
@@ -140,6 +140,15 @@ class AuthServiceProxy():
             raise JSONRPCException({
                 'code': -343, 'message': 'missing JSON-RPC result'})
         else:
+            assert response['jsonrpc'] == '2.0'
+            if status != HTTPStatus.OK:
+                raise JSONRPCException({
+                    'code': -342, 'message': 'non-200 HTTP status code'}, status)
+            if 'error' in response:
+                raise JSONRPCException(response['error'], status)
+            elif 'result' not in response:
+                raise JSONRPCException({
+                    'code': -343, 'message': 'missing JSON-RPC 2.0 result and error'}, status)
             return response['result']
 
     def batch(self, rpc_call_list):
@@ -161,6 +170,15 @@ class AuthServiceProxy():
         if http_response is None:
             raise JSONRPCException({
                 'code': -342, 'message': 'missing HTTP response from server'})
+
+        # Check for no-content HTTP status code, which can be returned when an
+        # RPC client requests a JSON-RPC 2.0 "notification" with no response.
+        # Currently this is only possible if clients call the _request() method
+        # directly to send a raw request.
+        if http_response.status == HTTPStatus.NO_CONTENT:
+            if len(http_response.read()) != 0:
+                raise JSONRPCException({'code': -342, 'message': 'Content received with NO CONTENT status code'})
+            return None, http_response.status
 
         content_type = http_response.getheader('Content-Type')
         if content_type != 'application/json':

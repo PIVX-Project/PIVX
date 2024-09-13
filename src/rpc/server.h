@@ -200,6 +200,7 @@ extern std::string HelpExampleRpc(std::string methodname, std::string args);
 bool StartRPC();
 void InterruptRPC();
 void StopRPC();
+UniValue JSONRPCExec(const JSONRPCRequest& jreq, bool catch_errors);
 std::string JSONRPCExecBatch(const UniValue& vReq);
 void RPCNotifyBlockChange(bool fInitialDownload, const CBlockIndex* pindex);
 
