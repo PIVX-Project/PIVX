@@ -383,14 +383,14 @@ void JSONRPCRequest::parse(const UniValue& valRequest)
 
     // Parse id now so errors from here on will have the id
     if (request.exists("id")) {
-        id = request.find_value("id");
+        id = find_value(request, "id");
     } else {
-        id = std::nullopt;
+        id = nullopt;
     }
 
     // Check for JSON-RPC 2.0 (default 1.1)
     m_json_version = JSONRPCVersion::V1_LEGACY;
-    const UniValue& jsonrpc_version = request.find_value("jsonrpc");
+    const UniValue& jsonrpc_version = find_value(request, "jsonrpc");
     if (!jsonrpc_version.isNull()) {
         if (!jsonrpc_version.isStr()) {
             throw JSONRPCError(RPC_INVALID_REQUEST, "jsonrpc field must be a string");

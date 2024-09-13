@@ -11,7 +11,7 @@
 
 #include <list>
 #include <map>
-#include <optional>
+#include "optional.h"
 #include <stdint.h>
 #include <string>
 
@@ -89,7 +89,7 @@ enum class JSONRPCVersion {
 };
 
 UniValue JSONRPCRequestObj(const std::string& strMethod, const UniValue& params, const UniValue& id);
-UniValue JSONRPCReplyObj(UniValue result, UniValue error, std::optional<UniValue> id, JSONRPCVersion jsonrpc_version);
+UniValue JSONRPCReplyObj(UniValue result, UniValue error, Optional<UniValue> id, JSONRPCVersion jsonrpc_version);
 UniValue JSONRPCError(int code, const std::string& message);
 
 /** Get name of RPC authentication cookie file */

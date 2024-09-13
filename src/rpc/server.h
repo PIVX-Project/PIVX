@@ -13,7 +13,7 @@
 
 #include <list>
 #include <map>
-#include <optional>
+#include "optional.h"
 #include <stdint.h>
 #include <string>
 
@@ -43,7 +43,7 @@ struct UniValueType {
 class JSONRPCRequest
 {
 public:
-    std::optional<UniValue> id = UniValue::VNULL;
+    Optional<UniValue> id = UniValue(UniValue::VNULL);
     std::string strMethod;
     UniValue params;
     bool fHelp;
