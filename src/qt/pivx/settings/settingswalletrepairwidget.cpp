@@ -26,12 +26,12 @@ SettingsWalletRepairWidget::SettingsWalletRepairWidget(PIVXGUI* _window, QWidget
     // Labels
     setCssProperty({ui->labelMessageSalvage, ui->labelMessageRescan, ui->labelMessageRecover1,
                     ui->labelMessageRecover2, ui->labelMessageUpgrade, ui->labelMessageRebuild,
-                    ui->labelMessageDelete}, "text-main-settings");
+                    ui->labelMessageDelete, ui->labelMessageRewind}, "text-main-settings");
 
     // Buttons
     setCssProperty({ui->pushButtonSalvage, ui->pushButtonRescan, ui->pushButtonRecover1,
                     ui->pushButtonRecover2, ui->pushButtonUpgrade, ui->pushButtonRebuild,
-                    ui->pushButtonDelete}, "btn-primary");
+                    ui->pushButtonDelete, ui->pushButtonRewind}, "btn-primary");
 
     // Wallet Repair Buttons
     connect(ui->pushButtonSalvage, &QPushButton::clicked, this, &SettingsWalletRepairWidget::walletSalvage);
@@ -41,6 +41,7 @@ SettingsWalletRepairWidget::SettingsWalletRepairWidget(PIVXGUI* _window, QWidget
     connect(ui->pushButtonUpgrade, &QPushButton::clicked, this, &SettingsWalletRepairWidget::walletUpgrade);
     connect(ui->pushButtonRebuild, &QPushButton::clicked, this, &SettingsWalletRepairWidget::walletReindex);
     connect(ui->pushButtonDelete, &QPushButton::clicked, this, &SettingsWalletRepairWidget::walletResync);
+    connect(ui->pushButtonRewind, &QPushButton::clicked, this, &SettingsWalletRepairWidget::walletRewind);
 }
 
 /** Restart wallet with "-salvagewallet" */
@@ -98,6 +99,25 @@ void SettingsWalletRepairWidget::walletResync()
 
     // Restart and resync
     buildParameterlist(RESYNC);
+}
+
+/** Restart wallet with "-rewindblockindex" */
+void SettingsWalletRepairWidget::walletRewind()
+{
+    QString rewindWarning = tr("This will rewind your blocks to the most recent checkpoint.<br /><br />");
+        rewindWarning +=   tr("Do you want to continue?.<br />");
+    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm resync Blockchain"),
+                                                               rewindWarning,
+                                                               QMessageBox::Yes | QMessageBox::Cancel,
+                                                               QMessageBox::Cancel);
+
+    if (retval != QMessageBox::Yes) {
+        // Rewind canceled
+        return;
+    }
+
+    // Restart and rewind
+    buildParameterlist(REWIND);
 }
 
 /** Build command-line parameter list for restart */
