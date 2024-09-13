@@ -54,8 +54,8 @@ void CacheAccChecksum(const CBlockIndex* pindex, bool fWrite)
         pindex->nAccumulatorCheckpoint == pindex->pprev->nAccumulatorCheckpoint)
         return;
 
-    arith_uint256 accCurr = UintToArith256(pindex->nAccumulatorCheckpoint);
-    arith_uint256 accPrev = UintToArith256(pindex->pprev->nAccumulatorCheckpoint);
+    arith_uint256 accCurr = UintToArith256(*pindex->nAccumulatorCheckpoint);
+    arith_uint256 accPrev = UintToArith256(*pindex->pprev->nAccumulatorCheckpoint);
     // add/remove changed checksums to/from cache
     for (int i = (int)libzerocoin::zerocoinDenomList.size()-1; i >= 0; i--) {
         const uint32_t nChecksum = accCurr.Get32();

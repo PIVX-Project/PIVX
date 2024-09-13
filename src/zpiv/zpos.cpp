@@ -42,7 +42,7 @@ static const CBlockIndex* FindIndexFrom(uint32_t nChecksum, libzerocoin::CoinDen
 
     CBlockIndex* pindex = chainActive[(cpHeight/10)*10 - 10];
     if (!pindex) return nullptr;
-    while (ParseAccChecksum(pindex->nAccumulatorCheckpoint, denom) == nChecksum && pindex->nHeight > zc_activation) {
+    while (ParseAccChecksum(*pindex->nAccumulatorCheckpoint, denom) == nChecksum && pindex->nHeight > zc_activation) {
         //Skip backwards in groups of 10 blocks since checkpoints only change every 10 blocks
         pindex = chainActive[pindex->nHeight - 10];
     }
@@ -85,7 +85,7 @@ CLegacyZPivStake* CLegacyZPivStake::NewZPivStake(const CTxIn& txin, int nHeight)
 
     // The checkpoint needs to be from 200 blocks ago
     const int cpHeight = nHeight - 1 - consensus.ZC_MinStakeDepth;
-    if (ParseAccChecksum(chainActive[cpHeight]->nAccumulatorCheckpoint, _denom) != _nChecksum) {
+    if (ParseAccChecksum(*chainActive[cpHeight]->nAccumulatorCheckpoint, _denom) != _nChecksum) {
         LogPrint(BCLog::LEGACYZC, "%s : accum. checksum at height %d is wrong.", __func__, nHeight);
     }
 
