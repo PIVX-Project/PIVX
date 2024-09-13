@@ -13,6 +13,7 @@
 
 #include <list>
 #include <map>
+#include <optional>
 #include <stdint.h>
 #include <string>
 
@@ -42,15 +43,17 @@ struct UniValueType {
 class JSONRPCRequest
 {
 public:
-    UniValue id;
+    std::optional<UniValue> id = UniValue::VNULL;
     std::string strMethod;
     UniValue params;
     bool fHelp;
     std::string URI;
     std::string authUser;
+    JSONRPCVersion m_json_version = JSONRPCVersion::V1_LEGACY;
 
     JSONRPCRequest() { id = NullUniValue; params = NullUniValue; fHelp = false; }
     void parse(const UniValue& valRequest);
+    [[nodiscard]] bool IsNotification() const { return !id.has_value() && m_json_version == JSONRPCVersion::V2; };
 };
 
 /** Query whether RPC is running */
@@ -201,7 +204,6 @@ bool StartRPC();
 void InterruptRPC();
 void StopRPC();
 UniValue JSONRPCExec(const JSONRPCRequest& jreq, bool catch_errors);
-std::string JSONRPCExecBatch(const UniValue& vReq);
 void RPCNotifyBlockChange(bool fInitialDownload, const CBlockIndex* pindex);
 
 #endif // PIVX_RPC_SERVER_H
