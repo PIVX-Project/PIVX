@@ -32,7 +32,7 @@ UniValue JSONRPCRequestObj(const std::string& strMethod, const UniValue& params,
     return request;
 }
 
-UniValue JSONRPCReplyObj(UniValue result, UniValue error, std::optional<UniValue> id, JSONRPCVersion jsonrpc_version)
+UniValue JSONRPCReplyObj(UniValue result, UniValue error, Optional<UniValue> id, JSONRPCVersion jsonrpc_version)
 {
     UniValue reply(UniValue::VOBJ);
     // Add JSON-RPC version number field in v2 only.
