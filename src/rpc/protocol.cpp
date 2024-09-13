@@ -32,22 +32,23 @@ UniValue JSONRPCRequestObj(const std::string& strMethod, const UniValue& params,
     return request;
 }
 
-UniValue JSONRPCReplyObj(const UniValue& result, const UniValue& error, const UniValue& id)
+UniValue JSONRPCReplyObj(UniValue result, UniValue error, std::optional<UniValue> id, JSONRPCVersion jsonrpc_version)
 {
     UniValue reply(UniValue::VOBJ);
-    if (!error.isNull())
-        reply.pushKV("result", NullUniValue);
-    else
-        reply.pushKV("result", result);
-    reply.pushKV("error", error);
-    reply.pushKV("id", id);
-    return reply;
-}
+    // Add JSON-RPC version number field in v2 only.
+    if (jsonrpc_version == JSONRPCVersion::V2) reply.pushKV("jsonrpc", "2.0");
 
-std::string JSONRPCReply(const UniValue& result, const UniValue& error, const UniValue& id)
-{
-    UniValue reply = JSONRPCReplyObj(result, error, id);
-    return reply.write() + "\n";
+    // Add both result and error fields in v1, even though one will be null.
+    // Omit the null field in v2.
+    if (error.isNull()) {
+        reply.pushKV("result", std::move(result));
+        if (jsonrpc_version == JSONRPCVersion::V1_LEGACY) reply.pushKV("error", NullUniValue);
+    } else {
+        if (jsonrpc_version == JSONRPCVersion::V1_LEGACY) reply.pushKV("result", NullUniValue);
+        reply.pushKV("error", std::move(error));
+    }
+    if (id.has_value()) reply.pushKV("id", std::move(id.value()));
+    return reply;
 }
 
 UniValue JSONRPCError(int code, const std::string& message)
