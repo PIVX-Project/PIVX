@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_OPTIONSMODEL_H
-#define BITCOIN_QT_OPTIONSMODEL_H
+#ifndef PIVX_QT_OPTIONSMODEL_H
+#define PIVX_QT_OPTIONSMODEL_H
 
 #include "amount.h"
 #include <cstdint>
@@ -126,4 +126,4 @@ Q_SIGNALS:
     void hideOrphansChanged(bool);
 };
 
-#endif // BITCOIN_QT_OPTIONSMODEL_H
+#endif // PIVX_QT_OPTIONSMODEL_H

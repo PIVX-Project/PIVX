@@ -5,8 +5,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_WALLET_H
-#define PIVX_WALLET_H
+#ifndef PIVX_WALLET_WALLET_H
+#define PIVX_WALLET_WALLET_H
 
 #include "addressbook.h"
 #include "amount.h"
@@ -1354,4 +1354,4 @@ public:
     }
 };
 
-#endif // PIVX_WALLET_H
+#endif // PIVX_WALLET_WALLET_H

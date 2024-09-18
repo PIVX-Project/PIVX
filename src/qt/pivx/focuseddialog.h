@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef FOCUSEDDIALOG_H
-#define FOCUSEDDIALOG_H
+#ifndef PIVX_QT_PIVX_FOCUSEDDIALOG_H
+#define PIVX_QT_PIVX_FOCUSEDDIALOG_H
 
 #include <QDialog>
 
@@ -23,4 +23,4 @@ protected:
     void keyPressEvent(QKeyEvent *e);
 };
 
-#endif // FOCUSEDDIALOG_H
+#endif // PIVX_QT_PIVX_FOCUSEDDIALOG_H

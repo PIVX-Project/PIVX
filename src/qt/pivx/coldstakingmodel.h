@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef COLDSTAKINGMODEL_H
-#define COLDSTAKINGMODEL_H
+#ifndef PIVX_QT_PIVX_COLDSTAKINGMODEL_H
+#define PIVX_QT_PIVX_COLDSTAKINGMODEL_H
 
 #include <QAbstractTableModel>
 #include "amount.h"
@@ -89,4 +89,4 @@ private:
     bool parseCSDelegation(const CTxOut& out, CSDelegation& ret, const QString& txId, const int utxoIndex);
 };
 
-#endif // COLDSTAKINGMODEL_H
+#endif // PIVX_QT_PIVX_COLDSTAKINGMODEL_H

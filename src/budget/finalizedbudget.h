@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef FINALIZED_BUDGET_H
-#define FINALIZED_BUDGET_H
+#ifndef PIVX_BUDGET_FINALIZEDBUDGET_H
+#define PIVX_BUDGET_FINALIZEDBUDGET_H
 
 #include "budget/budgetproposal.h"
 #include "budget/finalizedbudgetvote.h"
@@ -166,4 +166,4 @@ public:
 
 };
 
-#endif
+#endif // PIVX_BUDGET_FINALIZEDBUDGET_H

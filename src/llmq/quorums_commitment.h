@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_QUORUMS_COMMITMENT_H
-#define PIVX_QUORUMS_COMMITMENT_H
+#ifndef PIVX_LLMQ_QUORUMS_COMMITMENT_H
+#define PIVX_LLMQ_QUORUMS_COMMITMENT_H
 
 #include "bls/bls_wrapper.h"
 #include "consensus/params.h"
@@ -88,4 +88,4 @@ public:
 
 } // namespace llmq
 
-#endif // PIVX_QUORUMS_COMMITMENT_H
+#endif // PIVX_LLMQ_QUORUMS_COMMITMENT_H

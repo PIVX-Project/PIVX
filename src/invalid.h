@@ -21,4 +21,4 @@ namespace invalid_out
     bool LoadOutpoints();
 }
 
-#endif //PIVX_INVALID_H
+#endif // PIVX_INVALID_H

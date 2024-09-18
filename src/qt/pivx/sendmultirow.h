@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SENDMULTIROW_H
-#define SENDMULTIROW_H
+#ifndef PIVX_QT_PIVX_SENDMULTIROW_H
+#define PIVX_QT_PIVX_SENDMULTIROW_H
 
 #include <QWidget>
 #include <QPushButton>
@@ -98,4 +98,4 @@ private:
 
 };
 
-#endif // SENDMULTIROW_H
+#endif // PIVX_QT_PIVX_SENDMULTIROW_H

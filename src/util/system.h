@@ -9,8 +9,8 @@
  * Server/client environment: argument handling, config file parsing,
  * thread wrappers
  */
-#ifndef BITCOIN_UTIL_SYSTEM_H
-#define BITCOIN_UTIL_SYSTEM_H
+#ifndef PIVX_UTIL_SYSTEM_H
+#define PIVX_UTIL_SYSTEM_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/pivx-config.h"
@@ -317,4 +317,4 @@ private:
 
 } // namespace util
 
-#endif // BITCOIN_UTIL_SYSTEM_H
+#endif // PIVX_UTIL_SYSTEM_H

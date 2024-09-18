@@ -4,8 +4,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_COINCONTROL_H
-#define BITCOIN_COINCONTROL_H
+#ifndef PIVX_COINCONTROL_H
+#define PIVX_COINCONTROL_H
 
 #include "optional.h"
 #include "policy/feerate.h"
@@ -109,4 +109,4 @@ private:
     std::unordered_set<OutPointWrapper, SimpleOutpointHash> setSelected;
 };
 
-#endif // BITCOIN_COINCONTROL_H
+#endif // PIVX_COINCONTROL_H

@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MASTERNODEMAN_H
-#define MASTERNODEMAN_H
+#ifndef PIVX_MASTERNODEMAN_H
+#define PIVX_MASTERNODEMAN_H
 
 #include "activemasternode.h"
 #include "cyclingvector.h"
@@ -197,4 +197,4 @@ public:
 
 void ThreadCheckMasternodes();
 
-#endif
+#endif // PIVX_MASTERNODEMAN_H

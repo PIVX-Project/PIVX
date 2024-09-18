@@ -6,8 +6,8 @@
 /**
  * Functionality for communicating with Tor.
  */
-#ifndef BITCOIN_TORCONTROL_H
-#define BITCOIN_TORCONTROL_H
+#ifndef PIVX_TORCONTROL_H
+#define PIVX_TORCONTROL_H
 
 #include <string>
 
@@ -18,4 +18,4 @@ void StartTorControl();
 void InterruptTorControl();
 void StopTorControl();
 
-#endif /* BITCOIN_TORCONTROL_H */
+#endif // PIVX_TORCONTROL_H

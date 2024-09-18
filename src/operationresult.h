@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef OPERATIONRESULT_H
-#define OPERATIONRESULT_H
+#ifndef PIVX_OPERATIONRESULT_H
+#define PIVX_OPERATIONRESULT_H
 
 #include "optional.h"
 #include <string>
@@ -42,4 +42,4 @@ public:
 };
 
 
-#endif //OPERATIONRESULT_H
+#endif // PIVX_OPERATIONRESULT_H

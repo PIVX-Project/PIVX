@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef NAVMENUWIDGET_H
-#define NAVMENUWIDGET_H
+#ifndef PIVX_QT_PIVX_NAVMENUWIDGET_H
+#define PIVX_QT_PIVX_NAVMENUWIDGET_H
 
 #include <QWidget>
 #include "qt/pivx/pwidget.h"
@@ -49,4 +49,4 @@ private:
     bool init = false;
 };
 
-#endif // NAVMENUWIDGET_H
+#endif // PIVX_QT_PIVX_NAVMENUWIDGET_H

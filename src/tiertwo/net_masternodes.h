@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_NET_MASTERNODES_H
-#define PIVX_NET_MASTERNODES_H
+#ifndef PIVX_TIERTWO_NET_MASTERNODES_H
+#define PIVX_TIERTWO_NET_MASTERNODES_H
 
 #include "consensus/params.h"
 #include "net.h"
@@ -95,4 +95,4 @@ private:
     void doMaintenance();
 };
 
-#endif //PIVX_NET_MASTERNODES_H
+#endif // PIVX_TIERTWO_NET_MASTERNODES_H

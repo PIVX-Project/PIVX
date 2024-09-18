@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SETTINGSSIGNMESSAGEWIDGETS_H
-#define SETTINGSSIGNMESSAGEWIDGETS_H
+#ifndef PIVX_QT_PIVX_SETTINGS_SETTINGSSIGNMESSAGEWIDGETS_H
+#define PIVX_QT_PIVX_SETTINGS_SETTINGSSIGNMESSAGEWIDGETS_H
 
 #include <QWidget>
 #include "qt/pivx/pwidget.h"
@@ -41,4 +41,4 @@ private:
     void resizeMenu();
 };
 
-#endif // SETTINGSSIGNMESSAGEWIDGETS_H
+#endif // PIVX_QT_PIVX_SETTINGS_SETTINGSSIGNMESSAGEWIDGETS_H

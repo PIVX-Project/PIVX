@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SRC_MASTERNODECONFIG_H_
-#define SRC_MASTERNODECONFIG_H_
+#ifndef PIVX_MASTERNODECONFIG_H
+#define PIVX_MASTERNODECONFIG_H
 
 #include "sync.h"
 #include <string>
@@ -62,4 +62,4 @@ private:
 };
 
 
-#endif /* SRC_MASTERNODECONFIG_H_ */
+#endif // PIVX_MASTERNODECONFIG_H

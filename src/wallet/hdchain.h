@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_HDCHAIN_H
-#define PIVX_HDCHAIN_H
+#ifndef PIVX_WALLET_HDCHAIN_H
+#define PIVX_WALLET_HDCHAIN_H
 
 #include "key.h"
 
@@ -65,4 +65,4 @@ public:
     }
 };
 
-#endif // PIVX_HDCHAIN_H
+#endif // PIVX_WALLET_HDCHAIN_H

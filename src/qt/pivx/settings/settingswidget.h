@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SETTINGSWIDGET_H
-#define SETTINGSWIDGET_H
+#ifndef PIVX_QT_PIVX_SETTINGS_SETTINGSWIDGET_H
+#define PIVX_QT_PIVX_SETTINGS_SETTINGSWIDGET_H
 
 #include <QWidget>
 #include "qt/pivx/pwidget.h"
@@ -104,4 +104,4 @@ private:
     void selectMenu(QPushButton* btn);
 };
 
-#endif // SETTINGSWIDGET_H
+#endif // PIVX_QT_PIVX_SETTINGS_SETTINGSWIDGET_H

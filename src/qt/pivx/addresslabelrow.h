@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ADDRESSLABELROW_H
-#define ADDRESSLABELROW_H
+#ifndef PIVX_QT_PIVX_ADDRESSLABELROW_H
+#define PIVX_QT_PIVX_ADDRESSLABELROW_H
 
 #include <QWidget>
 
@@ -31,4 +31,4 @@ private:
     Ui::AddressLabelRow *ui;
 };
 
-#endif // ADDRESSLABELROW_H
+#endif // PIVX_QT_PIVX_ADDRESSLABELROW_H

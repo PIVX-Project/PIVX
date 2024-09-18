@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_QUORUMS_SIGNING_SHARES_H
-#define PIVX_QUORUMS_SIGNING_SHARES_H
+#ifndef PIVX_LLMQ_QUORUMS_SIGNING_SHARES_H
+#define PIVX_LLMQ_QUORUMS_SIGNING_SHARES_H
 
 #include "chainparams.h"
 #include "consensus/params.h"
@@ -231,4 +231,4 @@ extern std::unique_ptr<CSigSharesManager> quorumSigSharesManager;
 
 } // namespace llmq
 
-#endif // PIVX_QUORUMS_SIGNING_SHARES_H
+#endif // PIVX_LLMQ_QUORUMS_SIGNING_SHARES_H

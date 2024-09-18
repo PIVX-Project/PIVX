@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SALTEDHASHER_H
-#define SALTEDHASHER_H
+#ifndef PIVX_SALTEDHASHER_H
+#define PIVX_SALTEDHASHER_H
 
 #include "crypto/siphash.h"
 #include "uint256.h"
@@ -72,4 +72,4 @@ struct StaticSaltedHasher
     }
 };
 
-#endif//SALTEDHASHER_H
+#endif // PIVX_SALTEDHASHER_H

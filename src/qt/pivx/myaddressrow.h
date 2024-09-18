@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MYADDRESSROW_H
-#define MYADDRESSROW_H
+#ifndef PIVX_QT_PIVX_MYADDRESSROW_H
+#define PIVX_QT_PIVX_MYADDRESSROW_H
 
 #include <QWidget>
 
@@ -25,4 +25,4 @@ private:
     Ui::MyAddressRow *ui;
 };
 
-#endif // MYADDRESSROW_H
+#endif // PIVX_QT_PIVX_MYADDRESSROW_H

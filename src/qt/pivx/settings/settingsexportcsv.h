@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SETTINGSEXPORTCSV_H
-#define SETTINGSEXPORTCSV_H
+#ifndef PIVX_QT_PIVX_SETTINGS_SETTINGSEXPORTCSV_H
+#define PIVX_QT_PIVX_SETTINGS_SETTINGSEXPORTCSV_H
 
 #include <QWidget>
 #include "qt/pivx/pwidget.h"
@@ -33,4 +33,4 @@ private:
     QSortFilterProxyModel* addressFilter{nullptr};
 };
 
-#endif // SETTINGSEXPORTCSV_H
+#endif // PIVX_QT_PIVX_SETTINGS_SETTINGSEXPORTCSV_H

@@ -60,4 +60,4 @@ void DeleteTierTwo();
 void InterruptTierTwo();
 
 
-#endif //PIVX_TIERTWO_INIT_H
+#endif // PIVX_TIERTWO_INIT_H

@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_NETFULFILLEDMAN_H
-#define PIVX_NETFULFILLEDMAN_H
+#ifndef PIVX_TIERTWO_NETFULFILLEDMAN_H
+#define PIVX_TIERTWO_NETFULFILLEDMAN_H
 
 #include "bloom.h"
 #include "serialize.h"
@@ -65,4 +65,4 @@ public:
 
 extern CNetFulfilledRequestManager g_netfulfilledman;
 
-#endif // PIVX_NETFULFILLEDMAN_H
+#endif // PIVX_TIERTWO_NETFULFILLEDMAN_H

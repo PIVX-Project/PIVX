@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ADDNEWCONTACTDIALOG_H
-#define ADDNEWCONTACTDIALOG_H
+#ifndef PIVX_QT_PIVX_ADDNEWCONTACTDIALOG_H
+#define PIVX_QT_PIVX_ADDNEWCONTACTDIALOG_H
 
 #include "qt/pivx/focuseddialog.h"
 
@@ -33,4 +33,4 @@ private:
     const char* message = nullptr;
 };
 
-#endif // ADDNEWCONTACTDIALOG_H
+#endif // PIVX_QT_PIVX_ADDNEWCONTACTDIALOG_H

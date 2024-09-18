@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MNROW_H
-#define MNROW_H
+#ifndef PIVX_QT_PIVX_MNROW_H
+#define PIVX_QT_PIVX_MNROW_H
 
 #include <QWidget>
 
@@ -27,4 +27,4 @@ private:
     Ui::MNRow *ui;
 };
 
-#endif // MNROW_H
+#endif // PIVX_QT_PIVX_MNROW_H

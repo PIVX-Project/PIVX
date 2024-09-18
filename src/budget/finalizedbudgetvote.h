@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef FINALIZED_BUDGET_VOTE_H
-#define FINALIZED_BUDGET_VOTE_H
+#ifndef PIVX_BUDGET_FINALIZEDBUDGETVOTE_H
+#define PIVX_BUDGET_FINALIZEDBUDGETVOTE_H
 
 #include "messagesigner.h"
 #include "primitives/transaction.h"
@@ -51,4 +51,4 @@ public:
     SERIALIZE_METHODS(CFinalizedBudgetVote, obj) { READWRITE(obj.vin, obj.nBudgetHash, obj.nTime, obj.vchSig, obj.nMessVersion); }
 };
 
-#endif // FINALIZED_BUDGET_VOTE_H
+#endif // PIVX_BUDGET_FINALIZEDBUDGETVOTE_H

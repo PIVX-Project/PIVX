@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SENDCHANGEADDRESSDIALOG_H
-#define SENDCHANGEADDRESSDIALOG_H
+#ifndef PIVX_QT_PIVX_SENDCHANGEADDRESSDIALOG_H
+#define PIVX_QT_PIVX_SENDCHANGEADDRESSDIALOG_H
 
 #include "destination_io.h"
 #include "qt/pivx/focuseddialog.h"
@@ -43,4 +43,4 @@ private Q_SLOTS:
     void accept() override;
 };
 
-#endif // SENDCHANGEADDRESSDIALOG_H
+#endif // PIVX_QT_PIVX_SENDCHANGEADDRESSDIALOG_H

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef CONTACTDROPDOWNROW_H
-#define CONTACTDROPDOWNROW_H
+#ifndef PIVX_QT_PIVX_CONTACTDROPDOWNROW_H
+#define PIVX_QT_PIVX_CONTACTDROPDOWNROW_H
 
 #include <QWidget>
 
@@ -27,4 +27,4 @@ private:
     Ui::ContactDropdownRow *ui;
 };
 
-#endif // CONTACTDROPDOWNROW_H
+#endif // PIVX_QT_PIVX_CONTACTDROPDOWNROW_H

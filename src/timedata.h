@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_TIMEDATA_H
-#define BITCOIN_TIMEDATA_H
+#ifndef PIVX_TIMEDATA_H
+#define PIVX_TIMEDATA_H
 
 #include <algorithm>
 #include <assert.h>
@@ -79,4 +79,4 @@ void AddTimeData(const CNetAddr& ip, int64_t nTime, int nOffsetLimit);
 int64_t GetTimeSlot(const int64_t nTime);
 int64_t GetCurrentTimeSlot();
 
-#endif // BITCOIN_TIMEDATA_H
+#endif // PIVX_TIMEDATA_H

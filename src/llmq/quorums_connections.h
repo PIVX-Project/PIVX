@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_QUORUMS_CONNECTIONS_H
-#define PIVX_QUORUMS_CONNECTIONS_H
+#ifndef PIVX_LLMQ_QUORUMS_CONNECTIONS_H
+#define PIVX_LLMQ_QUORUMS_CONNECTIONS_H
 
 #include "consensus/params.h"
 #include "quorums.h"
@@ -29,4 +29,4 @@ void AddQuorumProbeConnections(Consensus::LLMQType llmqType, const CBlockIndex* 
 
 } // namespace llmq
 
-#endif // PIVX_QUORUMS_CONNECTIONS_H
+#endif // PIVX_LLMQ_QUORUMS_CONNECTIONS_H

@@ -38,4 +38,4 @@ namespace KeyIO {
 
 }
 
-#endif //PIVX_KEY_IO_H
+#endif // PIVX_KEY_IO_H
