@@ -35,6 +35,7 @@ ServiceProxy class:
 
 import base64
 import decimal
+from http import HTTPStatus
 import http.client
 import json
 import logging
@@ -46,6 +47,7 @@ HTTP_TIMEOUT = 300
 USER_AGENT = "AuthServiceProxy/0.1"
 
 log = logging.getLogger("BitcoinRPC")
+
 
 class JSONRPCException(Exception):
     def __init__(self, rpc_error):
@@ -61,6 +63,7 @@ def EncodeDecimal(o):
     if isinstance(o, decimal.Decimal):
         return str(o)
     raise TypeError(repr(o) + " is not JSON serializable")
+
 
 class AuthServiceProxy():
     __id_count = 0
