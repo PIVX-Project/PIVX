@@ -108,7 +108,7 @@ jobs:
           - name: macOS
             os: macos-12
             python-version: '3.8'
-            packages: llvm@13 autoconf automake berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
+            packages: llvm@13 autoconf automake berkeley-db@4 libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
             cc: $(brew --prefix llvm@13)/bin/clang
             cxx: $(brew --prefix llvm@13)/bin/clang++
@@ -116,7 +116,7 @@ jobs:
           - name: macOS-latest
             os: macos-14
             python-version: '3.10'
-            packages: llvm@14 autoconf automake berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
+            packages: llvm@14 autoconf automake berkeley-db@4 libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
             cc: $(brew --prefix llvm@14)/bin/clang
             cxx: $(brew --prefix llvm@14)/bin/clang++
@@ -165,11 +165,11 @@ jobs:
             if [ "${{ matrix.config.boost_root }}" = "true" ]; then
               export CI_BOOST=1
               if [ "${{ matrix.config.os }}" = "macos-14" ]; then
-                export LDFLAGS="-L/opt/homebrew/opt/boost@1.76/lib"
-                export CPPFLAGS="-I/opt/homebrew/opt/boost@1.76/include"
+                export LDFLAGS="-L/opt/homebrew/opt/boost/lib"
+                export CPPFLAGS="-I/opt/homebrew/opt/boost/include"
               else
-                export CPPFLAGS="-I/usr/local/opt/boost@1.76/include -I/usr/local/opt/berkeley-db@4/include"
-                export LDFLAGS="-L/usr/local/opt/boost@1.76/lib -L/usr/local/opt/berkeley-db@4/lib"
+                export CPPFLAGS="-I/usr/local/opt/boost/include -I/usr/local/opt/berkeley-db@4/include"
+                export LDFLAGS="-L/usr/local/opt/boost/lib -L/usr/local/opt/berkeley-db@4/lib"
               fi
             fi
           fi
@@ -228,24 +228,24 @@ jobs:
             id: macOS-nodepends
             os: macos-12
             python-version: '3.8'
-            packages: autoconf automake ccache berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
+            packages: autoconf automake ccache berkeley-db@4 libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
             functional_tests: true
             cc: clang
             cxx: clang++
-            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug --with-boost=/usr/local/opt/boost@1.76"
+            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug --with-boost=/usr/local/opt/boost"
 
           - name: arm64-macOS-latest
             id: macOS-nodepends-latest
             os: macos-14
             python-version: '3.10'
-            packages: autoconf automake ccache berkeley-db@4 libtool boost@1.76 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
+            packages: autoconf automake ccache berkeley-db@4 libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
             functional_tests: true
             goal: deploy
             cc: clang
             cxx: clang++
-            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug --with-boost=/opt/homebrew/opt/boost@1.76"
+            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug --with-boost=/opt/homebrew/opt/boost"
 
     steps:
       - name: Get Source
@@ -297,8 +297,8 @@ jobs:
           fi
 
           if [ "${{ matrix.config.os }}" = "macos-12" ]; then
-            export CPPFLAGS="-I/usr/local/opt/boost@1.76/include -I/usr/local/opt/berkeley-db@4/include"
-            export LDFLAGS="-L/usr/local/opt/boost@1.76/lib -L/usr/local/opt/berkeley-db@4/lib"
+            export CPPFLAGS="-I/usr/local/opt/boost/include -I/usr/local/opt/berkeley-db@4/include"
+            export LDFLAGS="-L/usr/local/opt/boost/lib -L/usr/local/opt/berkeley-db@4/lib"
           fi
 
           if [[ ${{ matrix.config.os }} = ubuntu* ]]; then
@@ -391,13 +391,13 @@ jobs:
             id: macOS-nodepends
             os: macos-12
             python-version: '3.8'
-            packages: berkeley-db@4 boost@1.76 miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
+            packages: berkeley-db@4 boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
           - name: arm64-macOS-latest
             id: macOS-nodepends-latest
             os: macos-14
             python-version: '3.10'
-            packages: berkeley-db@4 boost@1.76 miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
+            packages: berkeley-db@4 boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
     steps:
       - name: Initialize Python
