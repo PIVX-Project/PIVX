@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef EVONOTIFICATIONINTERFACE_H
-#define EVONOTIFICATIONINTERFACE_H
+#ifndef PIVX_EVO_EVONOTIFICATIONINTERFACE_H
+#define PIVX_EVO_EVONOTIFICATIONINTERFACE_H
 
 #include "validationinterface.h"
 
@@ -22,4 +22,4 @@ protected:
     void NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff) override;
 };
 
-#endif // EVONOTIFICATIONINTERFACE_H
+#endif // PIVX_EVO_EVONOTIFICATIONINTERFACE_H

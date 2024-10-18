@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SETTINGSFAQWIDGET_H
-#define SETTINGSFAQWIDGET_H
+#ifndef PIVX_QT_PIVX_SETTINGS_SETTINGSFAQWIDGET_H
+#define PIVX_QT_PIVX_SETTINGS_SETTINGSFAQWIDGET_H
 
 #include <QDialog>
 
@@ -70,4 +70,4 @@ private:
     }
 };
 
-#endif // SETTINGSFAQWIDGET_H
+#endif // PIVX_QT_PIVX_SETTINGS_SETTINGSFAQWIDGET_H

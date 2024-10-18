@@ -21,4 +21,4 @@ namespace bls {
 
 } // end bls namespace
 
-#endif //PIVX_BLS_KEY_IO_H
+#endif // PIVX_BLS_KEY_IO_H

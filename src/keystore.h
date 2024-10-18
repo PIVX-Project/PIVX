@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_KEYSTORE_H
-#define BITCOIN_KEYSTORE_H
+#ifndef PIVX_KEYSTORE_H
+#define PIVX_KEYSTORE_H
 
 #include "key.h"
 #include "pubkey.h"
@@ -156,4 +156,4 @@ typedef std::map<CKeyID, std::pair<CPubKey, std::vector<unsigned char> > > Crypt
 //! Sapling
 typedef std::map<libzcash::SaplingExtendedFullViewingKey, std::vector<unsigned char> > CryptedSaplingSpendingKeyMap;
 
-#endif // BITCOIN_KEYSTORE_H
+#endif // PIVX_KEYSTORE_H

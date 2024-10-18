@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef DESTINATION_IO_H
-#define DESTINATION_IO_H
+#ifndef PIVX_DESTINATION_IO_H
+#define PIVX_DESTINATION_IO_H
 
 #include "chainparams.h"
 #include "script/standard.h"
@@ -48,4 +48,4 @@ public:
     std::string ToString() const;
 };
 
-#endif //DESTINATION_IO_H
+#endif // PIVX_DESTINATION_IO_H

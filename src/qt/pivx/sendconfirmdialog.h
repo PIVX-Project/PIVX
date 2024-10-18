@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SENDCONFIRMDIALOG_H
-#define SENDCONFIRMDIALOG_H
+#ifndef PIVX_QT_PIVX_SENDCONFIRMDIALOG_H
+#define PIVX_QT_PIVX_SENDCONFIRMDIALOG_H
 
 #include "walletmodeltransaction.h"
 #include "qt/pivx/focuseddialog.h"
@@ -60,4 +60,4 @@ private:
     void setInputsType(CTransactionRef _tx);
 };
 
-#endif // SENDCONFIRMDIALOG_H
+#endif // PIVX_QT_PIVX_SENDCONFIRMDIALOG_H

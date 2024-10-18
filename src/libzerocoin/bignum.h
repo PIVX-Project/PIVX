@@ -4,8 +4,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_BIGNUM_H
-#define BITCOIN_BIGNUM_H
+#ifndef PIVX_LIBZEROCOIN_BIGNUM_H
+#define PIVX_LIBZEROCOIN_BIGNUM_H
 
 #if defined HAVE_CONFIG_H
 #include "config/pivx-config.h"
@@ -234,4 +234,4 @@ const CBigNum BN_ONE = CBigNum(1);
 const CBigNum BN_TWO = CBigNum(2);
 const CBigNum BN_THREE = CBigNum(3);
 
-#endif // BITCOIN_BIGNUM_H
+#endif // PIVX_LIBZEROCOIN_BIGNUM_H

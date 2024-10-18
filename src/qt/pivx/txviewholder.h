@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TXVIEWHOLDER_H
-#define TXVIEWHOLDER_H
+#ifndef PIVX_QT_PIVX_TXVIEWHOLDER_H
+#define PIVX_QT_PIVX_TXVIEWHOLDER_H
 
 #include "qt/pivx/furlistrow.h"
 #include "qt/pivx/txrow.h"
@@ -45,4 +45,4 @@ private:
     TxRow* txRow{nullptr};
 };
 
-#endif // TXVIEWHOLDER_H
+#endif // PIVX_QT_PIVX_TXVIEWHOLDER_H

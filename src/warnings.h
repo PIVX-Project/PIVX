@@ -18,4 +18,4 @@ std::string GetWarnings(const std::string& strFor);
 
 static const bool DEFAULT_TESTSAFEMODE = false;
 
-#endif //PIVX_WARNINGS_H
+#endif // PIVX_WARNINGS_H

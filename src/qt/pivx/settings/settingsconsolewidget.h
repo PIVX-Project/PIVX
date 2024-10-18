@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SETTINGSCONSOLEWIDGET_H
-#define SETTINGSCONSOLEWIDGET_H
+#ifndef PIVX_QT_PIVX_SETTINGS_SETTINGSCONSOLEWIDGET_H
+#define PIVX_QT_PIVX_SETTINGS_SETTINGSCONSOLEWIDGET_H
 
 #include <QWidget>
 #include "qt/pivx/pwidget.h"
@@ -71,4 +71,4 @@ private Q_SLOTS:
 
 };
 
-#endif // SETTINGSCONSOLEWIDGET_H
+#endif // PIVX_QT_PIVX_SETTINGS_SETTINGSCONSOLEWIDGET_H

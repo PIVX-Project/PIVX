@@ -4,6 +4,7 @@
 
 #ifndef PIVX_INVALID_OUTPOINTS_JSON_H
 #define PIVX_INVALID_OUTPOINTS_JSON_H
+
 #include <string>
 
 std::string LoadInvalidOutPoints()
@@ -157,4 +158,4 @@ std::string LoadInvalidOutPoints()
     return str;
 }
 
-#endif //PIVX_INVALID_OUTPOINTS_JSON_H
+#endif // PIVX_INVALID_OUTPOINTS_JSON_H

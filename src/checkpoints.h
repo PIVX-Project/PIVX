@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CHECKPOINTS_H
-#define BITCOIN_CHECKPOINTS_H
+#ifndef PIVX_CHECKPOINTS_H
+#define PIVX_CHECKPOINTS_H
 
 #include "uint256.h"
 
@@ -12,7 +12,7 @@
 
 class CBlockIndex;
 
-/** 
+/**
  * Block-chain checkpoints are compiled-in sanity checks.
  * They are updated every release or three.
  */
@@ -31,4 +31,4 @@ extern bool fEnabled;
 
 } //namespace Checkpoints
 
-#endif // BITCOIN_CHECKPOINTS_H
+#endif // PIVX_CHECKPOINTS_H

@@ -4,8 +4,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_RPCCLIENT_H
-#define BITCOIN_RPCCLIENT_H
+#ifndef PIVX_RPC_CLIENT_H
+#define PIVX_RPC_CLIENT_H
 
 #include <univalue.h>
 
@@ -20,4 +20,4 @@ UniValue RPCConvertNamedValues(const std::string& strMethod, const std::vector<s
  */
 UniValue ParseNonRFCJSONValue(const std::string& strVal);
 
-#endif // BITCOIN_RPCCLIENT_H
+#endif // PIVX_RPC_CLIENT_H

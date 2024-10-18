@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_QUORUMS_UTILS_H
-#define PIVX_QUORUMS_UTILS_H
+#ifndef PIVX_LLMQ_QUORUMS_UTILS_H
+#define PIVX_LLMQ_QUORUMS_UTILS_H
 
 #include "consensus/params.h"
 #include "unordered_lru_cache.h"
@@ -68,4 +68,4 @@ void InitQuorumsCache(CacheType& cache);
 
 } // namespace llmq
 
-#endif // PIVX_QUORUMS_UTILS_H
+#endif // PIVX_LLMQ_QUORUMS_UTILS_H

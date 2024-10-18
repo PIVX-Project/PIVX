@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef LOCKUNLOCK_H
-#define LOCKUNLOCK_H
+#ifndef PIVX_QT_PIVX_LOCKUNLOCK_H
+#define PIVX_QT_PIVX_LOCKUNLOCK_H
 
 #include <QWidget>
 #include "walletmodel.h"
@@ -46,4 +46,4 @@ private:
     bool isOnHover = false;
 };
 
-#endif // LOCKUNLOCK_H
+#endif // PIVX_QT_PIVX_LOCKUNLOCK_H

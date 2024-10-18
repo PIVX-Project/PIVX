@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_REVERSE_ITERATE_H
-#define BITCOIN_REVERSE_ITERATE_H
+#ifndef PIVX_REVERSE_ITERATE_H
+#define PIVX_REVERSE_ITERATE_H
 
 /**
  * Template used for reverse iteration in C++11 range-based for loops.
@@ -38,4 +38,4 @@ reverse_range<T> reverse_iterate(T &x)
     return reverse_range<T>(x);
 }
 
-#endif // BITCOIN_REVERSE_ITERATE_H
+#endif // PIVX_REVERSE_ITERATE_H

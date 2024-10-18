@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CONSENSUS_PARAMS_H
-#define BITCOIN_CONSENSUS_PARAMS_H
+#ifndef PIVX_CONSENSUS_PARAMS_H
+#define PIVX_CONSENSUS_PARAMS_H
 
 #include "amount.h"
 #include "libzerocoin/Params.h"
@@ -282,4 +282,4 @@ struct Params {
 };
 } // namespace Consensus
 
-#endif // BITCOIN_CONSENSUS_PARAMS_H
+#endif // PIVX_CONSENSUS_PARAMS_H

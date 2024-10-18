@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef EXPANDABLEBUTTON2_H
-#define EXPANDABLEBUTTON2_H
+#ifndef PIVX_QT_PIVX_EXPANDABLEBUTTON_H
+#define PIVX_QT_PIVX_EXPANDABLEBUTTON_H
 
 #include <QWidget>
 #include <QEvent>
@@ -69,4 +69,4 @@ private:
     bool keepExpanded = false;
 };
 
-#endif // EXPANDABLEBUTTON2_H
+#endif // PIVX_QT_PIVX_EXPANDABLEBUTTON_H

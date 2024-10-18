@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_QT_UTILITYDIALOG_H
-#define BITCOIN_QT_UTILITYDIALOG_H
+#ifndef PIVX_QT_UTILITYDIALOG_H
+#define PIVX_QT_UTILITYDIALOG_H
 
 #include <QDialog>
 #include <QObject>
@@ -48,4 +48,4 @@ protected:
     void closeEvent(QCloseEvent* event);
 };
 
-#endif // BITCOIN_QT_UTILITYDIALOG_H
+#endif // PIVX_QT_UTILITYDIALOG_H

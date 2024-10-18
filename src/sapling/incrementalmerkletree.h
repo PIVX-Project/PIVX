@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef INCREMENTALMERKLETREE_H_
-#define INCREMENTALMERKLETREE_H_
+#ifndef PIVX_SAPLING_INCREMENTALMERKLETREE_H
+#define PIVX_SAPLING_INCREMENTALMERKLETREE_H
 
 #include "uint256.h"
 #include "optional.h"
@@ -248,4 +248,4 @@ typedef libzcash::IncrementalMerkleTree<INCREMENTAL_MERKLE_TREE_DEPTH_TESTING, l
 typedef libzcash::IncrementalWitness<SAPLING_INCREMENTAL_MERKLE_TREE_DEPTH, libzcash::PedersenHash> SaplingWitness;
 typedef libzcash::IncrementalWitness<INCREMENTAL_MERKLE_TREE_DEPTH_TESTING, libzcash::PedersenHash> SaplingTestingWitness;
 
-#endif /* INCREMENTALMERKLETREE_H_ */
+#endif // PIVX_SAPLING_INCREMENTALMERKLETREE_H

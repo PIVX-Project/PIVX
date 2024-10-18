@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MNMODEL_H
-#define MNMODEL_H
+#ifndef PIVX_QT_PIVX_MNMODEL_H
+#define PIVX_QT_PIVX_MNMODEL_H
 
 #include <QAbstractTableModel>
 #include "masternodeconfig.h"
@@ -88,4 +88,4 @@ private:
     QMap<std::string, bool> collateralTxAccepted;
 };
 
-#endif // MNMODEL_H
+#endif // PIVX_QT_PIVX_MNMODEL_H

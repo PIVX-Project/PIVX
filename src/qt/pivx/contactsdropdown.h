@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef CONTACTSDROPDOWN_H
-#define CONTACTSDROPDOWN_H
+#ifndef PIVX_QT_PIVX_CONTACTSDROPDOWN_H
+#define PIVX_QT_PIVX_CONTACTSDROPDOWN_H
 
 #include "addresstablemodel.h"
 #include "qt/pivx/pwidget.h"
@@ -49,4 +49,4 @@ private Q_SLOTS:
     void handleClick(const QModelIndex &index);
 };
 
-#endif // CONTACTSDROPDOWN_H
+#endif // PIVX_QT_PIVX_CONTACTSDROPDOWN_H

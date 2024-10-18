@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SENDMEMODIALOG_H
-#define SENDMEMODIALOG_H
+#ifndef PIVX_QT_PIVX_SENDMEMODIALOG_H
+#define PIVX_QT_PIVX_SENDMEMODIALOG_H
 
 #include "qt/pivx/focuseddialog.h"
 
@@ -44,4 +44,4 @@ private Q_SLOTS:
     void accept() override;
 };
 
-#endif // SENDMEMODIALOG_H
+#endif // PIVX_QT_PIVX_SENDMEMODIALOG_H

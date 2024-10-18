@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MASTERNODEWIZARDDIALOG_H
-#define MASTERNODEWIZARDDIALOG_H
+#ifndef PIVX_QT_PIVX_MASTERNODEWIZARDDIALOG_H
+#define PIVX_QT_PIVX_MASTERNODEWIZARDDIALOG_H
 
 #include "qt/pivx/focuseddialog.h"
 #include "qt/pivx/snackbar.h"
@@ -51,4 +51,4 @@ private:
     void inform(const QString& text);
 };
 
-#endif // MASTERNODEWIZARDDIALOG_H
+#endif // PIVX_QT_PIVX_MASTERNODEWIZARDDIALOG_H

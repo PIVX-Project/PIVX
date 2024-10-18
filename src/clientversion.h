@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_CLIENTVERSION_H
-#define BITCOIN_CLIENTVERSION_H
+#ifndef PIVX_CLIENTVERSION_H
+#define PIVX_CLIENTVERSION_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config/pivx-config.h"
@@ -54,4 +54,4 @@ std::string FormatVersionFriendly();
 
 #endif // WINDRES_PREPROC
 
-#endif // BITCOIN_CLIENTVERSION_H
+#endif // PIVX_CLIENTVERSION_H

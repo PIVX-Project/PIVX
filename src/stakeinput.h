@@ -50,4 +50,4 @@ public:
 };
 
 
-#endif //PIVX_STAKEINPUT_H
+#endif // PIVX_STAKEINPUT_H

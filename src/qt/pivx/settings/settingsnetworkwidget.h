@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SETTINGSNETWORKWIDGET_H
-#define SETTINGSNETWORKWIDGET_H
+#ifndef PIVX_QT_PIVX_SETTINGS_SETTINGSNETWORKWIDGET_H
+#define PIVX_QT_PIVX_SETTINGS_SETTINGSNETWORKWIDGET_H
 
 #include <QWidget>
 #include <QDataWidgetMapper>
@@ -30,4 +30,4 @@ Q_SIGNALS:
     void saveSettings() {};
 };
 
-#endif // SETTINGSNETWORKWIDGET_H
+#endif // PIVX_QT_PIVX_SETTINGS_SETTINGSNETWORKWIDGET_H

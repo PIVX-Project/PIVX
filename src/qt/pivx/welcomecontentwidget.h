@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef WELCOMECONTENTWIDGET_H
-#define WELCOMECONTENTWIDGET_H
+#ifndef PIVX_QT_PIVX_WELCOMECONTENTWIDGET_H
+#define PIVX_QT_PIVX_WELCOMECONTENTWIDGET_H
 
 #include <QWidget>
 #include <QDialog>
@@ -49,4 +49,4 @@ private:
     void initLanguages();
 };
 
-#endif // WELCOMECONTENTWIDGET_H
+#endif // PIVX_QT_PIVX_WELCOMECONTENTWIDGET_H

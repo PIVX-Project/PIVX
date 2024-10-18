@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef TXROW_H
-#define TXROW_H
+#ifndef PIVX_QT_PIVX_TXROW_H
+#define PIVX_QT_PIVX_TXROW_H
 
 #include <QWidget>
 #include <QDateTime>
@@ -37,4 +37,4 @@ private:
     bool isDoubleAmount = false;
 };
 
-#endif // TXROW_H
+#endif // PIVX_QT_PIVX_TXROW_H

@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef FURSZY_PIVX_GUITRANSACTIONSUTILS_H
-#define FURSZY_PIVX_GUITRANSACTIONSUTILS_H
+#ifndef PIVX_QT_PIVX_GUITRANSACTIONSUTILS_H
+#define PIVX_QT_PIVX_GUITRANSACTIONSUTILS_H
 
 #include "walletmodel.h"
 #include "qt/pivx/pwidget.h"
@@ -33,4 +33,4 @@ namespace GuiTransactionsUtils {
 }
 
 
-#endif //FURSZY_PIVX_GUITRANSACTIONSUTILS_H
+#endif // PIVX_QT_PIVX_GUITRANSACTIONSUTILS_H

@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_ATTRIBUTES_H
-#define BITCOIN_ATTRIBUTES_H
+#ifndef PIVX_ATTRIBUTES_H
+#define PIVX_ATTRIBUTES_H
 
 #if defined(__has_cpp_attribute)
 #  if __has_cpp_attribute(nodiscard)
@@ -29,4 +29,4 @@
 #  define LIFETIMEBOUND
 #endif
 
-#endif // BITCOIN_ATTRIBUTES_H
+#endif // PIVX_ATTRIBUTES_H

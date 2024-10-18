@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SETTINGSMAINOPTIONSWIDGET_H
-#define SETTINGSMAINOPTIONSWIDGET_H
+#ifndef PIVX_QT_PIVX_SETTINGS_SETTINGSMAINOPTIONSWIDGET_H
+#define PIVX_QT_PIVX_SETTINGS_SETTINGSMAINOPTIONSWIDGET_H
 
 #include "qt/pivx/pwidget.h"
 
@@ -38,4 +38,4 @@ private:
     Ui::SettingsMainOptionsWidget *ui;
 };
 
-#endif // SETTINGSMAINOPTIONSWIDGET_H
+#endif // PIVX_QT_PIVX_SETTINGS_SETTINGSMAINOPTIONSWIDGET_H

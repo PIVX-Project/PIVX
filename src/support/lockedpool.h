@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_SUPPORT_LOCKEDPOOL_H
-#define BITCOIN_SUPPORT_LOCKEDPOOL_H
+#ifndef PIVX_SUPPORT_LOCKEDPOOL_H
+#define PIVX_SUPPORT_LOCKEDPOOL_H
 
 #include <list>
 #include <map>
@@ -238,4 +238,4 @@ private:
     static std::once_flag init_flag;
 };
 
-#endif // BITCOIN_SUPPORT_LOCKEDPOOL_H
+#endif // PIVX_SUPPORT_LOCKEDPOOL_H

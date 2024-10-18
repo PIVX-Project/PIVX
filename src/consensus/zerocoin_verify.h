@@ -34,4 +34,4 @@ bool ParseAndValidateZerocoinSpends(const Consensus::Params& consensus,
                                     CValidationState& state,
                                     std::vector<std::pair<CBigNum, uint256>>& vSpendsRet);
 
-#endif //PIVX_CONSENSUS_ZEROCOIN_VERIFY_H
+#endif // PIVX_CONSENSUS_ZEROCOIN_VERIFY_H

@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ACTIVEMASTERNODE_H
-#define ACTIVEMASTERNODE_H
+#ifndef PIVX_ACTIVEMASTERNODE_H
+#define PIVX_ACTIVEMASTERNODE_H
 
 #include "key.h"
 #include "evo/deterministicmns.h"
@@ -117,4 +117,4 @@ bool GetActiveMasternodeKeys(CTxIn& vin, Optional<CKey>& key, CBLSSecretKey& bls
 // Get active masternode BLS operator keys for DMN
 bool GetActiveDMNKeys(CBLSSecretKey& key, CTxIn& vin);
 
-#endif
+#endif // PIVX_ACTIVEMASTERNODE_H

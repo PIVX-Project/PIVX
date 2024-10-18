@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MESSAGESIGNER_H
-#define MESSAGESIGNER_H
+#ifndef PIVX_MESSAGESIGNER_H
+#define PIVX_MESSAGESIGNER_H
 
 #include "key.h"
 #include "primitives/transaction.h" // for CTxIn
@@ -93,4 +93,4 @@ public:
     bool CheckSignature(const CBLSPublicKey& pk) const;
 };
 
-#endif
+#endif // PIVX_MESSAGESIGNER_H

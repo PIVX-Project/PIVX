@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ZC_UTIL_H_
-#define ZC_UTIL_H_
+#ifndef PIVX_SAPLING_SAPLING_UTIL_H
+#define PIVX_SAPLING_SAPLING_UTIL_H
 
 #include "fs.h"
 #include "uint256.h"
@@ -20,4 +20,4 @@ uint64_t convertVectorToInt(const std::vector<bool>& v);
 // random number generator using sodium.
 uint256 random_uint256();
 
-#endif // ZC_UTIL_H_
+#endif // PIVX_SAPLING_SAPLING_UTIL_H

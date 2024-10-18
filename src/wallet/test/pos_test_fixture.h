@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_POS_TEST_FIXTURE_H
-#define PIVX_POS_TEST_FIXTURE_H
+#ifndef PIVX_WALLET_TEST_POS_TEST_FIXTURE_H
+#define PIVX_WALLET_TEST_POS_TEST_FIXTURE_H
 
 #include "test/test_pivx.h"
 
@@ -21,4 +21,4 @@ struct TestPoSChainSetup: public TestChainSetup
     ~TestPoSChainSetup();
 };
 
-#endif // PIVX_POS_TEST_FIXTURE_H
+#endif // PIVX_WALLET_TEST_POS_TEST_FIXTURE_H

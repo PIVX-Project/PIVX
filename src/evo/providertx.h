@@ -2,8 +2,8 @@
 // Copyright (c) 2021 The PIVX Core developers
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_PROVIDERTX_H
-#define PIVX_PROVIDERTX_H
+#ifndef PIVX_EVO_PROVIDERTX_H
+#define PIVX_EVO_PROVIDERTX_H
 
 #include "bls/bls_wrapper.h"
 #include "netaddress.h"
@@ -172,4 +172,4 @@ public:
 // If tx is a ProRegTx, return the collateral outpoint in outRet.
 bool GetProRegCollateral(const CTransactionRef& tx, COutPoint& outRet);
 
-#endif  //PIVX_PROVIDERTX_H
+#endif // PIVX_EVO_PROVIDERTX_H

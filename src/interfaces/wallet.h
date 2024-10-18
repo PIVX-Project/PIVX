@@ -51,4 +51,4 @@ private:
 
 } // namespace interfaces
 
-#endif // BITCOIN_INTERFACES_WALLET_H
+#endif // PIVX_INTERFACES_WALLET_H

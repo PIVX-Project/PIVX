@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef PIVX_CRYPTO_BLS_BATCHVERIFIER_H
-#define PIVX_CRYPTO_BLS_BATCHVERIFIER_H
+#ifndef PIVX_BLS_BLS_BATCHVERIFIER_H
+#define PIVX_BLS_BLS_BATCHVERIFIER_H
 
 #include "bls_worker.h"
 
@@ -237,4 +237,4 @@ private:
     }
 };
 
-#endif // PIVX_CRYPTO_BLS_BATCHVERIFIER_H
+#endif // PIVX_BLS_BLS_BATCHVERIFIER_H

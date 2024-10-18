@@ -178,4 +178,4 @@ private:
     const std::string m_reason;
 };
 
-#endif
+#endif // PIVX_TEST_TEST_PIVX_H

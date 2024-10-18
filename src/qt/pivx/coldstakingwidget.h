@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef COLDSTAKINGWIDGET_H
-#define COLDSTAKINGWIDGET_H
+#ifndef PIVX_QT_PIVX_COLDSTAKINGWIDGET_H
+#define PIVX_QT_PIVX_COLDSTAKINGWIDGET_H
 
 #include "qt/pivx/pwidget.h"
 #include "qt/pivx/furabstractlistitemdelegate.h"
@@ -128,4 +128,4 @@ private:
     void setCoinControlPayAmounts();
 };
 
-#endif // COLDSTAKINGWIDGET_H
+#endif // PIVX_QT_PIVX_COLDSTAKINGWIDGET_H

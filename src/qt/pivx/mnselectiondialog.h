@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef MN_SELECTION_DEFAULTDIALOG_H
-#define MN_SELECTION_DEFAULTDIALOG_H
+#ifndef PIVX_QT_PIVX_MNSELECTIONDIALOG_H
+#define PIVX_QT_PIVX_MNSELECTIONDIALOG_H
 
 #include <QDialog>
 #include <map>
@@ -62,4 +62,4 @@ private:
                     VoteInfo* ptrVoteInfo);
 };
 
-#endif // MN_SELECTION_DEFAULTDIALOG_H
+#endif // PIVX_QT_PIVX_MNSELECTIONDIALOG_H

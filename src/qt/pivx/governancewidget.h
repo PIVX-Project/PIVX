@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or https://www.opensource.org/licenses/mit-license.php.
 
-#ifndef GOVERNANCEWIDGET_H
-#define GOVERNANCEWIDGET_H
+#ifndef PIVX_QT_PIVX_GOVERNANCEWIDGET_H
+#define PIVX_QT_PIVX_GOVERNANCEWIDGET_H
 
 #include "qt/pivx/pwidget.h"
 #include "qt/pivx/proposalcard.h"
@@ -104,4 +104,4 @@ private:
     int calculateColumnsPerRow();
 };
 
-#endif // GOVERNANCEWIDGET_H
+#endif // PIVX_QT_PIVX_GOVERNANCEWIDGET_H

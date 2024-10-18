@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef OPTIONBUTTON_H
-#define OPTIONBUTTON_H
+#ifndef PIVX_QT_PIVX_OPTIONBUTTON_H
+#define PIVX_QT_PIVX_OPTIONBUTTON_H
 
 #include <QWidget>
 
@@ -36,4 +36,4 @@ private:
     Ui::OptionButton *ui;
 };
 
-#endif // OPTIONBUTTON_H
+#endif // PIVX_QT_PIVX_OPTIONBUTTON_H

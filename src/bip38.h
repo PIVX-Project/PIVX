@@ -2,8 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BITCOIN_BIP38_H
-#define BITCOIN_BIP38_H
+#ifndef PIVX_BIP38_H
+#define PIVX_BIP38_H
 
 #include "pubkey.h"
 #include "uint256.h"
@@ -37,4 +37,4 @@ bool BIP38_Decrypt(std::string strPassphrase, std::string strEncryptedKey, uint2
 
 std::string AddressToBip38Hash(const std::string& address);
 
-#endif // BIP38_H
+#endif // PIVX_BIP38_H
