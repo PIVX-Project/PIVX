@@ -311,7 +311,7 @@ void GovernanceModel::pollGovernanceChanged()
 
         // Try to add it
         if (!g_budgetman.AddProposal(*it)) {
-            LogPrint(BCLog::QT, "Cannot broadcast budget proposal - %s", it->IsInvalidReason());
+            LogPrint(BCLog::QT, "Cannot broadcast budget proposal - %s\n", it->IsInvalidReason());
             // Remove proposals which due a reorg lost their fee tx
             if (it->IsInvalidReason().find("Can't find collateral tx") != std::string::npos) {
                 // future: notify the user about it.

@@ -3290,7 +3290,7 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, CBlockInde
     if (pindex->nStatus & BLOCK_HAVE_DATA) {
         // TODO: deal better with duplicate blocks.
         // return state.DoS(20, error("AcceptBlock() : already have block %d %s", pindex->nHeight, pindex->GetBlockHash().ToString()), REJECT_DUPLICATE, "duplicate");
-        LogPrintf("%s : already have block %d %s", __func__, pindex->nHeight, pindex->GetBlockHash().ToString());
+        LogPrintf("%s : already have block %d %s\n", __func__, pindex->nHeight, pindex->GetBlockHash().ToString());
         return true;
     }
 
@@ -4059,7 +4059,7 @@ bool LoadExternalBlockFile(FILE* fileIn, FlatFilePos* dbp)
                     }
                 }
             } catch (const std::exception& e) {
-                LogPrintf("%s : Deserialize or I/O error - %s", __func__, e.what());
+                LogPrintf("%s : Deserialize or I/O error - %s\n", __func__, e.what());
             }
         }
     } catch (const std::runtime_error& e) {

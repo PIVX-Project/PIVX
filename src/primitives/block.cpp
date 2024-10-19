@@ -52,5 +52,5 @@ std::string CBlock::ToString() const
 
 void CBlock::print() const
 {
-    LogPrintf("%s", ToString());
+    LogPrintf("%s\n", ToString());
 }

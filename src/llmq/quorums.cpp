@@ -323,7 +323,7 @@ CQuorumCPtr CQuorumManager::GetQuorum(Consensus::LLMQType llmqType, const uint25
         pindexQuorum = LookupBlockIndex(quorumHash);
 
         if (!pindexQuorum) {
-            LogPrint(BCLog::LLMQ, "CQuorumManager::%s -- block %s not found", __func__, quorumHash.ToString());
+            LogPrint(BCLog::LLMQ, "CQuorumManager::%s -- block %s not found.\n", __func__, quorumHash.ToString());
             return nullptr;
         }
     }

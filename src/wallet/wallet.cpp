@@ -3528,7 +3528,7 @@ CWallet::CommitResult CWallet::CommitTransaction(CTransactionRef tx, CReserveKey
 
     {
         LOCK2(cs_main, cs_wallet);
-        LogPrintf("%s:\n%s", __func__, wtxNew.tx->ToString());
+        LogPrintf("%s: %s\n", __func__, wtxNew.tx->ToString());
         {
             // Take key pair from key pool so it won't be used again
             if (opReservekey) opReservekey->KeepKey();
