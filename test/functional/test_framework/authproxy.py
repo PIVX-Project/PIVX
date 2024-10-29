@@ -137,21 +137,27 @@ class AuthServiceProxy():
     def __call__(self, *args, **argsn):
         postdata = json.dumps(self.get_request(*args, **argsn), default=EncodeDecimal, ensure_ascii=self.ensure_ascii)
         response, status = self._request('POST', self.__url.path, postdata.encode('utf-8'))
-        if response['error'] is not None:
-            raise JSONRPCException(response['error'])
+
+        error_response = response['error']
+        if 'code' not in error_response:
+            error_response['code'] = -1
+            raise JSONRPCException({'error': error_response, 'status': status})
         elif 'result' not in response:
             raise JSONRPCException({
                 'code': -343, 'message': 'missing JSON-RPC result'})
+        elif status != HTTPStatus.OK:
+            raise JSONRPCException({
+                'code': -342, 'message': 'non-200 HTTP status code but no JSON-RPC error'})
         else:
             assert response['jsonrpc'] == '2.0'
             if status != HTTPStatus.OK:
                 raise JSONRPCException({
-                    'code': -342, 'message': 'non-200 HTTP status code'}, status)
+                    'code': -342, 'message': 'non-200 HTTP status code'})
             if 'error' in response:
-                raise JSONRPCException(response['error'], status)
+                raise JSONRPCException({'error': response['error'], 'status': status})
             elif 'result' not in response:
                 raise JSONRPCException({
-                    'code': -343, 'message': 'missing JSON-RPC 2.0 result and error'}, status)
+                    'code': -343, 'message': 'missing JSON-RPC 2.0 result and error'})
             return response['result']
 
     def batch(self, rpc_call_list):
@@ -195,7 +201,8 @@ class AuthServiceProxy():
             log.debug("<-%s- [%.6f] %s" % (response["id"], elapsed, json.dumps(response["result"], default=EncodeDecimal, ensure_ascii=self.ensure_ascii)))
         else:
             log.debug("<-- [%.6f] %s" % (elapsed, responsedata))
-        return response
+        return response, http_response.status
+
 
     def __truediv__(self, relative_uri):
         return AuthServiceProxy("{}/{}".format(self.__service_url, relative_uri), self._service_name, connection=self.__conn)
