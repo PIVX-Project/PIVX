@@ -339,6 +339,20 @@ void CChainLocksHandler::EnforceBestChainLock()
     if (activateNeeded && !ActivateBestChain(state)) {
         LogPrintf("CChainLocksHandler::%s -- ActivateBestChain failed: %s\n", __func__, state.GetRejectReason());
     }
+
+    const CBlockIndex* pindexNotify = nullptr;
+    {
+        LOCK(cs_main);
+        if (lastNotifyChainLockBlockIndex != currentBestChainLockBlockIndex &&
+            chainActive.Tip()->GetAncestor(currentBestChainLockBlockIndex->nHeight) == currentBestChainLockBlockIndex) {
+            lastNotifyChainLockBlockIndex = currentBestChainLockBlockIndex;
+            pindexNotify = currentBestChainLockBlockIndex;
+        }
+    }
+
+    if (pindexNotify) {
+        GetMainSignals().NotifyChainLock(pindexNotify, clsig);
+    }
 }
 
 void CChainLocksHandler::HandleNewRecoveredSig(const llmq::CRecoveredSig& recoveredSig)

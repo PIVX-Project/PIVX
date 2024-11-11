@@ -34,6 +34,12 @@ public:
     bool NotifyBlock(const CBlockIndex *pindex);
 };
 
+class CZMQPublishHashChainLockNotifier : public CZMQAbstractPublishNotifier
+{
+public:
+    bool NotifyChainLock(const CBlockIndex *pindex, const llmq::CChainLockSig& clsig) override;
+};
+
 class CZMQPublishHashTransactionNotifier : public CZMQAbstractPublishNotifier
 {
 public:
@@ -44,6 +50,18 @@ class CZMQPublishRawBlockNotifier : public CZMQAbstractPublishNotifier
 {
 public:
     bool NotifyBlock(const CBlockIndex *pindex);
+};
+
+class CZMQPublishRawChainLockNotifier : public CZMQAbstractPublishNotifier
+{
+public:
+    bool NotifyChainLock(const CBlockIndex *pindex, const llmq::CChainLockSig& clsig) override;
+};
+
+class CZMQPublishRawChainLockSigNotifier : public CZMQAbstractPublishNotifier
+{
+public:
+    bool NotifyChainLock(const CBlockIndex *pindex, const llmq::CChainLockSig& clsig) override;
 };
 
 class CZMQPublishRawTransactionNotifier : public CZMQAbstractPublishNotifier

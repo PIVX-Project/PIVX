@@ -1249,6 +1249,7 @@ public:
 
     /** notify stake-split threshold changed */
     boost::signals2::signal<void (const CAmount stakeSplitThreshold)> NotifySSTChanged;
+    void NotifyChainLock(const CBlockIndex* pindexChainLock, const llmq::CChainLockSig& clsig) override;
 };
 
 /** A key allocated from the key pool. */

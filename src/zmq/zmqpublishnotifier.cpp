@@ -11,10 +11,13 @@
 
 static std::multimap<std::string, CZMQAbstractPublishNotifier*> mapPublishNotifiers;
 
-static const char *MSG_HASHBLOCK  = "hashblock";
-static const char *MSG_HASHTX     = "hashtx";
-static const char *MSG_RAWBLOCK   = "rawblock";
-static const char *MSG_RAWTX      = "rawtx";
+static const char *MSG_HASHBLOCK     = "hashblock";
+static const char *MSG_HASHCHAINLOCK = "hashchainlock";
+static const char *MSG_HASHTX        = "hashtx";
+static const char *MSG_RAWBLOCK      = "rawblock";
+static const char *MSG_RAWCHAINLOCK  = "rawchainlock";
+static const char *MSG_RAWCLSIG      = "rawchainlocksig";
+static const char *MSG_RAWTX         = "rawtx";
 
 // Internal function to send multipart message
 static int zmq_send_multipart(void *sock, const void* data, size_t size, ...)
@@ -155,6 +158,16 @@ bool CZMQPublishHashBlockNotifier::NotifyBlock(const CBlockIndex *pindex)
     return SendMessage(MSG_HASHBLOCK, data, 32);
 }
 
+bool CZMQPublishHashChainLockNotifier::NotifyChainLock(const CBlockIndex *pindex, const llmq::CChainLockSig& clsig)
+{
+    uint256 hash = pindex->GetBlockHash();
+    LogPrint(BCLog::ZMQ, "zmq: Publish hashchainlock %s\n", hash.GetHex());
+    char data[32];
+    for (unsigned int i = 0; i < 32; i++)
+        data[31 - i] = hash.begin()[i];
+    return SendMessage(MSG_HASHCHAINLOCK, data, 32);
+}
+
 bool CZMQPublishHashTransactionNotifier::NotifyTransaction(const CTransaction &transaction)
 {
     uint256 hash = transaction.GetHash();
@@ -183,6 +196,49 @@ bool CZMQPublishRawBlockNotifier::NotifyBlock(const CBlockIndex *pindex)
     }
 
     return SendMessage(MSG_RAWBLOCK, &(*ss.begin()), ss.size());
+}
+
+bool CZMQPublishRawChainLockNotifier::NotifyChainLock(const CBlockIndex *pindex, const llmq::CChainLockSig& clsig)
+{
+    LogPrint(BCLog::ZMQ, "zmq: Publish rawchainlock %s\n", pindex->GetBlockHash().GetHex());
+
+    const Consensus::Params& consensusParams = Params().GetConsensus();
+    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+    {
+        LOCK(cs_main);
+        CBlock block;
+        if(!ReadBlockFromDisk(block, pindex, consensusParams))
+        {
+            zmqError("Can't read block from disk");
+            return false;
+        }
+
+        ss << block;
+    }
+
+    return SendMessage(MSG_RAWCHAINLOCK, &(*ss.begin()), ss.size());
+}
+
+bool CZMQPublishRawChainLockSigNotifier::NotifyChainLock(const CBlockIndex *pindex, const llmq::CChainLockSig& clsig)
+{
+    LogPrint(BCLog::ZMQ, "zmq: Publish rawchainlocksig %s\n", pindex->GetBlockHash().GetHex());
+
+    const Consensus::Params& consensusParams = Params().GetConsensus();
+    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+    {
+        LOCK(cs_main);
+        CBlock block;
+        if(!ReadBlockFromDisk(block, pindex, consensusParams))
+        {
+            zmqError("Can't read block from disk");
+            return false;
+        }
+
+        ss << block;
+        ss << clsig;
+    }
+
+    return SendMessage(MSG_RAWCLSIG, &(*ss.begin()), ss.size());
 }
 
 bool CZMQPublishRawTransactionNotifier::NotifyTransaction(const CTransaction &transaction)
