@@ -9,6 +9,7 @@
 #include "util/blockstatecatcher.h"
 #include "blocksignature.h"
 #include "consensus/merkle.h"
+#include "keystore.h"
 #include "primitives/block.h"
 #include "script/sign.h"
 #include "test/util/blocksutil.h"
@@ -26,8 +27,10 @@ void reSignTx(CMutableTransaction& mtx,
     for (int index=0; index < (int) txPrevOutputs.size(); index++) {
         const CTxOut& prevOut = txPrevOutputs.at(index);
         SignatureData sigdata;
+        const CKeyStore& keys = *wallet;
         BOOST_ASSERT(ProduceSignature(
-                TransactionSignatureCreator(wallet, &txNewConst, index, prevOut.nValue, SIGHASH_ALL),
+                keys,
+                TransactionSignatureCreator(&txNewConst, index, prevOut.nValue, SIGHASH_ALL),
                 prevOut.scriptPubKey,
                 sigdata,
                 txNewConst.GetRequiredSigVersion(),

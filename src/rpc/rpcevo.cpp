@@ -355,7 +355,9 @@ static OperationResult SignTransaction(CWallet* const pwallet, CMutableTransacti
         SigVersion sv = tx.GetRequiredSigVersion();
         txin.scriptSig.clear();
         SignatureData sigdata;
-        if (!ProduceSignature(MutableTransactionSignatureCreator(pwallet, &tx, i, coin.out.nValue, SIGHASH_ALL),
+        const CKeyStore& keys = *pwallet;
+        if (!ProduceSignature(keys,
+                              MutableTransactionSignatureCreator(&tx, i, coin.out.nValue, SIGHASH_ALL),
                               coin.out.scriptPubKey, sigdata, sv, false)) {
             return errorOut(TxInErrorToString(i, txin, "signature failed"));
         }
