@@ -19,6 +19,9 @@
 #include "primitives/block.h"
 #include "primitives/transaction.h"
 
+#include "llmq/quorums_chainlocks.h"
+#include "llmq/quorums_instantsend.h"
+
 void zmqError(const char *str);
 
 #endif // PIVX_ZMQ_ZMQCONFIG_H
