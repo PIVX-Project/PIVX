@@ -6,6 +6,7 @@
 #ifndef PIVX_LLMQ_QUORUMS_H
 #define PIVX_LLMQ_QUORUMS_H
 
+#include "llmq/quorums_commitment.h"
 #include "bls/bls_worker.h"
 #include "bls/bls_wrapper.h"
 #include "consensus/params.h"
@@ -35,11 +36,11 @@ class CQuorum
 
 public:
     const Consensus::LLMQParams& params;
-    uint256 minedBlockHash;
     const CBlockIndex* pindexQuorum;
+    CFinalCommitment qc;
+    int height;
+    uint256 minedBlockHash;
     std::vector<CDeterministicMNCPtr> members;
-    std::vector<bool> validMembers;
-    CBLSPublicKey quorumPublicKey;
 
     // These are only valid when we either participated in the DKG or fully watched it
     BLSVerificationVectorPtr quorumVvec;
@@ -55,7 +56,7 @@ private:
 public:
     CQuorum(const Consensus::LLMQParams& _params, CBLSWorker& _blsWorker) : params(_params), blsCache(_blsWorker), stopCachePopulatorThread(false) {}
     ~CQuorum();
-    void Init(const uint256& minedBlockHash, const CBlockIndex* pindexQuorum, const std::vector<CDeterministicMNCPtr>& members, const std::vector<bool>& validMembers, const CBLSPublicKey& quorumPublicKey);
+    void Init(const CFinalCommitment& _qc, const CBlockIndex* pindexQuorum, int _height, const uint256& _minedBlockHash, const std::vector<CDeterministicMNCPtr>& _members);
 
     bool IsMember(const uint256& proTxHash) const;
     bool IsValidMember(const uint256& proTxHash) const;
