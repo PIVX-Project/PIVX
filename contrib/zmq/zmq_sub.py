@@ -14,7 +14,6 @@ zmqSubSocket.setsockopt(zmq.SUBSCRIBE, b"hashtx")
 zmqSubSocket.setsockopt(zmq.SUBSCRIBE, b"hashtxlock")
 zmqSubSocket.setsockopt(zmq.SUBSCRIBE, b"rawblock")
 zmqSubSocket.setsockopt(zmq.SUBSCRIBE, b"rawtx")
-zmqSubSocket.setsockopt(zmq.SUBSCRIBE, b"rawtxlock")
 zmqSubSocket.connect("tcp://127.0.0.1:%i" % port)
 
         self.zmqSubSocket = self.zmqContext.socket(zmq.SUB)
@@ -26,8 +25,6 @@ zmqSubSocket.connect("tcp://127.0.0.1:%i" % port)
         self.zmqSubSocket.setsockopt_string(zmq.SUBSCRIBE, "rawchainlock")
         self.zmqSubSocket.setsockopt_string(zmq.SUBSCRIBE, "rawchainlocksig")
         self.zmqSubSocket.setsockopt_string(zmq.SUBSCRIBE, "rawtx")
-        self.zmqSubSocket.setsockopt_string(zmq.SUBSCRIBE, "rawtxlock")
-        self.zmqSubSocket.setsockopt_string(zmq.SUBSCRIBE, "rawtxlocksig")
         self.zmqSubSocket.connect("tcp://127.0.0.1:%i" % port)
 
     async def handle(self) :
@@ -61,12 +58,6 @@ zmqSubSocket.connect("tcp://127.0.0.1:%i" % port)
         elif topic == b"rawtx":
             print('- RAW TX ('+sequence+') -')
             print(body.hex())
-        elif topic == "rawtxlock":
-            print('- RAW TX LOCK ('+sequence+') -')
-            print(binascii.hexlify(body).decode("utf-8"))
-        elif topic == b"rawtxlocksig":
-            print('- RAW TX LOCK SIG ('+sequence+') -')
-            print(binascii.hexlify(body).decode("utf-8"))
         # schedule ourselves to receive the next message
         asyncio.ensure_future(self.handle())
 
