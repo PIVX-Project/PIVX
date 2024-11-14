@@ -183,7 +183,6 @@ void CZMQNotificationInterface::NotifyTransactionLock(const CTransaction &tx, co
     }
 }
 
-
 void CZMQNotificationInterface::BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex* pindexConnected)
 {
     for (const CTransactionRef& ptx : pblock->vtx) {
