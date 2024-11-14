@@ -89,7 +89,6 @@ public:
     virtual void AcceptedBlockHeader(const CBlockIndex* pindexNew) {}
 
 protected:
-    virtual void AcceptedBlockHeader(const CBlockIndex *pindexNew) {}
     virtual void NotifyHeaderTip(const CBlockIndex *pindexNew, bool fInitialDownload) {}
     virtual void UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload) {}
     virtual void SyncTransaction(const CTransaction &tx, const CBlockIndex *pindex, int posInBlock) {}
@@ -102,8 +101,6 @@ protected:
     friend void ::RegisterSharedValidationInterface(std::shared_ptr<CValidationInterface>);
     friend void ::UnregisterValidationInterface(CValidationInterface*);
     friend void ::UnregisterAllValidationInterfaces();
-    /** Notifies listeners of updated deterministic masternode list */
-    virtual void NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff) {}
 };
 
 struct CMainSignals {
@@ -145,8 +142,7 @@ struct CMainSignals {
     /** Notifies listeners that a block has been successfully mined */
     boost::signals2::signal<void (const uint256 &)> BlockFound;
     /** Notifies listeners of a ChainLock. */
-    /** Notifies listeners that a key for mining is required (coinbase) */
-    boost::signals2::signal<void (boost::shared_ptr<CReserveScript>&)> ScriptForMining;
+    boost::signals2::signal<void (const CBlockIndex* pindex, const llmq::CChainLockSig& clsig)> NotifyChainLock;
 };
 
 CMainSignals& GetMainSignals();
