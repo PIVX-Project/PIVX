@@ -116,13 +116,13 @@ void RegisterValidationInterface(CValidationInterface* pwalletIn)
     RegisterSharedValidationInterface({pwalletIn, [](CValidationInterface*) {}});
 }
 
-void RegisterValidationInterface(CValidationInterface* pwalletIn) {
+void UnregisterValidationInterface(CValidationInterface* pwalletIn) {
     if (g_signals.m_internals) {
         g_signals.m_internals->m_connMainSignals.erase(pwalletIn);
     }
 }
 
-void UnregisterValidationInterface(CValidationInterface* pwalletIn) {
+void UnregisterSharedValidationInterface(std::shared_ptr<CValidationInterface> pwalletIn) {
     UnregisterValidationInterface(pwalletIn.get());
 }
 
