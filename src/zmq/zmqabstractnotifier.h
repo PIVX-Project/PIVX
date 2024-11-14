@@ -12,7 +12,6 @@ class CZMQAbstractNotifier;
 
 namespace llmq {
     class CChainLockSig;
-    class CInstantSendLock;
 }
 
 typedef CZMQAbstractNotifier* (*CZMQNotifierFactory)();
