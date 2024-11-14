@@ -28,7 +28,6 @@ enum class MemPoolRemovalReason;
 
 namespace llmq {
     class CChainLockSig;
-    class CInstantSendLock;
 }
 
 // These functions dispatch to one or all registered wallets
