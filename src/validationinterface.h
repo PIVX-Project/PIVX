@@ -88,11 +88,73 @@ public:
     virtual void AcceptedBlockHeader(const CBlockIndex* pindexNew) {}
 
 protected:
-    virtual void NotifyHeaderTip(const CBlockIndex *pindexNew, bool fInitialDownload) {}
-    virtual void UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload) {}
-    virtual void SyncTransaction(const CTransaction &tx, const CBlockIndex *pindex, int posInBlock) {}
-    virtual void NotifyChainLock(const CBlockIndex* pindex, const llmq::CChainLockSig& clsig) {}
-    virtual void NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff) {}
+   /**
+     * Notifies listeners when the block chain tip advances.
+     *
+     * When multiple blocks are connected at once, UpdatedBlockTip will be called on the final tip
+     * but may not be called on every intermediate tip. If the latter behavior is desired,
+     * subscribe to BlockConnected() instead.
+     *
+     * Called on a background thread.
+     */
+    virtual void UpdatedBlockTip(const CBlockIndex* pindexNew, const CBlockIndex* pindexFork, bool fInitialDownload) {}
+    /**
+     * Notifies listeners of a transaction having been added to mempool.
+     *
+     * Called on a background thread.
+     */
+    virtual void TransactionAddedToMempool(const CTransactionRef &ptxn) {}
+    /**
+     * Notifies listeners of a transaction leaving mempool.
+     *
+     * This notification fires for transactions that are removed from the
+     * mempool for the following reasons:
+     *
+     * - EXPIRY (expired from mempool after -mempoolexpiry hours)
+     * - SIZELIMIT (removed in size limiting if the mempool exceeds -maxmempool megabytes)
+     * - REORG (removed during a reorg)
+     * - CONFLICT (removed because it conflicts with in-block transaction)
+     * - REPLACED (removed due to RBF replacement) -- not supported yet --
+     *
+     * This does not fire for transactions that are removed from the mempool
+     * because they have been included in a block. Any client that is interested
+     * in transactions removed from the mempool for inclusion in a block can learn
+     * about those transactions from the BlockConnected notification.
+     *
+     * Transactions that are removed from the mempool because they conflict
+     * with a transaction in the new block will have
+     * TransactionRemovedFromMempool events fired *before* the BlockConnected
+     * event is fired. If multiple blocks are connected in one step, then the
+     * ordering could be:
+     *
+     * - TransactionRemovedFromMempool(tx1 from block A)
+     * - TransactionRemovedFromMempool(tx2 from block A)
+     * - TransactionRemovedFromMempool(tx1 from block B)
+     * - TransactionRemovedFromMempool(tx2 from block B)
+     * - BlockConnected(A)
+     * - BlockConnected(B)
+     *
+     * Called on a background thread.
+     */
+    virtual void TransactionRemovedFromMempool(const CTransactionRef &ptx, MemPoolRemovalReason reason) {}
+    /**
+     * Notifies listeners of a block being connected.
+     * Provides a vector of transactions evicted from the mempool as a result.
+     *
+     * Called on a background thread.
+     */
+    virtual void BlockConnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex) {}
+    /**
+     * Notifies listeners of a block being disconnected
+     *
+     * Called on a background thread.
+     */
+    virtual void BlockDisconnected(const std::shared_ptr<const CBlock> &block, const uint256& blockHash, int nBlockHeight, int64_t blockTime) {}
+    /**
+     * Notifies listeners of the new active block chain on-disk.
+     *
+     * Called on a background thread.
+     */
     virtual void SetBestChain(const CBlockLocator &locator) {}
     /** Tells listeners to broadcast their data. */
     virtual void ResendWalletTransactions(CConnman* connman) {}
@@ -100,48 +162,41 @@ protected:
     friend void ::RegisterSharedValidationInterface(std::shared_ptr<CValidationInterface>);
     friend void ::UnregisterValidationInterface(CValidationInterface*);
     friend void ::UnregisterAllValidationInterfaces();
+    virtual void NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff) {}
+    virtual void NotifyChainLock(const CBlockIndex* pindex, const llmq::CChainLockSig& clsig) {}
 };
 
-struct CMainSignals {
-    /** Notifies listeners of accepted block header */
-    boost::signals2::signal<void (const CBlockIndex *)> AcceptedBlockHeader;
-    /** Notifies listeners of updated block header tip */
-    boost::signals2::signal<void (const CBlockIndex *, bool fInitialDownload)> NotifyHeaderTip;
-    /** Notifies listeners of updated block chain tip */
-    boost::signals2::signal<void (const CBlockIndex *, const CBlockIndex *, bool fInitialDownload)> UpdatedBlockTip;
-    /** A posInBlock value for SyncTransaction calls for transactions not
-     * included in connected blocks such as transactions removed from mempool,
-     * accepted to mempool or appearing in disconnected blocks.*/
-    static const int SYNC_TRANSACTION_NOT_IN_BLOCK = -1;
-    /** Notifies listeners of updated transaction data (transaction, and
-     * optionally the block it is found in). Called with block data when
-     * transaction is included in a connected block, and without block data when
-     * transaction was accepted to mempool, removed from mempool (only when
-     * removal was due to conflict from connected block), or appeared in a
-     * disconnected block.*/
-    boost::signals2::signal<void (const CTransaction &, const CBlockIndex *pindex, int posInBlock)> SyncTransaction;
-    boost::signals2::signal<void (const CBlockIndex* pindex, const llmq::CChainLockSig& clsig)> NotifyChainLock;
-    /** Notifies listeners that the MN list changed */
-    boost::signals2::signal<void(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff)> NotifyMasternodeListChanged;
-    /** Notifies listeners of an updated transaction without new data (for now: a coinbase potentially becoming visible). */
-    boost::signals2::signal<bool (const uint256 &)> UpdatedTransaction;
-    /** Notifies listeners of a new active block chain. */
-    boost::signals2::signal<void (const CBlockLocator &)> SetBestChain;
-    /** Notifies listeners about an inventory item being seen on the network. */
-    boost::signals2::signal<void (const uint256 &)> Inventory;
-    /** Tells listeners to broadcast their data. */
-    boost::signals2::signal<void (int64_t nBestBlockTime, CConnman* connman)> Broadcast;
-    /**
-     * Notifies listeners of a block validation result.
-     * If the provided CValidationState IsValid, the provided block
-     * is guaranteed to be the current best block at the time the
-     * callback was generated (not necessarily now)
-     */
-    boost::signals2::signal<void (const CBlock&, const CValidationState&)> BlockChecked;
-    /** Notifies listeners that a block has been successfully mined */
-    boost::signals2::signal<void (const uint256 &)> BlockFound;
-    /** Notifies listeners of a ChainLock. */
-    boost::signals2::signal<void (const CBlockIndex* pindex, const llmq::CChainLockSig& clsig)> NotifyChainLock;
+struct MainSignalsInstance;
+class CMainSignals {
+private:
+    std::unique_ptr<MainSignalsInstance> m_internals;
+
+    friend void ::RegisterSharedValidationInterface(std::shared_ptr<CValidationInterface>);
+    friend void ::UnregisterValidationInterface(CValidationInterface*);
+    friend void ::UnregisterAllValidationInterfaces();
+    friend void ::CallFunctionInValidationInterfaceQueue(std::function<void ()> func);
+
+public:
+    /** Register a CScheduler to give callbacks which should run in the background (may only be called once) */
+    void RegisterBackgroundSignalScheduler(CScheduler& scheduler);
+    /** Unregister a CScheduler to give callbacks which should run in the background - these callbacks will now be dropped! */
+    void UnregisterBackgroundSignalScheduler();
+    /** Call any remaining callbacks on the calling thread */
+    void FlushBackgroundCallbacks();
+
+    size_t CallbacksPending();
+
+    void AcceptedBlockHeader(const CBlockIndex* pindexNew);
+    void UpdatedBlockTip(const CBlockIndex *, const CBlockIndex *, bool fInitialDownload);
+    void TransactionAddedToMempool(const CTransactionRef &ptxn);
+    void TransactionRemovedFromMempool(const CTransactionRef&, MemPoolRemovalReason);
+    void BlockConnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex);
+    void BlockDisconnected(const std::shared_ptr<const CBlock> &block, const uint256& blockHash, int nBlockHeight, int64_t blockTime);
+    void SetBestChain(const CBlockLocator &);
+    void Broadcast(CConnman* connman);
+    void BlockChecked(const CBlock&, const CValidationState&);
+    void NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff);
+    void NotifyChainLock(const CBlockIndex* pindex, const llmq::CChainLockSig& clsig);
 };
 
 CMainSignals& GetMainSignals();
