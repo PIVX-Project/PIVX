@@ -88,7 +88,7 @@ public:
     virtual void AcceptedBlockHeader(const CBlockIndex* pindexNew) {}
 
 protected:
-   /**
+    /**
      * Notifies listeners when the block chain tip advances.
      *
      * When multiple blocks are connected at once, UpdatedBlockTip will be called on the final tip
@@ -162,6 +162,7 @@ protected:
     friend void ::RegisterSharedValidationInterface(std::shared_ptr<CValidationInterface>);
     friend void ::UnregisterValidationInterface(CValidationInterface*);
     friend void ::UnregisterAllValidationInterfaces();
+    /** Notifies listeners of updated deterministic masternode list */
     virtual void NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff) {}
     virtual void NotifyChainLock(const CBlockIndex* pindex, const llmq::CChainLockSig& clsig) {}
 };
