@@ -119,6 +119,7 @@ background.tiff*
 .cargo/.configured-for-*
 .cargo/config
 target/
+vendor/
 
 # Unit-tests
 Makefile.test
@@ -148,11 +149,8 @@ linux-build
 win32-build
 test/config.ini
 test/cache/*
-qa/pull-tester/run-bitcoind-for-test.sh
-qa/pull-tester/tests-config.sh
-qa/pull-tester/cache/*
-qa/pull-tester/test.*/*
 cache/*
+venv*/
 
 !src/leveldb*/Makefile
 
@@ -164,6 +162,8 @@ libbitcoinconsensus.pc
 .idea
 CMakeLists.txt
 cmake-build-debug
+*CMakeFiles
+*.cmake
 
 moc_*
 *.tmp
@@ -172,3 +172,9 @@ build*
 pivxd.*
 pivxd-new-gui.*
 /cov-int/
+
+cppcheck.txt
+to_backport.txt
+.ci-cppcheck/
+.mypy_cache/
+*.old
