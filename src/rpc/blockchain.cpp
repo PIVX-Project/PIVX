@@ -245,6 +245,32 @@ UniValue getbestsaplinganchor(const JSONRPCRequest& request)
     return pcoinsTip->GetBestAnchor().ToString();
 }
 
+UniValue getbestchainlock(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 0)
+        throw std::runtime_error(
+            "getbestchainlock\n"
+            "\nReturns the block hash of the best chainlock. Throws an error if there is no known chainlock yet.\n"
+            "\nResult:\n"
+            "{\n"
+            "  \"blockhash\" : \"hash\",      (string) The block hash hex encoded\n"
+            "  \"height\" : n,              (numeric) The block height or index\n"
+            "  \"known_block\" : true|false (boolean) True if the block is known by our node\n"
+            "}\n"
+            "\nExamples:\n" +
+            HelpExampleCli("getbestchainlock", "") + HelpExampleRpc("getbestchainlock", ""));
+    UniValue result(UniValue::VOBJ);
+    llmq::CChainLockSig clsig = llmq::chainLocksHandler->GetBestChainLock();
+    if (clsig.IsNull()) {
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Unable to find any chainlock");
+    }
+    result.pushKV("blockhash", clsig.blockHash.GetHex());
+    result.pushKV("height", clsig.nHeight);
+    LOCK(cs_main);
+    result.pushKV("known_block", mapBlockIndex.count(clsig.blockHash) > 0);
+    return result;
+}
+
 void RPCNotifyBlockChange(bool fInitialDownload, const CBlockIndex* pindex)
 {
     if(pindex) {
@@ -1693,6 +1719,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "getbestsaplinganchor",   &getbestsaplinganchor,   true,  {} },
     { "blockchain",         "getblock",               &getblock,               true,  {"blockhash","verbose|verbosity"} },
     { "blockchain",         "getblockchaininfo",      &getblockchaininfo,      true,  {} },
+    { "blockchain",         "getbestchainlock",       &getbestchainlock,       true,  {} },
     { "blockchain",         "getblockcount",          &getblockcount,          true,  {} },
     { "blockchain",         "getblockhash",           &getblockhash,           true,  {"height"} },
     { "blockchain",         "getblockheader",         &getblockheader,         false, {"blockhash","verbose"} },

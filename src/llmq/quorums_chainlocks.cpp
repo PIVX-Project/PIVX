@@ -23,6 +23,11 @@ static const std::string CLSIG_REQUESTID_PREFIX = "clsig";
 
 std::unique_ptr<CChainLocksHandler> chainLocksHandler{nullptr};
 
+bool CChainLockSig::IsNull() const
+{
+    return nHeight == -1 && blockHash == uint256();
+}
+
 std::string CChainLockSig::ToString() const
 {
     return strprintf("CChainLockSig(nHeight=%d, blockHash=%s)", nHeight, blockHash.ToString());
@@ -72,6 +77,12 @@ bool CChainLocksHandler::GetChainLockByHash(const uint256& hash, llmq::CChainLoc
     return true;
 }
 
+CChainLockSig CChainLocksHandler::GetBestChainLock()
+{
+    LOCK(cs);
+    return bestChainLock;
+}
+
 void CChainLocksHandler::ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
 {
     if (!sporkManager.IsSporkActive(SPORK_23_CHAINLOCKS_ENFORCEMENT)) {
@@ -101,7 +112,7 @@ void CChainLocksHandler::ProcessNewChainLock(NodeId from, const llmq::CChainLock
             return;
         }
 
-        if (bestChainLock.nHeight != -1 && clsig.nHeight <= bestChainLock.nHeight) {
+        if (!bestChainLock.IsNull() && clsig.nHeight <= bestChainLock.nHeight) {
             // no need to process/relay older CLSIGs
             return;
         }
@@ -133,7 +144,7 @@ void CChainLocksHandler::ProcessNewChainLock(NodeId from, const llmq::CChainLock
         bestChainLock = clsig;
 
         CInv inv(MSG_CLSIG, hash);
-        g_connman->RelayInv(inv);
+        g_connman->RelayInv(inv, LLMQS_PROTO_VERSION);
 
         auto blockIt = mapBlockIndex.find(clsig.blockHash);
         if (blockIt == mapBlockIndex.end()) {

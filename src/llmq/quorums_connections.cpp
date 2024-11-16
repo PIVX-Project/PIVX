@@ -124,9 +124,8 @@ void EnsureLatestQuorumConnections(Consensus::LLMQType llmqType, const CBlockInd
             continue;
         }
 
-        if (!connman->hasQuorumNodes(llmqType, quorum->pindexQuorum->GetBlockHash())) {
-            EnsureQuorumConnections(llmqType, quorum->pindexQuorum, myProTxHash);
-        }
+        EnsureQuorumConnections(llmqType, quorum->pindexQuorum, myProTxHash);
+
         connmanQuorumsToDelete.erase(quorum->pindexQuorum->GetBlockHash());
     }
 

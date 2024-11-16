@@ -72,7 +72,7 @@ bool CMasternodeSync::MessageDispatcher(CNode* pfrom, std::string& strCommand, C
         }
         return true;
     }
-    if (strCommand == NetMsgType::QSIGSHARESINV || strCommand == NetMsgType::QGETSIGSHARES || strCommand == NetMsgType::QBSIGSHARES || strCommand == NetMsgType::QSIGSESANN) {
+    if (strCommand == NetMsgType::QSIGSHARESINV || strCommand == NetMsgType::QGETSIGSHARES || strCommand == NetMsgType::QBSIGSHARES || strCommand == NetMsgType::QSIGSESANN || strCommand == NetMsgType::QSIGSHARE) {
         llmq::quorumSigSharesManager->ProcessMessage(pfrom, strCommand, vRecv, *g_connman);
         return true;
     }

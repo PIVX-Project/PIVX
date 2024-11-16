@@ -11,6 +11,7 @@
 #include "llmq/quorums_debug.h"
 #include "llmq/quorums_dkgsession.h"
 #include "llmq/quorums_signing.h"
+#include "llmq/quorums_signing_shares.h"
 #include "rpc/server.h"
 #include "validation.h"
 
@@ -140,7 +141,7 @@ UniValue listquorums(const JSONRPCRequest& request)
 
         auto quorums = llmq::quorumManager->ScanQuorums(p.first, chainActive.Tip(), count);
         for (auto& q : quorums) {
-            v.push_back(q->pindexQuorum->GetBlockHash().ToString());
+            v.push_back(q->qc.quorumHash.ToString());
         }
 
         ret.pushKV(p.second.name, v);
@@ -200,15 +201,15 @@ UniValue getquoruminfo(const JSONRPCRequest& request)
     UniValue ret(UniValue::VOBJ);
 
     ret.pushKV("height", quorum->pindexQuorum->nHeight);
-    ret.pushKV("quorumHash", quorum->pindexQuorum->GetBlockHash().ToString());
+    ret.pushKV("quorumHash", quorum->qc.quorumHash.ToString());
 
     UniValue membersArr(UniValue::VARR);
     for (size_t i = 0; i < quorum->members.size(); i++) {
         auto& dmn = quorum->members[i];
         UniValue mo(UniValue::VOBJ);
         mo.pushKV("proTxHash", dmn->proTxHash.ToString());
-        mo.pushKV("valid", quorum->validMembers[i]);
-        if (quorum->validMembers[i]) {
+        mo.pushKV("valid", quorum->qc.validMembers[i]);
+        if (quorum->qc.validMembers[i]) {
             CBLSPublicKey pubKey = quorum->GetPubKeyShare(i);
             if (pubKey.IsValid()) {
                 mo.pushKV("pubKeyShare", pubKey.ToString());
@@ -218,7 +219,7 @@ UniValue getquoruminfo(const JSONRPCRequest& request)
     }
 
     ret.pushKV("members", membersArr);
-    ret.pushKV("quorumPublicKey", quorum->quorumPublicKey.ToString());
+    ret.pushKV("quorumPublicKey", quorum->qc.quorumPublicKey.ToString());
     CBLSSecretKey skShare = quorum->GetSkShare();
     if (includeSkShare && skShare.IsValid()) {
         ret.pushKV("secretKeyShare", skShare.ToString());
@@ -343,6 +344,48 @@ UniValue quorumdkgstatus(const JSONRPCRequest& request)
     return ret;
 }
 
+UniValue quorumselectquorum(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() != 2) {
+        throw std::runtime_error(
+            "quorum selectquorum llmqType \"id\"\n"
+            "Returns the quorum that would/should sign a request\n"
+            "\nArguments:\n"
+            "1. llmqType              (int, required) LLMQ type.\n"
+            "2. \"id\"                  (string, required) Request id.\n");
+    }
+
+    Consensus::LLMQType llmqType = static_cast<Consensus::LLMQType>(request.params[0].get_int());
+    if (!Params().GetConsensus().llmqs.count(llmqType)) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "invalid LLMQ type");
+    }
+
+    uint256 id = ParseHashV(request.params[1], "id");
+
+    int tipHeight;
+    {
+        LOCK(cs_main);
+        tipHeight = chainActive.Height();
+    }
+
+    UniValue ret(UniValue::VOBJ);
+
+    auto quorum = llmq::quorumSigningManager->SelectQuorumForSigning(llmqType, tipHeight, id);
+    if (!quorum) {
+        throw JSONRPCError(RPC_MISC_ERROR, "no quorums active");
+    }
+    ret.pushKV("quorumHash", quorum->qc.quorumHash.ToString());
+
+    UniValue recoveryMembers(UniValue::VARR);
+    for (int i = 0; i < quorum->params.recoveryMembers; i++) {
+        auto dmn = llmq::quorumSigSharesManager->SelectMemberForRecovery(quorum, id, i);
+        recoveryMembers.push_back(dmn->proTxHash.ToString());
+    }
+    ret.pushKV("recoveryMembers", recoveryMembers);
+
+    return ret;
+}
+
 UniValue quorumdkgsimerror(const JSONRPCRequest& request)
 {
     if (request.fHelp || request.params.size() != 2) {
@@ -382,6 +425,7 @@ static const CRPCCommand commands[] =
   //  -------------- ------------------------- --------------------- ------ --------
     { "evo",         "getminedcommitment",     &getminedcommitment,  true,  {"llmq_type", "quorum_hash"}  },
     { "evo",         "getquorummembers",       &getquorummembers,    true,  {"llmq_type", "quorum_hash"}  },
+    { "evo",         "quorumselectquorum",     &quorumselectquorum,  true,  {"llmq_type", "id"}  },
     { "evo",         "quorumdkgsimerror",      &quorumdkgsimerror,   true,  {"error_type", "rate"}  },
     { "evo",         "quorumdkgstatus",        &quorumdkgstatus,     true,  {"detail_level"}  },
     { "evo",         "listquorums",            &listquorums,         true,  {"count"}  },

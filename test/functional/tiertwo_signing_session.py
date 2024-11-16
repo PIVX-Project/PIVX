@@ -105,7 +105,7 @@ class SigningSessionTest(PivxDMNTestFramework):
         for i in [m.idx for m in members]:
             assert_equal(True, self.nodes[i].hasrecoverysignature(100, id, msgHash))
         self.log.info("Threshold signature is still valid after the corresponding quorum went inactive!")
-
+        # TODO: explicitly test also the new concentrated recovery system
 
 if __name__ == '__main__':
     SigningSessionTest().main()

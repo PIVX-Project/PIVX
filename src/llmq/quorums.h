@@ -35,11 +35,10 @@ class CQuorum
 
 public:
     const Consensus::LLMQParams& params;
-    uint256 minedBlockHash;
+    CFinalCommitment qc;
     const CBlockIndex* pindexQuorum;
+    uint256 minedBlockHash;
     std::vector<CDeterministicMNCPtr> members;
-    std::vector<bool> validMembers;
-    CBLSPublicKey quorumPublicKey;
 
     // These are only valid when we either participated in the DKG or fully watched it
     BLSVerificationVectorPtr quorumVvec;
@@ -55,7 +54,7 @@ private:
 public:
     CQuorum(const Consensus::LLMQParams& _params, CBLSWorker& _blsWorker) : params(_params), blsCache(_blsWorker), stopCachePopulatorThread(false) {}
     ~CQuorum();
-    void Init(const uint256& minedBlockHash, const CBlockIndex* pindexQuorum, const std::vector<CDeterministicMNCPtr>& members, const std::vector<bool>& validMembers, const CBLSPublicKey& quorumPublicKey);
+    void Init(const CFinalCommitment& _qc, const CBlockIndex* _pindexQuorum, const uint256& _minedBlockHash, const std::vector<CDeterministicMNCPtr>& _members);
 
     bool IsMember(const uint256& proTxHash) const;
     bool IsValidMember(const uint256& proTxHash) const;

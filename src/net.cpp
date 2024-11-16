@@ -23,7 +23,6 @@
 #include "primitives/transaction.h"
 #include "scheduler.h"
 #include "tiertwo/net_masternodes.h"
-#include "validation.h"
 
 #ifdef WIN32
 #include <string.h>
@@ -2560,14 +2559,14 @@ bool CConnman::DisconnectNode(NodeId id)
     return false;
 }
 
-void CConnman::RelayInv(CInv& inv)
+void CConnman::RelayInv(CInv& inv, int minProtoVersion)
 {
     LOCK(cs_vNodes);
     for (CNode* pnode : vNodes){
         if (!pnode->fSuccessfullyConnected) continue;
         if ((pnode->nServices == NODE_BLOOM_WITHOUT_MN) && inv.IsMasterNodeType()) continue;
         if (!pnode->CanRelay()) continue;
-        if (pnode->nVersion >= ActiveProtocol())
+        if (pnode->nVersion >= minProtoVersion)
             pnode->PushInventory(inv);
     }
 }

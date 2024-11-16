@@ -65,6 +65,7 @@ const char* QSIGSHARESINV = "qsigsinv";
 const char* QGETSIGSHARES = "qgetsigs";
 const char* QBSIGSHARES = "qbsigs";
 const char* QSIGREC = "qsigrec";
+const char* QSIGSHARE = "qsigshare";
 const char* CLSIG = "clsig";
 }; // namespace NetMsgType
 
@@ -128,6 +129,7 @@ const static std::string allNetMessageTypes[] = {
     NetMsgType::QGETSIGSHARES,
     NetMsgType::QBSIGSHARES,
     NetMsgType::QSIGREC,
+    NetMsgType::QSIGSHARE,
     NetMsgType::CLSIG,
 };
 const static std::vector<std::string> allNetMessageTypesVec(allNetMessageTypes, allNetMessageTypes + ARRAYLEN(allNetMessageTypes));

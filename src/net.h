@@ -23,6 +23,7 @@
 #include "uint256.h"
 #include "utilstrencodings.h"
 #include "threadinterrupt.h"
+#include "validation.h"
 
 #include <atomic>
 #include <cstdint>
@@ -301,7 +302,7 @@ public:
     // Clears AskFor requests for every known peer
     void RemoveAskFor(const uint256& invHash, int invType);
 
-    void RelayInv(CInv& inv);
+    void RelayInv(CInv& inv, int minProtoVersion = ActiveProtocol());
     bool IsNodeConnected(const CAddress& addr);
     // Retrieves a connected peer (if connection success). Used only to check peer address availability for now.
     CNode* ConnectNode(const CAddress& addrConnect);
