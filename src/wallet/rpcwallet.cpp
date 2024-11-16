@@ -23,6 +23,7 @@
 #include "sapling/key_io_sapling.h"
 #include "sapling/sapling_operation.h"
 #include "shutdown.h"
+#include "simpleroi.h"
 #include "spork.h"
 #include "timedata.h"
 #include "utilmoneystr.h"
@@ -4747,6 +4748,38 @@ UniValue rescanblockchain(const JSONRPCRequest& request)
     return response;
 }
 
+UniValue getroi(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() > 0) {
+        int nRoiMinutes = Params().GetConsensus().nTargetTimespan;     // defalut if no Tip()
+        CSimpRoiArgs csra;
+        CBlockIndex * pb = chainActive.Tip();
+        if (pb && pb->nHeight) {
+            nRoiMinutes = Params().GetConsensus().TargetTimespan(pb->nHeight);
+        }
+        std::string sTopline = strprintf("  \"%d hour avg ROI: nnnn.n%%\",           smoothed staking ROI\n", csra.nStakeRoiHrs);
+        std::string sLine2   = strprintf("  \"%2d min stk ROI: nnnn.n%%\",           real time staking ROI\n", nRoiMinutes / 60);
+            throw std::runtime_error(
+                "getroi\n" +
+                sTopline +
+                sLine2 +
+                "  \"tot stake coin: nnnnnnnn\",          estimate of total staked coins\n"
+                "\n"
+                "  \"masternode ROI: nnnn.n%\",           masternode ROI\n"
+                "  \"tot collateral: nnnnnnnn\",          total masternode collateral\n"
+                "  \"enabled  nodes: nnnn\",              number of enabled masternodes\n"
+                "  \"blocks per day: nnnn.n\",            number of blocks per day\n"
+                "\n"
+            );
+    }
+    CSimpleRoi csimproi;
+    UniValue roi(UniValue::VOBJ);
+    std::string sGerror;
+
+    if (csimproi.generateROI(roi, sGerror)) return roi;
+    throw std::runtime_error(sGerror);
+}
+
 extern UniValue abortrescan(const JSONRPCRequest& request); // in rpcdump.cpp
 extern UniValue dumpprivkey(const JSONRPCRequest& request); // in rpcdump.cpp
 extern UniValue importprivkey(const JSONRPCRequest& request);
@@ -4789,6 +4822,7 @@ static const CRPCCommand commands[] =
     { "wallet",             "getnewstakingaddress",     &getnewstakingaddress,     true,  {"label"}  },
     { "wallet",             "getrawchangeaddress",      &getrawchangeaddress,      true,  {} },
     { "wallet",             "getreceivedbyaddress",     &getreceivedbyaddress,     false, {"address","minconf"} },
+    { "wallet",             "getroi",                   &getroi,                   false, {} },
     { "wallet",             "gettransaction",           &gettransaction,           false, {"txid","include_watchonly"} },
     { "wallet",             "getstakesplitthreshold",   &getstakesplitthreshold,   false, {} },
     { "wallet",             "getunconfirmedbalance",    &getunconfirmedbalance,    false, {} },
