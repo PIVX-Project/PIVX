@@ -3775,6 +3775,102 @@ bool CVerifyDB::VerifyDB(CCoinsView* coinsview, int nCheckLevel, int nCheckDepth
     return true;
 }
 
+bool RewindBlockIndexToLastCheckpoint(const CChainParams& chainparams, bool& clearWitnessCaches, bool fJustCheck)
+{
+    LOCK(cs_main);
+
+    // Get current Height and current Checkpoints
+    int nHeight = chainActive.Height();
+    const CBlockIndex* prevCheckPoint = GetLastCheckpoint();
+    const int checkPointHeight = prevCheckPoint ? prevCheckPoint->nHeight : 0;
+
+    // First load options
+    if(!fJustCheck)
+        return true;
+
+    clearWitnessCaches = true;
+    CValidationState state;
+    const int blocksToRollBack = nHeight - checkPointHeight;
+    // Iterate to start removing blocks
+    while (nHeight > checkPointHeight) {
+        if (!DisconnectTip(state, chainparams, nullptr)) {
+            return error("%s: unable to disconnect block at height %i", __func__, nHeight);
+        }
+        // Occasionally flush state to disk.
+        if (!FlushStateToDisk(state, FLUSH_STATE_PERIODIC))
+            return false;
+
+        nHeight = chainActive.Height();
+    }
+
+    // Collect blocks to be removed (blocks in mapBlockIndex must be at least BLOCK_VALID_TREE).
+    // We do this after actual disconnecting, otherwise we'll end up writing the lack of data
+    // to disk before writing the chainstate, resulting in a failure to continue if interrupted.
+    std::vector<const CBlockIndex*> vBlocks;
+    for (BlockMap::iterator it = mapBlockIndex.begin(); it != mapBlockIndex.end(); it++) {
+        CBlockIndex* pindexIter = it->second;
+        if (!chainActive.Contains(pindexIter)) {
+            // Add to the list of blocks to remove
+            vBlocks.emplace_back(pindexIter);
+            if (pindexIter == pindexBestInvalid) {
+                // Reset invalid block marker if it was pointing to this block
+                pindexBestInvalid = nullptr;
+            }
+            // Reduce validity
+            pindexIter->nStatus = std::min<unsigned int>(pindexIter->nStatus & BLOCK_VALID_MASK, BLOCK_VALID_TREE) | (pindexIter->nStatus & ~BLOCK_VALID_MASK);
+            // Remove have-data flags.
+            pindexIter->nStatus &= ~(BLOCK_HAVE_DATA | BLOCK_HAVE_UNDO);
+            // Remove storage location.
+            pindexIter->nFile = 0;
+            pindexIter->nDataPos = 0;
+            pindexIter->nUndoPos = 0;
+            // Remove various other things
+            pindexIter->nTx = 0;
+            pindexIter->nChainTx = 0;
+            pindexIter->nSequenceId = 0;
+            // Update indices
+            setBlockIndexCandidates.erase(pindexIter);
+            auto ret = mapBlocksUnlinked.equal_range(pindexIter->pprev);
+            while (ret.first != ret.second) {
+                if (ret.first->second == pindexIter) {
+                    ret.first = mapBlocksUnlinked.erase(ret.first);
+                } else {
+                    ++ret.first;
+                }
+            }
+        } else if (pindexIter->IsValid(BLOCK_VALID_TRANSACTIONS) && pindexIter->nChainTx) {
+            setBlockIndexCandidates.insert(pindexIter);
+        }
+    }
+
+    // Set pindexBestHeader to the current chain tip
+    // (since we are about to delete the block it is pointing to)
+    pindexBestHeader = chainActive.Tip();
+
+    // Erase block indices on-disk
+    if (!pblocktree->EraseBatchSync(vBlocks)) {
+        return AbortNode(state, "Failed to erase from block index database");
+    }
+
+    // Erase block indices in-memory
+    for (auto pindex : vBlocks) {
+        auto ret = mapBlockIndex.find(*pindex->phashBlock);
+        if (ret != mapBlockIndex.end()) {
+            mapBlockIndex.erase(ret);
+            delete pindex;
+        }
+    }
+
+    CheckBlockIndex();
+
+    if (!FlushStateToDisk(state, FLUSH_STATE_ALWAYS)) {
+        return false;
+    }
+
+    return true;
+}
+
+
 /** Apply the effects of a block on the utxo cache, ignoring that it may already have been applied. */
 static bool RollforwardBlock(const CBlockIndex* pindex, CCoinsViewCache& inputs, const CChainParams& params) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
