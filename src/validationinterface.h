@@ -26,6 +26,10 @@ class uint256;
 class CScheduler;
 enum class MemPoolRemovalReason;
 
+namespace llmq {
+    class CChainLockSig;
+}
+
 // These functions dispatch to one or all registered wallets
 
 /** Register a wallet to receive updates from core */
@@ -160,6 +164,7 @@ protected:
     friend void ::UnregisterAllValidationInterfaces();
     /** Notifies listeners of updated deterministic masternode list */
     virtual void NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff) {}
+    virtual void NotifyChainLock(const CBlockIndex* pindex, const llmq::CChainLockSig& clsig) {}
 };
 
 struct MainSignalsInstance;
@@ -192,6 +197,7 @@ public:
     void Broadcast(CConnman* connman);
     void BlockChecked(const CBlock&, const CValidationState&);
     void NotifyMasternodeListChanged(bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff);
+    void NotifyChainLock(const CBlockIndex* pindex, const llmq::CChainLockSig& clsig);
 };
 
 CMainSignals& GetMainSignals();
