@@ -2232,6 +2232,11 @@ static bool DisconnectIfBanned(CNode* pnode, CConnman* connman)
     AssertLockHeld(cs_main);
     CNodeState &state = *State(pnode->GetId());
 
+    for (const CBlockReject& reject : state.rejects) {
+        connman->PushMessage(pnode, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, (std::string)NetMsgType::BLOCK, reject.chRejectCode, reject.strRejectReason, reject.hashBlock));
+    }
+    state.rejects.clear();
+
     if (state.fShouldBan) {
         state.fShouldBan = false;
         if (pnode->fWhitelisted) {

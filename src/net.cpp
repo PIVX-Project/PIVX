@@ -2762,7 +2762,7 @@ bool CConnman::NodeFullyConnected(const CNode* pnode)
     return pnode && pnode->fSuccessfullyConnected && !pnode->fDisconnect;
 }
 
-void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg, bool allowOptimisticSend)
+void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
 {
     size_t nMessageSize = msg.data.size();
     size_t nTotalSize = nMessageSize + CMessageHeader::HEADER_SIZE;
@@ -2780,7 +2780,6 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg, bool allowOpti
     {
         LOCK(pnode->cs_vSend);
         bool hasPendingData = !pnode->vSendMsg.empty();
-        bool optimisticSend(allowOptimisticSend && pnode->vSendMsg.empty());
 
         //log total amount of bytes per command
         pnode->mapSendBytesPerMsgCmd[msg.command] += nTotalSize;
@@ -2792,11 +2791,8 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg, bool allowOpti
         if (nMessageSize)
             pnode->vSendMsg.push_back(std::move(msg.data));
 
-        // If write queue empty, attempt "optimistic write"
-        if (optimisticSend == true)
-            nBytesSent = SocketSendData(pnode);
         // wake up select() call in case there was no pending data before (so it was not selecting this socket for sending)
-        else if (!hasPendingData && wakeupSelectNeeded)
+        if (!hasPendingData && wakeupSelectNeeded)
             WakeSelect();
     }
     if (nBytesSent)
