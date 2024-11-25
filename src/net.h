@@ -711,6 +711,7 @@ public:
     std::atomic_bool m_wants_addrv2{false};
     std::atomic_bool fSuccessfullyConnected;
     std::atomic_bool fDisconnect;
+    std::atomic<int64_t> nDisconnectLingerTime{0};
     // We use fRelayTxes for two purposes -
     // a) it allows us to not relay tx invs before receiving the peer's version message
     // b) the peer may tell us in their version message that we should not relay tx invs
