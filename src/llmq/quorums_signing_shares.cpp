@@ -1235,8 +1235,8 @@ bool CSigSharesManager::SendMessages()
         if (lt != sigSharesToSend.end()) {
             std::vector<CSigShare> msgs;
             for (auto& sigShare : lt->second) {
-                LogPrint(BCLog::LLMQ_SIGS, "CSigSharesManager::SendMessages -- QSIGSHARE signHash=%s, node=%d\n",
-                         sigShare.GetSignHash().ToString(), pnode->GetId());
+                LogPrint(BCLog::LLMQ, "CSigSharesManager::SendMessages -- QSIGSHARE signHash=%s, node=%d\n",
+                    sigShare.GetSignHash().ToString(), pnode->GetId());
                 msgs.emplace_back(std::move(sigShare));
                 if (msgs.size() == MAX_MSGS_SIG_SHARES) {
                     g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARE, msgs));
@@ -1246,25 +1246,6 @@ bool CSigSharesManager::SendMessages()
             }
             if (!msgs.empty()) {
                 g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARE, msgs));
-                didSend = true;
-            }
-        }
-
-        auto lt = sigSharesToSend.find(pnode->GetId());
-        if (lt != sigSharesToSend.end()) {
-            std::vector<CSigShare> msgs;
-            for (auto& sigShare : lt->second) {
-                LogPrint(BCLog::LLMQ, "CSigSharesManager::SendMessages -- QSIGSHARE signHash=%s, node=%d\n",
-                    sigShare.GetSignHash().ToString(), pnode->GetId());
-                msgs.emplace_back(std::move(sigShare));
-                if (msgs.size() == MAX_MSGS_SIG_SHARES) {
-                    g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARE, msgs), false);
-                    msgs.clear();
-                    didSend = true;
-                }
-            }
-            if (!msgs.empty()) {
-                g_connman->PushMessage(pnode, msgMaker.Make(NetMsgType::QSIGSHARE, msgs), false);
                 didSend = true;
             }
         }
