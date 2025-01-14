@@ -255,5 +255,5 @@ void CMainSignals::NotifyMasternodeListChanged(bool undo, const CDeterministicMN
 
 void CMainSignals::NotifyChainLock(const CBlockIndex* pindex, const llmq::CChainLockSig& clsig) {
     m_internals->NotifyChainLock(pindex, clsig);
-    LOG_EVENT("%s: new chain lock pindex: %s, CLSIG: %s", __func__, pindex->GetBlockHash().ToString(), clsig.blockHash);
+    LOG_EVENT("%s: new chain lock pindex: %s", __func__, pindex->GetBlockHash().ToString());
 }
