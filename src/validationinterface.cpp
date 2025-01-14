@@ -9,6 +9,7 @@
 #include "chain.h"
 #include "consensus/validation.h"
 #include "evo/deterministicmns.h"
+#include "llmq/quorums_chainlocks.h"
 #include "logging.h"
 #include "scheduler.h"
 #include "util/validation.h"
@@ -30,6 +31,7 @@ struct ValidationInterfaceConnections {
     boost::signals2::scoped_connection Broadcast;
     boost::signals2::scoped_connection BlockChecked;
     boost::signals2::scoped_connection NotifyMasternodeListChanged;
+    boost::signals2::scoped_connection NotifyChainLock;
 };
 
 struct MainSignalsInstance {
@@ -56,7 +58,8 @@ struct MainSignalsInstance {
     boost::signals2::signal<void (const CBlock&, const CValidationState&)> BlockChecked;
     /** Notifies listeners of updated deterministic masternode list */
     boost::signals2::signal<void (bool undo, const CDeterministicMNList& oldMNList, const CDeterministicMNListDiff& diff)> NotifyMasternodeListChanged;
-
+    /** Notifies listeners of a ChainLock. */
+    boost::signals2::signal<void (const CBlockIndex* pindex, const llmq::CChainLockSig& clsig)> NotifyChainLock;
     std::unordered_map<CValidationInterface*, ValidationInterfaceConnections> m_connMainSignals;
 
     // We are not allowed to assume the scheduler only runs in one thread,
@@ -108,6 +111,7 @@ void RegisterSharedValidationInterface(std::shared_ptr<CValidationInterface> pwa
     conns.Broadcast = g_signals.m_internals->Broadcast.connect(std::bind(&CValidationInterface::ResendWalletTransactions, pwalletIn, std::placeholders::_1));
     conns.BlockChecked = g_signals.m_internals->BlockChecked.connect(std::bind(&CValidationInterface::BlockChecked, pwalletIn, std::placeholders::_1, std::placeholders::_2));
     conns.NotifyMasternodeListChanged = g_signals.m_internals->NotifyMasternodeListChanged.connect(std::bind(&CValidationInterface::NotifyMasternodeListChanged, pwalletIn, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    conns.NotifyChainLock = g_signals.m_internals->NotifyChainLock.connect(std::bind(&CValidationInterface::NotifyChainLock, pwalletIn, std::placeholders::_1, std::placeholders::_2));
 }
 void RegisterValidationInterface(CValidationInterface* pwalletIn)
 {
@@ -248,4 +252,9 @@ void CMainSignals::NotifyMasternodeListChanged(bool undo, const CDeterministicMN
               diff.addedMNs.size(),
               diff.updatedMNs.size(),
               diff.removedMns.size());
+}
+
+void CMainSignals::NotifyChainLock(const CBlockIndex* pindex, const llmq::CChainLockSig& clsig) {
+    m_internals->NotifyChainLock(pindex, clsig);
+    LOG_EVENT("%s: new chain lock pindex: %s, CLSIG: %s", __func__, pindex->GetBlockHash().ToString(), clsig.ToString());
 }

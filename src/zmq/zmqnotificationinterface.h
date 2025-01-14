@@ -29,7 +29,6 @@ protected:
     void BlockConnected(const std::shared_ptr<const CBlock>& pblock, const CBlockIndex* pindexConnected);
     void BlockDisconnected(const std::shared_ptr<const CBlock>& pblock, const uint256& blockHash, int nBlockHeight, int64_t blockTime);
     void UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload);
-    void NotifyChainLock(const CBlockIndex *pindex, const llmq::CChainLockSig& clsig);
 
 private:
     CZMQNotificationInterface();
