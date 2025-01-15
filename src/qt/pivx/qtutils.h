@@ -29,6 +29,7 @@ const QString ZAPTXES2("-zapwallettxes=2");
 const QString UPGRADEWALLET("-upgradewallet");
 const QString REINDEX("-reindex");
 const QString RESYNC("-resync");
+const QString REWIND("-rewindblockindex");
 
 extern Qt::Modifier SHORT_KEY;
 

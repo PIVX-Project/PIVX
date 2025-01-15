@@ -182,12 +182,13 @@ static MapCheckpoints mapCheckpoints = {
     {3014000, uint256S("78ad99b7225f73c42238bd7ca841ff700542b92bba75a0ef2ed351caa560f87f")}, //!< PIVX v5.3.0 enforced
     {3024000, uint256S("be4bc75afcfb9136924810f7483b2695089a366cc4ee27fd6dc3ecd5396e1f0f")}, //!< Superblock
     {3715200, uint256S("a676b9a598c393c82b949c37dd35013aeda55f5d18ab062349db6a8235972aaa")}, //!< Superblock for 5.5.0 mainnet rewards changeover
+    {3780000, uint256S("2667fa1d552999aca930ced7fd3902ae5721e5c256a607049e3c47a3137a18ee")}, //!< Fri, 10 Mar 2023 rewindblockindex testing
 };
 
 static const CCheckpointData data = {
     &mapCheckpoints,
-    1591401645, // * UNIX timestamp of last checkpoint block
-    5607713,    // * total number of transactions between genesis and last checkpoint
+    1678401150, // * UNIX timestamp of last checkpoint block
+    8716106,    // * total number of transactions between genesis and last checkpoint
                 //   (the tx=... number in the UpdateTip debug.log lines)
     3000        // * estimated number of transactions per day after checkpoint
 };

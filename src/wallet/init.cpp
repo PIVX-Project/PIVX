@@ -205,7 +205,7 @@ bool WalletVerify()
     return true;
 }
 
-bool InitLoadWallet()
+bool InitLoadWallet(bool clearWitnessCaches)
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
         LogPrintf("Wallet disabled!\n");
@@ -214,7 +214,7 @@ bool InitLoadWallet()
 
     for (const std::string& walletFile : gArgs.GetArgs("-wallet")) {
         // create/load wallet
-        CWallet * const pwallet = CWallet::CreateWalletFromFile(walletFile, fs::absolute(walletFile, GetWalletDir()));
+        CWallet * const pwallet = CWallet::CreateWalletFromFile(walletFile, fs::absolute(walletFile, GetWalletDir()), clearWitnessCaches);
         if (!pwallet) {
             return false;
         }
