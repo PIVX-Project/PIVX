@@ -41,7 +41,7 @@ private:
     bool updateExpired(int nCurrentHeight);
     bool CheckStartEnd();
     bool CheckAmount(const CAmount& nTotalBudget);
-    bool CheckAddress();
+    bool CheckAddress(const int nCurrentHeight);
     bool CheckStrings();
 
 protected:
@@ -71,7 +71,7 @@ public:
     // sets fValid and strInvalid, returns fValid
     bool UpdateValid(int nHeight, int mnCount);
     // Static checks that should be done only once - sets strInvalid
-    bool IsWellFormed(const CAmount& nTotalBudget);
+    bool IsWellFormed(const CAmount& nTotalBudget, const int nCurrentHeight);
     bool IsValid() const  { return fValid; }
     void SetStrInvalid(const std::string& _strInvalid) { strInvalid = _strInvalid; }
     std::string IsInvalidReason() const { return strInvalid; }

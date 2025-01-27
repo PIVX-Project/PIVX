@@ -58,7 +58,7 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         for i in range(0, len(self.nodes)):
             node = self.nodes[i]
             budFin = node.mnfinalbudget("show")
-            assert_true(len(budFin) == 1, "MN budget finalization not synced in node" + str(i))
+            assert_true(len(budFin) == 1, "MN budget finalization not synced in node " + str(i))
             budget = budFin[next(iter(budFin))]
             assert_equal(budget["VoteCount"], votesCount)
             assert_equal(budget["Status"], status)
@@ -173,6 +173,15 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
             self.log.info("proposal %s broadcast successful!" % entry.name)
         return props
 
+    def create_multisig_addr(self, node):
+        addr1 = node.getnewaddress()
+        addr2 = node.getnewaddress()
+        addr3 = node.getnewaddress()
+        sig_address_1 = node.validateaddress(addr1)
+        sig_address_2 = node.validateaddress(addr2)
+        sig_address_3 = node.validateaddress(addr3)
+        return node.addmultisigaddress(2, [sig_address_1['pubkey'], sig_address_2['pubkey'], sig_address_3['pubkey']])
+
     def run_test(self):
         self.enable_mocktime()
         self.setup_3_masternodes_network()
@@ -205,6 +214,18 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         )
         self.submit_proposals([firstProposal])
 
+        multisigAddr = self.create_multisig_addr(self.miner)
+        # Submit multisig proposal
+        self.log.info("preparing budget proposal..")
+        multisigProposal = Proposal(
+            "we-like-multisig",
+            "https://forum.pivx.org/t/test-multisig",
+            2,
+            multisigAddr,
+            600
+        )
+        self.submit_proposals([multisigProposal])
+
         # Create 15 more proposals to have a higher tier two net gossip movement
         props = []
         for i in range(15):
@@ -220,17 +241,21 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         self.stake(7, [self.remoteOne, self.remoteTwo])
         # Check proposals existence
         for i in range(self.num_nodes):
-            assert_equal(len(self.nodes[i].getbudgetinfo()), 16)
+            assert_equal(len(self.nodes[i].getbudgetinfo()), 17)
 
         # now let's vote for the proposal with the first MN
         self.log.info("Voting with MN1...")
         voteResult = self.ownerOne.mnbudgetvote("alias", firstProposal.proposalHash, "yes", self.masternodeOneAlias, True)
         assert_equal(voteResult["detail"][0]["result"], "success")
 
+        multisigVoteResult = self.ownerOne.mnbudgetvote("alias", multisigProposal.proposalHash, "yes", self.masternodeOneAlias, True)
+        assert_equal(multisigVoteResult["detail"][0]["result"], "success")
+
         # check that the vote was accepted everywhere
         self.stake(1, [self.remoteOne, self.remoteTwo])
         self.check_vote_existence(firstProposal.name, self.mnOneCollateral.hash, "YES", True)
-        self.log.info("all good, MN1 vote accepted everywhere!")
+        self.check_vote_existence(multisigProposal.name, self.mnOneCollateral.hash, "YES", True)
+        self.log.info("all good, MN1 votes accepted everywhere!")
 
         # before broadcast the second vote, let's drop the budget data of ownerOne.
         # so the node is forced to send a single proposal sync when the, now orphan, proposal vote is received.
@@ -244,11 +269,15 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         voteResult = self.ownerTwo.mnbudgetvote("alias", firstProposal.proposalHash, "yes", self.masternodeTwoAlias, True)
         assert_equal(voteResult["detail"][0]["result"], "success")
 
+        multisigVoteResult = self.ownerTwo.mnbudgetvote("alias", multisigProposal.proposalHash, "yes", self.masternodeTwoAlias, True)
+        assert_equal(multisigVoteResult["detail"][0]["result"], "success")
         # check orphan vote proposal re-sync
         self.log.info("checking orphan vote based proposal re-sync...")
         time.sleep(5) # wait a bit before check it
         self.check_proposal_existence(firstProposal.name, firstProposal.proposalHash)
         self.check_vote_existence(firstProposal.name, self.mnOneCollateral.hash, "YES", True)
+        self.check_proposal_existence(multisigProposal.name, multisigProposal.proposalHash)
+        self.check_vote_existence(multisigProposal.name, self.mnOneCollateral.hash, "YES", True)
         self.log.info("all good, orphan vote based proposal re-sync succeeded")
 
         # check that the vote was accepted everywhere
@@ -272,19 +301,28 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         TotalPayment = firstProposal.amountPerCycle * firstProposal.cycles
         Allotted = firstProposal.amountPerCycle
         RemainingPaymentCount = firstProposal.cycles
+
+        multisigBlockEnd = blockStart + multisigProposal.cycles * 145
+        multisigTotalPayment = multisigProposal.amountPerCycle * multisigProposal.cycles
+        multisigAllotted = multisigProposal.amountPerCycle
+        multisigRemainingPaymentCount = multisigProposal.cycles
         expected_budget = [
             self.get_proposal_obj(firstProposal.name, firstProposal.link, firstProposal.proposalHash, firstProposal.feeTxId, blockStart,
                                   blockEnd, firstProposal.cycles, RemainingPaymentCount, firstProposal.paymentAddr, 1,
                                   3, 0, 0, satoshi_round(TotalPayment), satoshi_round(firstProposal.amountPerCycle),
-                                  True, True, satoshi_round(Allotted), satoshi_round(Allotted))
+                                  True, True, satoshi_round(Allotted), satoshi_round(Allotted)),
+            self.get_proposal_obj(multisigProposal.name, multisigProposal.link, multisigProposal.proposalHash, multisigProposal.feeTxId, blockStart,
+                                  multisigBlockEnd, multisigProposal.cycles, multisigRemainingPaymentCount, multisigProposal.paymentAddr, 1,
+                                  2, 0, 0, satoshi_round(multisigTotalPayment), satoshi_round(multisigProposal.amountPerCycle),
+                                  True, True, satoshi_round(multisigAllotted), satoshi_round(multisigAllotted + Allotted)),
                            ]
         self.check_budgetprojection(expected_budget)
 
         # Quick block count check.
-        assert_equal(self.ownerOne.getblockcount(), 279)
+        assert_equal(self.ownerOne.getblockcount(), 282)
 
         self.log.info("starting budget finalization sync test..")
-        self.stake(2, [self.remoteOne, self.remoteTwo])
+        self.stake(1, [self.remoteOne, self.remoteTwo])
 
         # assert that there is no budget finalization first.
         assert_equal(len(self.ownerOne.mnfinalbudget("show")), 0)
@@ -334,10 +372,14 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         addrInfo = self.miner.listreceivedbyaddress(0, False, False, firstProposal.paymentAddr)
         assert_equal(addrInfo[0]["amount"], firstProposal.amountPerCycle)
 
+        addrInfo = self.miner.listreceivedbyaddress(0, False, False, multisigProposal.paymentAddr)
+        assert_equal(addrInfo[0]["amount"], multisigProposal.amountPerCycle)
+
         self.log.info("budget proposal paid!, all good")
 
         # Check that the proposal info returns updated payment count
         expected_budget[0]["RemainingPaymentCount"] -= 1
+        expected_budget[1]["RemainingPaymentCount"] -= 1
         self.check_budgetprojection(expected_budget)
 
         self.stake(1, [self.remoteOne, self.remoteTwo])
@@ -353,7 +395,7 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         self.wait_until_mnsync_finished()
         self.check_budgetprojection(expected_budget)
         for i in range(self.num_nodes):
-            assert_equal(len(self.nodes[i].getbudgetinfo()), 16)
+            assert_equal(len(self.nodes[i].getbudgetinfo()), 17)
 
         self.log.info("resync (1): budget data resynchronized successfully!")
 
@@ -375,7 +417,7 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         self.log.info("syncing node..")
         self.wait_until_mnsync_finished()
         for i in range(self.num_nodes):
-            assert_equal(len(self.nodes[i].getbudgetinfo()), 16)
+            assert_equal(len(self.nodes[i].getbudgetinfo()), 17)
         self.log.info("resync (2): budget data resynchronized successfully!")
 
         # Let's now verify the remote budget data relay.
@@ -390,7 +432,7 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         time.sleep(5) # wait a little bit
         self.log.info("Checking budget sync..")
         for i in range(self.num_nodes):
-            assert_equal(len(self.nodes[i].getbudgetinfo()), 16)
+            assert_equal(len(self.nodes[i].getbudgetinfo()), 17)
         self.check_vote_existence(firstProposal.name, self.mnOneCollateral.hash, "YES", True)
         self.check_vote_existence(firstProposal.name, self.mnTwoCollateral.hash, "YES", True)
         self.check_vote_existence(firstProposal.name, self.proRegTx1, "YES", True)
@@ -422,7 +464,7 @@ class MasternodeGovernanceBasicTest(PivxTier2TestFramework):
         assert_equal(len(self.miner.mnfinalbudget("show")), 1)
         blocks_to_mine = nextSuperBlockHeight + 200 - self.miner.getblockcount()
         self.log.info("Mining %d more blocks to check expired budget removal..." % blocks_to_mine)
-        self.stake(blocks_to_mine - 1, [self.remoteTwo])
+        self.stake(blocks_to_mine, [self.remoteTwo])
         # finalized budget must still be there
         self.miner.checkbudgets()
         assert_equal(len(self.miner.mnfinalbudget("show")), 1)

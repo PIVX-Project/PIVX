@@ -245,7 +245,7 @@ OperationResult GovernanceModel::createProposal(const std::string& strProposalNa
 
     // Validate proposal
     CBudgetProposal proposal(strProposalName, strURL, nPaymentCount, scriptPubKey, nAmount, nBlockStart, UINT256_ZERO);
-    if (!proposal.IsWellFormed(g_budgetman.GetTotalBudget(proposal.GetBlockStart()))) {
+    if (!proposal.IsWellFormed(g_budgetman.GetTotalBudget(proposal.GetBlockStart()), clientModel->getNumBlocks())) {
         return {false, strprintf(_("Proposal is not valid %s"), proposal.IsInvalidReason())};
     }
 
