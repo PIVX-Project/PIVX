@@ -4534,51 +4534,15 @@ std::string CWallet::GetUniqueWalletBackupName() const
 
 CWallet::CWallet(std::string name, std::unique_ptr<WalletDatabase> database) : m_name(std::move(name)), database(std::move(database))
 {
-    SetNull();
+    // Sapling.
+    m_sspk_man->nWitnessCacheSize = 0;
+    m_sspk_man->nWitnessCacheNeedsUpdate = true;
 }
 
 CWallet::~CWallet()
 {
     delete encrypted_batch;
     delete pStakerStatus;
-}
-
-void CWallet::SetNull()
-{
-    nWalletVersion = FEATURE_BASE;
-    nWalletMaxVersion = FEATURE_BASE;
-    nMasterKeyMaxID = 0;
-    encrypted_batch = nullptr;
-    nOrderPosNext = 0;
-    nNextResend = 0;
-    nLastResend = 0;
-    nTimeFirstKey = 0;
-    nRelockTime = 0;
-    fAbortRescan = false;
-    fScanningWallet = false;
-    fWalletUnlockStaking = false;
-
-    // Staker status (last hashed block and time)
-    if (pStakerStatus) {
-        pStakerStatus->SetNull();
-    } else {
-        pStakerStatus = new CStakerStatus();
-    }
-    // Stake split threshold
-    nStakeSplitThreshold = DEFAULT_STAKE_SPLIT_THRESHOLD;
-
-    // User-defined fee PIV/kb
-    fUseCustomFee = false;
-    nCustomFee = CWallet::minTxFee.GetFeePerK();
-
-    //Auto Combine Dust
-    fCombineDust = false;
-    nAutoCombineThreshold = 0;
-    frequency = 30;
-
-    // Sapling.
-    m_sspk_man->nWitnessCacheSize = 0;
-    m_sspk_man->nWitnessCacheNeedsUpdate = true;
 }
 
 bool CWallet::CanSupportFeature(enum WalletFeature wf)
