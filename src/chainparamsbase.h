@@ -57,10 +57,4 @@ const CBaseChainParams& BaseParams();
 /** Sets the params returned by Params() to those for the given network. */
 void SelectBaseParams(const std::string& chain);
 
-/**
- * Returns the appropriate chain name from the program arguments.
- * @return CBaseChainParams::MAX_NETWORK_TYPES if an invalid combination is given. CBaseChainParams::MAIN by default.
- */
-std::string ChainNameFromCommandLine();
-
 #endif // PIVX_CHAINPARAMSBASE_H
