@@ -152,10 +152,13 @@ BOOST_AUTO_TEST_CASE(addrman_simple)
 
 
     // Test 5: New table has one addr and we add a diff addr we should
-    //  have two addrs.
+    // have at least one addr.
+    // Note that addrman's size cannot be tested reliably after insertion, as
+    // hash collisions may occur. But we can always be sure of at least one
+    // success.
     CService addr2 = ResolveService("250.1.1.2", 8333);
     addrman.Add(CAddress(addr2, NODE_NONE), source);
-    BOOST_CHECK(addrman.size() == 2);
+    BOOST_CHECK(addrman.size() >= 1);
 
     // Test 6: AddrMan::Clear() should empty the new table.
     addrman.Clear();
