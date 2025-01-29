@@ -875,8 +875,10 @@ bool IsInitialBlockDownload()
         return true;
     bool state = (chainHeight < pindexBestHeader->nHeight - 24 * 6 ||
             pindexBestHeader->GetBlockTime() < GetTime() - nMaxTipAge);
-    if (!state)
+    if (!state) {
+        LogPrintf("Leaving InitialBlockDownload (latching to false)\n");
         latchToFalse.store(true, std::memory_order_relaxed);
+    }
     return state;
 }
 
