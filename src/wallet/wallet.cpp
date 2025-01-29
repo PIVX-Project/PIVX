@@ -3586,7 +3586,7 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
     LOCK2(cs_main, cs_wallet);
 
     DBErrors nLoadWalletRet = WalletBatch(*database, "cr+").LoadWallet(this);
-    if (nLoadWalletRet == DB_NEED_REWRITE) {
+    if (nLoadWalletRet == DBErrors::NEED_REWRITE) {
         if (database->Rewrite( "\x04pool")) {
             // TODO: Implement spk_man->RewriteDB().
             m_spk_man->set_pre_split_keypool.clear();
@@ -3599,19 +3599,19 @@ DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
     // This wallet is in its first run if all of these are empty
     fFirstRunRet = mapKeys.empty() && mapCryptedKeys.empty() && mapMasterKeys.empty() && setWatchOnly.empty() && mapScripts.empty();
 
-    if (nLoadWalletRet != DB_LOAD_OK)
+    if (nLoadWalletRet != DBErrors::LOAD_OK)
         return nLoadWalletRet;
 
     uiInterface.LoadWallet(this);
 
-    return DB_LOAD_OK;
+    return DBErrors::LOAD_OK;
 }
 
 
 DBErrors CWallet::ZapWalletTx(std::vector<CWalletTx>& vWtx)
 {
     DBErrors nZapWalletTxRet = WalletBatch(*database, "cr+").ZapWalletTx(this, vWtx);
-    if (nZapWalletTxRet == DB_NEED_REWRITE) {
+    if (nZapWalletTxRet == DBErrors::NEED_REWRITE) {
         if (database->Rewrite("\x04pool")) {
             LOCK(cs_wallet);
             m_spk_man->set_pre_split_keypool.clear();
@@ -3621,10 +3621,10 @@ DBErrors CWallet::ZapWalletTx(std::vector<CWalletTx>& vWtx)
         }
     }
 
-    if (nZapWalletTxRet != DB_LOAD_OK)
+    if (nZapWalletTxRet != DBErrors::LOAD_OK)
         return nZapWalletTxRet;
 
-    return DB_LOAD_OK;
+    return DBErrors::LOAD_OK;
 }
 
 std::string CWallet::ParseIntoAddress(const CWDestination& dest, const std::string& purpose) {
@@ -4260,7 +4260,7 @@ CWallet* CWallet::CreateWalletFromFile(const std::string& name, const fs::path& 
 
         std::unique_ptr<CWallet> tempWallet = std::make_unique<CWallet>(name, WalletDatabase::Create(path));
         DBErrors nZapWalletRet = tempWallet->ZapWalletTx(vWtx);
-        if (nZapWalletRet != DB_LOAD_OK) {
+        if (nZapWalletRet != DBErrors::LOAD_OK) {
             UIError(strprintf(_("Error loading %s: Wallet corrupted"), walletFile));
             return nullptr;
         }
@@ -4272,17 +4272,17 @@ CWallet* CWallet::CreateWalletFromFile(const std::string& name, const fs::path& 
     bool fFirstRun = true;
     CWallet *walletInstance = new CWallet(name, WalletDatabase::Create(path));
     DBErrors nLoadWalletRet = walletInstance->LoadWallet(fFirstRun);
-    if (nLoadWalletRet != DB_LOAD_OK) {
-        if (nLoadWalletRet == DB_CORRUPT) {
+    if (nLoadWalletRet != DBErrors::LOAD_OK) {
+        if (nLoadWalletRet == DBErrors::CORRUPT) {
             UIError(strprintf(_("Error loading %s: Wallet corrupted"), walletFile));
             return nullptr;
-        } else if (nLoadWalletRet == DB_NONCRITICAL_ERROR) {
+        } else if (nLoadWalletRet == DBErrors::NONCRITICAL_ERROR) {
             UIWarning(strprintf(_("Warning: error reading %s! All keys read correctly, but transaction data"
                          " or address book entries might be missing or incorrect."), walletFile));
-        } else if (nLoadWalletRet == DB_TOO_NEW) {
+        } else if (nLoadWalletRet == DBErrors::TOO_NEW) {
             UIError(strprintf(_("Error loading %s: Wallet requires newer version of %s"), walletFile, PACKAGE_NAME));
             return nullptr;
-        } else if (nLoadWalletRet == DB_NEED_REWRITE) {
+        } else if (nLoadWalletRet == DBErrors::NEED_REWRITE) {
             UIError(strprintf(_("Wallet needed to be rewritten: restart %s to complete"), PACKAGE_NAME));
             return nullptr;
         } else {
