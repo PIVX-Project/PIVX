@@ -33,7 +33,7 @@ enum class RetFormat {
 };
 
 static const struct {
-    enum RetFormat rf;
+    RetFormat rf;
     const char* name;
 } rf_names[] = {
     {RetFormat::UNDEF, ""},
@@ -69,7 +69,7 @@ static bool RESTERR(HTTPRequest* req, enum HTTPStatusCode status, std::string me
     return false;
 }
 
-static enum RetFormat ParseDataFormat(std::vector<std::string>& params, const std::string& strReq)
+static RetFormat ParseDataFormat(std::vector<std::string>& params, const std::string& strReq)
 {
     boost::split(params, strReq, boost::is_any_of("."));
     if (params.size() > 1) {
