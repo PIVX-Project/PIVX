@@ -152,11 +152,9 @@ static CScript PushAll(const std::vector<valtype>& values)
 
 bool ProduceSignature(const BaseSignatureCreator& creator, const CScript& fromPubKey, SignatureData& sigdata, SigVersion sigversion, bool fColdStake, ScriptError* serror)
 {
-    CScript script = fromPubKey;
-    bool solved = true;
     std::vector<valtype> result;
     txnouttype whichType;
-    solved = SignStep(creator, script, result, whichType, sigversion, fColdStake);
+    bool solved = SignStep(creator, fromPubKey, result, whichType, sigversion, fColdStake);
     CScript subscript;
 
     if (solved && whichType == TX_SCRIPTHASH)
@@ -164,8 +162,8 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CScript& fromPu
         // Solver returns the subscript that needs to be evaluated;
         // the final scriptSig is the signatures from that
         // and then the serialized subscript:
-        script = subscript = CScript(result[0].begin(), result[0].end());
-        solved = solved && SignStep(creator, script, result, whichType, sigversion, fColdStake) && whichType != TX_SCRIPTHASH;
+        subscript = CScript(result[0].begin(), result[0].end());
+        solved = solved && SignStep(creator, subscript, result, whichType, sigversion, fColdStake) && whichType != TX_SCRIPTHASH;
         result.emplace_back(subscript.begin(), subscript.end());
     }
 
