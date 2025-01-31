@@ -18,11 +18,7 @@ from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
 )
-from collections import OrderedDict
-from io import BytesIO
 from test_framework.messages import CTransaction, ToHex
-from test_framework.test_framework import PivxTestFramework
-from test_framework.util import *
 
 class multidict(dict):
     """Dictionary that allows duplicate keys.
