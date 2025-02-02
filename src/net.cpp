@@ -1115,8 +1115,13 @@ void CConnman::AcceptConnection(const ListenSocket& hListenSocket) {
         return;
     }
 
-    if (IsBanned(addr) && !whitelisted) {
-        LogPrint(BCLog::NET, "connection from %s dropped (banned)\n", addr.ToString());
+    // According to the internet TCP_NODELAY is not carried into accepted sockets
+    // on all platforms.  Set it again here just to be sure.
+    SetSocketNoDelay(hSocket);
+
+    if (IsBanned(addr) && !whitelisted)
+    {
+        LogPrintf("connection from %s dropped (banned)\n", addr.ToString());
         CloseSocket(hSocket);
         return;
     }
