@@ -988,7 +988,7 @@ bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& 
             }
 
             // Size limits
-            if (stack.size() + altstack.size() > 1000)
+            if (stack.size() + altstack.size() > MAX_STACK_SIZE)
                 return set_error(serror, SCRIPT_ERR_STACK_SIZE);
         }
     }
@@ -1184,12 +1184,11 @@ uint256 SignatureHash(const CScript& scriptCode, const CTransaction& txTo, unsig
         return UINT256_ONE;
     }
 
-    if (txTo.isSaplingVersion() && sigversion != SIGVERSION_SAPLING) {
-        throw std::runtime_error("SignatureHash in Sapling tx with wrong sigversion " + std::to_string(sigversion));
+    if (txTo.isSaplingVersion() && sigversion != SigVersion::SAPLING) {
+        throw std::runtime_error("SignatureHash in Sapling tx with wrong sigversion " + std::to_string((int)sigversion));
     }
 
-    if (sigversion == SIGVERSION_SAPLING) {
-
+    if (sigversion == SigVersion::SAPLING) {
         uint256 hashPrevouts;
         uint256 hashSequence;
         uint256 hashOutputs;

@@ -487,6 +487,7 @@ void PeerLogicValidation::FinalizeNode(NodeId nodeid, bool& fUpdateConnectionTim
     nPreferredDownload -= state->fPreferredDownload;
 
     mapNodeState.erase(nodeid);
+    LogPrint(BCLog::NET, "Cleared nodestate for peer=%d\n", nodeid);
 }
 
 bool GetNodeStateStats(NodeId nodeid, CNodeStateStats& stats)
