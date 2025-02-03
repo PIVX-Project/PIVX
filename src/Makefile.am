@@ -283,6 +283,7 @@ BITCOIN_CORE_H = \
   script/standard.h \
   script/script_error.h \
   serialize.h \
+  simpleroi.h \
   shutdown.h \
   span.h \
   spork.h \
@@ -450,6 +451,7 @@ libbitcoin_wallet_a_SOURCES = \
   crypter.cpp \
   legacy/stakemodifier.cpp \
   kernel.cpp \
+  simpleroi.cpp \
   wallet/db.cpp \
   wallet/fees.cpp \
   wallet/init.cpp \
