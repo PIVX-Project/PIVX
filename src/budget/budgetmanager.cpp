@@ -5,6 +5,8 @@
 
 #include "budget/budgetmanager.h"
 
+#include "addrman.h"
+#include "chainparams.h"
 #include "consensus/validation.h"
 #include "evo/deterministicmns.h"
 #include "masternodeman.h"
@@ -1308,7 +1310,7 @@ int CBudgetManager::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            EraseObjectRequest(proposal.GetHash());
+            EraseObjectRequest(pfrom->GetId(), CInv(MSG_BUDGET_PROPOSAL, proposal.GetHash()));
         }
         return ProcessProposal(proposal);
     }
@@ -1321,7 +1323,7 @@ int CBudgetManager::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            EraseObjectRequest(vote.GetHash());
+            EraseObjectRequest(pfrom->GetId(), CInv(MSG_BUDGET_VOTE, vote.GetHash()));
         }
 
         CValidationState state;
@@ -1344,7 +1346,7 @@ int CBudgetManager::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            EraseObjectRequest(finalbudget.GetHash());
+            EraseObjectRequest(pfrom->GetId(), CInv(MSG_BUDGET_FINALIZED, finalbudget.GetHash()));
         }
         return ProcessFinalizedBudget(finalbudget, pfrom);
     }
@@ -1357,7 +1359,7 @@ int CBudgetManager::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            EraseObjectRequest(vote.GetHash());
+            EraseObjectRequest(pfrom->GetId(), CInv(MSG_BUDGET_FINALIZED_VOTE, vote.GetHash()));
         }
 
         CValidationState state;

@@ -538,11 +538,27 @@ static void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vec
 }
 
 } // namespace
-void EraseObjectRequest(const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
+
+void EraseObjectRequest(CNodeState* nodestate, const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     AssertLockHeld(cs_main);
-    g_already_asked_for.erase(hash);
-    g_erased_object_requests.insert(std::make_pair(hash, GetTimeMillis()));
+    g_already_asked_for.erase(inv.hash);
+    g_erased_object_requests.insert(std::make_pair(inv.hash, GetTimeMillis()));
+
+    if (nodestate) {
+        nodestate->m_tx_download.m_tx_announced.erase(inv);
+        nodestate->m_tx_download.m_tx_in_flight.erase(inv);
+    }
+}
+
+void EraseObjectRequest(NodeId nodeId, const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
+{
+    AssertLockHeld(cs_main);
+    auto* state = State(nodeId);
+    if (!state) {
+        return;
+    }
+    EraseObjectRequest(state, inv);
 }
 
 int64_t GetObjectRequestTime(const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
@@ -1954,7 +1970,7 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
         CNodeState* nodestate = State(pfrom->GetId());
         nodestate->m_tx_download.m_tx_announced.erase(inv);
         nodestate->m_tx_download.m_tx_in_flight.erase(inv);
-        EraseObjectRequest(inv.hash);
+        EraseObjectRequest(pfrom->GetId(), inv);
 
         if (ptx->ContainsZerocoins()) {
             // Don't even try to check zerocoins at all.

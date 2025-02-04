@@ -45,7 +45,7 @@ void CDKGPendingMessages::PushPendingMessage(NodeId from, CDataStream& vRecv, in
 
     LOCK2(cs_main, cs);
 
-    EraseObjectRequest(hash);
+    EraseObjectRequest(from, CInv(invType, hash));
 
     if (!seenMessages.emplace(hash).second) {
         LogPrint(BCLog::NET, "CDKGPendingMessages::%s -- already seen %s, peer=%d\n", __func__, hash.ToString(), from);

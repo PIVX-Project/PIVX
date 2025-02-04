@@ -431,7 +431,7 @@ bool CMasternodePayments::ProcessMessageMasternodePayments(CNode* pfrom, std::st
         {
             // Clear inv request
             LOCK(cs_main);
-            EraseObjectRequest(winner.GetHash());
+            EraseObjectRequest(pfrom->GetId(), CInv(MSG_MASTERNODE_WINNER, winner.GetHash()));
         }
 
         ProcessMNWinner(winner, pfrom, state);

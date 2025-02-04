@@ -4,6 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "quorums_signing.h"
+#include "chainparams.h"
 #include "clientversion.h"
 #include "netaddress.h"
 #include "quorums_signing_shares.h"
@@ -642,7 +643,7 @@ void CSigningManager::ProcessRecoveredSig(NodeId nodeId, const CRecoveredSig& re
 
     {
         LOCK(cs_main);
-        EraseObjectRequest(recoveredSig.GetHash());
+        EraseObjectRequest(nodeId, CInv(MSG_QUORUM_RECOVERED_SIG, recoveredSig.GetHash()));
     }
 
     if (db.HasRecoveredSigForHash(recoveredSig.GetHash())) {

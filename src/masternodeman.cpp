@@ -5,6 +5,8 @@
 
 #include "masternodeman.h"
 
+#include "addrman.h"
+#include "chainparams.h"
 #include "evo/deterministicmns.h"
 #include "fs.h"
 #include "masternode-payments.h"
@@ -968,7 +970,7 @@ int CMasternodeMan::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            EraseObjectRequest(mnb.GetHash());
+            EraseObjectRequest(pfrom->GetId(), CInv(MSG_MASTERNODE_ANNOUNCE, mnb.GetHash()));
         }
         return ProcessMNBroadcast(pfrom, mnb);
 
@@ -979,7 +981,7 @@ int CMasternodeMan::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            EraseObjectRequest(mnb.GetHash());
+            EraseObjectRequest(pfrom->GetId(), CInv(MSG_MASTERNODE_ANNOUNCE, mnb.GetHash()));
         }
 
         // For now, let's not process mnb2 with pre-BIP155 node addr format.
@@ -998,7 +1000,7 @@ int CMasternodeMan::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            EraseObjectRequest(mnp.GetHash());
+            EraseObjectRequest(pfrom->GetId(), CInv(MSG_MASTERNODE_PING, mnp.GetHash()));
         }
         return ProcessMNPing(pfrom, mnp);
 

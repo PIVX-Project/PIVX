@@ -81,7 +81,7 @@ using SecondsDouble = std::chrono::duration<double, std::chrono::seconds::period
  */
 inline double CountSecondsDouble(SecondsDouble t) { return t.count(); }
 
-void EraseObjectRequest(const uint256& hash);
+void EraseObjectRequest(NodeId nodeId, const CInv& inv);
 void RequestObject(NodeId nodeId, const CInv& inv, int64_t nNow);
 
 #endif // PIVX_NET_PROCESSING_H

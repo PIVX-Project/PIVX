@@ -54,7 +54,7 @@ void CQuorumBlockProcessor::ProcessMessage(CNode* pfrom, CDataStream& vRecv, int
     uint256 qfc_hash{::SerializeHash(qc)};
     {
         LOCK(cs_main);
-        EraseObjectRequest(qfc_hash);
+        EraseObjectRequest(pfrom->GetId(), CInv(MSG_QUORUM_FINAL_COMMITMENT, qfc_hash));
     }
 
     if (qc.IsNull()) {
