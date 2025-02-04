@@ -2569,12 +2569,6 @@ void CConnman::RelayInv(CInv& inv, int minProtoVersion)
     }
 }
 
-void CConnman::RemoveAskFor(const uint256& invHash, int invType)
-{
-    LOCK(cs_vNodes);
-    // TODO: Remove this
-}
-
 void CConnman::UpdateQuorumRelayMemberIfNeeded(CNode* pnode)
 {
     if (!pnode->m_masternode_iqr_connection && pnode->m_masternode_connection &&

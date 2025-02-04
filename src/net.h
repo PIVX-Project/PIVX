@@ -295,9 +295,6 @@ public:
     std::vector<CNode*> CopyNodeVector();
     void ReleaseNodeVector(const std::vector<CNode*>& vecNodes);
 
-    // Clears AskFor requests for every known peer
-    void RemoveAskFor(const uint256& invHash, int invType);
-
     void RelayInv(CInv& inv, int minProtoVersion = ActiveProtocol());
     bool IsNodeConnected(const CAddress& addr);
     // Retrieves a connected peer (if connection success). Used only to check peer address availability for now.

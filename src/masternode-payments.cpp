@@ -5,20 +5,21 @@
 
 #include "masternode-payments.h"
 
+#include "budget/budgetmanager.h"
 #include "chainparams.h"
 #include "evo/deterministicmns.h"
 #include "fs.h"
-#include "budget/budgetmanager.h"
 #include "masternodeman.h"
 #include "netmessagemaker.h"
-#include "tiertwo/netfulfilledman.h"
 #include "spork.h"
 #include "sync.h"
+#include "tiertwo/netfulfilledman.h"
 #include "tiertwo/tiertwo_sync_state.h"
 #include "util/system.h"
 #include "utilmoneystr.h"
 #include "validation.h"
 
+void EraseObjectRequest(NodeId nodeId, const CInv& inv);
 
 /** Object for who's going to get paid on which blocks */
 CMasternodePayments masternodePayments;
@@ -430,7 +431,7 @@ bool CMasternodePayments::ProcessMessageMasternodePayments(CNode* pfrom, std::st
         {
             // Clear inv request
             LOCK(cs_main);
-            g_connman->RemoveAskFor(winner.GetHash(), MSG_MASTERNODE_WINNER);
+            EraseObjectRequest(winner.GetHash());
         }
 
         ProcessMNWinner(winner, pfrom, state);

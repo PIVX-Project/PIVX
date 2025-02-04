@@ -9,10 +9,10 @@
 #include "evo/deterministicmns.h"
 #include "masternodeman.h"
 #include "netmessagemaker.h"
-#include "tiertwo/tiertwo_sync_state.h"
 #include "tiertwo/netfulfilledman.h"
+#include "tiertwo/tiertwo_sync_state.h"
 #include "util/validation.h"
-#include "validation.h"   // GetTransaction, cs_main
+#include "validation.h" // GetTransaction, cs_main
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h" // future: use interface instead.
@@ -27,6 +27,8 @@ CBudgetManager g_budgetman;
 
 // Used to check both proposals and finalized-budgets collateral txes
 bool CheckCollateral(const uint256& nTxCollateralHash, const uint256& nExpectedHash, std::string& strError, int64_t& nTime, int nCurrentHeight, bool fBudgetFinalization);
+
+void EraseObjectRequest(NodeId nodeId, const CInv& inv);
 
 void CBudgetManager::ReloadMapSeen()
 {
@@ -1306,7 +1308,7 @@ int CBudgetManager::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            g_connman->RemoveAskFor(proposal.GetHash(), MSG_BUDGET_PROPOSAL);
+            EraseObjectRequest(proposal.GetHash());
         }
         return ProcessProposal(proposal);
     }
@@ -1319,7 +1321,7 @@ int CBudgetManager::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            g_connman->RemoveAskFor(vote.GetHash(), MSG_BUDGET_VOTE);
+            EraseObjectRequest(vote.GetHash());
         }
 
         CValidationState state;
@@ -1342,7 +1344,7 @@ int CBudgetManager::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            g_connman->RemoveAskFor(finalbudget.GetHash(), MSG_BUDGET_FINALIZED);
+            EraseObjectRequest(finalbudget.GetHash());
         }
         return ProcessFinalizedBudget(finalbudget, pfrom);
     }
@@ -1355,7 +1357,7 @@ int CBudgetManager::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            g_connman->RemoveAskFor(vote.GetHash(), MSG_BUDGET_FINALIZED_VOTE);
+            EraseObjectRequest(vote.GetHash());
         }
 
         CValidationState state;
