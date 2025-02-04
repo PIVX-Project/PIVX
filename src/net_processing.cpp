@@ -44,6 +44,8 @@ static constexpr int32_t MAX_PEER_TX_ANNOUNCEMENTS = 2 * MAX_INV_SZ;
 static constexpr int64_t INBOUND_PEER_TX_DELAY = 2 * 1000000;
 /** How long to wait (in microseconds) before downloading a transaction from an additional peer */
 static constexpr int64_t GETDATA_TX_INTERVAL = 60 * 1000000;
+/** How long to wait (expiry * factor microseconds) before expiring an in-flight getdata request to a peer */
+static constexpr int64_t TX_EXPIRY_INTERVAL_FACTOR = 10;
 /** Maximum delay (in microseconds) for transaction requests to avoid biasing some peers over others. */
 static constexpr int64_t MAX_GETDATA_RANDOM_DELAY = 2 * 1000000;
 static_assert(INBOUND_PEER_TX_DELAY >= MAX_GETDATA_RANDOM_DELAY,
@@ -563,22 +565,48 @@ void UpdateObjectRequestTime(const uint256& hash, int64_t request_time) EXCLUSIV
 }
 
 
-int64_t CalculateObjectGetDataTime(const uint256& txid, int64_t current_time, bool use_inbound_delay) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
+int64_t GetObjectInterval(int invType)
 {
+    // some messages need to be re-requested faster when the first announcing peer did not answer to GETDATA
+    switch (invType) {
+    case MSG_QUORUM_RECOVERED_SIG:
+        return 15 * 1000000;
+    case MSG_CLSIG:
+        return 5 * 1000000;
+    default:
+        return GETDATA_TX_INTERVAL;
+    }
+}
+
+int64_t GetObjectExpiryInterval(int invType)
+{
+    return GetObjectInterval(invType) * TX_EXPIRY_INTERVAL_FACTOR;
+}
+
+int64_t GetObjectRandomDelay(int invType)
+{
+    if (invType == MSG_TX) {
+        return GetRand(MAX_GETDATA_RANDOM_DELAY);
+    }
+    return 0;
+}
+
+int64_t CalculateObjectGetDataTime(const CInv& inv, int64_t current_time, bool use_inbound_delay) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
+{
+    AssertLockHeld(cs_main);
     int64_t process_time;
-    int64_t last_request_time = GetObjectRequestTime(txid);
+    int64_t last_request_time = GetObjectRequestTime(inv.hash);
     // First time requesting this tx
     if (last_request_time == 0) {
         process_time = current_time;
     } else {
         // Randomize the delay to avoid biasing some peers over others (such as due to
         // fixed ordering of peer processing in ThreadMessageHandler)
-        process_time = last_request_time + GETDATA_TX_INTERVAL + GetRand(MAX_GETDATA_RANDOM_DELAY);
+        process_time = last_request_time + GetObjectInterval(inv.type) + GetObjectRandomDelay(inv.type);
     }
 
     // We delay processing announcements from inbound peers
     if (use_inbound_delay) process_time += INBOUND_PEER_TX_DELAY;
-
     return process_time;
 }
 
@@ -593,7 +621,7 @@ void RequestObject(CNodeState* state, const CInv& inv, int64_t nNow) EXCLUSIVE_L
     peer_download_state.m_tx_announced.insert(inv);
     // Calculate the time to try requesting this transaction. Use
     // fPreferredDownload as a proxy for outbound peers.
-    int64_t process_time = CalculateObjectGetDataTime(inv.hash, nNow, !state->fPreferredDownload);
+    int64_t process_time = CalculateObjectGetDataTime(inv, nNow, !state->fPreferredDownload);
 
     peer_download_state.m_tx_process_time.emplace(process_time, inv);
 }
@@ -2799,7 +2827,7 @@ bool PeerLogicValidation::SendMessages(CNode* pto, std::atomic<bool>& interruptM
                 // If this transaction was last requested more than 1 minute ago,
                 // then request.
                 int64_t last_request_time = GetObjectRequestTime(inv.hash);
-                if (last_request_time <= nNow - GETDATA_TX_INTERVAL) {
+                if (last_request_time <= nNow - GetObjectExpiryInterval(inv.type)) {
                     LogPrint(BCLog::NET, "Requesting %s peer=%d\n", inv.ToString(), pto->GetId());
                     vGetData.push_back(inv);
                     if (vGetData.size() >= MAX_GETDATA_SZ) {
@@ -2813,7 +2841,7 @@ bool PeerLogicValidation::SendMessages(CNode* pto, std::atomic<bool>& interruptM
                     // up processing to happen after the download times out
                     // (with a slight delay for inbound peers, to prefer
                     // requests to outbound peers).
-                    int64_t next_process_time = CalculateObjectGetDataTime(inv.hash, nNow, !state.fPreferredDownload);
+                    int64_t next_process_time = CalculateObjectGetDataTime(inv, nNow, !state.fPreferredDownload);
                     tx_process_time.emplace(next_process_time, inv);
                 }
             } else {
