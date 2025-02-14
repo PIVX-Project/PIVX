@@ -497,11 +497,11 @@ class RawTransactionsTest(PivxTestFramework):
         assert_greater_than(result["changepos"], -1)
         assert_equal(result["fee"] + res_dec["vout"][result["changepos"]]["value"], float(self.watchonly_amount) / 10)
 
-        signedtx = self.nodes[3].signrawtransaction(result["hex"])
-        assert not signedtx["complete"]
-        signedtx = self.nodes[0].signrawtransaction(signedtx["hex"])
-        assert signedtx["complete"]
-        self.nodes[0].sendrawtransaction(signedtx["hex"])
+        signedtxpart1 = self.nodes[3].signrawtransaction(result["hex"])
+        assert not signedtxpart1["complete"]
+        signedtxpart2 = self.nodes[0].signrawtransaction(signedtxpart1["hex"])
+        combinedtx = self.nodes[0].combinerawtransaction([signedtxpart1['hex'], signedtxpart2['hex']])
+        self.nodes[0].sendrawtransaction(combinedtx)
         self.nodes[0].generate(1)
         self.sync_all()
 
