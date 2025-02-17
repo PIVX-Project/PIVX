@@ -632,7 +632,7 @@ std::chrono::microseconds CalculateObjectGetDataTime(const CInv& inv, std::chron
     return process_time;
 }
 
-void RequestObject(CNodeState* state, const CInv& inv, std::chrono::microseconds current_time, bool fForce = false) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
+void RequestObject(CNodeState* state, const CInv& inv, std::chrono::microseconds current_time, bool fForce = true) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
 {
     CNodeState::TxDownloadState& peer_download_state = state->m_tx_download;
     if (peer_download_state.m_tx_announced.size() >= MAX_PEER_TX_ANNOUNCEMENTS || peer_download_state.m_tx_announced.count(inv)) {
@@ -660,7 +660,7 @@ void RequestObject(NodeId nodeId, const CInv& inv, std::chrono::microseconds cur
     AssertLockHeld(cs_main);
     auto* state = State(nodeId);
     if (!state) {
-        return;
+      return;
     }
 
     RequestObject(state, inv, current_time, fForce);
@@ -2400,8 +2400,25 @@ bool static ProcessMessage(CNode* pfrom, std::string strCommand, CDataStream& vR
     }
 
     else if (strCommand == NetMsgType::NOTFOUND) {
-        // We do not care about the NOTFOUND message (for now), but logging an Unknown Command
-        // message is undesirable as we transmit it ourselves.
+        // Remove the NOTFOUND transactions from the peer
+        LOCK(cs_main);
+        CNodeState *state = State(pfrom->GetId());
+        std::vector<CInv> vInv;
+        vRecv >> vInv;
+        if (vInv.size() <= MAX_PEER_TX_IN_FLIGHT + MAX_BLOCKS_IN_TRANSIT_PER_PEER) {
+            for (CInv &inv : vInv) {
+                //  If we receive a NOTFOUND message for a txid we requested, erase
+                //  it from our data structures for this peer.
+                auto in_flight_it = state->m_tx_download.m_tx_in_flight.find(inv);
+                if (in_flight_it == state->m_tx_download.m_tx_in_flight.end()) {
+                    // Skip any further work if this is a spurious NOTFOUND
+                    // message.
+                    continue;
+                }
+                    state->m_tx_download.m_tx_in_flight.erase(in_flight_it);
+                    state->m_tx_download.m_tx_announced.erase(inv);
+                }
+        }
         return true;
     }
 

@@ -1037,7 +1037,7 @@ class PivxTestFramework():
             raise AssertionError("Unable to complete mnsync: %s" % str(synced))
 
 
-    def wait_until_mn_status(self, status, mnTxHash, _timeout, orEmpty=False, with_ping_mns=None):
+    def wait_until_mn_status(self, status, mnTxHash, _timeout, orEmpty=False, with_ping_mns=None, wait_func = None):
         if with_ping_mns is None:
             with_ping_mns = []
         nodes_status = [None] * self.num_nodes
@@ -1054,6 +1054,8 @@ class PivxTestFramework():
         time.sleep(2)
         timeout = time.time() + _timeout
         while not all_synced() and time.time() < timeout:
+            if wait_func is not None:
+                wait_func()
             for i in range(self.num_nodes):
                 if not node_synced(i):
                     nodes_status[i] = self.get_mn_status(self.nodes[i], mnTxHash)
@@ -1066,10 +1068,10 @@ class PivxTestFramework():
             raise AssertionError(strErr)
 
 
-    def wait_until_mn_enabled(self, mnTxHash, _timeout, _with_ping_mns=None):
+    def wait_until_mn_enabled(self, mnTxHash, _timeout, _with_ping_mns=None, wait_func = None):
         if _with_ping_mns is None:
             _with_ping_mns = []
-        self.wait_until_mn_status("ENABLED", mnTxHash, _timeout, with_ping_mns=_with_ping_mns)
+        self.wait_until_mn_status("ENABLED", mnTxHash, _timeout, with_ping_mns=_with_ping_mns, wait_func=wait_func)
 
 
     def wait_until_mn_preenabled(self, mnTxHash, _timeout, _with_ping_mns=None):
