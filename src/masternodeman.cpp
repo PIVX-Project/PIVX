@@ -6,12 +6,12 @@
 #include "masternodeman.h"
 
 #include "addrman.h"
+#include "chainparams.h"
 #include "evo/deterministicmns.h"
 #include "fs.h"
 #include "masternode-payments.h"
 #include "masternode-sync.h"
 #include "masternode.h"
-#include "messagesigner.h"
 #include "netbase.h"
 #include "netmessagemaker.h"
 #include "shutdown.h"
@@ -22,6 +22,8 @@
 #include <boost/thread/thread.hpp>
 
 #define MN_WINNER_MINIMUM_AGE 8000    // Age in seconds. This should be > MASTERNODE_REMOVAL_SECONDS to avoid misconfigured new nodes in the list.
+
+void EraseObjectRequest(NodeId nodeId, const CInv& inv);
 
 /** Masternode manager */
 CMasternodeMan mnodeman;
@@ -968,7 +970,7 @@ int CMasternodeMan::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            g_connman->RemoveAskFor(mnb.GetHash(), MSG_MASTERNODE_ANNOUNCE);
+            EraseObjectRequest(pfrom->GetId(), CInv(MSG_MASTERNODE_ANNOUNCE, mnb.GetHash()));
         }
         return ProcessMNBroadcast(pfrom, mnb);
 
@@ -979,7 +981,7 @@ int CMasternodeMan::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            g_connman->RemoveAskFor(mnb.GetHash(), MSG_MASTERNODE_ANNOUNCE);
+            EraseObjectRequest(pfrom->GetId(), CInv(MSG_MASTERNODE_ANNOUNCE, mnb.GetHash()));
         }
 
         // For now, let's not process mnb2 with pre-BIP155 node addr format.
@@ -998,7 +1000,7 @@ int CMasternodeMan::ProcessMessageInner(CNode* pfrom, std::string& strCommand, C
         {
             // Clear inv request
             LOCK(cs_main);
-            g_connman->RemoveAskFor(mnp.GetHash(), MSG_MASTERNODE_PING);
+            EraseObjectRequest(pfrom->GetId(), CInv(MSG_MASTERNODE_PING, mnp.GetHash()));
         }
         return ProcessMNPing(pfrom, mnp);
 
