@@ -13,7 +13,7 @@ jobs:
     env:
       SHELLCHECK_VERSION: v0.7.1
       LC_ALL: C
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         shell: bash
@@ -79,7 +79,7 @@ jobs:
       CPPCHECK_BIN_DIR: ${{ github.workspace }}/.cppcheck
       CPPCHECK_BUILD_DIR: ${{ github.workspace }}/.ci-cppcheck
       LC_ALL: C
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         shell: bash
@@ -150,16 +150,16 @@ jobs:
       matrix:
         config:
           - name: Linux
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             python-version: '3.8'
             packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             cc: gcc
             cxx: g++
 
           - name: Linux-latest
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             python-version: '3.8'
-            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             cc: gcc
             cxx: g++
 
@@ -264,7 +264,7 @@ jobs:
         config:
           - name: x64-Linux
             id: Linux-x86_64-nodepends
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             python-version: '3.8'
             packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             unit_tests: true
@@ -274,9 +274,9 @@ jobs:
 
           - name: x64-Linux-latest
             id: Linux-x86_64-nodepends-latest
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             python-version: '3.8'
-            packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             unit_tests: true
             functional_tests: true
             goal: install
@@ -431,15 +431,15 @@ jobs:
         config:
           - name: x64-Linux
             id: Linux-x86_64-nodepends-tests
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             python-version: '3.8'
             packages: python3-zmq libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev
 
           - name: x64-Linux-latest
             id: Linux-x86_64-nodepends-latest-tests
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             python-version: '3.8'
-            packages: python3-zmq libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev
+            packages: python3-zmq libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev
 
           - name: x64-macOS
             id: macOS-nodepends
@@ -505,35 +505,35 @@ jobs:
       matrix:
         config:
           - name: ARM 32-bit
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: arm-linux-gnueabihf
             packages: g++-arm-linux-gnueabihf
 
           - name: AARCH64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: aarch64-linux-gnu
             packages: g++-aarch64-linux-gnu
 
           - name: Win64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: x86_64-w64-mingw32
             packages: nsis g++-mingw-w64-x86-64 wine-binfmt wine64
 
           - name: 32-bit + dash
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: i686-pc-linux-gnu
             packages: g++-multilib python3-zmq
 
           - name: x86_64 Linux
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: x86_64-unknown-linux-gnu
             packages: python3-zmq
             dep_opts: DEBUG=1
 
           - name: macOS 10.12
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: x86_64-apple-darwin16
-            packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools
+            packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools xorriso libtinfo5
             XCODE_VERSION: 11.3.1
             XCODE_BUILD_ID: 11C505
 
@@ -612,7 +612,7 @@ jobs:
         config:
           - name: ARM 32-bit [GOAL:install]
             id: ARM32-build
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: arm-linux-gnueabihf
             packages: python3 g++-arm-linux-gnueabihf
             unit_tests: false
@@ -624,7 +624,7 @@ jobs:
 
           - name: AARCH64 [GOAL:install]
             id: ARM64-build
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: aarch64-linux-gnu
             packages: g++-aarch64-linux-gnu
             unit_tests: false
@@ -634,7 +634,7 @@ jobs:
 
           - name: Win64 [GOAL:deploy]
             id: Win64-build
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: x86_64-w64-mingw32
             packages: nsis g++-mingw-w64-x86-64 wine-binfmt wine64
             unit_tests: false
@@ -645,7 +645,7 @@ jobs:
 
           - name: x86_64 Linux [GOAL:install]
             id: Linux-x86_64-build
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: x86_64-unknown-linux-gnu
             packages: python3-zmq
             unit_tests: true
@@ -655,9 +655,9 @@ jobs:
 
           - name: macOS 10.12 [GOAL:deploy]
             id: macOS10.12-build
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: x86_64-apple-darwin16
-            packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools
+            packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools xorriso libtinfo5
             XCODE_VERSION: 11.3.1
             XCODE_BUILD_ID: 11C505
             unit_tests: false
@@ -815,14 +815,14 @@ jobs:
         config:
           - name: x86_64 Linux [Full Functional Tests]
             id: Linux-x86_64-tests
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: x86_64-unknown-linux-gnu
             packages: python3-zmq
             test_runner_extra: "--coverage --all --exclude feature_dbcrash"
 
           - name: x86_64 Linux [Only functional tests on legacy pre-HD wallets]
             id: Linux-x86_64-legacy-tests
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             host: x86_64-unknown-linux-gnu
             packages: python3-zmq
             test_runner_extra: "--legacywallet"
