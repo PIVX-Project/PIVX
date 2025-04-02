@@ -689,7 +689,7 @@ void CTxMemPool::removeConflicts(const CTransaction& tx)
 {
     // Remove transactions which depend on inputs of tx, recursively
     std::list<CTransaction> result;
-    LOCK(cs);
+    AssertLockHeld(cs);
     for (const CTxIn& txin : tx.vin) {
         auto it = mapNextTx.find(txin.prevout);
         if (it != mapNextTx.end()) {
