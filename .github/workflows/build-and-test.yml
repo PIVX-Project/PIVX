@@ -198,6 +198,11 @@ jobs:
             brew install "$APT_BASE" ${{ matrix.config.packages }}
           fi
 
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.31.6'
+
       - name: ccache cache files
         uses: actions/cache@v4
         with:
@@ -533,7 +538,7 @@ jobs:
           - name: macOS 10.12
             os: ubuntu-22.04
             host: x86_64-apple-darwin16
-            packages: cmake imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools xorriso libtinfo5
+            packages: imagemagick libcap-dev librsvg2-bin libz-dev libbz2-dev libtiff-tools xorriso libtinfo5
             XCODE_VERSION: 11.3.1
             XCODE_BUILD_ID: 11C505
 
@@ -550,6 +555,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --no-install-recommends --no-upgrade -qq "$APT_BASE" ${{ matrix.config.packages }}
+
+      - name: Setup cmake
+        uses: jwlawson/actions-setup-cmake@v2
+        with:
+          cmake-version: '3.31.6'
 
       - name: depends cache files
         uses: actions/cache@v4
