@@ -11,8 +11,9 @@
 #include "crypto/common.h"
 #include "uint256.h"
 
-#include <stdint.h>
+#include <chrono> // For std::chrono::microseconds
 #include <limits>
+#include <stdint.h>
 
 /**
  * Overall design of the RNG and entropy sources.
@@ -250,5 +251,7 @@ bool Random_SanityCheck();
  * needed if it is not called.
  */
 void RandomInit();
+
+std::chrono::microseconds GetRandMicros(std::chrono::microseconds duration_max) noexcept;
 
 #endif // PIVX_RANDOM_H
