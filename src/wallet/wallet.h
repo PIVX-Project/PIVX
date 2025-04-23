@@ -576,9 +576,9 @@ class WalletRescanReserver; //forward declarations for ScanForWalletTransactions
 class CWallet : public CCryptoKeyStore, public CValidationInterface
 {
 private:
-    static std::atomic<bool> fFlushScheduled;
-    std::atomic<bool> fAbortRescan;
-    std::atomic<bool> fScanningWallet; //controlled by WalletRescanReserver
+  static std::atomic<bool> fFlushScheduled;
+  std::atomic<bool> fAbortRescan{false};
+  std::atomic<bool> fScanningWallet{false}; //controlled by WalletRescanReserver
     std::mutex mutexScanning;
     friend class WalletRescanReserver;
 
@@ -591,10 +591,10 @@ private:
     std::unique_ptr<SaplingScriptPubKeyMan> m_sspk_man = std::make_unique<SaplingScriptPubKeyMan>(this);
 
     //! the current wallet version: clients below this version are not able to load the wallet
-    int nWalletVersion;
+    int nWalletVersion = FEATURE_BASE;
 
     //! the maximum wallet format version: memory-only variable that specifies to what version this wallet may be upgraded
-    int nWalletMaxVersion;
+    int nWalletMaxVersion = FEATURE_BASE;
 
     /**
      * Wallet filename from wallet=<path> command line or config option.
@@ -626,8 +626,8 @@ private:
     int m_last_block_processed_height GUARDED_BY(cs_wallet) = -1;
     int64_t m_last_block_processed_time GUARDED_BY(cs_wallet) = 0;
 
-    int64_t nNextResend;
-    int64_t nLastResend;
+    int64_t nNextResend = 0;
+    int64_t nLastResend = 0;
     std::atomic<int64_t> nTimeBestReceived{0}; // Used only to inform the wallet of when we last received a block
 
     /**
@@ -719,31 +719,31 @@ public:
      */
     mutable RecursiveMutex cs_wallet;
 
-    bool fWalletUnlockStaking;
+  bool fWalletUnlockStaking{false};
 
-    WalletBatch* encrypted_batch;
+  WalletBatch* encrypted_batch{nullptr};
 
     std::map<CKeyID, CKeyMetadata> mapKeyMetadata;
 
     typedef std::map<unsigned int, CMasterKey> MasterKeyMap;
     MasterKeyMap mapMasterKeys;
-    unsigned int nMasterKeyMaxID;
+    unsigned int nMasterKeyMaxID = 0;
 
     // Stake split threshold
-    CAmount nStakeSplitThreshold;
+    CAmount nStakeSplitThreshold = DEFAULT_STAKE_SPLIT_THRESHOLD;
     // minimum value allowed for nStakeSplitThreshold (customizable with -minstakesplit flag)
     static CAmount minStakeSplitThreshold;
     // Staker status (last hashed block and time)
-    CStakerStatus* pStakerStatus = nullptr;
+  CStakerStatus* pStakerStatus = new CStakerStatus();
 
     // User-defined fee PIV/kb
-    bool fUseCustomFee;
-    CAmount nCustomFee;
+    bool fUseCustomFee = false;
+  CAmount nCustomFee = CWallet::minTxFee.GetFeePerK();
 
     //Auto Combine Inputs
-    bool fCombineDust;
-    CAmount nAutoCombineThreshold;
-    int frequency;
+    bool fCombineDust = false;
+    CAmount nAutoCombineThreshold = 0;
+    int frequency = 30;
 
     /** Get database handle used by this wallet. Ideally this function would
      * not be necessary.
@@ -761,19 +761,18 @@ public:
     /** Construct wallet with specified name and database implementation. */
     CWallet(std::string name, std::unique_ptr<WalletDatabase> dbw_in);
     ~CWallet();
-    void SetNull();
 
     std::map<uint256, CWalletTx> mapWallet;
 
     typedef std::multimap<int64_t, CWalletTx*> TxItems;
     TxItems wtxOrdered;
 
-    int64_t nOrderPosNext;
+    int64_t nOrderPosNext = 0;
 
     std::set<COutPoint> setLockedCoins;
     std::set<SaplingOutPoint> setLockedNotes;
 
-    int64_t nTimeFirstKey;
+    int64_t nTimeFirstKey = 0;
 
     // Public SyncMetadata interface used for the sapling spent nullifier map.
     void SyncMetaDataN(std::pair<TxSpendMap<uint256>::iterator, TxSpendMap<uint256>::iterator> range);
@@ -1006,7 +1005,7 @@ public:
 
     //! Lock Wallet
     //! Holds a timestamp at which point the wallet is scheduled (externally) to be relocked. Caller must arrange for actual relocking to occur via Lock().
-    int64_t nRelockTime;
+    int64_t nRelockTime = 0;
     bool Lock();
     bool Unlock(const SecureString& strWalletPassphrase, bool anonimizeOnly = false);
     bool Unlock(const CKeyingMaterial& vMasterKeyIn);

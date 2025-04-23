@@ -32,7 +32,8 @@ static const unsigned int INVENTORY_BROADCAST_INTERVAL = 5;
  *  Limits the impact of low-fee transaction floods. */
 static const unsigned int INVENTORY_BROADCAST_MAX = 7 * INVENTORY_BROADCAST_INTERVAL;
 
-class PeerLogicValidation : public CValidationInterface, public NetEventsInterface {
+class PeerLogicValidation final : public CValidationInterface, public NetEventsInterface
+{
 private:
     CConnman* connman;
 
