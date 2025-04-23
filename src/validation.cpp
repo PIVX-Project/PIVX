@@ -209,11 +209,11 @@ std::unique_ptr<CZerocoinDB> zerocoinDB;
 std::unique_ptr<CSporkDB> pSporkDB;
 std::unique_ptr<AccumulatorCache> accumulatorCache;
 
-enum FlushStateMode {
-    FLUSH_STATE_NONE,
-    FLUSH_STATE_IF_NEEDED,
-    FLUSH_STATE_PERIODIC,
-    FLUSH_STATE_ALWAYS
+enum class FlushStateMode {
+    NONE,
+    IF_NEEDED,
+    PERIODIC,
+    ALWAYS
 };
 
 // See definition for documentation
@@ -642,7 +642,7 @@ bool AcceptToMemoryPoolWithTime(CTxMemPool& pool, CValidationState &state, const
     }
     // After we've (potentially) uncached entries, ensure our coins cache is still within its size limits
     CValidationState stateDummy;
-    FlushStateToDisk(stateDummy, FLUSH_STATE_PERIODIC);
+    FlushStateToDisk(stateDummy, FlushStateMode::PERIODIC);
     return res;
 }
 
@@ -1766,19 +1766,19 @@ bool static FlushStateToDisk(CValidationState& state, FlushStateMode mode)
         int64_t nTotalSpace = nCoinCacheUsage + std::max<int64_t>(nMempoolSizeMax - nMempoolUsage, 0);
         // The cache is large and we're within 10% and 10 MiB of the limit, but we have time now
         // (not in the middle of a block processing).
-        bool fCacheLarge = mode == FLUSH_STATE_PERIODIC &&
-                cacheSize > std::max((9 * nTotalSpace) / 10, nTotalSpace - MAX_BLOCK_COINSDB_USAGE * 1024 * 1024);
+        bool fCacheLarge = mode == FlushStateMode::PERIODIC &&
+                           cacheSize > std::max((9 * nTotalSpace) / 10, nTotalSpace - MAX_BLOCK_COINSDB_USAGE * 1024 * 1024);
         // The cache is over the limit, we have to write now.
-        bool fCacheCritical = mode == FLUSH_STATE_IF_NEEDED && (unsigned) cacheSize > nCoinCacheUsage;
+        bool fCacheCritical = mode == FlushStateMode::IF_NEEDED && (unsigned)cacheSize > nCoinCacheUsage;
         // The evoDB cache is too large, time to write
-        bool fEvoDbCacheCritical = mode == FLUSH_STATE_IF_NEEDED && evoDb != nullptr && evoDb->GetMemoryUsage() >= (64 << 20);
+        bool fEvoDbCacheCritical = mode == FlushStateMode::IF_NEEDED && evoDb != nullptr && evoDb->GetMemoryUsage() >= (64 << 20);
         // It's been a while since we wrote the block index to disk.
         // Do this frequently, so we don't need to redownload after a crash.
-        bool fPeriodicWrite = mode == FLUSH_STATE_PERIODIC && nNow > nLastWrite + (int64_t)DATABASE_WRITE_INTERVAL * 1000000;
+        bool fPeriodicWrite = mode == FlushStateMode::PERIODIC && nNow > nLastWrite + (int64_t)DATABASE_WRITE_INTERVAL * 1000000;
         // It's been very long since we flushed the cache. Do this infrequently, to optimize cache usage.
-        bool fPeriodicFlush = mode == FLUSH_STATE_PERIODIC && nNow > nLastFlush + (int64_t)DATABASE_FLUSH_INTERVAL * 1000000;
+        bool fPeriodicFlush = mode == FlushStateMode::PERIODIC && nNow > nLastFlush + (int64_t)DATABASE_FLUSH_INTERVAL * 1000000;
         // Combine all conditions that result in a full cache flush.
-        bool fDoFullFlush = (mode == FLUSH_STATE_ALWAYS) || fCacheLarge || fCacheCritical || fEvoDbCacheCritical || fPeriodicFlush;
+        bool fDoFullFlush = (mode == FlushStateMode::ALWAYS) || fCacheLarge || fCacheCritical || fEvoDbCacheCritical || fPeriodicFlush;
         // Write blocks and block index to disk.
         if (fDoFullFlush || fPeriodicWrite) {
             // Depend on nMinDiskSpace to ensure we can write block index
@@ -1833,7 +1833,7 @@ bool static FlushStateToDisk(CValidationState& state, FlushStateMode mode)
                 MoneySupply.Update(pcoinsTip->GetTotalAmount(), chainActive.Height());
             }
         }
-        if ((mode == FLUSH_STATE_ALWAYS || mode == FLUSH_STATE_PERIODIC) && nNow > nLastSetChain + (int64_t)DATABASE_WRITE_INTERVAL * 1000000) {
+        if ((mode == FlushStateMode::ALWAYS || mode == FlushStateMode::PERIODIC) && nNow > nLastSetChain + (int64_t)DATABASE_WRITE_INTERVAL * 1000000) {
             // Update best block in wallet (so we can detect restored wallets).
             GetMainSignals().SetBestChain(chainActive.GetLocator());
             nLastSetChain = nNow;
@@ -1848,7 +1848,7 @@ bool static FlushStateToDisk(CValidationState& state, FlushStateMode mode)
 void FlushStateToDisk()
 {
     CValidationState state;
-    FlushStateToDisk(state, FLUSH_STATE_ALWAYS);
+    FlushStateToDisk(state, FlushStateMode::ALWAYS);
 }
 
 /** Update chainActive and related internal data structures. */
@@ -1937,7 +1937,7 @@ bool static DisconnectTip(CValidationState& state, const CChainParams& chainpara
     LogPrint(BCLog::BENCHMARK, "- Disconnect block: %.2fms\n", (GetTimeMicros() - nStart) * 0.001);
     const uint256& saplingAnchorAfterDisconnect = pcoinsTip->GetBestAnchor();
     // Write the chain state to disk, if necessary.
-    if (!FlushStateToDisk(state, FLUSH_STATE_IF_NEEDED))
+    if (!FlushStateToDisk(state, FlushStateMode::IF_NEEDED))
         return false;
     if (disconnectpool) {
         // Save transactions to re-add to mempool at end of reorg
@@ -2076,9 +2076,9 @@ bool static ConnectTip(CValidationState& state, CBlockIndex* pindexNew, const st
     LogPrint(BCLog::BENCHMARK, "  - Flush: %.2fms [%.2fs]\n", (nTime4 - nTime3) * 0.001, nTimeFlush * 0.000001);
 
     // Write the chain state to disk, if necessary. Always write to disk if this is the first of a new file.
-    FlushStateMode flushMode = FLUSH_STATE_IF_NEEDED;
+    FlushStateMode flushMode = FlushStateMode::IF_NEEDED;
     if (pindexNew->pprev && (pindexNew->GetBlockPos().nFile != pindexNew->pprev->GetBlockPos().nFile))
-        flushMode = FLUSH_STATE_ALWAYS;
+        flushMode = FlushStateMode::ALWAYS;
     if (!FlushStateToDisk(state, flushMode))
         return false;
     int64_t nTime5 = GetTimeMicros();
@@ -2366,7 +2366,7 @@ bool ActivateBestChain(CValidationState& state, std::shared_ptr<const CBlock> pb
     CheckBlockIndex();
 
     // Write changes periodically to disk, after relay.
-    if (!FlushStateToDisk(state, FLUSH_STATE_PERIODIC)) {
+    if (!FlushStateToDisk(state, FlushStateMode::PERIODIC)) {
         return false;
     }
 
