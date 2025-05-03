@@ -413,7 +413,11 @@ UniValue startmasternode(const JSONRPCRequest& request)
 {
     // Skip after legacy obsolete. !TODO: remove when transition to DMN is complete
     if (deterministicMNManager->LegacyMNObsolete()) {
-        throw JSONRPCError(RPC_MISC_ERROR, "startmasternode is not supported when deterministic masternode list is active (DIP3)");
+        if (request.fHelp) {
+            throw std::runtime_error("startmasternode (deprecated and no longer functional)");
+        } else {
+            throw JSONRPCError(RPC_MISC_ERROR, "startmasternode is not supported when deterministic masternode list is active (DIP3)");
+        }
     }
 
     CWallet* const pwallet = GetWalletForJSONRPCRequest(request);
