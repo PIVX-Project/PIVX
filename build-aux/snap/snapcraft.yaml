@@ -124,7 +124,6 @@ parts:
       COPYCONF=0    # copy example config into users data folder, 1 = enabled
       JOBS=4        # 0 means off and make will run without -j
       PATCH=1       # 1 = enabled
-      SPLASHPNGS=0  # patch pngs to differ visaully from those installed from self compilation or other source like deb
       FIXPPCBUILD=1 # if ppc builds fail due to failed qt, apps part will return error and build will fail, 1 = enabled
       EXTRALOG=0    # prints env and all installed files at the end of current script
       RUNTESTS=0    # run make check after post install part
@@ -172,20 +171,6 @@ parts:
         sed -i 's/tar --strip-components/tar --no-same-owner --strip-components/' ${SNAPCRAFT_PART_BUILD}/depends/funcs.mk
       else
         echo "APPLY .patch files during compilation is disabled, skipping"
-      fi
-      if [ $SPLASHPNGS = 1 ]; then
-        echo "replace splash screen with snapcrafts"
-        mv -f $SNAPCRAFT_PART_BUILD/contrib/snap/images/splash.png $SNAPCRAFT_PART_BUILD/src/qt/res/images/splash.png
-        mv -f $SNAPCRAFT_PART_BUILD/contrib/snap/images/splash_regtest.png $SNAPCRAFT_PART_BUILD/src/qt/res/images/splash_regtest.png
-        mv -f $SNAPCRAFT_PART_BUILD/contrib/snap/images/splash_testnet.png $SNAPCRAFT_PART_BUILD/src/qt/res/images/splash_testnet.png
-        mv -f $SNAPCRAFT_PART_BUILD/contrib/snap/icons/favicon.ico $SNAPCRAFT_PART_BUILD/share/pixmaps/favicon.ico
-        mv -f $SNAPCRAFT_PART_BUILD/contrib/snap/icons/favicon_testnet.ico $SNAPCRAFT_PART_BUILD/share/pixmaps/favicon_testnet.ico
-        mv -f $SNAPCRAFT_PART_BUILD/contrib/snap/icons/favicon_regtest.ico $SNAPCRAFT_PART_BUILD/share/pixmaps/favicon_regtest.ico
-        mv -f $SNAPCRAFT_PART_BUILD/build-aux/snap/local/desktop/${BINPREF}.png $SNAPCRAFT_PART_BUILD/src/qt/res/icons/${BINPREF}.png
-        mv -f $SNAPCRAFT_PART_BUILD/build-aux/snap/local/desktop/${BINPREF}_testnet.png $SNAPCRAFT_PART_BUILD/src/qt/res/icons/${BINPREF}_testnet.png
-        mv -f $SNAPCRAFT_PART_BUILD/build-aux/snap/local/desktop/${BINPREF}_regtest.png $SNAPCRAFT_PART_BUILD/src/qt/res/icons/${BINPREF}_regtest.png
-      else
-        echo "patch icons and images is disabled, skipping"
       fi
       if [ $DEPENDS = 1 ]; then
         echo "-----------------------------------------------"
