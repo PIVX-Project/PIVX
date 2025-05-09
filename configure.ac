@@ -1168,6 +1168,7 @@ if test x$use_pkgconfig = xyes; then
           PKG_CHECK_MODULES([EVENT_PTHREADS], [libevent_pthreads], [], [AC_MSG_ERROR([libevent_pthreads not found.])])
         fi
         PKG_CHECK_MODULES([SODIUM], [libsodium], [], [AC_MSG_ERROR([libsodium not found.])])
+        PKG_CHECK_MODULES([GMP], [gmp], [], [AC_MSG_ERROR([libgmp not found.])])
       fi
 
       if test "x$use_zmq" = "xyes"; then
@@ -1191,6 +1192,8 @@ else
     fi
     AC_CHECK_HEADER([sodium/core.h], [], [AC_MSG_ERROR([libsodium headers missing])])
     AC_CHECK_LIB([sodium], [main], [SODIUM_LIBS=-lsodium], [AC_MSG_ERROR([libsodium missing])])
+    AC_CHECK_HEADER([gmp.h], [], [AC_MSG_ERROR([libgmp headers missing])])
+    AC_CHECK_LIB([gmp], [__gmpz_init], [LIBS="$LIBS -lgmp"], [AC_MSG_ERROR([libgmp missing])])
   fi
 
   if test "x$use_zmq" = "xyes"; then
@@ -1222,12 +1225,6 @@ else
     BITCOIN_QT_CHECK([AC_CHECK_LIB([Qt5Charts], [main], [CHARTS_LIBS=-lQt5Charts], [have_qtcharts=no])])
     BITCOIN_QT_CHECK([AC_CHECK_HEADER([QtCharts/qchartview.h], [], [have_qtcharts=no])])
   fi
-fi
-
-dnl gmp check
-GMP_CHECK
-if test x"$has_gmp" != x"yes"; then
-  AC_MSG_ERROR([libgmp not found])
 fi
 
 dnl univalue check
