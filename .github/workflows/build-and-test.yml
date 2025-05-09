@@ -152,32 +152,32 @@ jobs:
           - name: Linux
             os: ubuntu-22.04
             python-version: '3.8'
-            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             cc: gcc
             cxx: g++
 
           - name: Linux-latest
             os: ubuntu-24.04
             python-version: '3.8'
-            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libdb5.3++-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             cc: gcc
             cxx: g++
 
           - name: macOS
             os: macos-13
             python-version: '3.10'
-            packages: llvm@14 autoconf automake berkeley-db@4 libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
+            packages: autoconf automake libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
-            cc: $(brew --prefix llvm@14)/bin/clang
-            cxx: $(brew --prefix llvm@14)/bin/clang++
+            cc: clang
+            cxx: clang++
 
           - name: macOS-latest
             os: macos-14
             python-version: '3.12'
-            packages: llvm@14 autoconf automake berkeley-db@4 libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
+            packages: autoconf automake libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
-            cc: $(brew --prefix llvm@14)/bin/clang
-            cxx: $(brew --prefix llvm@14)/bin/clang++
+            cc: clang
+            cxx: clang++
 
     steps:
       - name: Get Source
@@ -195,8 +195,12 @@ jobs:
             sudo apt-get install --no-install-recommends --no-upgrade -qq "$APT_BASE" ${{ matrix.config.packages }}
           fi
           if [[ ${{ matrix.config.os }} = macos* ]]; then
-            brew install "$APT_BASE" ${{ matrix.config.packages }}
+            brew install -q "$APT_BASE" ${{ matrix.config.packages }}
           fi
+
+      - name: Install BerkeleyDB
+        run: |
+          sudo ./contrib/install_db4.sh /usr/local true
 
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v2
@@ -227,18 +231,16 @@ jobs:
             fi
             if [ "${{ matrix.config.boost_root }}" = "true" ]; then
               export CI_BOOST=1
-              if [ "${{ matrix.config.os }}" = "macos-14" ]; then
-                export LDFLAGS="-L/opt/homebrew/opt/boost/lib"
-                export CPPFLAGS="-I/opt/homebrew/opt/boost/include"
-              else
-                export CPPFLAGS="-I/usr/local/opt/boost/include -I/usr/local/opt/berkeley-db@4/include"
-                export LDFLAGS="-L/usr/local/opt/boost/lib -L/usr/local/opt/berkeley-db@4/lib"
-              fi
             fi
           fi
           export CC
           export CXX
           export PYTHON
+          # workaround for macos runners not being able to properly test the native clang++ from within cmake
+          if [[ ${{ matrix.config.os }} = macos* ]]; then
+            ./autogen.sh
+            ./configure
+          fi
           mkdir -p ${{ github.workspace }}/cmake-build-debug && cd ${{ github.workspace }}/cmake-build-debug
           cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" ${{ github.workspace }}
 
@@ -271,27 +273,27 @@ jobs:
             id: Linux-x86_64-nodepends
             os: ubuntu-22.04
             python-version: '3.8'
-            packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             unit_tests: true
             functional_tests: true
             goal: install
-            BITCOIN_CONFIG: "--enable-zmq --enable-debug --with-incompatible-bdb --with-gui=qt5 CPPFLAGS='-DARENA_DEBUG -DDEBUG_LOCKORDER'"
+            BITCOIN_CONFIG: "--enable-zmq --enable-debug --with-gui=qt5 CPPFLAGS='-DARENA_DEBUG -DDEBUG_LOCKORDER'"
 
           - name: x64-Linux-latest
             id: Linux-x86_64-nodepends-latest
             os: ubuntu-24.04
             python-version: '3.8'
-            packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             unit_tests: true
             functional_tests: true
             goal: install
-            BITCOIN_CONFIG: "--enable-zmq --enable-debug --with-incompatible-bdb --with-gui=qt5 CPPFLAGS='-DARENA_DEBUG -DDEBUG_LOCKORDER'"
+            BITCOIN_CONFIG: "--enable-zmq --enable-debug --with-gui=qt5 CPPFLAGS='-DARENA_DEBUG -DDEBUG_LOCKORDER'"
 
           - name: x64-macOS
             id: macOS-nodepends
             os: macos-13
             python-version: '3.10'
-            packages: autoconf automake ccache berkeley-db@4 libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
+            packages: autoconf automake ccache libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
             functional_tests: true
             goal: deploy
@@ -303,7 +305,7 @@ jobs:
             id: macOS-nodepends-latest
             os: macos-14
             python-version: '3.12'
-            packages: autoconf automake ccache berkeley-db@4 libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
+            packages: autoconf automake ccache libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
             functional_tests: true
             goal: deploy
@@ -327,9 +329,13 @@ jobs:
             sudo apt-get install --no-install-recommends --no-upgrade -qq "$APT_BASE" ${{ matrix.config.packages }}
           fi
           if [[ ${{ matrix.config.os }} = macos* ]]; then
-            brew install ${{ matrix.config.packages }}
+            brew install -q ${{ matrix.config.packages }}
             pip install ds_store mac_alias
           fi
+
+      - name: Install BerkeleyDB
+        run: |
+          sudo ./contrib/install_db4.sh /usr/local true
 
       - name: ccache cache files
         uses: actions/cache@v4
@@ -438,25 +444,25 @@ jobs:
             id: Linux-x86_64-nodepends-tests
             os: ubuntu-22.04
             python-version: '3.8'
-            packages: python3-zmq libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev
+            packages: python3-zmq libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev
 
           - name: x64-Linux-latest
             id: Linux-x86_64-nodepends-latest-tests
             os: ubuntu-24.04
             python-version: '3.8'
-            packages: python3-zmq libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libdb5.3++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev
+            packages: python3-zmq libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev
 
           - name: x64-macOS
             id: macOS-nodepends
             os: macos-13
             python-version: '3.10'
-            packages: berkeley-db@4 boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
+            packages: boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
           - name: arm64-macOS-latest
             id: macOS-nodepends-latest
             os: macos-14
             python-version: '3.12'
-            packages: berkeley-db@4 boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
+            packages: boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
     steps:
       - name: Initialize Python
@@ -471,7 +477,7 @@ jobs:
             sudo apt-get install --no-install-recommends --no-upgrade -qq ${{ matrix.config.packages }}
           fi
           if [[ ${{ matrix.config.os }} = macos* ]]; then
-            brew install ${{ matrix.config.packages }}
+            brew install -q ${{ matrix.config.packages }}
           fi
           pip install pyzmq
 

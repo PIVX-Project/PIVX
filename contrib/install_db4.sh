@@ -6,7 +6,7 @@ export LC_ALL=C
 set -e
 
 if [ -z "${1}" ]; then
-  echo "Usage: $0 <base-dir> [<extra-bdb-configure-flag> ...]"
+  echo "Usage: $0 <base-dir> [<ci-mode>] [<extra-bdb-configure-flag> ...]"
   echo
   echo "Must specify a single argument: the directory in which db4 will be built."
   echo "This is probably \`pwd\` if you're at the root of the pivx repository."
@@ -17,7 +17,15 @@ expand_path() {
   cd "${1}" && pwd -P
 }
 
-BDB_PREFIX="$(expand_path ${1})/db4"; shift;
+if [ "$#" -ge 2 ]; then
+  if [ "${2}" != 'true' ]; then
+    BDB_PREFIX="$(expand_path ${1})/db4"; shift;
+    echo "Installing in user mode..."
+  else
+    BDB_PREFIX="$(expand_path ${1})"; shift; shift;
+    echo "Installing in CI mode..."
+  fi
+fi
 BDB_VERSION='db-4.8.30.NC'
 BDB_HASH='12edc0df75bf9abd7f82f821795bcee50f42cb2e5f76a6a281b85732798364ef'
 BDB_URL="https://download.oracle.com/berkeley-db/${BDB_VERSION}.tar.gz"
@@ -61,7 +69,7 @@ http_get() {
 
 mkdir -p "${BDB_PREFIX}"
 http_get "${BDB_URL}" "${BDB_VERSION}.tar.gz" "${BDB_HASH}"
-tar -xzvf ${BDB_VERSION}.tar.gz -C "$BDB_PREFIX"
+tar -xzf ${BDB_VERSION}.tar.gz -C "$BDB_PREFIX"
 cd "${BDB_PREFIX}/${BDB_VERSION}/"
 
 # Apply a patch necessary when building with clang and c++11 (see https://community.oracle.com/thread/3952592)
@@ -70,13 +78,18 @@ CLANG_CXX11_PATCH_HASH='7a9a47b03fd5fb93a16ef42235fa9512db9b0829cfc3bdf90edd3ec1
 http_get "${CLANG_CXX11_PATCH_URL}" clang.patch "${CLANG_CXX11_PATCH_HASH}"
 patch -p2 < clang.patch
 
+BIGSUR_PATCH_URL='https://gist.githubusercontent.com/Fuzzbawls/51f8cc35e03d18f35b82e7b36e66491d/raw/d57f6731def206db65191932f5ae7016a325fde5/configure-pre-0.4.2.418-big_sur.diff'
+BIGSUR_PATCH_HASH='83af02f2aa2b746bb7225872cab29a253264be49db0ecebb12f841562d9a2923'
+http_get "${BIGSUR_PATCH_URL}" bigsur.patch "${BIGSUR_PATCH_HASH}"
+patch dist/configure < bigsur.patch
+
 # The packaged config.guess and config.sub are ancient (2009) and can cause build issues.
 # Replace them with modern versions.
 # See https://github.com/bitcoin/bitcoin/issues/16064
-CONFIG_GUESS_URL='https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=55eaf3e779455c4e5cc9f82efb5278be8f8f900b'
-CONFIG_GUESS_HASH='2d1ff7bca773d2ec3c6217118129220fa72d8adda67c7d2bf79994b3129232c1'
-CONFIG_SUB_URL='https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=55eaf3e779455c4e5cc9f82efb5278be8f8f900b'
-CONFIG_SUB_HASH='3a4befde9bcdf0fdb2763fc1bfa74e8696df94e1ad7aac8042d133c8ff1d2e32'
+CONFIG_GUESS_URL='https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=00b15927496058d23e6258a28d8996f87cf1f191'
+CONFIG_GUESS_HASH='e3d148130e9151735f8b9a8e69a70d06890ece51468a9762eb7ac0feddddcc2f'
+CONFIG_SUB_URL='https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=00b15927496058d23e6258a28d8996f87cf1f191'
+CONFIG_SUB_HASH='11c54f55c3ac99e5d2c3dc2bb0bcccbf69f8223cc68f6b2438daa806cf0d16d8'
 
 rm -f "dist/config.guess"
 rm -f "dist/config.sub"
@@ -86,7 +99,7 @@ http_get "${CONFIG_SUB_URL}" dist/config.sub "${CONFIG_SUB_HASH}"
 
 cd build_unix/
 
-"${BDB_PREFIX}/${BDB_VERSION}/dist/configure" \
+CFLAGS="-Wno-error=implicit-function-declaration" "${BDB_PREFIX}/${BDB_VERSION}/dist/configure" \
   --enable-cxx --disable-shared --disable-replication --with-pic --prefix="${BDB_PREFIX}" \
   "${@}"
 
