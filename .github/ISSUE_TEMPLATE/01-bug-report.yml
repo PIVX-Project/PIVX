@@ -1,0 +1,77 @@
+name: "🐛 Bug Report"
+description: File a bug report.
+title: "[Bug]: "
+labels: "Bug"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to file a bug report.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A concise description of what you're experiencing.
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: Describe what you expected to happen.
+    validations:
+      required: false
+  - type: textarea
+    id: reproduce-steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this issue?
+      placeholder: |
+        1. 
+        2. 
+        3.
+    validations:
+      required: false
+  - type: dropdown
+    id: version
+    attributes:
+      label: PIVX Core Wallet Version
+      description: What version of the PIVX Core wallet are you using?
+      multiple: false
+      options:
+        - 5.6.1 (Latest Release)
+        - 5.6.0
+        - Github master branch (self-compiled)
+        - 5.5.0 or below (Unsupported)
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: sys-platform
+    attributes:
+      label: What OS and system specs are you using?
+      description: Include OS version, RAM amount, and storage type.
+      value: |
+        - OS: 
+        - RAM: 
+        - Storage Type (HDD/SSD): 
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will will be automatically formatted into code, so no need for backticks.
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: extra-info
+    attributes:
+      label: Any additional information or context
+      description: |
+        Links? References? Anything that will give us more context about the issue you are encountering!
+        
+        Tip: You can attach image files by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false

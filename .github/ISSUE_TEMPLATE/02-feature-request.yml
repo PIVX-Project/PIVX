@@ -1,0 +1,58 @@
+name: "\U0001F4A1 Feature Request"
+description: Suggest an idea for the PIVX Core wallet.
+title: "[Feature Request]: "
+labels: "Feature Request"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to request additional features and functionality.
+  - type: textarea
+    id: problem-related
+    attributes:
+      label: Is your feature request related to a problem? Please describe.
+      description: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+    validations:
+      required: false
+  - type: textarea
+    id: feat-solution
+    attributes:
+      label: Describe the solution or feature you'd like
+      description: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: PIVX Core Wallet Version
+      description: What version of the PIVX Core wallet are you using?
+      multiple: false
+      options:
+        - 5.6.1 (Latest Release)
+        - 5.6.0
+        - Github master branch (self-compiled)
+        - 5.5.0 or below (Unsupported)
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: sys-platform
+    attributes:
+      label: What OS and system specs are you using?
+      description: Include OS version, RAM amount, and storage type.
+      value: |
+        - OS: 
+        - RAM: 
+        - Storage Type (HDD/SSD): 
+    validations:
+      required: true
+  - type: textarea
+    id: extra-info
+    attributes:
+      label: Any additional information or context
+      description: |
+        Links? References? Anything that will give us more context about your request!
+
+        Tip: You can attach image files by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false

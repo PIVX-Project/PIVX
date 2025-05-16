@@ -40,7 +40,7 @@ if [ -z "${COMMIT_RANGE}" ]; then
 fi
 
 showdiff() {
-  if ! git diff -U0 "${COMMIT_RANGE}" -- "." ":(exclude)depends/patches/" ":(exclude)src/chiabls" ":(exclude)src/immer" ":(exclude)src/leveldb/" ":(exclude)src/secp256k1/" ":(exclude)src/univalue/" ":(exclude)doc/release-notes.md" ":(exclude)doc/release-notes/" ":(exclude)build-aux/snap/local/patches/" ":(exclude)contrib/linearize/"; then
+  if ! git diff -U0 "${COMMIT_RANGE}" -- "." ":(exclude).github/ISSUE_TEMPLATE/" ":(exclude)depends/patches/" ":(exclude)src/chiabls" ":(exclude)src/immer" ":(exclude)src/leveldb/" ":(exclude)src/secp256k1/" ":(exclude)src/univalue/" ":(exclude)doc/release-notes.md" ":(exclude)doc/release-notes/" ":(exclude)build-aux/snap/local/patches/" ":(exclude)contrib/linearize/"; then
     echo "Failed to get a diff"
     exit 1
   fi
