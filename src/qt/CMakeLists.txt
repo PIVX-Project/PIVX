@@ -35,6 +35,19 @@ else()
     MESSAGE(FATAL_ERROR "Could not find any Qt5 installation")
 endif()
 
+list(APPEND _WEBP_PATHS
+        "/usr/local/opt/qt@5/plugins/imageformats"
+        "/opt/homebrew/opt/qt@5/plugins/imageformats"
+        "/usr/lib/"
+        "/usr/local/lib"
+)
+find_library(WEBP_FOUND NAMES qwebp PATHS ${_WEBP_PATHS} PATH_SUFFIXES "qt5/plugins/imageformats")
+if (WEBP_FOUND)
+    MESSAGE(STATUS "Found Qt5 webp plugin at ${WEBP_FOUND}")
+else ()
+    MESSAGE(FATAL_ERROR "Qt5 webp plugin not found!")
+endif ()
+
 if (Qt5DBus_FOUND)
     add_compile_options("-DUSE_DBUS")
 endif()
