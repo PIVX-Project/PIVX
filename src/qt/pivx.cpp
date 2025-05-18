@@ -63,6 +63,7 @@ Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 Q_IMPORT_PLUGIN(QSvgPlugin);
 Q_IMPORT_PLUGIN(QSvgIconPlugin);
 Q_IMPORT_PLUGIN(QGifPlugin);
+Q_IMPORT_PLUGIN(QWebpPlugin)
 #endif
 
 // Declare meta types used for QMetaObject::invokeMethod
