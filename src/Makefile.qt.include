@@ -496,8 +496,8 @@ RES_ICONS = \
   qt/res/images/ic-check-box-indeterminate.svg \
   qt/res/images/ic-information.svg \
   qt/res/images/ic-information-hover.svg \
-  qt/res/images/ani-loading-dark.gif \
-  qt/res/images/ani-loading.gif \
+  qt/res/images/ani-loading-dark.webp \
+  qt/res/images/ani-loading-light.webp \
   qt/res/images/ic-check-vote.svg \
   qt/res/images/ic-check-vote-active.svg \
   qt/res/images/ic-check-vote-dark.svg \
