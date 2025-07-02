@@ -302,7 +302,7 @@ TransactionBuilderResult TransactionBuilder::ProveAndSign()
         uint256 dataToBeSigned;
         CScript scriptCode;
         try {
-            dataToBeSigned = SignatureHash(scriptCode, mtx, NOT_AN_INPUT, SIGHASH_ALL, 0, SIGVERSION_SAPLING);
+            dataToBeSigned = SignatureHash(scriptCode, mtx, NOT_AN_INPUT, SIGHASH_ALL, 0, SigVersion::SAPLING);
         } catch (const std::logic_error& ex) {
             librustzcash_sapling_proving_ctx_free(ctx);
             return TransactionBuilderResult("Could not construct signature hash: " + std::string(ex.what()));
@@ -334,7 +334,7 @@ TransactionBuilderResult TransactionBuilder::ProveAndSign()
         bool signSuccess = ProduceSignature(
             TransactionSignatureCreator(
                 keystore, &txNewConst, nIn, tIn.value, SIGHASH_ALL),
-            tIn.scriptPubKey, sigdata, SIGVERSION_SAPLING, false);
+            tIn.scriptPubKey, sigdata, SigVersion::SAPLING, false);
 
         if (!signSuccess) {
             return TransactionBuilderResult("Failed to sign transaction");
@@ -366,7 +366,7 @@ TransactionBuilderResult TransactionBuilder::AddDummySignatures()
     for (int nIn = 0; nIn < (int) mtx.vin.size(); nIn++) {
         auto tIn = tIns[nIn];
         SignatureData sigdata;
-        if (!ProduceSignature(DummySignatureCreator(keystore), tIn.scriptPubKey, sigdata, SIGVERSION_SAPLING, false)) {
+        if (!ProduceSignature(DummySignatureCreator(keystore), tIn.scriptPubKey, sigdata, SigVersion::SAPLING, false)) {
             return TransactionBuilderResult("Failed to sign transaction");
         } else {
             UpdateTransaction(mtx, nIn, sigdata);
