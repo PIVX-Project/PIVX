@@ -574,8 +574,8 @@ jobs:
             depends/built
             depends/sdk-sources
             depends/${{ matrix.config.host }}
-          key: ${{ runner.os }}-depends-${{ matrix.config.host }}
-          restore-keys: ${{ runner.os }}-depends-${{ matrix.config.host }}
+          key: ${{ runner.os }}-depends-${{ matrix.config.host }}-v2
+          restore-keys: ${{ runner.os }}-depends-${{ matrix.config.host }}-v2
 
       - name: Build Depends
         run: |
@@ -619,6 +619,7 @@ jobs:
       CCACHE_COMPRESS: 1
       WINEDEBUG: fixme-all
       BOOST_TEST_RANDOM: 1 # random seed based on the current time
+      SDK_URL: https://bitcoincore.org/depends-sources/sdks
     defaults:
       run:
         shell: bash
@@ -704,8 +705,8 @@ jobs:
             depends/built
             depends/sdk-sources
             depends/${{ matrix.config.host }}
-          key: ${{ runner.os }}-depends-${{ matrix.config.host }}
-          restore-keys: ${{ runner.os }}-depends-${{ matrix.config.host }}
+          key: ${{ runner.os }}-depends-${{ matrix.config.host }}-v2
+          restore-keys: ${{ runner.os }}-depends-${{ matrix.config.host }}-v2
 
       - name: ccache cache files
         uses: actions/cache@v4

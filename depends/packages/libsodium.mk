@@ -11,7 +11,7 @@ define $(package)_preprocess_cmds
 endef
 
 define $(package)_config_cmds
-  $($(package)_autoconf) --enable-static --disable-shared
+  $($(package)_autoconf) --enable-static --disable-shared --disable-dependency-tracking --enable-option-checking
 endef
 
 define $(package)_build_cmds
@@ -20,4 +20,8 @@ endef
 
 define $(package)_stage_cmds
   $(MAKE) DESTDIR=$($(package)_staging_dir) install
+endef
+
+define $(package)_postprocess_cmds
+  rm lib/*.la
 endef
