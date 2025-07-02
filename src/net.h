@@ -36,17 +36,8 @@
 #include <arpa/inet.h>
 #endif
 
-// "Optimistic send" was introduced in the beginning of the Bitcoin project. I assume this was done because it was
-// thought that "send" would be very cheap when the send buffer is empty. This is not true, as shown by profiling.
-// When a lot of load is seen on the network, the "send" call done in the message handler thread can easily use up 20%
-// of time, effectively blocking things that could be done in parallel. We have introduced a way to wake up the select()
-// call in the network thread, which allows us to disable optimistic send without introducing an artificial latency/delay
-// when sending data. This however only works on non-WIN32 platforms for now. When we add support for WIN32 platforms,
-// we can completely remove optimistic send.
-#ifdef WIN32
-#define DEFAULT_ALLOW_OPTIMISTIC_SEND true
-#else
-#define DEFAULT_ALLOW_OPTIMISTIC_SEND false
+
+#ifndef WIN32
 #define USE_WAKEUP_PIPE
 #endif
 
@@ -224,7 +215,7 @@ public:
     bool ForNode(NodeId id, std::function<bool(CNode* pnode)> func);
     bool ForNode(const CService& addr, const std::function<bool(const CNode* pnode)>& cond, const std::function<bool(CNode* pnode)>& func);
 
-    void PushMessage(CNode* pnode, CSerializedNetMsg&& msg, bool allowOptimisticSend = DEFAULT_ALLOW_OPTIMISTIC_SEND);
+    void PushMessage(CNode* pnode, CSerializedNetMsg&& msg);
 
     template<typename Callable>
     bool ForEachNodeContinueIf(Callable&& func)
@@ -269,6 +260,16 @@ public:
         LOCK(cs_vNodes);
         for (auto&& node : vNodes) {
             if (NodeFullyConnected(node))
+                func(node);
+        }
+    };
+
+    template<typename Condition, typename Callable>
+    void ForEachNode(const Condition& cond, Callable&& func) const
+    {
+        LOCK(cs_vNodes);
+        for (auto&& node : vNodes) {
+            if (cond(node))
                 func(node);
         }
     };
@@ -720,6 +721,7 @@ public:
     std::atomic_bool m_wants_addrv2{false};
     std::atomic_bool fSuccessfullyConnected;
     std::atomic_bool fDisconnect;
+    std::atomic<int64_t> nDisconnectLingerTime{0};
     // We use fRelayTxes for two purposes -
     // a) it allows us to not relay tx invs before receiving the peer's version message
     // b) the peer may tell us in their version message that we should not relay tx invs
