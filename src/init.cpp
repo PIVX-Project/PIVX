@@ -1730,7 +1730,9 @@ bool AppInitMain()
         }
     }
 
-    LoadTierTwo(chain_active_height, load_cache_files);
+    if (!LoadTierTwo(chain_active_height, load_cache_files)) {
+        return false; // error informed inside the function
+    }
     RegisterTierTwoValidationInterface();
 
     // set the mode of budget voting for this node

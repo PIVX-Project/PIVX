@@ -162,12 +162,12 @@ bool LoadTierTwo(int chain_active_height, bool load_cache_files)
     CFlatDB<CMasternodeMetaMan> metadb(MN_META_CACHE_FILENAME, MN_META_CACHE_FILE_ID);
     if (load_cache_files) {
         if (!metadb.Load(g_mmetaman)) {
-            return UIError(strprintf(_("Failed to load masternode metadata cache from: %s"), metadb.GetDbPath().string()));
+            LogPrintf("Failed to load masternode metadata cache from: %s", metadb.GetDbPath().string());
         }
     } else {
         CMasternodeMetaMan mmetamanTmp;
         if (!metadb.Dump(mmetamanTmp)) {
-            return UIError(strprintf(_("Failed to clear masternode metadata cache at: %s"), metadb.GetDbPath().string()));
+            LogPrintf("Failed to clear masternode metadata cache at: %s", metadb.GetDbPath().string());
         }
     }
 
