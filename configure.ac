@@ -1169,7 +1169,14 @@ if test x$use_pkgconfig = xyes; then
           PKG_CHECK_MODULES([EVENT_PTHREADS], [libevent_pthreads], [], [AC_MSG_ERROR([libevent_pthreads not found.])])
         fi
         PKG_CHECK_MODULES([SODIUM], [libsodium], [], [AC_MSG_ERROR([libsodium not found.])])
-        PKG_CHECK_MODULES([GMP], [gmp], [], [AC_MSG_ERROR([libgmp not found.])])
+        dnl Ubuntu Bionic's libgmp-dev package doesn't include pkgconfig files,
+        dnl so we need to do some gymnastics here.
+        dnl TODO: Remove this drill down once Ubuntu Bionic is no longer supported.
+        PKG_CHECK_MODULES([GMP], [gmp], [], [
+          AC_CHECK_HEADER([gmp.h], [
+            AC_CHECK_LIB([gmp], [__gmpz_init], [LIBS="$LIBS -lgmp"], [AC_MSG_ERROR([libgmp missing])])
+          ], [AC_MSG_ERROR([libgmp headers missing])])
+        ])
       fi
 
       if test "x$use_zmq" = "xyes"; then
