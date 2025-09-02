@@ -200,8 +200,8 @@
         <file alias="ic-check-box-dark-active">res/images/ic-check-box-dark-active.svg</file>
         <file alias="ic-check-box-indeterminate">res/images/ic-check-box-indeterminate.svg</file>
         <file alias="ic-check-liliac-indeterminate">res/images/ic-check-liliac-indeterminate.svg</file>
-        <file alias="ani-loading-dark">res/images/ani-loading-dark.gif</file>
-        <file alias="ani-loading">res/images/ani-loading.gif</file>
+        <file alias="ani-loading-dark">res/images/ani-loading-dark.webp</file>
+        <file alias="ani-loading-light">res/images/ani-loading-light.webp</file>
         <file alias="ic-pending">res/images/ic-pending.svg</file>
         <file alias="ic-transaction-stake-delegated">res/images/ic-transaction-stake-delegated.svg</file>
         <file alias="ic-transaction-stake-delegated-inactive">res/images/ic-transaction-stake-delegated-inactive.svg</file>

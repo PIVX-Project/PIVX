@@ -17,6 +17,7 @@ These are the dependencies currently used by PIVX Core. You can find instruction
 | libnatpmp | [20150609](https://miniupnp.tuxfamily.org/files) |  | No |  |  |
 | libjpeg |  |  |  |  | [Yes](https://github.com/pivx-project/pivx/blob/master/depends/packages/qt.mk#L65) |
 | libpng |  |  |  |  | [Yes](https://github.com/pivx-project/pivx/blob/master/depends/packages/qt.mk#L64) |
+| libwebp | | | | | [Yes](https://github.com/pivx-project/pivx/blob/master/depends/packages/qt.mk#L22) |
 | librsvg | |  |  |  |  |
 | MiniUPnPc | [2.2.2](https://miniupnp.tuxfamily.org/files) |  | No |  |  |
 | GMP | [6.1.2](https://gmplib.org/) | | No | | |

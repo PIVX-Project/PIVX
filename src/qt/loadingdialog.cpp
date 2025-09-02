@@ -3,6 +3,9 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "loadingdialog.h"
+
+#include "qtutils.h"
+
 #include "ui_loadingdialog.h"
 
 #include <QMovie>
@@ -36,7 +39,12 @@ LoadingDialog::LoadingDialog(QWidget *parent, QString loadingMsg) :
 
     ui->frame->setProperty("cssClass", "container-loading");
 
-    QMovie *movie = new QMovie("://ani-loading-dark");
+    QMovie *movie = {};
+    if (isLightTheme()) {
+        movie = new QMovie("://ani-loading-light");
+    } else {
+        movie = new QMovie("://ani-loading-dark");
+    }
     ui->labelMovie->setText("");
     ui->labelMovie->setMovie(movie);
     movie->start();

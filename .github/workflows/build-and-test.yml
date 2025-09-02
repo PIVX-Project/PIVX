@@ -152,14 +152,14 @@ jobs:
           - name: Linux
             os: ubuntu-22.04
             python-version: '3.8'
-            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev qt5-image-formats-plugins libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             cc: gcc
             cxx: g++
 
           - name: Linux-latest
             os: ubuntu-24.04
             python-version: '3.8'
-            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev qt5-image-formats-plugins libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             cc: gcc
             cxx: g++
 
@@ -273,7 +273,7 @@ jobs:
             id: Linux-x86_64-nodepends
             os: ubuntu-22.04
             python-version: '3.8'
-            packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev qt5-image-formats-plugins libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             unit_tests: true
             functional_tests: true
             goal: install
@@ -283,7 +283,7 @@ jobs:
             id: Linux-x86_64-nodepends-latest
             os: ubuntu-24.04
             python-version: '3.8'
-            packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev qt5-image-formats-plugins libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             unit_tests: true
             functional_tests: true
             goal: install
