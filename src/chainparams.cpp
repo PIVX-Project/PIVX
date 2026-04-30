@@ -193,15 +193,14 @@ static const CCheckpointData data = {
 };
 
 static MapCheckpoints mapCheckpointsTestnet = {
-    {0, uint256S("0x001")},
-    //{    201, uint256S("6ae7d52092fd918c8ac8d9b1334400387d3057997e6e927a88e57186dc395231")},     // v5 activation (PoS/Sapling)
+    {0, uint256S("0x00000431e286f849bbd0b5cce53dd39e6f6e4497f91b078a9e5f6ef418e57912")},
 };
 
 static const CCheckpointData dataTestnet = {
     &mapCheckpointsTestnet,
-    1454124731,
-    0,
-    3000};
+    1777507200, // * UNIX timestamp of testnet6 genesis block (April 30, 2026)
+    0,          // * total number of transactions between genesis and last checkpoint (fresh start)
+    250};       // * estimated number of transactions per day after checkpoint
 
 static MapCheckpoints mapCheckpointsRegtest = {{0, uint256S("0x001")}};
 static const CCheckpointData dataRegtest = {
@@ -372,7 +371,7 @@ public:
 };
 
 /**
- * Testnet (v5)
+ * Testnet (v6)
  */
 class CTestNetParams : public CChainParams
 {
@@ -381,9 +380,10 @@ public:
     {
         strNetworkID = "test";
 
-        genesis = CreateGenesisBlock(1454124731, 2402015, 0x1e0ffff0, 1, 250 * COIN);
+        // Testnet6 genesis - April 30, 2026.
+        genesis = CreateGenesisBlock(1777507200, 461120, 0x1e0ffff0, 1, 250 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000041e482b9b9691d98eefb48473405c0b8ec31b76df3797c74a78680ef818"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000431e286f849bbd0b5cce53dd39e6f6e4497f91b078a9e5f6ef418e57912"));
         assert(genesis.hashMerkleRoot == uint256S("0x1b2ef6e2f28be914103a277377ae7729dcd125dfeb8bf97bd5964ba72b6dc39b"));
 
         consensus.fPowAllowMinDifficultyBlocks = true;
@@ -450,10 +450,10 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 201;
         consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 201;
         consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 262525;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 332300;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 925056;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_6].nActivationHeight          = 1624280; // Estimate Feb 23 Midnight UTC
+        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 201;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 201;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 201;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_6].nActivationHeight          = 201;
         consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight =
                 Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
 
@@ -462,10 +462,10 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 4-byte int at any alignment.
          */
-        pchMessageStart[0] = 0xf5;
-        pchMessageStart[1] = 0xe6;
-        pchMessageStart[2] = 0xd5;
-        pchMessageStart[3] = 0xca;
+        pchMessageStart[0] = 0xf6;
+        pchMessageStart[1] = 0xe7;
+        pchMessageStart[2] = 0xd6;
+        pchMessageStart[3] = 0xcb;
         nDefaultPort = 51474;
 
         // nodes with support for servicebits filtering should be at the top
@@ -484,7 +484,7 @@ public:
         // Testnet pivx BIP44 coin type is '1' (All coin's testnet default)
         base58Prefixes[EXT_COIN_TYPE] = {0x80, 0x00, 0x00, 0x01};
 
-        vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_test), std::end(chainparams_seed_test));
+        vFixedSeeds.clear(); // Testnet6 - no fixed seeds yet
 
         fRequireStandard = false;
 
