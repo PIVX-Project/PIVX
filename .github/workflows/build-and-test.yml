@@ -95,7 +95,7 @@ jobs:
           python-version: '3.8'
 
       - name: cppcheck cache files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .cppcheck
@@ -208,7 +208,7 @@ jobs:
           cmake-version: '3.31.6'
 
       - name: ccache cache files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .ccache
           key: ${{ runner.os }}-cmake-${{ matrix.config.name }}-ccache
@@ -338,7 +338,7 @@ jobs:
           sudo ./contrib/install_db4.sh /usr/local true
 
       - name: ccache cache files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .ccache
           key: ${{ runner.os }}-${{ matrix.config.id }}-native-ccache
@@ -568,7 +568,7 @@ jobs:
           cmake-version: '3.31.6'
 
       - name: depends cache files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             depends/built
@@ -699,7 +699,7 @@ jobs:
 
       - name: depends cache files
         if: matrix.config.no_depends != 1
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             depends/built
@@ -709,7 +709,7 @@ jobs:
           restore-keys: ${{ runner.os }}-depends-${{ matrix.config.host }}-v2
 
       - name: ccache cache files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .ccache
           key: ${{ runner.os }}-depbuild-${{ matrix.config.id }}-ccache
