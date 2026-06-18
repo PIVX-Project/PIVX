@@ -164,7 +164,7 @@ jobs:
             cxx: g++
 
           - name: macOS
-            os: macos-13
+            os: macos-15-intel
             python-version: '3.10'
             packages: autoconf automake libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
@@ -172,7 +172,7 @@ jobs:
             cxx: clang++
 
           - name: macOS-latest
-            os: macos-14
+            os: macos-15
             python-version: '3.12'
             packages: autoconf automake libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
@@ -215,7 +215,7 @@ jobs:
           restore-keys: ${{ runner.os }}-cmake-${{ matrix.config.name }}-ccache
 
       - name: Set Xcode Version
-        if: matrix.config.os == 'macos-14'
+        if: matrix.config.os == 'macos-15'
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '15.0.1'
@@ -291,7 +291,7 @@ jobs:
 
           - name: x64-macOS
             id: macOS-nodepends
-            os: macos-13
+            os: macos-15-intel
             python-version: '3.10'
             packages: autoconf automake ccache libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
@@ -303,7 +303,7 @@ jobs:
 
           - name: arm64-macOS-latest
             id: macOS-nodepends-latest
-            os: macos-14
+            os: macos-15
             python-version: '3.12'
             packages: autoconf automake ccache libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
@@ -345,7 +345,7 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ matrix.config.id }}-native-ccache
 
       - name: Set Xcode Version
-        if: matrix.config.os == 'macos-14'
+        if: matrix.config.os == 'macos-15'
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '15.0.1'
@@ -454,13 +454,13 @@ jobs:
 
           - name: x64-macOS
             id: macOS-nodepends
-            os: macos-13
+            os: macos-15-intel
             python-version: '3.10'
             packages: boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
           - name: arm64-macOS-latest
             id: macOS-nodepends-latest
-            os: macos-14
+            os: macos-15
             python-version: '3.12'
             packages: boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
@@ -846,7 +846,7 @@ jobs:
 
           - name: x86_64 macOS [Full Functional Tests]
             id: macos-x86_64-tests
-            os: macos-13
+            os: macos-15-intel
             host: x86_64-apple-darwin16
             packages: None
             test_runner_extra: "--all --exclude feature_dbcrash"
