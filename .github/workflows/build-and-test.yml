@@ -218,7 +218,7 @@ jobs:
         if: matrix.config.os == 'macos-15'
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '15.0.1'
+          xcode-version: '16.0.0'
 
       - name: Configure CMake Wallet
         run: |
@@ -348,7 +348,7 @@ jobs:
         if: matrix.config.os == 'macos-15'
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '15.0.1'
+          xcode-version: '16.0.0'
 
       - name: Configure Native Wallet
         run: |
