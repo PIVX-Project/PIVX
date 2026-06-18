@@ -19,7 +19,7 @@ jobs:
         shell: bash
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -85,7 +85,7 @@ jobs:
         shell: bash
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -181,7 +181,7 @@ jobs:
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Initialize Python
         uses: actions/setup-python@v5
@@ -315,7 +315,7 @@ jobs:
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Initialize Python
         uses: actions/setup-python@v5
@@ -550,7 +550,7 @@ jobs:
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Initialize Python
         uses: actions/setup-python@v5
@@ -685,7 +685,7 @@ jobs:
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Initialize Python
         uses: actions/setup-python@v5
