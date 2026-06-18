@@ -482,7 +482,7 @@ jobs:
           pip install pyzmq
 
       - name: Download Build Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: native-${{ matrix.config.os }}-built
 
@@ -871,7 +871,7 @@ jobs:
           pip install pyzmq
 
       - name: Download Build Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ matrix.config.host }}-built
 
