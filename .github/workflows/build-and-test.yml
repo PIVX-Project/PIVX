@@ -421,7 +421,7 @@ jobs:
 
       - name: Upload Build Artifact
         if: matrix.config.functional_tests == true
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: native-${{ matrix.config.os }}-built
           path: native-${{ matrix.config.os }}-built.tar
@@ -809,7 +809,7 @@ jobs:
 
       - name: Upload Build Artifact
         if: matrix.config.functional_tests == true
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.config.host }}-built
           path: ${{ matrix.config.host }}-built.tar
