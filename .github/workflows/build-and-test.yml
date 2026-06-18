@@ -166,7 +166,7 @@ jobs:
           - name: macOS
             os: macos-15-intel
             python-version: '3.10'
-            packages: autoconf automake libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
+            packages: autoconf automake libtool boost@1.85 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
             cc: clang
             cxx: clang++
@@ -174,7 +174,7 @@ jobs:
           - name: macOS-latest
             os: macos-15
             python-version: '3.12'
-            packages: autoconf automake libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
+            packages: autoconf automake libtool boost@1.85 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
             cc: clang
             cxx: clang++
@@ -293,25 +293,25 @@ jobs:
             id: macOS-nodepends
             os: macos-15-intel
             python-version: '3.10'
-            packages: autoconf automake ccache libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
+            packages: autoconf automake ccache libtool boost@1.85 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
             functional_tests: true
             goal: deploy
             cc: clang
             cxx: clang++
-            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug --with-boost=/usr/local/opt/boost"
+            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug"
 
           - name: arm64-macOS-latest
             id: macOS-nodepends-latest
             os: macos-15
             python-version: '3.12'
-            packages: autoconf automake ccache libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
+            packages: autoconf automake ccache libtool boost@1.85 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
             functional_tests: true
             goal: deploy
             cc: clang
             cxx: clang++
-            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug --with-boost=/opt/homebrew/opt/boost"
+            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug"
 
     steps:
       - name: Get Source
@@ -456,13 +456,13 @@ jobs:
             id: macOS-nodepends
             os: macos-15-intel
             python-version: '3.10'
-            packages: boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
+            packages: boost@1.85 miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
           - name: arm64-macOS-latest
             id: macOS-nodepends-latest
             os: macos-15
             python-version: '3.12'
-            packages: boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
+            packages: boost@1.85 miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
     steps:
       - name: Initialize Python
