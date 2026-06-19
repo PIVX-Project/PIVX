@@ -45,11 +45,14 @@ function install_params {
         filename="share/pivx/$filename"
     fi
 
-    if ! [ -f "$output" ]
-    then
+    if ! [ -f "$output" ]; then
+      if [ "$(uname)" = "Darwin" ]; then
+        echo "$expectedhash  $filename" | shasum -a 256 -c
+      else
         "$SHA256CMD" $SHA256ARGS -c <<EOF
 $expectedhash  $filename
 EOF
+      fi
 
         # Check the exit code of the shasum command:
         CHECKSUM_RESULT=$?

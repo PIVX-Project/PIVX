@@ -19,12 +19,12 @@ jobs:
         shell: bash
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Initialize Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.8'
 
@@ -85,17 +85,17 @@ jobs:
         shell: bash
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Initialize Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.8'
 
       - name: cppcheck cache files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .cppcheck
@@ -152,39 +152,39 @@ jobs:
           - name: Linux
             os: ubuntu-22.04
             python-version: '3.8'
-            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev qt5-image-formats-plugins libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev qt5-image-formats-plugins libevent-dev bsdmainutils libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-test-dev libboost-thread-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             cc: gcc
             cxx: g++
 
           - name: Linux-latest
             os: ubuntu-24.04
             python-version: '3.8'
-            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev qt5-image-formats-plugins libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libminiupnpc-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
+            packages: python3-zmq qttools5-dev qtbase5-dev qttools5-dev-tools libqt5svg5-dev libqt5charts5-dev qt5-image-formats-plugins libevent-dev bsdmainutils libboost-system1.74-dev libboost-filesystem1.74-dev libboost-chrono1.74-dev libboost-test1.74-dev libboost-thread1.74-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev libqrencode-dev libgmp-dev libsodium-dev cargo
             cc: gcc
             cxx: g++
 
           - name: macOS
-            os: macos-13
+            os: macos-15-intel
             python-version: '3.10'
-            packages: autoconf automake libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
+            packages: autoconf automake libtool boost@1.85 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
             cc: clang
             cxx: clang++
 
           - name: macOS-latest
-            os: macos-14
+            os: macos-15
             python-version: '3.12'
-            packages: autoconf automake libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
+            packages: autoconf automake libtool boost@1.85 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium
             boost_root: true
             cc: clang
             cxx: clang++
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Initialize Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.config.python-version }}
 
@@ -208,17 +208,17 @@ jobs:
           cmake-version: '3.31.6'
 
       - name: ccache cache files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .ccache
           key: ${{ runner.os }}-cmake-${{ matrix.config.name }}-ccache
           restore-keys: ${{ runner.os }}-cmake-${{ matrix.config.name }}-ccache
 
       - name: Set Xcode Version
-        if: matrix.config.os == 'macos-14'
+        if: matrix.config.os == 'macos-15'
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '15.0.1'
+          xcode-version: '16.0.0'
 
       - name: Configure CMake Wallet
         run: |
@@ -291,34 +291,34 @@ jobs:
 
           - name: x64-macOS
             id: macOS-nodepends
-            os: macos-13
+            os: macos-15-intel
             python-version: '3.10'
-            packages: autoconf automake ccache libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
+            packages: autoconf automake ccache libtool boost@1.85 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
             functional_tests: true
             goal: deploy
             cc: clang
             cxx: clang++
-            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug --with-boost=/usr/local/opt/boost"
+            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug"
 
           - name: arm64-macOS-latest
             id: macOS-nodepends-latest
-            os: macos-14
+            os: macos-15
             python-version: '3.12'
-            packages: autoconf automake ccache libtool boost miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
+            packages: autoconf automake ccache libtool boost@1.85 miniupnpc libnatpmp pkg-config qt@5 zmq libevent qrencode gmp libsodium librsvg
             unit_tests: true
             functional_tests: true
             goal: deploy
             cc: clang
             cxx: clang++
-            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug --with-boost=/opt/homebrew/opt/boost"
+            BITCOIN_CONFIG: "--enable-zmq --enable-gui --enable-reduce-exports --enable-werror --enable-debug"
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Initialize Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.config.python-version }}
 
@@ -338,17 +338,17 @@ jobs:
           sudo ./contrib/install_db4.sh /usr/local true
 
       - name: ccache cache files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .ccache
           key: ${{ runner.os }}-${{ matrix.config.id }}-native-ccache
           restore-keys: ${{ runner.os }}-${{ matrix.config.id }}-native-ccache
 
       - name: Set Xcode Version
-        if: matrix.config.os == 'macos-14'
+        if: matrix.config.os == 'macos-15'
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '15.0.1'
+          xcode-version: '16.0.0'
 
       - name: Configure Native Wallet
         run: |
@@ -421,7 +421,7 @@ jobs:
 
       - name: Upload Build Artifact
         if: matrix.config.functional_tests == true
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: native-${{ matrix.config.os }}-built
           path: native-${{ matrix.config.os }}-built.tar
@@ -454,19 +454,19 @@ jobs:
 
           - name: x64-macOS
             id: macOS-nodepends
-            os: macos-13
+            os: macos-15-intel
             python-version: '3.10'
-            packages: boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
+            packages: boost@1.85 miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
           - name: arm64-macOS-latest
             id: macOS-nodepends-latest
-            os: macos-14
+            os: macos-15
             python-version: '3.12'
-            packages: boost miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
+            packages: boost@1.85 miniupnpc libnatpmp pkg-config zmq libevent qrencode gmp libsodium
 
     steps:
       - name: Initialize Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.config.python-version }}
 
@@ -482,7 +482,7 @@ jobs:
           pip install pyzmq
 
       - name: Download Build Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: native-${{ matrix.config.os }}-built
 
@@ -550,10 +550,10 @@ jobs:
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Initialize Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.8'
 
@@ -568,7 +568,7 @@ jobs:
           cmake-version: '3.31.6'
 
       - name: depends cache files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             depends/built
@@ -685,10 +685,10 @@ jobs:
 
     steps:
       - name: Get Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Initialize Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.8'
 
@@ -699,7 +699,7 @@ jobs:
 
       - name: depends cache files
         if: matrix.config.no_depends != 1
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             depends/built
@@ -709,7 +709,7 @@ jobs:
           restore-keys: ${{ runner.os }}-depends-${{ matrix.config.host }}-v2
 
       - name: ccache cache files
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .ccache
           key: ${{ runner.os }}-depbuild-${{ matrix.config.id }}-ccache
@@ -809,7 +809,7 @@ jobs:
 
       - name: Upload Build Artifact
         if: matrix.config.functional_tests == true
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.config.host }}-built
           path: ${{ matrix.config.host }}-built.tar
@@ -846,14 +846,14 @@ jobs:
 
           - name: x86_64 macOS [Full Functional Tests]
             id: macos-x86_64-tests
-            os: macos-13
+            os: macos-15-intel
             host: x86_64-apple-darwin16
             packages: None
             test_runner_extra: "--all --exclude feature_dbcrash"
 
     steps:
       - name: Initialize Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.8'
 
@@ -871,7 +871,7 @@ jobs:
           pip install pyzmq
 
       - name: Download Build Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ matrix.config.host }}-built
 

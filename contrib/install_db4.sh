@@ -1,9 +1,22 @@
 #!/bin/sh
-
+# Copyright (c) 2017-2021 The Bitcoin Core developers
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or http://www.opensource.org/licenses/mit-license.php.
 # Install libdb4.8 (Berkeley DB).
-
 export LC_ALL=C
 set -e
+
+# Set C_FLAG for Mac OS version > 11.0.0
+# shellcheck disable=SC2039,SC2004
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  os_ver_str=$(sw_vers -productVersion)
+  os_ver=${os_ver_str//.}
+  required_ver=1100
+
+  if (($os_ver > $required_ver)); then
+	  export CFLAGS="-Wno-error=implicit-function-declaration"
+  fi
+fi
 
 if [ -z "${1}" ]; then
   echo "Usage: $0 <base-dir> [<ci-mode>] [<extra-bdb-configure-flag> ...]"
@@ -37,16 +50,17 @@ check_exists() {
 sha256_check() {
   # Args: <sha256_hash> <filename>
   #
-  if check_exists sha256sum; then
-    echo "${1}  ${2}" | sha256sum -c
-  elif check_exists sha256; then
-    if [ "$(uname)" = "FreeBSD" ]; then
-      sha256 -c "${1}" "${2}"
-    else
-      echo "${1}  ${2}" | sha256 -c
-    fi
-  else
+  if [ "$(uname)" = "FreeBSD" ]; then
+    # sha256sum exists on FreeBSD, but takes different arguments than the GNU version
+    sha256 -c "${1}" "${2}"
+  elif [ "$(uname)" = "Darwin" ]; then
     echo "${1}  ${2}" | shasum -a 256 -c
+  elif check_exists sha256sum; then
+    echo "${1} ${2}" | sha256sum -c
+  elif check_exists sha256; then
+    echo "${1} ${2}" | sha256 -c
+  else
+    echo "${1} ${2}" | shasum -a 256 -c
   fi
 }
 
