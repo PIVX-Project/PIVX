@@ -466,7 +466,9 @@ private:
     void DeleteUniqueProperty(const CDeterministicMNCPtr& dmn, const T& oldValue)
     {
         static const T nullValue;
-        assert(oldValue != nullValue);
+        if (oldValue == nullValue) {
+            return;
+        }
 
         auto oldHash = ::SerializeHash(oldValue, SER_GETHASH, PROTOCOL_VERSION | ADDRV2_FORMAT);
         auto p = mnUniquePropertyMap.find(oldHash);
