@@ -236,23 +236,20 @@ bool InitActiveMN()
         LogPrintf("IS %s MASTERNODE\n", (fDeterministic ? "DETERMINISTIC " : ""));
 
         if (fDeterministic) {
-            // Check enforcement
-            if (!deterministicMNManager->IsDIP3Enforced()) {
-                const std::string strError = strprintf(
-                        _("Cannot start deterministic masternode before enforcement. Remove %s to start as legacy masternode"),
-                        "-mnoperatorprivatekey");
-                LogPrintf("-- ERROR: %s\n", strError);
-                return UIError(strError);
-            }
             // Create and register activeMasternodeManager
             activeMasternodeManager = new CActiveDeterministicMasternodeManager();
+            RegisterValidationInterface(activeMasternodeManager);
             auto res = activeMasternodeManager->SetOperatorKey(mnoperatorkeyStr);
             if (!res) { return UIError(res.getError()); }
-            // Init active masternode
-            const CBlockIndex* pindexTip = WITH_LOCK(cs_main, return chainActive.Tip(););
-            activeMasternodeManager->Init(pindexTip);
-            if (activeMasternodeManager->GetState() == CActiveDeterministicMasternodeManager::MASTERNODE_ERROR) {
-                return UIError(activeMasternodeManager->GetStatus()); // state logged internally
+            // Init active masternode if DIP3 is enforced
+            if (deterministicMNManager->IsDIP3Enforced()) {
+                const CBlockIndex* pindexTip = WITH_LOCK(cs_main, return chainActive.Tip(););
+                activeMasternodeManager->Init(pindexTip);
+                if (activeMasternodeManager->GetState() == CActiveDeterministicMasternodeManager::MASTERNODE_ERROR) {
+                    return UIError(activeMasternodeManager->GetStatus()); // state logged internally
+                }
+            } else {
+                LogPrintf("%s: Evo upgrade is not active yet. Active masternode manager initialized in waiting state.\n", __func__);
             }
         } else {
             // Check enforcement
