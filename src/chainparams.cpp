@@ -193,7 +193,7 @@ static const CCheckpointData data = {
 };
 
 static MapCheckpoints mapCheckpointsTestnet = {
-    {0, uint256S("0x00000431e286f849bbd0b5cce53dd39e6f6e4497f91b078a9e5f6ef418e57912")},
+    {0, uint256S("0x00000f254358fe046377c224341c794b7faf942a6311a7ece773d3c378239c54")},
 };
 
 static const CCheckpointData dataTestnet = {
@@ -381,9 +381,9 @@ public:
         strNetworkID = "test";
 
         // Testnet6 genesis - April 30, 2026.
-        genesis = CreateGenesisBlock(1777507200, 461120, 0x1e0ffff0, 1, 250 * COIN);
+        genesis = CreateGenesisBlock(1777507200, 498658, 0x1e0ffff0, 1, 250 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000431e286f849bbd0b5cce53dd39e6f6e4497f91b078a9e5f6ef418e57912"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000f254358fe046377c224341c794b7faf942a6311a7ece773d3c378239c54"));
         assert(genesis.hashMerkleRoot == uint256S("0x1b2ef6e2f28be914103a277377ae7729dcd125dfeb8bf97bd5964ba72b6dc39b"));
 
         consensus.fPowAllowMinDifficultyBlocks = true;
