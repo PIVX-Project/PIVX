@@ -504,7 +504,7 @@ public:
 
         nLLMQConnectionRetryTimeout = 60;
 
-        consensus.llmqTypeChainLocks = Consensus::LLMQ_400_60;
+        consensus.llmqTypeChainLocks = Consensus::LLMQ_50_60;
 
         // Tier two
         nFulfilledRequestExpireTime = 60 * 60; // fulfilled requests expire in 1 hour
