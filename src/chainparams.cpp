@@ -442,18 +442,18 @@ public:
         consensus.vUpgrades[Consensus::UPGRADE_TESTDUMMY].nActivationHeight =
                 Consensus::NetworkUpgrade::NO_ACTIVATION_HEIGHT;
         consensus.vUpgrades[Consensus::UPGRADE_POS].nActivationHeight           = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 201;
-        consensus.vUpgrades[Consensus::UPGRADE_V5_6].nActivationHeight          = 201;
+        consensus.vUpgrades[Consensus::UPGRADE_POS_V2].nActivationHeight        = 225;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC].nActivationHeight            = 250;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC_V2].nActivationHeight         = 275;
+        consensus.vUpgrades[Consensus::UPGRADE_BIP65].nActivationHeight         = 300;
+        consensus.vUpgrades[Consensus::UPGRADE_ZC_PUBLIC].nActivationHeight     = 350;
+        consensus.vUpgrades[Consensus::UPGRADE_V3_4].nActivationHeight          = 400;
+        consensus.vUpgrades[Consensus::UPGRADE_V4_0].nActivationHeight          = 450;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_0].nActivationHeight          = 500;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_2].nActivationHeight          = 550;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_3].nActivationHeight          = 600;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight          = 650;
+        consensus.vUpgrades[Consensus::UPGRADE_V5_6].nActivationHeight          = 700;
         consensus.vUpgrades[Consensus::UPGRADE_V6_0].nActivationHeight = 5000;
 
         /**
