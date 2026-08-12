@@ -53,6 +53,13 @@ void CDeterministicMNState::ToJson(UniValue& obj) const
     obj.pushKV("PoSePenalty", nPoSePenalty);
     obj.pushKV("PoSeRevivedHeight", nPoSeRevivedHeight);
     obj.pushKV("PoSeBanHeight", nPoSeBanHeight);
+    std::string strPoSeStatus = "OK_HEALTHY";
+    if (nPoSeBanHeight != -1) {
+        strPoSeStatus = "BANNED";
+    } else if (nPoSePenalty > 0) {
+        strPoSeStatus = "WARNING_PENALIZED";
+    }
+    obj.pushKV("PoSeStatus", strPoSeStatus);
     obj.pushKV("revocationReason", nRevocationReason);
     obj.pushKV("ownerAddress", EncodeDestination(keyIDOwner));
     obj.pushKV("operatorPubKey", bls::EncodePublic(Params(), pubKeyOperator.Get()));

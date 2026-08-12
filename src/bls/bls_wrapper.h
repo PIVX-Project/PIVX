@@ -6,14 +6,15 @@
 #ifndef PIVX_BLS_BLS_WRAPPER_H
 #define PIVX_BLS_BLS_WRAPPER_H
 
-#include "hash.h"
-#include "serialize.h"
-#include "uint256.h"
-#include "utilstrencodings.h"
+#include "../hash.h"
+#include "../serialize.h"
+#include "../uint256.h"
+#include "../utilstrencodings.h"
 
 // chiabls uses relic, which may define DEBUG and ERROR, which leads to many warnings in some build setups
 #undef ERROR
 #undef DEBUG
+#undef err_get_code
 #include <bls.hpp>
 #include <privatekey.hpp>
 #include <elements.hpp>

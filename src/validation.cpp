@@ -851,12 +851,19 @@ CAmount GetBlockValue(int nHeight)
 
 int64_t GetMasternodePayment(int nHeight)
 {
-    if (nHeight > Params().GetConsensus().vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight) {
-        return Params().GetConsensus().nNewMNBlockReward;
+    int64_t baseReward = (nHeight > Params().GetConsensus().vUpgrades[Consensus::UPGRADE_V5_5].nActivationHeight) ?
+        Params().GetConsensus().nNewMNBlockReward : Params().GetConsensus().nMNBlockReward;
+
+    // Adaptive Masternode Incentive Boost:
+    // If active Masternodes drop below 1,200, scale reward by +25% (up to 50% block reward) to incentivize new node launches
+    if (deterministicMNManager != nullptr) {
+        size_t activeMNs = deterministicMNManager->GetListAtChainTip().GetValidMNsCount();
+        if (activeMNs > 0 && activeMNs < 1200) {
+            baseReward = (baseReward * 125) / 100; // 25% reward boost
+        }
     }
 
-    // Future: refactor function callers to use this line directly.
-    return Params().GetConsensus().nMNBlockReward;
+    return baseReward;
 }
 
 bool IsInitialBlockDownload()

@@ -94,12 +94,9 @@ endif()
 # Find required Boost library dependency
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_VERBOSE ON)
-# Use the new upstream BoostConfig.cmake for CMake versions starting with 3.30.0
-if(CMAKE_VERSION VERSION_LESS "3.30.0")
-else()
-    cmake_policy(SET CMP0167 NEW)
-endif()
-find_package(Boost COMPONENTS system filesystem chrono thread unit_test_framework REQUIRED)
+# Use FindBoost module for compatibility with Boost 1.85+
+cmake_policy(SET CMP0167 OLD)
+find_package(Boost COMPONENTS filesystem chrono thread unit_test_framework REQUIRED)
 
 # Other required library dependencies
 find_package(GMP REQUIRED)
@@ -679,7 +676,7 @@ endif()
 
 target_link_libraries(pivxd ${sodium_LIBRARY_RELEASE} -ldl -lpthread)
 
-if(NOT DEFINED ENV{NO_QT})
+if(NOT DEFINED ENV{NO_QT} AND NOT NO_QT)
   add_subdirectory(src/qt)
 endif()
 
