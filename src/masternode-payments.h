@@ -26,6 +26,7 @@ extern CMasternodePayments masternodePayments;
 #define MNPAYMENTS_SIGNATURES_TOTAL 10
 
 bool IsBlockPayeeValid(const CBlock& block, const CBlockIndex* pindexPrev);
+bool CheckMasternodePayee(const CTransaction& txNew, const CBlockIndex* pindexPrev);
 std::string GetRequiredPaymentsString(int nBlockHeight);
 bool IsBlockValueValid(int nHeight, CAmount& nExpectedValue, CAmount nMinted, CAmount& nBudgetAmt);
 void FillBlockPayee(CMutableTransaction& txCoinbase, CMutableTransaction& txCoinstake, const CBlockIndex* pindexPrev, bool fProofOfStake);
