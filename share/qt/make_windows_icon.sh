@@ -1,5 +1,8 @@
 #!/bin/bash
 # create multiresolution windows icon
+
+export LC_ALL=C
+
 #mainnet
 ICON_SRC=../../src/qt/res/icons/bitcoin.png
 ICON_DST=../../src/qt/res/icons/bitcoin.ico

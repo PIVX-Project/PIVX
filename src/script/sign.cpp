@@ -152,11 +152,9 @@ static CScript PushAll(const std::vector<valtype>& values)
 
 bool ProduceSignature(const BaseSignatureCreator& creator, const CScript& fromPubKey, SignatureData& sigdata, SigVersion sigversion, bool fColdStake, ScriptError* serror)
 {
-    CScript script = fromPubKey;
-    bool solved = true;
     std::vector<valtype> result;
     txnouttype whichType;
-    solved = SignStep(creator, script, result, whichType, sigversion, fColdStake);
+    bool solved = SignStep(creator, fromPubKey, result, whichType, sigversion, fColdStake);
     CScript subscript;
 
     if (solved && whichType == TX_SCRIPTHASH)
@@ -164,8 +162,8 @@ bool ProduceSignature(const BaseSignatureCreator& creator, const CScript& fromPu
         // Solver returns the subscript that needs to be evaluated;
         // the final scriptSig is the signatures from that
         // and then the serialized subscript:
-        script = subscript = CScript(result[0].begin(), result[0].end());
-        solved = solved && SignStep(creator, script, result, whichType, sigversion, fColdStake) && whichType != TX_SCRIPTHASH;
+        subscript = CScript(result[0].begin(), result[0].end());
+        solved = solved && SignStep(creator, subscript, result, whichType, sigversion, fColdStake) && whichType != TX_SCRIPTHASH;
         result.emplace_back(subscript.begin(), subscript.end());
     }
 
@@ -341,7 +339,7 @@ SignatureData CombineSignatures(const CScript& scriptPubKey, const BaseSignature
     std::vector<std::vector<unsigned char> > vSolutions;
     Solver(scriptPubKey, txType, vSolutions);
 
-    return CombineSignatures(scriptPubKey, checker, txType, vSolutions, Stacks(scriptSig1, SIGVERSION_BASE), Stacks(scriptSig2, SIGVERSION_BASE), SIGVERSION_BASE).Output();
+    return CombineSignatures(scriptPubKey, checker, txType, vSolutions, Stacks(scriptSig1, SigVersion::BASE), Stacks(scriptSig2, SigVersion::BASE), SigVersion::BASE).Output();
 }
 
 namespace {
@@ -398,9 +396,9 @@ bool IsSolvable(const CKeyStore& store, const CScript& script, bool fColdStaking
     // if found in a transaction, we would still accept and relay that transaction. In particular,
     DummySignatureCreator creator(&store);
     SignatureData sigs;
-    if (ProduceSignature(creator, script, sigs, SIGVERSION_BASE, fColdStaking)) {
+    if (ProduceSignature(creator, script, sigs, SigVersion::BASE, fColdStaking)) {
         // VerifyScript check is just defensive, and should never fail.
-        assert(VerifyScript(sigs.scriptSig, script, STANDARD_SCRIPT_VERIFY_FLAGS, creator.Checker(), SIGVERSION_BASE));
+        assert(VerifyScript(sigs.scriptSig, script, STANDARD_SCRIPT_VERIFY_FLAGS, creator.Checker(), SigVersion::BASE));
         return true;
     }
     return false;
