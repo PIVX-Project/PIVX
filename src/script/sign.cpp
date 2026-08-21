@@ -341,7 +341,7 @@ SignatureData CombineSignatures(const CScript& scriptPubKey, const BaseSignature
     std::vector<std::vector<unsigned char> > vSolutions;
     Solver(scriptPubKey, txType, vSolutions);
 
-    return CombineSignatures(scriptPubKey, checker, txType, vSolutions, Stacks(scriptSig1, SIGVERSION_BASE), Stacks(scriptSig2, SIGVERSION_BASE), SIGVERSION_BASE).Output();
+    return CombineSignatures(scriptPubKey, checker, txType, vSolutions, Stacks(scriptSig1, SigVersion::BASE), Stacks(scriptSig2, SigVersion::BASE), SigVersion::BASE).Output();
 }
 
 namespace {
@@ -398,9 +398,9 @@ bool IsSolvable(const CKeyStore& store, const CScript& script, bool fColdStaking
     // if found in a transaction, we would still accept and relay that transaction. In particular,
     DummySignatureCreator creator(&store);
     SignatureData sigs;
-    if (ProduceSignature(creator, script, sigs, SIGVERSION_BASE, fColdStaking)) {
+    if (ProduceSignature(creator, script, sigs, SigVersion::BASE, fColdStaking)) {
         // VerifyScript check is just defensive, and should never fail.
-        assert(VerifyScript(sigs.scriptSig, script, STANDARD_SCRIPT_VERIFY_FLAGS, creator.Checker(), SIGVERSION_BASE));
+        assert(VerifyScript(sigs.scriptSig, script, STANDARD_SCRIPT_VERIFY_FLAGS, creator.Checker(), SigVersion::BASE));
         return true;
     }
     return false;
