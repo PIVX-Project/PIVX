@@ -191,7 +191,11 @@ private:
     size_t maxAvg;
 };
 
-
+struct CBlockReject {
+    unsigned char chRejectCode;
+    std::string strRejectReason;
+    uint256 hashBlock;
+};
 
  /**
  * Maintain validation-specific state about nodes, protected by cs_main, instead
@@ -210,6 +214,8 @@ struct CNodeState {
     bool fShouldBan;
     //! String name of this peer (debugging/logging purposes).
     const std::string name;
+    //! List of asynchronously-determined block rejections to notify this peer about.
+    std::vector<CBlockReject> rejects;
     //! The best known block we know this peer has announced.
     const CBlockIndex* pindexBestKnownBlock;
     //! The hash of the last unknown block this peer has announced.
@@ -2232,6 +2238,11 @@ static bool DisconnectIfBanned(CNode* pnode, CConnman* connman)
 {
     AssertLockHeld(cs_main);
     CNodeState &state = *State(pnode->GetId());
+
+    for (const CBlockReject& reject : state.rejects) {
+        connman->PushMessage(pnode, CNetMsgMaker(INIT_PROTO_VERSION).Make(NetMsgType::REJECT, (std::string)NetMsgType::BLOCK, reject.chRejectCode, reject.strRejectReason, reject.hashBlock));
+    }
+    state.rejects.clear();
 
     if (state.fShouldBan) {
         state.fShouldBan = false;
