@@ -720,3 +720,9 @@ void RandomInit()
 
     ReportHardwareRand();
 }
+
+
+std::chrono::microseconds GetRandMicros(std::chrono::microseconds duration_max) noexcept
+{
+    return std::chrono::microseconds{GetRand(duration_max.count())};
+}

@@ -93,8 +93,6 @@ std::map<CNetAddr, LocalServiceInfo> mapLocalHost;
 static bool vfLimited[NET_MAX] = {};
 std::string strSubVersion;
 
-limitedmap<CInv, int64_t> mapAlreadyAskedFor(MAX_INV_SZ);
-
 void CConnman::AddOneShot(const std::string& strDest)
 {
     LOCK(cs_vOneShots);
@@ -2576,16 +2574,6 @@ void CConnman::RelayInv(CInv& inv, int minProtoVersion)
     }
 }
 
-void CConnman::RemoveAskFor(const uint256& invHash, int invType)
-{
-    mapAlreadyAskedFor.erase(CInv(invType, invHash));
-
-    LOCK(cs_vNodes);
-    for (const auto& pnode : vNodes) {
-        pnode->AskForInvReceived(invHash);
-    }
-}
-
 void CConnman::UpdateQuorumRelayMemberIfNeeded(CNode* pnode)
 {
     if (!pnode->m_masternode_iqr_connection && pnode->m_masternode_connection &&
@@ -2702,52 +2690,6 @@ CNode::CNode(NodeId idIn, ServiceFlags nLocalServicesIn, int nMyStartingHeightIn
 CNode::~CNode()
 {
     CloseSocket(hSocket);
-}
-
-void CNode::AskFor(const CInv& inv, int64_t doubleRequestDelay)
-{
-    if (mapAskFor.size() > MAPASKFOR_MAX_SZ || setAskFor.size() > SETASKFOR_MAX_SZ)
-        return;
-    // a peer may not have multiple non-responded queue positions for a single inv item
-    if (!setAskFor.insert(inv.hash).second)
-        return;
-
-    // We're using mapAskFor as a priority queue,
-    // the key is the earliest time the request can be sent
-    int64_t nRequestTime;
-    limitedmap<CInv, int64_t>::const_iterator it = mapAlreadyAskedFor.find(inv);
-    if (it != mapAlreadyAskedFor.end())
-        nRequestTime = it->second;
-    else
-        nRequestTime = 0;
-    LogPrint(BCLog::NET, "askfor %s  %d (%s) peer=%d\n", inv.ToString(), nRequestTime, FormatISO8601Time(nRequestTime / 1000000), id);
-
-    // Make sure not to reuse time indexes to keep things in the same order
-    int64_t nNow = GetTimeMicros() - 1000000;
-    static int64_t nLastTime;
-    ++nLastTime;
-    nNow = std::max(nNow, nLastTime);
-    nLastTime = nNow;
-
-    // Each retry is 2 minutes after the last
-    nRequestTime = std::max(nRequestTime + doubleRequestDelay, nNow);
-    if (it != mapAlreadyAskedFor.end())
-        mapAlreadyAskedFor.update(it, nRequestTime);
-    else
-        mapAlreadyAskedFor.insert(std::make_pair(inv, nRequestTime));
-    mapAskFor.insert(std::make_pair(nRequestTime, inv));
-}
-
-void CNode::AskForInvReceived(const uint256& invHash)
-{
-    setAskFor.erase(invHash);
-    for (auto it = mapAskFor.begin(); it != mapAskFor.end();) {
-        if (it->second.hash == invHash) {
-            it = mapAskFor.erase(it);
-        } else {
-            ++it;
-        }
-    }
 }
 
 bool CConnman::NodeFullyConnected(const CNode* pnode)

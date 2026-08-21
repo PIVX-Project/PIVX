@@ -8,11 +8,11 @@ import struct
 import time
 
 from test_framework import messages
+from test_framework.messages import CTxIn, COutPoint, msg_mnping
 from test_framework.mininode import (
     P2PDataStore,
     P2PInterface,
 )
-from test_framework.messages import CTxIn, COutPoint, msg_mnping
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,
@@ -212,24 +212,26 @@ class InvalidMessagesTest(PivxTestFramework):
     def test_fill_askfor(self):
         self.nodes[0].generate(1) # IBD
         conn = self.nodes[0].add_p2p_connection(InvReceiver())
+        self.disable_mocktime()
         invs = []
         blockhash = int(self.nodes[0].getbestblockhash(), 16)
-        for _ in range(50000):
+        total_requests = 100
+        for _ in range(total_requests):
             mnp = msg_mnping(CTxIn(COutPoint(getrandbits(256))), blockhash, int(time.time()))
-            conn.vec_mnp[mnp.get_hash()] = mnp
-            invs.append(messages.CInv(15, mnp.get_hash()))
-        assert_equal(len(conn.vec_mnp), 50000)
-        assert_equal(len(invs), 50000)
+            hash = mnp.get_hash()
+            conn.vec_mnp[hash] = mnp
+            invs.append(messages.CInv(15, hash))
+        assert_equal(len(conn.vec_mnp), total_requests)
+        assert_equal(len(invs), total_requests)
         msg = messages.msg_inv(invs)
         conn.send_message(msg)
-        conn.wait_for_p2p_messages(50000)
-
+        conn.wait_for_p2p_messages(total_requests)
         # Prior #2611 the node was blocking any follow-up request.
         mnp = msg_mnping(CTxIn(COutPoint(getrandbits(256))), getrandbits(256), int(time.time()))
         conn.vec_mnp[mnp.get_hash()] = mnp
         msg = messages.msg_inv([messages.CInv(15, mnp.get_hash())])
         conn.send_and_ping(msg)
-        conn.wait_for_p2p_messages(50001)
+        conn.wait_for_p2p_messages(total_requests + 1)
         self.nodes[0].disconnect_p2ps()
 
     def test_resource_exhaustion(self):

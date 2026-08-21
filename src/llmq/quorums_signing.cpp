@@ -4,6 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "quorums_signing.h"
+#include "chainparams.h"
 #include "clientversion.h"
 #include "netaddress.h"
 #include "quorums_signing_shares.h"
@@ -12,12 +13,14 @@
 #include "activemasternode.h"
 #include "bls/bls_batchverifier.h"
 #include "cxxtimer.h"
-#include "net_processing.h"
 #include "validation.h"
 
 #include <algorithm>
 #include <limits>
 #include <unordered_set>
+
+void EraseObjectRequest(NodeId nodeId, const CInv& inv);
+void Misbehaving(NodeId nodeid, int howmuch, const std::string& message = "");
 
 namespace llmq
 {
@@ -640,7 +643,7 @@ void CSigningManager::ProcessRecoveredSig(NodeId nodeId, const CRecoveredSig& re
 
     {
         LOCK(cs_main);
-        connman.RemoveAskFor(recoveredSig.GetHash(), MSG_QUORUM_RECOVERED_SIG);
+        EraseObjectRequest(nodeId, CInv(MSG_QUORUM_RECOVERED_SIG, recoveredSig.GetHash()));
     }
 
     if (db.HasRecoveredSigForHash(recoveredSig.GetHash())) {
