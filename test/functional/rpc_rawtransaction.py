@@ -283,7 +283,7 @@ class RawTransactionsTest(PivxTestFramework):
                 break
 
         bal = self.nodes[0].getbalance()
-        inputs = [{ "txid" : txId, "vout" : vout['n'], "scriptPubKey" : vout['scriptPubKey']['hex'], "redeemScript" : mSigObjValid['hex'], "amount" : vout['value']}]
+        inputs = [{ "txid" : txId, "vout" : vout['n'], "scriptPubKey" : vout['scriptPubKey']['hex'], "redeemScript" : mSigObjValid['hex']}]
         outputs = { self.nodes[0].getnewaddress() : 2.19 }
         rawTx2 = self.nodes[2].createrawtransaction(inputs, outputs)
         rawTxPartialSigned1 = self.nodes[1].signrawtransaction(rawTx2, inputs)
@@ -293,12 +293,10 @@ class RawTransactionsTest(PivxTestFramework):
         rawTxPartialSigned2 = self.nodes[2].signrawtransaction(rawTx2, inputs)
         self.log.info(rawTxPartialSigned2)
         assert_equal(rawTxPartialSigned2['complete'], False) #node2 only has one key, can't comp. sign the tx
-
-        rawTxSignedComplete = self.nodes[2].signrawtransaction(rawTxPartialSigned1['hex'], inputs)
-        self.log.info(rawTxSignedComplete)
-        assert_equal(rawTxSignedComplete['complete'], True)
-        self.nodes[2].sendrawtransaction(rawTxSignedComplete['hex'])
-        rawTx2 = self.nodes[0].decoderawtransaction(rawTxSignedComplete['hex'])
+        rawTxComb = self.nodes[2].combinerawtransaction([rawTxPartialSigned1['hex'], rawTxPartialSigned2['hex']])
+        self.log.info(rawTxComb)
+        self.nodes[2].sendrawtransaction(rawTxComb)
+        rawTx2 = self.nodes[0].decoderawtransaction(rawTxComb)
         self.sync_all()
         self.nodes[0].generate(1)
         self.sync_all()

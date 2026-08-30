@@ -33,6 +33,7 @@ static const CRPCConvertParam vRPCConvertParams[] = {
     { "cleanbudget", 0, "try_sync" },
     { "createmultisig", 0, "nrequired" },
     { "createmultisig", 1, "keys" },
+    { "combinerawtransaction", 0, "txs" },
     { "createrawtransaction", 0, "inputs" },
     { "createrawtransaction", 1, "outputs" },
     { "createrawtransaction", 2, "locktime" },
