@@ -467,6 +467,39 @@ BOOST_FIXTURE_TEST_CASE(dip3_protx, TestChain400Setup)
         BOOST_CHECK(!WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state); ));
         BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-collateral");
     }
+    // Try to register spending the declared external collateral in the same tx.
+    // Without the guard this reaches the mempool, because AcceptToMemoryPool validates
+    // before applying inputs to the view, and then halts block production: ConnectBlock
+    // runs UpdateCoins first, so the collateral is spent by the time CheckSpecialTx runs
+    // and BlockAssembler throws rather than dropping the tx.
+    {
+        CMutableTransaction mtx;
+        const COutPoint& coll_out = CreateNewUTXO(utxos, mtx, coinbaseKey, Params().GetConsensus().nMNCollateralAmt);
+        CreateAndProcessBlock({mtx}, coinbaseKey);
+        chainTip = chainActive.Tip();
+        BOOST_CHECK_EQUAL(chainTip->nHeight, ++nHeight);
+        Coin coll_coin;
+        BOOST_CHECK(view->GetUTXOCoin(coll_out, coll_coin));
+
+        auto tx = CreateProRegTx(Optional<COutPoint>(coll_out), utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey());
+        // Spend the collateral, then make the tx valid in every other respect: refresh the
+        // inputs hash and prove collateral ownership. Without a fully valid tx this would
+        // be rejected by CheckStringSig and never exercise the collateral rule at all.
+        tx.vin.emplace_back(coll_out);
+        ProRegPL pl;
+        BOOST_CHECK(GetTxPayload(tx, pl));
+        pl.inputsHash = CalcTxInputsHash(CTransaction(tx));
+        pl.vchSig.clear();
+        BOOST_CHECK(CMessageSigner::SignMessage(pl.MakeSignString(), pl.vchSig, coinbaseKey));
+        SetTxPayload(tx, pl);
+        SignTransaction(tx, coinbaseKey);
+
+        CValidationState state;
+        BOOST_CHECK(!WITH_LOCK(cs_main, return CheckSpecialTx(tx, chainTip, view, state); ));
+        BOOST_CHECK_EQUAL(state.GetRejectReason(), "bad-protx-collateral-used-as-input");
+
+        utxos.emplace(coll_out, std::make_pair(coll_coin.nHeight, coll_coin.out.nValue));
+    }
     // Try to register with invalid internal collateral
     {
         auto tx = CreateProRegTx(nullopt, utxos, port, GenerateRandomAddress(), coinbaseKey, GetRandomKey(), GetRandomBLSKey().GetPublicKey(), 0, true);
