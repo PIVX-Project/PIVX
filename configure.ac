@@ -779,6 +779,14 @@ AC_CHECK_DECLS([bswap_16, bswap_32, bswap_64],,,
                  #include <byteswap.h>
                  #endif])
 
+dnl FreeBSD and recent macOS SDKs declare be32enc in sys/endian.h; older ones do
+dnl not. crypto/scrypt.cpp defines its own when the platform does not, so the test
+dnl has to be for the declaration rather than for the operating system.
+AC_CHECK_DECLS([be32enc],,,
+		[#if HAVE_SYS_ENDIAN_H
+                 #include <sys/endian.h>
+                 #endif])
+
 AC_CHECK_DECLS([__builtin_clz, __builtin_clzl, __builtin_clzll])
 
 dnl Check for MSG_NOSIGNAL
