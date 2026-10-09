@@ -81,6 +81,30 @@ static Consensus::LLMQParams llmq_test = {
         .cacheDkgInterval = 60,
 };
 
+// Small quorum for networks with a masternode count in the tens. Sized well below
+// the fleet so that membership actually rotates between DKGs instead of every
+// masternode landing in every quorum.
+static Consensus::LLMQParams llmq20_60 = {
+        .type = Consensus::LLMQ_20_60,
+        .name = "llmq_20_60",
+        .size = 20,
+        .minSize = 16,
+        .threshold = 12,
+
+        .dkgInterval = 60, // one DKG per hour
+        .dkgPhaseBlocks = 6,
+        .dkgMiningWindowStart = 30, // dkgPhaseBlocks * 5 = after finalization
+        .dkgMiningWindowEnd = 40,
+        .dkgBadVotesThreshold = 16,
+
+        .signingActiveQuorumCount = 24, // a full day worth of LLMQs
+
+        .keepOldConnections = 25,
+        .recoveryMembers = 10,
+
+        .cacheDkgInterval = 600,
+};
+
 static Consensus::LLMQParams llmq50_60 = {
         .type = Consensus::LLMQ_50_60,
         .name = "llmq_50_60",
@@ -498,13 +522,14 @@ public:
         bech32HRPs[BLS_PUBLIC_KEY]               = "bls-pk-test";
 
         // long living quorum params
+        consensus.llmqs[Consensus::LLMQ_20_60] = llmq20_60;
         consensus.llmqs[Consensus::LLMQ_50_60] = llmq50_60;
         consensus.llmqs[Consensus::LLMQ_400_60] = llmq400_60;
         consensus.llmqs[Consensus::LLMQ_400_85] = llmq400_85;
 
         nLLMQConnectionRetryTimeout = 60;
 
-        consensus.llmqTypeChainLocks = Consensus::LLMQ_50_60;
+        consensus.llmqTypeChainLocks = Consensus::LLMQ_20_60;
 
         // Tier two
         nFulfilledRequestExpireTime = 60 * 60; // fulfilled requests expire in 1 hour
