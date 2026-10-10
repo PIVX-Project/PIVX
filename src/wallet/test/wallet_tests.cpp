@@ -591,7 +591,7 @@ BOOST_AUTO_TEST_CASE(cached_balances_tests)
     // Setup wallet
     CWallet wallet("testWallet1", WalletDatabase::CreateMock());
     bool fFirstRun;
-    BOOST_CHECK_EQUAL(wallet.LoadWallet(fFirstRun), DB_LOAD_OK);
+    BOOST_CHECK_EQUAL(wallet.LoadWallet(fFirstRun), DBErrors::LOAD_OK);
     LOCK2(cs_main, wallet.cs_wallet);
     wallet.SetMinVersion(FEATURE_PRE_SPLIT_KEYPOOL);
     wallet.SetupSPKM(false);

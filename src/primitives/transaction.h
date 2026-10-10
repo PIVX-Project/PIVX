@@ -22,10 +22,9 @@
 
 class CTransaction;
 
-enum SigVersion
-{
-    SIGVERSION_BASE = 0,
-    SIGVERSION_SAPLING = 1,
+enum class SigVersion {
+    BASE = 0,
+    SAPLING = 1,
 };
 
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
@@ -346,7 +345,7 @@ public:
     // Ensure that special and sapling fields are signed
     SigVersion GetRequiredSigVersion() const
     {
-        return isSaplingVersion() ? SIGVERSION_SAPLING : SIGVERSION_BASE;
+        return isSaplingVersion() ? SigVersion::SAPLING : SigVersion::BASE;
     }
 
     /*
@@ -449,7 +448,7 @@ struct CMutableTransaction
     // Ensure that special and sapling fields are signed
     SigVersion GetRequiredSigVersion() const
     {
-        return isSaplingVersion() ? SIGVERSION_SAPLING : SIGVERSION_BASE;
+        return isSaplingVersion() ? SigVersion::SAPLING : SigVersion::BASE;
     }
 };
 
