@@ -75,6 +75,7 @@ extern const char* VERSION;
  * @see https://bitcoin.org/en/developer-reference#verack
  */
 extern const char* VERACK;
+extern const char* REJECT;
 /**
  * The addr (IP address) message relays connection information for peers on the
  * network.
