@@ -136,7 +136,7 @@ BOOST_FIXTURE_TEST_CASE(WriteCryptedSaplingZkeyDirectToDb, BasicTestingSetup) {
     path.make_preferred();
     std::unique_ptr<CWallet> testWallet = std::make_unique<CWallet>("testWallet1", WalletDatabase::Create(path));
     bool fFirstRun;
-    BOOST_CHECK_EQUAL(testWallet->LoadWallet(fFirstRun), DB_LOAD_OK);
+    BOOST_CHECK_EQUAL(testWallet->LoadWallet(fFirstRun), DBErrors::LOAD_OK);
     BOOST_CHECK(!testWallet->HasSaplingSPKM());
     assert(testWallet->SetupSPKM(true));
 
@@ -172,7 +172,7 @@ BOOST_FIXTURE_TEST_CASE(WriteCryptedSaplingZkeyDirectToDb, BasicTestingSetup) {
     // Create a new wallet from the existing wallet path
     fFirstRun = false;
     std::unique_ptr<CWallet> wallet2 = std::make_unique<CWallet>("testWallet1", WalletDatabase::Create(path));
-    BOOST_CHECK_EQUAL(DB_LOAD_OK, wallet2->LoadWallet(fFirstRun));
+    BOOST_CHECK_EQUAL(DBErrors::LOAD_OK, wallet2->LoadWallet(fFirstRun));
 
     // Confirm it's not the same as the other wallet
     BOOST_CHECK(wallet2->HasSaplingSPKM());

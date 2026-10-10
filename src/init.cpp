@@ -397,7 +397,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-checklevel=<n>", strprintf("How thorough the block verification of -checkblocks is (0-4, default: %u)", DEFAULT_CHECKLEVEL));
 
     strUsage += HelpMessageOpt("-conf=<file>", strprintf("Specify configuration file (default: %s)", PIVX_CONF_FILENAME));
-    if (mode == HMM_BITCOIND) {
+    if (mode == HelpMessageMode::BITCOIND) {
 #if !defined(WIN32)
         strUsage += HelpMessageOpt("-daemon", "Run in the background as a daemon and accept commands");
 #endif
@@ -469,7 +469,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += GetWalletHelpString(showDebug);
 #endif
 
-    if (mode == HMM_BITCOIN_QT) {
+    if (mode == HelpMessageMode::BITCOIN_QT) {
         strUsage += HelpMessageOpt("-windowtitle=<name>", "Wallet window title");
     }
 
