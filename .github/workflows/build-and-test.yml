@@ -5,6 +5,9 @@
 name: CI Actions for PIVX
 
 on: [push, pull_request]
+permissions:
+  contents: read
+
 jobs:
 
   # Pre-build linting job. This runs various lint tests.
