@@ -1,0 +1,21 @@
+# Proposal analysis rubric — 1.0-draft
+
+Status: proposed for Michael's review. Scores describe the public evidence available at the report's cutoff. They are editorial judgments, not objective measurements, funding rankings or voting instructions. Vote popularity does not affect a score.
+
+Each dimension has an equal published weight of 20%. The prototype displays dimensions individually and does not calculate a weighted total. Changing weights or anchors requires a new rubric version and renewed report review.
+
+| Dimension | 0 | 1 | 2 | 3 | 4 | 5 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Clarity | Reviewed proposal contains no identifiable work | Vague activity only | Activities identified, major scope gaps | Work and term described, acceptance details limited | Specific outputs and milestones with limited gaps | Outputs, quantities, owners, timing and acceptance tests are explicit |
+| Cost reasonableness | Documented material cost inconsistency remains unexplained | Comparable evidence shows major unexplained premium | Some itemization, important unexplained cost gaps | Public breakdown and relevant comparisons broadly support cost | Strong itemization and alternatives support cost | Reproducible estimates, alternatives and sensitivity analysis support cost |
+| Verifiability | Reviewed commitments have no public verification route | Claims only | Verification route described but reporting/baselines limited | Public artifacts or reports exist, acceptance gaps remain | Traceable artifacts and clear progress checks | Reproducible acceptance checks and regularly dated evidence |
+| Track record | Public evidence establishes repeated material non-delivery | Public evidence establishes significant unresolved misses | Mixed delivery with documented unresolved gaps | Mostly supported delivery with disclosed limitations | Consistently supported delivery across the researched period | Strong supported delivery and timely reporting across the researched period |
+| Ecosystem impact | No explained connection to PIVX needs | Weak or speculative connection | Relevant intent with limited beneficiaries or outcomes | Clear connection to a PIVX need; outcomes remain uncertain | Defined beneficiaries and supported outcome indicators | Measured sustained outcomes support the expected benefit |
+
+Use `null` and confidence `unscored` when evidence is unavailable, history is incomplete, or comparisons cannot be made fairly. Never convert missing evidence into zero. Every score needs a short rationale and source IDs; low/medium/high describes evidence confidence. A public promise is evidence of a promise, not delivery. A merged PR or release supports that artifact's existence, not runtime correctness or all work attributed to a proposer. Lack of public evidence does not prove non-delivery. New proposers are unscored on history unless adequate history exists.
+
+Current cycle coverage means all valid on-chain proposals whose term spans the next payout cycle, including failing and not-yet-established proposals. Core's budget projection identifies expected funding only. Invalid/removed proposals may be absent from `getbudgetinfo`; forum candidates outside the roster belong in a separate research queue. Record the cutoff and refresh the roster before review and publication; late additions require another draft and review.
+
+Costs are decimal strings in PIV, with separate cycle and full-term totals. USD is a dated conversion from an independently fetched public quote, never a live promise or an inferred rate from rounded website totals. If the quote is unavailable, USD is null. Divide cost by deliverables only when comparable, quantified units share an explicit period and denominator. Do not divide a maintenance budget by an arbitrary count of bullets, mix capital/liquidity with service fees, or treat invoice claims as verified payments.
+
+Reviewer checklist: reconcile identities and dates; inspect citations; separate proposed and delivered work; inspect cost assumptions and overlap between proposals; review all five dimensions; confirm disclosures; record unknowns; and approve the exact report package hash. A score change triggers another review and a correction record.

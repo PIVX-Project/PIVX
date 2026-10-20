@@ -1,0 +1,552 @@
+{
+  "status": "complete",
+  "updated_at": "2026-01-01T00:00:00Z",
+  "delivery_evidence_complete": false,
+  "required_cycles": 6,
+  "sources": [
+    {
+      "id": "fixture",
+      "url": "https://example.com/governance-fixture",
+      "title": "Synthetic example; no real proposal or evidence",
+      "accessed_at": "2026-01-01T00:00:00Z",
+      "retrieval": "local_public_source",
+      "freshness": "Synthetic fixture only; never collected from the network."
+    }
+  ],
+  "cycles": [
+    {
+      "id": 125,
+      "status": "complete",
+      "payout_height": 5400000,
+      "payout_date": "2026-06-01T00:00:00Z",
+      "observed_until": "2026-07-01T00:00:00Z",
+      "period_finished": true,
+      "total_paid_piv": "1000.00000000",
+      "payment_count": 1,
+      "evidence_urls": [
+        "https://example.com/governance-fixture"
+      ],
+      "searches": [
+        {
+          "proposer": "Example A",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example B",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example C",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example D",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example E",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        }
+      ]
+    },
+    {
+      "id": 126,
+      "status": "complete",
+      "payout_height": 5443200,
+      "payout_date": "2026-06-01T00:00:00Z",
+      "observed_until": "2026-07-01T00:00:00Z",
+      "period_finished": true,
+      "total_paid_piv": "1000.00000000",
+      "payment_count": 1,
+      "evidence_urls": [
+        "https://example.com/governance-fixture"
+      ],
+      "searches": [
+        {
+          "proposer": "Example A",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example B",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example C",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example D",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example E",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        }
+      ]
+    },
+    {
+      "id": 127,
+      "status": "complete",
+      "payout_height": 5486400,
+      "payout_date": "2026-06-01T00:00:00Z",
+      "observed_until": "2026-07-01T00:00:00Z",
+      "period_finished": true,
+      "total_paid_piv": "1000.00000000",
+      "payment_count": 1,
+      "evidence_urls": [
+        "https://example.com/governance-fixture"
+      ],
+      "searches": [
+        {
+          "proposer": "Example A",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example B",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example C",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example D",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example E",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        }
+      ]
+    },
+    {
+      "id": 128,
+      "status": "complete",
+      "payout_height": 5529600,
+      "payout_date": "2026-06-01T00:00:00Z",
+      "observed_until": "2026-07-01T00:00:00Z",
+      "period_finished": true,
+      "total_paid_piv": "1000.00000000",
+      "payment_count": 1,
+      "evidence_urls": [
+        "https://example.com/governance-fixture"
+      ],
+      "searches": [
+        {
+          "proposer": "Example A",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example B",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example C",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example D",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example E",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        }
+      ]
+    },
+    {
+      "id": 129,
+      "status": "complete",
+      "payout_height": 5572800,
+      "payout_date": "2026-06-01T00:00:00Z",
+      "observed_until": "2026-07-01T00:00:00Z",
+      "period_finished": true,
+      "total_paid_piv": "1000.00000000",
+      "payment_count": 1,
+      "evidence_urls": [
+        "https://example.com/governance-fixture"
+      ],
+      "searches": [
+        {
+          "proposer": "Example A",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example B",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example C",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example D",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example E",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        }
+      ]
+    },
+    {
+      "id": 130,
+      "status": "complete",
+      "payout_height": 5616000,
+      "payout_date": "2026-06-01T00:00:00Z",
+      "observed_until": "2026-07-01T00:00:00Z",
+      "period_finished": false,
+      "total_paid_piv": "1000.00000000",
+      "payment_count": 1,
+      "evidence_urls": [
+        "https://example.com/governance-fixture"
+      ],
+      "searches": [
+        {
+          "proposer": "Example A",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example B",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example C",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example D",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        },
+        {
+          "proposer": "Example E",
+          "searched_source_ids": [
+            "fixture"
+          ],
+          "matched_posts": [],
+          "matched_payment_event_ids": [],
+          "delivery_result": "unknown",
+          "absence_interpretation": "Invented search; no real delivery inference."
+        }
+      ]
+    }
+  ],
+  "search_scope": {
+    "thread_ids": [
+      "fixture"
+    ],
+    "discovery_source_ids": [
+      "fixture"
+    ],
+    "method": "Synthetic bounded-search fixture; no real collection."
+  },
+  "proposers": [
+    {
+      "name": "Example A",
+      "complete_cycle_ids": [
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ],
+      "research_notes": "Synthetic example only.",
+      "timeline": [
+        {
+          "id": "reported-work-example",
+          "proposer": "Example A",
+          "date": "2026-06-22",
+          "kind": "self_report",
+          "text": "Invented June report describes May activity; no real delivery claim.",
+          "source_ids": [
+            "fixture"
+          ],
+          "reported_period": "2026-05",
+          "verified_cycle_ids": []
+        }
+      ]
+    },
+    {
+      "name": "Example B",
+      "complete_cycle_ids": [
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ],
+      "research_notes": "Synthetic example only.",
+      "timeline": [
+        {
+          "id": "event-B",
+          "proposer": "Example B",
+          "date": "2026-06-22",
+          "kind": "self_report",
+          "text": "Invented June report describes May activity; no real delivery claim.",
+          "source_ids": [
+            "fixture"
+          ],
+          "reported_period": "2026-05",
+          "verified_cycle_ids": []
+        }
+      ]
+    },
+    {
+      "name": "Example C",
+      "complete_cycle_ids": [
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ],
+      "research_notes": "Synthetic example only.",
+      "timeline": [
+        {
+          "id": "event-C",
+          "proposer": "Example C",
+          "date": "2026-06-22",
+          "kind": "self_report",
+          "text": "Invented June report describes May activity; no real delivery claim.",
+          "source_ids": [
+            "fixture"
+          ],
+          "reported_period": "2026-05",
+          "verified_cycle_ids": []
+        }
+      ]
+    },
+    {
+      "name": "Example D",
+      "complete_cycle_ids": [
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ],
+      "research_notes": "Synthetic example only.",
+      "timeline": [
+        {
+          "id": "event-D",
+          "proposer": "Example D",
+          "date": "2026-06-22",
+          "kind": "self_report",
+          "text": "Invented June report describes May activity; no real delivery claim.",
+          "source_ids": [
+            "fixture"
+          ],
+          "reported_period": "2026-05",
+          "verified_cycle_ids": []
+        }
+      ]
+    },
+    {
+      "name": "Example E",
+      "complete_cycle_ids": [
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ],
+      "research_notes": "Synthetic example only.",
+      "timeline": [
+        {
+          "id": "event-E",
+          "proposer": "Example E",
+          "date": "2026-06-22",
+          "kind": "self_report",
+          "text": "Invented June report describes May activity; no real delivery claim.",
+          "source_ids": [
+            "fixture"
+          ],
+          "reported_period": "2026-05",
+          "verified_cycle_ids": []
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Synthetic examples only; no actual payments or delivery conclusions."
+  ]
+}

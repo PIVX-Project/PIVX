@@ -1,0 +1,3 @@
+# Optional independent schema validation and browser QA; runtime uses the standard library.
+jsonschema>=4.23,<5
+playwright>=1.48,<2
