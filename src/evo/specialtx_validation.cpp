@@ -143,6 +143,20 @@ static bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev,
         // This is checked only when pindexPrev is not null (thus during ConnectBlock-->CheckSpecialTx),
         // because this is a contextual check: we need the updated utxo set, to verify that
         // the coin exists and it is unspent.
+
+        // Spending the declared collateral in the same tx halts block production.
+        // AcceptToMemoryPool calls this before applying inputs to the view, so GetUTXOCoin
+        // below still finds the coin and the tx is accepted. ConnectBlock runs UpdateCoins
+        // (validation.cpp:1602) before ProcessSpecialTxsInBlock (:1671), so by then the coin
+        // is spent, CheckSpecialTx fails, and BlockAssembler throws instead of dropping the
+        // tx (blockassembler.cpp:253). Reject at mempool time. Checked ahead of GetUTXOCoin
+        // so the reject reason names the real cause at both call sites.
+        for (const CTxIn& txin : tx.vin) {
+            if (txin.prevout == pl.collateralOutpoint) {
+                return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral-used-as-input");
+            }
+        }
+
         Coin coin;
         if (!view->GetUTXOCoin(pl.collateralOutpoint, coin)) {
             return state.DoS(10, false, REJECT_INVALID, "bad-protx-collateral");

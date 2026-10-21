@@ -16,6 +16,7 @@ from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
     create_new_dmn,
+    get_collateral_vout,
     hex_str_to_bytes,
     is_coin_locked_by,
     spend_mn_collateral,
@@ -238,6 +239,24 @@ class DIP3Test(PivxTestFramework):
         dmn2c.owner = mns[randrange(len(mns))].owner
         assert_raises_rpc_error(-1, "bad-protx-dup-owner-key",
                                 self.protx_register_fund, miner, controller, dmn2c, dummy_add)
+
+        # A ProRegTx must not spend the collateral it declares: the mempool took
+        # it, then every block template failed. With only the collateral in its
+        # wallet, protx_register has to fund the fee from it.
+        self.log.info("Trying a ProRegTx that spends its own collateral...")
+        owner = self.nodes[dmn2.idx]
+        assert_equal(owner.getbalance(), 0)
+        coll_txid = miner.sendtoaddress(owner.getnewaddress(), Decimal('100'))
+        miner.generate(1)
+        self.sync_blocks()
+        coll_n = get_collateral_vout(owner.getrawtransaction(coll_txid, True))
+        dmn2d = create_new_dmn(dmn2.idx, owner, dummy_add, dmn2_keys)
+        assert_raises_rpc_error(-1, "bad-protx-collateral-used-as-input",
+                                owner.protx_register, coll_txid, coll_n, dmn2d.ipport, dmn2d.owner,
+                                dmn2d.operator_pk, dmn2d.voting, dmn2d.payee)
+        assert_equal(owner.getrawmempool(), [])
+        miner.generate(1)
+        self.sync_blocks()
 
         # Finally, register it properly. This time setting 10% of the reward for the operator
         op_rew = {"reward": 10.00, "address": self.nodes[dmn2.idx].getnewaddress()}
