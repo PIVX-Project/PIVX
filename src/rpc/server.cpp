@@ -382,7 +382,30 @@ void JSONRPCRequest::parse(const UniValue& valRequest)
     const UniValue& request = valRequest.get_obj();
 
     // Parse id now so errors from here on will have the id
-    id = find_value(request, "id");
+    if (request.exists("id")) {
+        id = find_value(request, "id");
+    } else {
+        id = nullopt;
+    }
+
+    // Check for JSON-RPC 2.0 (default 1.1)
+    m_json_version = JSONRPCVersion::V1_LEGACY;
+    const UniValue& jsonrpc_version = find_value(request, "jsonrpc");
+    if (!jsonrpc_version.isNull()) {
+        if (!jsonrpc_version.isStr()) {
+            throw JSONRPCError(RPC_INVALID_REQUEST, "jsonrpc field must be a string");
+        }
+        // The "jsonrpc" key was added in the 2.0 spec, but some older documentation
+        // incorrectly included {"jsonrpc":"1.0"} in a request object, so we
+        // maintain that for backwards compatibility.
+        if (jsonrpc_version.get_str() == "1.0") {
+            m_json_version = JSONRPCVersion::V1_LEGACY;
+        } else if (jsonrpc_version.get_str() == "2.0") {
+            m_json_version = JSONRPCVersion::V2;
+        } else {
+            throw JSONRPCError(RPC_INVALID_REQUEST, "JSON-RPC version not supported");
+        }
+    }
 
     // Parse method
     UniValue valMethod = find_value(request, "method");
@@ -411,33 +434,22 @@ bool IsDeprecatedRPCEnabled(const std::string& method)
     return find(enabled_methods.begin(), enabled_methods.end(), method) != enabled_methods.end();
 }
 
-static UniValue JSONRPCExecOne(const UniValue& req)
+UniValue JSONRPCExec(const JSONRPCRequest& jreq, bool catch_errors)
 {
-    UniValue rpc_result(UniValue::VOBJ);
-
-    JSONRPCRequest jreq;
-    try {
-        jreq.parse(req);
-
-        UniValue result = tableRPC.execute(jreq);
-        rpc_result = JSONRPCReplyObj(result, NullUniValue, jreq.id);
-    } catch (const UniValue& objError) {
-        rpc_result = JSONRPCReplyObj(NullUniValue, objError, jreq.id);
-    } catch (const std::exception& e) {
-        rpc_result = JSONRPCReplyObj(NullUniValue,
-            JSONRPCError(RPC_PARSE_ERROR, e.what()), jreq.id);
+    UniValue result;
+    if (catch_errors) {
+        try {
+            result = tableRPC.execute(jreq);
+        } catch (UniValue& e) {
+            return JSONRPCReplyObj(NullUniValue, std::move(e), jreq.id, jreq.m_json_version);
+        } catch (const std::exception& e) {
+            return JSONRPCReplyObj(NullUniValue, JSONRPCError(RPC_MISC_ERROR, e.what()), jreq.id, jreq.m_json_version);
+        }
+    } else {
+        result = tableRPC.execute(jreq);
     }
 
-    return rpc_result;
-}
-
-std::string JSONRPCExecBatch(const UniValue& vReq)
-{
-    UniValue ret(UniValue::VARR);
-    for (unsigned int reqIdx = 0; reqIdx < vReq.size(); reqIdx++)
-        ret.push_back(JSONRPCExecOne(vReq[reqIdx]));
-
-    return ret.write() + "\n";
+    return JSONRPCReplyObj(std::move(result), NullUniValue, jreq.id, jreq.m_json_version);
 }
 
 /**
@@ -531,7 +543,7 @@ std::string HelpExampleCli(std::string methodname, std::string args)
 
 std::string HelpExampleRpc(std::string methodname, std::string args)
 {
-    return "> curl --user myusername --data-binary '{\"jsonrpc\": \"1.0\", \"id\":\"curltest\", "
+    return "> curl --user myusername --data-binary '{\"jsonrpc\": \"2.0\", \"id\":\"curltest\", "
            "\"method\": \"" +
            methodname + "\", \"params\": [" + args + "] }' -H 'content-type: text/plain;' http://127.0.0.1:51473/\n";
 }
