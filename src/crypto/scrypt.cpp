@@ -34,12 +34,20 @@
 #include "uint256.h"
 #include "utilstrencodings.h"
 
+#if defined(HAVE_CONFIG_H)
+#include <config/pivx-config.h>
+#endif
+
 #include <string>
 
 #include <string.h>
 #include <stdint.h>
 
-#ifndef __FreeBSD__
+// FreeBSD and recent macOS SDKs declare this in sys/endian.h, older macOS SDKs do
+// not, so the test is for the declaration and not for the platform. Guarding on
+// __APPLE__ alone broke every macOS CI job: the definition was excluded on runners
+// whose SDK does not provide one.
+#if !HAVE_DECL_BE32ENC
 static inline void be32enc(void *pp, uint32_t x)
 {
     uint8_t *p = (uint8_t *)pp;
