@@ -103,7 +103,7 @@ void CChainLocksHandler::ProcessNewChainLock(NodeId from, const llmq::CChainLock
 {
     {
         LOCK(cs_main);
-        g_connman->RemoveAskFor(hash, MSG_CLSIG);
+        EraseObjectRequest(from, CInv(MSG_CLSIG, hash));
     }
 
     {
@@ -484,4 +484,5 @@ void CChainLocksHandler::Cleanup()
     lastCleanupTime = GetTimeMillis();
 }
 
-}
+} // namespace llmq
+

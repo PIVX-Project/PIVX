@@ -18,6 +18,8 @@
 #include "spork.h"
 #include "validation.h"
 
+void EraseObjectRequest(NodeId nodeId, const CInv& inv);
+
 namespace llmq
 {
 std::unique_ptr<CQuorumBlockProcessor> quorumBlockProcessor{nullptr};
@@ -52,7 +54,7 @@ void CQuorumBlockProcessor::ProcessMessage(CNode* pfrom, CDataStream& vRecv, int
     uint256 qfc_hash{::SerializeHash(qc)};
     {
         LOCK(cs_main);
-        g_connman->RemoveAskFor(qfc_hash, MSG_QUORUM_FINAL_COMMITMENT);
+        EraseObjectRequest(pfrom->GetId(), CInv(MSG_QUORUM_FINAL_COMMITMENT, qfc_hash));
     }
 
     if (qc.IsNull()) {
