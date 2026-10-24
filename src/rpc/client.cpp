@@ -127,6 +127,7 @@ static const CRPCConvertParam vRPCConvertParams[] = {
     { "preparebudget", 3, "start" },
     { "preparebudget", 5, "montly_payment" },
     { "prioritisetransaction", 1, "fee_delta" },
+    { "protx_register_prepare", 1, "collateralIndex" },
     { "quorumdkgsimerror", 1, "rate" },
     { "quorumdkgstatus", 0, "detail_level" },
     { "listquorums", 0, "count" },
