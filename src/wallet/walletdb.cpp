@@ -49,6 +49,7 @@ namespace DBKeys {
     const std::string SAP_KEY{"sapzkey"};
     const std::string SAP_KEY_CRIPTED{"csapzkey"};
     const std::string SAP_ADDR{"sapzaddr"};
+    const std::string SAP_EXTFVK{"sapextfvk"};
     const std::string SAP_COMMON_OVK{"commonovk"};
     const std::string SAP_HDCHAIN{"hdchain_sap"};
     const std::string SAP_WITNESS_CACHE_SIZE{"witnesscachesize"};
@@ -149,6 +150,11 @@ bool WalletBatch::WriteSaplingPaymentAddress(const libzcash::SaplingPaymentAddre
                                            const libzcash::SaplingIncomingViewingKey &ivk)
 {
     return WriteIC(std::make_pair(std::string(DBKeys::SAP_ADDR), addr), ivk, false);
+}
+
+bool WalletBatch::WriteSaplingExtendedFullViewingKey(const libzcash::SaplingExtendedFullViewingKey &extfvk)
+{
+    return WriteIC(std::make_pair(std::string(DBKeys::SAP_EXTFVK), extfvk.fvk.in_viewing_key()), extfvk, false);
 }
 
 bool WalletBatch::WriteCryptedSaplingZKey(const libzcash::SaplingExtendedFullViewingKey &extfvk,
@@ -616,6 +622,16 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
                 strErr = "Error reading wallet database: LoadSaplingPaymentAddress failed";
                 return false;
             }
+        } else if (strType == DBKeys::SAP_EXTFVK) {
+            libzcash::SaplingIncomingViewingKey ivk;
+            ssKey >> ivk;
+            libzcash::SaplingExtendedFullViewingKey extfvk;
+            ssValue >> extfvk;
+
+            if (!pwallet->LoadSaplingFullViewingKey(extfvk)) {
+                strErr = "Error reading wallet database: LoadSaplingFullViewingKey failed";
+                return false;
+            }
         } else if (strType == DBKeys::SAP_WITNESS_CACHE_SIZE) {
             ssValue >> pwallet->GetSaplingScriptPubKeyMan()->nWitnessCacheSize;
         }
@@ -629,7 +645,8 @@ bool WalletBatch::IsKeyType(const std::string& strType)
 {
     return (strType == DBKeys::KEY ||
             strType == DBKeys::MASTER_KEY || strType == DBKeys::CRYPTED_KEY ||
-            strType == DBKeys::SAP_KEY || strType == DBKeys::SAP_KEY_CRIPTED);
+            strType == DBKeys::SAP_KEY || strType == DBKeys::SAP_KEY_CRIPTED ||
+            strType == DBKeys::SAP_EXTFVK);
 }
 
 DBErrors WalletBatch::LoadWallet(CWallet* pwallet)
