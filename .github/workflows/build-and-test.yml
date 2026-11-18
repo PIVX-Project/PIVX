@@ -331,6 +331,10 @@ jobs:
           if [[ ${{ matrix.config.os }} = macos* ]]; then
             brew install -q ${{ matrix.config.packages }}
             pip install ds_store mac_alias
+            if [[ ${{ matrix.config.name }} = arm64-macOS* ]]; then
+              install_name_tool -change "@rpath/libbrotlicommon.1.dylib" "/opt/homebrew/lib/libbrotlicommon.1.dylib" /opt/homebrew/lib/libbrotlidec.1.dylib
+              install_name_tool -change "@rpath/libbrotlicommon.1.dylib" "/opt/homebrew/lib/libbrotlicommon.1.dylib" /opt/homebrew/lib/libbrotlienc.1.dylib
+            fi
           fi
 
       - name: Install BerkeleyDB
