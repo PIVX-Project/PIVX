@@ -6,8 +6,27 @@
 
 import argparse
 import os
+import shutil
 import subprocess
 import sys
+
+
+def coreutils_gnubin():
+    """Directory holding GNU coreutils under its unprefixed names.
+
+    Homebrew's prefix is /usr/local on Intel and /opt/homebrew on Apple Silicon, so ask
+    brew rather than assuming. This has to be ahead of /sbin on PATH: macOS ships its own
+    sha256sum, and "echo '<hash> <file>' | sha256sum -c" below needs the checksum list on
+    stdin, which Apple's build rejects with a usage error.
+    """
+    prefix = '/usr/local'
+    try:
+        out = subprocess.check_output(['brew', '--prefix'], universal_newlines=True, encoding='utf8').strip()
+        if out:
+            prefix = out
+    except (OSError, subprocess.CalledProcessError):
+        pass
+    return os.path.join(prefix, 'opt', 'coreutils', 'libexec', 'gnubin')
 
 
 def setup_linux():
@@ -89,13 +108,13 @@ def setup_darwin():
         programs += ['wget']
     if not os.path.isfile('/usr/local/bin/git'):
         programs += ['git']
-    if not os.path.isfile('/usr/local/bin/gsha256sum'):
+    if shutil.which('gsha256sum') is None:
         programs += ['coreutils']
     if args.docker:
         print('Experimental setup for macOS host')
         if len(programs) > 0:
             subprocess.check_call(['brew', 'install'] + programs)
-            os.environ['PATH'] = '/usr/local/opt/coreutils/libexec/gnubin' + os.pathsep + os.environ['PATH']
+            os.environ['PATH'] = coreutils_gnubin() + os.pathsep + os.environ['PATH']
     elif args.kvm or not args.docker:
         print('KVM and LXC are not supported under macOS at this time.')
         sys.exit(0)
@@ -327,7 +346,7 @@ def main():
         sys.exit(0)
 
     if args.host_os == 'darwin':
-        os.environ['PATH'] = '/usr/local/opt/coreutils/libexec/gnubin' + os.pathsep + os.environ['PATH']
+        os.environ['PATH'] = coreutils_gnubin() + os.pathsep + os.environ['PATH']
 
     args.linux = 'l' in args.os
     args.windows = 'w' in args.os
