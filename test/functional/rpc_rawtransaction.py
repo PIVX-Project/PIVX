@@ -18,6 +18,7 @@ from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
+    get_rpc_proxy,
 )
 
 
@@ -348,6 +349,21 @@ class RawTransactionsTest(PivxTestFramework):
         rawtx   = self.nodes[0].createrawtransaction(inputs, outputs)
         decrawtx= self.nodes[0].decoderawtransaction(rawtx)
         assert_equal(decrawtx['vin'][0]['sequence'], 4294967294)
+
+        # Re-broadcast of a tx already in the mempool must return the txid, not block.
+        # Before the fix TryATMP set its promise in the accepted branch only, so a
+        # duplicate matched no branch and parked the RPC thread on a promise nobody set.
+        # Own proxy at 30s because the default rpc_timewait is 600 and a parked thread
+        # also defeats node shutdown, which cost 1230s per regression.
+        self.log.info('sendrawtransaction of a tx already in the mempool')
+        txid = self.nodes[0].sendtoaddress(self.nodes[2].getnewaddress(), 1.0)
+        rawtx = self.nodes[0].getrawtransaction(txid)
+        assert txid in self.nodes[0].getrawmempool()
+        bounded = get_rpc_proxy(self.nodes[0].url, 0, timeout=30)
+        assert_equal(bounded.sendrawtransaction(rawtx), txid)
+        assert_equal(self.nodes[0].getrawmempool().count(txid), 1)
+        # node still serving, so the thread was released rather than parked
+        assert_equal(self.nodes[0].getrawtransaction(txid), rawtx)
 
 if __name__ == '__main__':
     RawTransactionsTest().main()
