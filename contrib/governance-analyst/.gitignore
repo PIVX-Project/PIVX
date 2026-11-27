@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+dist/
+publish/
+data/cache/
+data/raw/
+data/runs/
+data/research/
+data/reviews/
+data/reviewed/
+data/verification/
+data/drafts/REVIEW.md

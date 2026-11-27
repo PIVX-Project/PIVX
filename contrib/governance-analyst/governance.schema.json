@@ -1,0 +1,762 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "kind": {
+      "const": "governance_report"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rubric_version": {
+      "enum": [
+        "1.0-draft",
+        "1.0"
+      ]
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "reviewed"
+      ]
+    },
+    "cycle": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "payout_height": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "id",
+            "payout_height"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "snapshot": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "unverified",
+            "partial",
+            "verified"
+          ]
+        },
+        "path": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "content_sha256": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          ]
+        }
+      },
+      "required": [
+        "status",
+        "path",
+        "content_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expected_active_ids": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            }
+          ]
+        },
+        "analyzed_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "basis",
+        "expected_active_ids",
+        "analyzed_ids"
+      ],
+      "additionalProperties": false
+    },
+    "disclosures": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "confirmed"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "status",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "generation": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "interactive_assistant",
+            "manual_free_ui",
+            "local_model"
+          ]
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "prompt_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "mode",
+        "model",
+        "generated_at",
+        "prompt_path",
+        "input_path",
+        "input_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "retrieval": {
+            "enum": [
+              "browser_excerpt",
+              "direct_http",
+              "local_public_source"
+            ]
+          },
+          "freshness": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "title",
+          "accessed_at",
+          "retrieval",
+          "freshness"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "proposals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]+$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "proposer": {
+            "type": "string",
+            "minLength": 1
+          },
+          "chain_hash": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            ]
+          },
+          "chain_verified": {
+            "type": "boolean"
+          },
+          "summary": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 1
+              }
+            },
+            "required": [
+              "text",
+              "source_ids"
+            ],
+            "additionalProperties": false
+          },
+          "deliverables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "kind": {
+                  "enum": [
+                    "ongoing",
+                    "discrete"
+                  ]
+                },
+                "source_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "text",
+                "kind",
+                "source_ids"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "cost": {
+            "type": "object",
+            "properties": {
+              "cycle_piv": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d{8}$"
+              },
+              "term_piv": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d{8}$"
+              },
+              "payment_count": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 1
+              },
+              "usd": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "cycle_usd": {
+                        "type": "string",
+                        "pattern": "^\\d+\\.\\d{2}$"
+                      },
+                      "usd_per_piv": {
+                        "type": "string",
+                        "pattern": "^(?:0|[1-9]\\d*)(?:\\.\\d+)?$"
+                      },
+                      "price_updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "source_ids": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "minItems": 1
+                      }
+                    },
+                    "required": [
+                      "cycle_usd",
+                      "usd_per_piv",
+                      "price_updated_at",
+                      "source_ids"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "per_deliverable": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "piv": {
+                        "type": "string",
+                        "pattern": "^\\d+\\.\\d{8}$"
+                      },
+                      "quantity": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "unit": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "piv",
+                      "quantity",
+                      "unit"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "cycle_piv",
+              "term_piv",
+              "payment_count",
+              "source_ids",
+              "usd",
+              "per_deliverable",
+              "explanation"
+            ],
+            "additionalProperties": false
+          },
+          "scores": {
+            "type": "object",
+            "properties": {
+              "clarity": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 5
+                      }
+                    ]
+                  },
+                  "confidence": {
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high",
+                      "unscored"
+                    ]
+                  },
+                  "rationale": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "source_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "value",
+                  "confidence",
+                  "rationale",
+                  "source_ids"
+                ],
+                "additionalProperties": false
+              },
+              "cost_reasonableness": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 5
+                      }
+                    ]
+                  },
+                  "confidence": {
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high",
+                      "unscored"
+                    ]
+                  },
+                  "rationale": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "source_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "value",
+                  "confidence",
+                  "rationale",
+                  "source_ids"
+                ],
+                "additionalProperties": false
+              },
+              "verifiability": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 5
+                      }
+                    ]
+                  },
+                  "confidence": {
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high",
+                      "unscored"
+                    ]
+                  },
+                  "rationale": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "source_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "value",
+                  "confidence",
+                  "rationale",
+                  "source_ids"
+                ],
+                "additionalProperties": false
+              },
+              "track_record": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 5
+                      }
+                    ]
+                  },
+                  "confidence": {
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high",
+                      "unscored"
+                    ]
+                  },
+                  "rationale": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "source_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "value",
+                  "confidence",
+                  "rationale",
+                  "source_ids"
+                ],
+                "additionalProperties": false
+              },
+              "ecosystem_impact": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 5
+                      }
+                    ]
+                  },
+                  "confidence": {
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high",
+                      "unscored"
+                    ]
+                  },
+                  "rationale": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "source_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "value",
+                  "confidence",
+                  "rationale",
+                  "source_ids"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "clarity",
+              "cost_reasonableness",
+              "verifiability",
+              "track_record",
+              "ecosystem_impact"
+            ],
+            "additionalProperties": false
+          },
+          "history": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "incomplete",
+                  "researched"
+                ]
+              },
+              "notes": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 1
+              }
+            },
+            "required": [
+              "status",
+              "notes",
+              "source_ids"
+            ],
+            "additionalProperties": false
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "source_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "text",
+                "source_ids"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 0
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "proposer",
+          "chain_hash",
+          "chain_verified",
+          "summary",
+          "deliverables",
+          "cost",
+          "scores",
+          "history",
+          "limitations"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "kind",
+    "created_at",
+    "rubric_version",
+    "status",
+    "cycle",
+    "snapshot",
+    "coverage",
+    "disclosures",
+    "generation",
+    "sources",
+    "proposals",
+    "limitations"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PIVX governance report v0.1.0"
+}

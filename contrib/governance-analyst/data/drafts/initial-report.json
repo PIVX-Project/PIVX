@@ -1,0 +1,637 @@
+{
+  "schema_version": "0.1.0",
+  "kind": "governance_report",
+  "created_at": "2026-01-01T00:00:00Z",
+  "rubric_version": "1.0-draft",
+  "status": "draft",
+  "cycle": {
+    "id": 131,
+    "payout_height": 5659200
+  },
+  "snapshot": {
+    "status": "unverified",
+    "path": null,
+    "content_sha256": null
+  },
+  "coverage": {
+    "basis": "SYNTHETIC EXAMPLE: six invented proposals for offline tests; chain roster is unverified.",
+    "expected_active_ids": null,
+    "analyzed_ids": [
+      "example-1",
+      "example-2",
+      "example-3",
+      "example-4",
+      "example-5",
+      "example-6"
+    ]
+  },
+  "disclosures": {
+    "status": "pending",
+    "text": "Synthetic example only. A real report requires the reviewer disclosure."
+  },
+  "generation": {
+    "mode": "interactive_assistant",
+    "model": "Synthetic fixture; no inference was run.",
+    "generated_at": "2026-01-01T00:00:00Z",
+    "prompt_path": "prompts/proposal-review-v1.txt",
+    "input_path": "data/examples/inputs.json",
+    "input_sha256": "9185e92dcc050fa7fd2073b693775130492afde6e3998bf3b75d4533b8e7aa12"
+  },
+  "sources": [
+    {
+      "id": "fixture",
+      "url": "https://example.com/governance-fixture",
+      "title": "Synthetic example; no real proposal or evidence",
+      "accessed_at": "2026-01-01T00:00:00Z",
+      "retrieval": "local_public_source",
+      "freshness": "Synthetic fixture only; never collected from the network."
+    }
+  ],
+  "proposals": [
+    {
+      "id": "example-1",
+      "name": "Example proposal 1",
+      "proposer": "Example A",
+      "chain_hash": null,
+      "chain_verified": false,
+      "summary": {
+        "text": "Synthetic proposal for recurring public maintenance. This invented example demonstrates the report interface and evidence gaps.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "deliverables": [
+        {
+          "text": "Synthetic maintenance work; no actual commitment.",
+          "kind": "ongoing",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ],
+      "cost": {
+        "cycle_piv": "1000.00000000",
+        "term_piv": "3000.00000000",
+        "payment_count": 3,
+        "source_ids": [
+          "fixture"
+        ],
+        "usd": {
+          "cycle_usd": "50.00",
+          "usd_per_piv": "0.05",
+          "price_updated_at": "2026-01-01T00:00:00Z",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "per_deliverable": null,
+        "explanation": "Invented arithmetic example, not a market quote or funding request."
+      },
+      "scores": {
+        "clarity": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "cost_reasonableness": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "verifiability": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "track_record": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "ecosystem_impact": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      },
+      "history": {
+        "status": "researched",
+        "notes": "Synthetic bounded-search example; all delivery outcomes are unknown.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "limitations": [
+        {
+          "text": "Synthetic example, not a real proposal.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-2",
+      "name": "Example proposal 2",
+      "proposer": "Example A",
+      "chain_hash": null,
+      "chain_verified": false,
+      "summary": {
+        "text": "Synthetic proposal for recurring public maintenance. This invented example demonstrates the report interface and evidence gaps.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "deliverables": [
+        {
+          "text": "Synthetic maintenance work; no actual commitment.",
+          "kind": "ongoing",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ],
+      "cost": {
+        "cycle_piv": "1000.00000000",
+        "term_piv": "3000.00000000",
+        "payment_count": 3,
+        "source_ids": [
+          "fixture"
+        ],
+        "usd": {
+          "cycle_usd": "50.00",
+          "usd_per_piv": "0.05",
+          "price_updated_at": "2026-01-01T00:00:00Z",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "per_deliverable": null,
+        "explanation": "Invented arithmetic example, not a market quote or funding request."
+      },
+      "scores": {
+        "clarity": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "cost_reasonableness": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "verifiability": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "track_record": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "ecosystem_impact": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      },
+      "history": {
+        "status": "researched",
+        "notes": "Synthetic bounded-search example; all delivery outcomes are unknown.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "limitations": [
+        {
+          "text": "Synthetic example, not a real proposal.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-3",
+      "name": "Example proposal 3",
+      "proposer": "Example B",
+      "chain_hash": null,
+      "chain_verified": false,
+      "summary": {
+        "text": "Synthetic proposal for recurring public maintenance. This invented example demonstrates the report interface and evidence gaps.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "deliverables": [
+        {
+          "text": "Synthetic maintenance work; no actual commitment.",
+          "kind": "ongoing",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ],
+      "cost": {
+        "cycle_piv": "1000.00000000",
+        "term_piv": "3000.00000000",
+        "payment_count": 3,
+        "source_ids": [
+          "fixture"
+        ],
+        "usd": {
+          "cycle_usd": "50.00",
+          "usd_per_piv": "0.05",
+          "price_updated_at": "2026-01-01T00:00:00Z",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "per_deliverable": null,
+        "explanation": "Invented arithmetic example, not a market quote or funding request."
+      },
+      "scores": {
+        "clarity": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "cost_reasonableness": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "verifiability": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "track_record": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "ecosystem_impact": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      },
+      "history": {
+        "status": "researched",
+        "notes": "Synthetic bounded-search example; all delivery outcomes are unknown.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "limitations": [
+        {
+          "text": "Synthetic example, not a real proposal.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-4",
+      "name": "Example proposal 4",
+      "proposer": "Example C",
+      "chain_hash": null,
+      "chain_verified": false,
+      "summary": {
+        "text": "Synthetic proposal for recurring public maintenance. This invented example demonstrates the report interface and evidence gaps.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "deliverables": [
+        {
+          "text": "Synthetic maintenance work; no actual commitment.",
+          "kind": "ongoing",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ],
+      "cost": {
+        "cycle_piv": "1000.00000000",
+        "term_piv": "3000.00000000",
+        "payment_count": 3,
+        "source_ids": [
+          "fixture"
+        ],
+        "usd": {
+          "cycle_usd": "50.00",
+          "usd_per_piv": "0.05",
+          "price_updated_at": "2026-01-01T00:00:00Z",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "per_deliverable": null,
+        "explanation": "Invented arithmetic example, not a market quote or funding request."
+      },
+      "scores": {
+        "clarity": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "cost_reasonableness": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "verifiability": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "track_record": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "ecosystem_impact": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      },
+      "history": {
+        "status": "researched",
+        "notes": "Synthetic bounded-search example; all delivery outcomes are unknown.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "limitations": [
+        {
+          "text": "Synthetic example, not a real proposal.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-5",
+      "name": "Example proposal 5",
+      "proposer": "Example D",
+      "chain_hash": null,
+      "chain_verified": false,
+      "summary": {
+        "text": "Synthetic proposal for recurring public maintenance. This invented example demonstrates the report interface and evidence gaps.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "deliverables": [
+        {
+          "text": "Synthetic maintenance work; no actual commitment.",
+          "kind": "ongoing",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ],
+      "cost": {
+        "cycle_piv": "1000.00000000",
+        "term_piv": "3000.00000000",
+        "payment_count": 3,
+        "source_ids": [
+          "fixture"
+        ],
+        "usd": {
+          "cycle_usd": "50.00",
+          "usd_per_piv": "0.05",
+          "price_updated_at": "2026-01-01T00:00:00Z",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "per_deliverable": null,
+        "explanation": "Invented arithmetic example, not a market quote or funding request."
+      },
+      "scores": {
+        "clarity": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "cost_reasonableness": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "verifiability": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "track_record": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "ecosystem_impact": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      },
+      "history": {
+        "status": "researched",
+        "notes": "Synthetic bounded-search example; all delivery outcomes are unknown.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "limitations": [
+        {
+          "text": "Synthetic example, not a real proposal.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example-6",
+      "name": "Example proposal 6",
+      "proposer": "Example E",
+      "chain_hash": null,
+      "chain_verified": false,
+      "summary": {
+        "text": "Synthetic proposal for recurring public maintenance. This invented example demonstrates the report interface and evidence gaps.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "deliverables": [
+        {
+          "text": "Synthetic maintenance work; no actual commitment.",
+          "kind": "ongoing",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ],
+      "cost": {
+        "cycle_piv": "1000.00000000",
+        "term_piv": "3000.00000000",
+        "payment_count": 3,
+        "source_ids": [
+          "fixture"
+        ],
+        "usd": {
+          "cycle_usd": "50.00",
+          "usd_per_piv": "0.05",
+          "price_updated_at": "2026-01-01T00:00:00Z",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "per_deliverable": null,
+        "explanation": "Invented arithmetic example, not a market quote or funding request."
+      },
+      "scores": {
+        "clarity": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "cost_reasonableness": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "verifiability": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "track_record": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        },
+        "ecosystem_impact": {
+          "value": null,
+          "confidence": "unscored",
+          "rationale": "Synthetic fixture has no real evidence to score.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      },
+      "history": {
+        "status": "researched",
+        "notes": "Synthetic bounded-search example; all delivery outcomes are unknown.",
+        "source_ids": [
+          "fixture"
+        ]
+      },
+      "limitations": [
+        {
+          "text": "Synthetic example, not a real proposal.",
+          "source_ids": [
+            "fixture"
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "SYNTHETIC EXAMPLE: no actual proposals, payments, rankings or human approvals."
+  ]
+}
