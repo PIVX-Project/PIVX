@@ -127,8 +127,8 @@ class GovernanceInvalidBudgetTest(PivxTestFramework):
         self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)
         self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)
         self.send_3_pings([self.mn1, self.mn2])
-        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [self.mn1, self.mn2])
-        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [self.mn1, self.mn2])
+        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [self.mn1, self.mn2], lambda: self.advance_mocktime(2))
+        self.wait_until_mn_enabled(self.mnTwoCollateral.hash, 120, [self.mn1, self.mn2], lambda: self.advance_mocktime(2))
 
         # activate sporks
         self.log.info("Masternodes enabled. Activating sporks.")

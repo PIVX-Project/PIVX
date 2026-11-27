@@ -1246,10 +1246,16 @@ class msg_mnping:
         r += ser_string(self.vch_sig)
         r += struct.pack("<I", self.mess_version)
         return r
+    def serialize_for_hash(self):
+        r = b""
+        r += self.vin.serialize()
+        r += ser_uint256(self.blockhash)
+        r += struct.pack("<q", self.sigtime)
+        return r
 
     def get_hash(self):
         if self.cached_hash == b"":
-            self.cached_hash = uint256_from_str(hash256(self.serialize()))
+            self.cached_hash = uint256_from_str(hash256(self.serialize_for_hash()))
         return self.cached_hash
 
     def __repr__(self):

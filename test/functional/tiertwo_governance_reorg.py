@@ -85,8 +85,8 @@ class GovernanceReorgTest(PivxTestFramework):
         self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)
         self.wait_until_mn_preenabled(self.mnOneCollateral.hash, 40)
         self.send_3_pings([mn1, mn2])
-        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [mn1, mn2])
-        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [mn1, mn2])
+        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [mn1, mn2], lambda: self.advance_mocktime(2))
+        self.wait_until_mn_enabled(self.mnOneCollateral.hash, 120, [mn1, mn2], lambda: self.advance_mocktime(2))
 
         # activate sporks
         self.log.info("Masternodes enabled. Activating sporks.")
