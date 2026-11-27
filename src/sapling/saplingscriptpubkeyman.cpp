@@ -91,8 +91,13 @@ void SaplingScriptPubKeyMan::UpdateSaplingNullifierNoteMapWithTx(CWalletTx& wtx)
             nd.nullifier = nullopt;
         } else {
             const libzcash::SaplingIncomingViewingKey& ivk = *(nd.ivk);
+            libzcash::SaplingExtendedFullViewingKey extfvk;
+            if (!wallet->GetSaplingFullViewingKey(ivk, extfvk)) {
+                // Wallets used to lose imported viewing keys on restart, but kept the notes.
+                // Such a note stays as it is until its key is imported again.
+                continue;
+            }
             uint64_t position = nd.witnesses.front().position();
-            auto extfvk = wallet->mapSaplingFullViewingKeys.at(ivk);
             OutputDescription output = wtx.tx->sapData->vShieldedOutput[op.n];
             auto optPlaintext = libzcash::SaplingNotePlaintext::decrypt(output.encCiphertext, ivk, output.ephemeralKey, output.cmu);
             if (!optPlaintext) {
@@ -1158,7 +1163,8 @@ KeyAddResult SaplingScriptPubKeyMan::AddViewingKeyToWallet(const libzcash::Sapli
         return SpendingKeyExists;
     } else if (wallet->HaveSaplingFullViewingKey(extfvk.fvk.in_viewing_key())) {
         return KeyAlreadyExists;
-    } else if (wallet->AddSaplingFullViewingKey(extfvk)) {
+    } else if (WalletBatch(wallet->GetDBHandle()).WriteSaplingExtendedFullViewingKey(extfvk) &&
+               wallet->AddSaplingFullViewingKey(extfvk)) {
         return KeyAdded;
     } else {
         return KeyNotAdded;
@@ -1348,6 +1354,11 @@ bool SaplingScriptPubKeyMan::LoadSaplingZKeyMetadata(const libzcash::SaplingInco
 bool SaplingScriptPubKeyMan::LoadSaplingZKey(const libzcash::SaplingExtendedSpendingKey &key)
 {
     return wallet->AddSaplingSpendingKey(key);
+}
+
+bool SaplingScriptPubKeyMan::LoadSaplingFullViewingKey(const libzcash::SaplingExtendedFullViewingKey &extfvk)
+{
+    return wallet->AddSaplingFullViewingKey(extfvk);
 }
 
 bool SaplingScriptPubKeyMan::LoadSaplingPaymentAddress(

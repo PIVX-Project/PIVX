@@ -185,6 +185,10 @@ public:
     bool WriteSaplingPaymentAddress(const libzcash::SaplingPaymentAddress &addr,
                                     const libzcash::SaplingIncomingViewingKey &ivk);
 
+    /// Write a viewing key imported without its spending key. It cannot spend, so it is not
+    /// encrypted, like the extended full viewing key stored with an encrypted spending key.
+    bool WriteSaplingExtendedFullViewingKey(const libzcash::SaplingExtendedFullViewingKey &extfvk);
+
     bool WriteCryptedSaplingZKey(const libzcash::SaplingExtendedFullViewingKey &extfvk,
                                  const std::vector<unsigned char>& vchCryptedSecret,
                                  const CKeyMetadata &keyMeta);

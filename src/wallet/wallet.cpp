@@ -1988,6 +1988,11 @@ CBlockIndex* CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, CBlock
                 }
             }
         }
+        // The witnesses just written must not outnumber the cache size on disk, or the next
+        // rescan trips over them.
+        if (!batch.WriteWitnessCacheSize(m_sspk_man->nWitnessCacheSize)) {
+            LogPrintf("Rescanning... WriteToDisk failed to update the witness cache size\n");
+        }
 
         if (pindex && fAbortRescan) {
             LogPrintf("Rescan aborted at block %d. Progress=%f\n", pindex->nHeight, Checkpoints::GuessVerificationProgress(pindex, false));
@@ -4740,6 +4745,13 @@ bool CWallet::LoadSaplingZKey(const libzcash::SaplingExtendedSpendingKey &key) {
 bool CWallet::LoadSaplingZKeyMetadata(const libzcash::SaplingIncomingViewingKey &ivk, const CKeyMetadata &meta) { return m_sspk_man->LoadSaplingZKeyMetadata(ivk, meta); }
 bool CWallet::LoadCryptedSaplingZKey(const libzcash::SaplingExtendedFullViewingKey &extfvk,
                             const std::vector<unsigned char> &vchCryptedSecret) { return m_sspk_man->LoadCryptedSaplingZKey(extfvk, vchCryptedSecret); }
+
+bool CWallet::LoadSaplingFullViewingKey(const libzcash::SaplingExtendedFullViewingKey &extfvk)
+{
+    AssertLockHeld(cs_wallet);
+    UpdateTimeFirstKey(1); // No birthday information for viewing keys.
+    return m_sspk_man->LoadSaplingFullViewingKey(extfvk);
+}
 
 bool CWallet::LoadSaplingPaymentAddress(
         const libzcash::SaplingPaymentAddress &addr,
