@@ -13,13 +13,12 @@ Test the following RPCs:
 """
 
 from decimal import Decimal
-
 from test_framework.test_framework import PivxTestFramework
 from test_framework.util import (
     assert_equal,
     assert_raises_rpc_error,
 )
-
+from test_framework.messages import CTransaction, ToHex
 
 class multidict(dict):
     """Dictionary that allows duplicate keys.
@@ -348,6 +347,27 @@ class RawTransactionsTest(PivxTestFramework):
         rawtx   = self.nodes[0].createrawtransaction(inputs, outputs)
         decrawtx= self.nodes[0].decoderawtransaction(rawtx)
         assert_equal(decrawtx['vin'][0]['sequence'], 4294967294)
+
+        ####################################
+        # TRANSACTION VERSION NUMBER TESTS #
+        ####################################
+
+        # Test the minimum transaction version number that fits in a signed 16-bit integer.
+        # Note, this is different to bitcoin. Bitcoin has a 32 bit integer
+        # representing the version, we have 16 bits of version and 16 bits of
+        # type.
+        tx = CTransaction()
+        tx.nVersion = -0x8000
+        rawtx = ToHex(tx)
+        decrawtx = self.nodes[0].decoderawtransaction(rawtx)
+        assert_equal(decrawtx['version'], -0x8000)
+
+        # Test the maximum transaction version number that fits in a signed 32-bit integer.
+        tx = CTransaction()
+        tx.nVersion = 0x7fff
+        rawtx = ToHex(tx)
+        decrawtx = self.nodes[0].decoderawtransaction(rawtx)
+        assert_equal(decrawtx['version'], 0x7fff)
 
 if __name__ == '__main__':
     RawTransactionsTest().main()
