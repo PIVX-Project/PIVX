@@ -11,6 +11,7 @@
 
 #include <list>
 #include <map>
+#include "optional.h"
 #include <stdint.h>
 #include <string>
 
@@ -19,6 +20,7 @@
 //! HTTP status codes
 enum HTTPStatusCode {
     HTTP_OK                    = 200,
+    HTTP_NO_CONTENT            = 204,
     HTTP_BAD_REQUEST           = 400,
     HTTP_UNAUTHORIZED          = 401,
     HTTP_FORBIDDEN             = 403,
@@ -80,9 +82,14 @@ enum RPCErrorCode {
     RPC_WALLET_NOT_SPECIFIED            = -19, //!< No wallet specified (error when there are multiple wallets loaded)
 };
 
+// JSON RPC Versions
+enum class JSONRPCVersion {
+    V1_LEGACY,
+    V2
+};
+
 UniValue JSONRPCRequestObj(const std::string& strMethod, const UniValue& params, const UniValue& id);
-UniValue JSONRPCReplyObj(const UniValue& result, const UniValue& error, const UniValue& id);
-std::string JSONRPCReply(const UniValue& result, const UniValue& error, const UniValue& id);
+UniValue JSONRPCReplyObj(UniValue result, UniValue error, Optional<UniValue> id, JSONRPCVersion jsonrpc_version);
 UniValue JSONRPCError(int code, const std::string& message);
 
 /** Get name of RPC authentication cookie file */
