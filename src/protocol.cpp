@@ -18,6 +18,7 @@ namespace NetMsgType
 {
 const char* VERSION = "version";
 const char* VERACK = "verack";
+const char* REJECT = "reject";
 const char* ADDR = "addr";
 const char* ADDRV2="addrv2";
 const char* SENDADDRV2="sendaddrv2";
@@ -76,6 +77,7 @@ const char* CLSIG = "clsig";
 const static std::string allNetMessageTypes[] = {
     NetMsgType::VERSION,
     NetMsgType::VERACK,
+    NetMsgType::REJECT,
     NetMsgType::ADDR,
     NetMsgType::ADDRV2,
     NetMsgType::SENDADDRV2,
